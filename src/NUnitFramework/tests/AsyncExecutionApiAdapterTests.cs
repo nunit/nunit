@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     // Make sure other tests are testing what we think they’re testing
     public static class AsyncExecutionApiAdapterTests

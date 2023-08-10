@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -17,22 +15,22 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public CompositeFilter()
         {
-            Filters = new List<TestFilter>();
+            Filters = Array.Empty<TestFilter>();
         }
 
         /// <summary>
         /// Constructs a CompositeFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
-        public CompositeFilter( params TestFilter[] filters )
+        public CompositeFilter(params TestFilter[] filters)
         {
-            Filters = new ReadOnlyCollection<TestFilter>(filters);
+            Filters = filters;
         }
 
         /// <summary>
         /// Return a list of the composing filters.
         /// </summary>
-        public IList<TestFilter> Filters { get; }
+        public TestFilter[] Filters { get; }
 
         /// <summary>
         /// Checks whether the CompositeFilter is matched by a test.
@@ -64,8 +62,10 @@ namespace NUnit.Framework.Internal.Filters
             TNode result = parentNode.AddElement(ElementName);
 
             if (recursive)
+            {
                 foreach (ITestFilter filter in Filters)
                     filter.AddToXml(result, true);
+            }
 
             return result;
         }

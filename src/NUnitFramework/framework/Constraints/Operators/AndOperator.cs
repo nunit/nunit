@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public AndOperator()
         {
-            this.left_precedence = this.right_precedence = 2;
+            left_precedence = right_precedence = 2;
         }
 
         /// <summary>

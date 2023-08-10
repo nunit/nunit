@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
-using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NUnit.TestData.UnhandledExceptionData
 {
@@ -58,7 +57,7 @@ namespace NUnit.TestData.UnhandledExceptionData
 
         private void ThreadedAssertProc()
         {
-            Assert.AreEqual(5, 2 + 2);
+            ClassicAssert.AreEqual(5, 2 + 2);
         }
         #endregion
     }

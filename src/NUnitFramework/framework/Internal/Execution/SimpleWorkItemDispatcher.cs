@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -16,17 +14,17 @@ namespace NUnit.Framework.Internal.Execution
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
         // The first WorkItem to be dispatched, assumed to be top-level item
-        private WorkItem _topLevelWorkItem;
+        private WorkItem? _topLevelWorkItem;
 
         // Thread used to run and cancel tests
-        private Thread _runnerThread;
+        private Thread? _runnerThread;
 
         #region IWorkItemDispatcher Members
 
         /// <summary>
         ///  The level of parallelism supported
         /// </summary>
-        public int LevelOfParallelism { get { return 0; } }
+        public int LevelOfParallelism => 0;
 
         /// <summary>
         /// Start execution, creating the execution thread,
@@ -34,11 +32,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            _topLevelWorkItem = topLevelWorkItem;
             _runnerThread = new Thread(RunnerThreadProc);
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
+#if NET6_0_OR_GREATER
+                if (OperatingSystem.IsWindows())
+                    _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+                else
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
+#else
                 try
                 {
                     _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
@@ -47,9 +50,10 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
                 }
+#endif
             }
 
-            _runnerThread.Start();
+            _runnerThread.Start(topLevelWorkItem);
         }
 
         /// <summary>
@@ -59,20 +63,16 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            if (work != null)
-                work.Execute();
+            work?.Execute();
         }
 
-
-        private void RunnerThreadProc()
+        private void RunnerThreadProc(object? obj)
         {
+            _topLevelWorkItem = (WorkItem)obj!;
             _topLevelWorkItem.Execute();
         }
 
-
-
-        private readonly object cancelLock = new object();
-
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.
@@ -81,9 +81,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
         public void CancelRun(bool force)
         {
-            lock (cancelLock)
+            lock (_cancelLock)
             {
-                if (_topLevelWorkItem != null)
+                if (_topLevelWorkItem is not null)
                 {
                     _topLevelWorkItem.Cancel(force);
                     if (force)

@@ -1,13 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -60,8 +57,8 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type)
         {
-            ConstructorInfo ctor = type.GetConstructor(Array.Empty<Type>());
-            if (ctor == null)
+            ConstructorInfo? ctor = type.GetConstructor(Array.Empty<Type>());
+            if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a default constructor");
 
             return ctor.Invoke(null);
@@ -75,11 +72,11 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type, object?[]? arguments)
         {
-            if (arguments == null) return Construct(type);
+            if (arguments is null) return Construct(type);
 
             Type?[] argTypes = GetTypeArray(arguments);
-            ConstructorInfo ctor = GetConstructors(type, argTypes).FirstOrDefault();
-            if (ctor == null)
+            ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
+            if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
             return ctor.Invoke(arguments);
@@ -128,7 +125,7 @@ namespace NUnit.Framework.Internal
         }
 
         // §6.1.2 (Implicit numeric conversions) of the specification
-        private static readonly Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
+        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new() {
             { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
             { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
             { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
@@ -149,13 +146,13 @@ namespace NUnit.Framework.Internal
                 return true;
 
             // Look for the marker that indicates from was null
-            if (from == null)
+            if (from is null)
             {
                 // Look for the marker that indicates from was null
-                return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
+                return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
+            if (ConvertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
                 return true;
 
             return from
@@ -184,37 +181,34 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-        [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
+#if NETFRAMEWORK
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
+#endif
         public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
-            if (method != null)
+            try
             {
-                try
-                {
-                    return method.Invoke(fixture, args);
-                }
-                catch (TargetInvocationException e)
-                {
-                    throw new NUnitException("Rethrown", e.InnerException);
-                }
-                catch (Exception e)
-#if THREAD_ABORT
-                    // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
-                    // will not rethrow at the end of the catch block. Instead, it will resurrect
-                    // the ThreadAbortException at the end of the next unrelated catch block that
-                    // executes on the same thread after handling an unrelated exception.
-                    // The end result is that an unrelated test will error with the message "Test
-                    // cancelled by user."
-
-                    // This is just cleaner than catching and rethrowing:
-                    when (!(e is System.Threading.ThreadAbortException))
-#endif
-                {
-                    throw new NUnitException("Rethrown", e);
-                }
+                return method.Invoke(fixture, args);
             }
+            catch (TargetInvocationException e)
+            {
+                throw new NUnitException("Rethrown", e.InnerException);
+            }
+            catch (Exception e)
+#if THREAD_ABORT
+                // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
+                // will not rethrow at the end of the catch block. Instead, it will resurrect
+                // the ThreadAbortException at the end of the next unrelated catch block that
+                // executes on the same thread after handling an unrelated exception.
+                // The end result is that an unrelated test will error with the message "Test
+                // cancelled by user."
 
-            return null;
+                // This is just cleaner than catching and rethrowing:
+                when (e is not System.Threading.ThreadAbortException)
+#endif
+            {
+                throw new NUnitException("Rethrown", e);
+            }
         }
 
         #endregion
@@ -252,20 +246,20 @@ namespace NUnit.Framework.Internal
                 // If we're searching for both public and nonpublic properties, search for only public first
                 // because chances are if there is a public property, it would be very surprising to detect the private shadowing property.
 
-                for (var publicSearchType = type; publicSearchType != null; publicSearchType = publicSearchType.GetTypeInfo().BaseType)
+                for (var publicSearchType = type; publicSearchType is not null; publicSearchType = publicSearchType.BaseType)
                 {
                     var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
-                    if (property != null) return property;
+                    if (property is not null) return property;
                 }
 
                 // There is no public property, so may as well not ask to include them during the second search.
                 bindingFlags &= ~BindingFlags.Public;
             }
 
-            for (var searchType = type; searchType != null; searchType = searchType.GetTypeInfo().BaseType)
+            for (var searchType = type; searchType is not null; searchType = searchType.BaseType)
             {
                 var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
-                if (property != null) return property;
+                if (property is not null) return property;
             }
 
             return null;
@@ -274,20 +268,20 @@ namespace NUnit.Framework.Internal
         internal static bool IsAssignableFromNull(Type type)
         {
             Guard.ArgumentNotNull(type, nameof(type));
-            return !type.GetTypeInfo().IsValueType || IsNullable(type);
+            return !type.IsValueType || IsNullable(type);
         }
 
         private static bool IsNullable(Type type)
         {
             // Compare with https://github.com/dotnet/coreclr/blob/bb01fb0d954c957a36f3f8c7aad19657afc2ceda/src/mscorlib/src/System/Nullable.cs#L152-L157
-            return type.GetTypeInfo().IsGenericType
-                && !type.GetTypeInfo().IsGenericTypeDefinition
+            return type.IsGenericType
+                && !type.IsGenericTypeDefinition
                 && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
 
-        internal static IEnumerable<Type> TypeAndBaseTypes(this Type type)
+        internal static IEnumerable<Type> TypeAndBaseTypes(this Type? type)
         {
-            for (; type != null; type = type.GetTypeInfo().BaseType)
+            for (; type is not null; type = type.BaseType)
             {
                 yield return type;
             }
@@ -313,13 +307,15 @@ namespace NUnit.Framework.Internal
                        if (parameters.Length != parameterTypes.Length) return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
+                       {
                            if (parameters[i].ParameterType != parameterTypes[i])
                                return false;
+                       }
 
                        return true;
                    });
 
-                if (method != null) return method;
+                if (method is not null) return method;
             }
 
             return null;
@@ -327,13 +323,14 @@ namespace NUnit.Framework.Internal
 
         internal static PropertyInfo? GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
         {
-            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            for (var currentType = type; currentType is not null; currentType = currentType.BaseType)
             {
                 var property = currentType
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                      .SingleOrDefault(candidate =>
                      {
-                         if (candidate.Name != name) return false;
+                         if (candidate.Name != name)
+                             return false;
 
                          var indexParameters = candidate.GetIndexParameters();
                          if (indexParameters.Length != indexParameterTypes.Length) return false;
@@ -344,7 +341,7 @@ namespace NUnit.Framework.Internal
                          return true;
                      });
 
-                if (property != null) return property;
+                if (property is not null) return property;
             }
 
             return null;
@@ -361,7 +358,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException ex)
             {
-                ExceptionHelper.Rethrow(ex.InnerException);
+                ExceptionHelper.Rethrow(ex.InnerException!);
 
                 // If this line is reached, ExceptionHelper.Rethrow is very broken.
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
@@ -376,7 +373,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException ex)
             {
-                ExceptionHelper.Rethrow(ex.InnerException);
+                ExceptionHelper.Rethrow(ex.InnerException!);
 
                 // If this line is reached, ExceptionHelper.Rethrow is very broken.
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
@@ -387,7 +384,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(type, nameof(type));
 
-            if (type.GetTypeInfo().IsGenericType
+            if (type.IsGenericType
                 && type.GetGenericTypeDefinition().FullName == "Microsoft.FSharp.Core.FSharpOption`1")
             {
                 someType = type.GetGenericArguments()[0];
@@ -441,12 +438,17 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static MemberInfo[] GetMemberIncludingFromBase(this Type type, string name, BindingFlags flags)
         {
+            Type? currentType = type;
             MemberInfo[] members;
             do
             {
-                members = type.GetMember(name, flags);
+                members = currentType.GetMember(name, flags);
             }
-            while (members.Length == 0 && (type = type.BaseType) != null);
+            while (members.Length == 0 &&
+#pragma warning disable CSIsNull002 // Use `is not null` for non-null checks
+                  // https://github.com/dotnet/roslyn/issues/59152
+                  (currentType = currentType.BaseType) != null);
+#pragma warning restore CSIsNull002 // Use `is not null` for non-null checks
             return members;
         }
     }

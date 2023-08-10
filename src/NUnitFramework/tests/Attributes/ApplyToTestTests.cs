@@ -5,18 +5,18 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class ApplyToTestTests
     {
-        Test test;
+        private NUnit.Framework.Internal.Test _test;
 
         [SetUp]
         public void SetUp()
         {
-            test = new TestDummy();
-            test.RunState = RunState.Runnable;
+            _test = new TestDummy();
+            _test.RunState = RunState.Runnable;
         }
 
         #region CategoryAttribute
@@ -28,32 +28,32 @@ namespace NUnit.Framework.Attributes
         public void CategoryAttributePassesOnSpecialCharacters(char specialCharacter)
         {
             var categoryName = new string(specialCharacter, 5);
-            new CategoryAttribute(categoryName).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo(categoryName));
+            new CategoryAttribute(categoryName).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.Category), Is.EqualTo(categoryName));
         }
 
         [Test]
         public void CategoryAttributeSetsCategory()
         {
-            new CategoryAttribute("database").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo("database"));
+            new CategoryAttribute("database").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.Category), Is.EqualTo("database"));
         }
 
         [Test]
         public void CategoryAttributeSetsCategoryOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new CategoryAttribute("database").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo("database"));
+            _test.RunState = RunState.NotRunnable;
+            new CategoryAttribute("database").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.Category), Is.EqualTo("database"));
         }
 
         [Test]
         public void CategoryAttributeSetsMultipleCategories()
         {
-            new CategoryAttribute("group1").ApplyToTest(test);
-            new CategoryAttribute("group2").ApplyToTest(test);
-            Assert.That(test.Properties[PropertyNames.Category],
-                Is.EquivalentTo( new string[] { "group1", "group2" } ));
+            new CategoryAttribute("group1").ApplyToTest(_test);
+            new CategoryAttribute("group2").ApplyToTest(_test);
+            Assert.That(_test.Properties[PropertyNames.Category],
+                Is.EquivalentTo(new[] { "group1", "group2" }));
         }
 
         #endregion
@@ -63,16 +63,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void DescriptionAttributeSetsDescription()
         {
-            new DescriptionAttribute("Cool test!").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
+            new DescriptionAttribute("Cool test!").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
         }
 
         [Test]
         public void DescriptionAttributeSetsDescriptionOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new DescriptionAttribute("Cool test!").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
+            _test.RunState = RunState.NotRunnable;
+            new DescriptionAttribute("Cool test!").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.Description), Is.EqualTo("Cool test!"));
         }
 
         #endregion
@@ -82,25 +82,28 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void IgnoreAttributeIgnoresTest()
         {
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         [Test]
         public void IgnoreAttributeSetsIgnoreReason()
         {
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+            new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
         [Test]
         public void IgnoreAttributeDoesNotAffectNonRunnableTest()
         {
-            test.MakeInvalid("UNCHANGED");
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
+            _test.MakeInvalid("UNCHANGED");
+            new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(_test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
+            });
         }
 
         [Test]
@@ -108,8 +111,8 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "4242-01-01";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         [Test]
@@ -117,8 +120,8 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "4242-01-01 12:00:00Z";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         [Test]
@@ -126,8 +129,8 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "1492-01-01";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [TestCase("4242-01-01")]
@@ -137,8 +140,8 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = date;
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. BECAUSE"));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. BECAUSE"));
         }
 
         [Test]
@@ -153,8 +156,8 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "4242-01-01";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
         }
 
         [Test]
@@ -162,16 +165,16 @@ namespace NUnit.Framework.Attributes
         {
             var ignoreAttribute = new IgnoreAttribute("BECAUSE");
             ignoreAttribute.Until = "1242-01-01";
-            ignoreAttribute.ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("1242-01-01 00:00:00Z"));
+            ignoreAttribute.ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("1242-01-01 00:00:00Z"));
         }
 
         [Test]
         public void IgnoreAttributeWithExplicitIgnoresTest()
         {
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            new ExplicitAttribute().ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
+            new ExplicitAttribute().ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         #endregion
@@ -181,33 +184,33 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ExplicitAttributeMakesTestExplicit()
         {
-            new ExplicitAttribute().ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
+            new ExplicitAttribute().ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Explicit));
         }
 
         [Test]
         public void ExplicitAttributeSetsIgnoreReason()
         {
-            new ExplicitAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
+            new ExplicitAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("BECAUSE"));
         }
 
         [Test]
         public void ExplicitAttributeDoesNotAffectNonRunnableTest()
         {
-            test.MakeInvalid("UNCHANGED");
-            new ExplicitAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
+            _test.MakeInvalid("UNCHANGED");
+            new ExplicitAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
         }
 
         [Test]
         public void ExplicitAttributeWithIgnoreIgnoresTest()
         {
-            new ExplicitAttribute().ApplyToTest(test);
-            new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Ignored));
+            new ExplicitAttribute().ApplyToTest(_test);
+            new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Ignored));
         }
 
         #endregion
@@ -217,16 +220,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CombinatorialAttributeSetsJoinType()
         {
-            new CombinatorialAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Combinatorial"));
+            new CombinatorialAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Combinatorial"));
         }
 
         [Test]
         public void CombinatorialAttributeSetsJoinTypeOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new CombinatorialAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Combinatorial"));
+            _test.RunState = RunState.NotRunnable;
+            new CombinatorialAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Combinatorial"));
         }
 
         #endregion
@@ -237,17 +240,17 @@ namespace NUnit.Framework.Attributes
         public void CultureAttributeIncludingCurrentCultureRunsTest()
         {
             string name = System.Globalization.CultureInfo.CurrentCulture.Name;
-            new CultureAttribute(name).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            new CultureAttribute(name).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]
         public void CultureAttributeDoesNotAffectNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
+            _test.RunState = RunState.NotRunnable;
             string name = System.Globalization.CultureInfo.CurrentCulture.Name;
-            new CultureAttribute(name).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+            new CultureAttribute(name).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
         [Test]
@@ -256,9 +259,9 @@ namespace NUnit.Framework.Attributes
             string name = System.Globalization.CultureInfo.CurrentCulture.Name;
             CultureAttribute attr = new CultureAttribute(name);
             attr.Exclude = name;
-            attr.ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+            attr.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason),
                 Is.EqualTo("Not supported under culture " + name));
         }
 
@@ -269,9 +272,9 @@ namespace NUnit.Framework.Attributes
             if (System.Globalization.CultureInfo.CurrentCulture.Name == name)
                 name = "en-US";
 
-            new CultureAttribute(name).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
+            new CultureAttribute(name).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
+            Assert.That(_test.Properties.Get(PropertyNames.SkipReason),
                 Is.EqualTo("Only supported under culture " + name));
         }
 
@@ -284,8 +287,8 @@ namespace NUnit.Framework.Attributes
 
             CultureAttribute attr = new CultureAttribute();
             attr.Exclude = other;
-            attr.ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            attr.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]
@@ -295,8 +298,8 @@ namespace NUnit.Framework.Attributes
             string other = current == "fr-FR" ? "en-US" : "fr-FR";
             string cultures = current + "," + other;
 
-            new CultureAttribute(cultures).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            new CultureAttribute(cultures).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         #endregion
@@ -306,16 +309,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MaxTimeAttributeSetsMaxTime()
         {
-            new MaxTimeAttribute(2000).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.MaxTime), Is.EqualTo(2000));
+            new MaxTimeAttribute(2000).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.MaxTime), Is.EqualTo(2000));
         }
 
         [Test]
         public void MaxTimeAttributeSetsMaxTimeOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new MaxTimeAttribute(2000).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.MaxTime), Is.EqualTo(2000));
+            _test.RunState = RunState.NotRunnable;
+            new MaxTimeAttribute(2000).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.MaxTime), Is.EqualTo(2000));
         }
 
         #endregion
@@ -325,16 +328,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void PairwiseAttributeSetsJoinType()
         {
-            new PairwiseAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Pairwise"));
+            new PairwiseAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Pairwise"));
         }
 
         [Test]
         public void PairwiseAttributeSetsJoinTypeOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new PairwiseAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Pairwise"));
+            _test.RunState = RunState.NotRunnable;
+            new PairwiseAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Pairwise"));
         }
 
         #endregion
@@ -345,8 +348,8 @@ namespace NUnit.Framework.Attributes
         public void PlatformAttributeRunsTest()
         {
             string myPlatform = GetMyPlatform();
-            new PlatformAttribute(myPlatform).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            new PlatformAttribute(myPlatform).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]
@@ -354,32 +357,35 @@ namespace NUnit.Framework.Attributes
         {
             string notMyPlatform = System.IO.Path.DirectorySeparatorChar == '/'
                 ? "Win" : "Linux";
-            new PlatformAttribute(notMyPlatform).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.Skipped));
+            new PlatformAttribute(notMyPlatform).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
         }
 
         [Test]
         public void PlatformAttributeDoesNotAffectNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
+            _test.RunState = RunState.NotRunnable;
             string myPlatform = GetMyPlatform();
-            new PlatformAttribute(myPlatform).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+            new PlatformAttribute(myPlatform).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
         [Test]
         public void InvalidPlatformAttributeIsNotRunnable()
         {
             var invalidPlatform = "FakePlatform";
-            new PlatformAttribute(invalidPlatform).ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith("Invalid platform name"));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
-                Does.Contain(invalidPlatform));
+            new PlatformAttribute(invalidPlatform).ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.NotRunnable));
+            string? skipReason = (string?)_test.Properties.Get(PropertyNames.SkipReason);
+            Assert.That(skipReason, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(skipReason, Does.StartWith("Invalid platform name"));
+                Assert.That(skipReason, Does.Contain(invalidPlatform));
+            });
         }
 
-        string GetMyPlatform()
+        private string GetMyPlatform()
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
@@ -395,16 +401,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RepeatAttributeSetsRepeatCount()
         {
-            new RepeatAttribute(5).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
+            new RepeatAttribute(5).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
         }
 
         [Test]
         public void RepeatAttributeSetsRepeatCountOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new RepeatAttribute(5).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
+            _test.RunState = RunState.NotRunnable;
+            new RepeatAttribute(5).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.RepeatCount), Is.EqualTo(5));
         }
 
         #endregion
@@ -414,17 +420,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RequiresMTAAttributeSetsApartmentState()
         {
-            new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
+            new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.MTA));
         }
 
         [Test]
         public void RequiresMTAAttributeSetsApartmentStateOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
+            _test.RunState = RunState.NotRunnable;
+            new ApartmentAttribute(ApartmentState.MTA).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.MTA));
         }
 
@@ -435,17 +441,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RequiresSTAAttributeSetsApartmentState()
         {
-            new ApartmentAttribute(ApartmentState.STA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
+            new ApartmentAttribute(ApartmentState.STA).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.STA));
         }
 
         [Test]
         public void RequiresSTAAttributeSetsApartmentStateOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new ApartmentAttribute(ApartmentState.STA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
+            _test.RunState = RunState.NotRunnable;
+            new ApartmentAttribute(ApartmentState.STA).ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.STA));
         }
 
@@ -456,25 +462,28 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
-            new RequiresThreadAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
+            new RequiresThreadAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
 
         [Test]
         public void RequiresThreadAttributeSetsRequiresThreadOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new RequiresThreadAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
+            _test.RunState = RunState.NotRunnable;
+            new RequiresThreadAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
 
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
-            new RequiresThreadAttribute(ApartmentState.STA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
-                Is.EqualTo(ApartmentState.STA));
+            new RequiresThreadAttribute(ApartmentState.STA).ApplyToTest(_test);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
+                Assert.That(_test.Properties.Get(PropertyNames.ApartmentState),
+                    Is.EqualTo(ApartmentState.STA));
+            });
         }
 
         #endregion
@@ -484,50 +493,54 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SequentialAttributeSetsJoinType()
         {
-            new SequentialAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Sequential"));
+            new SequentialAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Sequential"));
         }
 
         [Test]
         public void SequentialAttributeSetsJoinTypeOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new SequentialAttribute().ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Sequential"));
+            _test.RunState = RunState.NotRunnable;
+            new SequentialAttribute().ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.JoinType), Is.EqualTo("Sequential"));
         }
 
         #endregion
 
         #region SetCultureAttribute
 
+        [Test]
         public void SetCultureAttributeSetsSetCultureProperty()
         {
-            new SetCultureAttribute("fr-FR").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SetCulture), Is.EqualTo("fr-FR"));
+            new SetCultureAttribute("fr-FR").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.SetCulture), Is.EqualTo("fr-FR"));
         }
 
+        [Test]
         public void SetCultureAttributeSetsSetCulturePropertyOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new SetCultureAttribute("fr-FR").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SetCulture), Is.EqualTo("fr-FR"));
+            _test.RunState = RunState.NotRunnable;
+            new SetCultureAttribute("fr-FR").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.SetCulture), Is.EqualTo("fr-FR"));
         }
 
         #endregion
 
         #region SetUICultureAttribute
 
+        [Test]
         public void SetUICultureAttributeSetsSetUICultureProperty()
         {
-            new SetUICultureAttribute("fr-FR").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SetUICulture), Is.EqualTo("fr-FR"));
+            new SetUICultureAttribute("fr-FR").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.SetUICulture), Is.EqualTo("fr-FR"));
         }
 
+        [Test]
         public void SetUICultureAttributeSetsSetUICulturePropertyOnNonRunnableTest()
         {
-            test.RunState = RunState.NotRunnable;
-            new SetUICultureAttribute("fr-FR").ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.SetUICulture), Is.EqualTo("fr-FR"));
+            _test.RunState = RunState.NotRunnable;
+            new SetUICultureAttribute("fr-FR").ApplyToTest(_test);
+            Assert.That(_test.Properties.Get(PropertyNames.SetUICulture), Is.EqualTo("fr-FR"));
         }
 
         #endregion

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -9,11 +7,11 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks an assembly, test fixture or test method such that it will only run if explicitly 
-    /// executed from the GUI, command line or included within a test filter. 
+    /// Marks an assembly, test fixture or test method such that it will only run if explicitly
+    /// executed from the GUI, command line or included within a test filter.
     /// The test will not be run simply because an enclosing suite is run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly string? _reason;
@@ -45,7 +43,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
             {
                 test.RunState = RunState.Explicit;
-                if (_reason != null)
+                if (_reason is not null)
                     test.Properties.Set(PropertyNames.SkipReason, _reason);
             }
         }

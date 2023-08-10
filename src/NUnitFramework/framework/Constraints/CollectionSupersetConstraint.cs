@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,25 +26,22 @@ namespace NUnit.Framework.Constraints
             _expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "SupersetOf"; } }
+        public override string DisplayName => "SupersetOf";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "superset of " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "superset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
-        /// Test whether the actual collection is a superset of 
+        /// Test whether the actual collection is a superset of
         /// the expected collection provided.
         /// </summary>
         /// <param name="actual"></param>
@@ -54,7 +49,7 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(IEnumerable actual)
         {
             // Create tally from 'actual' collection, and remove '_expected'.
-            // ExtraItems from tally would be missing items for '_expected' collection. 
+            // ExtraItems from tally would be missing items for '_expected' collection.
             CollectionTally tally = Tally(actual);
             tally.TryRemove(_expected);
 
@@ -92,7 +87,7 @@ namespace NUnit.Framework.Constraints
         {
             private readonly List<object>? _missingItems;
 
-            public CollectionSupersetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? missingItems)
+            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? missingItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _missingItems = missingItems;

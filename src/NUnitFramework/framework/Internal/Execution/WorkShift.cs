@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -29,9 +28,9 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkShift
     {
-        private static readonly Logger log = InternalTrace.GetLogger("WorkShift");
+        private static readonly Logger Log = InternalTrace.GetLogger("WorkShift");
 
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private int _busyCount = 0;
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event that fires when the shift has ended
         /// </summary>
-        public event ShiftChangeEventHandler EndOfShift;
+        public event ShiftChangeEventHandler? EndOfShift;
 
         /// <summary>
         /// The Name of this shift
@@ -68,8 +67,10 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in Queues)
+                {
                     if (!q.IsEmpty)
                         return true;
+                }
 
                 return false;
             }
@@ -101,7 +102,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void AddQueue(WorkItemQueue queue)
         {
-            log.Debug("{0} shift adding queue {1}", Name, queue.Name);
+            Log.Debug("{0} shift adding queue {1}", Name, queue.Name);
 
             Queues.Add(queue);
 
@@ -115,19 +116,19 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="worker"></param>
         public void Assign(TestWorker worker)
         {
-            log.Debug("{0} shift assigned worker {1}", Name, worker.Name);
+            Log.Debug("{0} shift assigned worker {1}", Name, worker.Name);
 
             Workers.Add(worker);
         }
 
-        bool _firstStart = true;
+        private bool _firstStart = true;
 
         /// <summary>
         /// Start or restart processing for the shift
         /// </summary>
         public void Start()
         {
-            log.Info("{0} shift starting", Name);
+            Log.Info("{0} shift starting", Name);
 
             IsActive = true;
 
@@ -145,8 +146,8 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var worker in Workers)
             {
-                worker.Busy += (s, ea) => Interlocked.Increment(ref _busyCount);
-                worker.Idle += (s, ea) =>
+                worker.Busy += (_, _) => Interlocked.Increment(ref _busyCount);
+                worker.Idle += (_, _) =>
                 {
                     // Quick check first using Interlocked.Decrement
                     if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
@@ -173,7 +174,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            log.Info("{0} shift ending", Name);
+            Log.Info("{0} shift ending", Name);
 
             IsActive = false;
 

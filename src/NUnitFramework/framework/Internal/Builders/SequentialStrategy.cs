@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -21,7 +19,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>The test cases.</returns>
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
-            List<ITestCaseData> testCases = new List<ITestCaseData>();
+            List<ITestCaseData> testCases = new();
 
             IEnumerator[] enumerators = new IEnumerator[sources.Length];
             for (int i = 0; i < sources.Length; i++)
@@ -33,13 +31,17 @@ namespace NUnit.Framework.Internal.Builders
                 object?[] testdata = new object?[sources.Length];
 
                 for (int i = 0; i < sources.Length; i++)
+                {
                     if (enumerators[i].MoveNext())
                     {
                         testdata[i] = enumerators[i].Current;
                         gotData = true;
                     }
                     else
+                    {
                         testdata[i] = null;
+                    }
+                }
 
                 if (!gotData)
                     break;

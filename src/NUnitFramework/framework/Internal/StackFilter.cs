@@ -19,21 +19,21 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Single instance of our default filter
         /// </summary>
-        public static StackFilter DefaultFilter = new StackFilter();
+        public static StackFilter DefaultFilter = new();
 
-        private readonly Regex _topOfStackRegex;
-        private readonly Regex _bottomOfStackRegex;
+        private readonly Regex? _topOfStackRegex;
+        private readonly Regex? _bottomOfStackRegex;
 
         /// <summary>
         /// Construct a stack filter instance
         /// </summary>
         /// <param name="topOfStackPattern">Regex pattern used to delete lines from the top of the stack</param>
         /// <param name="bottomOfStackPattern">Regex pattern used to delete lines from the bottom of the stack</param>
-        public StackFilter(string topOfStackPattern, string bottomOfStackPattern)
+        public StackFilter(string? topOfStackPattern, string? bottomOfStackPattern)
         {
-            if (topOfStackPattern != null)
+            if (topOfStackPattern is not null)
                 _topOfStackRegex = new Regex(topOfStackPattern, RegexOptions.Compiled);
-            if (bottomOfStackPattern != null)
+            if (bottomOfStackPattern is not null)
                 _bottomOfStackRegex = new Regex(bottomOfStackPattern, RegexOptions.Compiled);
         }
 
@@ -55,29 +55,31 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="rawTrace">The original stack trace</param>
         /// <returns>A filtered stack trace</returns>
-        public string Filter(string rawTrace)
+        public string? Filter(string? rawTrace)
         {
-            if (rawTrace == null) return null;
+            if (rawTrace is null) return null;
 
             StringReader sr = new StringReader(rawTrace);
             StringWriter sw = new StringWriter();
 
             try
             {
-                string line = sr.ReadLine();
+                var line = sr.ReadLine();
 
-                if (_topOfStackRegex != null)
+                if (_topOfStackRegex is not null)
+                {
                     // First, skip past any Assert, Assume or MultipleAssertBlock lines
-                    while (line != null && _topOfStackRegex.IsMatch(line))
+                    while (line is not null && _topOfStackRegex.IsMatch(line))
                         line = sr.ReadLine();
+                }
 
                 // Copy lines down to the line that invoked the failing method.
                 // This is actually only needed for the compact framework, but
                 // we do it on all platforms for simplicity. Desktop platforms
                 // won't have any System.Reflection lines.
-                while (line != null)
+                while (line is not null)
                 {
-                    if (_bottomOfStackRegex != null && _bottomOfStackRegex.IsMatch(line))
+                    if (_bottomOfStackRegex is not null && _bottomOfStackRegex.IsMatch(line))
                         break;
 
                     sw.WriteLine(line);

@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class CollectionTallyTests
@@ -23,20 +23,20 @@ namespace NUnit.Framework.Internal
         {
             List<string> strings = new List<string>(_testStrings);
 
-            Assert.AreEqual(3, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(0, _collectionTally.Result.ExtraItems.Count);
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(3));
+            Assert.That(_collectionTally.Result.ExtraItems, Is.Empty);
 
             _collectionTally.TryRemove((object)strings[0]);
-            Assert.AreEqual(2, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(0, _collectionTally.Result.ExtraItems.Count);
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(2));
+            Assert.That(_collectionTally.Result.ExtraItems, Is.Empty);
 
             _collectionTally.TryRemove((object)strings[1]);
-            Assert.AreEqual(1, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(0, _collectionTally.Result.ExtraItems.Count);
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(1));
+            Assert.That(_collectionTally.Result.ExtraItems, Is.Empty);
 
             _collectionTally.TryRemove((object)strings[2]);
-            Assert.AreEqual(0, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(0, _collectionTally.Result.ExtraItems.Count);
+            Assert.That(_collectionTally.Result.MissingItems, Is.Empty);
+            Assert.That(_collectionTally.Result.ExtraItems, Is.Empty);
         }
 
         [Test]
@@ -45,8 +45,8 @@ namespace NUnit.Framework.Internal
             List<string> strings = new List<string>(_testStrings);
 
             _collectionTally.TryRemove(strings);
-            Assert.AreEqual(0, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(0, _collectionTally.Result.ExtraItems.Count);
+            Assert.That(_collectionTally.Result.MissingItems, Is.Empty);
+            Assert.That(_collectionTally.Result.ExtraItems, Is.Empty);
         }
 
         [Test]
@@ -54,9 +54,9 @@ namespace NUnit.Framework.Internal
         {
             _collectionTally.TryRemove((object)"notFound");
 
-            Assert.AreEqual(3, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(1, _collectionTally.Result.ExtraItems.Count);
-            Assert.IsTrue(_collectionTally.Result.ExtraItems.Contains("notFound"));
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(3));
+            Assert.That(_collectionTally.Result.ExtraItems, Has.Count.EqualTo(1));
+            Assert.That(_collectionTally.Result.ExtraItems.Contains("notFound"), Is.True);
         }
 
         [Test]
@@ -66,10 +66,10 @@ namespace NUnit.Framework.Internal
 
             _collectionTally.TryRemove(nonExistingElems);
 
-            Assert.AreEqual(3, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(2, _collectionTally.Result.ExtraItems.Count);
-            Assert.IsTrue(_collectionTally.Result.ExtraItems.Contains("notFound"));
-            Assert.IsTrue(_collectionTally.Result.ExtraItems.Contains("notFound2"));
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(3));
+            Assert.That(_collectionTally.Result.ExtraItems, Has.Count.EqualTo(2));
+            Assert.That(_collectionTally.Result.ExtraItems.Contains("notFound"), Is.True);
+            Assert.That(_collectionTally.Result.ExtraItems.Contains("notFound2"), Is.True);
         }
 
         [Test]
@@ -79,9 +79,9 @@ namespace NUnit.Framework.Internal
 
             _collectionTally.TryRemove(someExistingElems);
 
-            Assert.AreEqual(2, _collectionTally.Result.MissingItems.Count);
-            Assert.AreEqual(1, _collectionTally.Result.ExtraItems.Count);
-            Assert.IsTrue(_collectionTally.Result.ExtraItems.Contains("notFound2"));
+            Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(2));
+            Assert.That(_collectionTally.Result.ExtraItems, Has.Count.EqualTo(1));
+            Assert.That(_collectionTally.Result.ExtraItems.Contains("notFound2"), Is.True);
         }
     }
 }

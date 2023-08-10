@@ -4,7 +4,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     [TestFixture(nameof(F.ReturnsNonVoidResultTask))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomTask))]
@@ -16,7 +16,6 @@ namespace NUnit.Framework
         public NonVoidResultAwaitableReturnTypeTests(string methodName)
             : base(methodName)
         {
-
         }
 
         [Test]

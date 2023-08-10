@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -23,9 +21,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual argument</param>
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected override bool Matches(object actual)
+        protected override bool Matches(object? actual)
         {
-            return actual != null && actual.GetType().GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo());
+            return actual is not null && actual.GetType().IsAssignableFrom(expectedType);
         }
     }
 }

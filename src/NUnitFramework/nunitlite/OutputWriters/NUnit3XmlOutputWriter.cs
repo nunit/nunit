@@ -1,13 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Xml;
-using NUnit.Common;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -59,15 +56,15 @@ namespace NUnitLite
             TNode resultNode = result.ToXml(true);
 
             // Insert elements as first child in reverse order
-            if (runSettings != null) // Some platforms don't have settings
+            if (runSettings is not null) // Some platforms don't have settings
                 FrameworkController.InsertSettingsElement(resultNode, runSettings);
             FrameworkController.InsertEnvironmentElement(resultNode);
 
             TNode testRun = MakeTestRunElement(result);
 
-            testRun.ChildNodes.Add(MakeCommandLineElement());
-            testRun.ChildNodes.Add(MakeTestFilterElement(filter));
-            testRun.ChildNodes.Add(resultNode);
+            testRun.AddChildNode(MakeCommandLineElement());
+            testRun.AddChildNode(MakeTestFilterElement(filter));
+            testRun.AddChildNode(resultNode);
 
             testRun.WriteTo(xmlWriter);
         }
@@ -113,7 +110,7 @@ namespace NUnitLite
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (filter != null && !filter.IsEmpty)
+            if (filter is not null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }

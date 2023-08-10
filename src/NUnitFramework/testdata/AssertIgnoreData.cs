@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework;
 
 namespace NUnit.TestData.AssertIgnoreData
@@ -41,7 +40,7 @@ namespace NUnit.TestData.AssertIgnoreData
         [SetUp]
         public void SetUp()
         {
-            Assert.Ignore( "Ignore this test" );
+            Assert.Ignore("Ignore this test");
         }
 
         [Test]

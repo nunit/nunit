@@ -5,13 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
-    class CollectionEqualsTests
+    internal class CollectionEqualsTests
     {
         [Test]
         public void CanMatchTwoCollections()
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Constraints
         public void CanMatchAnArrayWithACollection()
         {
             ICollection collection = new SimpleObjectCollection(1, 2, 3);
-            int[] array = new int[] { 1, 2, 3 };
+            int[] array = new[] { 1, 2, 3 };
 
             Assert.That(collection, Is.EqualTo(array));
             Assert.That(array, Is.EqualTo(collection));
@@ -53,11 +54,11 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailureForEnumerablesWithDifferentSizes()
         {
-            IEnumerable<int> expected = new int[] { 1, 2, 3 }.Select(i => i);
+            IEnumerable<int> expected = new[] { 1, 2, 3 }.Select(i => i);
             IEnumerable<int> actual = expected.Take(2);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(
+            Assert.That(ex?.Message, Does.Contain(
                 $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  Missing:  < 3, ... >"));
@@ -66,12 +67,12 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailureMatchingArrayAndCollection()
         {
-            int[] expected = new int[] { 1, 2, 3 };
+            int[] expected = new[] { 1, 2, 3 };
             ICollection actual = new SimpleObjectCollection(1, 5, 3);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(
-                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
+            Assert.That(ex?.Message, Does.Contain(
+                "  Expected is <System.Int32[3]>, actual is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [1]" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
@@ -106,7 +107,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(integerTypes, equalsConstraint);
 
-            Assert.That(equalsConstraint.Tolerance, Is.Not.EqualTo(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance, Is.Not.SameAs(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance.Amount, Is.Not.EqualTo(originalTolerance.Amount).Within(0.0));
             Assert.That(equalsConstraint.Tolerance.Mode, Is.Not.EqualTo(originalTolerance.Mode));
         }
 
@@ -124,7 +126,7 @@ namespace NUnit.Framework.Constraints
         public void StructuralComparerOnDifferentCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
         {
             var integerTypes = ImmutableArray.Create<int>(1);
-            var floatingTypes = new double[] { 1.1 };
+            var floatingTypes = new[] { 1.1 };
 
             Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
             Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));

@@ -2,11 +2,10 @@
 
 using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Tests for MaxTime decoration.
@@ -14,7 +13,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture, NonParallelizable]
     public class MaxTimeTests
     {
-        [Test,MaxTime(1000)]
+        [Test, MaxTime(1000)]
         public void MaxTimeNotExceeded()
         {
         }
@@ -24,7 +23,7 @@ namespace NUnit.Framework.Attributes
         public void MaxTimeExceeded()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(MaxTimeFixture));
-            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
             ITestResult result = suiteResult.Children.ToArray()[0];
             Assert.That(result.Message, Does.Contain("exceeds maximum of 1ms"));
         }
@@ -33,7 +32,7 @@ namespace NUnit.Framework.Attributes
         public void MaxTimeExceededOnTestCase()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithTestCase));
-            Assert.AreEqual(ResultState.ChildFailure, suiteResult.ResultState);
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
             ITestResult result = suiteResult.Children.ToArray()[0].Children.ToArray()[0];
             Assert.That(result.Message, Does.Contain("exceeds maximum of 1ms"));
         }
@@ -50,9 +49,9 @@ namespace NUnit.Framework.Attributes
         public void FailureReportHasPriorityOverMaxTime()
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithFailure));
-            Assert.AreEqual(ResultState.ChildFailure, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             result = result.Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("Intentional Failure"));
         }
 
@@ -60,9 +59,9 @@ namespace NUnit.Framework.Attributes
         public void ErrorReportHasPriorityOverMaxTime()
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithError));
-            Assert.AreEqual(ResultState.ChildFailure, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
             result = result.Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Error, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
             Assert.That(result.Message, Does.Contain("Exception message"));
         }
     }

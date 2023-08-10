@@ -6,12 +6,12 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ThrowsConstraint is used to test the exception thrown by 
+    /// ThrowsConstraint is used to test the exception thrown by
     /// a delegate by applying a constraint to it.
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
     {
-        private Exception caughtException;
+        private Exception? _caughtException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThrowsConstraint"/> class,
@@ -19,25 +19,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
         public ThrowsConstraint(IConstraint baseConstraint)
-            : base(baseConstraint) { }
+            : base(baseConstraint, string.Empty) { }
 
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.
         /// </summary>
-        public Exception ActualException
-        {
-            get { return caughtException; }
-        }
+        public Exception? ActualException => _caughtException;
 
         #region Constraint Overrides
 
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return BaseConstraint.Description; }
-        }
+        public override string Description => BaseConstraint.Description;
 
         /// <summary>
         /// Executes the code of the delegate and captures any exception.
@@ -50,14 +44,16 @@ namespace NUnit.Framework.Constraints
         {
             var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+            _caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            return new ThrowsConstraintResult(
-                this,
-                caughtException,
-                caughtException != null
-                    ? BaseConstraint.ApplyTo(caughtException)
-                    : null);
+            if (_caughtException is not null)
+            {
+                return new ThrowsConstraintResult(
+                    this,
+                    _caughtException,
+                    BaseConstraint.ApplyTo(_caughtException));
+            }
+            return new ThrowsConstraintResult(this);
         }
 
         /// <summary>
@@ -77,19 +73,25 @@ namespace NUnit.Framework.Constraints
 
         private sealed class ThrowsConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult baseResult;
+            private readonly ConstraintResult? _baseResult;
+
+            public ThrowsConstraintResult(ThrowsConstraint constraint)
+                : base(constraint, null)
+            {
+                Status = ConstraintStatus.Failure;
+            }
 
             public ThrowsConstraintResult(ThrowsConstraint constraint,
                 Exception caughtException,
                 ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
-                if (caughtException != null && baseResult.IsSuccess)
+                if (baseResult.IsSuccess)
                     Status = ConstraintStatus.Success;
                 else
                     Status = ConstraintStatus.Failure;
 
-                this.baseResult = baseResult;
+                _baseResult = baseResult;
             }
 
             /// <summary>
@@ -100,10 +102,10 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (ActualValue == null)
+                if (_baseResult is null)
                     writer.Write("no exception thrown");
                 else
-                    baseResult.WriteActualValueTo(writer);
+                    _baseResult.WriteActualValueTo(writer);
             }
         }
 

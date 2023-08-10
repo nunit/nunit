@@ -7,8 +7,8 @@ namespace NUnit.TestData.CategoryAttributeData
 {
     [TestFixture, InheritableCategory("MyCategory")]
     public abstract class AbstractBase { }
-    
-    [TestFixture, Category( "DataBase" )]
+
+    [TestFixture, Category("DataBase")]
     public class FixtureWithCategories : AbstractBase
     {
         [Test, Category("Long")]
@@ -24,17 +24,15 @@ namespace NUnit.TestData.CategoryAttributeData
         [Test, Category("A-B"), Category("A,B"), Category("A!B"), Category("A+B")]
         public void TestValidSpecialChars() { }
 
-#pragma warning disable 414
-        private static TestCaseData[] Test3Data = new TestCaseData[] {
+        private static readonly TestCaseData[] Test3Data = new TestCaseData[] {
             new TestCaseData(5).SetCategory("Bottom")
         };
-#pragma warning restore 414
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class CriticalAttribute : CategoryAttribute { }
-    
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class InheritableCategoryAttribute : CategoryAttribute
     {
         public InheritableCategoryAttribute(string name) : base(name) { }

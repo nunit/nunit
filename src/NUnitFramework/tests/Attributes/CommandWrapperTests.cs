@@ -1,56 +1,66 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class CommandWrapperTests
     {
         [Test]
         public void CorrectExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsCorrectException");
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsCorrectException));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsCorrectException()
         {
             throw new NullReferenceException();
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         [Test]
         public void NoExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsNoException");
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but no exception was thrown"));
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsNoException));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but no exception was thrown"));
+            });
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsNoException()
         {
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         [Test]
         public void WrongExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsWrongException");
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but got Exception"));
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsWrongException));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but got Exception"));
+            });
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsWrongException()
         {
             throw new Exception();
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         /// <summary>
         /// Extremely simple ExpectedException implementation for use in the test
@@ -82,30 +92,36 @@ namespace NUnit.Framework.Attributes
 
                 public override TestResult Execute(TestExecutionContext context)
                 {
-                    Type caughtType = null;
+                    Type? caughtType = null;
 
                     try
                     {
                         innerCommand.Execute(context);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         if (ex is NUnitException)
-                            ex = ex.InnerException;
+                            ex = ex.InnerException!;
                         caughtType = ex.GetType();
                     }
 
                     if (caughtType == _expectedType)
+                    {
                         context.CurrentResult.SetResult(ResultState.Success);
-                    else if (caughtType != null)
+                    }
+                    else if (caughtType is not null)
+                    {
                         context.CurrentResult.SetResult(ResultState.Failure,
-                            string.Format("Expected {0} but got {1}", _expectedType.Name, caughtType.Name));
+                            $"Expected {_expectedType.Name} but got {caughtType.Name}");
+                    }
                     else
+                    {
                         context.CurrentResult.SetResult(ResultState.Failure,
-                            string.Format("Expected {0} but no exception was thrown", _expectedType.Name));
-                    
+                            $"Expected {_expectedType.Name} but no exception was thrown");
+                    }
+
                     return context.CurrentResult;
-}
+                }
             }
         }
     }

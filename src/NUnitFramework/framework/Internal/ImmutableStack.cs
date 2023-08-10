@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (var current = _head; current != null; current = current.Next)
+            for (var current = _head; current is not null; current = current.Next)
                 yield return current.Value;
         }
 

@@ -9,40 +9,37 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PropOperator : SelfResolvingOperator
     {
-        private readonly string name;
+        private readonly string _name;
 
         /// <summary>
         /// Gets the name of the property to which the operator applies
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name => _name;
 
         /// <summary>
         /// Constructs a PropOperator for a particular named property
         /// </summary>
         public PropOperator(string name)
         {
-            this.name = name;
+            _name = name;
 
-            // Prop stacks on anything and allows only 
+            // Prop stacks on anything and allows only
             // prefix operators to stack on it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
-                stack.Push(new PropertyExistsConstraint(name));
+            if (RightContext is null || RightContext is BinaryOperator)
+                stack.Push(new PropertyExistsConstraint(_name));
             else
-                stack.Push(new PropertyConstraint(name, stack.Pop()));
+                stack.Push(new PropertyConstraint(_name, stack.Pop()));
         }
     }
 }

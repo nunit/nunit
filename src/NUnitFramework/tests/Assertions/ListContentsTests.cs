@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for ListContentsTests.
@@ -11,14 +11,14 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ListContentsTests
     {
-        private static readonly object[] testArray = { "abc", 123, "xyz" };
+        private static readonly object[] TestArray = { "abc", 123, "xyz" };
 
         [Test]
         public void ArraySucceeds()
         {
-            Assert.Contains("abc", testArray);
-            Assert.Contains(123, testArray);
-            Assert.Contains("xyz", testArray, "expected array containing '{0}'", "xyz");
+            Assert.That(TestArray, Has.Some.EqualTo("abc"));
+            Assert.That(TestArray, Has.Some.EqualTo(123));
+            Assert.That(TestArray, Has.Some.EqualTo("xyz"), "expected array containing 'xyz'");
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains("def", testArray));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(TestArray, Has.Some.EqualTo("def")));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -37,24 +37,25 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", Array.Empty<object>() ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<object>(), Has.Some.EqualTo("def")));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void NullArrayIsError()
         {
-            Assert.Throws<ArgumentException>(() => Assert.Contains( "def", null ));
+            string[]? nullList = null;
+            Assert.Throws<ArgumentException>(() => Assert.That(nullList, Has.Some.EqualTo("def")));
         }
 
         [Test]
         public void ArrayListSucceeds()
         {
-            var list = new SimpleObjectList( testArray );
+            var list = new SimpleObjectList(TestArray);
 
-            Assert.Contains( "abc", list );
-            Assert.Contains( 123, list );
-            Assert.Contains( "xyz", list );
+            Assert.That(list, Has.Some.EqualTo("abc"));
+            Assert.That(list, Has.Some.EqualTo(123));
+            Assert.That(list, Has.Some.EqualTo("xyz"));
         }
 
         [Test]
@@ -63,14 +64,14 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new SimpleObjectList( testArray ) ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void DifferentTypesMayBeEqual()
         {
-            Assert.Contains( 123.0, new SimpleObjectList( testArray ) );
+            Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo(123.0));
         }
 
         [Test]

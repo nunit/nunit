@@ -1,11 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Internal;
 using NUnit.TestData.AttributeInheritanceData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class AttributeInheritanceTests
@@ -13,14 +12,14 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InheritedFixtureAttributeIsRecognized()
         {
-            Assert.That( TestBuilder.MakeFixture( typeof (When_collecting_test_fixtures) ) != null );
+            Assert.That(TestBuilder.MakeFixture(typeof(When_collecting_test_fixtures)) is not null);
         }
 
         [Test]
         public void InheritedTestAttributeIsRecognized()
         {
-            Test fixture = TestBuilder.MakeFixture( typeof( When_collecting_test_fixtures ) );
-            Assert.AreEqual( 1, fixture.TestCaseCount );
+            Test fixture = TestBuilder.MakeFixture(typeof(When_collecting_test_fixtures));
+            Assert.That(fixture.TestCaseCount, Is.EqualTo(1));
         }
     }
 }

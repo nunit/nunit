@@ -1,6 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-
-using System;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework
 {
@@ -22,7 +20,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="test">The test that has just been run.</param>
         void AfterTest(ITest test);
-
 
         /// <summary>
         /// Provides the target for the action attribute

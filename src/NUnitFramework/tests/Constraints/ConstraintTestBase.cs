@@ -1,15 +1,17 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     public abstract class ConstraintTestBaseNoData
     {
-        protected Constraint TheConstraint;
         protected string ExpectedDescription = "<NOT SET>";
         protected string StringRepresentation = "<NOT SET>";
+
+        protected abstract Constraint TheConstraint { get; }
 
         [Test]
         public void ProvidesProperDescription()
@@ -26,7 +28,13 @@ namespace NUnit.Framework.Constraints
 
     public abstract class ConstraintTestBase : ConstraintTestBaseNoData
     {
-        [Test, TestCaseSource("SuccessData")]
+        private const string Message = ": Must be implemented in derived class";
+
+        private static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
+
+        private static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
+
+        [Test, TestCaseSource(nameof(SuccessData))]
         public void SucceedsWithGoodValues(object value)
         {
             var constraintResult = TheConstraint.ApplyTo(value);
@@ -38,19 +46,19 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        [Test, TestCaseSource("FailureData")]
+        [Test, TestCaseSource(nameof(FailureData))]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = Environment.NewLine;
+            string nl = Environment.NewLine;
 
             var constraintResult = TheConstraint.ApplyTo(badValue);
-            Assert.IsFalse(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
-            Assert.That( writer.ToString(), Is.EqualTo(
-                TextMessageWriter.Pfx_Expected + ExpectedDescription + NL +
-                TextMessageWriter.Pfx_Actual + message + NL ));
+            Assert.That(writer.ToString(), Is.EqualTo(
+                TextMessageWriter.Pfx_Expected + ExpectedDescription + nl +
+                TextMessageWriter.Pfx_Actual + message + nl));
         }
     }
 }

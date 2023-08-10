@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -56,7 +54,7 @@ namespace NUnit.Framework.Internal
             TestName = data.TestName;
 
             foreach (string key in data.Properties.Keys)
-                this.Properties[key] = data.Properties[key];
+                Properties[key] = data.Properties[key];
         }
 
         private TestParameters(RunState runState, object?[] args)
@@ -93,13 +91,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string? TestName
         {
-            get
-            {
-                return _testName;
-            }
+            get => _testName;
             set
             {
-                Guard.OperationValid(ArgDisplayNames == null || value == null, "TestName cannot be set when argument display names are set.");
+                Guard.OperationValid(ArgDisplayNames is null || value is null, "TestName cannot be set when argument display names are set.");
                 _testName = value;
             }
         }
@@ -115,12 +110,14 @@ namespace NUnit.Framework.Internal
         /// <param name="test">A test.</param>
         public void ApplyToTest(Test test)
         {
-            if (this.RunState != RunState.Runnable)
-                test.RunState = this.RunState;
+            if (RunState != RunState.Runnable)
+                test.RunState = RunState;
 
             foreach (string key in Properties.Keys)
+            {
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+            }
         }
 
         /// <summary>
@@ -136,13 +133,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal string[]? ArgDisplayNames
         {
-            get
-            {
-                return _argDisplayNames;
-            }
+            get => _argDisplayNames;
             set
             {
-                Guard.OperationValid(TestName == null || value == null, "Argument display names cannot be set when TestName is set.");
+                Guard.OperationValid(TestName is null || value is null, "Argument display names cannot be set when TestName is set.");
                 _argDisplayNames = value;
             }
         }

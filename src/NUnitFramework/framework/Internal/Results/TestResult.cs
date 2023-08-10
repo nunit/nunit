@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,7 +48,7 @@ namespace NUnit.Framework.Internal
 
         //        static Logger log = InternalTrace.GetLogger("TestResult");
 
-        private readonly StringBuilder _output = new StringBuilder();
+        private readonly StringBuilder _output = new();
         private double _duration;
 
         /// <summary>
@@ -59,16 +57,16 @@ namespace NUnit.Framework.Internal
         protected int InternalAssertCount;
 
         private ResultState _resultState;
-        private string? _message;
+        private string _message;
         private string? _stackTrace;
 
-        private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
-        private readonly List<TestAttachment> _testAttachments = new List<TestAttachment>();
+        private readonly List<AssertionResult> _assertionResults = new();
+        private readonly List<TestAttachment> _testAttachments = new();
 
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        protected ReaderWriterLockSlim RwLock = new(LockRecursionPolicy.SupportsRecursion);
 
         #endregion
 
@@ -82,6 +80,7 @@ namespace NUnit.Framework.Internal
         {
             Test = test;
             _resultState = ResultState.Inconclusive;
+            _message = string.Empty;
 
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
         }
@@ -113,32 +112,26 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
-            private set { _resultState = value; }
+            private set => _resultState = value;
         }
 
         /// <summary>
         /// Gets the name of the test result
         /// </summary>
-        public virtual string Name
-        {
-            get { return Test.Name; }
-        }
+        public virtual string Name => Test.Name;
 
         /// <summary>
         /// Gets the full name of the test result
         /// </summary>
-        public virtual string FullName
-        {
-            get { return Test.FullName; }
-        }
+        public virtual string FullName => Test.FullName;
 
         /// <summary>
         /// Gets or sets the elapsed time for running the test in seconds
         /// </summary>
         public double Duration
         {
-            get { return _duration; }
-            set { _duration = value >= MIN_DURATION ? value : MIN_DURATION; }
+            get => _duration;
+            set => _duration = value >= MIN_DURATION ? value : MIN_DURATION;
         }
 
         /// <summary>
@@ -169,7 +162,7 @@ namespace NUnit.Framework.Internal
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        public string? Message
+        public string Message
         {
             get
             {
@@ -182,12 +175,8 @@ namespace NUnit.Framework.Internal
                 {
                     RwLock.ExitReadLock();
                 }
-
             }
-            private set
-            {
-                _message = value;
-            }
+            private set => _message = value;
         }
 
         /// <summary>
@@ -209,10 +198,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            private set
-            {
-                _stackTrace = value;
-            }
+            private set => _stackTrace = value;
         }
 
         /// <summary>
@@ -234,10 +220,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            internal set
-            {
-                InternalAssertCount = value;
-            }
+            internal set => InternalAssertCount = value;
         }
 
         /// <summary>
@@ -308,10 +291,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of assertion results associated with the test.
         /// </summary>
-        public IList<AssertionResult> AssertionResults
-        {
-            get { return _assertionResults; }
-        }
+        public IList<AssertionResult> AssertionResults => _assertionResults;
 
         #endregion
 
@@ -370,7 +350,7 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
-                    if (Message != null && Message.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(Message))
                     {
                         TNode reasonNode = thisNode.AddElement("reason");
                         reasonNode.AddElementWithCDATA("message", Message);
@@ -388,8 +368,10 @@ namespace NUnit.Framework.Internal
                 AddAttachmentsElement(thisNode);
 
             if (recursive && HasChildren)
+            {
                 foreach (var child in Children)
                     child.AddToXml(thisNode, recursive);
+            }
 
             return thisNode;
         }
@@ -401,18 +383,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a count of pending failures (from Multiple Assert)
         /// </summary>
-        public int PendingFailures
-        {
-            get { return AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed); }
-        }
+        public int PendingFailures => AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed);
 
         /// <summary>
         /// Gets the worst assertion status (highest enum) in all the assertion results
         /// </summary>
-        public AssertionStatus WorstAssertionStatus
-        {
-            get { return AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status; }
-        }
+        public AssertionStatus WorstAssertionStatus => AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
 
         #endregion
 
@@ -424,7 +400,7 @@ namespace NUnit.Framework.Internal
         /// <param name="resultState">The ResultState to use in the result</param>
         public void SetResult(ResultState resultState)
         {
-            SetResult(resultState, null, null);
+            SetResult(resultState, string.Empty, null);
         }
 
         /// <summary>
@@ -432,7 +408,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
-        public void SetResult(ResultState resultState, string? message)
+        public void SetResult(ResultState resultState, string message)
         {
             SetResult(resultState, message, null);
         }
@@ -443,7 +419,7 @@ namespace NUnit.Framework.Internal
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        public void SetResult(ResultState resultState, string? message, string? stackTrace)
+        public void SetResult(ResultState resultState, string message, string? stackTrace)
         {
             RwLock.EnterWriteLock();
             try
@@ -512,11 +488,11 @@ namespace NUnit.Framework.Internal
                 resultState = resultState.WithSite(FailureSite.TearDown);
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-            if (Message != null)
+            if (!string.IsNullOrEmpty(Message))
                 message = Message + Environment.NewLine + message;
 
             string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
-            if (StackTrace != null)
+            if (StackTrace is not null)
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
@@ -526,7 +502,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
+            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is not null)
                 return ex.InnerException;
 
             return ex;
@@ -536,7 +512,7 @@ namespace NUnit.Framework.Internal
         {
             public ResultState ResultState { get; }
             public string Message { get; }
-            public string StackTrace { get; }
+            public string? StackTrace { get; }
 
             public ExceptionResult(Exception ex, FailureSite site)
             {
@@ -601,7 +577,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Record an assertion result
         /// </summary>
-        public void RecordAssertion(AssertionStatus status, string? message, string? stackTrace)
+        public void RecordAssertion(AssertionStatus status, string message, string? stackTrace)
         {
             RecordAssertion(new AssertionResult(status, message, stackTrace));
         }
@@ -609,11 +585,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Record an assertion result
         /// </summary>
-        public void RecordAssertion(AssertionStatus status, string? message)
+        public void RecordAssertion(AssertionStatus status, string message)
         {
             RecordAssertion(status, message, null);
         }
-
 
         /// <summary>
         /// Creates a failure message incorporating failures
@@ -630,7 +605,7 @@ namespace NUnit.Framework.Internal
 
             int counter = 0;
             foreach (var assertion in AssertionResults)
-                writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+                writer.WriteLine($"  {++counter}) {assertion.Message}");
 
             return writer.ToString();
         }
@@ -648,10 +623,10 @@ namespace NUnit.Framework.Internal
         {
             TNode failureNode = targetNode.AddElement("failure");
 
-            if (Message != null && Message.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(Message))
                 failureNode.AddElementWithCDATA("message", Message);
 
-            if (StackTrace != null && StackTrace.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(StackTrace))
                 failureNode.AddElementWithCDATA("stack-trace", StackTrace);
 
             return failureNode;
@@ -670,9 +645,9 @@ namespace NUnit.Framework.Internal
             {
                 TNode assertionNode = assertionsNode.AddElement("assertion");
                 assertionNode.AddAttribute("result", assertion.Status.ToString());
-                if (assertion.Message != null)
+                if (assertion.Message is not null)
                     assertionNode.AddElementWithCDATA("message", assertion.Message);
-                if (assertion.StackTrace != null)
+                if (assertion.StackTrace is not null)
                     assertionNode.AddElementWithCDATA("stack-trace", assertion.StackTrace);
             }
 
@@ -712,7 +687,7 @@ namespace NUnit.Framework.Internal
 
                 attachmentNode.AddElement("filePath", attachment.FilePath);
 
-                if (attachment.Description != null)
+                if (attachment.Description is not null)
                     attachmentNode.AddElementWithCDATA("description", attachment.Description);
             }
 

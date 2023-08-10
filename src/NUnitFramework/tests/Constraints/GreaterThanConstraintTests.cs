@@ -1,25 +1,25 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class GreaterThanConstraintTests : ComparisonConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new GreaterThanConstraint(5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = ComparisonConstraint = new GreaterThanConstraint(5);
             ExpectedDescription = "greater than 5";
             StringRepresentation = "<greaterthan 5>";
         }
 
-        static object[] SuccessData = new object[] { 6, 5.001 };
-
-        static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 5, "5" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 6, 5.001 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 5, "5" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCompareIComparables()
@@ -57,7 +57,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(196, 200, 5)] // lower range bound + 1
         public void SimpleTolerance(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThan(expected).Within(tolerance));
+#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         [TestCase(4.95, 5.0, 0.05)] // lower range bound
@@ -66,11 +68,13 @@ namespace NUnit.Framework.Constraints
         [TestCase(190, 200, 5)]
         public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance)),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + expected.ToString()));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + expected));
         }
 
         [TestCase(6.0, 5.0, 1)]
@@ -85,7 +89,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(196, 200, 2.5)] // lower range bound + 1
         public void PercentTolerance(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent);
+#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         [TestCase(4.95, 5.0, 1)] // lower range bound
@@ -94,11 +100,13 @@ namespace NUnit.Framework.Constraints
         [TestCase(190, 200, 2.5)]
         public void PercentTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
     }
 }

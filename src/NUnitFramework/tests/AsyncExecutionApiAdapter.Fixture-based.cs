@@ -3,11 +3,11 @@
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
         {

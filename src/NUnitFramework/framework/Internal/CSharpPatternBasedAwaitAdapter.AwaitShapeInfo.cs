@@ -1,8 +1,7 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -23,7 +22,7 @@ namespace NUnit.Framework.Internal
                 _getResultMethod = getResultMethod;
             }
 
-            public static AwaitShapeInfo TryCreate(Type awaitableType)
+            public static AwaitShapeInfo? TryCreate(Type awaitableType)
             {
                 // See https://docs.microsoft.com/dotnet/csharp/language-reference/language-specification/expressions#awaitable-expressions
                 // This section was first established in C# 5 and has not been updated as of C# 7.3.
@@ -34,21 +33,21 @@ namespace NUnit.Framework.Internal
                 // since this code is needed as a fallback anyway.
 
                 var getAwaiterMethod = awaitableType.GetNonGenericPublicInstanceMethod("GetAwaiter", Type.EmptyTypes);
-                if (getAwaiterMethod == null || getAwaiterMethod.GetGenericArguments().Length != 0) return null;
+                if (getAwaiterMethod is null || getAwaiterMethod.GetGenericArguments().Length != 0) return null;
 
                 var awaiterType = getAwaiterMethod.ReturnType;
                 var notifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.INotifyCompletion");
-                if (notifyCompletionInterface == null) return null;
+                if (notifyCompletionInterface is null) return null;
                 var onCompletedMethod = notifyCompletionInterface.GetNonGenericPublicInstanceMethod("OnCompleted", new[] { typeof(Action) });
-                if (onCompletedMethod == null) return null;
+                if (onCompletedMethod is null) return null;
 
                 var isCompletedProperty = awaiterType.GetPublicInstanceProperty("IsCompleted", Type.EmptyTypes);
-                if (isCompletedProperty == null || isCompletedProperty.PropertyType != typeof(bool)) return null;
+                if (isCompletedProperty is null || isCompletedProperty.PropertyType != typeof(bool)) return null;
                 var isCompletedGetter = isCompletedProperty.GetGetMethod();
-                if (isCompletedGetter == null) return null;
+                if (isCompletedGetter is null) return null;
 
                 var getResultMethod = awaiterType.GetNonGenericPublicInstanceMethod("GetResult", Type.EmptyTypes);
-                if (getResultMethod == null) return null;
+                if (getResultMethod is null) return null;
 
                 var criticalNotifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.ICriticalNotifyCompletion");
                 var unsafeOnCompletedMethod = criticalNotifyCompletionInterface?.GetNonGenericPublicInstanceMethod("UnsafeOnCompleted", new[] { typeof(Action) });

@@ -1,16 +1,18 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.AssertMultipleData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     public class AssertMultipleTests
     {
-        private static readonly ComplexNumber _complex = new ComplexNumber(5.2, 3.9);
+        private static readonly ComplexNumber Complex = new ComplexNumber(5.2, 3.9);
 
         [TestCase(nameof(AM.EmptyBlock), 0)]
         [TestCase(nameof(AM.SingleAssertSucceeds), 1)]
@@ -74,13 +76,27 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.Message, Contains.Substring($"{invalidAssert} may not be used in a multiple assertion block."));
         }
 
-        private ITestResult CheckResult(string methodName, ResultState expectedResultState, int expectedAsserts, params string[] assertionMessageRegex)
+        [Test]
+        public async Task AssertMultipleAsyncSucceeds()
+        {
+            await Assert.MultipleAsync(async () =>
+            {
+                await Assert.ThatAsync(() => Task.FromResult(42), Is.EqualTo(42));
+                Assert.That("hello", Is.EqualTo("hello"));
+                await Assert.ThatAsync(() => Task.FromException(new ArgumentNullException()), Throws.ArgumentNullException);
+            });
+        }
+
+        private static ITestResult CheckResult(string methodName, ResultState expectedResultState, int expectedAsserts, params string[] assertionMessageRegex)
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
-            Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
-            Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
+                Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            });
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
@@ -102,29 +118,50 @@ namespace NUnit.Framework.Assertions
                 {
                     // Since the order of argument evaluation is not guaranteed, we don't
                     // want 'i' to appear more than once in the Assert statement.
-                    string errmsg = string.Format("AssertionResult {0}", i + 1);
+                    string errmsg = $"AssertionResult {i + 1}";
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
-                    // NOTE: This test expects the stack trace to contain the name of the method 
+                    // NOTE: This test expects the stack trace to contain the name of the method
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-
-                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
-                    {
-                        Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
-                    });
+                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(
+                        () => Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg));
                 }
             }
 
             return result;
+        }
+
+        [Test]
+        public void AssertMultiple_OnlyThrowsForCurrentScope()
+        {
+            try
+            {
+                // Place one failure in the context
+                Assert.That(false);
+            }
+            catch { }
+
+            var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
+            var previousFailureCount = currentResult.AssertionResults.Count;
+            Assume.That(previousFailureCount, Is.GreaterThan(0));
+
+            Assert.Multiple(() => { });
+
+            // The assert multiple shouldn't've triggered a failure
+            Assert.That(currentResult.AssertionResults, Has.Count.EqualTo(previousFailureCount));
+
+            // If we get this far, the test is good so we should clean up the context from the intentional failure above
+            currentResult.SetResult(ResultState.Inconclusive, string.Empty, null);
+            currentResult.AssertionResults.Clear();
         }
     }
 
     [Explicit("Used to display error messages for visual confirmation")]
     public class MultipleAssertDemo
     {
-        private static readonly ComplexNumber _complex = new ComplexNumber(5.2, 3.9);
+        private static readonly ComplexNumber Complex = new ComplexNumber(5.2, 3.9);
 
         [Test]
         // Shows multiple failures including one from Assert.Fail
@@ -132,8 +169,8 @@ namespace NUnit.Framework.Assertions
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(_complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 Assert.Fail("Assert.Fail Called");
             });
         }
@@ -144,10 +181,29 @@ namespace NUnit.Framework.Assertions
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(_complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 throw new Exception("Simulated Error");
             });
+        }
+    }
+
+    [Explicit("Used to verify that further failures do not skip the rest of the execution")]
+    public class MultipleAssertFailureAccumulationDemo
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            Console.WriteLine("Teardown Start, expect to see a Teardown End message");
+            Assert.Multiple(() => Assert.That(true));
+            Console.WriteLine("Teardown End");
+        }
+
+        [Test]
+        public void AssertFailureAccumulationDemo()
+        {
+            Console.WriteLine("Test Start");
+            Assert.That(false);
         }
     }
 

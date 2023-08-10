@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -15,7 +13,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestFixtureData : TestFixtureParameters
     {
-
         #region Constructors
 
         /// <summary>
@@ -23,7 +20,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestFixtureData(params object?[]? args)
-            : base(args == null ? new object?[] { null } : args)
+            : base(args ?? new object?[] { null })
         {
         }
 
@@ -83,7 +80,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test fixture as explicit.
         /// </summary>
-        public TestFixtureData Explicit()	{
+        public TestFixtureData Explicit()
+        {
             RunState = RunState.Explicit;
             return this;
         }

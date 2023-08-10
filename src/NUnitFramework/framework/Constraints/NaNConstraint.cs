@@ -11,10 +11,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "NaN"; }
-        }
+        public override string Description => "NaN";
 
         /// <summary>
         /// Test that the actual value is an NaN
@@ -23,7 +20,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual, 
+            return new ConstraintResult(this, actual,
                 actual is double d && double.IsNaN(d) ||
                 actual is float f && float.IsNaN(f));
         }

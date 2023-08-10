@@ -1,13 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -15,7 +12,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// TypeHelper provides static methods that operate on Types.
     /// </summary>
-    public class TypeHelper
+    public static class TypeHelper
     {
         private const int STRING_MAX = 40;
         private const int STRING_LIMIT = STRING_MAX - 3;
@@ -31,9 +28,9 @@ namespace NUnit.Framework.Internal
             if (type.IsGenericParameter)
                 return type.Name;
 
-            if (type.GetTypeInfo().IsGenericType)
+            if (type.IsGenericType)
             {
-                string name = type.FullName;
+                string name = type.FullName();
                 int index = name.IndexOf('[');
                 if (index >= 0) name = name.Substring(0, index);
 
@@ -46,7 +43,7 @@ namespace NUnit.Framework.Internal
                 StringBuilder sb = new StringBuilder();
 
                 bool firstClassSeen = false;
-                foreach (string nestedClass in name.Split('+'))
+                foreach (string nestedClass in name.Tokenize('+'))
                 {
                     if (firstClassSeen)
                         sb.Append("+");
@@ -71,16 +68,19 @@ namespace NUnit.Framework.Internal
                         sb.Append(">");
                     }
                     else
+                    {
                         sb.Append(nestedClass);
+                    }
                 }
 
                 return sb.ToString();
             }
 
-            int lastdot = type.FullName.LastIndexOf('.');
+            string typeFullName = type.FullName();
+            int lastdot = typeFullName.LastIndexOf('.');
             return lastdot >= 0
-                ? type.FullName.Substring(lastdot + 1)
-                : type.FullName;
+                ? typeFullName.Substring(lastdot + 1)
+                : typeFullName;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal
         public static string GetDisplayName(Type type, object?[]? arglist)
         {
             string baseName = GetDisplayName(type);
-            if (arglist == null || arglist.Length == 0)
+            if (arglist is null || arglist.Length == 0)
                 return baseName;
 
             StringBuilder sb = new StringBuilder(baseName);
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
                 if (i > 0) sb.Append(",");
 
                 object? arg = arglist[i];
-                string? display = arg == null ? "null" : arg.ToString();
+                string display = arg?.ToString() ?? "null";
 
                 if (arg is double || arg is float)
                 {
@@ -111,9 +111,18 @@ namespace NUnit.Framework.Internal
                         display += ".0";
                     display += arg is double ? "d" : "f";
                 }
-                else if (arg is decimal) display += "m";
-                else if (arg is long) display += "L";
-                else if (arg is ulong) display += "UL";
+                else if (arg is decimal)
+                {
+                    display += "m";
+                }
+                else if (arg is long)
+                {
+                    display += "L";
+                }
+                else if (arg is ulong)
+                {
+                    display += "UL";
+                }
                 else if (arg is string)
                 {
                     if (display.Length > STRING_MAX)
@@ -135,8 +144,8 @@ namespace NUnit.Framework.Internal
         public static bool TryGetBestCommonType(Type? type1, Type? type2, [NotNullIfNotNull("type1"), NotNullIfNotNull("type2")] out Type? bestCommonType)
         {
             if (type1 == type2) { bestCommonType = type1; return true; }
-            if (type1 == null) { bestCommonType = type2; return true; }
-            if (type2 == null) { bestCommonType = type1; return true; }
+            if (type1 is null) { bestCommonType = type2; return true; }
+            if (type2 is null) { bestCommonType = type1; return true; }
 
             if (TypeHelper.IsNumeric(type1) && TypeHelper.IsNumeric(type2))
             {
@@ -229,15 +238,17 @@ namespace NUnit.Framework.Internal
                             convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
                         else
                             if (targetType == typeof(long))
-                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                            else
+                            convert = arg is int || arg is short || arg is byte || arg is sbyte;
+                        else
                                 if (targetType == typeof(short))
-                                    convert = arg is byte || arg is sbyte;
+                            convert = arg is byte || arg is sbyte;
                     }
 
                     if (convert)
+                    {
                         arglist[i] = Convert.ChangeType(arg, targetType,
                             System.Globalization.CultureInfo.InvariantCulture);
+                    }
                 }
             }
         }
@@ -266,7 +277,7 @@ namespace NUnit.Framework.Internal
                 {
                     for (int j = 0; j < arglist.Length; j++)
                     {
-                        if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
+                        if (parameters[j].ParameterType.Equals(typeParameters[i]))
                         {
                             if (!TypeHelper.TryGetBestCommonType(
                                 typeArgs[i],
@@ -279,14 +290,14 @@ namespace NUnit.Framework.Internal
                         }
                     }
 
-                    if (typeArgs[i] == null)
+                    if (typeArgs[i] is null)
                     {
                         typeArgs = null;
                         break;
                     }
                 }
 
-                if (typeArgs != null)
+                if (typeArgs is not null)
                 {
                     typeArgsOut = typeArgs!;
                     return true;
@@ -303,13 +314,13 @@ namespace NUnit.Framework.Internal
         /// <returns>An array of Types for the interfaces.</returns>
         public static Type[] GetDeclaredInterfaces(Type type)
         {
-            List<Type> interfaces = new List<Type>(type.GetInterfaces());
+            List<Type> interfaces = new(type.GetInterfaces());
 
-            if (type.GetTypeInfo().BaseType == typeof(object))
+            if (type.BaseType is null || type.BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
-            List<Type> declaredInterfaces = new List<Type>();
+            List<Type> baseInterfaces = new(type.BaseType.GetInterfaces());
+            List<Type> declaredInterfaces = new();
 
             foreach (Type interfaceType in interfaces)
             {
@@ -342,7 +353,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsTupleInternal(Type type, string tupleName)
         {
-            string typeName = type.FullName;
+            string typeName = type.FullName();
 
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
                 return false;
@@ -363,11 +374,9 @@ namespace NUnit.Framework.Internal
         /// can be <see langword="null"/>, the cast succeeds just like the C# language feature.
         /// </summary>
         /// <param name="obj">The object to cast.</param>
-        internal static bool CanCast<T>(object obj)
+        internal static bool CanCast<T>(object? obj)
         {
-            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
-            //                                           ↓
-            return obj is T || (obj == null && default(T)! == null);
+            return obj is T || (obj is null && default(T) is null);
         }
 
         /// <summary>
@@ -377,7 +386,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="obj">The object to cast.</param>
         /// <param name="value">The value of the object, if the cast succeeded.</param>
-        internal static bool TryCast<T>(object obj, [MaybeNull] out T value)
+        internal static bool TryCast<T>(object? obj, [NotNullWhen(true)] out T? value)
         {
             if (obj is T tObj)
             {
@@ -385,12 +394,19 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            // Workaround for https://github.com/dotnet/roslyn/issues/36039, fixed in VS 16.5
-            //                ↓
-            value = default(T)!;
-            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
-            //                              ↓
-            return obj == null && default(T)! == null;
+            value = default(T);
+            return obj is null && default(T) is null;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Type.FullName"/> if available.
+        /// </summary>
+        /// <param name="type">The type to get the <see cref="Type.FullName"/> for.</param>
+        /// <returns><see cref="Type.FullName"/> if available, throws otherwise.</returns>
+        /// <exception cref="InvalidOperationException">If <see cref="Type.FullName"/> returns <see langword="null"/>.</exception>
+        internal static string FullName(this Type type)
+        {
+            return type.FullName ?? throw new InvalidOperationException("No name for type: " + type);
         }
     }
 }

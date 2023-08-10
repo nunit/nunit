@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     /// <summary>
     /// ObjectComparer is used in testing to ensure that only
@@ -14,7 +13,7 @@ namespace NUnit.TestUtilities.Comparers
         public bool WasCalled = false;
         public static readonly IComparer Default = new ObjectComparer();
 
-        int IComparer.Compare(object x, object y)
+        int IComparer.Compare(object? x, object? y)
         {
             WasCalled = true;
             return Comparer.Default.Compare(x, y);

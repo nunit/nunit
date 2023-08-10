@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,9 +11,8 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// ExceptionHelper provides static methods for working with exceptions
     /// </summary>
-    public class ExceptionHelper
+    public static class ExceptionHelper
     {
-
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
@@ -33,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception.</param>
         /// <param name="excludeExceptionNames">Flag indicating whether exception names should be excluded.</param>
         /// <returns>A combined message string.</returns>
-        public static string BuildMessage(Exception exception, bool excludeExceptionNames=false)
+        public static string BuildMessage(Exception exception, bool excludeExceptionNames = false)
         {
             Guard.ArgumentNotNull(exception, nameof(exception));
 
@@ -102,14 +99,18 @@ namespace NUnit.Framework.Internal
                 sb.AppendLine();
                 sb.Append(message);
             }
-            else if (data.Value.Count != 0)
+            else
             {
-                sb.AppendLine();
-                sb.Append("Data:");
-                foreach (DictionaryEntry kvp in data.Value)
+                IDictionary dictionary = data.Value!;
+                if (dictionary.Count != 0)
                 {
                     sb.AppendLine();
-                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    sb.Append("Data:");
+                    foreach (DictionaryEntry kvp in dictionary)
+                    {
+                        sb.AppendLine();
+                        sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    }
                 }
             }
         }
@@ -120,10 +121,17 @@ namespace NUnit.Framework.Internal
 
             if (exception is ReflectionTypeLoadException reflectionException)
             {
-                result.AddRange(reflectionException.LoaderExceptions);
+                foreach (var innerException in reflectionException.LoaderExceptions)
+                {
+                    if (innerException is not null)
+                        result.Add(exception);
+                }
 
                 foreach (var innerException in reflectionException.LoaderExceptions)
-                    result.AddRange(FlattenExceptionHierarchy(innerException));
+                {
+                    if (innerException is not null)
+                        result.AddRange(FlattenExceptionHierarchy(innerException));
+                }
             }
             if (exception is AggregateException aggregateException)
             {
@@ -132,7 +140,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in aggregateException.InnerExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-            else if (exception.InnerException != null)
+            else if (exception.InnerException is not null)
             {
                 result.Add(exception.InnerException);
                 result.AddRange(FlattenExceptionHierarchy(exception.InnerException));
@@ -149,7 +157,7 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
-                parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
+                parameterlessDelegate.GetType().GetMethod("Invoke")?.GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
                 parameterName);
 

@@ -3,19 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Tests</RootNamespace>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

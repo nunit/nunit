@@ -1,20 +1,18 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using static NUnit.Framework.TestContext;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class PropertyBagAdapterTests
     {
-        private IPropertyBag _source;
-        private PropertyBagAdapter _adapter;
+        private readonly IPropertyBag _source;
+        private readonly PropertyBagAdapter _adapter;
 
-        [SetUp]
-        public void SetUp()
+        public PropertyBagAdapterTests()
         {
             _source = new PropertyBag();
 
@@ -28,17 +26,23 @@ namespace NUnit.Framework.Internal
         [Test]
         public void PropertyBagAdapter_Get_CanAccessKeysFromSourceIPropertyBag()
         {
-            Assert.AreEqual("val1", _adapter.Get("key"));
-            Assert.AreEqual(42, _adapter.Get("meaningOfLife"));
-            Assert.AreEqual(null, _adapter.Get("nonExistantKey"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_adapter.Get("key"), Is.EqualTo("val1"));
+                Assert.That(_adapter.Get("meaningOfLife"), Is.EqualTo(42));
+                Assert.That(_adapter.Get("nonExistentKey"), Is.EqualTo(null));
+            });
         }
 
         [Test]
         public void PropertyBagAdapter_ContainsKeys()
         {
-            Assert.IsTrue(_adapter.ContainsKey("key"));
-            Assert.IsTrue(_adapter.ContainsKey("meaningOfLife"));
-            Assert.IsFalse(_adapter.ContainsKey("nonExistantKey"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_adapter.ContainsKey("key"), Is.True);
+                Assert.That(_adapter.ContainsKey("meaningOfLife"), Is.True);
+                Assert.That(_adapter.ContainsKey("nonExistentKey"), Is.False);
+            });
         }
 
         [Test]
@@ -47,36 +51,38 @@ namespace NUnit.Framework.Internal
             var enumerable = _adapter["key"];
 
             var asList = new List<object>(enumerable);
-            Assert.AreEqual(2, asList.Count);
-            CollectionAssert.Contains(asList, "val1");
-            CollectionAssert.Contains(asList, "val2");
+            Assert.That(asList, Has.Count.EqualTo(2));
+            Assert.That(asList, Contains.Item("val1"));
+            Assert.That(asList, Contains.Item("val2"));
         }
 
         [Test]
         public void PropertyBagAdapter_Count()
         {
-            Assert.AreEqual(2, _adapter.Count("key"));
+            Assert.That(_adapter.Count("key"), Is.EqualTo(2));
         }
 
         [Test]
         public void PropertyBagAdapter_Keys()
         {
             var actual = _adapter.Keys;
-            var expected = new string[] { "key", "meaningOfLife" };
+            var expected = new[] { "key", "meaningOfLife" };
 
-            CollectionAssert.AreEquivalent(expected, actual);
+            Assert.That(actual, Is.EquivalentTo(expected));
         }
 
         [Test]
         public void PropertyBagAdapter_UpdatesWhenSourcePropertyBagUpdates()
         {
             _source.Add("newKey", "newVal");
-
-            Assert.IsTrue(_adapter.ContainsKey("newKey"));
-            Assert.AreEqual("newVal", _adapter.Get("newKey"));
-            CollectionAssert.AreEquivalent(new string[] { "newVal" }, _adapter["newKey"]);
-            Assert.AreEqual(1, _adapter.Count("newKey"));
-            CollectionAssert.AreEquivalent(new string[] { "key", "meaningOfLife", "newKey" }, _adapter.Keys);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_adapter.ContainsKey("newKey"), Is.True);
+                Assert.That(_adapter.Get("newKey"), Is.EqualTo("newVal"));
+                Assert.That(_adapter["newKey"], Is.EquivalentTo(new[] { "newVal" }));
+                Assert.That(_adapter.Count("newKey"), Is.EqualTo(1));
+                Assert.That(_adapter.Keys, Is.EquivalentTo(new[] { "key", "meaningOfLife", "newKey" }));
+            });
         }
     }
 }

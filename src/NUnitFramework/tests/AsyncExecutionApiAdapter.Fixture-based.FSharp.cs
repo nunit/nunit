@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private sealed class FSharpTaskReturningTestMethodAdapter : AsyncExecutionApiAdapter
         {

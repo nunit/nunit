@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Threading;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -23,12 +20,12 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            BeforeTest = (context) =>
+            BeforeTest = _ =>
             {
                 action.BeforeTest(Test);
             };
 
-            AfterTest = (context) =>
+            AfterTest = _ =>
             {
                 action.AfterTest(Test);
             };

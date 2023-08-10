@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -17,13 +14,13 @@ namespace NUnit.Framework.Internal
         /// Called when a test has just started
         /// </summary>
         /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test){}
+        public void TestStarted(ITest test) { }
 
         /// <summary>
         /// Called when a test case has finished
         /// </summary>
         /// <param name="result">The result of the test</param>
-        public void TestFinished(ITestResult result){}
+        public void TestFinished(ITestResult result) { }
 
         /// <summary>
         /// Called when a test produces output for immediate display
@@ -47,9 +44,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        public static ITestListener NULL
-        {
-            get { return new TestListener();}
-        }
+        public static ITestListener NULL => new TestListener();
     }
 }

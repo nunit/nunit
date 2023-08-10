@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will check files and directories.
         /// </summary>
-        public FileOrDirectoryExistsConstraint(){}
+        public FileOrDirectoryExistsConstraint() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentNullException(nameof(actual), "The actual value must be a non-null string" + ErrorSubstring);
 
             if (actual is string stringValue)

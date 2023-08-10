@@ -48,15 +48,15 @@ namespace NUnit.Common
 
         public override string ToString()
         {
-            return Text != null
-                ? Kind.ToString() + ":" + Text
-                : Kind.ToString();
+            if (Text is null)
+                return Kind.ToString();
+            return $"{Kind}:{Text}";
         }
 
         public static bool operator ==(Token t1, Token t2)
         {
-            bool t1Null = ReferenceEquals(t1, null);
-            bool t2Null = ReferenceEquals(t2, null);
+            bool t1Null = t1 is null;
+            bool t2Null = t2 is null;
 
             if (t1Null && t2Null)
                 return true;
@@ -94,7 +94,7 @@ namespace NUnit.Common
 
         public Tokenizer(string input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             _input = input;
@@ -105,7 +105,7 @@ namespace NUnit.Common
         {
             get
             {
-                if (_lookahead == null)
+                if (_lookahead is null)
                     _lookahead = GetNextToken();
 
                 return _lookahead;
@@ -143,12 +143,14 @@ namespace NUnit.Common
                 case '=':
                 case '!':
                     GetChar();
-                    foreach(string dbl in DOUBLE_CHAR_SYMBOLS)
+                    foreach (string dbl in DOUBLE_CHAR_SYMBOLS)
+                    {
                         if (ch == dbl[0] && NextChar == dbl[1])
                         {
                             GetChar();
                             return new Token(TokenKind.Symbol, dbl) { Pos = pos };
                         }
+                    }
 
                     return new Token(TokenKind.Symbol, ch);
 
@@ -213,13 +215,7 @@ namespace NUnit.Common
         /// <summary>
         /// Peek ahead at the next character in input
         /// </summary>
-        private char NextChar
-        {
-            get
-            {
-                return _index < _input.Length ? _input[_index] : EOF_CHAR;
-            }
-        }
+        private char NextChar => _index < _input.Length ? _input[_index] : EOF_CHAR;
 
         private void SkipBlanks()
         {

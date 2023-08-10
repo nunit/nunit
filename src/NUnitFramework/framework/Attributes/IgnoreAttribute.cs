@@ -1,8 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -13,7 +12,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as being ignored. Ignored tests result in a warning message when the tests are run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly string _reason;
@@ -30,7 +29,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// The date in the future to stop ignoring the test as a string in UTC time. 
+        /// The date in the future to stop ignoring the test as a string in UTC time.
         /// For example for a date and time, "2014-12-25 08:10:00Z" or for just a date,
         /// "2014-12-25". If just a date is given, the Ignore will expire at midnight UTC.
         /// </summary>
@@ -39,10 +38,12 @@ namespace NUnit.Framework
         /// as runnable. Tests with an ignore until date will have an IgnoreUntilDate
         /// property set which will appear in the test results.
         /// </remarks>
-        /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
+        /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception>
+        [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+        [DisallowNull]
         public string? Until
         {
-            get { return _until; }
+            get => _until;
             set
             {
                 _until = value;
@@ -67,7 +68,7 @@ namespace NUnit.Framework
                         test.RunState = RunState.Ignored;
                         test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
                     }
-                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
+                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
 
                     return;
                 }

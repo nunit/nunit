@@ -12,15 +12,10 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class XmlSerializableConstraint : Constraint
     {
-        private XmlSerializer serializer;
-
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return "XML serializable"; }
-        }
+        public override string Description => "XML serializable";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -29,7 +24,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if(actual == null)
+            if (actual is null)
                 throw new ArgumentNullException(nameof(actual));
 
             MemoryStream stream = new MemoryStream();
@@ -38,13 +33,13 @@ namespace NUnit.Framework.Constraints
 
             try
             {
-                serializer = new XmlSerializer(actual.GetType());
+                var serializer = new XmlSerializer(actual.GetType());
 
                 serializer.Serialize(stream, actual);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                succeeded = serializer.Deserialize(stream) != null;
+                succeeded = serializer.Deserialize(stream) is not null;
             }
             catch (NotSupportedException)
             {

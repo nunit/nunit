@@ -13,16 +13,16 @@ namespace NUnit.Framework
 
     internal struct Result<T>
     {
-        private readonly T _value;
-        private readonly string _errorMessage;
+        private readonly T? _value;
+        private readonly string? _errorMessage;
 
-        private Result(T value, string errorMessage)
+        private Result(T? value, string? errorMessage)
         {
             _value = value;
             _errorMessage = errorMessage;
         }
 
-        public static Result<T> Success(T value)
+        public static Result<T> Success(T? value)
         {
             return new Result<T>(value, errorMessage: null);
         }
@@ -32,26 +32,26 @@ namespace NUnit.Framework
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Error message must be specified.", nameof(message));
 
-            return new Result<T>(default(T), message);
+            return new Result<T>(default, message);
         }
 
-        public bool IsSuccess(out T value)
+        public bool IsSuccess(out T? value)
         {
             value = _value;
             return _errorMessage is null;
         }
 
-        public bool IsError(out string message)
+        public bool IsError(out string? message)
         {
             message = _errorMessage;
-            return _errorMessage != null;
+            return _errorMessage is not null;
         }
 
-        public T Value
+        public T? Value
         {
             get
             {
-                if (_errorMessage != null) throw new InvalidOperationException("The result is not success.");
+                if (_errorMessage is not null) throw new InvalidOperationException("The result is not success.");
                 return _value;
             }
         }

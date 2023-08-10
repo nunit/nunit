@@ -3,10 +3,11 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Legacy;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
-using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     [NonParallelizable]
@@ -147,7 +148,7 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTest(fixture);
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
+            Assert.That(RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter, Is.EqualTo(3));
             BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
@@ -216,12 +217,21 @@ namespace NUnit.Framework.Attributes
         #region Assembly level InstancePerTestCase
 
 #if NETFRAMEWORK
+
+        private readonly string[] _referenceAssemblies = new[]
+        {
+            typeof(Test).Assembly.Location,
+            typeof(BaseLifeCycle).Assembly.Location,
+            typeof(DirectoryAssert).Assembly.Location
+        };
+
         [Test]
         public void AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelFixtureLifeCycleTest.Code, new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                AssemblyLevelFixtureLifeCycleTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -234,9 +244,9 @@ namespace NUnit.Framework.Attributes
         public void FixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycle()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                OverrideAssemblyLevelFixtureLifeCycleTest.Code,
-                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                OverrideAssemblyLevelFixtureLifeCycleTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -249,9 +259,9 @@ namespace NUnit.Framework.Attributes
         public void OuterFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                NestedOverrideAssemblyLevelFixtureLifeCycleTest.OuterClass,
-                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.OuterClass, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -264,9 +274,9 @@ namespace NUnit.Framework.Attributes
         public void InnerFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                NestedOverrideAssemblyLevelFixtureLifeCycleTest.InnerClass,
-                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.InnerClass, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -279,9 +289,9 @@ namespace NUnit.Framework.Attributes
         public void BaseLifecycleShouldOverrideAssemblyLevelLifeCycle()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                InheritedOverrideTest.InheritClassWithOtherLifecycle,
-                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                InheritedOverrideTest.InheritClassWithOtherLifecycle, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -294,9 +304,9 @@ namespace NUnit.Framework.Attributes
         public void BaseLifecycleFromOtherAssemblyShouldOverrideAssemblyLevelLifeCycle()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                InheritedOverrideTest.InheritClassWithOtherLifecycleFromOtherAssembly,
-                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+                InheritedOverrideTest.InheritClassWithOtherLifecycleFromOtherAssembly, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -309,8 +319,9 @@ namespace NUnit.Framework.Attributes
         public void GivenFixtureWithTestFixtureSource_AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelLifeCycleTestFixtureSourceTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelLifeCycleTestFixtureSourceTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -322,8 +333,9 @@ namespace NUnit.Framework.Attributes
         public void GivenFixtureWithTestCases_AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelLifeCycleFixtureWithTestCasesTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelLifeCycleFixtureWithTestCasesTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -335,8 +347,9 @@ namespace NUnit.Framework.Attributes
         public void GivenFixtureWithTestCaseSource_AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelLifeCycleFixtureWithTestCaseSourceTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelLifeCycleFixtureWithTestCaseSourceTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -348,8 +361,9 @@ namespace NUnit.Framework.Attributes
         public void GivenFixtureWithValuesAttribute_AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelLifeCycleFixtureWithValuesTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelLifeCycleFixtureWithValuesTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
@@ -361,8 +375,9 @@ namespace NUnit.Framework.Attributes
         public void GivenFixtureWithTheory_AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelLifeCycleFixtureWithTheoryTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelLifeCycleFixtureWithTheoryTest.Code, _referenceAssemblies);
             var testType = asm.GetType("FixtureUnderTest");
+            Assert.That(testType, Is.Not.Null);
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);

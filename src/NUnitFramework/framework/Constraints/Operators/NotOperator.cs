@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
         {
             // Not stacks on anything and only allows other
             // prefix ops to stack on top of it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>

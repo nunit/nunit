@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestData;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class AsyncSetupTeardownTests
     {
@@ -73,16 +74,16 @@ namespace NUnit.Framework.Internal
 
         private IEnumerable<IMethodInfo> Success
         {
-            get { yield return Method("SuccessfulAsyncMethod"); }
+            get { yield return Method(nameof(AsyncSetupTearDownFixture.SuccessfulAsyncMethod)); }
         }
         private IEnumerable<IMethodInfo> Failure
         {
-            get { yield return Method("FailingAsyncMethod"); }
+            get { yield return Method(nameof(AsyncSetupTearDownFixture.FailingAsyncMethod)); }
         }
 
         private IMethodInfo Method(string methodName)
         {
-            return new MethodWrapper(_testObject.GetType(), _testObject.GetType().GetMethod(methodName));
+            return new MethodWrapper(_testObject.GetType(), methodName);
         }
     }
 }

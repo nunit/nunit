@@ -2,11 +2,9 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class NamespaceTests
@@ -14,9 +12,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AllExportedNameSpacesAreNotSystem()
         {
-            var exportedTypes = typeof(FrameworkController).GetTypeInfo().Assembly.GetExportedTypes();
+            var exportedTypes = typeof(FrameworkController).Assembly.GetExportedTypes();
 
-            var exportedTypesWhitelist = new[] 
+            var exportedTypesWhitelist = new[]
             {
                 typeof(System.Web.UI.ICallbackEventHandler)
             };
@@ -25,8 +23,8 @@ namespace NUnit.Framework.Internal
             {
                 foreach (var type in exportedTypes.Except(exportedTypesWhitelist))
                 {
-                    Assert.IsFalse(
-                        type.Namespace.StartsWith("System", StringComparison.OrdinalIgnoreCase),
+                    Assert.That(
+                        type.Namespace!.StartsWith("System", StringComparison.OrdinalIgnoreCase), Is.False,
                         $"Type {type.FullName} is publicly visible in the System namespace but should not be.");
                 }
             });

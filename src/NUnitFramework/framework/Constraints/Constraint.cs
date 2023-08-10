@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
-using NUnit.Compatibility;
-using System.Collections;
 using System;
-using System.Reflection;
+using System.Collections;
+using System.Text;
 
 namespace NUnit.Framework.Constraints
 {
@@ -21,7 +20,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IConstraint
     {
-        readonly Lazy<string> _displayName;
+        private readonly Lazy<string> _displayName;
 
         #region Constructor
 
@@ -29,15 +28,15 @@ namespace NUnit.Framework.Constraints
         /// Construct a constraint with optional arguments
         /// </summary>
         /// <param name="args">Arguments to be saved</param>
-        protected Constraint(params object[] args)
+        protected Constraint(params object?[] args)
         {
             Arguments = args;
 
             _displayName = new Lazy<string>(() =>
             {
-                var type = this.GetType();
+                var type = GetType();
                 var displayName = type.Name;
-                if (type.GetTypeInfo().IsGenericType)
+                if (type.IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
                 if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
                     displayName = displayName.Substring(0, displayName.Length - 10);
@@ -55,24 +54,21 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public virtual string DisplayName { get { return _displayName.Value; } }
+        public virtual string DisplayName => _displayName.Value;
 
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public virtual string Description { get; protected set; }
+        /// <inheritdoc/>
+        public abstract string Description { get; }
 
         /// <summary>
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        public object[] Arguments { get; }
+        public object?[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint
         /// </summary>
-        public ConstraintBuilder Builder { get; set; }
+        public ConstraintBuilder? Builder { get; set; }
 
         #endregion
 
@@ -120,7 +116,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>Delegate evaluation result</returns>
-        protected virtual object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        protected virtual object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
         {
             return del();
         }
@@ -138,20 +134,20 @@ namespace NUnit.Framework.Constraints
         {
             string rep = GetStringRepresentation();
 
-            return this.Builder == null ? rep : string.Format("<unresolved {0}>", rep);
+            return Builder is null ? rep : $"<unresolved {rep}>";
         }
 
         /// <summary>
-        /// Returns the string representation of this constraint
+        /// Returns the string representation of this constraint and the passed in arguments
         /// </summary>
-        protected virtual string GetStringRepresentation()
+        protected string GetStringRepresentation(IEnumerable arguments)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             sb.Append("<");
             sb.Append(DisplayName.ToLower());
 
-            foreach (object arg in Arguments)
+            foreach (object? arg in arguments)
             {
                 sb.Append(" ");
                 sb.Append(Displayable(arg));
@@ -161,13 +157,19 @@ namespace NUnit.Framework.Constraints
 
             return sb.ToString();
 
-            static string Displayable(object o)
+            static string Displayable(object? o)
             {
-                if (o == null) return "null";
+                if (o is null) return "null";
                 else if (o is string s) return $"\"{s}\"";
                 else return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
             }
         }
+
+        /// <summary>
+        /// Returns the string representation of this constraint
+        /// </summary>
+        protected virtual string GetStringRepresentation()
+            => GetStringRepresentation(Arguments);
 
         #endregion
 
@@ -179,8 +181,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator &(Constraint left, Constraint right)
         {
-            IResolveConstraint l = (IResolveConstraint)left;
-            IResolveConstraint r = (IResolveConstraint)right;
+            var l = (IResolveConstraint)left;
+            var r = (IResolveConstraint)right;
             return new AndConstraint(l.Resolve(), r.Resolve());
         }
 
@@ -190,8 +192,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator |(Constraint left, Constraint right)
         {
-            IResolveConstraint l = (IResolveConstraint)left;
-            IResolveConstraint r = (IResolveConstraint)right;
+            var l = (IResolveConstraint)left;
+            var r = (IResolveConstraint)right;
             return new OrConstraint(l.Resolve(), r.Resolve());
         }
 
@@ -201,7 +203,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator !(Constraint constraint)
         {
-            IResolveConstraint r = (IResolveConstraint)constraint;
+            var r = (IResolveConstraint)constraint;
             return new NotConstraint(r.Resolve());
         }
 
@@ -217,8 +219,8 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.Builder;
-                if (builder == null)
+                ConstraintBuilder? builder = Builder;
+                if (builder is null)
                 {
                     builder = new ConstraintBuilder();
                     builder.Append(this);
@@ -234,10 +236,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
         /// </summary>
-        public ConstraintExpression With
-        {
-            get { return this.And; }
-        }
+        public ConstraintExpression With => And;
 
         /// <summary>
         /// Returns a ConstraintExpression by appending Or
@@ -247,8 +246,8 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.Builder;
-                if (builder == null)
+                ConstraintBuilder? builder = Builder;
+                if (builder is null)
                 {
                     builder = new ConstraintBuilder();
                     builder.Append(this);
@@ -272,7 +271,7 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint.WithRawDelayInterval After(int delay)
         {
             return new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(
-                Builder == null ? this : Builder.Resolve(),
+                Builder is null ? this : Builder.Resolve(),
                 delay));
         }
 
@@ -286,13 +285,12 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint After(int delayInMilliseconds, int pollingInterval)
         {
             return new DelayedConstraint(
-                Builder == null ? this : Builder.Resolve(),
+                Builder is null ? this : Builder.Resolve(),
                 delayInMilliseconds,
                 pollingInterval);
         }
 
         #endregion
-
 
         #region IResolveConstraint Members
 
@@ -301,7 +299,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         IConstraint IResolveConstraint.Resolve()
         {
-            return Builder == null ? this : Builder.Resolve();
+            return Builder is null ? this : Builder.Resolve();
         }
 
         #endregion

@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework
 {
@@ -13,17 +12,33 @@ namespace NUnit.Framework
     /// </summary>
     internal static class OSPlatformTranslator
     {
+        private static readonly Type? OsPlatformAttributeType = Type.GetType("System.Runtime.Versioning.OSPlatformAttribute, System.Runtime", false);
+        private static readonly PropertyInfo? PlatformNameProperty = OsPlatformAttributeType?.GetProperty("PlatformName", typeof(string));
+
         /// <summary>
         /// Converts one or more .NET 5+ OSPlatformAttributes into a single NUnit PlatformAttribute
         /// </summary>
-        /// <param name="allAttributes">Enumeration of all attributes.</param>
+        /// <param name="provider">The type we want the attributes from.</param>
         /// <returns>All attributes with OSPlatformAttributes translated into PlatformAttributes.</returns>
-        public static IEnumerable<object> Translate(IEnumerable<object> allAttributes)
+        public static IEnumerable<IApplyToTest> RetrieveAndTranslate(this ICustomAttributeProvider provider)
+        {
+            IApplyToTest[] applyToTestAttributes = provider.GetAttributes<IApplyToTest>(inherit: true);
+
+            // OSPlatformAttribute is only available on NET5.O or greater
+            var osPlatformAttributes = OsPlatformAttributeType is null ?
+                Array.Empty<Attribute>() :
+                (Attribute[])provider.GetCustomAttributes(OsPlatformAttributeType, inherit: true);
+
+            return Translate(osPlatformAttributes, applyToTestAttributes);
+        }
+
+        internal static IEnumerable<IApplyToTest> Translate(Attribute[] osPlatformAttributes, IEnumerable<IApplyToTest> applyToTestAttributes)
         {
             var includes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var excludes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var attribute in allAttributes)
+            // Filter out the Platform Attributes
+            foreach (var attribute in applyToTestAttributes)
             {
                 if (attribute is PlatformAttribute platformAttribute)
                 {
@@ -32,47 +47,46 @@ namespace NUnit.Framework
 
                     static void Add(HashSet<string> set, string? platforms)
                     {
-                        if (platforms != null)
+                        if (platforms is not null)
                         {
                             set.UnionWith(platforms.Split(','));
                         }
                     }
-
-                    continue;
                 }
-
-                Type type = attribute.GetType();
-
-                bool include = type.FullName == "System.Runtime.Versioning.SupportedOSPlatformAttribute";
-                bool exclude = type.FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
-
-                if (!include && !exclude)
+                else
                 {
-                    // Not a translatable attribute, keep it.
+                    // Return others
                     yield return attribute;
-                    continue;
                 }
+            }
 
-                PropertyInfo? platformNameProperty = type.GetProperty("PlatformName", typeof(string));
-                string? platformName = (string?)platformNameProperty?.GetValue(attribute);
-                if (platformNameProperty is null || platformName is null)
+            // Translate OSPlatformAttribute
+            foreach (var osPlatformAttribute in osPlatformAttributes)
+            {
+                string? platformName = (string?)PlatformNameProperty?.GetValue(osPlatformAttribute);
+                if (platformName is null)
                 {
-                    yield return attribute;
+                    // Invalid property, ignore
                     continue;
                 }
 
                 string nunitPlatform = Translate(platformName);
 
-                if (include)
+                Type type = osPlatformAttribute.GetType();
+
+                if (type.FullName == "System.Runtime.Versioning.SupportedOSPlatformAttribute")
                 {
                     includes.Add(nunitPlatform);
                 }
-                else
+                else if (type.FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute")
                 {
                     excludes.Add(nunitPlatform);
                 }
+
+                // Ignore others, e.g. SupportedOSPlatformGuard
             }
 
+            // Compile all platform attributes into a single one
             if (includes.Count > 0 || excludes.Count > 0)
             {
                 yield return new PlatformAttribute

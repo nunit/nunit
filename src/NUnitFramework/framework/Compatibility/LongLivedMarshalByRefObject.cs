@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Security;
 
 namespace NUnit.Compatibility
 {
@@ -13,10 +12,12 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
-        [SecurityCritical]  // Override of security critical method must be security critical itself
+#if NET6_0_OR_GREATER
+        [Obsolete("Preventing throwing PlatformNotSupportedException")]
+#endif
         public override object InitializeLifetimeService()
         {
-            return null;
+            return null!;
         }
     }
 }

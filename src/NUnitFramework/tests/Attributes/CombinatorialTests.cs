@@ -1,12 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class CombinatorialTests
@@ -40,8 +36,11 @@ namespace NUnit.Framework.Attributes
             [Values(10, 20)] int y,
             [Values("Charlie", "Joe", "Frank")] string name)
         {
-            Assert.That(x > 0 && x < 4 && y % 10 == 0);
-            Assert.That(name.Length >= 2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(x > 0 && x < 4 && y % 10 == 0);
+                Assert.That(name, Has.Length.GreaterThanOrEqualTo(2));
+            });
         }
 
         [Test, Sequential]
@@ -50,8 +49,11 @@ namespace NUnit.Framework.Attributes
             [Values(10, 20)] int y,
             [Values("Charlie", "Joe", "Frank")] string name)
         {
-            Assert.That(x > 0 && x < 4 && y % 10 == 0);
-            Assert.That(name.Length >= 2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(x > 0 && x < 4 && y % 10 == 0);
+                Assert.That(name, Has.Length.GreaterThanOrEqualTo(2));
+            });
         }
 
         [Test]
@@ -59,17 +61,25 @@ namespace NUnit.Framework.Attributes
             [Range(0.2, 0.6, 0.2)] double a,
             [Range(10, 20, 5)] int b)
         {
+            Assert.Multiple(() =>
+            {
+                Assert.That(a, Is.InRange(0.2, 0.6));
+                Assert.That(b, Is.InRange(10, 20));
+            });
         }
-        
+
         [Test, Sequential]
         public void RandomTest(
             [Random(32, 212, 5)] int x,
             [Random(5)] double y,
             [Random(5)] AttributeTargets z)
         {
-            Assert.That(x,Is.InRange(32,212));
-            Assert.That(y,Is.InRange(0.0,1.0));
-            Assert.That(z, Is.TypeOf<AttributeTargets>());
+            Assert.Multiple(() =>
+            {
+                Assert.That(x, Is.InRange(32, 212));
+                Assert.That(y, Is.InRange(0.0, 1.0));
+                Assert.That(z, Is.TypeOf<AttributeTargets>());
+            });
         }
 
         [Test, Sequential]
@@ -77,7 +87,7 @@ namespace NUnit.Framework.Attributes
             [Random(1)] double x,
             [Random(1)] double y)
         {
-            Assert.AreNotEqual(x, y);
+            Assert.That(y, Is.Not.EqualTo(x));
         }
 
         [Test, Combinatorial]

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -16,9 +14,9 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="EndsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
-        public EndsWithConstraint(string expected) : base(expected) 
+        public EndsWithConstraint(string expected) : base(expected)
         {
-            this.descriptionText = "String ending with";
+            descriptionText = "String ending with";
         }
 
         /// <summary>
@@ -30,8 +28,8 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string actual)
         {
-            var stringComparison = this.caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-            return actual != null && actual.EndsWith(expected, stringComparison);
+            var stringComparison = caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            return actual is not null && actual.EndsWith(expected, stringComparison);
         }
     }
 }

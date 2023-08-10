@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -62,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object? ExpectedResult
         {
-            get { return _expectedResult; }
+            get => _expectedResult;
             set
             {
                 _expectedResult = value;

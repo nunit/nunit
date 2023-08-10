@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -10,7 +8,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specifies that a test method should be rerun on failure up to the specified 
+    /// Specifies that a test method should be rerun on failure up to the specified
     /// maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
@@ -80,7 +78,7 @@ namespace NUnit.Framework
                     // and we want to look at restructuring the API in the future.
                     catch (Exception ex)
                     {
-                        if (context.CurrentResult == null) context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        if (context.CurrentResult is null) context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
                     }
 

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +17,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
-        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new();
 
         private readonly ICombiningStrategy _strategy;
         private readonly IParameterDataProvider _dataProvider;
@@ -57,7 +55,7 @@ namespace NUnit.Framework
         /// <param name="suite">The suite to which the tests will be added.</param>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
-            List<TestMethod> tests = new List<TestMethod>();
+            List<TestMethod> tests = new();
 
             IParameterInfo[] parameters = method.GetParameters();
 

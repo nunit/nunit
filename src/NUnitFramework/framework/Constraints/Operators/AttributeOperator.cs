@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeOperator : SelfResolvingOperator
     {
-        private readonly Type type;
+        private readonly Type _type;
 
         /// <summary>
         /// Construct an AttributeOperator for a particular Type
@@ -17,24 +17,24 @@ namespace NUnit.Framework.Constraints
         /// <param name="type">The Type of attribute tested</param>
         public AttributeOperator(Type type)
         {
-            this.type = type;
+            _type = type;
 
-            // Attribute stacks on anything and allows only 
+            // Attribute stacks on anything and allows only
             // prefix operators to stack on it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
-                stack.Push(new AttributeExistsConstraint(type));
+            if (RightContext is null || RightContext is BinaryOperator)
+                stack.Push(new AttributeExistsConstraint(_type));
             else
-                stack.Push(new AttributeConstraint(type, stack.Pop()));
+                stack.Push(new AttributeConstraint(_type, stack.Pop()));
         }
     }
- }
+}

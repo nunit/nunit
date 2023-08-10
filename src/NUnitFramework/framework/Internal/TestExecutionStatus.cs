@@ -1,9 +1,9 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Enumeration indicating whether the tests are 
+    /// Enumeration indicating whether the tests are
     /// running normally or being cancelled.
     /// </summary>
     public enum TestExecutionStatus

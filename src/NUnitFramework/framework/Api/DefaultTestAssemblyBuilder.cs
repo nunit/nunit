@@ -3,9 +3,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Security;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -18,16 +18,14 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static readonly Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+        private static readonly Logger Log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
 
         /// <summary>
         /// The default suite builder used by the test assembly builder.
         /// </summary>
-        readonly ISuiteBuilder _defaultSuiteBuilder;
-
-        private PreFilter _filter;
+        private readonly ISuiteBuilder _defaultSuiteBuilder;
 
         #endregion
 
@@ -55,7 +53,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-            log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
+            Log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
             string suiteName = assemblyPath.Equals("<Unknown>")
@@ -75,9 +73,9 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyNameOrPath, IDictionary<string, object> options)
         {
-            log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
+            Log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
 
-            TestSuite testAssembly = null;
+            TestSuite testAssembly;
 
             try
             {
@@ -95,19 +93,19 @@ namespace NUnit.Framework.Api
 
         private TestSuite Build(Assembly assembly, string assemblyNameOrPath, IDictionary<string, object> options)
         {
-            TestSuite testAssembly = null;
+            TestSuite testAssembly;
 
             try
             {
-                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object defaultTestNamePattern))
-                    TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern as string;
+                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object? defaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = (string)defaultTestNamePattern;
 
-                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object workDirectory))
+                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object? workDirectory))
                     TestContext.DefaultWorkDirectory = workDirectory as string;
                 else
                     TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
-                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersObject) &&
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object? testParametersObject) &&
                     testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
                     foreach (var parameter in testParametersDictionary)
@@ -117,34 +115,36 @@ namespace NUnit.Framework.Api
                 {
                     // This cannot be changed without breaking backwards compatibility with old runners.
                     // Deserializes the way old runners understand.
-                    
-                    options.TryGetValue(FrameworkPackageSettings.TestParameters, out object testParameters);
-                    string parametersString = testParameters as string;
-                    if (!string.IsNullOrEmpty(parametersString))
+
+                    if (options.TryGetValue(FrameworkPackageSettings.TestParameters, out var testParameters))
                     {
-                        foreach (string param in parametersString.Split(new[] { ';' }))
+                        var parametersString = (string?)testParameters;
+                        if (!string.IsNullOrEmpty(parametersString))
                         {
-                            int eq = param.IndexOf('=');
-                        
-                            if (eq > 0 && eq < param.Length - 1)
+                            foreach (var param in parametersString!.Tokenize(';'))
                             {
-                                var name = param.Substring(0, eq);
-                                var val = param.Substring(eq + 1);
-                        
-                                TestContext.Parameters.Add(name, val);
+                                var eq = param.IndexOf('=');
+
+                                if (eq > 0 && eq < param.Length - 1)
+                                {
+                                    var name = param.Substring(0, eq);
+                                    var val = param.Substring(eq + 1);
+
+                                    TestContext.Parameters.Add(name, val);
+                                }
                             }
                         }
                     }
                 }
 
-                _filter = new PreFilter();
-                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
+                var filter = new PreFilter();
+                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object? load))
                 {
                     foreach (string filterText in (IList)load)
-                        _filter.Add(filterText);
+                        filter.Add(filterText);
                 }
 
-                var fixtures = GetFixtures(assembly);
+                var fixtures = GetFixtures(assembly, filter);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyNameOrPath, fixtures);
             }
@@ -161,19 +161,16 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList<Test> GetFixtures(Assembly assembly)
+        private IList<Test> GetFixtures(Assembly assembly, PreFilter filter)
         {
             var fixtures = new List<Test>();
-            log.Debug("Examining assembly for test fixtures");
+            Log.Debug("Examining assembly for test fixtures");
 
-            var testTypes = GetCandidateFixtureTypes(assembly);
+            var testTypes = GetCandidateFixtureTypes(assembly, filter);
 
-            log.Debug("Found {0} classes to examine", testTypes.Count);
-#if LOAD_TIMING
-            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
-            timer.Start();
-#endif
-            int testcases = 0;
+            Log.Debug("Found {0} classes to examine", testTypes.Count);
+            var timer = Stopwatch.StartNew();
+            var testcases = 0;
             foreach (Type testType in testTypes)
             {
                 var typeInfo = new TypeWrapper(testType);
@@ -187,37 +184,30 @@ namespace NUnit.Framework.Api
                     // Any exceptions from this call are fatal problems in NUnit itself,
                     // since this is always DefaultSuiteBuilder and the current implementation
                     // of DefaultSuiteBuilder.BuildFrom handles all exceptions from user code.
-                    Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo, _filter);
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo, filter);
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
             }
 
-#if LOAD_TIMING
-            log.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
-#else
-            log.Debug("Found {0} fixtures with {1} test cases", fixtures.Count, testcases);
-#endif
+            Log.Debug("Found {0} fixtures with {1} test cases in {2}ms", fixtures.Count, testcases, timer.ElapsedMilliseconds);
 
             return fixtures;
         }
 
-        private IList<Type> GetCandidateFixtureTypes(Assembly assembly)
+        private IList<Type> GetCandidateFixtureTypes(Assembly assembly, PreFilter filter)
         {
             var result = new List<Type>();
 
             foreach (Type type in assembly.GetTypes())
-                if (_filter.IsMatch(type))
+            {
+                if (filter.IsMatch(type))
                     result.Add(type);
+            }
 
             return result;
         }
 
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
-        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
-        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
-        [SecuritySafeCritical]
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyNameOrPath, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyNameOrPath);
@@ -238,7 +228,8 @@ namespace NUnit.Framework.Api
 
             try
             {
-                testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+                using var process = System.Diagnostics.Process.GetCurrentProcess();
+                testAssembly.Properties.Set(PropertyNames.ProcessId, process.Id);
             }
             catch (PlatformNotSupportedException)
             { }

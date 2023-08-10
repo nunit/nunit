@@ -3,7 +3,6 @@
 #if NETFRAMEWORK
 using System;
 using System.Runtime.Remoting.Messaging;
-using System.Security;
 
 namespace NUnit.Framework.Internal
 {
@@ -17,19 +16,14 @@ namespace NUnit.Framework.Internal
         private readonly object _oldContext;
         public const string TestExecutionContextKey = "NUnit.Framework.TestExecutionContext";
 
-        // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
-        // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
-        // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-        [SecuritySafeCritical]
         public NUnitCallContext()
         {
             _oldContext = CallContext.GetData(TestExecutionContextKey);
         }
 
-        [SecuritySafeCritical]
         public void Dispose()
         {
-            if (_oldContext == null)
+            if (_oldContext is null)
                 CallContext.FreeNamedDataSlot(TestExecutionContextKey);
             else
                 CallContext.SetData(TestExecutionContextKey, _oldContext);

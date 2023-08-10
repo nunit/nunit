@@ -15,8 +15,8 @@ namespace NUnit.Framework.Constraints
         {
             // Collection Operators stack on everything
             // and allow all other ops to stack on them
-            this.left_precedence = 1;
-            this.right_precedence = 10;
+            left_precedence = 1;
+            right_precedence = 10;
         }
     }
- }
+}

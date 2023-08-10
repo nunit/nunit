@@ -1,10 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionEquivalentConstraintResultTests
@@ -33,7 +34,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\" >" + Environment.NewLine +
                 "  Missing (1): < \"two\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -48,7 +49,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine +
                 "  Missing (2): < \"one\", \"two\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\", \"two\", \"three\", \"four\" >" + Environment.NewLine +
                 "  Extra (2): < \"three\", \"four\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"three\", \"one\", \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"three\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -93,7 +94,7 @@ namespace NUnit.Framework.Constraints
                 "  But was:  < \"three\", \"one\" >" + Environment.NewLine +
                 "  Missing (1): < \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"three\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -108,7 +109,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\", \"two\", \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"two\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -123,7 +124,7 @@ namespace NUnit.Framework.Constraints
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\", \"two\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\"... >" + Environment.NewLine +
                 "  Extra (11): < \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\", \"nine\", \"ten\"... >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, _writer.ToString());
+            Assert.That(_writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -133,8 +134,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                #pragma warning disable CS0219
-                CollectionEquivalentConstraintResult cr = new CollectionEquivalentConstraintResult(_constraint, null, actualList, false);
+                _ = new CollectionEquivalentConstraintResult(_constraint, null!, actualList, false);
             });
         }
     }

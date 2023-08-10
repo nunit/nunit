@@ -43,7 +43,7 @@ namespace NUnit.TestData
         {
             await Task.Delay(0);
         }
-        
+
         [TestCase(ExpectedResult = 1)]
         public async void AsyncVoidTestCaseWithExpectedResult()
         {
@@ -101,7 +101,7 @@ namespace NUnit.TestData
         private async Task<int> Throw()
         {
             Func<int> thrower = () => { throw new InvalidOperationException(); };
-            return await Task.Run( thrower );
+            return await Task.Run(thrower);
         }
     }
 }

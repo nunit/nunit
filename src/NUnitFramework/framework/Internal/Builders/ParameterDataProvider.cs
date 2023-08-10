@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -14,7 +12,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class ParameterDataProvider : IParameterDataProvider
     {
-        private readonly List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
+        private readonly List<IParameterDataProvider> _providers = new();
 
         /// <summary>
         /// Construct with a collection of individual providers
@@ -31,8 +29,10 @@ namespace NUnit.Framework.Internal.Builders
         public bool HasDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
+            {
                 if (provider.HasDataFor(parameter))
                     return true;
+            }
 
             return false;
         }
@@ -44,8 +44,10 @@ namespace NUnit.Framework.Internal.Builders
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
+            {
                 foreach (object? data in provider.GetDataFor(parameter))
                     yield return data;
+            }
         }
     }
 }

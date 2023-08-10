@@ -3,7 +3,9 @@
 using System;
 using System.Collections;
 
-namespace NUnit.Framework.Internal
+using NUnit.Framework.Internal;
+
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class ParamAttributeTypeConversionTests
@@ -11,13 +13,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void NullDataArgumentShouldThrowArgumentNullException()
         {
-            Assert.That(() => ParamAttributeTypeConversions.ConvertData(null, typeof(object)), Throws.ArgumentNullException);
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(null!, typeof(object)), Throws.ArgumentNullException);
         }
 
         [Test]
         public static void NullTypeArgumentShouldThrowArgumentNullException()
         {
-            Assert.That(() => ParamAttributeTypeConversions.ConvertData(Array.Empty<object>(), null), Throws.ArgumentNullException);
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(Array.Empty<object>(), null!), Throws.ArgumentNullException);
         }
 
         [TestCase(typeof(short))]
@@ -28,16 +30,16 @@ namespace NUnit.Framework.Internal
         {
             var data = new object[] { 1, 2, 3 };
 
-            IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, targetType);
+            var result = ParamAttributeTypeConversions.ConvertData(data, targetType);
 
-            CollectionAssert.AllItemsAreInstancesOfType(result, targetType);
+            Assert.That(result, Is.All.InstanceOf(targetType));
         }
 
         [Test]
         public void TestStringToDecimal()
         {
             var data = new object[] { "0.1", "1.0", "-1.0" };
-            var expected = new decimal[] { 0.1M, 1.0M, -1.0M };
+            var expected = new[] { 0.1M, 1.0M, -1.0M };
 
             IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(decimal));
 
@@ -48,11 +50,11 @@ namespace NUnit.Framework.Internal
         public void TestStringToDateTime()
         {
             var data = new object[] { "1970/01/01", "02/01/1980", "1999/12/31" };
-            var expected = new DateTime[] { new DateTime(1970, 1, 1), new DateTime(1980, 2, 1), new DateTime(1999, 12, 31) };
+            var expected = new[] { new DateTime(1970, 1, 1), new DateTime(1980, 2, 1), new DateTime(1999, 12, 31) };
 
             IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(DateTime));
 
             Assert.That(result, Is.EquivalentTo(expected).And.All.TypeOf<DateTime>());
-        }       
+        }
     }
 }

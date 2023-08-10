@@ -1,7 +1,5 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -10,7 +8,7 @@ namespace NUnit.Framework.Api
 {
     /// <summary>
     /// The ITestAssemblyBuilder interface is implemented by a class
-    /// that is able to build a suite of tests given an assembly or 
+    /// that is able to build a suite of tests given an assembly or
     /// an assembly filename.
     /// </summary>
     public interface ITestAssemblyBuilder

@@ -2,9 +2,9 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class ParallelizableAttributeTests
     {
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(scope));
         }
 
-        [TestCaseSourceAttribute(nameof(Scopes))]
+        [TestCaseSource(nameof(Scopes))]
         public void ApplyScopeToTestFixture(ParallelScope scope)
         {
             var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(context.ParallelScope, Is.EqualTo(scope & ParallelScope.ContextMask));
         }
 
-        static ParallelScope[] Scopes = new ParallelScope[]
+        private static readonly ParallelScope[] Scopes = new ParallelScope[]
         {
             ParallelScope.None,
             ParallelScope.Self,
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Attributes
 
         public class FixtureClass { }
 
-        public void DummyMethod() { }
+        private void DummyMethod() { }
 
         [TestCase(1)]
         public void DummyTestCase(int i) { }

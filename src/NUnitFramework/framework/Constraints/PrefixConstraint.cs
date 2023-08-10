@@ -10,33 +10,32 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The base constraint
         /// </summary>
-        protected IConstraint BaseConstraint { get; set; }
+        protected IConstraint BaseConstraint { get; }
 
         /// <summary>
         /// Prefix used in forming the constraint description
         /// </summary>
-        protected string DescriptionPrefix { get; set; }
+        protected string DescriptionPrefix { get; }
 
         /// <summary>
         /// Construct given a base constraint
         /// </summary>
         /// <param name="baseConstraint"></param>
-        protected PrefixConstraint(IResolveConstraint baseConstraint)
+        /// <param name="descriptionPrefix">Prefix used in forming the constraint description</param>
+        protected PrefixConstraint(IResolveConstraint baseConstraint, string descriptionPrefix)
             : base(baseConstraint)
         {
             Guard.ArgumentNotNull(baseConstraint, nameof(baseConstraint));
 
             BaseConstraint = baseConstraint.Resolve();
+            DescriptionPrefix = descriptionPrefix;
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return FormatDescription(DescriptionPrefix, BaseConstraint); }
-        }
+        public override string Description => FormatDescription(DescriptionPrefix, BaseConstraint);
 
         /// <summary>
         /// Formats a prefix constraint's description.

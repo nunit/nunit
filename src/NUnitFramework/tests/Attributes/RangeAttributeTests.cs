@@ -7,15 +7,15 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public partial class RangeAttributeTests
     {
         #region Shared specs
 
-        public static IEnumerable<Type> TestedParameterTypes() => new[]
+        private static IEnumerable<Type> TestedParameterTypes() => new[]
         {
             typeof(sbyte),
             typeof(byte),
@@ -552,20 +552,11 @@ namespace NUnit.Framework.Attributes
 
             public Type ParameterType { get; }
 
-            public bool IsOptional
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public bool IsOptional => throw new NotImplementedException();
 
-            public IMethodInfo Method
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public IMethodInfo Method => throw new NotImplementedException();
 
-            public ParameterInfo ParameterInfo
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public ParameterInfo ParameterInfo => throw new NotImplementedException();
 
             public T[] GetCustomAttributes<T>(bool inherit) where T : class
             {

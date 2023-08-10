@@ -1,24 +1,28 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Reflection;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class AttributeExistsConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
             ExpectedDescription = "type with attribute <NUnit.Framework.TestFixtureAttribute>";
             StringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
-        static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
-
-        static object[] FailureData = new object[] { 
-            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NonAttributeThrowsException()
@@ -42,10 +46,10 @@ namespace NUnit.Framework.Constraints
                 Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
 
-        class B { }
+        private class B { }
 
-        class D1 : B { }
+        private class D1 : B { }
 
-        class D2 : D1 { }
+        private class D2 : D1 { }
     }
 }

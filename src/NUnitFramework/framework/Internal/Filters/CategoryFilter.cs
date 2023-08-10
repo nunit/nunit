@@ -1,9 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -12,7 +8,7 @@ namespace NUnit.Framework.Internal.Filters
     /// CategoryFilter is able to select or exclude tests
     /// based on their categories.
     /// </summary>
-    internal class CategoryFilter : ValueMatchFilter
+    internal sealed class CategoryFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a CategoryFilter using a single category name
@@ -28,12 +24,17 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns></returns>
         public override bool Match(ITest test)
         {
-            IList testCategories = test.Properties[PropertyNames.Category];
-
-            if ( testCategories != null)
-                foreach (string cat in testCategories)
-                    if ( Match(cat))
+            if (test.Properties.TryGet(PropertyNames.Category, out var testCategories))
+            {
+                // Use for-loop to avoid allocating the enumerator
+                for (var i = 0; i < testCategories.Count; ++i)
+                {
+                    if (Match((string?)testCategories[i]))
+                    {
                         return true;
+                    }
+                }
+            }
 
             return false;
         }
@@ -42,9 +43,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "cat"; }
-        }
+        protected override string ElementName => "cat";
     }
 }

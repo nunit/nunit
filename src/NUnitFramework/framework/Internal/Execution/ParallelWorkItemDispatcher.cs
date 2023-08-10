@@ -12,26 +12,26 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
-        private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
+        private static readonly Logger Log = InternalTrace.GetLogger("Dispatcher");
 
         private const int WAIT_FOR_FORCED_TERMINATION = 5000;
 
-        private WorkItem _topLevelWorkItem;
-        private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
+        private WorkItem? _topLevelWorkItem;
+        private readonly Stack<WorkItem> _savedWorkItems = new();
 
-        private readonly List<CompositeWorkItem> _activeWorkItems = new List<CompositeWorkItem>();
+        private readonly List<CompositeWorkItem> _activeWorkItems = new();
 
         #region Events
 
         /// <summary>
         /// Event raised whenever a shift is starting.
         /// </summary>
-        public event ShiftChangeEventHandler ShiftStarting;
+        public event ShiftChangeEventHandler? ShiftStarting;
 
         /// <summary>
         /// Event raised whenever a shift has ended.
         /// </summary>
-        public event ShiftChangeEventHandler ShiftFinished;
+        public event ShiftChangeEventHandler? ShiftFinished;
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="levelOfParallelism">Number of workers to use</param>
         public ParallelWorkItemDispatcher(int levelOfParallelism)
         {
-            log.Info("Initializing with {0} workers", levelOfParallelism);
+            Log.Info("Initializing with {0} workers", levelOfParallelism);
 
             LevelOfParallelism = levelOfParallelism;
 
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Execution
             // TODO: Avoid creating all the workers till needed
             for (int i = 1; i <= LevelOfParallelism; i++)
             {
-                string name = string.Format("ParallelWorker#" + i.ToString());
+                string name = $"ParallelWorker#{i}";
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
                 IsolateQueues(work);
         }
 
-#endregion
+        #endregion
 
         #region Properties
 
@@ -126,15 +126,15 @@ namespace NUnit.Framework.Internal.Execution
 
         // WorkShifts - Dispatcher processes tests in three non-overlapping shifts.
         // See comment in Workshift.cs for a more detailed explanation.
-        private WorkShift ParallelShift { get; } = new WorkShift("Parallel");
-        private WorkShift NonParallelShift { get; } = new WorkShift("NonParallel");
-        private WorkShift NonParallelSTAShift { get; } = new WorkShift("NonParallelSTA");
+        private WorkShift ParallelShift { get; } = new("Parallel");
+        private WorkShift NonParallelShift { get; } = new("NonParallel");
+        private WorkShift NonParallelSTAShift { get; } = new("NonParallelSTA");
 
         // WorkItemQueues
-        private WorkItemQueue ParallelQueue { get; } = new WorkItemQueue("ParallelQueue", true, ApartmentState.MTA);
-        private WorkItemQueue ParallelSTAQueue { get; } = new WorkItemQueue("ParallelSTAQueue", true, ApartmentState.STA);
-        private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false, ApartmentState.MTA);
-        private WorkItemQueue NonParallelSTAQueue { get; } = new WorkItemQueue("NonParallelSTAQueue", false, ApartmentState.STA);
+        private WorkItemQueue ParallelQueue { get; } = new("ParallelQueue", true, ApartmentState.MTA);
+        private WorkItemQueue ParallelSTAQueue { get; } = new("ParallelSTAQueue", true, ApartmentState.STA);
+        private WorkItemQueue NonParallelQueue { get; } = new("NonParallelQueue", false, ApartmentState.MTA);
+        private WorkItemQueue NonParallelSTAQueue { get; } = new("NonParallelSTAQueue", false, ApartmentState.STA);
 
         #endregion
 
@@ -152,8 +152,11 @@ namespace NUnit.Framework.Internal.Execution
 
             var shift = SelectNextShift();
 
-            ShiftStarting?.Invoke(shift);
-            shift.Start();
+            if (shift is not null)
+            {
+                ShiftStarting?.Invoke(shift);
+                shift.Start();
+            }
         }
 
         // Initial strategy for the top level item is solely determined
@@ -180,7 +183,7 @@ namespace NUnit.Framework.Internal.Execution
         // Separate method so it can be used by Start
         private void Dispatch(WorkItem work, ParallelExecutionStrategy strategy)
         {
-            log.Debug("Using {0} strategy for {1}", strategy, work.Name);
+            Log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
             // Currently, we only track CompositeWorkItems - this could be expanded
             if (work is CompositeWorkItem composite)
@@ -192,24 +195,32 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
 
-            switch (strategy)
+            // The attribute SingleThreaded may not be applied to the content in time, so here as a workaround, check for the flag again
+            if (work.Context.IsSingleThreaded)
             {
-                default:
-                case ParallelExecutionStrategy.Direct:
-                    work.Execute();
-                    break;
-                case ParallelExecutionStrategy.Parallel:
-                    if (work.TargetApartment == ApartmentState.STA)
-                        ParallelSTAQueue.Enqueue(work);
-                    else
-                        ParallelQueue.Enqueue(work);
-                    break;
-                case ParallelExecutionStrategy.NonParallel:
-                    if (work.TargetApartment == ApartmentState.STA)
-                        NonParallelSTAQueue.Enqueue(work);
-                    else
-                        NonParallelQueue.Enqueue(work);
-                    break;
+                work.Execute();
+            }
+            else
+            {
+                switch (strategy)
+                {
+                    default:
+                    case ParallelExecutionStrategy.Direct:
+                        work.Execute();
+                        break;
+                    case ParallelExecutionStrategy.Parallel:
+                        if (work.TargetApartment == ApartmentState.STA)
+                            ParallelSTAQueue.Enqueue(work);
+                        else
+                            ParallelQueue.Enqueue(work);
+                        break;
+                    case ParallelExecutionStrategy.NonParallel:
+                        if (work.TargetApartment == ApartmentState.STA)
+                            NonParallelSTAQueue.Enqueue(work);
+                        else
+                            NonParallelQueue.Enqueue(work);
+                        break;
+                }
             }
         }
 
@@ -219,6 +230,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void CancelRun(bool force)
         {
+            if (_topLevelWorkItem is null)
+            {
+                throw new InvalidOperationException("Called Cancel without Start");
+            }
+
             foreach (var shift in Shifts)
                 shift.Cancel(force);
 
@@ -242,7 +258,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly object _queueLock = new object();
+        private readonly object _queueLock = new();
         private int _isolationLevel = 0;
 
         /// <summary>
@@ -250,7 +266,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void IsolateQueues(WorkItem work)
         {
-            log.Info("Saving Queue State for {0}", work.Name);
+            if (_topLevelWorkItem is null)
+            {
+                throw new InvalidOperationException("Called IsolateQueues without Start");
+            }
+
+            Log.Info("Saving Queue State for {0}", work.Name);
             lock (_queueLock)
             {
                 foreach (WorkItemQueue queue in Queues)
@@ -273,11 +294,11 @@ namespace NUnit.Framework.Internal.Execution
             {
                 if (_isolationLevel <= 0)
                 {
-                    log.Debug("Ignoring call to restore Queue State");
+                    Log.Debug("Ignoring call to restore Queue State");
                     return;
                 }
 
-                log.Info("Restoring Queue State");
+                Log.Info("Restoring Queue State");
 
                 foreach (WorkItemQueue queue in Queues)
                     queue.Restore();
@@ -291,14 +312,15 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Helper Methods
 
-        private void OnWorkItemCompletion(object sender, EventArgs args)
+        private void OnWorkItemCompletion(object? sender, EventArgs args)
         {
-            var work = (CompositeWorkItem)sender;
-
-            lock (_activeWorkItems)
+            if (sender is CompositeWorkItem work)
             {
-                _activeWorkItems.Remove(work);
-                work.Completed -= OnWorkItemCompletion;
+                lock (_activeWorkItems)
+                {
+                    _activeWorkItems.Remove(work);
+                    work.Completed -= OnWorkItemCompletion;
+                }
             }
         }
 
@@ -306,16 +328,14 @@ namespace NUnit.Framework.Internal.Execution
         {
             ShiftFinished?.Invoke(endingShift);
 
-            WorkShift nextShift = null;
-
             while (true)
             {
                 // Shift has ended but all work may not yet be done
-                while (_topLevelWorkItem.State != WorkItemState.Complete)
+                while (_topLevelWorkItem!.State != WorkItemState.Complete)
                 {
                     // This will return null if all queues are empty.
-                    nextShift = SelectNextShift();
-                    if (nextShift != null)
+                    WorkShift? nextShift = SelectNextShift();
+                    if (nextShift is not null)
                     {
                         ShiftStarting?.Invoke(nextShift);
                         nextShift.Start();
@@ -336,15 +356,17 @@ namespace NUnit.Framework.Internal.Execution
                 shift.ShutDown();
         }
 
-        private WorkShift SelectNextShift()
+        private WorkShift? SelectNextShift()
         {
             foreach (var shift in Shifts)
+            {
                 if (shift.HasWork)
                     return shift;
+            }
 
             return null;
         }
 
-#endregion
+        #endregion
     }
 }

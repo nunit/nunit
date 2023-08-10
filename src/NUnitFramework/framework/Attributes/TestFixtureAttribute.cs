@@ -1,12 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -16,10 +12,10 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks the class as a TestFixture.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
     {
-        private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _builder = new();
 
         #region Constructors
 
@@ -87,7 +83,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Description
         {
-            get { return Properties.Get(PropertyNames.Description) as string; }
+            get => Properties.Get(PropertyNames.Description) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -101,7 +97,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Author
         {
-            get { return Properties.Get(PropertyNames.Author) as string; }
+            get => Properties.Get(PropertyNames.Author) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -115,12 +111,12 @@ namespace NUnit.Framework
         [DisallowNull]
         public Type? TestOf
         {
-            get { return _testOf;  }
+            get => _testOf;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName);
+                Properties.Set(PropertyNames.TestOf, value.FullName());
             }
         }
         private Type? _testOf;
@@ -132,7 +128,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Ignore
         {
-            get { return IgnoreReason;  }
+            get => IgnoreReason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -147,11 +143,11 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Reason
         {
-            get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
+            get => Properties.Get(PropertyNames.SkipReason) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
-                this.Properties.Set(PropertyNames.SkipReason, value);
+                Properties.Set(PropertyNames.SkipReason, value);
             }
         }
 
@@ -163,7 +159,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? IgnoreReason
         {
-            get { return Reason; }
+            get => Reason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -180,8 +176,8 @@ namespace NUnit.Framework
         /// </value>
         public bool Explicit
         {
-            get { return RunState == RunState.Explicit; }
-            set { RunState = value ? RunState.Explicit : RunState.Runnable; }
+            get => RunState == RunState.Explicit;
+            set => RunState = value ? RunState.Explicit : RunState.Runnable;
         }
 
         /// <summary>
@@ -194,8 +190,7 @@ namespace NUnit.Framework
             get
             {
                 //return Properties.Get(PropertyNames.Category) as string;
-                var catList = Properties[PropertyNames.Category];
-                if (catList == null)
+                if (!Properties.TryGet(PropertyNames.Category, out var catList))
                     return null;
 
                 switch (catList.Count)
@@ -217,7 +212,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
 
-                foreach (string cat in value.Split(new char[] { ',' }))
+                foreach (string cat in value.Tokenize(','))
                     Properties.Add(PropertyNames.Category, cat);
             }
         }
@@ -231,7 +226,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            return this.BuildFrom(typeInfo, PreFilter.Empty);
+            return BuildFrom(typeInfo, PreFilter.Empty);
         }
 
         #endregion
@@ -246,7 +241,7 @@ namespace NUnit.Framework
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
             var fixture = _builder.BuildFrom(typeInfo, filter, this);
-            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly));
+            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.Assembly));
             fixture.ApplyAttributesToTest(typeInfo.Type);
 
             yield return fixture;

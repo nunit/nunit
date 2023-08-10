@@ -1,13 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -133,15 +131,15 @@ namespace NUnit.Framework.Internal
             {
                 ITypeInfo? typeInfo = TypeInfo;
 
-                if (Method != null)
+                if (Method is not null)
                 {
-                    if (_declaringTypeInfo == null)
-                        _declaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType);
+                    if (_declaringTypeInfo is null)
+                        _declaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType!);
 
                     typeInfo = _declaringTypeInfo;
                 }
 
-                if (typeInfo == null)
+                if (typeInfo is null)
                     return null;
 
                 return typeInfo.IsGenericType
@@ -154,10 +152,7 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public virtual string? MethodName
-        {
-            get { return null; }
-        }
+        public virtual string? MethodName => null;
 
         /// <summary>
         /// The arguments to use in creating the test or empty array if none required.
@@ -176,7 +171,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IMethodInfo? Method
         {
-            get { return _method; }
+            get => _method;
             set
             {
                 _declaringTypeInfo = null;
@@ -200,19 +195,13 @@ namespace NUnit.Framework.Internal
         /// value in the XML representation of a test and has no other
         /// function in the framework.
         /// </summary>
-        public virtual string TestType
-        {
-            get { return this.GetType().Name; }
-        }
+        public virtual string TestType => GetType().Name;
 
         /// <summary>
         /// Gets a count of test cases represented by
         /// or contained under this test.
         /// </summary>
-        public virtual int TestCaseCount
-        {
-            get { return 1; }
-        }
+        public virtual int TestCaseCount => 1;
 
         /// <summary>
         /// Gets the properties for this test
@@ -222,10 +211,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns true if this is a TestSuite
         /// </summary>
-        public bool IsSuite
-        {
-            get { return this is TestSuite; }
-        }
+        public bool IsSuite => this is TestSuite;
 
         /// <summary>
         /// Gets a bool indicating whether the current test
@@ -288,13 +274,22 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (_actions == null)
+                if (_actions is null)
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    _actions = Method == null && TypeInfo != null
-                        ? GetActionsForType(TypeInfo.Type)
-                        : GetCustomAttributes<ITestAction>(false);
+                    if (Method is null && TypeInfo is not null)
+                    {
+                        _actions = TestMetadataCache.Get(TypeInfo.Type).TestActionAttributes;
+                    }
+                    else if (Method is not null)
+                    {
+                        _actions = MethodInfoCache.Get(Method).TestActionAttributes;
+                    }
+                    else
+                    {
+                        _actions = GetCustomAttributes<ITestAction>(false);
+                    }
                 }
 
                 return _actions;
@@ -320,11 +315,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
-            IEnumerable<IApplyToTest> applyToTestAttributes =
-                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTest>();
-
-            ApplyAttributesToTest(applyToTestAttributes);
+            ApplyAttributesToTest(OSPlatformTranslator.RetrieveAndTranslate(provider));
         }
 
         /// <summary>
@@ -334,21 +325,8 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The </param>
         public void ApplyAttributesToTest(Type type)
         {
-            foreach (var t in GetNestedTypes(type).Reverse()) 
-                ApplyAttributesToTest((ICustomAttributeProvider) t.GetTypeInfo());
-        }
-        
-        /// <summary>
-        /// Returns all nested types, inner first.
-        /// </summary>
-        private IEnumerable<Type> GetNestedTypes(Type inner)
-        {
-            var current = inner;
-            while (current != null)
-            {
-                yield return current;
-                current = current.DeclaringType;
-            }
+            foreach (var t in GetNestedTypes(type).Reverse())
+                ApplyAttributesToTest((ICustomAttributeProvider)t);
         }
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
@@ -370,14 +348,28 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason and an exception.
+        /// </summary>
+        /// <param name="exception">The exception that was the cause.</param>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(Exception exception, string reason)
+        {
+            Guard.ArgumentNotNull(exception, nameof(exception));
+            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
+
+            MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));
+            Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
+        }
+
+        /// <summary>
         /// Get custom attributes applied to a test
         /// </summary>
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
         {
-            if (Method != null)
+            if (Method is not null)
                 return Method.GetCustomAttributes<TAttr>(inherit);
 
-            if (TypeInfo != null)
+            if (TypeInfo is not null)
                 return TypeInfo.GetCustomAttributes<TAttr>(inherit);
 
             return Array.Empty<TAttr>();
@@ -394,38 +386,30 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive"></param>
         protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
-            thisNode.AddAttribute("id", this.Id.ToString());
-            thisNode.AddAttribute("name", this.Name);
-            thisNode.AddAttribute("fullname", this.FullName);
-            if (this.MethodName != null)
-                thisNode.AddAttribute("methodname", this.MethodName);
-            if (this.ClassName != null)
-                thisNode.AddAttribute("classname", this.ClassName);
-            thisNode.AddAttribute("runstate", this.RunState.ToString());
+            thisNode.AddAttribute("id", Id);
+            thisNode.AddAttribute("name", Name);
+            thisNode.AddAttribute("fullname", FullName);
+            if (MethodName is not null)
+                thisNode.AddAttribute("methodname", MethodName);
+            if (ClassName is not null)
+                thisNode.AddAttribute("classname", ClassName);
+            thisNode.AddAttribute("runstate", RunState.ToString());
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static ITestAction[] GetActionsForType(Type type)
+        /// <summary>
+        /// Returns all nested types, inner first.
+        /// </summary>
+        protected IEnumerable<Type> GetNestedTypes(Type inner)
         {
-            var actions = new List<ITestAction>();
-
-            if (type != null && type != typeof(object))
+            var current = inner;
+            while (current is not null)
             {
-                actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
-
-                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false));
-
-                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false));
+                yield return current;
+                current = current.DeclaringType;
             }
-
-            return actions.ToArray();
         }
 
         #endregion
@@ -466,7 +450,7 @@ namespace NUnit.Framework.Internal
         /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(Test? other)
         {
-            return other == null ? -1 : this.FullName.CompareTo(other.FullName);
+            return other is null ? -1 : FullName.CompareTo(other.FullName);
         }
 
         #endregion

@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if THREAD_ABORT
-using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
@@ -30,7 +29,6 @@ namespace NUnit.TestData
         {
             while (true) { }
         }
-
 
         [Test, Timeout(500)]
         public void TimeoutWithMessagePumpShouldAbort()
@@ -86,9 +84,9 @@ namespace NUnit.TestData
 
     public class TimeoutTestCaseFixture
     {
-        const int TIME_OUT_TIME = 100;
-        const int NOT_TIMEOUTED_TIME = 10;
-        const int TIMEOUTED_TIME = 500;
+        private const int TIME_OUT_TIME = 100;
+        private const int NOT_TIMEOUTED_TIME = 10;
+        private const int TIMEOUTED_TIME = 500;
 
         [Test]
         [Timeout(TIME_OUT_TIME)]

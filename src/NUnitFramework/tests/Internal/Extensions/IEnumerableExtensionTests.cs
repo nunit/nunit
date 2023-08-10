@@ -4,9 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Internal.Extensions;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Internal.Extensions
+namespace NUnit.Framework.Tests.Internal.Extensions
 {
     public class IEnumerableExtensionTests
     {
@@ -24,8 +25,8 @@ namespace NUnit.Framework.Internal.Extensions
 
         public static IEnumerable<TestCaseData> SortableCollections => new[]
         {
-            new TestCaseData(new int[] { 1 }).SetArgDisplayNames("int[]"),
-            new TestCaseData(new string[] { "1" }).SetArgDisplayNames("string[]"),
+            new TestCaseData(new[] { 1 }).SetArgDisplayNames("int[]"),
+            new TestCaseData(new[] { "1" }).SetArgDisplayNames("string[]"),
             new TestCaseData(Enumerable.Range(0, 10)).SetArgDisplayNames("IEnumerable<int>"),
             new TestCaseData(Enumerable.Range(0, 10).Select(n => n.ToString())).SetArgDisplayNames("IEnumerable<string>"),
             new TestCaseData(new List<int> { 1 }).SetArgDisplayNames("List<int>"),

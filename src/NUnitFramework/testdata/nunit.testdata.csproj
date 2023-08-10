@@ -3,22 +3,17 @@
   <PropertyGroup>
     <RootNamespace>NUnit.TestData</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <Optimize>false</Optimize>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.6.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+    <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
   </ItemGroup>
 
 </Project>

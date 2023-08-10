@@ -1,14 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 using NUnit.Tests.Singletons;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     public class DefaultTestAssemblyBuilderTests
     {
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason)!);
 
             return result.TestCaseCount;
         }

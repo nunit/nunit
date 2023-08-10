@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,25 +25,22 @@ namespace NUnit.Framework.Constraints
             _expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "SubsetOf"; } }
+        public override string DisplayName => "SubsetOf";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "subset of " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "subset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
-        /// Test whether the actual collection is a subset of 
+        /// Test whether the actual collection is a subset of
         /// the expected collection provided.
         /// </summary>
         /// <param name="actual"></param>
@@ -87,7 +82,7 @@ namespace NUnit.Framework.Constraints
         {
             private readonly List<object>? _extraItems;
 
-            public CollectionSubsetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? extraItems)
+            public CollectionSubsetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? extraItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _extraItems = extraItems;

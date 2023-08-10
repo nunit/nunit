@@ -2,10 +2,9 @@
 
 using System;
 using System.Collections;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class ParameterDataSourceTests

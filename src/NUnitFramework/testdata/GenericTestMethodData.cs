@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace NUnit.TestData
@@ -25,14 +22,12 @@ namespace NUnit.TestData
         {
         }
 
-#pragma warning disable 414
         private static readonly object[] Source = new object[] {
             new object[] { 5, 2, "ABC" },
             new object[] { 5, "Y", "ABC" },
             new object[] { "X", 2, "ABC" },
             new object[] { "X", "Y", "ABC" }
         };
-#pragma warning restore 414
     }
 
     public class IncompatibleGenericCombinatorialData
@@ -42,6 +37,26 @@ namespace NUnit.TestData
             [Values(5, "X")] T x,
             [Values(2, "Y")] T y)
         {
+        }
+    }
+
+    public class NotRunnableGenericData
+    {
+        [Test]
+        public void TestWithGeneric_ReturningVoid_ThatIsUnRunnable<T>()
+        {
+        }
+
+        [TestCase(ExpectedResult = default)]
+        public T TestWithGeneric_ReturningGenericType_ThatIsUnRunnable<T>()
+        {
+            return default;
+        }
+
+        [TestCase(1)]
+        public void TestWithGeneric_PassingInGenericParameter_ThatIsRunnable<T>(T parameter)
+        {
+            Assert.That(parameter, Is.EqualTo(1));
         }
     }
 }

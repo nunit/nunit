@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Common;
@@ -27,7 +27,7 @@ namespace NUnit.ConsoleRunner.Tests
             Environment.SetEnvironmentVariable(EnvironmentVariableTeamcityProjectName, "Abc");
 
             // Then
-            Assert.True(provider.TeamCity);
+            Assert.That(provider.TeamCity);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace NUnit.ConsoleRunner.Tests
             Environment.SetEnvironmentVariable(EnvironmentVariableTeamcityProjectName, string.Empty);
 
             // Then
-            Assert.False(provider.TeamCity);
+            Assert.That(provider.TeamCity, Is.False);
         }
 
         private static DefaultOptionsProvider CreateInstance()

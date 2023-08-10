@@ -42,34 +42,22 @@ namespace NUnitLite
         /// <summary>
         /// Returns the number of test cases actually run.
         /// </summary>
-        public int RunCount 
-        {
-            get { return PassCount + ErrorCount + FailureCount + InconclusiveCount;  }
-        }
+        public int RunCount => PassCount + ErrorCount + FailureCount + InconclusiveCount;
 
         /// <summary>
         /// Gets the number of tests not run for any reason.
         /// </summary>
-        public int NotRunCount
-        {
-            get { return InvalidCount + SkipCount + IgnoreCount + ExplicitCount;  }
-        }
+        public int NotRunCount => InvalidCount + SkipCount + IgnoreCount + ExplicitCount;
 
         /// <summary>
         /// Returns the number of failed test cases (including errors and invalid tests)
         /// </summary>
-        public int FailedCount
-        {
-            get { return FailureCount + InvalidCount + ErrorCount;  }
-        }
+        public int FailedCount => FailureCount + InvalidCount + ErrorCount;
 
         /// <summary>
         /// Returns the sum of skipped test cases, including ignored and explicit tests
         /// </summary>
-        public int TotalSkipCount
-        {
-            get { return SkipCount + IgnoreCount + ExplicitCount;  }
-        }
+        public int TotalSkipCount => SkipCount + IgnoreCount + ExplicitCount;
 
         /// <summary>
         /// Gets the count of passed tests
@@ -124,7 +112,7 @@ namespace NUnitLite
         public int InvalidTestFixtures { get; private set; }
 
         /// <summary>
-        /// Gets the ResultState of the test result, which 
+        /// Gets the ResultState of the test result, which
         /// indicates the success or failure of the test.
         /// </summary>
         public ResultState ResultState { get; }

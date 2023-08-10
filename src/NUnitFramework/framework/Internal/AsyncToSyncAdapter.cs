@@ -1,20 +1,19 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq;
 using System.Reflection;
-using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
     internal static class AsyncToSyncAdapter
     {
+        private static readonly Type? AsyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
+
         public static bool IsAsyncOperation(MethodInfo method)
         {
             return AwaitAdapter.IsAwaitable(method.ReturnType)
-                || method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
+                || (AsyncStateMachineAttributeType is not null && method.IsDefined(AsyncStateMachineAttributeType, false));
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
@@ -22,7 +21,7 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        public static object Await(Func<object> invoke)
+        public static object? Await(Func<object?> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
@@ -40,12 +39,12 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static IDisposable InitializeExecutionEnvironment()
+        private static IDisposable? InitializeExecutionEnvironment()
         {
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
-                if (context == null || context.GetType() == typeof(SynchronizationContext))
+                if (context is null || context.GetType() == typeof(SynchronizationContext))
                 {
                     var singleThreadedContext = new SingleThreadedTestSynchronizationContext(
                         shutdownTimeout: TimeSpan.FromSeconds(10));
@@ -63,8 +62,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        [SecuritySafeCritical]
-        private static void SetSynchronizationContext(SynchronizationContext syncContext)
+        private static void SetSynchronizationContext(SynchronizationContext? syncContext)
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);
         }

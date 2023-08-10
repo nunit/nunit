@@ -204,8 +204,10 @@ namespace NUnit.Common
             Token token = NextToken();
 
             foreach (TokenKind kind in kinds)
+            {
                 if (token.Kind == kind)
                     return token;
+            }
 
             throw InvalidTokenError(token);
         }
@@ -216,28 +218,28 @@ namespace NUnit.Common
             Token token = NextToken();
 
             foreach (Token item in valid)
+            {
                 if (token == item)
                     return token;
+            }
 
             throw InvalidTokenError(token);
         }
 
         private Exception InvalidTokenError(Token token)
         {
-            return new TestSelectionParserException(string.Format(
-                "Unexpected token '{0}' at position {1} in selection expression.", token.Text, token.Pos));
+            return new TestSelectionParserException($"Unexpected token '{token.Text}' at position {token.Pos} in selection expression.");
         }
 
-        private Token LookAhead
-        {
-            get { return _tokenizer.LookAhead; }
-        }
+        private Token LookAhead => _tokenizer.LookAhead;
 
         private bool LookingAt(params Token[] tokens)
         {
             foreach (Token token in tokens)
+            {
                 if (LookAhead == token)
                     return true;
+            }
 
             return false;
         }

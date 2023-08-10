@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework
@@ -24,7 +22,7 @@ namespace NUnit.Framework
         /// internally by NUnit but is provided to facilitate debugging.
         /// </param>
         public MultipleAssertException(ITestResult testResult)
-            : base(testResult?.Message)
+            : base(testResult.Message)
         {
             Guard.ArgumentNotNull(testResult, "testResult");
             TestResult = testResult;
@@ -35,7 +33,7 @@ namespace NUnit.Framework
         /// Serialization Constructor
         /// </summary>
         protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info,context)
+            System.Runtime.Serialization.StreamingContext context) : base(info, context)
         {
         }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
@@ -43,10 +41,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the <see cref="ResultState"/> provided by this exception.
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Failure; }
-        }
+        public override ResultState ResultState => ResultState.Failure;
 
         /// <summary>
         /// Gets the <see cref="ITestResult"/> of this test at the point the exception was thrown,

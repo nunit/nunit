@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -13,11 +11,11 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as applying to a specific Culture.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly CultureDetector cultureDetector = new CultureDetector();
-        private readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
+        private readonly CultureDetector _cultureDetector = new();
+        private readonly CultureInfo _currentCulture = CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Constructor with no cultures specified, for use
@@ -58,15 +56,15 @@ namespace NUnit.Framework
         /// <returns>True, if the current culture is supported</returns>
         private bool IsCultureSupported([NotNullWhen(false)] out string? reason)
         {
-            if (Include != null && !cultureDetector.IsCultureSupported(Include))
+            if (Include is not null && !_cultureDetector.IsCultureSupported(Include))
             {
-                reason = string.Format("Only supported under culture {0}", Include);
+                reason = $"Only supported under culture {Include}";
                 return false;
             }
 
-            if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
+            if (Exclude is not null && _cultureDetector.IsCultureSupported(Exclude))
             {
-                reason = string.Format("Not supported under culture {0}", Exclude);
+                reason = $"Not supported under culture {Exclude}";
                 return false;
             }
 
@@ -86,12 +84,12 @@ namespace NUnit.Framework
 
             if (culture.IndexOf(',') >= 0)
             {
-                if (IsCultureSupported(culture.Split(new char[] { ',' })))
+                if (IsCultureSupported(culture.Split(',')))
                     return true;
             }
             else
             {
-                if (currentCulture.Name == culture || currentCulture.TwoLetterISOLanguageName == culture)
+                if (_currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 
@@ -107,8 +105,10 @@ namespace NUnit.Framework
         public bool IsCultureSupported(string[] cultures)
         {
             foreach (string culture in cultures)
+            {
                 if (IsCultureSupported(culture))
                     return true;
+            }
 
             return false;
         }

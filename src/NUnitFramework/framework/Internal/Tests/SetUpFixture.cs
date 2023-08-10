@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -19,18 +17,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public SetUpFixture(ITypeInfo type) : base(type)
         {
-            this.Name = type.Namespace;
-            if (this.Name == null)
-                this.Name = "[default namespace]";
-            int index = this.Name.LastIndexOf('.');
-            if (index > 0)
-                this.Name = this.Name.Substring(index + 1);
+            Name = GetName(type);
 
             OneTimeSetUpMethods = TypeInfo.GetMethodsWithAttribute<OneTimeSetUpAttribute>(true);
             OneTimeTearDownMethods = TypeInfo.GetMethodsWithAttribute<OneTimeTearDownAttribute>(true);
 
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
+        }
+
+        private static string GetName(ITypeInfo type)
+        {
+            var name = type.Namespace ?? "[default namespace]";
+            var index = name.LastIndexOf('.');
+            if (index > 0)
+                name = name.Substring(index + 1);
+            return name;
         }
 
         /// <summary>

@@ -1,8 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-
-using System;
-using System.Reflection;
-using NUnit.Common;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnitLite
 {
@@ -13,9 +9,9 @@ namespace NUnitLite
     /// Since it references a particular version of NUnitLite, it may only
     /// be used for test assemblies built against that framework version.
     /// </summary>
-    class Program
+    internal class Program
     {
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             return new TextRunner().Execute(args);
         }

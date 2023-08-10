@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="argList">The arguments to the method</param>
         /// <param name="typeArguments">If successful, an array of type arguments.</param>
-        public bool TryGetTypeArguments(object[] argList, out Type[] typeArguments)
+        public bool TryGetTypeArguments(object?[] argList, [NotNullWhen(true)] out Type[]? typeArguments)
         {
             Guard.ArgumentValid(argList.Length == ParmTypes.Length, "Supplied arguments do not match required method parameters", nameof(argList));
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
             {
                 var arg = argList[argIndex];
 
-                if (arg != null)
+                if (arg is not null)
                 {
                     Type argType = arg.GetType();
                     TryApplyArgType(ParmTypes[argIndex], argType);
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
 
             foreach (var typeArg in TypeArgs)
             {
-                if (typeArg == null || typeArg == ConflictingTypesMarker)
+                if (typeArg is null || typeArg == ConflictingTypesMarker)
                 {
                     typeArguments = null;
                     return false;
@@ -86,23 +86,25 @@ namespace NUnit.Framework.Internal
             {
                 ApplyArgType(parmType, argType);
             }
-            else if (parmType.GetTypeInfo().ContainsGenericParameters)
+            else if (parmType.ContainsGenericParameters)
             {
-                var genericArgTypes = parmType.IsArray
-                    ? new[] { parmType.GetElementType() }
+                Type[] genericArgTypes = parmType.IsArray
+                    ? new[] { parmType.GetElementType()! }
                     : parmType.GetGenericArguments();
 
                 if (argType.HasElementType)
                 {
-                    ApplyArgType(genericArgTypes[0], argType.GetElementType());
+                    ApplyArgType(genericArgTypes[0], argType.GetElementType()!);
                 }
-                else if (argType.GetTypeInfo().IsGenericType && IsAssignableToGenericType(argType, parmType))
+                else if (argType.IsGenericType && IsAssignableToGenericType(argType, parmType))
                 {
                     Type[] argTypes = argType.GetGenericArguments();
 
                     if (argTypes.Length == genericArgTypes.Length)
+                    {
                         for (int i = 0; i < genericArgTypes.Length; i++)
                             TryApplyArgType(genericArgTypes[i], argTypes[i]);
+                    }
                 }
             }
         }
@@ -122,7 +124,7 @@ namespace NUnit.Framework.Internal
 
             foreach (var iterator in interfaceTypes)
             {
-                if (iterator.GetTypeInfo().IsGenericType)
+                if (iterator.IsGenericType)
                 {
                     // The Type returned by GetGenericTyeDefinition may have the
                     // FullName set to null, so we do our own comparison
@@ -132,7 +134,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            if (givenType.GetTypeInfo().IsGenericType)
+            if (givenType.IsGenericType)
             {
                 // The Type returned by GetGenericTyeDefinition may have the
                 // FullName set to null, so we do our own comparison
@@ -141,8 +143,8 @@ namespace NUnit.Framework.Internal
                     return true;
             }
 
-            Type baseType = givenType.GetTypeInfo().BaseType;
-            if (baseType == null)
+            Type? baseType = givenType.BaseType;
+            if (baseType is null)
                 return false;
 
             return IsAssignableToGenericType(baseType, genericType);

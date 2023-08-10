@@ -7,17 +7,17 @@
 //
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
+
 using System;
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public partial class RepeatAttributeTests
@@ -35,15 +35,17 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RepeatErrorOnThirdTryFixture), "Failed(Child)", 3)]
         public void RepeatWorksAsExpected(Type fixtureType, string outcome, int nTries)
         {
-            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            var fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-
-            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.AreEqual(1, fixture.FixtureSetupCount);
-            Assert.AreEqual(1, fixture.FixtureTeardownCount);
-            Assert.AreEqual(nTries, fixture.SetupCount);
-            Assert.AreEqual(nTries, fixture.TeardownCount);
-            Assert.AreEqual(nTries, fixture.Count);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+                Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+                Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+                Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            });
         }
 
         [Test]
@@ -52,8 +54,8 @@ namespace NUnit.Framework.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.PassesTwoTimes));
 
-            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.AreEqual(result.FailCount, 1, "expected that the test failed the last repetition");
+            Assert.That(fixture.TearDownResults, Has.Count.EqualTo(fixture.Count + 1), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(result.FailCount, Is.EqualTo(1), "expected that the test failed the last repetition");
         }
 
         [Test]
@@ -62,19 +64,20 @@ namespace NUnit.Framework.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.AlwaysPasses));
 
-            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.AreEqual(result.FailCount, 0, "expected that the test passes all repetitions without a failure");
+            Assert.That(fixture.TearDownResults, Has.Count.EqualTo(fixture.Count + 1), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(result.FailCount, Is.EqualTo(0), "expected that the test passes all repetitions without a failure");
         }
 
         [Test]
         public void CategoryWorksWithRepeatedTest()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
-            Test test = suite.Tests[0] as Test;
+            var test = suite.Tests[0] as Test;
+            Assert.That(test, Is.Not.Null);
             System.Collections.IList categories = test.Properties["Category"];
-            Assert.IsNotNull(categories);
-            Assert.AreEqual(1, categories.Count);
-            Assert.AreEqual("SAMPLE", categories[0]);
+            Assert.That(categories, Is.Not.Null);
+            Assert.That(categories, Has.Count.EqualTo(1));
+            Assert.That(categories[0], Is.EqualTo("SAMPLE"));
         }
 
         [Test]

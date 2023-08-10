@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class TupleEqualityTests
@@ -49,7 +49,9 @@ namespace NUnit.Framework.Constraints
         {
             var tuple1 = Tuple.Create("Hello", 3);
             var tuple2 = Tuple.Create("Hello", 3, 1);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             Assert.That(tuple1, Is.Not.EqualTo(tuple2));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 
         [Test]

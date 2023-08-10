@@ -16,18 +16,17 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="itemConstraint"></param>
         public NoItemConstraint(IConstraint itemConstraint)
-            : base(itemConstraint)
+            : base(itemConstraint, "no item")
         {
-            DescriptionPrefix = "no item";
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "None"; } }
+        public override string DisplayName => "None";
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,

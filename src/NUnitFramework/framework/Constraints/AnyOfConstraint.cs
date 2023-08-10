@@ -11,17 +11,17 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AnyOfConstraint : Constraint
     {
-        private readonly object[] _expected;
-        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private readonly ICollection _expected;
+        private readonly NUnitEqualityComparer _comparer = new();
 
         /// <summary>
         /// Construct a <see cref="AnyOfConstraint"/>
         /// </summary>
         /// <param name="expected">Collection of expected values</param>
-        public AnyOfConstraint(object[] expected) : base(expected)
+        public AnyOfConstraint(ICollection expected) : base(expected)
         {
             Guard.ArgumentNotNull(expected, nameof(expected));
-            Guard.ArgumentValid(expected.Length > 0,
+            Guard.ArgumentValid(expected.Count > 0,
                 $"{nameof(AnyOfConstraint)} requires non-empty expected collection!", nameof(expected));
 
             _expected = expected;
@@ -31,13 +31,11 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "any of " + MsgUtils.FormatValue(_expected);
-            }
-        }
+        public override string Description => "any of " + MsgUtils.FormatValue(_expected);
+
+        /// <inheritdoc/>
+        protected override string GetStringRepresentation()
+            => GetStringRepresentation(_expected);
 
         /// <summary>
         /// Test whether item is present in expected collection

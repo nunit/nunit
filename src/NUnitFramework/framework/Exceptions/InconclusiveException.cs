@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework
@@ -16,7 +14,7 @@ namespace NUnit.Framework
     {
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        public InconclusiveException(string? message)
+        public InconclusiveException(string message)
             : base(message)
         { }
 
@@ -24,7 +22,7 @@ namespace NUnit.Framework
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public InconclusiveException(string? message, Exception? inner)
+        public InconclusiveException(string message, Exception? inner)
             :
             base(message, inner)
         { }
@@ -40,9 +38,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Inconclusive; }
-        }
+        public override ResultState ResultState => ResultState.Inconclusive;
     }
 }

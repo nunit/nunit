@@ -1,11 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
@@ -18,7 +14,7 @@ namespace NUnit.Framework
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
     /// under a given namespace.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
@@ -53,28 +49,30 @@ namespace NUnit.Framework
             {
                 if (typeInfo.IsAbstract)
                 {
-                    reason = string.Format("{0} is an abstract class", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} is an abstract class";
                     return false;
                 }
 
                 if (!typeInfo.HasConstructor(Array.Empty<Type>()))
                 {
-                    reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} does not have a default constructor";
                     return false;
                 }
             }
 
-            var invalidAttributes = new Type[] {
+            var invalidAttributes = new[] {
                 typeof(SetUpAttribute),
                 typeof(TearDownAttribute)
             };
 
             foreach (Type invalidType in invalidAttributes)
+            {
                 if (typeInfo.HasMethodWithAttribute(invalidType))
                 {
                     reason = invalidType.Name + " attribute not allowed in a SetUpFixture";
                     return false;
                 }
+            }
 
             return true;
         }

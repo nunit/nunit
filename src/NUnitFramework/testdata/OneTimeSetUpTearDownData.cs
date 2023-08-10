@@ -58,7 +58,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(4)]
         public void Success(int i)
         {
-            Assert.Pass("Passed with test case {0}", i);
+            Assert.Pass($"Passed with test case {i}");
         }
     }
 
@@ -97,7 +97,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [Theory]
         public void TheoryTest(Data entry)
         {
-            Assert.Pass("Passed with theory id {0}", entry.Id);
+            Assert.Pass($"Passed with theory id {entry.Id}");
         }
     }
 
@@ -174,14 +174,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public void Init2()
         {
             DerivedSetUpCount++;
-            BaseSetUpCalledFirst = this.SetUpCount > 0;
+            BaseSetUpCalledFirst = SetUpCount > 0;
         }
 
         [OneTimeTearDown]
         public void Destroy2()
         {
             DerivedTearDownCount++;
-            BaseTearDownCalledLast = this.TearDownCount == 0;
+            BaseTearDownCalledLast = TearDownCount == 0;
         }
 
         [Test]
@@ -221,7 +221,6 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
 
         public static bool BaseSetUpCalledFirst;
         public static bool BaseTearDownCalledLast;
-
 
         [OneTimeSetUp]
         public static void Init2()
@@ -275,7 +274,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     }
 
     [TestFixture]
-    public class MisbehavingFixture 
+    public class MisbehavingFixture
     {
         public bool BlowUpInSetUp = false;
         public bool BlowUpInTest = false;
@@ -294,7 +293,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [OneTimeSetUp]
-        public void SetUp() 
+        public void SetUp()
         {
             SetUpCount++;
             if (BlowUpInSetUp)
@@ -310,7 +309,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Test() 
+        public void Test()
         {
             if (BlowUpInTest)
                 throw new Exception("This was thrown from a test");
@@ -322,7 +321,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         public ExceptionInConstructor()
         {
-            throw new Exception( "This was thrown in constructor" );
+            throw new Exception("This was thrown in constructor");
         }
 
         [Test]
@@ -335,13 +334,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class IgnoreInFixtureSetUp
     {
         [OneTimeSetUp]
-        public void SetUpCallsIgnore() 
+        public void SetUpCallsIgnore()
         {
             Assert.Ignore("OneTimeSetUp called Ignore");
         }
 
         [Test]
-        public void NothingToTest() 
+        public void NothingToTest()
         {
         }
     }
@@ -365,13 +364,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
-    [TestFixture, Ignore( "Do Not Run This" )]
+    [TestFixture, Ignore("Do Not Run This")]
     public class IgnoredFixture
     {
         public bool SetupCalled = false;
@@ -390,10 +389,10 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
@@ -419,8 +418,8 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class DisposableFixture : IDisposable
     {
         public int DisposeCalled = 0;
-        public List<String> Actions = new List<String>();
-        
+        public List<string> Actions = new();
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -453,7 +452,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(3)]
         [TestCase(4)]
         public void TestCaseTest(int data) { }
-        
+
         public void Dispose()
         {
             DisposeCalled++;

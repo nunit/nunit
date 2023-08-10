@@ -3,7 +3,6 @@
 using System;
 using System.Reflection;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -11,7 +10,9 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Abstractions;
 
-namespace NUnit.TestUtilities
+#nullable enable
+
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Utility Class used to build and run NUnit tests used as test data
@@ -27,7 +28,7 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(Type type)
         {
-            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(type));
+            return new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(type));
         }
 
         public static TestSuite MakeFixture(object fixture)
@@ -40,14 +41,14 @@ namespace NUnit.TestUtilities
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
             var suite = MakeTestFromMethod(type, methodName) as TestSuite;
-            Assert.NotNull(suite, "Unable to create parameterized suite - most likely there is no data provided");
+            Assert.That(suite, Is.Not.Null, "Unable to create parameterized suite - most likely there is no data provided");
             return suite;
         }
 
         public static TestMethod MakeTestCase(Type type, string methodName)
         {
             var test = MakeTestFromMethod(type, methodName) as TestMethod;
-            Assert.NotNull(test, "Unable to create TestMethod from {0}", methodName);
+            Assert.That(test, Is.Not.Null, $"Unable to create TestMethod from {methodName}");
 
             return test;
         }
@@ -56,11 +57,7 @@ namespace NUnit.TestUtilities
         // depending on whether the method takes arguments or not
         internal static Test MakeTestFromMethod(Type type, string methodName)
         {
-            var method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            if (method == null)
-                Assert.Fail("Method not found: " + methodName);
-            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
+            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, methodName));
         }
 
         #endregion
@@ -85,7 +82,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context);
         }
 
-        public static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger = null)
+        public static WorkItem CreateWorkItem(Test test, object? testObject, IDebugger? debugger = null)
         {
             var context = new TestExecutionContext
             {
@@ -96,9 +93,10 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context, debugger);
         }
 
-        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger = null)
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger? debugger = null)
         {
             var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, debugger ?? new DebuggerProxy(), true);
+            Assert.That(work, Is.Not.Null);
             work.InitializeContext(context);
 
             return work;
@@ -122,7 +120,7 @@ namespace NUnit.TestUtilities
         {
             var suite = MakeParameterizedMethodSuite(type, methodName);
 
-            object testObject = null;
+            object? testObject = null;
             if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
@@ -133,7 +131,7 @@ namespace NUnit.TestUtilities
         {
             var testMethod = MakeTestCase(type, methodName);
 
-            object testObject = null;
+            object? testObject = null;
             if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
@@ -150,6 +148,8 @@ namespace NUnit.TestUtilities
         public static ITestResult RunAsTestCase(Action action)
         {
             var method = action.GetMethodInfo();
+            Assert.That(method, Is.Not.Null);
+            Assert.That(method.DeclaringType, Is.Not.Null);
             var testMethod = MakeTestCase(method.DeclaringType, method.Name);
             return RunTest(testMethod);
         }
@@ -159,22 +159,36 @@ namespace NUnit.TestUtilities
             return RunTest(test, null);
         }
 
-        public static ITestResult RunTest(Test test, object testObject, IDebugger debugger = null)
+        public static ITestResult RunTest(Test test, object? testObject, IDebugger? debugger = null)
         {
             return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger ?? new DebuggerProxy()));
         }
 
         public static ITestResult ExecuteWorkItem(WorkItem work)
         {
-            work.Execute();
+            var savedContext = TestExecutionContext.CurrentContext;
 
-            // TODO: Replace with an event - but not while method is static
-            while (work.State != WorkItemState.Complete)
+            try
             {
-                Thread.Sleep(1);
+                return ExecuteUntilComplete(work);
+            }
+            finally
+            {
+                savedContext.EstablishExecutionEnvironment();
             }
 
-            return work.Result;
+            static ITestResult ExecuteUntilComplete(WorkItem work)
+            {
+                work.Execute();
+
+                // TODO: Replace with an event - but not while method is static
+                while (work.State != WorkItemState.Complete)
+                {
+                    Thread.Sleep(1);
+                }
+
+                return work.Result;
+            }
         }
 
         #endregion
@@ -186,9 +200,9 @@ namespace NUnit.TestUtilities
         /// It is needed particularly when running suites, since
         /// the child items require a dispatcher in the context.
         /// </summary>
-        class SuperSimpleDispatcher : IWorkItemDispatcher
+        private class SuperSimpleDispatcher : IWorkItemDispatcher
         {
-            public int LevelOfParallelism { get { return 0; } }
+            public int LevelOfParallelism => 0;
 
             public void Start(WorkItem topLevelWorkItem)
             {

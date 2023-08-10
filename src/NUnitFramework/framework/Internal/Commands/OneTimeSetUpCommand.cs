@@ -16,14 +16,13 @@ namespace NUnit.Framework.Internal.Commands
         public OneTimeSetUpCommand(TestCommand innerCommand, SetUpTearDownItem setUpTearDown)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(Test is TestSuite && Test.TypeInfo != null,
+            Guard.ArgumentValid(Test is TestSuite && Test.TypeInfo is not null,
                 "OneTimeSetUpCommand must reference a TestFixture or SetUpFixture", nameof(innerCommand));
 
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
                 setUpTearDown.RunSetUp(context);
             };
         }
     }
 }
-

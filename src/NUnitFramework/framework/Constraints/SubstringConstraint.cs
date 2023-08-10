@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Globalization;
 
 namespace NUnit.Framework.Constraints
 {
@@ -11,13 +10,13 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SubstringConstraint : StringConstraint
     {
-        private StringComparison? comparisonType;
+        private StringComparison? _comparisonType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected.</param>
-        public SubstringConstraint(string expected) : base(expected) 
+        public SubstringConstraint(string expected) : base(expected)
         {
             descriptionText = "String containing";
         }
@@ -40,9 +39,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (actual == null) return false;
+            if (actual is null) return false;
 
-            var actualComparison = comparisonType ?? StringComparison.CurrentCulture;
+            var actualComparison = _comparisonType ?? StringComparison.CurrentCulture;
             return actual.IndexOf(expected, actualComparison) >= 0;
         }
 
@@ -53,9 +52,9 @@ namespace NUnit.Framework.Constraints
         /// than <paramref name="comparisonType"/> was already set.</exception>
         public SubstringConstraint Using(StringComparison comparisonType)
         {
-            if (this.comparisonType == null)
-                this.comparisonType = comparisonType;
-            else if (this.comparisonType != comparisonType)
+            if (_comparisonType == null)
+                _comparisonType = comparisonType;
+            else if (_comparisonType != comparisonType)
                 throw new InvalidOperationException("A different comparison type was already set.");
 
             return this;

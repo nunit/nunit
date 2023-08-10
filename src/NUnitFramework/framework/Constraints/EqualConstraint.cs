@@ -3,9 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
-using NUnit.Framework.Constraints.Comparers;
+using System.Text;
 
 namespace NUnit.Framework.Constraints
 {
@@ -19,14 +17,14 @@ namespace NUnit.Framework.Constraints
     {
         #region Static and Instance Fields
 
-        private readonly object _expected;
+        private readonly object? _expected;
 
         private Tolerance _tolerance = Tolerance.Default;
 
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
         /// </summary>
-        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         #endregion
 
@@ -35,7 +33,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public EqualConstraint(object expected)
+        public EqualConstraint(object? expected)
             : base(expected)
         {
             AdjustArgumentIfNeeded(ref expected);
@@ -57,10 +55,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         /// The tolerance.
         /// </value>
-        public Tolerance Tolerance
-        {
-            get { return _tolerance; }
-        }
+        public Tolerance Tolerance => _tolerance;
 
         /// <summary>
         /// Gets a value indicating whether to compare case insensitive.
@@ -68,10 +63,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         ///   <see langword="true"/> if comparing case insensitive; otherwise, <see langword="false"/>.
         /// </value>
-        public bool CaseInsensitive
-        {
-            get { return _comparer.IgnoreCase; }
-        }
+        public bool CaseInsensitive => _comparer.IgnoreCase;
 
         /// <summary>
         /// Gets a value indicating whether or not to clip strings.
@@ -87,10 +79,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         /// The failure points.
         /// </value>
-        public IList<NUnitEqualityComparer.FailurePoint> FailurePoints
-        {
-            get { return _comparer.FailurePoints; }
-        }
+        public IList<NUnitEqualityComparer.FailurePoint> FailurePoints => _comparer.FailurePoints;
 
         #endregion
 
@@ -380,9 +369,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
+                var sb = new StringBuilder(MsgUtils.FormatValue(_expected));
 
-                if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+                if (_tolerance is not null && _tolerance.HasVariance)
                 {
                     sb.Append(" +/- ");
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
@@ -408,16 +397,17 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-            if (arg != null)
+            if (arg is not null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.GetTypeInfo().IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type? genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
-                if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
+                if (genericTypeDefinition == typeof(ArraySegment<>) &&
+                    argType.GetProperty("Array")?.GetValue(arg, null) is null)
                 {
                     var elementType = argType.GetGenericArguments()[0];
                     var array = Array.CreateInstance(elementType, 0);
-                    var ctor = argType.GetConstructor(new Type[] { array.GetType() });
+                    var ctor = argType.GetConstructor(new[] { array.GetType() })!;
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }

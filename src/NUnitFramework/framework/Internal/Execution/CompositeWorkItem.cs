@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
-using System.Diagnostics;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
@@ -23,23 +21,20 @@ namespace NUnit.Framework.Internal.Execution
 
         private readonly TestSuite _suite;
         private readonly TestSuiteResult _suiteResult;
-        private TestCommand _setupCommand;
-        private TestCommand _teardownCommand;
+        private TestCommand? _setupCommand;
+        private TestCommand? _teardownCommand;
 
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children { get; } = new List<WorkItem>();
+        public List<WorkItem> Children { get; } = new();
 
         /// <summary>
         /// Indicates whether this work item should use a separate dispatcher.
         /// </summary>
-        public override bool IsolateChildTests
-        {
-            get { return ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0; }
-        }
+        public override bool IsolateChildTests => ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0;
 
-        private CountdownEvent _childTestCountdown;
+        private CountdownEvent? _childTestCountdown;
 
         /// <summary>
         /// Construct a CompositeWorkItem for executing a test suite
@@ -51,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
             : base(suite, childFilter)
         {
             _suite = suite;
-            _suiteResult = Result as TestSuiteResult;
+            _suiteResult = (TestSuiteResult)Result;
         }
 
         /// <summary>
@@ -62,9 +57,13 @@ namespace NUnit.Framework.Internal.Execution
         protected override void PerformWork()
         {
             if (!CheckForCancellation())
+            {
                 if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
+                {
                     SkipFixture(ResultState.Explicit, GetSkipReason(), null);
+                }
                 else
+                {
                     switch (Test.RunState)
                     {
                         default:
@@ -106,7 +105,10 @@ namespace NUnit.Framework.Internal.Execution
                                     PerformOneTimeTearDown();
                             }
                             else if (Test.TestType == "Theory")
+                            {
                                 Result.SetResult(ResultState.Failure, "No test cases were provided");
+                            }
+
                             break;
 
                         case RunState.Skipped:
@@ -121,6 +123,8 @@ namespace NUnit.Framework.Internal.Execution
                             SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
                             break;
                     }
+                }
+            }
 
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
@@ -165,7 +169,7 @@ namespace NUnit.Framework.Internal.Execution
                 // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite =  action.Targets.HasFlag(ActionTargets.Suite)
+                bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
                 bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
@@ -192,7 +196,7 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
 
-            if (Test.TypeInfo != null)
+            if (Test.TypeInfo is not null)
             {
                 // Build the OneTimeSetUpCommands
                 foreach (SetUpTearDownItem item in setUpTearDown)
@@ -228,7 +232,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+            if (Test is IDisposableFixture && Test.TypeInfo is not null && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -238,7 +242,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                _setupCommand.Execute(Context);
+                _setupCommand?.Execute(Context);
 
                 // SetUp may have changed some things in the environment
                 Context.UpdateContextFromEnvironment();
@@ -246,7 +250,7 @@ namespace NUnit.Framework.Internal.Execution
             catch (Exception ex)
             {
                 if (ex is NUnitException || ex is TargetInvocationException)
-                    ex = ex.InnerException;
+                    ex = ex.InnerException!;
 
                 Result.RecordException(ex, FailureSite.SetUp);
             }
@@ -281,15 +285,17 @@ namespace NUnit.Framework.Internal.Execution
             // If run was cancelled, reduce countdown by number of
             // child items not yet staged and check if we are done.
             if (childCount > 0)
-                lock(_childCompletionLock)
+            {
+                lock (_childCompletionLock)
                 {
                     _childTestCountdown.Signal(childCount);
                     if (_childTestCountdown.CurrentCount == 0)
                         OnAllChildItemsCompleted();
                 }
+            }
         }
 
-        private void SkipFixture(ResultState resultState, string message, string stackTrace)
+        private void SkipFixture(ResultState resultState, string message, string? stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
             SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
@@ -325,24 +331,24 @@ namespace NUnit.Framework.Internal.Execution
             // executed on the same thread since the time that
             // this test started, so we have to re-establish
             // the proper execution environment
-            this.Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-            _teardownCommand.Execute(this.Context);
+            _teardownCommand?.Execute(Context);
         }
 
         private string GetSkipReason()
         {
-            return (string)Test.Properties.Get(PropertyNames.SkipReason);
+            return (string?)Test.Properties.Get(PropertyNames.SkipReason) ?? string.Empty;
         }
 
-        private string GetProviderStackTrace()
+        private string? GetProviderStackTrace()
         {
-            return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
+            return (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private readonly object _childCompletionLock = new object();
+        private readonly object _childCompletionLock = new();
 
-        private void OnChildItemCompleted(object sender, EventArgs e)
+        private void OnChildItemCompleted(object? sender, EventArgs e)
         {
             // Since child tests may be run on various threads, this
             // method may be called simultaneously by different children.
@@ -359,7 +365,8 @@ namespace NUnit.Framework.Internal.Execution
                         Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                     // Check to see if all children completed
-                    _childTestCountdown.Signal();
+                    // _childTestCountdown is created before running child tasks, so is not null here.
+                    _childTestCountdown!.Signal();
                     if (_childTestCountdown.CurrentCount == 0)
                         OnAllChildItemsCompleted();
                 }
@@ -377,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
-        private readonly object cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -385,12 +392,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the CompositeWorkItem and all of its children should be aborted, false if it should allow all currently running tests to complete</param>
         public override void Cancel(bool force)
         {
-            lock (cancelLock)
+            lock (_cancelLock)
             {
                 foreach (var child in Children)
                 {
                     var ctx = child.Context;
-                    if (ctx != null)
+                    if (ctx is not null)
                         ctx.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
                     if (child.State == WorkItemState.Running)
@@ -411,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             private readonly CompositeWorkItem _originalWorkItem;
 
-            private readonly object _teardownLock = new object();
+            private readonly object _teardownLock = new();
 
             /// <summary>
             /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem
@@ -426,18 +433,12 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             /// The WorkItem name, overridden to indicate this is the teardown.
             /// </summary>
-            public override string Name
-            {
-                get { return string.Format("{0} OneTimeTearDown", base.Name); }
-            }
+            public override string Name => $"{base.Name} OneTimeTearDown";
 
             /// <summary>
             /// The ExecutionStrategy for use in running this work item
             /// </summary>
-            public override ParallelExecutionStrategy ExecutionStrategy
-            {
-                get { return _originalWorkItem.ExecutionStrategy; }
-            }
+            public override ParallelExecutionStrategy ExecutionStrategy => _originalWorkItem.ExecutionStrategy;
 
             /// <summary>
             ///
@@ -453,11 +454,13 @@ namespace NUnit.Framework.Internal.Execution
                         _originalWorkItem.PerformOneTimeTearDown();
 
                     foreach (var childResult in Result.Children)
+                    {
                         if (childResult.ResultState == ResultState.Cancelled)
                         {
-                            this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            Result.SetResult(ResultState.Cancelled, "Cancelled by user");
                             break;
                         }
+                    }
 
                     _originalWorkItem.WorkItemComplete();
                 }
@@ -484,4 +487,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-

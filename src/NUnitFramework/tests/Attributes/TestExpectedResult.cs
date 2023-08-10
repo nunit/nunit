@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestMethodSignatureFixture;
-using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestExpectedResult
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test(ExpectedResult = null)]
-        public object ResultCanBeNull()
+        public object? ResultCanBeNull()
         {
             return null;
         }

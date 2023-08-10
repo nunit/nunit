@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
 
@@ -11,12 +11,12 @@ namespace NUnit.Framework.Internal.Commands
     public class TheoryResultCommand : AfterTestCommand
     {
         /// <summary>
-        /// Constructs a TheoryResultCommand 
+        /// Constructs a TheoryResultCommand
         /// </summary>
         /// <param name="command">The command to be wrapped by this one</param>
         public TheoryResultCommand(TestCommand command) : base(command)
         {
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 TestResult theoryResult = context.CurrentResult;
 

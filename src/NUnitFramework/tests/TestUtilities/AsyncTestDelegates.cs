@@ -3,7 +3,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     public class AsyncTestDelegates
     {

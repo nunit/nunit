@@ -13,7 +13,7 @@ namespace NUnitLite
     /// </summary>
     public class TeamCityEventListener : ITestListener
     {
-        readonly TextWriter _outWriter;
+        private readonly TextWriter _outWriter;
 
         /// <summary>
         /// Default constructor using Console.Out
@@ -54,8 +54,11 @@ namespace NUnitLite
             string testName = result.Test.Name;
 
             if (result.Test.IsSuite)
+            {
                 TC_TestSuiteFinished(testName);
+            }
             else
+            {
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
@@ -75,6 +78,7 @@ namespace NUnitLite
                         TC_TestFinished(testName, result.Duration);
                         break;
                 }
+            }
         }
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace NUnitLite
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message) { }
 
-#region Helper Methods
+        #region Helper Methods
 
         private void TC_TestSuiteStarted(string name)
         {
@@ -125,7 +129,7 @@ namespace NUnitLite
 
         private static string Escape(string input)
         {
-            return input != null
+            return input is not null
                 ? input.Replace("|", "||")
                        .Replace("'", "|'")
                        .Replace("\n", "|n")
@@ -138,6 +142,6 @@ namespace NUnitLite
                 : null;
         }
 
-#endregion
+        #endregion
     }
 }

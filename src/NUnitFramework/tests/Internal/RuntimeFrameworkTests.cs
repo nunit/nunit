@@ -1,17 +1,18 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class RuntimeFrameworkTests
     {
 #if NETCOREAPP
-        static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
+        private static readonly RuntimeType CurrentRuntime = RuntimeType.NetCore;
 #else
-        static readonly RuntimeType currentRuntime =
-            Type.GetType("Mono.Runtime", false) != null
+        private static readonly RuntimeType CurrentRuntime =
+            Type.GetType("Mono.Runtime", false) is not null
                 ? RuntimeType.Mono
                 : RuntimeType.NetFramework;
 #endif
@@ -19,43 +20,48 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanGetCurrentFramework()
         {
-            RuntimeFramework framework = RuntimeFramework.CurrentFramework;
-
-            Assert.That(framework.Runtime, Is.EqualTo(currentRuntime), "#1");
-            Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
+            var framework = RuntimeFramework.CurrentFramework;
+            Assert.Multiple(() =>
+            {
+                Assert.That(framework.Runtime, Is.EqualTo(CurrentRuntime), "#1");
+                Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
+            });
         }
 
         [Test]
-        [TestCaseSource(nameof(netcoreRuntimes))]
+        [TestCaseSource(nameof(NetcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {
-            PlatformHelper platformHelper = new PlatformHelper();
+            var platformHelper = new PlatformHelper();
             Assert.Throws<PlatformNotSupportedException>(() => platformHelper.IsPlatformSupported(netcoreRuntime));
         }
 
         [Test]
         public void SpecifyingNetCoreWithoutVersioningSucceeds()
         {
-            PlatformHelper platformHelper = new PlatformHelper();
+            var platformHelper = new PlatformHelper();
             bool isNetCore;
 #if NETCOREAPP
             isNetCore = true;
 #else
             isNetCore = false;
 #endif
-            Assert.AreEqual(isNetCore, platformHelper.IsPlatformSupported("netcore"));
+            Assert.That(platformHelper.IsPlatformSupported("netcore"), Is.EqualTo(isNetCore));
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
-            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.FrameworkVersion, framework.FrameworkVersion, "#2");
-            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#3");
+            var framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            Assert.Multiple(() =>
+            {
+                Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
+                Assert.That(framework.FrameworkVersion, Is.EqualTo(data.FrameworkVersion), "#2");
+                Assert.That(framework.ClrVersion, Is.EqualTo(data.ClrVersion), "#3");
+            });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanCreateUsingClrVersion(FrameworkData data)
         {
             Assume.That(data.FrameworkVersion.Major != 3, "#0");
@@ -63,35 +69,44 @@ namespace NUnit.Framework.Internal
             Assume.That(data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5, "#0");
             Assume.That(data.Runtime != RuntimeType.NetCore, "#0");
 
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
-            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.FrameworkVersion, framework.FrameworkVersion, "#2");
-            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#3");
+            var framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
+            Assert.Multiple(() =>
+            {
+                Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
+                Assert.That(framework.FrameworkVersion, Is.EqualTo(data.FrameworkVersion), "#2");
+                Assert.That(framework.ClrVersion, Is.EqualTo(data.ClrVersion), "#3");
+            });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanParseRuntimeFramework(FrameworkData data)
         {
-            RuntimeFramework framework = RuntimeFramework.Parse(data.Representation);
-            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#2");
+            var framework = RuntimeFramework.Parse(data.Representation);
+            Assert.Multiple(() =>
+            {
+                Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
+                Assert.That(framework.ClrVersion, Is.EqualTo(data.ClrVersion), "#2");
+            });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanDisplayFrameworkAsString(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
-            Assert.AreEqual(data.Representation, framework.ToString(), "#1");
-            Assert.AreEqual(data.DisplayName, framework.DisplayName, "#2");
+            var framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            Assert.Multiple(() =>
+            {
+                Assert.That(framework.ToString(), Is.EqualTo(data.Representation), "#1");
+                Assert.That(framework.DisplayName, Is.EqualTo(data.DisplayName), "#2");
+            });
         }
 
-        [TestCaseSource(nameof(matchData))]
+        [TestCaseSource(nameof(MatchData))]
         public bool CanMatchRuntimes(RuntimeFramework f1, RuntimeFramework f2)
         {
             return f1.Supports(f2);
         }
 
-        internal static TestCaseData[] matchData = new TestCaseData[] {
+        internal static TestCaseData[] MatchData = new TestCaseData[] {
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
@@ -282,11 +297,11 @@ namespace NUnit.Framework.Internal
 
             public override string ToString()
             {
-                return string.Format("<{0},{1},{2}>", this.Runtime, this.FrameworkVersion, this.ClrVersion);
+                return $"<{Runtime},{FrameworkVersion},{ClrVersion}>";
             }
         }
 
-        internal static FrameworkData[] frameworkData = new FrameworkData[] {
+        internal static FrameworkData[] FrameworkTestData = new FrameworkData[] {
             new FrameworkData(RuntimeType.NetFramework, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
             new FrameworkData(RuntimeType.NetFramework, new Version(1,1), new Version(1,1,4322), "net-1.1", "Net 1.1"),
             new FrameworkData(RuntimeType.NetFramework, new Version(2,0), new Version(2,0,50727), "net-2.0", "Net 2.0"),
@@ -312,7 +327,7 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
 
-        internal static string[] netcoreRuntimes = new string[] {
+        internal static string[] NetcoreRuntimes = new string[] {
             "netcore-1.0",
             "netcore-1.1",
             "netcore-2.0",

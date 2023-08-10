@@ -1,10 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading;
+
+#if THREAD_ABORT
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Security;
-using System.Threading;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -25,7 +27,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Pre-Task compatibility
         /// </summary>
-        public static void Delay(int milliseconds, WaitCallback threadPoolWork, object state = null)
+        public static void Delay(int milliseconds, WaitCallback threadPoolWork, object? state = null)
         {
             new DelayClosure(milliseconds, threadPoolWork, state);
         }
@@ -34,9 +36,9 @@ namespace NUnit.Framework.Internal
         {
             private readonly Timer _timer;
             private readonly WaitCallback _threadPoolWork;
-            private readonly object _state;
+            private readonly object? _state;
 
-            public DelayClosure(int milliseconds, WaitCallback threadPoolWork, object state)
+            public DelayClosure(int milliseconds, WaitCallback threadPoolWork, object? state)
             {
                 _threadPoolWork = threadPoolWork;
                 _state = state;
@@ -45,13 +47,12 @@ namespace NUnit.Framework.Internal
                 _timer.Change(milliseconds, Timeout.Infinite);
             }
 
-            private void Callback(object _)
+            private void Callback(object? _)
             {
                 _timer.Dispose();
                 _threadPoolWork.Invoke(_state);
             }
         }
-
 
         /// <summary>
         /// Abort a thread, helping to dislodging it if it is blocked in native code
@@ -67,7 +68,6 @@ namespace NUnit.Framework.Internal
 
             thread.Abort();
         }
-
 
         /// <summary>
         /// Do our best to kill a thread
@@ -89,15 +89,14 @@ namespace NUnit.Framework.Internal
         /// <param name="nativeId">The native thread id (if known), otherwise 0.
         /// If provided, allows the thread to be killed if it's in a message pump native blocking wait.
         /// This must have previously been captured by calling <see cref="GetCurrentThreadNativeId"/> from the running thread itself.</param>
-        public static void Kill(Thread thread, object stateInfo, int nativeId = 0)
+        public static void Kill(Thread thread, object? stateInfo, int nativeId = 0)
         {
             if (nativeId != 0)
                 DislodgeThreadInNativeMessageWait(thread, nativeId);
 
-
             try
             {
-                if (stateInfo == null)
+                if (stateInfo is null)
                     thread.Abort();
                 else
                     thread.Abort(stateInfo);
@@ -126,9 +125,9 @@ namespace NUnit.Framework.Internal
             Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, new CheckOnAbortingThreadState(thread, nativeId));
         }
 
-        private static void CheckOnAbortingThread(object state)
+        private static void CheckOnAbortingThread(object? state)
         {
-            var context = (CheckOnAbortingThreadState)state;
+            var context = (CheckOnAbortingThreadState)state!;
 
             switch (context.Thread.ThreadState)
             {
@@ -154,47 +153,42 @@ namespace NUnit.Framework.Internal
             }
         }
 
-
-
-        private static bool isNotOnWindows;
+        private static bool _isNotOnWindows;
 
         /// <summary>
         /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
         /// </summary>
-        [SecuritySafeCritical]
         public static int GetCurrentThreadNativeId()
         {
-            if (isNotOnWindows) return 0;
+            if (_isNotOnWindows) return 0;
             try
             {
                 return GetCurrentThreadId();
             }
             catch (EntryPointNotFoundException)
             {
-                isNotOnWindows = true;
+                _isNotOnWindows = true;
                 return 0;
             }
         }
 
+        private const int ERROR_INVALID_THREAD_ID = 0x5A4;
 
         /// <summary>
         /// Sends a message to the thread to dislodge it from native code and allow a return to managed code, where a ThreadAbortException can be generated.
         /// The message is meaningless (WM_CLOSE without a window handle) but it will end any blocking message wait.
         /// </summary>
-        [SecuritySafeCritical]
         private static void PostThreadCloseMessage(int nativeId)
         {
             if (!PostThreadMessage(nativeId, WM.CLOSE, IntPtr.Zero, IntPtr.Zero))
             {
                 // ReSharper disable once InconsistentNaming
                 // P/invoke doesn’t need to follow naming convention
-                const int ERROR_INVALID_THREAD_ID = 0x5A4;
                 var errorCode = Marshal.GetLastWin32Error();
                 if (errorCode != ERROR_INVALID_THREAD_ID)
                     throw new Win32Exception(errorCode);
             }
         }
-
 
         [DllImport("kernel32.dll")]
         private static extern int GetCurrentThreadId();
@@ -211,7 +205,7 @@ namespace NUnit.Framework.Internal
 #endif
 
         /// <summary>Gets <see cref="Thread.CurrentPrincipal"/> or <see langword="null" /> if the current platform does not support it.</summary>
-        public static System.Security.Principal.IPrincipal GetCurrentThreadPrincipal()
+        public static System.Security.Principal.IPrincipal? GetCurrentThreadPrincipal()
         {
             try
             {
@@ -225,13 +219,13 @@ namespace NUnit.Framework.Internal
 
         /// <summary>Sets <see cref="Thread.CurrentPrincipal"/> if current platform supports it.</summary>
         /// <param name="principal">Value to set. If the current platform does not support <see cref="Thread.CurrentPrincipal"/> then the only allowed value is <see langword="null"/>.</param>
-        public static void SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal principal)
+        public static void SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal? principal)
         {
             try
             {
                 Thread.CurrentPrincipal = principal;
             }
-            catch (PlatformNotSupportedException) when (principal == null) //E.g. Mono.WASM
+            catch (PlatformNotSupportedException) when (principal is null) //E.g. Mono.WASM
             { }
         }
     }

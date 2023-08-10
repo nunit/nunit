@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Reflection;
 
@@ -39,7 +37,7 @@ namespace NUnit.Framework.Interfaces
         /// Gets a value indicating whether the method is public.
         /// </summary>
         bool IsPublic { get; }
-        
+
         /// <summary>
         /// Gets a value indicating whether the method is static.
         /// </summary>

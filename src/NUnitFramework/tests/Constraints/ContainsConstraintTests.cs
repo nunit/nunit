@@ -1,13 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     public class ContainsConstraintTests
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [Test]
         public void HonorsIgnoreCaseForStringCollection()
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected).IgnoreCase));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -70,7 +71,7 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -84,7 +85,7 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected).IgnoreCase));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

@@ -34,16 +34,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsKey"; } }
+        public override string DisplayName => "ContainsKey";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing key " + MsgUtils.FormatValue(Expected); }
-        }
+        public override string Description => "dictionary containing key " + MsgUtils.FormatValue(Expected);
 
         /// <summary>
         /// Gets the expected object
@@ -56,8 +53,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
         {
-            var builder = this.Builder;
-            if (builder == null)
+            var builder = Builder;
+            if (builder is null)
             {
                 builder = new ConstraintBuilder();
                 builder.Append(this);
@@ -68,21 +65,26 @@ namespace NUnit.Framework.Constraints
             return constraint;
         }
 
-        private bool Matches(object actual)
+        private bool Matches(object? actual)
         {
+            if (actual is null)
+                throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
+
             if (_isDeprecatedMode)
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
                 foreach (var obj in dictionary.Keys)
+                {
                     if (ItemsEqual(obj, Expected))
                         return true;
+                }
 
                 return false;
             }
 
             var method = GetContainsKeyMethod(actual);
-            if (method != null)
-                return (bool)method.Invoke(actual, new[] { Expected });
+            if (method is not null)
+                return (bool)method.Invoke(actual, new[] { Expected })!;
 
             throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a ContainsKey or Contains(TKey) method.");
         }
@@ -104,9 +106,8 @@ namespace NUnit.Framework.Constraints
             return Matches(collection);
         }
 
-        private static MethodInfo GetContainsKeyMethod(object keyedItemContainer)
+        private static MethodInfo? GetContainsKeyMethod(object keyedItemContainer)
         {
-            if (keyedItemContainer == null) throw new ArgumentNullException(nameof(keyedItemContainer));
             var instanceType = keyedItemContainer.GetType();
 
             var method = FindContainsKeyMethod(instanceType)
@@ -114,12 +115,12 @@ namespace NUnit.Framework.Constraints
                             .GetInterfaces()
                             .Concat(GetBaseTypes(instanceType))
                             .Select(FindContainsKeyMethod)
-                            .FirstOrDefault(m => m != null);
+                            .FirstOrDefault(m => m is not null);
 
             return method;
         }
 
-        private static MethodInfo FindContainsKeyMethod(Type type)
+        private static MethodInfo? FindContainsKeyMethod(Type type)
         {
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
@@ -128,12 +129,12 @@ namespace NUnit.Framework.Constraints
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
-            if (method == null && type.GetTypeInfo().IsGenericType)
+            if (method is null && type.IsGenericType)
             {
                 var definition = type.GetGenericTypeDefinition();
                 var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
 
-                if (tKeyGenericArg != null)
+                if (tKeyGenericArg is not null)
                 {
                     method = definition
                              .GetMethods(BindingFlags.Instance | BindingFlags.Public)
@@ -143,7 +144,7 @@ namespace NUnit.Framework.Constraints
                                                   m.GetParameters().Length == 1 &&
                                                   m.GetParameters()[0].ParameterType == tKeyGenericArg);
 
-                    if (method != null)
+                    if (method is not null)
                     {
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
                     }
@@ -155,11 +156,9 @@ namespace NUnit.Framework.Constraints
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
-            for (; ; )
+            for (Type? baseType = type.BaseType; baseType is not null; baseType = baseType.BaseType)
             {
-                type = type.GetTypeInfo().BaseType;
-                if (type == null) break;
-                yield return type;
+                yield return baseType;
             }
         }
     }

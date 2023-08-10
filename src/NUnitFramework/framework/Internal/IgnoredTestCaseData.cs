@@ -28,15 +28,15 @@ namespace NUnit.Framework
 
         internal IgnoredTestCaseData(TestCaseData data, RunState prevRunState)
         {
-            this.Arguments = data.Arguments;
-            this.ArgDisplayNames = data.ArgDisplayNames;
-            this.ExpectedResult = data.ExpectedResult;
-            this.HasExpectedResult = data.HasExpectedResult;
-            this.OriginalArguments = data.OriginalArguments;
-            this.Properties = data.Properties;
-            this.RunState = data.RunState;
-            this.TestName = data.TestName;
-            this._prevRunState = prevRunState;
+            Arguments = data.Arguments;
+            ArgDisplayNames = data.ArgDisplayNames;
+            ExpectedResult = data.ExpectedResult;
+            HasExpectedResult = data.HasExpectedResult;
+            OriginalArguments = data.OriginalArguments;
+            Properties = data.Properties;
+            RunState = data.RunState;
+            TestName = data.TestName;
+            _prevRunState = prevRunState;
         }
 
         #endregion
@@ -55,14 +55,14 @@ namespace NUnit.Framework
                 if (datetime > DateTimeOffset.UtcNow)
                 {
                     RunState = RunState.Ignored;
-                    string reason = (string)Properties.Get(PropertyNames.SkipReason);
+                    string? reason = (string?)Properties.Get(PropertyNames.SkipReason);
                     Properties.AddIgnoreUntilReason(datetime, reason);
                 }
                 else
                 {
                     RunState = _prevRunState;
                 }
-                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u") );
+                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u"));
             }
             return this;
         }

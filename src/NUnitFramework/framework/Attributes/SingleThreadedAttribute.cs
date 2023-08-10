@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -9,13 +7,13 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test fixture as requiring all child tests to be run on the 
+    /// Marks a test fixture as requiring all child tests to be run on the
     /// same thread as the OneTimeSetUp and OneTimeTearDown. A flag in the
-    /// <see cref="TestExecutionContext"/> is set forcing all child tests 
-    /// to be run sequentially on the current thread. 
+    /// <see cref="TestExecutionContext"/> is set forcing all child tests
+    /// to be run sequentially on the current thread.
     /// Any <see cref="ParallelScope"/> setting is ignored.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SingleThreadedAttribute : NUnitAttribute, IApplyToContext
     {
         #region IApplyToContext Members

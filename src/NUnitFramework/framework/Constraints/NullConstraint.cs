@@ -7,13 +7,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class NullConstraint : Constraint
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NullConstraint"/> class.
-        /// </summary>
-        public NullConstraint()
-        {
-            this.Description = "null";
-        }
+        /// <inheritdoc/>
+        public override string Description => "null";
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
@@ -22,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual, actual == null);
+            return new ConstraintResult(this, actual, actual is null);
         }
     }
 }

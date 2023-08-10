@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal
         public abstract bool IsCompleted { get; }
         public abstract void OnCompleted(Action action);
         public abstract void BlockUntilCompleted();
-        public abstract object GetResult();
+        public abstract object? GetResult();
 
         public static bool IsAwaitable(Type awaitableType)
         {
@@ -25,12 +25,13 @@ namespace NUnit.Framework.Internal
         {
             return
                 CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType)
-                ?? FSharpAsyncAwaitAdapter.GetResultType(awaitableType);
+                ?? FSharpAsyncAwaitAdapter.GetResultType(awaitableType)
+                ?? throw new InvalidOperationException("Cannot determine result type for: " + awaitableType);
         }
 
-        public static AwaitAdapter FromAwaitable(object awaitable)
+        public static AwaitAdapter FromAwaitable(object? awaitable)
         {
-            if (awaitable == null)
+            if (awaitable is null)
                 throw new InvalidOperationException("A null reference cannot be awaited.");
 
             // TaskAwaitAdapter is more efficient because it can rely on Task’s
@@ -44,7 +45,7 @@ namespace NUnit.Framework.Internal
             var adapter =
                 CSharpPatternBasedAwaitAdapter.TryCreate(awaitable)
                 ?? FSharpAsyncAwaitAdapter.TryCreate(awaitable);
-            if (adapter != null)
+            if (adapter is not null)
                 return adapter;
 
             throw new NotSupportedException("NUnit can only await objects which follow the C# specification for awaitable expressions.");

@@ -13,16 +13,14 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
     {
         #region Test Calling Assert.Ignore
 
-        [TestCaseSource(nameof(source))]
+        [TestCaseSource(nameof(Source))]
         public void MethodCallsIgnore(int x, int y, int z)
         {
             Assert.Ignore("Ignore this");
         }
 
-#pragma warning disable 414
-        private static object[] source = new object[] {
+        private static readonly object[] Source = new object[] {
             new TestCaseData( 2, 3, 4 ) };
-#pragma warning restore 414
 
         #endregion
 
@@ -34,17 +32,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable IgnoredSource
-        {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Ignore("Don't Run Me!"),
-
-                };
-            }
-        }
+        private static IEnumerable IgnoredSource =>
+            new object[] {
+                new TestCaseData(1),
+                new TestCaseData(2).Ignore("Don't Run Me!"),
+            };
 
         private static IEnumerable IgnoredWithDateSource
         {
@@ -69,17 +61,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable ExplicitSource
-        {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Explicit(),
-                    new TestCaseData(3).Explicit("Connection failing")
-                };
-            }
-        }
+        private static IEnumerable ExplicitSource =>
+            new object[] {
+                new TestCaseData(1),
+                new TestCaseData(2).Explicit(),
+                new TestCaseData(3).Explicit("Connection failing")
+            };
 
         #endregion
 
@@ -88,34 +75,35 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [Test, TestCaseSource(nameof(InstanceProperty))]
         public void MethodWithInstancePropertyAsSource(string source)
         {
-            Assert.AreEqual("InstanceProperty", source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceProperty)));
         }
 
-        IEnumerable InstanceProperty
-        {
-            get { return new object[] { new object[] { "InstanceProperty" } }; }
-        }
+        private IEnumerable InstanceProperty =>
+            new object[]
+            {
+                new object[] { nameof(InstanceProperty) }
+            };
 
         [Test, TestCaseSource(nameof(InstanceMethod))]
         public void MethodWithInstanceMethodAsSource(string source)
         {
-            Assert.AreEqual("InstanceMethod", source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceMethod)));
         }
 
-        IEnumerable InstanceMethod()
+        private IEnumerable InstanceMethod()
         {
-            return new object[] { new object[] { "InstanceMethod" } };
+            return new object[] { new object[] { nameof(InstanceMethod) } };
         }
 
         [Test, TestCaseSource(nameof(InstanceField))]
         public void MethodWithInstanceFieldAsSource(string source)
         {
-            Assert.AreEqual("InstanceField", source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceField)));
         }
 
-#pragma warning disable 414
-        object[] InstanceField = { new object[] { "InstanceField" } };
-#pragma warning restore 414
+#pragma warning disable IDE1006 // Naming Styles
+        private readonly object[] InstanceField = { new object[] { nameof(InstanceField) } };
+#pragma warning restore IDE1006 // Naming Styles
 
         #endregion
 
@@ -149,7 +137,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        static IEnumerable ExceptionSource
+        private static IEnumerable ExceptionSource
         {
             get
             {
@@ -160,12 +148,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        class DivideDataProvider
+        private class DivideDataProvider
         {
-#pragma warning disable 0169, 0649    // x is never assigned
-            static object[] myObject;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
             public static string MyField;
-#pragma warning restore 0169, 0649
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
@@ -181,19 +168,19 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        static object[] ComplexArrayBasedTestInput = new[]
+        private static readonly object[] ComplexArrayBasedTestInput = new[]
         {
-            new object[] { 1, "text", new object() },
+            new[] { 1, "text", new object() },
             Array.Empty<object>(),
-            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
 
-        static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
+        private static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
         {
             foreach (var argumentValue in ComplexArrayBasedTestInput)
-                yield return new TestCaseData(args: new object[] { argumentValue });
+                yield return new TestCaseData(args: new[] { argumentValue });
         }
 
         #region Test name tests

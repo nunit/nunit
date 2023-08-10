@@ -5,36 +5,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionSupersetConstraintTests : ConstraintTestBaseNoData
     {
+        protected override Constraint TheConstraint { get; } = new CollectionSupersetConstraint(new[] { 1, 2, 3, 4, 5 });
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new CollectionSupersetConstraint(new int[] { 1, 2, 3, 4, 5 });
             StringRepresentation = "<supersetof System.Int32[]>";
             ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
-        static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
-            new int[] { 1, 2, 3, 4, 5, 6 }
-            , new int[] { 1, 2, 3, 4, 5 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 3 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 7 }
+            new[] { 1, 2, 3, 4, 5, 6 }
+            , new[] { 1, 2, 3, 4, 5 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
-
-        static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
-            new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
-            , new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
+            new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
+            , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
         };
 
         [Test, TestCaseSource(nameof(SuccessData))]
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Constraints
         public void FailsWithBadValues(object badActualValue, string actualMessage, string missingMessage)
         {
             var constraintResult = TheConstraint.ApplyTo(badActualValue);
-            Assert.IsFalse(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
@@ -128,7 +129,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(constraintResult.IsSuccess, Is.True);
         }
-        
+
         private class S
         {
             public char C;

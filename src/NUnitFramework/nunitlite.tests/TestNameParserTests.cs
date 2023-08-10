@@ -1,6 +1,5 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework;
 
 namespace NUnit.Common.Tests
@@ -19,8 +18,8 @@ namespace NUnit.Common.Tests
         public void SingleName(string name)
         {
             string[] names = TestNameParser.Parse(name);
-            Assert.AreEqual(1, names.Length);
-            Assert.AreEqual(name.Trim(new char[] { ' ', ',' }), names[0]);
+            Assert.That(names, Has.Length.EqualTo(1));
+            Assert.That(names[0], Is.EqualTo(name.Trim(new char[] { ' ', ',' })));
         }
 
         [TestCase("Test.Namespace.Fixture.Method1", "Test.Namespace.Fixture.Method2")]
@@ -31,9 +30,9 @@ namespace NUnit.Common.Tests
         {
             char[] delims = new char[] { ' ', ',' };
             string[] names = TestNameParser.Parse(name1 + "," + name2);
-            Assert.AreEqual(2, names.Length);
-            Assert.AreEqual(name1.Trim(delims), names[0]);
-            Assert.AreEqual(name2.Trim(delims), names[1]);
+            Assert.That(names, Has.Length.EqualTo(2));
+            Assert.That(names[0], Is.EqualTo(name1.Trim(delims)));
+            Assert.That(names[1], Is.EqualTo(name2.Trim(delims)));
         }
     }
 }

@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -22,7 +20,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest is not null, "AfterTest was not set by the derived class constructor");
 
             RunTestMethodInThreadAbortSafeZone(context, () =>
             {
@@ -37,6 +35,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Set this to perform action after the inner command.
         /// </summary>
-        protected Action<TestExecutionContext> AfterTest;
+        protected Action<TestExecutionContext>? AfterTest;
     }
 }

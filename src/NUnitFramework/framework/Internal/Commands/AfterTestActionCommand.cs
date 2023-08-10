@@ -1,13 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionAfterCommand handles the AfterTest method of a single 
+    /// TestActionAfterCommand handles the AfterTest method of a single
     /// TestActionItem, provided the items BeforeTest has been run.
     /// </summary>
     public class AfterTestActionCommand : AfterTestCommand
@@ -23,7 +19,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 if (action.BeforeTestWasRun)
                 {
@@ -35,7 +31,7 @@ namespace NUnit.Framework.Internal.Commands
                     // in teardown. Redo test completion so they are listed properly.
                     if (context.CurrentResult.AssertionResults.Count > oldCount)
                         context.CurrentResult.RecordTestCompletion();
-                };
+                }
             };
         }
     }

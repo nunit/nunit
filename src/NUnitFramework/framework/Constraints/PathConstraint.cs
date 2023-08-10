@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.IO;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
-    #region PathConstraint
     /// <summary>
     /// PathConstraint serves as the abstract base of constraints
     /// that operate on paths and provides several helper methods.
@@ -23,8 +23,7 @@ namespace NUnit.Framework.Constraints
         protected PathConstraint(string expected)
             : base(expected)
         {
-            this.expected = expected;
-            this.caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
+            caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
         }
 
         /// <summary>
@@ -41,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<{0} \"{1}\" {2}>", DisplayName.ToLower(), expected, caseInsensitive ? "ignorecase" : "respectcase");
+            return $"<{DisplayName.ToLower()} \"{expected}\" {(caseInsensitive ? "ignorecase" : "respectcase")}>";
         }
 
         #region Helper Methods
@@ -55,7 +54,7 @@ namespace NUnit.Framework.Constraints
             if (Path.DirectorySeparatorChar != Path.AltDirectorySeparatorChar)
                 path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 
-            string leadingSeparators = "";
+            string leadingSeparators = string.Empty;
 
             foreach (char c in path)
             {
@@ -63,7 +62,10 @@ namespace NUnit.Framework.Constraints
                 {
                     leadingSeparators += Path.DirectorySeparatorChar;
                 }
-                else break;
+                else
+                {
+                    break;
+                }
             }
 
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);
@@ -92,7 +94,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            return leadingSeparators + String.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
+            return leadingSeparators + string.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
         }
 
         /// <summary>
@@ -121,5 +123,4 @@ namespace NUnit.Framework.Constraints
 
         #endregion
     }
-    #endregion
 }

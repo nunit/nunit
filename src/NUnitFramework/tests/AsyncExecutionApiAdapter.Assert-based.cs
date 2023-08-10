@@ -3,15 +3,15 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private sealed class AssertThrowsAsyncAdapter : AsyncExecutionApiAdapter
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                var ex = (Exception)null;
+                var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())
                 {
                     try
@@ -21,7 +21,7 @@ namespace NUnit.Framework
                     catch { }
                 }
 
-                if (ex != null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null) ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.ThrowsAsync(…)";
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                var ex = (Exception)null;
+                var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())
                 {
                     try
@@ -51,7 +51,7 @@ namespace NUnit.Framework
                     catch { }
                 }
 
-                if (ex != null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null) ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.CatchAsync(…)";

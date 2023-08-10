@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework
@@ -15,7 +13,7 @@ namespace NUnit.Framework
     public class SuccessException : ResultStateException
     {
         /// <param name="message"></param>
-        public SuccessException(string? message)
+        public SuccessException(string message)
             : base(message)
         { }
 
@@ -23,7 +21,7 @@ namespace NUnit.Framework
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public SuccessException(string? message, Exception? inner)
+        public SuccessException(string message, Exception? inner)
             :
             base(message, inner)
         { }
@@ -39,9 +37,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Success; }
-        }
+        public override ResultState ResultState => ResultState.Success;
     }
 }

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -11,10 +9,10 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as applying to a specific platform.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
     public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly PlatformHelper platformHelper = new PlatformHelper();
+        private readonly PlatformHelper _platformHelper = new();
 
         /// <summary>
         /// Constructor with no platforms specified, for use
@@ -42,7 +40,7 @@ namespace NUnit.Framework
                 bool platformIsSupported = false;
                 try
                 {
-                    platformIsSupported = platformHelper.IsPlatformSupported(this);
+                    platformIsSupported = _platformHelper.IsPlatformSupported(this);
                 }
                 catch (InvalidPlatformException ex)
                 {
@@ -54,7 +52,7 @@ namespace NUnit.Framework
                 if (!platformIsSupported)
                 {
                     test.RunState = RunState.Skipped;
-                    test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
+                    test.Properties.Add(PropertyNames.SkipReason, _platformHelper.Reason);
                 }
             }
         }

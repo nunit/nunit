@@ -7,27 +7,13 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class GreaterThanConstraint : ComparisonConstraint
     {
-        private string _description;
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="GreaterThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public GreaterThanConstraint(object expected) : base(expected) {}
-
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description
+        public GreaterThanConstraint(object expected)
+            : base(expected, "greater than ")
         {
-            get
-            {
-                if (_description == null)
-                    _description = DefaultDescription("greater than ");
-                
-                return _description;
-            }
         }
 
         /// <summary>

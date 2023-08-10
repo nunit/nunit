@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// The Numerics class contains common operations on numeric values.
     /// </summary>
-    public static class Numerics
+    internal static class Numerics
     {
         #region Numeric Type Recognition
         /// <summary>
@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a numeric type</returns>
-        public static bool IsNumericType(Object obj)
+        public static bool IsNumericType(object? obj)
         {
             return IsFloatingPointNumeric(obj) || IsFixedPointNumeric(obj);
         }
@@ -33,20 +33,20 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a floating point numeric type</returns>
-        public static bool IsFloatingPointNumeric(Object obj)
+        public static bool IsFloatingPointNumeric(object? obj)
         {
-            if (null != obj)
+            if (obj is not null)
             {
-                if (obj is System.Double) return true;
-                if (obj is System.Single) return true;
-                if (obj is System.Decimal) return true;
+                if (obj is double) return true;
+                if (obj is float) return true;
+                if (obj is decimal) return true;
             }
             return false;
         }
 
         internal static bool IsFloatingPointNumeric(Type type)
         {
-            if (null != type)
+            if (type is not null)
             {
                 if (type == typeof(double)) return true;
                 if (type == typeof(float)) return true;
@@ -55,33 +55,32 @@ namespace NUnit.Framework.Constraints
             return false;
         }
 
-
         /// <summary>
         /// Checks the type of the object, returning true if
         /// the object is a fixed point numeric type.
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a fixed point numeric type</returns>
-        public static bool IsFixedPointNumeric(Object obj)
+        public static bool IsFixedPointNumeric(object? obj)
         {
-            if (null != obj)
+            if (obj is not null)
             {
-                if (obj is System.Byte) return true;
-                if (obj is System.SByte) return true;
-                if (obj is System.Int32) return true;
-                if (obj is System.UInt32) return true;
-                if (obj is System.Int64) return true;
-                if (obj is System.UInt64) return true;
-                if (obj is System.Int16) return true;
-                if (obj is System.UInt16) return true;
-                if (obj is System.Char) return true;
+                if (obj is byte) return true;
+                if (obj is sbyte) return true;
+                if (obj is int) return true;
+                if (obj is uint) return true;
+                if (obj is long) return true;
+                if (obj is ulong) return true;
+                if (obj is short) return true;
+                if (obj is ushort) return true;
+                if (obj is char) return true;
             }
             return false;
         }
 
         internal static bool IsFixedPointNumeric(Type type)
         {
-            if (null != type)
+            if (type is not null)
             {
                 if (type == typeof(byte)) return true;
                 if (type == typeof(sbyte)) return true;
@@ -104,8 +103,8 @@ namespace NUnit.Framework.Constraints
 
         #region Numeric Equality
         /// <summary>
-        /// Test two numeric values for equality, performing the usual numeric 
-        /// conversions and using a provided or default tolerance. If the tolerance 
+        /// Test two numeric values for equality, performing the usual numeric
+        /// conversions and using a provided or default tolerance. If the tolerance
         /// provided is Empty, this method may set it to a default tolerance.
         /// </summary>
         /// <param name="expected">The expected value</param>
@@ -143,7 +142,7 @@ namespace NUnit.Framework.Constraints
             if (double.IsNaN(expected) && double.IsNaN(actual))
                 return true;
 
-            // Handle infinity specially since subtracting two infinite values gives 
+            // Handle infinity specially since subtracting two infinite values gives
             // NaN and the following test fails. mono also needs NaN to be handled
             // specially although ms.net could use either method. Also, handle
             // situation where no tolerance is used.
@@ -155,7 +154,7 @@ namespace NUnit.Framework.Constraints
             if (tolerance.IsUnsetOrDefault)
             {
                 var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp != null && !temp.IsUnsetOrDefault)
+                if (temp is not null && !temp.IsUnsetOrDefault)
                     tolerance = temp;
             }
 
@@ -188,7 +187,7 @@ namespace NUnit.Framework.Constraints
             if (float.IsNaN(expected) && float.IsNaN(actual))
                 return true;
 
-            // handle infinity specially since subtracting two infinite values gives 
+            // handle infinity specially since subtracting two infinite values gives
             // NaN and the following test fails. mono also needs NaN to be handled
             // specially although ms.net could use either method.
             if (float.IsInfinity(expected) || float.IsNaN(expected) || float.IsNaN(actual))
@@ -199,10 +198,9 @@ namespace NUnit.Framework.Constraints
             if (tolerance.IsUnsetOrDefault)
             {
                 var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp != null && !temp.IsUnsetOrDefault)
+                if (temp is not null && !temp.IsUnsetOrDefault)
                     tolerance = temp;
             }
-
 
             switch (tolerance.Mode)
             {
@@ -226,7 +224,6 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
-
 
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {
@@ -306,7 +303,7 @@ namespace NUnit.Framework.Constraints
 
                     double relativeError = Math.Abs(
                         (double)(expected - actual) / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -335,8 +332,8 @@ namespace NUnit.Framework.Constraints
                         return expected.Equals(actual);
 
                     // Can't do a simple Math.Abs() here since it's unsigned
-                    uint difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs((double)difference / (double)expected);
+                    double difference = Math.Max(expected, actual) - Math.Min(expected, actual);
+                    double relativeError = Math.Abs(difference / expected);
                     return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
 
                 default:
@@ -364,7 +361,7 @@ namespace NUnit.Framework.Constraints
 
                     double relativeError = Math.Abs(
                         (double)(expected - actual) / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -424,7 +421,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual value</param>
         /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
         /// <returns>The difference between the values</returns>
-        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
+        internal static object Difference(object? expected, object? actual, ToleranceMode toleranceMode)
         {
             switch (toleranceMode)
             {
@@ -437,7 +434,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static object Difference(object expected, object actual, bool isAbsolute)
+        private static object Difference(object? expected, object? actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))

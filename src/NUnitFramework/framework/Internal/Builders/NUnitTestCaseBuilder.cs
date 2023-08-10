@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -38,49 +36,58 @@ namespace NUnit.Framework.Internal.Builders
                 Seed = _randomizer.Next()
             };
 
-            CheckTestMethodAttributes(testMethod);
-
-            CheckTestMethodSignature(testMethod, parms);
-
-            if (parms == null || parms.Arguments.Length == 0)
-                testMethod.ApplyAttributesToTest(method.MethodInfo);
-
-            // NOTE: After the call to CheckTestMethodSignature, the Method
-            // property of testMethod may no longer be the same as the
-            // original MethodInfo, so we don't use it here.
-            string prefix = testMethod.Method.TypeInfo.FullName;
-
-            // Needed to give proper full name to test in a parameterized fixture.
-            // Without this, the arguments to the fixture are not included.
-            if (parentSuite != null)
-                prefix = parentSuite.FullName;
-
-            if (parms != null)
+            try
             {
-                parms.ApplyToTest(testMethod);
+                var metadata = MethodInfoCache.Get(method);
 
-                if (parms.TestName != null)
+                CheckTestMethodAttributes(testMethod, metadata);
+
+                CheckTestMethodSignature(testMethod, metadata, parms);
+
+                if (parms is null || parms.Arguments.Length == 0)
+                    testMethod.ApplyAttributesToTest(method.MethodInfo);
+
+                // NOTE: After the call to CheckTestMethodSignature, the Method
+                // property of testMethod may no longer be the same as the
+                // original MethodInfo, so we don't use it here.
+                string prefix = testMethod.Method.TypeInfo.FullName;
+
+                // Needed to give proper full name to test in a parameterized fixture.
+                // Without this, the arguments to the fixture are not included.
+                if (parentSuite is not null)
+                    prefix = parentSuite.FullName;
+
+                if (parms is not null)
                 {
-                    // The test is simply for efficiency
-                    testMethod.Name = parms.TestName.IndexOf('{') >= 0
-                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
-                        : parms.TestName;
-                }
-                else if (parms.ArgDisplayNames != null)
-                {
-                    testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                    parms.ApplyToTest(testMethod);
+
+                    if (parms.TestName is not null)
+                    {
+                        // The test is simply for efficiency
+                        testMethod.Name = parms.TestName.IndexOf('{') >= 0
+                            ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
+                            : parms.TestName;
+                    }
+                    else if (parms.ArgDisplayNames is not null)
+                    {
+                        testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                    }
+                    else
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    }
                 }
                 else
                 {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
                 }
-            }
-            else
-            {
-                testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
-            }
 
-            testMethod.FullName = prefix + "." + testMethod.Name;
+                testMethod.FullName = prefix + "." + testMethod.Name;
+            }
+            catch (Exception ex)
+            {
+                testMethod.MakeInvalid(ex, "Failure building TestMethod");
+            }
 
             return testMethod;
         }
@@ -92,10 +99,11 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="testMethod">The TestMethod to be checked. If it
         /// is found to be non-runnable, it will be modified.</param>
+        /// <param name="metadata">Metadata for this TestMethod.</param>
         /// <returns>True if the method signature is valid, false if not</returns>
-        private static bool CheckTestMethodAttributes(TestMethod testMethod)
+        private static bool CheckTestMethodAttributes(TestMethod testMethod, MethodInfoCache.TestMethodMetadata metadata)
         {
-            if (testMethod.Method.GetCustomAttributes<IRepeatTest>(true).Length > 1)
+            if (metadata.RepeatTestAttributes.Length > 1)
                 return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
 
             return true;
@@ -115,13 +123,14 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="testMethod">The TestMethod to be checked. If it
         /// is found to be non-runnable, it will be modified.</param>
+        /// <param name="metadata">Metadata for this TestMethod.</param>
         /// <param name="parms">Parameters to be used for this test, or null</param>
         /// <returns>True if the method signature is valid, false if not</returns>
         /// <remarks>
         /// The return value is no longer used internally, but is retained
         /// for testing purposes.
         /// </remarks>
-        private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters? parms)
+        private static bool CheckTestMethodSignature(TestMethod testMethod, MethodInfoCache.TestMethodMetadata metadata, TestCaseParameters? parms)
         {
             if (testMethod.Method.IsAbstract)
                 return MarkAsNotRunnable(testMethod, "Method is abstract");
@@ -129,8 +138,7 @@ namespace NUnit.Framework.Internal.Builders
             if (!testMethod.Method.IsPublic)
                 return MarkAsNotRunnable(testMethod, "Method is not public");
 
-            IParameterInfo[] parameters;
-            parameters = testMethod.Method.GetParameters();
+            IParameterInfo[] parameters = metadata.Parameters;
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
@@ -144,14 +152,14 @@ namespace NUnit.Framework.Internal.Builders
             object?[]? arglist = null;
             int argsProvided = 0;
 
-            if (parms != null)
+            if (parms is not null)
             {
-                testMethod.parms = parms;
+                testMethod.Parms = parms;
                 testMethod.RunState = parms.RunState;
 
                 arglist = parms.Arguments;
 
-                if (arglist != null)
+                if (arglist is not null)
                     argsProvided = arglist.Length;
 
                 if (testMethod.RunState != RunState.Runnable)
@@ -160,28 +168,34 @@ namespace NUnit.Framework.Internal.Builders
 
             var returnType = testMethod.Method.ReturnType.Type;
 
-            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (metadata.IsAsyncOperation)
             {
                 if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
                 var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
-                if (!voidResult && (parms == null || !parms.HasExpectedResult))
+                if (!voidResult && (parms is null || !parms.HasExpectedResult))
+                {
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a void result when no result is expected");
+                }
 
-                if (voidResult && parms != null && parms.HasExpectedResult)
+                if (voidResult && parms is not null && parms.HasExpectedResult)
+                {
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
+                }
             }
-            else if (Reflect.IsVoidOrUnit(returnType))
+            else if (metadata.IsVoidOrUnit)
             {
-                if (parms != null && parms.HasExpectedResult)
+                if (parms is not null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
             }
-            else if (parms == null || !parms.HasExpectedResult)
+            else if (parms is null || !parms.HasExpectedResult)
+            {
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+            }
 
             if (argsProvided > 0 && maxArgsNeeded == 0)
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
@@ -190,24 +204,24 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "No arguments were provided");
 
             if (argsProvided < minArgsNeeded)
-                return MarkAsNotRunnable(testMethod, string.Format("Not enough arguments provided, provide at least {0} arguments.", minArgsNeeded));
+                return MarkAsNotRunnable(testMethod, $"Not enough arguments provided, provide at least {minArgsNeeded} arguments.");
 
             if (argsProvided > maxArgsNeeded)
-                return MarkAsNotRunnable(testMethod, string.Format("Too many arguments provided, provide at most {0} arguments.", maxArgsNeeded));
+                return MarkAsNotRunnable(testMethod, $"Too many arguments provided, provide at most {maxArgsNeeded} arguments.");
 
-            if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
+            if (testMethod.Method.IsGenericMethodDefinition)
             {
-                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
+                if (arglist is null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
             }
 
-            if (parms != null && parms.TestName != null && parms.TestName.Trim() == "")
+            if (parms is not null && parms.TestName is not null && string.IsNullOrWhiteSpace(parms.TestName))
                 return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
 
-            if (arglist != null && parameters != null)
+            if (arglist is not null && parameters is not null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;

@@ -16,22 +16,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static IDisposable Dispose(Action action)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (action is null) throw new ArgumentNullException(nameof(action));
             return new DisposableAction(action);
         }
 
         private sealed class DisposableAction : IDisposable
         {
-            private Action action;
+            private Action? _action;
 
             public DisposableAction(Action action)
             {
-                this.action = action;
+                _action = action;
             }
 
             public void Dispose()
             {
-                Interlocked.Exchange(ref action, null)?.Invoke();
+                Interlocked.Exchange(ref _action, null)?.Invoke();
             }
         }
     }

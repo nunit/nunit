@@ -4,9 +4,10 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
 
-namespace NUnit.TestUtilities
+#nullable enable
+
+namespace NUnit.Framework.Tests.TestUtilities
 {
     internal static class SchemaTestUtils
     {
@@ -16,8 +17,10 @@ namespace NUnit.TestUtilities
         {
             using (var testXsd = File.OpenRead(Path.Combine(GetSchemasPath(), schemaFile)))
             {
-                return XmlSchema.Read(testXsd,
+                var schema = XmlSchema.Read(testXsd,
                     validationEventHandler: (sender, e) => Assert.Fail(e.Message));
+                Assert.That(schema, Is.Not.Null);
+                return schema;
             }
         }
 
@@ -63,8 +66,10 @@ namespace NUnit.TestUtilities
                 _schemasPath = schemasPath;
             }
 
-            public override Uri ResolveUri(Uri baseUri, string relativeUri)
+            public override Uri ResolveUri(Uri? baseUri, string? relativeUri)
             {
+                if (relativeUri is null)
+                    return new Uri(_schemasPath);
                 return new Uri(Path.Combine(_schemasPath, relativeUri));
             }
         }

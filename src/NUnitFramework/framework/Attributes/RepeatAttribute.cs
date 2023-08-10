@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 // TODO: Rework this
 // RepeatAttribute should either
 //  1) Apply at load time to create the exact number of tests, or
@@ -54,7 +52,7 @@ namespace NUnit.Framework
         /// </summary>
         public class RepeatedTestCommand : DelegatingTestCommand
         {
-            private readonly int repeatCount;
+            private readonly int _repeatCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
@@ -64,7 +62,7 @@ namespace NUnit.Framework
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount)
                 : base(innerCommand)
             {
-                this.repeatCount = repeatCount;
+                _repeatCount = repeatCount;
             }
 
             /// <summary>
@@ -74,7 +72,7 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
-                int count = repeatCount;
+                int count = _repeatCount;
 
                 while (count-- > 0)
                 {

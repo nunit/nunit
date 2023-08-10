@@ -19,22 +19,22 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "TypeOf"; } }
+        public override string DisplayName => "TypeOf";
 
         /// <summary>
         /// Apply the constraint to an actual value, returning true if it succeeds
         /// </summary>
         /// <param name="actual">The actual argument</param>
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected override bool Matches(object actual)
+        protected override bool Matches(object? actual)
         {
-            return actual != null && actual.GetType() == expectedType;
+            return actual is not null && actual.GetType() == expectedType;
         }
     }
 }

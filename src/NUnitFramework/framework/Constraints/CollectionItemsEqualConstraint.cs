@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The NUnitEqualityComparer in use for this constraint
         /// </summary>
-        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         /// <summary>
         /// Construct an empty CollectionConstraint
@@ -27,25 +27,19 @@ namespace NUnit.Framework.Constraints
         /// Construct a CollectionConstraint
         /// </summary>
         /// <param name="arg"></param>
-        protected CollectionItemsEqualConstraint(object arg) : base(arg) { }
+        protected CollectionItemsEqualConstraint(object? arg) : base(arg) { }
 
         #region Protected Properties
 
         /// <summary>
         /// Get a flag indicating whether the user requested us to ignore case.
         /// </summary>
-        protected bool IgnoringCase
-        {
-            get { return _comparer.IgnoreCase; }
-        }
+        protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
         /// </summary>
-        protected bool UsingExternalComparer
-        {
-            get { return _comparer.ExternalComparers.Count > 0; }
-        }
+        protected bool UsingExternalComparer => _comparer.ExternalComparers.Count > 0;
 
         #endregion
 
@@ -134,7 +128,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two collection members for equality
         /// </summary>
-        protected bool ItemsEqual(object x, object y)
+        protected bool ItemsEqual(object? x, object? y)
         {
             Tolerance tolerance = Tolerance.Default;
             return _comparer.AreEqual(x, y, ref tolerance);

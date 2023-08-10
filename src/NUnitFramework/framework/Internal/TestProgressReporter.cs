@@ -1,11 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
-using System.Reflection;
+using System.IO;
+using System.Text;
 using System.Web.UI;
-using NUnit.Compatibility;
+using System.Xml;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -15,11 +14,14 @@ namespace NUnit.Framework.Internal
     /// the async callbacks that are used to inform the client
     /// software about the progress of a test run.
     /// </summary>
-    public class TestProgressReporter : ITestListener
+    public sealed class TestProgressReporter : ITestListener
     {
-        static readonly Logger log = InternalTrace.GetLogger("TestProgressReporter");
+        private static readonly Logger Log = InternalTrace.GetLogger("TestProgressReporter");
 
-        private readonly ICallbackEventHandler handler;
+        private readonly ICallbackEventHandler _handler;
+
+        // this reporter is being called synchronously so we can reuse shared string builder
+        private readonly StringBuilder _stringBuilder = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
@@ -27,7 +29,7 @@ namespace NUnit.Framework.Internal
         /// <param name="handler">The callback handler to be used for reporting progress.</param>
         public TestProgressReporter(ICallbackEventHandler handler)
         {
-            this.handler = handler;
+            _handler = handler;
         }
 
         #region ITestListener Members
@@ -38,46 +40,79 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            var parent = GetParent(test);
+            var message = CreateTestStartedMessage(test);
+
             try
             {
-                string report;
-                if (test is TestSuite)
-                {
-                    // Only add framework-version for the Assembly start-suite
-                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
-                    report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
-                }
-                else
-                {
-                    report = $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
-                }
-
-                handler.RaiseCallbackEvent(report);
+                _handler.RaiseCallbackEvent(message);
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + test.FullName + Environment.NewLine + ex.ToString());
+                Log.Error($"Exception processing {test.FullName}{Environment.NewLine}{ex}");
             }
+        }
+
+        private string CreateTestStartedMessage(ITest test)
+        {
+            var parent = GetParent(test);
+
+            var stringBuilder = GetStringBuilder();
+
+            using var stringWriter = new StringWriter(stringBuilder);
+            using (var writer = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                var isSuite = test is TestSuite;
+                writer.WriteStartElement(isSuite ? "start-suite" : "start-test");
+
+                writer.WriteAttributeString("id", test.Id);
+                writer.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
+                writer.WriteAttributeStringSafe("name", test.Name);
+                writer.WriteAttributeStringSafe("fullname", test.FullName);
+                writer.WriteAttributeStringSafe("type", test.TestType);
+
+                if (isSuite)
+                {
+                    // Only add framework-version for the Assembly start-suite
+                    if (test.TestType == "Assembly")
+                    {
+                        writer.WriteAttributeString("framework-version", typeof(TestProgressReporter).Assembly.GetName().Version?.ToString());
+                    }
+                }
+                else
+                {
+                    writer.WriteAttributeStringSafe("classname", test.ClassName ?? string.Empty);
+                    writer.WriteAttributeStringSafe("methodname", test.MethodName ?? string.Empty);
+                }
+
+                writer.WriteEndElement();
+            }
+
+            return stringWriter.ToString();
         }
 
         /// <summary>
         /// Called when a test has finished. Sends a result summary to the callback.
-        /// to 
         /// </summary>
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
+            var node = result.ToXml(false);
+            var parent = GetParent(result.Test);
+            node.AddAttribute("parentId", parent is not null ? parent.Id : string.Empty);
+
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                node.WriteTo(xmlWriter);
+            }
+
             try
             {
-                var node = result.ToXml(false);
-                var parent = GetParent(result.Test);
-                node.Attributes.Add("parentId", parent != null ? parent.Id : string.Empty);
-                handler.RaiseCallbackEvent(node.OuterXml);                
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + result.FullName + Environment.NewLine + ex.ToString());
+                Log.Error($"Exception processing {result.FullName}{Environment.NewLine}{ex}");
             }
         }
 
@@ -87,13 +122,19 @@ namespace NUnit.Framework.Internal
         /// <param name="output">A TestOutput object containing the text to display</param>
         public void TestOutput(TestOutput output)
         {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var writer = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                output.ToXml(writer);
+            }
+
             try
             {
-                handler.RaiseCallbackEvent(output.ToXml());
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing TestOutput event" + Environment.NewLine + ex.ToString());
+                Log.Error($"Exception processing TestOutput event{Environment.NewLine}{ex}");
             }
         }
 
@@ -103,13 +144,19 @@ namespace NUnit.Framework.Internal
         /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var writer = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                message.ToXml(writer);
+            }
+
             try
             {
-                handler.RaiseCallbackEvent(message.ToXml());
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing SendMessage event" + Environment.NewLine + ex.ToString());
+                Log.Error($"Exception processing SendMessage event{Environment.NewLine}{ex}");
             }
         }
 
@@ -124,29 +171,28 @@ namespace NUnit.Framework.Internal
         /// <returns>parent test item</returns>
         private static ITest? GetParent(ITest test)
         {
-            if (test == null || test.Parent == null)
+            while (true)
             {
-                return null;
-            }
+                var parent = test?.Parent;
 
-            return test.Parent.IsSuite ? test.Parent : GetParent(test.Parent);
+                if (parent is null)
+                {
+                    return null;
+                }
+
+                if (parent.IsSuite)
+                {
+                    return parent;
+                }
+
+                test = parent;
+            }
         }
 
-        /// <summary>
-        /// Makes a string safe for use as an attribute, replacing
-        /// characters that can't be used with their
-        /// corresponding XML representations.
-        /// </summary>
-        /// <param name="original">The string to be used</param>
-        /// <returns>A new string with the values replaced</returns>
-        private static string FormatAttributeValue(string original)
+        private StringBuilder GetStringBuilder()
         {
-            return original
-                .Replace("&", "&amp;")
-                .Replace("\"", "&quot;")
-                .Replace("'", "&apos;")
-                .Replace("<", "&lt;")
-                .Replace(">", "&gt;");
+            _stringBuilder.Clear();
+            return _stringBuilder;
         }
 
         #endregion

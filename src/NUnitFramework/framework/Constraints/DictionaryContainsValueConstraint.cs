@@ -16,33 +16,30 @@ namespace NUnit.Framework.Constraints
         /// Construct a DictionaryContainsValueConstraint
         /// </summary>
         /// <param name="expected"></param>
-        public DictionaryContainsValueConstraint(object expected)
+        public DictionaryContainsValueConstraint(object? expected)
             : base(expected)
         {
             Expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsValue"; } }
+        public override string DisplayName => "ContainsValue";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing value " + MsgUtils.FormatValue(Expected); }
-        }
+        public override string Description => "dictionary containing value " + MsgUtils.FormatValue(Expected);
 
         /// <summary>
         /// Gets the expected object
         /// </summary>
-        protected object Expected { get; }
+        protected object? Expected { get; }
 
         /// <summary>
         /// Test whether the expected value is contained in the dictionary
@@ -51,9 +48,11 @@ namespace NUnit.Framework.Constraints
         {
             var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
 
-            foreach (object obj in dictionary.Values)
+            foreach (object? obj in dictionary.Values)
+            {
                 if (ItemsEqual(obj, Expected))
                     return true;
+            }
 
             return false;
         }

@@ -1,5 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-using System;
+
 using NUnit.Framework;
 
 namespace NUnit.TestData.TheoryFixture
@@ -7,12 +7,14 @@ namespace NUnit.TestData.TheoryFixture
     [TestFixture]
     public class TheoryFixture
     {
-#pragma warning disable 414
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CS0414 // The field is assigned but its value is never used
         [Datapoint]
-        private int i0 = 0;
+        private readonly int _i0 = 0;
         [Datapoint]
-        static int i1 = 1;
-#pragma warning restore 414
+        private static readonly int I1 = 1;
+#pragma warning restore CS0414 // The field is assigned but its value is never used
+#pragma warning restore IDE0051 // Remove unused private members
         [Datapoint]
         public int I100 = 100;
 
@@ -65,14 +67,14 @@ namespace NUnit.TestData.TheoryFixture
         [Theory]
         public void TestWithBothDatapointAndAttributeData(
             int i,
-            [Values(0, 5)]decimal d)
+            [Values(0, 5)] decimal d)
         {
         }
 
         [Theory]
         public void TestWithAllDataSuppliedByAttributes(
-            [Values(1.0, 2.0)]double d1,
-            [Values(3.0, 4.0)]double d2)
+            [Values(1.0, 2.0)] double d1,
+            [Values(3.0, 4.0)] double d2)
         {
         }
 

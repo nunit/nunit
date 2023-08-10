@@ -13,16 +13,13 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class BinarySerializableConstraint : Constraint
     {
-        readonly BinaryFormatter serializer = new BinaryFormatter();
+        private readonly BinaryFormatter _serializer = new();
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "binary serializable"; }
-        }
+        public override string Description => "binary serializable";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -31,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentNullException(nameof(actual));
 
             MemoryStream stream = new MemoryStream();
@@ -39,11 +36,15 @@ namespace NUnit.Framework.Constraints
 
             try
             {
-                serializer.Serialize(stream, actual);
+                // 'BinaryFormatter serialization is obsolete and should not be used.
+                // See https://aka.ms/binaryformatter for more information.'
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
+                _serializer.Serialize(stream, actual);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                succeeded = serializer.Deserialize(stream) != null;
+                succeeded = _serializer.Deserialize(stream) is not null;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
             }
             catch (SerializationException)
             {

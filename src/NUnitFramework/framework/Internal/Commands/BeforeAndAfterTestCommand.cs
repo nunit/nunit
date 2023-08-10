@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Threading;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -25,11 +24,10 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
-            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+            Guard.OperationValid(BeforeTest is not null, "BeforeTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest is not null, "AfterTest was not set by the derived class constructor");
 
-            if (Test.Fixture == null)
-                Test.Fixture = context.TestObject;
+            Test.Fixture ??= context.TestObject;
 
             RunTestMethodInThreadAbortSafeZone(context, () =>
             {
@@ -39,7 +37,7 @@ namespace NUnit.Framework.Internal.Commands
 
             if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
             {
-                RunTestMethodInThreadAbortSafeZone(context, () => { AfterTest(context); });
+                RunTestMethodInThreadAbortSafeZone(context, () => AfterTest(context));
             }
 
             return context.CurrentResult;
@@ -48,11 +46,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Perform the before test action
         /// </summary>
-        protected Action<TestExecutionContext> BeforeTest;
+        protected Action<TestExecutionContext>? BeforeTest;
 
         /// <summary>
         /// Perform the after test action
         /// </summary>
-        protected Action<TestExecutionContext> AfterTest;
+        protected Action<TestExecutionContext>? AfterTest;
     }
 }

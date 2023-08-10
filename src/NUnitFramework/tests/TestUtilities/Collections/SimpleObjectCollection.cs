@@ -4,47 +4,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Collections
+namespace NUnit.Framework.Tests.TestUtilities.Collections
 {
     /// <summary>
     /// SimpleObjectCollection is used in testing to ensure that only
     /// methods of the ICollection interface are accessible.
     /// </summary>
-    class SimpleObjectCollection : ICollection
+    public class SimpleObjectCollection : ICollection
     {
-        private readonly List<object> contents = new List<object>();
+        private readonly List<object?> _contents;
 
-        public SimpleObjectCollection(IEnumerable<object> source)
+        public SimpleObjectCollection(IEnumerable<object?> source)
         {
-            this.contents = new List<object>(source);
+            _contents = new List<object?>(source);
         }
 
-        public SimpleObjectCollection(params object[] source)
+        public SimpleObjectCollection(params object?[] source)
         {
-            this.contents = new List<object>(source);
+            _contents = new List<object?>(source);
         }
 
         #region ICollection Members
 
         public void CopyTo(Array array, int index)
         {
-            ((ICollection)contents).CopyTo(array, index);
+            ((ICollection)_contents).CopyTo(array, index);
         }
 
-        public int Count
-        {
-            get { return contents.Count; }
-        }
+        public int Count => _contents.Count;
 
-        public bool IsSynchronized
-        {
-            get { return  ((ICollection)contents).IsSynchronized; }
-        }
+        public bool IsSynchronized => ((ICollection)_contents).IsSynchronized;
 
-        public object SyncRoot
-        {
-            get { return ((ICollection)contents).SyncRoot; }
-        }
+        public object SyncRoot => ((ICollection)_contents).SyncRoot;
 
         #endregion
 
@@ -52,7 +43,7 @@ namespace NUnit.TestUtilities.Collections
 
         public IEnumerator GetEnumerator()
         {
-            return contents.GetEnumerator();
+            return _contents.GetEnumerator();
         }
 
         #endregion

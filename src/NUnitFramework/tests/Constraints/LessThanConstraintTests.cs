@@ -1,25 +1,25 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class LessThanConstraintTests : ComparisonConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new LessThanConstraint(5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = ComparisonConstraint = new LessThanConstraint(5);
             ExpectedDescription = "less than 5";
             StringRepresentation = "<lessthan 5>";
         }
 
-        static object[] SuccessData = new object[] { 4, 4.999 };
-
-        static object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 4, 4.999 };
+        private static readonly object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCompareIComparables()
@@ -57,7 +57,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(202, 200, 5)]
         public void SimpleTolerance(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.LessThan(expected).Within(tolerance));
+#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         [TestCase(5.05, 5.0, 0.05)] // upper range bound
@@ -66,11 +68,13 @@ namespace NUnit.Framework.Constraints
         [TestCase(210, 200, 5)]
         public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.LessThan(expected).Within(tolerance)),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance)));
+            Assert.That(ex?.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance)));
         }
 
         [TestCase(4.0, 5.0, 1)]
@@ -85,7 +89,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(202, 200, 2.5)]
         public void PercentTolerance(object actual, object expected, object percent)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.LessThan(expected).Within(percent).Percent);
+#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         [TestCase(5.05, 5.0, 1)] // upper range bound
@@ -94,11 +100,13 @@ namespace NUnit.Framework.Constraints
         [TestCase(210, 200, 2.5)]
         public void PercentTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.LessThan(expected).Within(tolerance).Percent),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
+            Assert.That(ex?.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
     }
 }

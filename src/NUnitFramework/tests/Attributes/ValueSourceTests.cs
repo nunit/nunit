@@ -4,12 +4,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class ValueSourceTests : ValueSourceMayBeInherited
@@ -18,10 +18,10 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeStaticProperty(
             [ValueSource(nameof(StaticProperty))] string source)
         {
-            Assert.AreEqual("StaticProperty", source);
+            Assert.That(source, Is.EqualTo("StaticProperty"));
         }
 
-        static IEnumerable StaticProperty
+        private static IEnumerable StaticProperty
         {
             get
             {
@@ -33,53 +33,69 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeInheritedStaticProperty(
             [ValueSource(nameof(InheritedStaticProperty))] bool source)
         {
-            Assert.AreEqual(true, source);
+            Assert.That(source, Is.EqualTo(true));
         }
 
         [Test]
         public void ValueSourceMayNotBeInstanceProperty()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceProperty");
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceProperty));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceProperty(
+        private void MethodWithValueSourceInstanceProperty(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceProperty))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceProperty", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
-        IEnumerable InstanceProperty
-        {
-            get { return new object[] { "InstanceProperty" }; }
-        }
+        private IEnumerable InstanceProperty => new object[] { "InstanceProperty" };
 
         [Test]
         public void ValueSourceCanBeStaticMethod(
             [ValueSource(nameof(StaticMethod))] string source)
         {
-            Assert.AreEqual("StaticMethod", source);
+            Assert.That(source, Is.EqualTo("StaticMethod"));
         }
 
-        static IEnumerable StaticMethod()
+        private static IEnumerable StaticMethod()
         {
             return new object[] { "StaticMethod" };
         }
 
         [Test]
+        public void ValueSourceCanBeAsyncStaticMethod(
+#pragma warning disable NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
+            [ValueSource(nameof(AsyncStaticMethod))] string source)
+#pragma warning restore NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
+        {
+            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+        }
+
+        private static Task<IEnumerable?> AsyncStaticMethod()
+        {
+            var result = new object[] { "AsyncStaticMethod" };
+            return Task.FromResult((IEnumerable?)result);
+        }
+
+        [Test]
         public void ValueSourceMayNotBeInstanceMethod()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceMethod");
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceMethod));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceMethod(
+        private void MethodWithValueSourceInstanceMethod(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceMethod))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceMethod", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
-        IEnumerable InstanceMethod()
+        private IEnumerable InstanceMethod()
         {
             return new object[] { "InstanceMethod" };
         }
@@ -88,7 +104,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeStaticField(
             [ValueSource(nameof(StaticField))] string source)
         {
-            Assert.AreEqual("StaticField", source);
+            Assert.That(source, Is.EqualTo("StaticField"));
         }
 
         internal static object[] StaticField = { "StaticField" };
@@ -96,14 +112,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ValueSourceMayNotBeInstanceField()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceField");
-            Assert.That(result.Children.ToArray ()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceField));
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceField(
+        private void MethodWithValueSourceInstanceField(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceField))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceField", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
         internal object[] InstanceField = { "InstanceField" };
@@ -114,12 +132,12 @@ namespace NUnit.Framework.Attributes
             [ValueSource(nameof(Denominators))] int d,
             [ValueSource(nameof(Quotients))] int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
-        internal static int[] Numerators = new int[] { 12, 12, 12 };
-        internal static int[] Denominators = new int[] { 3, 4, 6 };
-        internal static int[] Quotients = new int[] { 4, 3, 2 };
+        internal static int[] Numerators = new[] { 12, 12, 12 };
+        internal static int[] Denominators = new[] { 3, 4, 6 };
+        internal static int[] Quotients = new[] { 4, 3, 2 };
 
         [Test, Sequential]
         public void ValueSourceMayBeInAnotherClass(
@@ -127,19 +145,19 @@ namespace NUnit.Framework.Attributes
             [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Denominators))] int d,
             [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Quotients))] int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         private class DivideDataProvider
         {
-            internal static int[] Numerators = new int[] { 12, 12, 12 };
-            internal static int[] Denominators = new int[] { 3, 4, 6 };
-            internal static int[] Quotients = new int[] { 4, 3, 2 };
+            internal static int[] Numerators = new[] { 12, 12, 12 };
+            internal static int[] Denominators = new[] { 3, 4, 6 };
+            internal static int[] Quotients = new[] { 4, 3, 2 };
         }
 
         [Test]
         public void ValueSourceMayBeGeneric(
-            [ValueSourceAttribute(typeof(ValueProvider), nameof(ValueProvider.IntegerProvider))] int val)
+            [ValueSource(typeof(ValueProvider), nameof(ValueProvider.IntegerProvider))] int val)
         {
             Assert.That(2 * val, Is.EqualTo(val + val));
         }
@@ -158,23 +176,20 @@ namespace NUnit.Framework.Attributes
                 return dataList;
             }
 
-            public static IEnumerable<int> ForeignNullResultProvider()
+            public static IEnumerable<int>? ForeignNullResultProvider()
             {
                 return null;
             }
         }
 
-        public static string NullSource = null;
+        private static readonly string? NullSource;
 
-        public static IEnumerable<int> NullDataSourceProvider()
+        private static IEnumerable<int>? NullDataSourceProvider()
         {
             return null;
         }
 
-        public static IEnumerable<int> NullDataSourceProperty
-        {
-            get { return null; }
-        }
+        public static IEnumerable<int>? NullDataSourceProperty => null;
 
         [Test, Explicit("Null or nonexistent data sources definitions should not prevent other tests from run #1121")]
         public void ValueSourceMayNotBeNull(
@@ -183,7 +198,9 @@ namespace NUnit.Framework.Attributes
             [ValueSource(typeof(ValueProvider), nameof(ValueProvider.ForeignNullResultProvider))] string nullDataSourceProvider,
             [ValueSource(typeof(object), sourceName: null)] string typeNotImplementingIEnumerableAndNullSourceName,
             [ValueSource(nameof(NullDataSourceProperty))] int nullDataSourceProperty,
+#pragma warning disable NUnit1025 // The ValueSource argument does not specify an existing member
             [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
+#pragma warning restore NUnit1025 // The ValueSource argument does not specify an existing member
         {
             Assert.Fail();
         }
@@ -206,11 +223,11 @@ namespace NUnit.Framework.Attributes
         {
         }
 
-        static object[] ComplexArrayBasedTestInput = new[]
+        private static readonly object[] ComplexArrayBasedTestInput = new[]
         {
-            new object[] { 1, "text", new object() },
+            new[] { 1, "text", new object() },
             Array.Empty<object>(),
-            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };

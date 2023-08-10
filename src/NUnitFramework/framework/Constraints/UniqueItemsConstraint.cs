@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,10 +19,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "all items unique"; }
-        }
+        public override string Description => "all items unique";
 
         /// <summary>
         /// Check that all items are unique.
@@ -68,7 +63,9 @@ namespace NUnit.Framework.Constraints
                 }
 
                 if (isUnique)
+                {
                     processedItems.Add(o1);
+                }
                 else if (unknownNonUnique)
                 {
                     nonUniques.Add(o1);
@@ -87,7 +84,7 @@ namespace NUnit.Framework.Constraints
             foreach (var item in actual)
             {
                 allItems.Add(item);
-                if (item != null)
+                if (item is not null)
                     allTypes.Add(item.GetType());
             }
 
@@ -98,10 +95,10 @@ namespace NUnit.Framework.Constraints
             var distinctTypes = allTypes.Distinct().ToList();
             if (distinctTypes.Count == 1)
             {
-                var itemsType = distinctTypes.FirstOrDefault();
+                var itemsType = distinctTypes[0];
                 if (IsTypeSafeForFastPath(itemsType))
                 {
-                    var itemsOfT = ItemsCastMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { actual });
+                    var itemsOfT = ItemsCastMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { actual })!;
 
                     if (IgnoringCase)
                     {
@@ -111,7 +108,7 @@ namespace NUnit.Framework.Constraints
                             return (ICollection)CharsUniqueIgnoringCase((IEnumerable<char>)itemsOfT);
                     }
 
-                    return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new object[] { itemsOfT });
+                    return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { itemsOfT })!;
                 }
             }
             else
@@ -128,15 +125,21 @@ namespace NUnit.Framework.Constraints
         private static bool IsSpecialComparisonType(Type type)
         {
             if (type.IsGenericType)
-                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
+            {
+                return type.FullName().StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
+            }
             else if (Numerics.IsNumericType(type))
+            {
                 return true;
+            }
             else
+            {
                 return
                     type == typeof(string)
                     || type == typeof(char)
                     || type == typeof(DateTimeOffset)
                     || type == typeof(DictionaryEntry);
+            }
         }
 
         private ICollection GetNonUniqueItems(IEnumerable actual)
@@ -148,11 +151,10 @@ namespace NUnit.Framework.Constraints
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type? memberType = GetGenericTypeArgument(actual);
-            if (memberType == null)
+            if (memberType is null)
                 return TryInferFastPath(actual) ?? OriginalAlgorithm(actual);
             else if (!IsTypeSafeForFastPath(memberType))
                 return OriginalAlgorithm(actual);
-
 
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
@@ -163,19 +165,19 @@ namespace NUnit.Framework.Constraints
                     return (ICollection)CharsUniqueIgnoringCase((IEnumerable<char>)actual);
             }
 
-            return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
+            return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual })!;
         }
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type != null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
-            typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic)!;
 
         private static readonly MethodInfo ItemsCastMethod =
-            typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public);
+            typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public)!;
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
@@ -234,7 +236,7 @@ namespace NUnit.Framework.Constraints
         {
             foreach (var type in actual.GetType().GetInterfaces())
             {
-                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1", StringComparison.Ordinal))
+                if (type.FullName().StartsWith("System.Collections.Generic.IEnumerable`1", StringComparison.Ordinal))
                 {
                     return type.GenericTypeArguments[0];
                 }
@@ -252,10 +254,10 @@ namespace NUnit.Framework.Constraints
                 _ignoreCase = ignoreCase;
             }
 
-            public bool Equals(string x, string y)
+            public bool Equals(string? x, string? y)
             {
                 var stringComparison = _ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
-                return x.Equals(y, stringComparison);
+                return string.Equals(x, y, stringComparison);
             }
 
             public int GetHashCode(string obj)
@@ -273,7 +275,7 @@ namespace NUnit.Framework.Constraints
         {
             internal ICollection NonUniqueItems { get; }
 
-            public UniqueItemsConstraintResult(IConstraint constraint, object actualValue, ICollection nonUniqueItems)
+            public UniqueItemsConstraintResult(IConstraint constraint, object? actualValue, ICollection nonUniqueItems)
                 : base(constraint, actualValue, nonUniqueItems.Count == 0)
             {
                 NonUniqueItems = nonUniqueItems;
@@ -281,7 +283,7 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                 {
                     writer.Write("  Not unique items: ");
                     var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MsgUtils.DefaultMaxItems);

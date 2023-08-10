@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -8,13 +7,13 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// NotFilter negates the operation of another filter
     /// </summary>
-    internal class NotFilter : TestFilter
+    internal sealed class NotFilter : TestFilter
     {
         /// <summary>
         /// Construct a not filter on another filter
         /// </summary>
         /// <param name="baseFilter">The filter to be negated</param>
-        public NotFilter( TestFilter baseFilter)
+        public NotFilter(TestFilter baseFilter)
         {
             BaseFilter = baseFilter;
         }
@@ -40,9 +39,9 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="test">The test to be matched</param>
         /// <returns>True if it matches, otherwise false</returns>
-        public override bool Match( ITest test )
+        public override bool Match(ITest test)
         {
-            return !BaseFilter.Match( test );
+            return !BaseFilter.Match(test);
         }
 
         /// <summary>

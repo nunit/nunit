@@ -1,17 +1,16 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Utility class used to locate tests by name in a test suite
     /// </summary>
     public class TestFinder
     {
-        public static Test Find(string name, TestSuite suite, bool recursive)
+        public static Test? Find(string name, TestSuite suite, bool recursive)
         {
             foreach (Test child in suite.Tests)
             {
@@ -19,11 +18,10 @@ namespace NUnit.TestUtilities
                     return child;
                 if (recursive)
                 {
-                    TestSuite childSuite = child as TestSuite;
-                    if (childSuite != null)
+                    if (child is TestSuite childSuite)
                     {
-                        Test grandchild = Find(name, childSuite, true);
-                        if (grandchild != null)
+                        Test? grandchild = Find(name, childSuite, true);
+                        if (grandchild is not null)
                             return grandchild;
                     }
                 }
@@ -32,7 +30,7 @@ namespace NUnit.TestUtilities
             return null;
         }
 
-        public static ITestResult Find(string name, ITestResult result, bool recursive)
+        public static ITestResult? Find(string name, ITestResult result, bool recursive)
         {
             if (result.HasChildren)
             {
@@ -43,8 +41,8 @@ namespace NUnit.TestUtilities
 
                     if (recursive && childResult.HasChildren)
                     {
-                        ITestResult r = Find(name, childResult, true);
-                        if (r != null)
+                        ITestResult? r = Find(name, childResult, true);
+                        if (r is not null)
                             return r;
                     }
                 }

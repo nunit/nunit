@@ -1,13 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using BF = System.Reflection.BindingFlags;
 
-namespace NUnit.TestUtilities
+#nullable enable
+
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Fakes provides static methods for creating test dummies of various kinds
@@ -74,7 +73,7 @@ namespace NUnit.TestUtilities
             : this(obj.GetType(), name) { }
 
         public FakeTestMethod(Type type, string name)
-            : base(new MethodWrapper(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
+            : base(new MethodWrapper(type, name)) { }
     }
 
     #endregion
@@ -86,7 +85,7 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class FakeWorkItem : WorkItem
     {
-        public event System.EventHandler Executed;
+        public event EventHandler? Executed;
 
         public FakeWorkItem(Test test)
             : this(test, new TestExecutionContext()) { }
@@ -99,8 +98,7 @@ namespace NUnit.TestUtilities
 
         public override void Execute()
         {
-            if (Executed != null)
-                Executed(this, System.EventArgs.Empty);
+            Executed?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void PerformWork() { }

@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-using System;
-using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -16,7 +13,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestCaseData : TestCaseParameters
     {
-
         #region Constructors
 
         /// <summary>
@@ -24,7 +20,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object?[]? args)
-            : base(args == null ? new object?[] { null } : args)
+            : base(args ?? new object?[] { null })
         {
         }
 
@@ -33,7 +29,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestCaseData(object? arg)
-            : base(new object?[] { arg })
+            : base(new[] { arg })
         {
         }
 
@@ -43,7 +39,7 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object? arg1, object? arg2)
-            : base(new object?[] { arg1, arg2 })
+            : base(new[] { arg1, arg2 })
         {
         }
 
@@ -54,7 +50,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object? arg1, object? arg2, object? arg3)
-            : base(new object?[] { arg1, arg2, arg3 })
+            : base(new[] { arg1, arg2, arg3 })
         {
         }
 
@@ -69,7 +65,7 @@ namespace NUnit.Framework
         /// <returns>A modified TestCaseData</returns>
         public TestCaseData Returns(object? result)
         {
-            this.ExpectedResult = result;
+            ExpectedResult = result;
             return this;
         }
 
@@ -79,7 +75,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData SetName(string? name)
         {
-            this.TestName = name;
+            TestName = name;
             return this;
         }
 
@@ -100,7 +96,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance.</returns>
         public TestCaseData SetDescription(string description)
         {
-            this.Properties.Set(PropertyNames.Description, description);
+            Properties.Set(PropertyNames.Description, description);
             return this;
         }
 
@@ -111,7 +107,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetCategory(string category)
         {
-            this.Properties.Add(PropertyNames.Category, category);
+            Properties.Add(PropertyNames.Category, category);
             return this;
         }
 
@@ -123,7 +119,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, string propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
@@ -135,7 +131,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, int propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
@@ -147,15 +143,16 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, double propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
         /// <summary>
         /// Marks the test case as explicit.
         /// </summary>
-        public TestCaseData Explicit()	{
-            this.RunState = RunState.Explicit;
+        public TestCaseData Explicit()
+        {
+            RunState = RunState.Explicit;
             return this;
         }
 
@@ -164,8 +161,8 @@ namespace NUnit.Framework
         /// </summary>
         public TestCaseData Explicit(string reason)
         {
-            this.RunState = RunState.Explicit;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState = RunState.Explicit;
+            Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
 
@@ -176,9 +173,9 @@ namespace NUnit.Framework
         /// <returns></returns>
         public IgnoredTestCaseData Ignore(string reason)
         {
-            RunState prevRunState = this.RunState;
-            this.RunState = RunState.Ignored;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState prevRunState = RunState;
+            RunState = RunState.Ignored;
+            Properties.Set(PropertyNames.SkipReason, reason);
             var ignoredData = new IgnoredTestCaseData(this, prevRunState);
             return ignoredData;
         }

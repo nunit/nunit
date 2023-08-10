@@ -1,14 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#region Using Directives
-
 using System;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-#endregion
-
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ToleranceTests
@@ -29,20 +24,34 @@ namespace NUnit.Framework.Constraints
         public void TestToleranceDefault()
         {
             var defaultTolerance = Tolerance.Default;
-            Assert.IsTrue(defaultTolerance.IsUnsetOrDefault);
+            Assert.That(defaultTolerance.IsUnsetOrDefault, Is.True);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsTrue(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance), Is.True);
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]
         public void TestToleranceExact()
         {
             var noneTolerance = Tolerance.Exact;
-            Assert.IsFalse(noneTolerance.IsUnsetOrDefault);
+            Assert.That(noneTolerance.IsUnsetOrDefault, Is.False);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsFalse(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance), Is.False);
+        }
+
+        [Test]
+        public void TestToleranceVarianceExact()
+        {
+            var noneTolerance = Tolerance.Exact;
+            Assert.That(noneTolerance.HasVariance, Is.False);
+        }
+
+        [Test]
+        public void TestToleranceVarianceDefault()
+        {
+            var noneTolerance = Tolerance.Default;
+            Assert.That(noneTolerance.HasVariance, Is.False);
         }
 
         [Test]
@@ -72,8 +81,20 @@ namespace NUnit.Framework.Constraints
         public void TestModeMustFollowTolerance()
         {
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)
-            Assert.That(() => tolerance.Percent, 
+            Assert.That(() => tolerance.Percent,
                 Throws.TypeOf<InvalidOperationException>().With.Message.Contains("Tolerance amount must be specified"));
+        }
+
+        [Test]
+        public void TestToleranceDefaultIsSameAs()
+        {
+            Assert.That(Tolerance.Default, Is.SameAs(Tolerance.Default));
+        }
+
+        [Test]
+        public void TestToleranceExactIsSameAs()
+        {
+            Assert.That(Tolerance.Exact, Is.SameAs(Tolerance.Exact));
         }
     }
 }

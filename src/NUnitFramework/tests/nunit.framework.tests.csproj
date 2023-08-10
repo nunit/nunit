@@ -2,17 +2,21 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
-    <RootNamespace>NUnit.Framework</RootNamespace>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <Nullable>enable</Nullable>
+    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
 
-    <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
+      <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.ValueTuple" version="4.5.0" />
   </ItemGroup>
@@ -23,6 +27,7 @@
     <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
     <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
+    <ProjectReference Include="..\nunitlite-runner\nunitlite-runner.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
@@ -44,7 +49,9 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+ <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.CompareTo('net5.0')) &lt; 0">
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
+
 </Project>

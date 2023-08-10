@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using NUnit.Framework.Internal;
@@ -15,7 +14,7 @@ namespace NUnit.Framework.Constraints
     public class ExactCountConstraint : Constraint
     {
         private readonly int _expectedCount;
-        private readonly IConstraint _itemConstraint;
+        private readonly IConstraint? _itemConstraint;
 
         /// <summary>
         /// Construct a standalone ExactCountConstraint
@@ -54,7 +53,7 @@ namespace NUnit.Framework.Constraints
 
             foreach (var item in enumerable)
             {
-                if (_itemConstraint != null)
+                if (_itemConstraint is not null)
                 {
                     if (_itemConstraint.ApplyTo(item).IsSuccess)
                         matchCount++;
@@ -66,7 +65,7 @@ namespace NUnit.Framework.Constraints
 
                 // We intentionally add one item too many because we use it to trigger
                 // the ellipsis when we call "MsgUtils.FormatCollection" later on.
-                if (itemList.Count <= MsgUtils.DefaultMaxItems )
+                if (itemList.Count <= MsgUtils.DefaultMaxItems)
                     itemList.Add(item);
             }
 
@@ -84,11 +83,10 @@ namespace NUnit.Framework.Constraints
                 var descriptionPrefix =
                     _expectedCount == 0 ? "no item" :
                     _expectedCount == 1 ? "exactly one item" :
-                    string.Format("exactly {0} items", _expectedCount);
+                    $"exactly {_expectedCount} items";
 
-                return _itemConstraint != null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
+                return _itemConstraint is not null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
             }
         }
     }
 }
-

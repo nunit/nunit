@@ -1,11 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -17,6 +13,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class ValuesAttribute : NUnitAttribute, IParameterDataSource
     {
+#pragma warning disable IDE1006
         /// <summary>
         /// The collection of data to be returned. Must
         /// be set by any derived attribute classes.
@@ -24,7 +21,6 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
         protected object?[] data;
@@ -45,7 +41,7 @@ namespace NUnit.Framework
         /// <param name="arg1"></param>
         public ValuesAttribute(object? arg1)
         {
-            data = new object?[] { arg1 };
+            data = new[] { arg1 };
         }
 
         /// <summary>
@@ -55,7 +51,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public ValuesAttribute(object? arg1, object? arg2)
         {
-            data = new object?[] { arg1, arg2 };
+            data = new[] { arg1, arg2 };
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public ValuesAttribute(object? arg1, object? arg2, object? arg3)
         {
-            data = new object?[] { arg1, arg2, arg3 };
+            data = new[] { arg1, arg2, arg3 };
         }
 
         /// <summary>
@@ -95,22 +91,23 @@ namespace NUnit.Framework
         /// </summary>
         private static IEnumerable GenerateData(Type targetType)
         {
-            if (IsNullableEnum(targetType))
+            Type actualType = targetType.IsByRef ? targetType.GetElementType()! : targetType;
+            if (IsNullableEnum(actualType))
             {
-                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(targetType));
+                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(actualType)!);
                 var enumValuesWithNull = new object[enumValues.Length + 1];
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
             }
-            if (targetType.GetTypeInfo().IsEnum)
+            if (actualType.IsEnum)
             {
-                return Enum.GetValues(targetType);
+                return Enum.GetValues(actualType);
             }
-            if (targetType == typeof(bool?))
+            if (actualType == typeof(bool?))
             {
                 return new object?[] { null, true, false };
             }
-            if (targetType == typeof(bool))
+            if (actualType == typeof(bool))
             {
                 return new object[] { true, false };
             }
@@ -123,8 +120,8 @@ namespace NUnit.Framework
         /// </summary>
         private static bool IsNullableEnum(Type t)
         {
-            Type u = Nullable.GetUnderlyingType(t);
-            return (u != null) && u.GetTypeInfo().IsEnum;
+            Type? u = Nullable.GetUnderlyingType(t);
+            return u is not null && u.IsEnum;
         }
     }
 }

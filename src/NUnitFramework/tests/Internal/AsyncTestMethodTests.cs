@@ -2,11 +2,12 @@
 
 using System.Collections;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class AsyncTestMethodTests
@@ -84,7 +85,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        [TestCaseSource("TestCases")]
+        [TestCaseSource(nameof(TestCases))]
         public void RunTests(IMethodInfo method, ResultState resultState, int assertionCount)
         {
             var test = _builder.BuildFrom(method);

@@ -1,16 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Represents a constraint that succeeds if the specified 
+    /// Represents a constraint that succeeds if the specified
     /// count of members of a collection match a base constraint.
     /// </summary>
     public class ExactCountOperator : SelfResolvingOperator
     {
-        private readonly int expectedCount;
+        private readonly int _expectedCount;
 
         /// <summary>
         /// Construct an ExactCountOperator for a specified count
@@ -20,25 +18,24 @@ namespace NUnit.Framework.Constraints
         {
             // Collection Operators stack on everything
             // and allow all other ops to stack on them
-            this.left_precedence = 1;
-            this.right_precedence = 10;
+            left_precedence = 1;
+            right_precedence = 10;
 
-            this.expectedCount = expectedCount;
+            _expectedCount = expectedCount;
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
-                stack.Push(new ExactCountConstraint(expectedCount));
+            if (RightContext is null || RightContext is BinaryOperator)
+                stack.Push(new ExactCountConstraint(_expectedCount));
             else
-                stack.Push(new ExactCountConstraint(expectedCount, stack.Pop()));
+                stack.Push(new ExactCountConstraint(_expectedCount, stack.Pop()));
         }
     }
 }
-

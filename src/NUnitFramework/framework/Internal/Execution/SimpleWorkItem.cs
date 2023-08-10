@@ -1,9 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if THREAD_ABORT
 using System.Threading;
+#endif
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Extensions;
 
@@ -17,8 +20,7 @@ namespace NUnit.Framework.Internal.Execution
     public class SimpleWorkItem : WorkItem
     {
         private readonly IDebugger _debugger;
-
-        readonly TestMethod _testMethod;
+        private readonly TestMethod _testMethod;
 
         /// <summary>
         /// Construct a simple work item for a test.
@@ -72,7 +74,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns>A TestCommand</returns>
-        private TestCommand MakeTestCommand()
+        internal TestCommand MakeTestCommand()
         {
             if (Test.RunState == RunState.Runnable ||
                 Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test))
@@ -80,27 +82,30 @@ namespace NUnit.Framework.Internal.Execution
                 // Command to execute test
                 TestCommand command = new TestMethodCommand(_testMethod);
 
-                var method = _testMethod.Method;
+                var method = MethodInfoCache.Get(_testMethod.Method);
 
                 // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                foreach (IWrapTestMethod wrapper in method.WrapTestMethodAttributes)
                     command = wrapper.Wrap(command);
 
                 // Create TestActionCommands using attributes of the method
                 foreach (ITestAction action in Test.Actions)
+                {
                     if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
-                        command = new TestActionCommand(command, action); ;
+                        command = new TestActionCommand(command, action);
+                }
 
                 // Try to locate the parent fixture. In current implementations, the test method
                 // is either one or two levels below the TestFixture - if this changes,
                 // so should the following code.
-                TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
+                TestFixture? parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Test.TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Test.TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
+                ITypeInfo typeInfo = Test.TypeInfo!;
+                var setUpMethods = parentFixture?.SetUpMethods ?? typeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? typeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
@@ -121,17 +126,17 @@ namespace NUnit.Framework.Internal.Execution
                     ITestAction action = Context.UpstreamActions[index];
                     System.Diagnostics.Debug.Assert(
                         action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test),
-                        "Invalid target on upstream action: " + action.Targets.ToString());
+                        $"Invalid target on upstream action: {action.Targets}");
 
                     command = new TestActionCommand(command, action);
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                foreach (ICommandWrapper decorator in method.WrapSetupTearDownAttributes)
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
-                foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
+                foreach (var attr in method.ApplyToContextAttributes)
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // Add a construct command and optionally a dispose command in case of instance per test case.
@@ -140,18 +145,14 @@ namespace NUnit.Framework.Internal.Execution
                     command = new FixturePerTestCaseCommand(command);
                 }
                 // If a timeout is specified, create a TimeoutCommand
-                // Timeout set at a higher level
-                int timeout = Context.TestCaseTimeout;
-
-                // Timeout set on this test
-                if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+                // Get Timeout set on this test or set at a higher level
+                int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
 
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout, _debugger);
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
-                foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))
+                foreach (var repeatableAttribute in method.RepeatTestAttributes)
                     command = repeatableAttribute.Wrap(command);
 
                 return command;

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +11,7 @@ namespace NUnit.Framework.Interfaces
     public interface ITestResult : IXmlNodeBuilder
     {
         /// <summary>
-        /// Gets the ResultState of the test result, which 
+        /// Gets the ResultState of the test result, which
         /// indicates the success or failure of the test.
         /// </summary>
         ResultState ResultState
@@ -65,7 +63,7 @@ namespace NUnit.Framework.Interfaces
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        string? Message
+        string Message
         {
             get;
         }
@@ -95,7 +93,6 @@ namespace NUnit.Framework.Interfaces
         {
             get;
         }
-
 
         /// <summary>
         /// Gets the number of test cases that failed

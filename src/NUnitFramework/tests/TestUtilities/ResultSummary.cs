@@ -1,44 +1,37 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Summary description for ResultSummary.
     /// </summary>
     public class ResultSummary
     {
-        private int resultCount = 0;
-        private int failureCount = 0;
-        private int successCount = 0;
-        private int inconclusiveCount = 0;
-        private int skipCount = 0;
+        private int _resultCount = 0;
+        private int _failureCount = 0;
+        private int _successCount = 0;
+        private int _inconclusiveCount = 0;
+        private int _skipCount = 0;
 
-        private DateTime startTime = DateTime.MinValue;
-        private DateTime endTime = DateTime.MaxValue;
-        private double duration = 0.0d;
-        private string name;
-
-        public ResultSummary() { }
+        private readonly DateTime _startTime = DateTime.MinValue;
+        private readonly DateTime _endTime = DateTime.MaxValue;
+        private readonly double _duration = 0.0d;
+        private readonly string _name;
 
         public ResultSummary(ITestResult result)
         {
+            _name = result.Name;
+            _startTime = result.StartTime;
+            _endTime = result.EndTime;
+            _duration = result.Duration;
             Summarize(result);
         }
 
         private void Summarize(ITestResult result)
         {
-            if (name == null)
-            {
-                name = result.Name;
-                startTime = result.StartTime;
-                endTime = result.EndTime;
-                duration = result.Duration;
-            }
-
             if (result.HasChildren)
             {
                 foreach (var childResult in result.Children)
@@ -46,111 +39,78 @@ namespace NUnit.TestUtilities
             }
             else
             {
-                resultCount++;
+                _resultCount++;
 
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
-                        successCount++;
+                        _successCount++;
                         break;
                     case TestStatus.Failed:
-                        failureCount++;
+                        _failureCount++;
                         break;
                     case TestStatus.Inconclusive:
-                        inconclusiveCount++;
+                        _inconclusiveCount++;
                         break;
                     case TestStatus.Skipped:
                     default:
-                        skipCount++;
+                        _skipCount++;
                         break;
                 }
             }
         }
 
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name => _name;
 
-        public bool Success
-        {
-            get { return failureCount == 0; }
-        }
+        public bool Success => _failureCount == 0;
 
         /// <summary>
         /// Returns the number of test cases for which results
         /// have been summarized. Any tests excluded by use of
         /// Category or Explicit attributes are not counted.
         /// </summary>
-        public int ResultCount
-        {
-            get { return resultCount; }
-        }
+        public int ResultCount => _resultCount;
 
         /// <summary>
         /// Returns the number of test cases actually run, which
         /// is the same as ResultCount, less any Skipped, Ignored
         /// or NonRunnable tests.
         /// </summary>
-        public int TestsRun
-        {
-            get { return Passed + Failed + Inconclusive; }
-        }
+        public int TestsRun => Passed + Failed + Inconclusive;
 
         /// <summary>
         /// Returns the number of tests that passed
         /// </summary>
-        public int Passed
-        {
-            get { return successCount; }
-        }
+        public int Passed => _successCount;
 
         /// <summary>
         /// Returns the number of test cases that failed.
         /// </summary>
-        public int Failed
-        {
-            get { return failureCount; }
-        }
+        public int Failed => _failureCount;
 
         /// <summary>
         /// Returns the number of test cases that failed.
         /// </summary>
-        public int Inconclusive
-        {
-            get { return inconclusiveCount; }
-        }
+        public int Inconclusive => _inconclusiveCount;
 
         /// <summary>
         /// Returns the number of test cases that were skipped.
         /// </summary>
-        public int Skipped
-        {
-            get { return skipCount; }
-        }
+        public int Skipped => _skipCount;
 
         /// <summary>
         /// Gets the start time of the test run.
         /// </summary>
-        public DateTime StartTime
-        {
-            get { return startTime; }
-        }
+        public DateTime StartTime => _startTime;
 
         /// <summary>
         /// Gets the end time of the test run.
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return endTime; }
-        }
+        public DateTime EndTime => _endTime;
 
         /// <summary>
         /// Gets the duration of the test run in seconds.
         /// </summary>
-        public double Duration
-        {
-            get { return duration; }
-        }
+        public double Duration => _duration;
     }
 }

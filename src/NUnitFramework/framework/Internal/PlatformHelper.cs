@@ -15,13 +15,12 @@ namespace NUnit.Framework.Internal
         private readonly RuntimeFramework _rt;
 
         // Set whenever we fail to support a list of platforms
-        private string _reason = string.Empty;
 
-        const string CommonOSPlatforms =
+        private const string CommonOSPlatforms =
             "Win,Win32,Win32S,Win32NT,Win32Windows,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
-            "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+
-            "Win8.1,Windows8.1,Win10,Windows10,WindowsServer10,Unix,Linux";
+            "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8," +
+            "Win8.1,Windows8.1,Win10,Windows10,Win11,Windows11,WindowsServer10,Unix,Linux";
 
         /// <summary>
         /// Comma-delimited list of all supported OS platform constants
@@ -50,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="rt">RuntimeFramework to be used</param>
         /// <param name="os">OperatingSystem to be used</param>
-        public PlatformHelper( OSPlatform os, RuntimeFramework rt )
+        public PlatformHelper(OSPlatform os, RuntimeFramework rt)
         {
             _os = os;
             _rt = rt;
@@ -62,9 +61,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platforms"></param>
         /// <returns></returns>
-        public bool IsPlatformSupported( string[] platforms )
+        public bool IsPlatformSupported(string[] platforms)
         {
-            return platforms.Any( IsPlatformSupported );
+            return platforms.Any(IsPlatformSupported);
         }
 
         /// <summary>
@@ -73,12 +72,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platformAttribute">The attribute to examine</param>
         /// <returns></returns>
-        public bool IsPlatformSupported( PlatformAttribute platformAttribute )
+        public bool IsPlatformSupported(PlatformAttribute platformAttribute)
         {
-            string include = platformAttribute.Include;
-            string exclude = platformAttribute.Exclude;
+            string? include = platformAttribute.Include;
+            string? exclude = platformAttribute.Exclude;
 
-            return IsPlatformSupported( include, exclude );
+            return IsPlatformSupported(include, exclude);
         }
 
         /// <summary>
@@ -89,23 +88,23 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported(TestCaseAttribute testCaseAttribute)
         {
-            string include = testCaseAttribute.IncludePlatform;
-            string exclude = testCaseAttribute.ExcludePlatform;
+            string? include = testCaseAttribute.IncludePlatform;
+            string? exclude = testCaseAttribute.ExcludePlatform;
 
             return IsPlatformSupported(include, exclude);
         }
 
-        private bool IsPlatformSupported(string include, string exclude)
+        private bool IsPlatformSupported(string? include, string? exclude)
         {
-            if (include != null && !IsPlatformSupported(include))
+            if (include is not null && !IsPlatformSupported(include))
             {
-                _reason = string.Format("Only supported on {0}", include);
+                Reason = $"Only supported on {include}";
                 return false;
             }
 
-            if (exclude != null && IsPlatformSupported(exclude))
+            if (exclude is not null && IsPlatformSupported(exclude))
             {
-                _reason = string.Format("Not supported on {0}", exclude);
+                Reason = $"Not supported on {exclude}";
                 return false;
             }
 
@@ -117,15 +116,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platform">Name of the platform or comma-separated list of platform ids</param>
         /// <returns>True if the platform is in use on the system</returns>
-        public bool IsPlatformSupported( string platform )
+        public bool IsPlatformSupported(string platform)
         {
-            if ( platform.IndexOf( ',' ) >= 0 )
-                return IsPlatformSupported( platform.Split(',') );
+            if (platform.IndexOf(',') >= 0)
+                return IsPlatformSupported(platform.Split(','));
 
             string platformName = platform.Trim();
             bool isSupported;
 
-            switch( platformName.ToUpper() )
+            switch (platformName.ToUpper())
             {
                 case "WIN":
                 case "WIN32":
@@ -201,6 +200,10 @@ namespace NUnit.Framework.Internal
                 case "WIN10":
                     isSupported = _os.IsWindows10;
                     break;
+                case "WINDOWS11":
+                case "WIN11":
+                    isSupported = _os.IsWindows11;
+                    break;
                 case "WINDOWSSERVER10":
                     isSupported = _os.IsWindowsServer10;
                     break;
@@ -238,7 +241,7 @@ namespace NUnit.Framework.Internal
             }
 
             if (!isSupported)
-                _reason = "Only supported on " + platform;
+                Reason = "Only supported on " + platform;
 
             return isSupported;
         }
@@ -248,14 +251,11 @@ namespace NUnit.Framework.Internal
         /// defined if called before IsSupported( Attribute )
         /// is called.
         /// </summary>
-        public string Reason
-        {
-            get { return _reason; }
-        }
+        public string Reason { get; private set; } = string.Empty;
 
         private bool IsRuntimeSupported(string platformName)
         {
-            string versionSpecification = null;
+            string? versionSpecification = null;
             string[] parts = platformName.Split('-');
             if (parts.Length == 2)
             {
@@ -286,25 +286,25 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private bool IsRuntimeSupported(RuntimeType runtime, string versionSpecification)
+        private bool IsRuntimeSupported(RuntimeType runtime, string? versionSpecification)
         {
-            Version version = versionSpecification == null
+            Version version = versionSpecification is null
                 ? RuntimeFramework.DefaultVersion
                 : new Version(versionSpecification);
 
-            RuntimeFramework target = new RuntimeFramework(runtime, version);
+            var target = new RuntimeFramework(runtime, version);
 
             return _rt.Supports(target);
         }
 
-        private bool IsNetCoreRuntimeSupported(RuntimeType runtime, string versionSpecification)
+        private bool IsNetCoreRuntimeSupported(RuntimeType runtime, string? versionSpecification)
         {
-            if (versionSpecification != null)
+            if (versionSpecification is not null)
             {
-                throw new PlatformNotSupportedException($"Detecting versions of .NET Core is not supported - {runtime.ToString()}-{versionSpecification}");
+                throw new PlatformNotSupportedException($"Detecting versions of .NET Core is not supported - {runtime}-{versionSpecification}");
             }
 
-            RuntimeFramework target = new RuntimeFramework(runtime, RuntimeFramework.DefaultVersion);
+            var target = new RuntimeFramework(runtime, RuntimeFramework.DefaultVersion);
 
             return _rt.Supports(target);
         }

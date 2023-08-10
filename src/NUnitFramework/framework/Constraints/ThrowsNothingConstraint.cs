@@ -11,16 +11,10 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ThrowsNothingConstraint : Constraint
     {
-        // TODO: This constraint needs tests
-        private Exception caughtException;
-
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return "No Exception to be thrown"; }
-        }
+        public override string Description => "No Exception to be thrown";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -31,15 +25,15 @@ namespace NUnit.Framework.Constraints
         {
             var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+            Exception? caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            return new ConstraintResult(this, caughtException, caughtException == null);
+            return new ConstraintResult(this, caughtException, caughtException is null);
         }
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns 
-        /// the value to be tested. The default implementation simply evaluates 
-        /// the delegate but derived classes may override it to provide for 
+        /// Applies the constraint to an ActualValueDelegate that returns
+        /// the value to be tested. The default implementation simply evaluates
+        /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>

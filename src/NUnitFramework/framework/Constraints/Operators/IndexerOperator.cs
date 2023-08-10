@@ -10,7 +10,7 @@ namespace NUnit.Framework.Constraints
     public class IndexerOperator : PrefixOperator
     {
         private readonly object[] _indexArguments;
-        
+
         /// <summary>
         /// Constructs a IndexerOperator for a particular set of indexer
         /// parameters
@@ -18,10 +18,10 @@ namespace NUnit.Framework.Constraints
         public IndexerOperator(params object[] indexArgs)
         {
             _indexArguments = indexArgs;
-            
+
             // Indexer stacks on anything and allows only
             // prefix operators to stack on it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>

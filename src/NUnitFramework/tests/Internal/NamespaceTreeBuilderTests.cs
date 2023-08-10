@@ -3,19 +3,21 @@
 using System;
 using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Internal.Builders
+namespace NUnit.Framework.Tests.Internal
 {
     public class NamespaceTreeBuilderTests
     {
         private TestAssembly _testAssembly;
         private NamespaceTreeBuilder _builder;
-
+        private const string NameofDll = "mytest.dll";
 
         [SetUp]
         public void CreateTreeBuilder()
         {
-            _testAssembly = new TestAssembly("mytest.dll");
+            _testAssembly = new TestAssembly(NameofDll);
             _builder = new NamespaceTreeBuilder(_testAssembly);
         }
 
@@ -23,13 +25,13 @@ namespace NUnit.Framework.Internal.Builders
         public void InitialTreeState()
         {
             Assert.That(_builder.RootSuite, Is.SameAs(_testAssembly));
-            Assert.That(_builder.RootSuite.Tests.Count, Is.Zero);
+            Assert.That(_builder.RootSuite.Tests, Is.Empty);
         }
 
         [Test]
         public void AddSingleFixture()
         {
-            _builder.Add( new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)));
+            _builder.Add(new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)));
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
         }
@@ -41,7 +43,8 @@ namespace NUnit.Framework.Internal.Builders
             {
                 new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)),
                 new TestSuite(typeof(NUnit.TestData.TestFixtureTests.FixtureWithTestFixtureAttribute)),
-                new TestSuite(typeof(NUnit.TestData.TestFixtureTests.FixtureWithoutTestFixtureAttributeContainingTestCase))
+                new TestSuite(
+                    typeof(NUnit.TestData.TestFixtureTests.FixtureWithoutTestFixtureAttributeContainingTestCase))
             });
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
@@ -54,9 +57,9 @@ namespace NUnit.Framework.Internal.Builders
         {
             _builder.Add(new[]
             {
-                new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)),
-                new TestSuite(typeof(NUnit.TestData.SetUpData.SetUpAndTearDownFixture)),
-                new TestSuite(typeof(NUnit.TestData.TheoryFixture.TheoryFixture))
+                new TestSuite(typeof(TestData.TestFixtureTests.RegularFixtureWithOneTest)),
+                new TestSuite(typeof(TestData.SetUpData.SetUpAndTearDownFixture)),
+                new TestSuite(typeof(TestData.TheoryFixture.TheoryFixture))
             });
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
@@ -83,7 +86,8 @@ namespace NUnit.Framework.Internal.Builders
         public void AddSetUpFixture_BottomUp()
         {
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(
+                new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
             Assert.That(_builder.RootSuite.Tests[0].Tests[0].Tests[0].Tests[0], Is.TypeOf<SetUpFixture>());
@@ -92,7 +96,8 @@ namespace NUnit.Framework.Internal.Builders
         [Test]
         public void AddSetUpFixture_TopDown()
         {
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(
+                new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
@@ -140,21 +145,23 @@ namespace NUnit.Framework.Internal.Builders
         private void CheckTree(params string[] names)
         {
             ITest suite = _builder.RootSuite;
-            Assert.That(suite.Name, Is.EqualTo("mytest.dll"));
+            Assert.That(suite.Name, Is.EqualTo(NameofDll));
 
             foreach (var name in names)
             {
                 foreach (var child in suite.Tests)
+                {
                     if (child.Name == name)
                     {
                         suite = child;
                         break;
                     }
+                }
 
                 if (suite.Name != name)
                 {
                     var dump = DumpTree(_builder.RootSuite, "   ");
-                    Assert.Fail("Did not find {0} in tree under {1}\nTree Contains:\n{2}", name, suite.Name, dump);
+                    Assert.Fail($"Did not find {name} in tree under {suite.Name}\nTree Contains:\n{dump}");
                 }
             }
         }

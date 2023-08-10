@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class TextOutputTests : ITestListener
     {
@@ -14,23 +14,20 @@ namespace NUnit.Framework
         private const string ERROR_TEXT = "Written directly to console";
         private static readonly string NL = Environment.NewLine;
 
-        private string CapturedOutput
-        {
-            get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
-        }
+        private static string CapturedOutput => TestExecutionContext.CurrentContext.CurrentResult.Output;
 
         [Test]
         public void ConsoleWrite_WritesToResult()
         {
             Console.Write(SOME_TEXT);
-            Assert.That(CapturedOutput, Is.EqualTo(SOME_TEXT));
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
         }
 
         [Test]
         public void ConsoleWriteLine_WritesToResult()
         {
             Console.WriteLine(SOME_TEXT);
-            Assert.That(CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
@@ -41,12 +38,18 @@ namespace NUnit.Framework
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
+            });
 
-            Assert.NotNull(_testOutput, "No output received");
-            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT));
-            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT));
+                Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            });
         }
 
         [Test]
@@ -57,12 +60,18 @@ namespace NUnit.Framework
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
+            });
 
-            Assert.NotNull(_testOutput, "No output received");
-            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
-            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+                Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            });
         }
 
         [Test]
@@ -84,12 +93,18 @@ namespace NUnit.Framework
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
+            });
 
-            Assert.NotNull(_testOutput, "No output received");
-            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
-            Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+                Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
+            });
         }
 
         [Test]
@@ -100,55 +115,60 @@ namespace NUnit.Framework
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
+            });
 
-            Assert.NotNull(_testOutput, "No output received");
-            Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
-            Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
+                Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
+            });
         }
 
         [Test]
         public void TestContextOut_WritesToResult()
         {
             TestContext.Out.WriteLine(SOME_TEXT);
-            Assert.That(CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
         public void TestContextWrite_WritesToResult()
         {
             TestContext.Write(SOME_TEXT);
-            Assert.That(CapturedOutput, Is.EqualTo(SOME_TEXT));
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
         }
 
         [Test]
         public void TestContextWriteLine_WritesToResult()
         {
             TestContext.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(Framework.Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         #region ITestListener Implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
         }
 
-        TestOutput _testOutput;
+        private TestOutput? _testOutput;
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
             _testOutput = output;
         }
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
-            
         }
 
         #endregion

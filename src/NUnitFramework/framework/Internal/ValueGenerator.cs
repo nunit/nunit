@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                for (var current = start;;)
+                for (var current = start; ;)
                 {
                     yield return current;
 
@@ -96,7 +97,7 @@ namespace NUnit.Framework.Internal
             /// </param>
             public ComparableStep(TStep value, Func<T, TStep, T> apply)
             {
-                if (apply == null) throw new ArgumentNullException(nameof(apply));
+                if (apply is null) throw new ArgumentNullException(nameof(apply));
                 _step = value;
                 _apply = apply;
             }
@@ -149,7 +150,7 @@ namespace NUnit.Framework.Internal
         /// use it to increment values of type <typeparamref name="T"/>. A return value indicates
         /// whether the creation succeeded.
         /// </summary>
-        public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+        public override bool TryCreateStep(object value, [NotNullWhen(true)] out ValueGenerator.Step? step)
         {
             Guard.ArgumentNotNull(value, nameof(value));
             step = null;
@@ -225,6 +226,6 @@ namespace NUnit.Framework.Internal
         /// use it to increment values on which it operates. A return value indicates
         /// whether the creation succeeded.
         /// </summary>
-        public abstract bool TryCreateStep(object value, out Step step);
+        public abstract bool TryCreateStep(object value, [NotNullWhen(true)] out Step? step);
     }
 }

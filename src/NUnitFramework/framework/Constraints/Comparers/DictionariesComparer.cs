@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is IDictionary xDictionary) || !(y is IDictionary yDictionary))
+            if (x is not IDictionary xDictionary || y is not IDictionary yDictionary)
                 return null;
 
             if (xDictionary.Count != yDictionary.Count)
@@ -23,8 +23,10 @@ namespace NUnit.Framework.Constraints.Comparers
                 return false;
 
             foreach (object key in xDictionary.Keys)
+            {
                 if (!equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, state.PushComparison(x, y)))
                     return false;
+            }
 
             return true;
         }

@@ -1,20 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultSuccessWithReasonGivenTests : TestResultSuccessTests
     {
         public TestResultSuccessWithReasonGivenTests() : base(TestPassedReason, node => ReasonNodeExpectedValidation(node, TestPassedReason))
-        {
-        }
-    }
-
-    public class TestResultSuccessWithNullReasonGivenTests : TestResultSuccessTests
-    {
-        public TestResultSuccessWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -35,55 +28,64 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultSuccessTests : TestResultTests
     {
-        protected string _successMessage;
+        private readonly string _successMessage;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
         public const string TestPassedReason = "Test passed!";
 
-        protected TestResultSuccessTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultSuccessTests(string successMessage, Action<TNode> xmlReasonNodeValidation)
         {
-            _successMessage = ignoreReason;
+            _successMessage = successMessage;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Success, _successMessage);
-            _testResult.AssertCount = 2;
+            TestResult.SetResult(ResultState.Success, _successMessage);
+            TestResult.AssertCount = 2;
 
-            _suiteResult.AddResult(_testResult);
+            SuiteResult.AddResult(TestResult);
         }
 
         [Test]
         public void TestResultIsSuccess()
         {
-            Assert.True(_testResult.ResultState == ResultState.Success);
-            Assert.AreEqual(_successMessage, _testResult.Message);
+            Assert.Multiple(() =>
+            {
+                Assert.That(TestResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(TestResult.Message, Is.EqualTo(_successMessage));
+            });
         }
 
         [Test]
         public void SuiteResultIsSuccess()
         {
-            Assert.True(_suiteResult.ResultState == ResultState.Success);
-            Assert.AreEqual(1, _suiteResult.TotalCount);
-            Assert.AreEqual(1, _suiteResult.PassCount);
-            Assert.AreEqual(0, _suiteResult.FailCount);
-            Assert.AreEqual(0, _suiteResult.WarningCount);
-            Assert.AreEqual(0, _suiteResult.SkipCount);
-            Assert.AreEqual(0, _suiteResult.InconclusiveCount);
-            Assert.AreEqual(2, _suiteResult.AssertCount);
+            Assert.Multiple(() =>
+            {
+                Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.PassCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.FailCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.AssertCount, Is.EqualTo(2));
+            });
         }
 
         [Test]
         public void TestResultXmlNodeIsSuccess()
         {
-            TNode testNode = _testResult.ToXml(true);
+            TNode testNode = TestResult.ToXml(true);
 
-            Assert.AreEqual("Passed", testNode.Attributes["result"]);
-            Assert.AreEqual(null, testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
-            Assert.AreEqual("2", testNode.Attributes["asserts"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.Attributes["result"], Is.EqualTo("Passed"));
+                Assert.That(testNode.Attributes["label"], Is.EqualTo(null));
+                Assert.That(testNode.Attributes["site"], Is.EqualTo(null));
+                Assert.That(testNode.Attributes["asserts"], Is.EqualTo("2"));
+            });
 
             _xmlReasonNodeValidation(testNode);
         }
@@ -91,18 +93,21 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultXmlNodeIsSuccess()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
 
-            Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
-            Assert.AreEqual(null, suiteNode.Attributes["label"]);
-            Assert.AreEqual(null, suiteNode.Attributes["site"]);
-            Assert.AreEqual("1", suiteNode.Attributes["total"]);
-            Assert.AreEqual("1", suiteNode.Attributes["passed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
-            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
-            Assert.AreEqual("2", suiteNode.Attributes["asserts"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Passed"));
+                Assert.That(suiteNode.Attributes["label"], Is.EqualTo(null));
+                Assert.That(suiteNode.Attributes["site"], Is.EqualTo(null));
+                Assert.That(suiteNode.Attributes["total"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("2"));
+            });
         }
     }
 }

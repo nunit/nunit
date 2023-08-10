@@ -1,12 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -23,7 +22,7 @@ namespace NUnit.Framework
         /// that don't support params arrays.
         /// </summary>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public ValueSourceAttribute(string sourceName)
+        public ValueSourceAttribute(string? sourceName)
         {
             SourceName = sourceName;
         }
@@ -34,7 +33,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public ValueSourceAttribute(Type sourceType, string sourceName)
+        public ValueSourceAttribute(Type? sourceType, string? sourceName)
         {
             SourceType = sourceType;
             SourceName = sourceName;
@@ -75,7 +74,7 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
-            if (SourceName == null)
+            if (SourceName is null)
             {
                 return Reflect.Construct(sourceType) as IEnumerable
                     ?? throw new InvalidDataSourceException($"The value source type '{sourceType}' does not implement IEnumerable.");
@@ -95,28 +94,29 @@ namespace NUnit.Framework
             MemberInfo member = members[0];
 
             var field = member as FieldInfo;
-            if (field != null)
+            if (field is not null)
             {
                 if (field.IsStatic)
-                    return (IEnumerable)field.GetValue(null);
+                    return (IEnumerable?)field.GetValue(null);
 
                 throw CreateSourceNameException();
             }
 
             var property = member as PropertyInfo;
-            if (property != null)
+            if (property is not null)
             {
-                if (property.GetGetMethod(true).IsStatic)
-                    return (IEnumerable)property.GetValue(null, null);
+                MethodInfo? getMethod = property.GetGetMethod(true);
+                if (getMethod?.IsStatic is true)
+                    return (IEnumerable?)property.GetValue(null, null);
 
                 throw CreateSourceNameException();
             }
 
             var m = member as MethodInfo;
-            if (m != null)
+            if (m is not null)
             {
                 if (m.IsStatic)
-                    return (IEnumerable)m.Invoke(null, null);
+                    return m.InvokeMaybeAwait<IEnumerable?>();
 
                 throw CreateSourceNameException();
             }

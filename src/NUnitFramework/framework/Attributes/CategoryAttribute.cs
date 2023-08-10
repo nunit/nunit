@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -11,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Applies a category to a test
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = true)]
     public class CategoryAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
@@ -36,7 +34,7 @@ namespace NUnit.Framework
         /// <param name="name">The name of the category</param>
         public CategoryAttribute(string name)
         {
-            this.categoryName = name.Trim();
+            categoryName = name.Trim();
         }
 
         /// <summary>
@@ -45,18 +43,15 @@ namespace NUnit.Framework
         /// </summary>
         protected CategoryAttribute()
         {
-            this.categoryName = this.GetType().Name;
-            if ( categoryName.EndsWith( "Attribute", StringComparison.Ordinal ) )
-                categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
+            categoryName = GetType().Name;
+            if (categoryName.EndsWith("Attribute", StringComparison.Ordinal))
+                categoryName = categoryName.Substring(0, categoryName.Length - 9);
         }
 
         /// <summary>
         /// The name of the category
         /// </summary>
-        public string Name 
-        {
-            get { return categoryName; }
-        }
+        public string Name => categoryName;
 
         #region IApplyToTest Members
 
@@ -66,7 +61,7 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            test.Properties.Add(PropertyNames.Category, this.Name);
+            test.Properties.Add(PropertyNames.Category, Name);
         }
 
         #endregion

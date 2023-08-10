@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
@@ -14,7 +13,7 @@ namespace NUnit.Framework
     {
         public static bool IsStatic(this Type type)
         {
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+            return type.IsAbstract && type.IsSealed;
         }
 
         public static bool HasAttribute<T>(this ICustomAttributeProvider attributeProvider, bool inherit)
@@ -24,7 +23,7 @@ namespace NUnit.Framework
 
         public static bool HasAttribute<T>(this Type type, bool inherit)
         {
-            return ((ICustomAttributeProvider)type.GetTypeInfo()).HasAttribute<T>(inherit);
+            return ((ICustomAttributeProvider)type).HasAttribute<T>(inherit);
         }
 
         public static T[] GetAttributes<T>(this ICustomAttributeProvider attributeProvider, bool inherit) where T : class
@@ -39,7 +38,7 @@ namespace NUnit.Framework
 
         public static T[] GetAttributes<T>(this Type type, bool inherit) where T : class
         {
-            return ((ICustomAttributeProvider)type.GetTypeInfo()).GetAttributes<T>(inherit);
+            return ((ICustomAttributeProvider)type).GetAttributes<T>(inherit);
         }
 
         public static IEnumerable Skip(this IEnumerable enumerable, long skip)

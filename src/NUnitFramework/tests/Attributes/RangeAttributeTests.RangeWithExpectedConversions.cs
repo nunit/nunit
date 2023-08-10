@@ -5,9 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
-    partial class RangeAttributeTests
+    public partial class RangeAttributeTests
     {
         public sealed class RangeWithExpectedConversions
         {

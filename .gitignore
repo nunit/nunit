@@ -116,7 +116,6 @@ AppPackages/
 sql/
 *.Cache
 ClientBin/
-[Ss]tyle[Cc]op.*
 ~$*
 *~
 *.dbmdl
@@ -189,3 +188,4 @@ project.lock.json
 *.out
 .ionide
 .fake
+BenchmarkDotNet.Artifacts*

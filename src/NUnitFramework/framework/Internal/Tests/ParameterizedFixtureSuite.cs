@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -36,15 +34,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a string representing the type of test
         /// </summary>
-        public override string TestType
-        {
-            get
-            {
-                return _genericFixture
-                    ? "GenericFixture"
-                    : "ParameterizedFixture";
-            }
-        }
+        public override string TestType =>
+            _genericFixture
+                ? "GenericFixture"
+                : "ParameterizedFixture";
 
         /// <summary>
         /// Creates a filtered copy of the test suite.

@@ -1,11 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#region Using Directives
-
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-
-#endregion
 
 namespace NUnit.TestData
 {
@@ -38,7 +33,8 @@ namespace NUnit.TestData
         { }
 
         [Test]
-        [TestOf(typeof(TestOfAttribute))][TestOf(typeof(TestAttribute))]
+        [TestOf(typeof(TestOfAttribute))]
+        [TestOf(typeof(TestAttribute))]
         public void TestOfMultipleAttributesMethod()
         { }
     }

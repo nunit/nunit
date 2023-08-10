@@ -1,28 +1,33 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class InstanceOfTypeConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new InstanceOfTypeConstraint(typeof(D1));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new InstanceOfTypeConstraint(typeof(D1));
-            ExpectedDescription = string.Format("instance of <{0}>", typeof(D1));
-            StringRepresentation = string.Format("<instanceof {0}>", typeof(D1));
+            ExpectedDescription = $"instance of <{typeof(D1)}>";
+            StringRepresentation = $"<instanceof {typeof(D1)}>";
         }
 
-        static object[] SuccessData = new object[] { new D1(), new D2() };
-
-        static object[] FailureData = new object[] { 
-            new TestCaseData( new B(), "<" + typeof(B).FullName + ">" ) 
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { new D1(), new D2() };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData( new B(), "<" + typeof(B).FullName + ">" )
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
-        class B { }
+        private class B { }
 
-        class D1 : B { }
+        private class D1 : B { }
 
-        class D2 : D1 { }
+        private class D2 : D1 { }
     }
 }

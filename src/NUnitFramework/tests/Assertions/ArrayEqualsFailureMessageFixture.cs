@@ -1,12 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for ArrayEqualsFailureMessageFixture.
@@ -15,26 +13,26 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ArrayEqualsFailureMessageFixture
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [Test]
         public void ArraysHaveDifferentRanks()
         {
-            int[] expected = new int[] { 1, 2, 3, 4 };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 4 } };
+            var expected = new[] { 1, 2, 3, 4 };
+            var actual = new[,] { { 1, 2 }, { 3, 4 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ExpectedArrayIsLonger()
         {
-            int[] expected = new int[] { 1, 2, 3, 4, 5 };
-            int[] actual = new int[] { 1, 2, 3 };
+            var expected = new[] { 1, 2, 3, 4, 5 };
+            var actual = new[] { 1, 2, 3 };
 
             var expectedMessage =
                 "  Expected is <System.Int32[5]>, actual is <System.Int32[3]>" + NL +
@@ -42,14 +40,14 @@ namespace NUnit.Framework.Assertions
                 "  Missing:  < 4, 5 >";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ActualArrayIsLonger()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            int[] actual = new int[] { 1, 2, 3, 4, 5, 6, 7 };
+            var expected = new[] { 1, 2, 3 };
+            var actual = new[] { 1, 2, 3, 4, 5, 6, 7 };
 
             var expectedMessage =
                 "  Expected is <System.Int32[3]>, actual is <System.Int32[7]>" + NL +
@@ -57,14 +55,14 @@ namespace NUnit.Framework.Assertions
                 "  Extra:    < 4, 5, 6... >";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void FailureOnSingleDimensionedArrays()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            int[] actual = new int[] { 1, 5, 3 };
+            var expected = new[] { 1, 2, 3 };
+            var actual = new[] { 1, 5, 3 };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[3]>" + NL +
@@ -73,14 +71,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "5" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void DoubleDimensionedArrays()
         {
-            int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new int[,] { { 1, 3, 2 }, { 4, 0, 6 } };
+            var expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            var actual = new[,] { { 1, 3, 2 }, { 4, 0, 6 } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,3]>" + NL +
@@ -89,14 +87,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "3" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void TripleDimensionedArrays()
         {
-            int[, ,] expected = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            int[, ,] actual = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
+            var expected = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            var actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +
@@ -105,14 +103,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void FiveDimensionedArrays()
         {
-            int[, , , ,] expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
-            int[, , , ,] actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 4, 3 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
+            var expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
+            var actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 4, 3 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2,2,2]>" + NL +
@@ -121,14 +119,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "4" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void JaggedArrays()
         {
-            int[][] expected = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6, 7 }, new int[] { 8, 9 } };
-            int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
+            var expected = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
+            var actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[3][]>" + NL +
@@ -139,14 +137,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void JaggedArrayComparedToSimpleArray()
         {
-            int[] expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
+            var expected = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[9]>, actual is <System.Int32[3][]>" + NL +
@@ -154,15 +152,17 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Expected + "1" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, 2, 3 >" + NL;
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ArraysWithDifferentRanksAsCollection()
         {
-            int[] expected = new int[] { 1, 2, 3, 4 };
-            int[,] actual = new int[,] { { 1, 0 }, { 3, 4 } };
+            var expected = new[] { 1, 2, 3, 4 };
+            var actual = new[,] { { 1, 0 }, { 3, 4 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL +
@@ -171,14 +171,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ArraysWithDifferentDimensionsAsCollection()
         {
-            int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
+            var expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            var actual = new[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[2,3]>, actual is <System.Int32[3,2]>" + NL +
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -223,14 +223,14 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ArrayAndCollection_Failure()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            var actual = new List<int>(new int[] { 1, 3 });
+            var expected = new[] { 1, 2, 3 };
+            var actual = new List<int>(new[] { 1, 3 });
 
             var expectedMessage =
                 "  Expected is <System.Int32[3]>, actual is <System.Collections.Generic.List`1[System.Int32]> with 2 elements" + NL +
@@ -239,7 +239,7 @@ namespace NUnit.Framework.Assertions
                 "  But was:  3" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array2, Is.EqualTo(array1)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

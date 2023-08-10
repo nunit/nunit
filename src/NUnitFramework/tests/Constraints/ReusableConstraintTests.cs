@@ -1,14 +1,14 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ReusableConstraintTests
     {
         [Datapoints]
-        static readonly ReusableConstraint[] constraints = new ReusableConstraint[] {
+        public static readonly ReusableConstraint[] Constraints = new ReusableConstraint[] {
             Is.Not.Empty,
             Is.Not.Null,
             Has.Length.GreaterThan(3),

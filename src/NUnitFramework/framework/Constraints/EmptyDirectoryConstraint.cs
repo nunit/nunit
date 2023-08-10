@@ -15,10 +15,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "an empty directory"; }
-        }
+        public override string Description => "an empty directory";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

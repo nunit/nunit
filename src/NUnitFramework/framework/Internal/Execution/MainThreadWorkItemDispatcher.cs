@@ -12,13 +12,12 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
-
         #region IWorkItemDispatcher Members
 
         /// <summary>
         ///  The level of parallelism supported
         /// </summary>
-        public int LevelOfParallelism { get { return 0; } }
+        public int LevelOfParallelism => 0;
 
         /// <summary>
         /// Start execution, dispatching the top level
@@ -36,12 +35,11 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            if (work != null)
-                work.Execute();
+            work?.Execute();
         }
 
         /// <summary>
-        /// This method is not supported for 
+        /// This method is not supported for
         /// this dispatcher. Using it will throw a
         /// NotSupportedException.
         /// </summary>

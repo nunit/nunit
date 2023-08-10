@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Constraints
 {
@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ReusableConstraint : IResolveConstraint
     {
-        private readonly IConstraint constraint;
+        private readonly IConstraint _constraint;
 
         /// <summary>
         /// Construct a ReusableConstraint from a constraint expression
@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expression to be resolved and reused</param>
         public ReusableConstraint(IResolveConstraint c)
         {
-            this.constraint = c.Resolve();
+            _constraint = c.Resolve();
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override string ToString()
         {
-            return constraint.ToString();
+            return _constraint.ToString()!;
         }
 
         #region IResolveConstraint Members
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public IConstraint Resolve()
         {
-            return constraint;
+            return _constraint;
         }
 
         #endregion

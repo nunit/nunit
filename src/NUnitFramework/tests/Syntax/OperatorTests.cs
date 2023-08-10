@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     #region Not
     public class NotTest : SyntaxTest
@@ -73,7 +71,6 @@ namespace NUnit.Framework.Syntax
             StaticSyntax = Has.Some.With.Some.LessThan(100);
             BuilderSyntax = Builder().Some.With.Some.LessThan(100);
         }
-        
     }
 
     public class SomeTest_UseOfAndSome : SyntaxTest
@@ -269,35 +266,20 @@ namespace NUnit.Framework.Syntax
 
     public class OperatorPrecedenceTests
     {
-        class A
+        private class A
         {
-            B B
-            {
-                get { return new B(); }
-            }
+            private B B => new B();
 
-            string X
-            {
-                get { return "X in A"; }
-            }
+            private string X => "X in A";
 
-            string Y
-            {
-                get { return "Y in A"; }
-            }
+            private string Y => "Y in A";
         }
 
-        class B
+        private class B
         {
-            string X
-            {
-                get { return "X in B"; }
-            }
+            private string X => "X in B";
 
-            string Y
-            {
-                get { return "Y in B"; }
-            }
+            private string Y => "Y in B";
         }
 
         [Test]

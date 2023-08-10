@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -49,21 +48,21 @@ namespace NUnitLite
         /// </summary>
         public void DisplayHeader()
         {
-            Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
+            Assembly executingAssembly = GetType().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
             string copyright = "Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt";
-            string build = "";
+            string build = string.Empty;
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
-            if (copyrightAttr != null)
+            if (copyrightAttr is not null)
                 copyright = copyrightAttr.Copyright;
 
             var configAttr = executingAssembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
-            if (configAttr != null)
-                build = string.Format("({0})", configAttr.Configuration);
+            if (configAttr is not null)
+                build = $"({configAttr.Configuration})";
 
-            WriteHeader(String.Format("NUnitLite {0} {1}", version.ToString(3), build));
+            WriteHeader($"NUnitLite {version.ToString(3)} {build}");
             WriteSubHeader(copyright);
             Writer.WriteLine();
         }
@@ -145,11 +144,7 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD2_0
-            Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
-#endif
+            Writer.WriteLabelLine("   OS Version: ", OSPlatform.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             Writer.WriteLine();
         }
@@ -268,7 +263,7 @@ namespace NUnitLite
 
         public void TestOutput(TestOutput output)
         {
-            if (_displayBeforeOutput && output.TestName != null)
+            if (_displayBeforeOutput && output.TestName is not null)
                 WriteLabelLine(output.TestName);
 
             WriteOutput(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
@@ -281,7 +276,7 @@ namespace NUnitLite
         public void WaitForUser(string message)
         {
             // Ignore if we don't have a TextReader
-            if (_reader != null)
+            if (_reader is not null)
             {
                 Writer.WriteLine(ColorStyle.Label, message);
                 _reader.ReadLine();
@@ -463,16 +458,22 @@ namespace NUnitLite
                     DisplayErrorsFailuresAndWarnings(childResult);
             }
             else if (display)
+            {
                 DisplayTestResult(result);
+            }
         }
 
         private void DisplayNotRunResults(ITestResult result)
         {
             if (result.HasChildren)
+            {
                 foreach (ITestResult childResult in result.Children)
                     DisplayNotRunResults(childResult);
+            }
             else if (result.ResultState.Status == TestStatus.Skipped)
+            {
                 DisplayTestResult(result);
+            }
         }
 
         private static readonly char[] TRIM_CHARS = new char[] { '\r', '\n' };
@@ -494,7 +495,7 @@ namespace NUnitLite
                 foreach (var assertion in result.AssertionResults)
                 {
                     if (numAsserts > 1)
-                        assertId = string.Format("{0}-{1}", reportId, ++assertionCounter);
+                        assertId = $"{reportId}-{++assertionCounter}";
                     ColorStyle style = GetColorStyle(resultState);
                     string status = assertion.Status.ToString();
                     DisplayTestResult(style, assertId, status, fullName, assertion.Message, assertion.StackTrace);
@@ -512,7 +513,7 @@ namespace NUnitLite
         {
             Writer.WriteLine();
             Writer.WriteLine(
-                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
+                style, $"{prefix}) {status} : {fullName}");
 
             if (!string.IsNullOrEmpty(message))
                 Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));
@@ -671,7 +672,7 @@ namespace NUnitLite
             _needsNewLine = !text.EndsWith("\n", StringComparison.Ordinal);
         }
 
-         private static ColorStyle GetColorForResultStatus(string status)
+        private static ColorStyle GetColorForResultStatus(string status)
         {
             switch (status)
             {

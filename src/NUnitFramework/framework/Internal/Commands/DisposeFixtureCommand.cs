@@ -20,10 +20,10 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.OperationValid(
-                HasDisposableFixture(Test), 
+                HasDisposableFixture(Test),
                 $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
 
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 try
                 {
@@ -39,13 +39,14 @@ namespace NUnit.Framework.Internal.Commands
 
         private static bool HasDisposableFixture(ITest test)
         {
-            while (test != null)
+            ITest? current = test;
+            do
             {
-                if (test is IDisposableFixture)
+                if (current is IDisposableFixture)
                     return true;
 
-                test = test.Parent;
-            }
+                current = current.Parent;
+            } while (current is not null);
 
             return false;
         }

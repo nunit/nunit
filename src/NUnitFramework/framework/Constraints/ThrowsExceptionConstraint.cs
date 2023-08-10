@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -16,10 +15,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "an exception to be thrown"; }
-        }
+        public override string Description => "an exception to be thrown";
 
         /// <summary>
         /// Executes the code and returns success if an exception is thrown.
@@ -48,14 +44,14 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class ThrowsExceptionConstraintResult : ConstraintResult
+        private class ThrowsExceptionConstraintResult : ConstraintResult
         {
-            public ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception caughtException)
-                : base(constraint, caughtException, caughtException != null) { }
+            public ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception? caughtException)
+                : base(constraint, caughtException, caughtException is not null) { }
 
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                     writer.Write("no exception thrown");
                 else
                     base.WriteActualValueTo(writer);

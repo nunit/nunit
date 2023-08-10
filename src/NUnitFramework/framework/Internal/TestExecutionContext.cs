@@ -5,14 +5,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
+using System.Diagnostics.CodeAnalysis;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
@@ -42,7 +41,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private readonly TestExecutionContext _priorContext;
+        private readonly TestExecutionContext? _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -59,7 +58,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private int _assertCount;
 
-        private Randomizer _randomGenerator;
+        private Randomizer? _randomGenerator;
 
         /// <summary>
         /// The current test result
@@ -68,9 +67,13 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
+
+        // TODO: Fix design where properties are not set at unknown times.
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
@@ -97,6 +100,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
+
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -114,28 +118,25 @@ namespace NUnit.Framework.Internal
             ParallelScope = other.ParallelScope;
             IsSingleThreaded = other.IsSingleThreaded;
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-#endregion
+        #endregion
 
-#region CurrentContext Instance
+        #region CurrentContext Instance
 
         // NOTE: We use different implementations for various platforms.
 
 #if !NETFRAMEWORK
-        private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
+        private static readonly AsyncLocal<TestExecutionContext?> AsyncLocalCurrentContext = new();
         /// <summary>
         /// Gets and sets the current context.
         /// </summary>
+        [AllowNull]
         public static TestExecutionContext CurrentContext
         {
-            get
-            {
-                return _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
-            }
+            get => AsyncLocalCurrentContext.Value ??= new AdhocContext();
             internal set // internal so that AdhocTestExecutionTests can get at it
-            {
-                _currentContext.Value = value;
-            }
+                => AsyncLocalCurrentContext.Value = value;
         }
 #else
         // In all other builds, we use the CallContext
@@ -144,15 +145,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
-            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-            [SecuritySafeCritical]
             get
             {
                 var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
 
-                if (context == null)
+                if (context is null)
                 {
                     context = new AdhocContext();
                     CallContext.SetData(NUnitCallContext.TestExecutionContextKey, context);
@@ -160,13 +157,9 @@ namespace NUnit.Framework.Internal
 
                 return context;
             }
-            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
-            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-            [SecuritySafeCritical]
             private set
             {
-                if (value == null)
+                if (value is null)
                     CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
                 else
                     CallContext.SetData(NUnitCallContext.TestExecutionContextKey, value);
@@ -174,9 +167,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the current test
@@ -210,11 +203,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public TestResult CurrentResult
         {
-            get { return _currentResult; }
+            get => _currentResult;
             set
             {
                 _currentResult = value;
-                if (value != null)
+                if (value is not null)
                     OutWriter = value.OutWriter;
             }
         }
@@ -228,7 +221,7 @@ namespace NUnit.Framework.Internal
         /// The current test object - that is the user fixture
         /// object on which tests are being executed.
         /// </summary>
-        public object TestObject { get; set; }
+        public object? TestObject { get; set; }
 
         /// <summary>
         /// Get or set indicator that run should stop on the first error
@@ -244,7 +237,7 @@ namespace NUnit.Framework.Internal
             {
                 // ExecutionStatus may have been set to StopRequested or AbortRequested
                 // in a prior context. If so, reflect the same setting in this context.
-                if (_executionStatus == TestExecutionStatus.Running && _priorContext != null)
+                if (_executionStatus == TestExecutionStatus.Running && _priorContext is not null)
                     _executionStatus = _priorContext.ExecutionStatus;
 
                 return _executionStatus;
@@ -254,7 +247,7 @@ namespace NUnit.Framework.Internal
                 _executionStatus = value;
 
                 // Push the same setting up to all prior contexts
-                if (_priorContext != null)
+                if (_priorContext is not null)
                     _priorContext.ExecutionStatus = value;
             }
         }
@@ -264,8 +257,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal ITestListener Listener
         {
-            get { return _listener; }
-            set { _listener = value; }
+            get => _listener;
+            set => _listener = value;
         }
 
         /// <summary>
@@ -290,7 +283,7 @@ namespace NUnit.Framework.Internal
         /// The worker that spawned the context.
         /// For builds without the parallel feature, it is null.
         /// </summary>
-        public TestWorker TestWorker {get; internal set;}
+        public TestWorker? TestWorker { get; internal set; }
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
@@ -299,7 +292,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (_randomGenerator == null)
+                if (_randomGenerator is null)
                     _randomGenerator = new Randomizer(CurrentTest.Seed);
                 return _randomGenerator;
             }
@@ -309,10 +302,7 @@ namespace NUnit.Framework.Internal
         /// Gets the assert count.
         /// </summary>
         /// <value>The assert count.</value>
-        internal int AssertCount
-        {
-            get { return _assertCount; }
-        }
+        internal int AssertCount => _assertCount;
 
         /// <summary>
         /// The current nesting level of multiple assert blocks
@@ -338,7 +328,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentCulture
         {
-            get { return _sandboxedThreadState.Culture; }
+            get => _sandboxedThreadState.Culture;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithCulture(value);
@@ -351,7 +341,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentUICulture
         {
-            get { return _sandboxedThreadState.UICulture; }
+            get => _sandboxedThreadState.UICulture;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithUICulture(value);
@@ -362,9 +352,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
-        public IPrincipal CurrentPrincipal
+        public IPrincipal? CurrentPrincipal
         {
-            get { return _sandboxedThreadState.Principal; }
+            get => _sandboxedThreadState.Principal;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithPrincipal(value);
@@ -388,15 +378,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public int CurrentRepeatCount { get; set; }
 
-#endregion
+        #endregion
 
-#region Instance Methods
+        #region Instance Methods
 
         /// <summary>
         /// Record any changes in the environment made by
         /// the test code in the execution context so it
         /// will be passed on to lower level tests.
         /// </summary>
+        [MemberNotNull(nameof(_sandboxedThreadState))]
         public void UpdateContextFromEnvironment()
         {
             _sandboxedThreadState = SandboxedThreadState.Capture();
@@ -407,11 +398,6 @@ namespace NUnit.Framework.Internal
         /// Note that we may be running on the same thread where the
         /// context was initially created or on a different thread.
         /// </summary>
-        [SecuritySafeCritical] // This gives partial trust code the ability to capture an existing
-                               // SynchronizationContext.Current and restore it at any time.
-                               // This simply unblocks us on .NET Framework and is not in the spirit
-                               // of partial trust. If we choose to make partial trust a design priority,
-                               // we’ll need to thoroughly review more than just this instance.
         public void EstablishExecutionEnvironment()
         {
             _sandboxedThreadState.Restore();
@@ -449,7 +435,7 @@ namespace NUnit.Framework.Internal
         {
             var context = new TestExecutionContext(this);
 
-            if (context.CurrentTest != null)
+            if (context.CurrentTest is not null)
                 context.CurrentResult = context.CurrentTest.MakeTestResult();
 
             context.TestWorker = TestWorker;
@@ -469,21 +455,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region InitializeLifetimeService
-
-        /// <summary>
-        /// Obtain lifetime service object
-        /// </summary>
-        /// <returns></returns>
-        [SecurityCritical]  // Override of security critical method must be security critical itself
-        public override object InitializeLifetimeService()
-        {
-            return null;
-        }
-
-#endregion
-
-#region Nested IsolatedContext Class
+        #region Nested IsolatedContext Class
 
         /// <summary>
         /// An IsolatedContext is used when running code
@@ -518,7 +490,7 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public void Dispose()
             {
-                _originalContext.OutWriter.Write(CurrentContext.CurrentResult.Output);
+                _originalContext.OutWriter?.Write(CurrentContext.CurrentResult?.Output);
                 CurrentContext = _originalContext;
             }
         }
@@ -540,16 +512,13 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public AdhocContext()
             {
-                var type = GetType();
-                var method = type.GetMethod(nameof(AdhocTestMethod), BindingFlags.NonPublic | BindingFlags.Instance);
-
-                CurrentTest = new TestMethod(new MethodWrapper(type, method));
+                CurrentTest = new TestMethod(new MethodWrapper(GetType(), nameof(AdhocTestMethod)));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 
             private void AdhocTestMethod() { }
         }
 
-#endregion
+        #endregion
     }
 }

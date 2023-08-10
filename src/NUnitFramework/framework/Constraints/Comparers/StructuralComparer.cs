@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints.Comparers
             private readonly NUnitEqualityComparer _comparer;
 
             private Tolerance _tolerance;
-            public Tolerance Tolerance { get { return _tolerance; } }
+            public Tolerance Tolerance => _tolerance;
 
             public NUnitEqualityComparison(NUnitEqualityComparer comparer, Tolerance tolerance)
             {
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 _tolerance = tolerance;
             }
 
-            public new bool Equals(object x, object y)
+            public new bool Equals(object? x, object? y)
             {
                 return _comparer.AreEqual(x, y, ref _tolerance);
             }

@@ -10,11 +10,11 @@ namespace NUnit.TestData.TestCaseAttributeFixture
     {
         [TestCase("12-Octobar-1942")]
         public void MethodHasInvalidDateFormat(DateTime dt)
-        {}
+        { }
 
-        [TestCase(2,3,4,Description="My Description")]
+        [TestCase(2, 3, 4, Description = "My Description")]
         public void MethodHasDescriptionSpecified(int x, int y, int z)
-        {}
+        { }
 
         [TestCase(2, 3, 4, TestName = "XYZ")]
         public void MethodHasTestNameSpecified_FixedText(int x, int y, int z)
@@ -32,7 +32,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodHasMultipleCategories(int x, int y, int z)
         { }
 
-        [TestCase(2, 2_000_000, ExpectedResult=4)]
+        [TestCase(2, 2_000_000, ExpectedResult = 4)]
         public int MethodCausesConversionOverflow(short x, short y)
         {
             return x + y;
@@ -102,7 +102,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 
         [TestCase((object)new object[] { })]
         [TestCase((object)new object[] { 1, "text", null })]
-        [TestCase((object)new object[] { 1, new int[] { 2, 3 }, 4 })]
+        [TestCase((object)new object[] { 1, new[] { 2, 3 }, 4 })]
         [TestCase((object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })]
         public void MethodWithArrayArguments(object o)
         {

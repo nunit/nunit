@@ -1,9 +1,9 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Represents a constraint that succeeds if any of the 
+    /// Represents a constraint that succeeds if any of the
     /// members of a collection match a base constraint.
     /// </summary>
     public class SomeOperator : CollectionOperator

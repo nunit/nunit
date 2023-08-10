@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public partial class RepeatAttributeTests
     {
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Attributes
 
             public Type Type => _baseInfo.Type;
 
-            public ITypeInfo BaseType => _baseInfo.BaseType;
+            public ITypeInfo? BaseType => _baseInfo.BaseType;
 
             public string Name => _baseInfo.Name;
 
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Attributes
 
             public Assembly Assembly => _baseInfo.Assembly;
 
-            public string Namespace => _baseInfo.Namespace;
+            public string? Namespace => _baseInfo.Namespace;
 
             public bool IsAbstract => _baseInfo.IsAbstract;
 
@@ -51,12 +51,12 @@ namespace NUnit.Framework.Attributes
 
             public bool IsStaticClass => _baseInfo.IsStaticClass;
 
-            public object Construct(object[] args)
+            public object Construct(object?[]? args)
             {
                 return _baseInfo.Construct(args);
             }
 
-            public ConstructorInfo GetConstructor(Type[] argTypes)
+            public ConstructorInfo? GetConstructor(Type[] argTypes)
             {
                 return _baseInfo.GetConstructor(argTypes);
             }
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
                 return _baseInfo.GetDisplayName();
             }
 
-            public string GetDisplayName(object[] args)
+            public string GetDisplayName(object?[]? args)
             {
                 return _baseInfo.GetDisplayName(args);
             }

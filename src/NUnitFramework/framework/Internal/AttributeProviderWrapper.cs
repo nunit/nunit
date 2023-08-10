@@ -2,12 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
-    internal class AttributeProviderWrapper<T> : ICustomAttributeProvider
+    internal sealed class AttributeProviderWrapper<T> : ICustomAttributeProvider
         where T : Attribute
     {
         private readonly ICustomAttributeProvider _innerProvider;
@@ -25,20 +24,27 @@ namespace NUnit.Framework.Internal
 
         public object[] GetCustomAttributes(bool inherit)
         {
-            var attributes = _innerProvider.GetCustomAttributes(inherit);
-            return GetFiltered(attributes);
+            throw new InvalidOperationException("Should not be called as 3rd party attributes could throw exceptions");
         }
 
         public bool IsDefined(Type attributeType, bool inherit)
         {
-            return GetCustomAttributes(attributeType, inherit).Any();
+            return GetCustomAttributes(attributeType, inherit).Length > 0;
         }
 
-        private static T[] GetFiltered(IEnumerable<object> attributes)
+        private static T[] GetFiltered(object[] attributes)
         {
-            return attributes
-                   .OfType<T>()
-                   .ToArray();
+            List<T>? filtered = null;
+            foreach (var attribute in attributes)
+            {
+                if (attribute is T t)
+                {
+                    filtered ??= new List<T>();
+                    filtered.Add(t);
+                }
+            }
+
+            return filtered?.ToArray() ?? Array.Empty<T>();
         }
     }
 }

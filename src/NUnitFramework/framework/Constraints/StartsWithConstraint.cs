@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -16,7 +14,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="StartsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
-        public StartsWithConstraint(string expected) : base(expected) 
+        public StartsWithConstraint(string expected) : base(expected)
         {
             descriptionText = "String starting with";
         }
@@ -30,8 +28,8 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string actual)
         {
-            var stringComparison = this.caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-            return actual != null && actual.StartsWith(expected, stringComparison);
+            var stringComparison = caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            return actual is not null && actual.StartsWith(expected, stringComparison);
         }
     }
 }

@@ -5,18 +5,12 @@ using System.Collections;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EmptyCollectionConstraint tests whether a collection is empty. 
+    /// EmptyCollectionConstraint tests whether a collection is empty.
     /// </summary>
     public class EmptyCollectionConstraint : CollectionConstraint
     {
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description
-        {
-            get { return "<empty>"; }
-        }
+        /// <inheritdoc/>
+        public override string Description => "<empty>";
 
         /// <summary>
         /// Check that the collection is empty

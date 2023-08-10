@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -9,11 +7,11 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Applies a timeout in milliseconds to a test. 
-    /// When applied to a method, the test is cancelled if the timeout is exceeded. 
+    /// Applies a timeout in milliseconds to a test.
+    /// When applied to a method, the test is cancelled if the timeout is exceeded.
     /// When applied to a class or assembly, the default timeout is set for all contained test methods.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class TimeoutAttribute : PropertyAttribute, IApplyToContext
     {
         private readonly int _timeout;

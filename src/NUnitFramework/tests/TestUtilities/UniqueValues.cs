@@ -1,12 +1,9 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// UniqueValues is used to check a set of values to ensure
@@ -20,6 +17,7 @@ namespace NUnit.TestUtilities
         /// up to a maximum number of tries. Assert that the target was reached.
         /// </summary>
         public static void Check<T>(ActualValueDelegate<T> del, int targetCount, int maxTries)
+            where T : notnull
         {
             var lookup = new Dictionary<T, int>();
 
@@ -34,54 +32,7 @@ namespace NUnit.TestUtilities
                 }
             }
 
-            Assert.Fail("After {0} attempts, only {1} value(s) found", maxTries, lookup.Count);
+            Assert.Fail($"After {maxTries} attempts, only {lookup.Count} value(s) found");
         }
-
-        #region Helper Methods
-
-        /// <summary>
-        /// Count the number of actually unique values in an IEnumerable
-        /// </summary>
-        private static int CountUniqueValues(IEnumerable actual)
-        {
-            var list = new List<object>();
-
-            foreach (object o1 in actual)
-                if (!list.Contains(o1))
-                    list.Add(o1);
-
-            return list.Count;
-        }
-
-        private static int CountUniqueValues<T>(ActualValueDelegate<T> del, int count)
-        {
-            var list = new List<T>();
-
-            while (count-- > 0)
-            {
-                T item = del();
-                if (!list.Contains(item))
-                    list.Add(item);
-            }
-
-            return list.Count;
-        }
-
-        #endregion
-
-        #region Self-test
-
-        [TestCase(1, 2, 3, 4, 5, ExpectedResult = 5)]
-        [TestCase(1, 2, 3, 4, 3, ExpectedResult = 4)]
-        [TestCase(1, 1, 1, 1, 1, ExpectedResult = 1)]
-        [TestCase(1, 2, 1, 2, 1, ExpectedResult = 2)]
-        [TestCase(1, 1, 1, 2, 2, ExpectedResult = 2)]
-        [TestCase(ExpectedResult = 0)]
-        public static int CountUniqueValuesTest(params int[] values)
-        {
-            return UniqueValues.CountUniqueValues(values);
-        }
-
-        #endregion
     }
 }

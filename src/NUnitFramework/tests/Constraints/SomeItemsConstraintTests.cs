@@ -2,14 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
-    class SomeItemsConstraintTests
+    internal class SomeItemsConstraintTests
     {
         [Test]
         public void EqualConstraintUsingDoesNotThrow()
@@ -24,7 +22,7 @@ namespace NUnit.Framework.Constraints
             var constraint = new SomeItemsConstraint(new EmptyCollectionConstraint());
             Assert.Throws<ArgumentException>(() => constraint.Using((IComparer<string>)Comparer<string>.Default));
         }
-        
+
         [Test]
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {

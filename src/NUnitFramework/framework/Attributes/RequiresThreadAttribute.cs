@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -12,7 +10,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks a test that must run on a separate thread.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]
     public class RequiresThreadAttribute : PropertyAttribute, IApplyToTest
     {
         /// <summary>
@@ -29,7 +27,7 @@ namespace NUnit.Framework
         {
             Guard.ArgumentValid(apartment != ApartmentState.Unknown, "must be STA or MTA", nameof(apartment));
 
-            this.Properties.Add(PropertyNames.ApartmentState, apartment);
+            Properties.Add(PropertyNames.ApartmentState, apartment);
         }
 
         void IApplyToTest.ApplyToTest(Test test)

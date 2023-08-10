@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -18,7 +17,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PropertyBag : IPropertyBag
     {
-        private readonly Dictionary<string, IList> inner = new Dictionary<string, IList>();
+        private readonly Dictionary<string, IList> _inner = new();
 
         #region IPropertyBagMembers
 
@@ -31,10 +30,10 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(value, "value");
 
-            if (!inner.TryGetValue(key, out var list))
+            if (!_inner.TryGetValue(key, out var list))
             {
                 list = new List<object>();
-                inner.Add(key, list);
+                _inner.Add(key, list);
             }
             list.Add(value);
         }
@@ -53,7 +52,7 @@ namespace NUnit.Framework.Internal
 
             IList list = new List<object>();
             list.Add(value);
-            inner[key] = list;
+            _inner[key] = list;
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public object? Get(string key)
         {
-            return inner.TryGetValue(key, out var list) && list.Count > 0
+            return _inner.TryGetValue(key, out var list) && list.Count > 0
                 ? list[0]
                 : null;
         }
@@ -80,17 +79,25 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public bool ContainsKey(string key)
         {
-            return inner.ContainsKey(key);
+            return _inner.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Tries to retrieve list of values.
+        /// </summary>
+        /// <param name="key">The key for which the values are to be retrieved</param>
+        /// <param name="values">Values, if found</param>
+        /// <returns>true if found</returns>
+        public bool TryGet(string key, [NotNullWhen(true)] out IList? values)
+        {
+            return _inner.TryGetValue(key, out values);
         }
 
         /// <summary>
         /// Gets a collection containing all the keys in the property set
         /// </summary>
         /// <value></value>
-        public ICollection<string> Keys
-        {
-            get { return inner.Keys; }
-        }
+        public ICollection<string> Keys => _inner.Keys;
 
         /// <summary>
         /// Gets or sets the list of values for a particular key
@@ -99,17 +106,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (!inner.TryGetValue(key, out var list))
+                if (!_inner.TryGetValue(key, out var list))
                 {
                     list = new List<object>();
-                    inner.Add(key, list);
+                    _inner.Add(key, list);
                 }
                 return list;
             }
-            set
-            {
-                inner[key] = value;
-            }
+            set => _inner[key] = value;
         }
 
         #endregion
@@ -137,15 +141,19 @@ namespace NUnit.Framework.Internal
         {
             TNode properties = parentNode.AddElement("properties");
 
-            foreach (string key in Keys)
+            // enumerating dictionary directly with struct enumerator which is fastest
+            foreach (var pair in _inner)
             {
-                foreach (object value in this[key])
+                // Use for-loop to avoid allocating the enumerator
+                var list = pair.Value;
+                var propertyCount = list.Count;
+                for (var i = 0; i < propertyCount; i++)
                 {
                     TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
-                    prop.AddAttribute("name", key.ToString());
-                    prop.AddAttribute("value", value.ToString());
+                    prop.AddAttribute("name", pair.Key);
+                    prop.AddAttribute("value", list[i]!.ToString()!);
                 }
             }
 

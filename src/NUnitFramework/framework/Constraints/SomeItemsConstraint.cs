@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -13,17 +14,16 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SomeItemsConstraint : PrefixConstraint
     {
-        private readonly EqualConstraint _equalConstraint;
+        private readonly EqualConstraint? _equalConstraint;
 
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
         /// </summary>
         /// <param name="itemConstraint"></param>
         public SomeItemsConstraint(IConstraint itemConstraint)
-            : base(itemConstraint)
+            : base(itemConstraint, "some item")
         {
             _equalConstraint = itemConstraint as EqualConstraint;
-            DescriptionPrefix = "some item";
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "Some"; } }
+        public override string DisplayName => "Some";
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
@@ -45,8 +45,10 @@ namespace NUnit.Framework.Constraints
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
             foreach (object item in enumerable)
+            {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);
+            }
 
             return new ConstraintResult(this, actual, ConstraintStatus.Failure);
         }
@@ -125,9 +127,10 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        [MemberNotNull(nameof(_equalConstraint))]
         private void CheckPrecondition(string argument)
         {
-            if (_equalConstraint == null)
+            if (_equalConstraint is null)
             {
                 var message = "Using may only be used with constraints that check the equality of the items";
                 throw new ArgumentException(message, argument);

@@ -4,7 +4,7 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class SetUpFixtureAttributeTests
     {
@@ -59,6 +59,15 @@ namespace NUnit.Framework.Attributes
             var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(abstractType));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+        }
+
+        [Test]
+        public void AttributeUsage_NoInheritance()
+        {
+            var usageAttrib = Attribute.GetCustomAttribute(typeof(SetUpFixtureAttribute), typeof(AttributeUsageAttribute)) as AttributeUsageAttribute;
+
+            Assert.That(usageAttrib, Is.Not.Null);
+            Assert.That(usageAttrib.Inherited, Is.False);
         }
 
         private static class StaticSetupClass

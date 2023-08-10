@@ -1,9 +1,9 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultOutputTests
     {
@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
+            _result = NUnit.Framework.Tests.TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Results
             _result.OutWriter.WriteLine(SOME_TEXT);
 
             var outputNode = _result.ToXml(false).SelectSingleNode("output");
-            Assert.NotNull(outputNode, "No output node found in XML");
+            Assert.That(outputNode, Is.Not.Null, "No output node found in XML");
             Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL));
         }
 
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Internal.Results
             _result.OutWriter.WriteLine("Last line!");
 
             var outputNode = _result.ToXml(false).SelectSingleNode("output");
-            Assert.NotNull(outputNode, "No output node found in XML");
+            Assert.That(outputNode, Is.Not.Null, "No output node found in XML");
             Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL +
                 "More text written in segments." + NL + "Last line!" + NL));
         }

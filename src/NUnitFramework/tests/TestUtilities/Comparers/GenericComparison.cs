@@ -1,19 +1,15 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     internal class GenericComparison<T>
     {
         public bool WasCalled = false;
 
-        public Comparison<T> Delegate
-        {
-            get { return new Comparison<T>(Compare); }
-        }
+        public Comparison<T> Delegate => new Comparison<T>(Compare);
 
         public int Compare(T x, T y)
         {

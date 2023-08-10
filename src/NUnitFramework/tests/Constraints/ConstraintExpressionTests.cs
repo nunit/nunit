@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     /// <summary>
     /// Summary description for ConstraintExpressionTests.
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ConstraintExpressionTests
     {
-        static readonly Func<int, int, bool> myIntComparer = (x, y) => x == y;
+        private static readonly Func<int, int, bool> MyIntComparer = (x, y) => x == y;
 
         [Test]
         public void ConstraintExpressionMemberAnd()
@@ -29,7 +30,7 @@ namespace NUnit.Framework.Constraints
             var constraint = constraintExpression
                 .Member("3")
                 .Using<int, string>((i, s) => i.ToString() == s)
-                .Using((IComparer<string>) Comparer<string>.Default);
+                .Using((IComparer<string>)Comparer<string>.Default);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Constraints
         public void ConstraintExpressionContainsUsing()
         {
             var constraintExpression = new ConstraintExpression();
-            var constraint = constraintExpression.Contains(4).Using(myIntComparer);
+            var constraint = constraintExpression.Contains(4).Using(MyIntComparer);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Constraints
         public void ConstraintExpressionContainUsing()
         {
             var constraintExpression = new ConstraintExpression();
-            var constraint = constraintExpression.Contain(8).Using(myIntComparer);
+            var constraint = constraintExpression.Contain(8).Using(MyIntComparer);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }

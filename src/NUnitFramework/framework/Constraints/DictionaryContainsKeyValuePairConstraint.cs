@@ -30,27 +30,27 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsKeyValuePair"; } }
+        public override string DisplayName => "ContainsKeyValuePair";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing entry " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "dictionary containing entry " + MsgUtils.FormatValue(_expected);
 
-        private bool Matches(object actual)
+        private bool Matches(object? actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
 
             if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
             {
                 foreach (var entry in dictionary)
+                {
                     if (ItemsEqual(entry, _expected))
                         return true;
+                }
+
                 return false;
             }
 
@@ -58,12 +58,15 @@ namespace NUnit.Framework.Constraints
             // and look it up by iterating using IEnumerable
             if (actual.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
             {
-                var expected = new KeyValuePair<object, object>(_expected.Key, _expected.Value);
-                var enumerable = actual as IEnumerable;
+                var expected = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
+                var enumerable = (IEnumerable)actual;
 
                 foreach (var item in enumerable)
+                {
                     if (ItemsEqual(item, expected))
                         return true;
+                }
+
                 return false;
             }
 

@@ -1,25 +1,24 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
-using NUnit.Compatibility;
 using System.Threading.Tasks;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public static class ExceptionHelperTests
     {
         [Test]
         public static void BuildMessageThrowsForNullException()
         {
-            Assert.That(() => ExceptionHelper.BuildMessage(null), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
+            Assert.That(() => ExceptionHelper.BuildMessage(null!), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
         }
 
         [Test]
         public static void RecordExceptionThrowsForNullDelegate()
         {
             Assert.That(
-                () => ExceptionHelper.RecordException(null, "someParamName"),
+                () => ExceptionHelper.RecordException(null!, "someParamName"),
                 Throws.ArgumentNullException.With.Property("ParamName").EqualTo("someParamName"));
         }
 
@@ -48,7 +47,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void RecordExceptionThrowsProperExceptionForDelegatesThatHaveOneMoreParameterThanTheBoundMethod()
         {
-            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.DummyInstanceMethod));
+            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.DummyInstanceMethod))!;
             var delegateThatParameterizesTheInstance = (Action<Foo>)methodInfo.CreateDelegate(typeof(Action<Foo>));
 
             Assert.That(
@@ -58,12 +57,12 @@ namespace NUnit.Framework.Internal
 
         private sealed class Foo
         {
-            public Foo(Exception exceptionToThrow)
+            public Foo(Exception? exceptionToThrow)
             {
                 ExceptionToThrow = exceptionToThrow;
             }
 
-            public Exception ExceptionToThrow { get; }
+            public Exception? ExceptionToThrow { get; }
 
             public void DummyInstanceMethod()
             {
@@ -72,7 +71,7 @@ namespace NUnit.Framework.Internal
 
         private static void ThrowingExtensionMethod(this Foo foo)
         {
-            if (foo.ExceptionToThrow != null)
+            if (foo.ExceptionToThrow is not null)
                 throw foo.ExceptionToThrow;
         }
 

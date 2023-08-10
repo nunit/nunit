@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     /// <summary>
     /// Abstract base for tests of TestResult
@@ -11,35 +12,35 @@ namespace NUnit.Framework.Internal.Results
     public abstract class TestResultTests
     {
         protected const string NonWhitespaceIgnoreReason = "because";
-        protected TestMethod _test;
-        protected TestResult _testResult;
+        protected TestMethod Test;
+        protected TestResult TestResult;
 
-        protected TestSuite _suite;
-        protected TestSuiteResult _suiteResult;
+        protected TestSuite Suite;
+        protected TestSuiteResult SuiteResult;
 
         [SetUp]
         public void SetUp()
         {
-            _test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
-            _testResult = _test.MakeTestResult();
+            Test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
+            TestResult = Test.MakeTestResult();
 
-            _suite = new TestSuite(typeof(DummySuite));
-            _suiteResult = (TestSuiteResult)_suite.MakeTestResult();
+            Suite = new TestSuite(typeof(DummySuite));
+            SuiteResult = (TestSuiteResult)Suite.MakeTestResult();
         }
 
         protected static void ReasonNodeExpectedValidation(TNode testNode, string reasonMessage)
         {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(reasonMessage, reason.SelectSingleNode("message").Value);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            TNode? reason = testNode.SelectSingleNode("reason");
+            Assert.That(reason, Is.Not.Null);
+            Assert.That(reason.SelectSingleNode("message"), Is.Not.Null);
+            Assert.That(reason.SelectSingleNode("message").Value, Is.EqualTo(reasonMessage));
+            Assert.That(reason.SelectSingleNode("stack-trace"), Is.Null);
         }
 
         protected static void NoReasonNodeExpectedValidation(TNode testNode)
         {
-            TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason, "This test expects no reason element to be present in the XML representation.");
+            TNode? reason = testNode.SelectSingleNode("reason");
+            Assert.That(reason, Is.Null, "This test expects no reason element to be present in the XML representation.");
         }
 
         #region Nested DummySuite
@@ -51,4 +52,4 @@ namespace NUnit.Framework.Internal.Results
 
         #endregion
     }
- }
+}

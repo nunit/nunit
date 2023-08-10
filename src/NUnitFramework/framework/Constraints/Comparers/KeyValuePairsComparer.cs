@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -18,21 +16,28 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
+            Type? xGenericTypeDefinition = xType.IsGenericType ? xType.GetGenericTypeDefinition() : null;
+            Type? yGenericTypeDefinition = yType.IsGenericType ? yType.GetGenericTypeDefinition() : null;
 
             if (xGenericTypeDefinition != typeof(KeyValuePair<,>) ||
                 yGenericTypeDefinition != typeof(KeyValuePair<,>))
+            {
                 return null;
+            }
 
             var keyTolerance = Tolerance.Exact;
-            object xKey = xType.GetProperty("Key").GetValue(x, null);
-            object yKey = yType.GetProperty("Key").GetValue(y, null);
-            object xValue = xType.GetProperty("Value").GetValue(x, null);
-            object yValue = yType.GetProperty("Value").GetValue(y, null);
+            object? xKey = xType.GetProperty("Key")!.GetValue(x, null);
+            object? yKey = yType.GetProperty("Key")!.GetValue(y, null);
 
-            return equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.PushComparison(x, y)) 
-                && equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.PushComparison(x, y));
+            if (!equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.PushComparison(x, y)))
+            {
+                return false;
+            }
+
+            object? xValue = xType.GetProperty("Value")!.GetValue(x, null);
+            object? yValue = yType.GetProperty("Value")!.GetValue(y, null);
+
+            return equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.PushComparison(x, y));
         }
     }
 }

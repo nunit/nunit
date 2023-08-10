@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace NUnit.Compatibility
@@ -20,8 +20,8 @@ namespace NUnit.Compatibility
         /// <returns>A list of the given attribute on the given object.</returns>
         public static Attribute[] GetCustomAttributes(object actual, Type attributeType, bool inherit)
         {
-            var attrProvider = actual as ICustomAttributeProvider;
-            if (attrProvider != null) return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
+            if (actual is ICustomAttributeProvider attrProvider)
+                return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
 
             throw new ArgumentException($"Actual value {actual} does not implement ICustomAttributeProvider.", nameof(actual));
         }

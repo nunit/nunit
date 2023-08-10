@@ -1,10 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Xml;
 
 namespace NUnit.Framework.Interfaces
@@ -17,8 +18,12 @@ namespace NUnit.Framework.Interfaces
     /// </summary>
     // ReSharper disable once InconsistentNaming
     // Disregarding naming convention for back-compat
-    public class TNode
+    [DebuggerDisplay("{OuterXml}")]
+    public sealed class TNode
     {
+        private List<TNode>? _childNodes;
+        private Dictionary<string, string>? _attributes;
+
         #region Constructors
 
         /// <summary>
@@ -28,8 +33,6 @@ namespace NUnit.Framework.Interfaces
         public TNode(string name)
         {
             Name = name;
-            Attributes = new AttributeDictionary();
-            ChildNodes = new NodeList();
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace NUnit.Framework.Interfaces
         public TNode(string name, string? value, bool valueIsCDATA)
             : this(name)
         {
-            Value = EscapeInvalidXmlCharacters(value);
+            Value = XmlExtensions.EscapeInvalidXmlCharacters(value);
             ValueIsCDATA = valueIsCDATA;
         }
 
@@ -69,25 +72,22 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a flag indicating whether the value should be output using CDATA.
         /// </summary>
-        public bool ValueIsCDATA { get; }
+        public bool ValueIsCDATA { get; set; }
 
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes { get; }
+        public AttributeDictionary Attributes => new(this);
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes { get; }
+        public NodeList ChildNodes => new(this);
 
         /// <summary>
         /// Gets the first ChildNode
         /// </summary>
-        public TNode? FirstChild
-        {
-            get { return ChildNodes.Count == 0 ? null : ChildNodes[0]; }
-        }
+        public TNode? FirstChild => _childNodes?.Count == 0 ? null : ChildNodes[0];
 
         /// <summary>
         /// Gets the XML representation of this node.
@@ -96,11 +96,8 @@ namespace NUnit.Framework.Interfaces
         {
             get
             {
-                var stringWriter = new System.IO.StringWriter();
-                var settings = new XmlWriterSettings();
-                settings.ConformanceLevel = ConformanceLevel.Fragment;
-
-                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
+                using var stringWriter = new StringWriter();
+                using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
                 {
                     WriteTo(xmlWriter);
                 }
@@ -120,9 +117,75 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-            var doc = new XmlDocument();
-            doc.LoadXml(xmlText);
-            return FromXml(doc.FirstChild);
+            using var stringReader = new StringReader(xmlText);
+            using var reader = XmlReader.Create(stringReader);
+
+            // go to starting point
+            reader.MoveToContent();
+
+            TNode? root = null;
+            TNode? current = null;
+            var parents = new Stack<TNode>();
+
+            while (!reader.EOF)
+            {
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    // keep track of previous which will be promoted to parent stack if reader depth changes
+                    var previous = current;
+                    current = new TNode(reader.Name, reader.Value);
+
+                    if (root is null)
+                    {
+                        // initialize root
+                        root = current;
+                        parents.Push(root);
+                    }
+                    else
+                    {
+                        if (reader.Depth > parents.Count)
+                        {
+                            parents.Push(previous!);
+                        }
+
+                        if (reader.Depth < parents.Count)
+                        {
+                            parents.Pop();
+                        }
+
+                        var parent = parents.Peek();
+                        parent.AddChildNode(current);
+                    }
+
+                    var attributeCount = reader.AttributeCount;
+                    if (attributeCount > 0)
+                    {
+                        for (var i = 0; i < attributeCount; i++)
+                        {
+                            reader.MoveToNextAttribute();
+                            current.AddAttribute(reader.Name, reader.Value);
+                        }
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.Text)
+                {
+                    current!.Value = reader.Value;
+                }
+                else if (reader.NodeType == XmlNodeType.CDATA)
+                {
+                    current!.Value = reader.Value;
+                    current.ValueIsCDATA = true;
+                }
+
+                reader.Read();
+            }
+
+            if (root is null)
+            {
+                throw new ArgumentException("Could not extract root element from " + xmlText);
+            }
+
+            return root;
         }
 
         #endregion
@@ -137,7 +200,7 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElement(string name)
         {
             TNode childResult = new TNode(name);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
         }
 
@@ -150,7 +213,7 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElement(string name, string value)
         {
             TNode childResult = new TNode(name, value);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
         }
 
@@ -164,8 +227,29 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElementWithCDATA(string name, string value)
         {
             TNode childResult = new TNode(name, value, true);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
+        }
+
+        /// <summary>
+        /// Adds a child node to this node.
+        /// </summary>
+        /// <param name="node">The child node to add.</param>
+        public void AddChildNode(TNode node)
+        {
+            _childNodes ??= new List<TNode>();
+            _childNodes.Add(node);
+        }
+
+        /// <summary>
+        /// Inserts a child nodeat the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which <paramref name="node" /> should be inserted.</param>
+        /// <param name="node">The node to insert.</param>
+        public void InsertChildNode(int index, TNode node)
+        {
+            _childNodes ??= new List<TNode>();
+            _childNodes.Insert(index, node);
         }
 
         /// <summary>
@@ -175,7 +259,8 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value of the attribute.</param>
         public void AddAttribute(string name, string value)
         {
-            Attributes.Add(name, EscapeInvalidXmlCharacters(value));
+            _attributes ??= new Dictionary<string, string>();
+            _attributes.Add(name, XmlExtensions.EscapeInvalidXmlCharacters(value));
         }
 
         /// <summary>
@@ -187,7 +272,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns></returns>
         public TNode? SelectSingleNode(string xpath)
         {
-            NodeList nodes = SelectNodes(xpath);
+            List<TNode> nodes = SelectNodes(xpath);
 
             return nodes.Count > 0
                 ? nodes[0] as TNode
@@ -199,9 +284,9 @@ namespace NUnit.Framework.Interfaces
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
-        public NodeList SelectNodes(string xpath)
+        public List<TNode> SelectNodes(string xpath)
         {
-            NodeList nodeList = new NodeList();
+            var nodeList = new List<TNode>();
             nodeList.Add(this);
 
             return ApplySelection(nodeList, xpath);
@@ -215,17 +300,22 @@ namespace NUnit.Framework.Interfaces
         {
             writer.WriteStartElement(Name);
 
-            foreach (string name in Attributes.Keys)
-                writer.WriteAttributeString(name, Attributes[name]);
+            foreach (var pair in Attributes)
+                writer.WriteAttributeString(pair.Key, pair.Value);
 
-            if (Value != null)
+            if (Value is not null)
+            {
                 if (ValueIsCDATA)
-                    WriteCDataTo(writer);
+                    writer.WriteCDataSafe(Value);
                 else
                     writer.WriteString(Value);
+            }
 
-            foreach (TNode node in ChildNodes)
-                node.WriteTo(writer);
+            var count = ChildNodes.Count;
+            for (var i = 0; i < count; i++)
+            {
+                ChildNodes[i].WriteTo(writer);
+            }
 
             writer.WriteEndElement();
         }
@@ -238,17 +328,22 @@ namespace NUnit.Framework.Interfaces
         {
             TNode tNode = new TNode(xmlNode.Name, xmlNode.InnerText);
 
-            foreach (XmlAttribute attr in xmlNode.Attributes)
-                tNode.AddAttribute(attr.Name, attr.Value);
+            if (xmlNode.Attributes is not null)
+            {
+                foreach (XmlAttribute attr in xmlNode.Attributes)
+                    tNode.AddAttribute(attr.Name, attr.Value);
+            }
 
             foreach (XmlNode child in xmlNode.ChildNodes)
+            {
                 if (child.NodeType == XmlNodeType.Element)
-                    tNode.ChildNodes.Add(FromXml(child));
+                    tNode.AddChildNode(FromXml(child));
+            }
 
             return tNode;
         }
 
-        private static NodeList ApplySelection(NodeList nodeList, string xpath)
+        private static List<TNode> ApplySelection(List<TNode> nodeList, string xpath)
         {
             Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
             if (xpath[0] == '/')
@@ -266,121 +361,38 @@ namespace NUnit.Framework.Interfaces
                 tail = xpath.Substring(slash + 1);
             }
 
-            NodeList resultNodes = new NodeList();
+            List<TNode> resultNodes = new();
             NodeFilter filter = new NodeFilter(head);
 
-            foreach(TNode node in nodeList)
-                foreach (TNode childNode in node.ChildNodes)
+            var nodeListCount = nodeList.Count;
+            for (var i = 0; i < nodeListCount; i++)
+            {
+                var node = nodeList[i];
+                var childNodesCount = node.ChildNodes.Count;
+                for (var j = 0; j < childNodesCount; j++)
+                {
+                    var childNode = node.ChildNodes[j];
                     if (filter.Pass(childNode))
                         resultNodes.Add(childNode);
+                }
+            }
 
-            return tail != null
+            return tail is not null
                 ? ApplySelection(resultNodes, tail)
                 : resultNodes;
-        }
-
-        [return: NotNullIfNotNull("str")]
-        private static string? EscapeInvalidXmlCharacters(string? str)
-        {
-            if (str == null) return null;
-
-            StringBuilder? builder = null;
-            for (int i = 0; i < str.Length; i++)
-            {
-                char c = str[i];
-                if(c > 0x20 && c < 0x7F)
-                {
-                    // ASCII characters - break quickly for these
-                    if (builder != null)
-                        builder.Append(c);
-                }
-                // From the XML specification: https://www.w3.org/TR/xml/#charsets
-                // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
-                // Any Unicode character, excluding the surrogate blocks, FFFE, and FFFF.
-                else if (!(0x0 <= c && c <= 0x8) &&
-                    c != 0xB &&
-                    c != 0xC &&
-                    !(0xE <= c && c <= 0x1F) &&
-                    !(0x7F <= c && c <= 0x84) &&
-                    !(0x86 <= c && c <= 0x9F) &&
-                    !(0xD800 <= c && c <= 0xDFFF) &&
-                    c != 0xFFFE &&
-                    c != 0xFFFF)
-                {
-                    if (builder != null)
-                        builder.Append(c);
-                }
-                // Also check if the char is actually a high/low surrogate pair of two characters.
-                // If it is, then it is a valid XML character (from above based on the surrogate blocks).
-                else if (char.IsHighSurrogate(c) &&
-                    i + 1 != str.Length &&
-                    char.IsLowSurrogate(str[i + 1]))
-                {
-                    if (builder != null)
-                    {
-                        builder.Append(c);
-                        builder.Append(str[i + 1]);
-                    }
-                    i++;
-                }
-                else
-                {
-                    // We keep the builder null so that we don't allocate a string
-                    // when doing this conversion until we encounter a unicode character.
-                    // Then, we allocate the rest of the string and escape the invalid
-                    // character.
-                    if (builder == null)
-                    {
-                        builder = new StringBuilder();
-                        for (int index = 0; index < i; index++)
-                            builder.Append(str[index]);
-                    }
-                    builder.Append(CharToUnicodeSequence(c));
-                }
-            }
-
-            if (builder != null)
-                return builder.ToString();
-            else
-                return str;
-        }
-
-        private static string CharToUnicodeSequence(char symbol)
-        {
-            return string.Format("\\u{0}", ((int)symbol).ToString("x4"));
-        }
-
-        private void WriteCDataTo(XmlWriter writer)
-        {
-            int start = 0;
-            string text = Value ?? throw new InvalidOperationException();
-
-            while (true)
-            {
-                int illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
-                if (illegal < 0)
-                    break;
-                writer.WriteCData(text.Substring(start, illegal - start + 2));
-                start = illegal + 2;
-                if (start >= text.Length)
-                    return;
-            }
-
-            if (start > 0)
-                writer.WriteCData(text.Substring(start));
-            else
-                writer.WriteCData(text);
         }
 
         #endregion
 
         #region Nested NodeFilter class
 
-        class NodeFilter
+        private sealed class NodeFilter
         {
             private readonly string _nodeName;
             private readonly string? _propName;
             private readonly string? _propValue;
+
+            private static readonly char[] TrimChars = { ' ', '"', '\'' };
 
             public NodeFilter(string xpath)
             {
@@ -393,14 +405,14 @@ namespace NUnit.Framework.Interfaces
                         throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _nodeName = xpath.Substring(0, lbrack);
-                    string filter = xpath.Substring(lbrack+1, xpath.Length - lbrack - 2);
+                    string filter = xpath.Substring(lbrack + 1, xpath.Length - lbrack - 2);
 
                     int equals = filter.IndexOf('=');
                     if (equals < 0 || filter[0] != '@')
                         throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _propName = filter.Substring(1, equals - 1).Trim();
-                    _propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });
+                    _propValue = filter.Substring(equals + 1).Trim(TrimChars);
                 }
             }
 
@@ -409,7 +421,7 @@ namespace NUnit.Framework.Interfaces
                 if (node.Name != _nodeName)
                     return false;
 
-                if (_propName == null)
+                if (_propName is null)
                     return true;
 
                 return node.Attributes[_propName] == _propValue;
@@ -417,31 +429,106 @@ namespace NUnit.Framework.Interfaces
         }
 
         #endregion
-    }
 
-    /// <summary>
-    /// Class used to represent a list of XmlResults
-    /// </summary>
-    public class NodeList : System.Collections.Generic.List<TNode>
-    {
-    }
-
-    /// <summary>
-    /// Class used to represent the attributes of a node
-    /// </summary>
-    public class AttributeDictionary : System.Collections.Generic.Dictionary<string, string>
-    {
         /// <summary>
-        /// Gets or sets the value associated with the specified key.
-        /// Overridden to return null if attribute is not found.
+        /// Class used to represent a list of XmlResults
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>Value of the attribute or null</returns>
-        public new string? this[string key]
+        public readonly struct NodeList : IEnumerable<TNode>
         {
-            get
+            private static readonly List<TNode> EmptyList = new();
+
+            private readonly TNode _parent;
+
+            internal NodeList(TNode parent)
             {
-                return TryGetValue(key, out var value) ? value : null;
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Gets or sets the element at the specified index.
+            /// </summary>
+            public TNode this[int index]
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    if (_parent._childNodes is null || (uint)index >= (uint)_parent._childNodes.Count)
+                        ThrowArgumentOutOfRangeException(index);
+
+                    return _parent._childNodes![index];
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            private static void ThrowArgumentOutOfRangeException(int index)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
+            }
+
+            /// <summary>
+            /// Gets the number of elements contained in the collection.
+            /// </summary>
+            public int Count
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _parent._childNodes?.Count ?? 0;
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public List<TNode>.Enumerator GetEnumerator() => _parent._childNodes?.GetEnumerator() ?? EmptyList.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            IEnumerator<TNode> IEnumerable<TNode>.GetEnumerator() => GetEnumerator();
+        }
+
+        /// <summary>
+        /// Class used to represent the attributes of a node
+        /// </summary>
+        public readonly struct AttributeDictionary
+        {
+            private static readonly Dictionary<string, string> EmptyDictionary = new();
+
+            private readonly TNode _parent;
+
+            internal AttributeDictionary(TNode parent)
+            {
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Gets or sets the value associated with the specified key.
+            /// Overridden to return null if attribute is not found.
+            /// </summary>
+            /// <param name="key">The key.</param>
+            /// <returns>Value of the attribute or null</returns>
+            public string? this[string key]
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    string? value = null;
+                    _parent._attributes?.TryGetValue(key, out value);
+                    return value;
+                }
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Dictionary<string, string>.Enumerator GetEnumerator() => _parent._attributes?.GetEnumerator() ?? EmptyDictionary.GetEnumerator();
+
+            /// <summary>
+            /// Gets the number of key/value pairs contained in the <see cref="T:System.Collections.Generic.Dictionary`2" />.
+            /// </summary>
+            public int Count
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _parent._attributes?.Count ?? 0;
             }
         }
     }

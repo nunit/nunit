@@ -10,22 +10,20 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class TypeConstraint : Constraint
     {
+#pragma warning disable IDE1006
         /// <summary>
         /// The expected Type used by the constraint
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
         protected Type expectedType;
-#pragma warning restore IDE1006
 
         /// <summary>
         /// The type of the actual argument to which the constraint was applied
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected Type actualType;
+        protected Type? actualType;
 #pragma warning restore IDE1006
 
         /// <summary>
@@ -36,9 +34,12 @@ namespace NUnit.Framework.Constraints
         protected TypeConstraint(Type type, string descriptionPrefix)
             : base(type)
         {
-            this.expectedType = type;
-            this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
+            expectedType = type;
+            Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
         }
+
+        /// <inheritdoc/>
+        public override string Description { get; }
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
@@ -50,9 +51,9 @@ namespace NUnit.Framework.Constraints
             actualType = actual?.GetType();
 
             if (actual is Exception)
-                return new ConstraintResult(this, actual, this.Matches(actual));
+                return new ConstraintResult(this, actual, Matches(actual));
 
-            return new ConstraintResult(this, actualType, this.Matches(actual));
+            return new ConstraintResult(this, actualType, Matches(actual));
         }
 
         /// <summary>
@@ -60,6 +61,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual argument</param>
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected abstract bool Matches(object actual);
+        protected abstract bool Matches(object? actual);
     }
 }

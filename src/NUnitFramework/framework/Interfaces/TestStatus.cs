@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Interfaces
 {
@@ -13,7 +13,7 @@ namespace NUnit.Framework.Interfaces
         Inconclusive,
 
         /// <summary>
-        /// The test has skipped 
+        /// The test has been skipped
         /// </summary>
         Skipped,
 

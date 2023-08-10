@@ -1,19 +1,21 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 using System;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ThrowsExceptionConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new ThrowsExceptionConstraint();
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new ThrowsExceptionConstraint();
             ExpectedDescription = "an exception to be thrown";
             StringRepresentation = "<throwsexception>";
         }
@@ -30,22 +32,23 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        static object[] SuccessData = new object[]
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[]
         {
             new TestDelegate( TestDelegates.ThrowsArgumentException )
         };
-
-        static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public static void CatchesAsyncException()
         {
             Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.Exception);
         }
-        
+
         [Test]
         public static void CatchesAsyncTaskOfTException()
         {
@@ -65,10 +68,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void CatchesSyncTaskOfTException()
         {
-            Assert.That<Task<int>>(() =>
-            {
-                throw new Exception();
-            }, Throws.Exception);
+            Assert.That<Task<int>>(() => throw new Exception(), Throws.Exception);
         }
     }
 }

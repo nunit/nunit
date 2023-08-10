@@ -17,13 +17,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return Left.Description + " or " + Right.Description; }
-        }
+        public override string Description => Left.Description + " or " + Right.Description;
 
         /// <summary>
-        /// Apply the member constraints to an actual value, succeeding 
+        /// Apply the member constraints to an actual value, succeeding
         /// succeeding as soon as one of them succeeds.
         /// </summary>
         /// <param name="actual">The actual value</param>

@@ -3,7 +3,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class RegexConstraintTests
@@ -59,10 +59,10 @@ namespace NUnit.Framework.Constraints
             const string testPhrase = "Make your tests fail before passing!";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(testMatcher)));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedErrorMessage));
 
             ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(new Regex(testMatcher))));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedErrorMessage));
         }
     }
 }

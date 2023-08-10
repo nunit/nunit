@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
     <Compile Include="..\SchemaTestUtils.cs" Link="TestUtilities\SchemaTestUtils.cs" />
     <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />
@@ -25,8 +21,8 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+ <ItemGroup>
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
   </ItemGroup>
 
 </Project>

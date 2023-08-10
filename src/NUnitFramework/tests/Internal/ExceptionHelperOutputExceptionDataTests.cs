@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal 
+namespace NUnit.Framework.Tests.Internal
 {
     public static class ExceptionHelperOutputExceptionDataTests
     {
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Internal
         {
             var exception = new Exception("blah");
             exception.Data["data-prop"] = "data-value";
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
@@ -23,7 +24,7 @@ namespace NUnit.Framework.Internal
         {
             var exception = new Exception("blah");
             exception.Data["data-prop"] = null;
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Internal
         public static void SkipsDataSectionOnEmptyData()
         {
             var exception = new Exception("blah");
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, !Contains.Substring("Data"));

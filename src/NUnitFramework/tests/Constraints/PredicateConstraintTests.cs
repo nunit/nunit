@@ -3,28 +3,28 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class PredicateConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new PredicateConstraint<int>((x) => x < 5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new PredicateConstraint<int>((x) => x < 5);
             ExpectedDescription = @"value matching lambda expression";
             StringRepresentation = "<predicate>";
         }
 
-        static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
             0,
             -5
         };
-
-        static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(123, "123")
         };
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         public static void ActualMayBeNullForNullableTypes(Type type)
         {
             // https://github.com/nunit/nunit/issues/1215
-            var methodInfo = typeof(PredicateConstraintTests).GetTypeInfo()
+            var methodInfo = typeof(PredicateConstraintTests)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
                 .Single(method => method.Name == nameof(ActualMayBeNullForNullableTypes) && method.GetParameters().Length == 0)
                 .MakeGenericMethod(type);
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
 
         private static void ActualMayBeNullForNullableTypes<T>()
         {
-            Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+            Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
         }
 
         [TestCase(typeof(int))]
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
         public static void ActualMustNotBeNullForNonNullableTypes(Type type)
         {
             // https://github.com/nunit/nunit/issues/1215
-            var methodInfo = typeof(PredicateConstraintTests).GetTypeInfo()
+            var methodInfo = typeof(PredicateConstraintTests)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
                 .Single(method => method.Name == nameof(ActualMustNotBeNullForNonNullableTypes) && method.GetParameters().Length == 0)
                 .MakeGenericMethod(type);
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(() =>
             {
-                Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+                Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
             }, Throws.ArgumentException);
         }
     }

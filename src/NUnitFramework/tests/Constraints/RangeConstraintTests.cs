@@ -1,28 +1,29 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.TestUtilities.Comparers;
 using System.Collections;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class RangeConstraintTest : ConstraintTestBase
     {
-        RangeConstraint rangeConstraint;
+        private readonly RangeConstraint _rangeConstraint = new RangeConstraint(5, 42);
+
+        protected override Constraint TheConstraint => _rangeConstraint;
 
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = rangeConstraint = new RangeConstraint(5, 42);
             ExpectedDescription = "in range (5,42)";
             StringRepresentation = "<range 5 42>";
         }
 
-        static object[] SuccessData = new object[] { 5, 23, 42 };
+        private static readonly object[] SuccessData = new object[] { 5, 23, 42 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
 
-        static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
-        
         [TestCase(null)]
         [TestCase("xxx")]
         public void InvalidDataThrowsArgumentException(object data)
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedIComparer()
         {
             var comparer = new ObjectComparer();
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparer()
         {
             var comparer = new GenericComparer<int>();
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -50,7 +51,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparison()
         {
             var comparer = new GenericComparison<int>();
-            Assert.That(rangeConstraint.Using(comparer.Delegate).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer.Delegate).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -58,7 +59,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
         }
         [Test]
         public void ShouldThrowExceptionIfObjectHasNoComparer()
@@ -81,7 +82,7 @@ namespace NUnit.Framework.Constraints
             Assert.DoesNotThrow(() => test.ApplyTo(7));
         }
         [TestCaseSource(nameof(NoIComparableTestCase))]
-        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj,object from, object to, System.Collections.IComparer comparer)
+        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj, object from, object to, System.Collections.IComparer comparer)
         {
             RangeConstraint test = new RangeConstraint(from, to);
             test.Using(comparer);
@@ -94,5 +95,4 @@ namespace NUnit.Framework.Constraints
             yield return new object[] { new NoComparer("M"), new NoComparer("A"), new NoComparer("Z"), comparer };
         }
     }
-
 }

@@ -2,9 +2,7 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Security;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
@@ -16,14 +14,14 @@ namespace NUnit.Framework.Internal
             var genericTaskType = task
                 .GetType()
                 .TypeAndBaseTypes()
-                .FirstOrDefault(t => t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
+                .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
 
-            if (genericTaskType != null)
+            if (genericTaskType is not null)
             {
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                      .MakeGenericType(typeArgument)
-                     .GetConstructor(new[] { typeof(Task<>).MakeGenericType(typeArgument) })
+                     .GetConstructor(new[] { typeof(Task<>).MakeGenericType(typeArgument) })!
                      .Invoke(new object[] { task });
             }
 
@@ -41,13 +39,12 @@ namespace NUnit.Framework.Internal
 
             public override bool IsCompleted => _awaiter.IsCompleted;
 
-            [SecuritySafeCritical]
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
 
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
             public override void BlockUntilCompleted() => _awaiter.GetResult();
 
-            public override object GetResult()
+            public override object? GetResult()
             {
                 _awaiter.GetResult(); // Throws exceptions, if any
                 return null;
@@ -65,13 +62,12 @@ namespace NUnit.Framework.Internal
 
             public override bool IsCompleted => _awaiter.IsCompleted;
 
-            [SecuritySafeCritical]
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
 
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
             public override void BlockUntilCompleted() => _awaiter.GetResult();
 
-            public override object GetResult()
+            public override object? GetResult()
             {
                 return _awaiter.GetResult(); // Throws exceptions, if any
             }

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -18,11 +16,11 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
-        internal TestCaseParameters? parms;
+        internal TestCaseParameters? Parms;
 
-#endregion
+        #endregion
 
-#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
@@ -39,26 +37,21 @@ namespace NUnit.Framework.Internal
         {
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
-            if (parentSuite != null)
+            if (parentSuite is not null)
                 FullName = parentSuite.FullName + "." + Name;
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
-        internal bool HasExpectedResult
-        {
-            get { return parms != null && parms.HasExpectedResult; }
-        }
+        internal bool HasExpectedResult => Parms is { HasExpectedResult: true };
 
-        internal object? ExpectedResult
-        {
-            get { return parms != null ? parms.ExpectedResult : null; }
-        }
-#endregion
+        internal object? ExpectedResult => Parms?.ExpectedResult;
 
-#region Test Overrides
+        #endregion
+
+        #region Test Overrides
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
@@ -68,10 +61,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
-        public override object?[] Arguments
-        {
-            get { return parms != null ? parms.Arguments : TestParameters.NoArguments; }
-        }
+        public override object?[] Arguments => Parms is null ? TestParameters.NoArguments : Parms.Arguments;
 
         /// <summary>
         /// Overridden to return a TestCaseResult.
@@ -86,10 +76,7 @@ namespace NUnit.Framework.Internal
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>
-        public override bool HasChildren
-        {
-            get { return false; }
-        }
+        public override bool HasChildren => false;
 
         /// <summary>
         /// Returns a TNode representing the current result after
@@ -104,7 +91,7 @@ namespace NUnit.Framework.Internal
 
             PopulateTestNode(thisNode, recursive);
 
-            thisNode.AddAttribute("seed", this.Seed.ToString());
+            thisNode.AddAttribute("seed", Seed.ToString());
 
             return thisNode;
         }
@@ -113,28 +100,19 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-        public override IList<ITest> Tests
-        {
-            get { return Array.Empty<ITest>(); }
-        }
+        public override IList<ITest> Tests => Array.Empty<ITest>();
 
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string XmlElementName
-        {
-            get { return "test-case"; }
-        }
+        public override string XmlElementName => "test-case";
 
         /// <summary>
         /// Returns the name of the method
         /// </summary>
-        public override string MethodName
-        {
-            get { return Method.Name; }
-        }
+        public override string MethodName => Method.Name;
 
-#endregion
+        #endregion
     }
 }

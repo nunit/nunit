@@ -2,10 +2,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class NUnitTestCaseBuilderTests
@@ -61,7 +62,7 @@ namespace NUnit.Framework.Internal
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
 
-        private readonly Type testNameFixtureType = typeof(TestNameFixture);
+        private readonly Type _testNameFixtureType = typeof(TestNameFixture);
 
         [TestCase(nameof(TestNameFixture.ImplicitNull), RunState.Runnable)]
         [TestCase(nameof(TestNameFixture.ExplicitNull), RunState.Runnable)]
@@ -70,7 +71,7 @@ namespace NUnit.Framework.Internal
         [TestCase(nameof(TestNameFixture.ProperNameTest), RunState.Runnable)]
         public void TestNameTests(string methodName, RunState expectedState)
         {
-            var suite = TestBuilder.MakeParameterizedMethodSuite(testNameFixtureType, methodName);
+            var suite = TestBuilder.MakeParameterizedMethodSuite(_testNameFixtureType, methodName);
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }

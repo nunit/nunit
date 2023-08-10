@@ -3,8 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -21,10 +19,7 @@ namespace NUnit.Framework.Constraints
         /// Gets the default ComparisonAdapter, which wraps an
         /// NUnitComparer object.
         /// </summary>
-        public static ComparisonAdapter Default
-        {
-            get { return new DefaultComparisonAdapter(); }
-        }
+        public static ComparisonAdapter Default => new DefaultComparisonAdapter();
 
         /// <summary>
         /// Returns a ComparisonAdapter that wraps an <see cref="IComparer"/>
@@ -53,26 +48,26 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects
         /// </summary>
-        public abstract int Compare(object expected, object actual);
+        public abstract int Compare(object? expected, object? actual);
 
-        class DefaultComparisonAdapter : ComparerAdapter
+        private class DefaultComparisonAdapter : ComparerAdapter
         {
             /// <summary>
             /// Construct a default ComparisonAdapter
             /// </summary>
-            public DefaultComparisonAdapter() : base( NUnitComparer.Default ) { }
+            public DefaultComparisonAdapter() : base(NUnitComparer.Default) { }
         }
 
-        class ComparerAdapter : ComparisonAdapter
+        private class ComparerAdapter : ComparisonAdapter
         {
-            private readonly IComparer comparer;
+            private readonly IComparer _comparer;
 
             /// <summary>
             /// Construct a ComparisonAdapter for an <see cref="IComparer"/>
             /// </summary>
             public ComparerAdapter(IComparer comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             /// <summary>
@@ -81,9 +76,9 @@ namespace NUnit.Framework.Constraints
             /// <param name="expected"></param>
             /// <param name="actual"></param>
             /// <returns></returns>
-            public override int Compare(object expected, object actual)
+            public override int Compare(object? expected, object? actual)
             {
-                return comparer.Compare(expected, actual);
+                return _comparer.Compare(expected, actual);
             }
         }
 
@@ -92,57 +87,57 @@ namespace NUnit.Framework.Constraints
         /// allows use of an <see cref="IComparer{T}"/> or <see cref="Comparison{T}"/>
         /// to actually perform the comparison.
         /// </summary>
-        class ComparerAdapter<T> : ComparisonAdapter
+        private class ComparerAdapter<T> : ComparisonAdapter
         {
-            private readonly IComparer<T> comparer;
+            private readonly IComparer<T> _comparer;
 
             /// <summary>
             /// Construct a ComparisonAdapter for an <see cref="IComparer{T}"/>
             /// </summary>
             public ComparerAdapter(IComparer<T> comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             /// <summary>
             /// Compare a Type T to an object
             /// </summary>
-            public override int Compare(object expected, object actual)
+            public override int Compare(object? expected, object? actual)
             {
-                if (!TypeHelper.TryCast(expected, out T expectedCast))
+                if (!TypeHelper.TryCast(expected, out T? expectedCast))
                     throw new ArgumentException($"Cannot compare {expected?.ToString() ?? "null"}");
 
-                if (!TypeHelper.TryCast(actual, out T actualCast))
+                if (!TypeHelper.TryCast(actual, out T? actualCast))
                     throw new ArgumentException($"Cannot compare to {actual?.ToString() ?? "null"}");
 
-                return comparer.Compare(expectedCast, actualCast);
+                return _comparer.Compare(expectedCast, actualCast);
             }
         }
 
-        class ComparisonAdapterForComparison<T> : ComparisonAdapter
+        private class ComparisonAdapterForComparison<T> : ComparisonAdapter
         {
-            private readonly Comparison<T> comparison;
+            private readonly Comparison<T> _comparison;
 
             /// <summary>
             /// Construct a ComparisonAdapter for a <see cref="Comparison{T}"/>
             /// </summary>
             public ComparisonAdapterForComparison(Comparison<T> comparer)
             {
-                this.comparison = comparer;
+                _comparison = comparer;
             }
 
             /// <summary>
             /// Compare a Type T to an object
             /// </summary>
-            public override int Compare(object expected, object actual)
+            public override int Compare(object? expected, object? actual)
             {
-                if (!TypeHelper.TryCast(expected, out T expectedCast))
+                if (!TypeHelper.TryCast(expected, out T? expectedCast))
                     throw new ArgumentException($"Cannot compare {expected?.ToString() ?? "null"}");
 
-                if (!TypeHelper.TryCast(actual, out T actualCast))
+                if (!TypeHelper.TryCast(actual, out T? actualCast))
                     throw new ArgumentException($"Cannot compare to {actual?.ToString() ?? "null"}");
 
-                return comparison.Invoke(expectedCast, actualCast);
+                return _comparison.Invoke(expectedCast, actualCast);
             }
         }
     }

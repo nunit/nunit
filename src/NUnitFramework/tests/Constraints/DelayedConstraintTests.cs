@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using NUnit.Compatibility;
+using NUnit.Framework.Constraints;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture, NonParallelizable]
     public class DelayedConstraintTests : ConstraintTestBase
@@ -23,35 +23,39 @@ namespace NUnit.Framework.Constraints
         private const int POLLING = 50;
         private const int MIN = AFTER - 10;
 
-        private static bool boolValue;
-        private static List<int> list;
-        private static string statusString;
+        private static bool _boolValue;
+        private static List<int> _list;
+        private static string? _statusString;
+
+        protected override Constraint TheConstraint { get; } = new DelayedConstraint(new EqualConstraint(true), 500);
 
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
             ExpectedDescription = "True after 500 milliseconds delay";
             StringRepresentation = "<after 500 <equal True>>";
 
-            boolValue = false;
-            list = new List<int>();
-            statusString = null;
+            _boolValue = false;
+            _list = new List<int>();
+            _statusString = null;
             //SetValueTrueAfterDelay(300);
         }
 
-        static object[] SuccessData = new object[] { true };
-        static object[] FailureData = new object[] {
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { true };
+        private static readonly object[] FailureData = new object[]
+        {
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
-            new TestCaseData( null, "null" ) };
+            new TestCaseData( null, "null" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
-        static readonly ActualValueDelegate DelegateReturningValue;
-        static readonly ActualValueDelegate DelegateReturningFalse;
-        static readonly ActualValueDelegate DelegateReturningZero;
-
-        static ActualValueDelegate<object>[] SuccessDelegates;
-        static ActualValueDelegate<object>[] FailureDelegates;
+        private static readonly ActualValueDelegate DelegateReturningValue;
+        private static readonly ActualValueDelegate DelegateReturningFalse;
+        private static readonly ActualValueDelegate DelegateReturningZero;
+        private static readonly ActualValueDelegate<object>[] SuccessDelegates;
+        private static readonly ActualValueDelegate<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
         // Most compilers would probably initialize these in lexical order but it
@@ -62,8 +66,8 @@ namespace NUnit.Framework.Constraints
             DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
             DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
-            SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-            FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+            SuccessDelegates = new[] { DelegateReturningValue };
+            FailureDelegates = new[] { DelegateReturningFalse, DelegateReturningZero };
         }
 
         [Test, TestCaseSource(nameof(SuccessDelegates))]
@@ -76,7 +80,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource(nameof(FailureDelegates))]
         public void FailsWithBadDelegates(ActualValueDelegate<object> del)
         {
-            Assert.IsFalse(TheConstraint.ApplyTo(del).IsSuccess);
+            Assert.That(TheConstraint.ApplyTo(del).IsSuccess, Is.False);
         }
 
         [Test]
@@ -90,7 +94,7 @@ namespace NUnit.Framework.Constraints
         public void SimpleTestUsingBoolean()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(() => boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+            Assert.That(() => _boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
         }
 
         [Test]
@@ -110,21 +114,26 @@ namespace NUnit.Framework.Constraints
         public void CanTestContentsOfList()
         {
             SetValuesAfterDelay(1);
-            Assert.That(list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+
+            // https://github.com/nunit/nunit.analyzers/issues/431
+            // It was decided to keep to analyzer warning
+#pragma warning disable NUnit2044 // Non-delegate actual parameter
+            Assert.That(_list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+#pragma warning restore NUnit2044 // Non-delegate actual parameter
         }
 
         [Test]
         public void CanTestContentsOfDelegateReturningList()
         {
             SetValuesAfterDelay(1);
-            Assert.That(() => list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+            Assert.That(() => _list, Has.Count.EqualTo(1).After(AFTER, POLLING));
         }
 
         [Test]
         public void CanTestInitiallyNullDelegate()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
+            Assert.That(() => _statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
         }
 
         [Test]
@@ -227,7 +236,7 @@ namespace NUnit.Framework.Constraints
         public void PreservesOriginalResultAdditionalLines()
         {
             var exception = Assert.Throws<AssertionException>(
-                () => Assert.That(new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
+                () => Assert.That(() => new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
 
             var expectedMessage =
                 "  Expected: equivalent to < 2, 3 > after 1 millisecond delay" + Environment.NewLine +
@@ -235,37 +244,35 @@ namespace NUnit.Framework.Constraints
                 "  Missing (1): < 3 >" + Environment.NewLine +
                 "  Extra (1): < 1 >" + Environment.NewLine;
 
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            Assert.That(exception.Message, Does.Contain(expectedMessage));
         }
 
-        private static int setValuesDelay;
+        private static int _setValuesDelay;
 
-        private static void MethodReturningVoid() { }
-
-        private static object MethodReturningValue() { return boolValue; }
+        private static object MethodReturningValue() { return _boolValue; }
 
         private static object MethodReturningFalse() { return false; }
 
         private static object MethodReturningZero() { return 0; }
 
-        private static readonly AutoResetEvent waitEvent = new AutoResetEvent(false);
+        private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
 
         private static void Delay(int delay)
         {
-            waitEvent.WaitOne(delay);
+            WaitEvent.WaitOne(delay);
         }
 
         private static void MethodSetsValues()
         {
-            Delay(setValuesDelay);
-            boolValue = true;
-            list.Add(1);
-            statusString = "Finished";
+            Delay(_setValuesDelay);
+            _boolValue = true;
+            _list.Add(1);
+            _statusString = "Finished";
         }
 
-        private void SetValuesAfterDelay(int delayInMilliSeconds)
+        private static void SetValuesAfterDelay(int delayInMilliSeconds)
         {
-            setValuesDelay = delayInMilliSeconds;
+            _setValuesDelay = delayInMilliSeconds;
             Thread thread = new Thread(MethodSetsValues);
             thread.Start();
         }

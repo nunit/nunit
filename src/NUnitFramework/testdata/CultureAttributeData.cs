@@ -1,11 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework;
 
 namespace NUnit.TestData.CultureAttributeData
 {
-    [TestFixture, Culture( "en,fr,de" )]
+    [TestFixture, Culture("en,fr,de")]
     public class FixtureWithCultureAttribute
     {
         [Test, Culture("en,de")]

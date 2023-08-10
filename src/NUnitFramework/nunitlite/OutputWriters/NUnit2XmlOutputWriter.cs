@@ -3,10 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Xml;
 using System.IO;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -18,7 +16,7 @@ namespace NUnitLite
     /// </summary>
     public class NUnit2XmlOutputWriter : OutputWriter
     {
-        private XmlWriter xmlWriter;
+        private XmlWriter _xmlWriter;
 
         /// <summary>
         /// Write info about a test
@@ -48,7 +46,7 @@ namespace NUnitLite
 
         private void WriteXmlOutput(ITestResult result, XmlWriter xmlWriter)
         {
-            this.xmlWriter = xmlWriter;
+            _xmlWriter = xmlWriter;
 
             InitializeXmlFile(result);
             WriteResultElement(result);
@@ -59,63 +57,58 @@ namespace NUnitLite
         {
             ResultSummary summary = new ResultSummary(result);
 
-            xmlWriter.WriteStartDocument(false);
-            xmlWriter.WriteComment("This file represents the results of running a test suite");
+            _xmlWriter.WriteStartDocument(false);
+            _xmlWriter.WriteComment("This file represents the results of running a test suite");
 
-            xmlWriter.WriteStartElement("test-results");
+            _xmlWriter.WriteStartElement("test-results");
 
-            xmlWriter.WriteAttributeString("name", result.FullName);
-            xmlWriter.WriteAttributeString("total", summary.TestCount.ToString());
-            xmlWriter.WriteAttributeString("errors", summary.ErrorCount.ToString());
-            xmlWriter.WriteAttributeString("failures", summary.FailureCount.ToString());
-            xmlWriter.WriteAttributeString("not-run", summary.NotRunCount.ToString());
-            xmlWriter.WriteAttributeString("inconclusive", summary.InconclusiveCount.ToString());
-            xmlWriter.WriteAttributeString("ignored", summary.IgnoreCount.ToString());
-            xmlWriter.WriteAttributeString("skipped", summary.SkipCount.ToString());
-            xmlWriter.WriteAttributeString("invalid", summary.InvalidCount.ToString());
+            _xmlWriter.WriteAttributeString("name", result.FullName);
+            _xmlWriter.WriteAttributeString("total", summary.TestCount.ToString());
+            _xmlWriter.WriteAttributeString("errors", summary.ErrorCount.ToString());
+            _xmlWriter.WriteAttributeString("failures", summary.FailureCount.ToString());
+            _xmlWriter.WriteAttributeString("not-run", summary.NotRunCount.ToString());
+            _xmlWriter.WriteAttributeString("inconclusive", summary.InconclusiveCount.ToString());
+            _xmlWriter.WriteAttributeString("ignored", summary.IgnoreCount.ToString());
+            _xmlWriter.WriteAttributeString("skipped", summary.SkipCount.ToString());
+            _xmlWriter.WriteAttributeString("invalid", summary.InvalidCount.ToString());
 
-            xmlWriter.WriteAttributeString("date", result.StartTime.ToString("yyyy-MM-dd"));
-            xmlWriter.WriteAttributeString("time", result.StartTime.ToString("HH:mm:ss"));
+            _xmlWriter.WriteAttributeString("date", result.StartTime.ToString("yyyy-MM-dd"));
+            _xmlWriter.WriteAttributeString("time", result.StartTime.ToString("HH:mm:ss"));
             WriteEnvironment();
             WriteCultureInfo();
         }
 
         private void WriteCultureInfo()
         {
-            xmlWriter.WriteStartElement("culture-info");
-            xmlWriter.WriteAttributeString("current-culture",
+            _xmlWriter.WriteStartElement("culture-info");
+            _xmlWriter.WriteAttributeString("current-culture",
                                            CultureInfo.CurrentCulture.ToString());
-            xmlWriter.WriteAttributeString("current-uiculture",
+            _xmlWriter.WriteAttributeString("current-uiculture",
                                            CultureInfo.CurrentUICulture.ToString());
-            xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
         }
 
         private void WriteEnvironment()
         {
-            xmlWriter.WriteStartElement("environment");
-            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
-            xmlWriter.WriteAttributeString("nunit-version",
+            _xmlWriter.WriteStartElement("environment");
+            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).Assembly);
+            _xmlWriter.WriteAttributeString("nunit-version",
                                            assemblyName.Version.ToString());
-            xmlWriter.WriteAttributeString("clr-version",
+            _xmlWriter.WriteAttributeString("clr-version",
                 Environment.Version.ToString());
-#if NETSTANDARD2_0
-            xmlWriter.WriteAttributeString("os-version",
-                                           System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            xmlWriter.WriteAttributeString("os-version",
-                                           OSPlatform.CurrentPlatform.ToString());
-#endif
-            xmlWriter.WriteAttributeString("platform",
+            _xmlWriter.WriteAttributeString("os-version",
+                                           OSPlatform.OSDescription);
+            _xmlWriter.WriteAttributeString("platform",
                 Environment.OSVersion.Platform.ToString());
-            xmlWriter.WriteAttributeString("cwd",
+            _xmlWriter.WriteAttributeString("cwd",
                                            Directory.GetCurrentDirectory());
-            xmlWriter.WriteAttributeString("machine-name",
+            _xmlWriter.WriteAttributeString("machine-name",
                                            Environment.MachineName);
-            xmlWriter.WriteAttributeString("user",
+            _xmlWriter.WriteAttributeString("user",
                                            Environment.UserName);
-            xmlWriter.WriteAttributeString("user-domain",
+            _xmlWriter.WriteAttributeString("user-domain",
                                            Environment.UserDomainName);
-            xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
         }
 
         private void WriteResultElement(ITestResult result)
@@ -128,7 +121,7 @@ namespace NUnitLite
             switch (result.ResultState.Status)
             {
                 case TestStatus.Skipped:
-                    if (result.Message != null)
+                    if (!string.IsNullOrEmpty(result.Message))
                         WriteReasonElement(result.Message);
                     break;
                 case TestStatus.Failed:
@@ -139,43 +132,41 @@ namespace NUnitLite
             if (result.Test is TestSuite)
                 WriteChildResults(result);
 
-            xmlWriter.WriteEndElement(); // test element
+            _xmlWriter.WriteEndElement(); // test element
         }
 
         private void TerminateXmlFile()
         {
-            xmlWriter.WriteEndElement(); // test-results
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Flush();
-            ((IDisposable)xmlWriter).Dispose();
+            _xmlWriter.WriteEndElement(); // test-results
+            _xmlWriter.WriteEndDocument();
+            _xmlWriter.Flush();
+            ((IDisposable)_xmlWriter).Dispose();
         }
-
 
         #region Element Creation Helpers
 
         private void StartTestElement(ITestResult result)
         {
             ITest test = result.Test;
-            TestSuite suite = test as TestSuite;
 
-            if (suite != null)
+            if (test is TestSuite suite)
             {
-                xmlWriter.WriteStartElement("test-suite");
-                xmlWriter.WriteAttributeString("type", suite.TestType == "ParameterizedMethod" ? "ParameterizedTest" : suite.TestType);
-                xmlWriter.WriteAttributeString("name", suite.TestType == "Assembly" || suite.TestType == "Project"
+                _xmlWriter.WriteStartElement("test-suite");
+                _xmlWriter.WriteAttributeString("type", suite.TestType == "ParameterizedMethod" ? "ParameterizedTest" : suite.TestType);
+                _xmlWriter.WriteAttributeString("name", suite.TestType == "Assembly" || suite.TestType == "Project"
                     ? result.Test.FullName
                     : result.Test.Name);
             }
             else
             {
-                xmlWriter.WriteStartElement("test-case");
-                xmlWriter.WriteAttributeString("name", result.Name);
+                _xmlWriter.WriteStartElement("test-case");
+                _xmlWriter.WriteAttributeString("name", result.Name);
             }
 
             if (test.Properties.ContainsKey(PropertyNames.Description))
             {
                 string description = (string)test.Properties.Get(PropertyNames.Description);
-                xmlWriter.WriteAttributeString("description", description);
+                _xmlWriter.WriteAttributeString("description", description);
             }
 
             TestStatus status = result.ResultState.Status;
@@ -183,16 +174,16 @@ namespace NUnitLite
 
             if (status != TestStatus.Skipped)
             {
-                xmlWriter.WriteAttributeString("executed", "True");
-                xmlWriter.WriteAttributeString("result", translatedResult);
-                xmlWriter.WriteAttributeString("success", status == TestStatus.Passed ? "True" : "False");
-                xmlWriter.WriteAttributeString("time", result.Duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
-                xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
+                _xmlWriter.WriteAttributeString("executed", "True");
+                _xmlWriter.WriteAttributeString("result", translatedResult);
+                _xmlWriter.WriteAttributeString("success", status == TestStatus.Passed ? "True" : "False");
+                _xmlWriter.WriteAttributeString("time", result.Duration.ToString("0.000", NumberFormatInfo.InvariantInfo));
+                _xmlWriter.WriteAttributeString("asserts", result.AssertCount.ToString());
             }
             else
             {
-                xmlWriter.WriteAttributeString("executed", "False");
-                xmlWriter.WriteAttributeString("result", translatedResult);
+                _xmlWriter.WriteAttributeString("executed", "False");
+                _xmlWriter.WriteAttributeString("result", translatedResult);
             }
         }
 
@@ -233,16 +224,16 @@ namespace NUnitLite
 
             if (properties.ContainsKey(PropertyNames.Category))
             {
-                xmlWriter.WriteStartElement("categories");
+                _xmlWriter.WriteStartElement("categories");
 
                 foreach (string category in properties[PropertyNames.Category])
                 {
-                    xmlWriter.WriteStartElement("category");
-                    xmlWriter.WriteAttributeString("name", category);
-                    xmlWriter.WriteEndElement();
+                    _xmlWriter.WriteStartElement("category");
+                    _xmlWriter.WriteAttributeString("name", category);
+                    _xmlWriter.WriteEndElement();
                 }
 
-                xmlWriter.WriteEndElement();
+                _xmlWriter.WriteEndElement();
             }
         }
 
@@ -256,57 +247,57 @@ namespace NUnitLite
                 if (key != PropertyNames.Category)
                 {
                     if (nprops++ == 0)
-                        xmlWriter.WriteStartElement("properties");
+                        _xmlWriter.WriteStartElement("properties");
 
                     foreach (object prop in properties[key])
                     {
-                        xmlWriter.WriteStartElement("property");
-                        xmlWriter.WriteAttributeString("name", key);
-                        xmlWriter.WriteAttributeString("value", prop.ToString());
-                        xmlWriter.WriteEndElement();
+                        _xmlWriter.WriteStartElement("property");
+                        _xmlWriter.WriteAttributeString("name", key);
+                        _xmlWriter.WriteAttributeString("value", prop.ToString());
+                        _xmlWriter.WriteEndElement();
                     }
                 }
             }
 
             if (nprops > 0)
-                xmlWriter.WriteEndElement();
+                _xmlWriter.WriteEndElement();
         }
 
         private void WriteReasonElement(string message)
         {
-            xmlWriter.WriteStartElement("reason");
-            xmlWriter.WriteStartElement("message");
+            _xmlWriter.WriteStartElement("reason");
+            _xmlWriter.WriteStartElement("message");
             WriteCData(message);
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
         }
 
         private void WriteFailureElement(string message, string stackTrace)
         {
-            xmlWriter.WriteStartElement("failure");
-            xmlWriter.WriteStartElement("message");
+            _xmlWriter.WriteStartElement("failure");
+            _xmlWriter.WriteStartElement("message");
             WriteCData(message);
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteStartElement("stack-trace");
-            if (stackTrace != null)
+            _xmlWriter.WriteEndElement();
+            _xmlWriter.WriteStartElement("stack-trace");
+            if (stackTrace is not null)
                 WriteCData(stackTrace);
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
         }
 
         private void WriteChildResults(ITestResult result)
         {
-            xmlWriter.WriteStartElement("results");
+            _xmlWriter.WriteStartElement("results");
 
             foreach (ITestResult childResult in result.Children)
                 WriteResultElement(childResult);
 
-            xmlWriter.WriteEndElement();
+            _xmlWriter.WriteEndElement();
         }
 
-#endregion
+        #endregion
 
-#region Output Helpers
+        #region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -348,18 +339,18 @@ namespace NUnitLite
                 int illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
                 if (illegal < 0)
                     break;
-                xmlWriter.WriteCData(text.Substring(start, illegal - start + 2));
+                _xmlWriter.WriteCData(text.Substring(start, illegal - start + 2));
                 start = illegal + 2;
                 if (start >= text.Length)
                     return;
             }
 
             if (start > 0)
-                xmlWriter.WriteCData(text.Substring(start));
+                _xmlWriter.WriteCData(text.Substring(start));
             else
-                xmlWriter.WriteCData(text);
+                _xmlWriter.WriteCData(text);
         }
 
-#endregion
+        #endregion
     }
 }

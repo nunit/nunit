@@ -18,14 +18,14 @@ namespace NUnit.Framework.Internal
         /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
         /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
         /// <typeparam name="T">The type to require.</typeparam>
-        public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
+        public static T RequireActual<T>(object? actual, string paramName, bool allowNull = false)
         {
-            if (TypeHelper.TryCast(actual, out T result) && (allowNull || result != null))
+            if (TypeHelper.TryCast(actual, out T? result) && (allowNull || result is not null))
             {
                 return result;
             }
 
-            var actualDisplay = actual == null ? "null" : actual.GetType().Name;
+            var actualDisplay = actual is null ? "null" : actual.GetType().Name;
             throw new ArgumentException($"Expected: {typeof(T).Name} But was: {actualDisplay}", paramName);
         }
     }

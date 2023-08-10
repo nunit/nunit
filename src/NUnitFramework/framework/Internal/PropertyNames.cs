@@ -1,14 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// The PropertyNames class provides static constants for the
     /// standard property ids that NUnit uses on tests.
     /// </summary>
-    public class PropertyNames
+    public static class PropertyNames
     {
         #region Internal Properties
 

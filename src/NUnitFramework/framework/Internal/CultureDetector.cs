@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Globalization;
 
 namespace NUnit.Framework.Internal
@@ -11,26 +10,26 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class CultureDetector
     {
-        private readonly CultureInfo currentCulture;
+        private readonly CultureInfo _currentCulture;
 
         // Set whenever we fail to support a list of platforms
-        private string reason = string.Empty;
+        private string _reason = string.Empty;
 
         /// <summary>
         /// Default constructor uses the current culture.
         /// </summary>
         public CultureDetector()
         {
-            this.currentCulture = CultureInfo.CurrentCulture;
+            _currentCulture = CultureInfo.CurrentCulture;
         }
 
         /// <summary>
         /// Construct a CultureDetector for a particular culture for testing.
         /// </summary>
         /// <param name="culture">The culture to be used</param>
-        public CultureDetector( string culture )
+        public CultureDetector(string culture)
         {
-            this.currentCulture = new CultureInfo( culture );
+            _currentCulture = new CultureInfo(culture);
         }
 
         /// <summary>
@@ -39,11 +38,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="cultures"></param>
         /// <returns></returns>
-        public bool IsCultureSupported( string[] cultures )
+        public bool IsCultureSupported(string[] cultures)
         {
-            foreach( string culture in cultures )
-                if ( IsCultureSupported( culture ) )
+            foreach (string culture in cultures)
+            {
+                if (IsCultureSupported(culture))
                     return true;
+            }
 
             return false;
         }
@@ -54,30 +55,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="cultureAttribute">The attribute to examine</param>
         /// <returns></returns>
-        public bool IsCultureSupported( CultureAttribute cultureAttribute )
+        public bool IsCultureSupported(CultureAttribute cultureAttribute)
         {
-            string include = cultureAttribute.Include;
-            string exclude = cultureAttribute.Exclude;
+            string? include = cultureAttribute.Include;
+            string? exclude = cultureAttribute.Exclude;
 
-            //try
-            //{
-                if (include != null && !IsCultureSupported(include))
-                {
-                    reason = string.Format("Only supported under culture {0}", include);
-                    return false;
-                }
+            if (include is not null && !IsCultureSupported(include))
+            {
+                _reason = $"Only supported under culture {include}";
+                return false;
+            }
 
-                if (exclude != null && IsCultureSupported(exclude))
-                {
-                    reason = string.Format("Not supported under culture {0}", exclude);
-                    return false;
-                }
-            //}
-            //catch( ArgumentException ex )
-            //{
-            //    reason = string.Format( "Invalid culture: {0}", ex.ParamName );
-            //    return false; 
-            //}
+            if (exclude is not null && IsCultureSupported(exclude))
+            {
+                _reason = $"Not supported under culture {exclude}";
+                return false;
+            }
 
             return true;
         }
@@ -88,22 +81,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="culture">Name of the culture or comma-separated list of culture ids</param>
         /// <returns>True if the culture is in use on the system</returns>
-        public bool IsCultureSupported( string culture )
+        public bool IsCultureSupported(string culture)
         {
             culture = culture.Trim();
 
-            if ( culture.IndexOf( ',' ) >= 0 )
+            if (culture.IndexOf(',') >= 0)
             {
-                if ( IsCultureSupported( culture.Split( new char[] { ',' } ) ) )
+                if (IsCultureSupported(culture.Split(',')))
                     return true;
             }
             else
             {
-                if( this.currentCulture.Name == culture || this.currentCulture.TwoLetterISOLanguageName == culture)
+                if (_currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 
-            this.reason = "Only supported under culture " + culture;
+            _reason = "Only supported under culture " + culture;
             return false;
         }
 
@@ -112,9 +105,6 @@ namespace NUnit.Framework.Internal
         /// defined if called before IsSupported( Attribute )
         /// is called.
         /// </summary>
-        public string Reason
-        {
-            get { return reason; }
-        }
+        public string Reason => _reason;
     }
 }

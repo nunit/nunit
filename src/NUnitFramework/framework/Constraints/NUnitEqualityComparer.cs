@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of comparers used to compare pairs of objects.
         /// </summary>
-        private static readonly EqualMethod[] _comparers = 
+        private static readonly EqualMethod[] Comparers =
         {
             ArraysComparer.Equal,
             DictionariesComparer.Equal,
@@ -49,6 +49,8 @@ namespace NUnit.Framework.Constraints
             StructuralComparer.Equal,
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,
+            EqualsComparer.Equal,
+            PropertiesComparer.Equal,
         };
 
         /// <summary>
@@ -65,12 +67,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private List<EqualityAdapter> _externalComparers;
+        private List<EqualityAdapter>? _externalComparers;
 
         /// <summary>
         /// List of points at which a failure occurred.
         /// </summary>
-        private List<FailurePoint> _failurePoints;
+        private List<FailurePoint>? _failurePoints;
 
         #endregion
 
@@ -89,8 +91,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool IgnoreCase
         {
-            get { return _caseInsensitive; }
-            set { _caseInsensitive = value; }
+            get => _caseInsensitive;
+            set => _caseInsensitive = value;
         }
 
         /// <summary>
@@ -99,8 +101,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool CompareAsCollection
         {
-            get { return _compareAsCollection; }
-            set { _compareAsCollection = value; }
+            get => _compareAsCollection;
+            set => _compareAsCollection = value;
         }
 
         /// <summary>
@@ -108,10 +110,7 @@ namespace NUnit.Framework.Constraints
         /// test for equality. They are applied to members of
         /// collections, in place of NUnit's own logic.
         /// </summary>
-        public IList<EqualityAdapter> ExternalComparers
-        {
-            get { return _externalComparers ??= new List<EqualityAdapter>(); }
-        }
+        public IList<EqualityAdapter> ExternalComparers => _externalComparers ??= new();
 
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
@@ -119,10 +118,7 @@ namespace NUnit.Framework.Constraints
         /// This generally means that the caller may only make use of
         /// objects it has placed on the list at a particular depth.
         /// </summary>
-        public IList<FailurePoint> FailurePoints
-        {
-            get { return _failurePoints; }
-        }
+        public IList<FailurePoint> FailurePoints => _failurePoints ??= new();
 
         /// <summary>
         /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>
@@ -139,19 +135,19 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
-        public bool AreEqual(object x, object y, ref Tolerance tolerance)
+        public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
             return AreEqual(x, y, ref tolerance, new ComparisonState(true));
         }
 
-        internal bool AreEqual(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            this._failurePoints = new List<FailurePoint>();
+            _failurePoints = new List<FailurePoint>();
 
-            if (x == null && y == null)
+            if (x is null && y is null)
                 return true;
 
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
 
             if (object.ReferenceEquals(x, y))
@@ -160,15 +156,21 @@ namespace NUnit.Framework.Constraints
             if (state.DidCompare(x, y))
                 return false;
 
-            EqualityAdapter externalComparer = GetExternalComparer(x, y);
-            if (externalComparer != null)
-                return externalComparer.AreEqual(x, y);
+            EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
-            foreach (EqualMethod equalMethod in _comparers)
+            if (externalComparer is not null)
+                return externalComparer.AreEqual(x, y, ref tolerance);
+
+            foreach (EqualMethod equalMethod in Comparers)
             {
                 bool? result = equalMethod(x, y, ref tolerance, state, this);
                 if (result.HasValue)
                     return result.Value;
+            }
+
+            if (tolerance.HasVariance)
+            {
+                throw new InvalidOperationException("Tolerance is not supported for this comparison");
             }
 
             return x.Equals(y);
@@ -178,13 +180,15 @@ namespace NUnit.Framework.Constraints
 
         #region Helper Methods
 
-        private EqualityAdapter GetExternalComparer(object x, object y)
+        private EqualityAdapter? GetExternalComparer(object x, object y)
         {
-            if (_externalComparers != null)
+            if (_externalComparers is not null)
             {
                 foreach (EqualityAdapter adapter in _externalComparers)
+                {
                     if (adapter.CanCompare(x, y))
                         return adapter;
+                }
             }
 
             return null;
@@ -208,12 +212,12 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// The expected value
             /// </summary>
-            public object ExpectedValue;
+            public object? ExpectedValue;
 
             /// <summary>
             /// The actual value
             /// </summary>
-            public object ActualValue;
+            public object? ActualValue;
 
             /// <summary>
             /// Indicates whether the expected value is valid

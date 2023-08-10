@@ -26,10 +26,10 @@ namespace NUnit.Framework.Constraints
             : base(left, right)
         {
             Guard.ArgumentNotNull(left, nameof(left));
-            this.Left = left;
+            Left = left;
 
             Guard.ArgumentNotNull(right, nameof(right));
-            this.Right = right;
+            Right = right;
         }
     }
 }

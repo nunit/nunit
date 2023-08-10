@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AsyncThrowsTests
@@ -15,10 +15,7 @@ namespace NUnit.Framework.Assertions
         private readonly ActualValueDelegate<System.Threading.Tasks.Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
         private readonly ActualValueDelegate<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
 
-        private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint
-        {
-            get { return new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException))); }
-        }
+        private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint => new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException)));
 
         [Test]
         public void ThrowsConstraintAsyncTask()
@@ -55,7 +52,7 @@ namespace NUnit.Framework.Assertions
         {
             Assert.That(new ThrowsNothingConstraint().ApplyTo(_throwsAsyncTask).Status, Is.EqualTo(ConstraintStatus.Failure));
         }
-        
+
         [Test]
         public void AssertThatThrowsTask()
         {

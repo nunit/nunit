@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
     public class ExactTypeTest : SyntaxTest

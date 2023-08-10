@@ -2,29 +2,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.ActionAttributeTests;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture, NonParallelizable]
     public class ActionAttributeTests
     {
         // NOTE: An earlier version of this fixture attempted to test
-        // the exact order of all actions. However, the order of execution 
+        // the exact order of all actions. However, the order of execution
         // of the individual tests cannot be predicted reliably across
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.
 
-        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).GetTypeInfo().Assembly);
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).Assembly);
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
-        private ITestResult _result = null;
+        private ITestResult _result;
         private int _numEvents = -1;
 
         [OneTimeSetUp]
@@ -34,16 +32,22 @@ namespace NUnit.Framework
 
             ActionAttributeFixture.ClearResults();
 
-            IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new string[] { "NUnit.TestData.ActionAttributeTests" };
-            // No need for the overhead of parallel execution here
-            options["NumberOfTestWorkers"] = 0;
+            IDictionary<string, object> options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { "NUnit.TestData.ActionAttributeTests" },
+                // No need for the overhead of parallel execution here
+                ["NumberOfTestWorkers"] = 0
+            };
 
-            Assert.NotNull(runner.Load(ASSEMBLY_PATH, options), "Assembly not loaded");
-            Assert.That(runner.LoadedTest.RunState, Is.EqualTo(RunState.Runnable));
+            ITest test = runner.Load(ASSEMBLY_PATH, options);
+            Assert.Multiple(() =>
+            {
+                Assert.That(test, Is.Not.Null, "Assembly not loaded");
+                Assert.That(runner.LoadedTest, Is.SameAs(test));
+                Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            });
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
-
             _numEvents = ActionAttributeFixture.Events.Count;
         }
 
@@ -63,12 +67,16 @@ namespace NUnit.Framework
             var notExpected = new List<string>();
 
             foreach (var item in ExpectedEvents)
+            {
                 if (!ActionAttributeFixture.Events.Contains(item))
                     notFound.Add(item);
+            }
 
             foreach (var item in ActionAttributeFixture.Events)
+            {
                 if (!ExpectedEvents.Contains(item))
                     notExpected.Add(item);
+            }
 
             if (notFound.Count > 0 || notExpected.Count > 0)
             {
@@ -130,7 +138,7 @@ namespace NUnit.Framework
         [Test]
         public void CorrectNumberOfEventsReceived()
         {
-            Assert.That(ActionAttributeFixture.Events.Count, Is.EqualTo(
+            Assert.That(ActionAttributeFixture.Events, Has.Count.EqualTo(
                 NumTestCaseEvents + 2 * (NumParameterizedTestActions + NumTestFixtureActions + NumSetUpFixtureActions + NumAssemblyActions)));
         }
 
@@ -152,27 +160,30 @@ namespace NUnit.Framework
             if (firstEvent > 0)
             {
                 var beforeEvent = ActionAttributeFixture.Events[firstEvent - 1];
-                Assert.That(beforeEvent, Does.Not.StartWith(suiteName), "Extra ActionAttribute Before: {0}", beforeEvent);
+                Assert.That(beforeEvent, Does.Not.StartWith(suiteName), $"Extra ActionAttribute Before: {beforeEvent}");
             }
 
             if (lastEvent < ActionAttributeFixture.Events.Count - 1)
             {
                 var afterEvent = ActionAttributeFixture.Events[lastEvent + 1];
-                Assert.That(afterEvent, Does.Not.StartWith(suiteName), "Extra ActionAttribute After: {0}", afterEvent);
+                Assert.That(afterEvent, Does.Not.StartWith(suiteName), $"Extra ActionAttribute After: {afterEvent}");
             }
         }
 
         private void CheckActionsOnTestCase(string testName)
         {
             var index = ActionAttributeFixture.Events.IndexOf(testName);
-            Assert.That(index, Is.GreaterThanOrEqualTo(0), "{0} did not execute", testName);
+            Assert.That(index, Is.GreaterThanOrEqualTo(0), $"{testName} did not execute");
             var numActions = ExpectedTestCaseActions.Length;
 
             for (int i = 0; i < numActions; i++)
                 CheckBeforeAfterActionPair(index - i - 1, index + i + 1, testName, ExpectedTestCaseActions[i]);
 
-            Assert.That(ActionAttributeFixture.Events[index - numActions - 1], Does.Not.StartWith(testName), "Extra ActionAttribute Before");
-            Assert.That(ActionAttributeFixture.Events[index + numActions + 1], Does.Not.StartWith(testName), "Extra ActionAttribute After");
+            Assert.Multiple(() =>
+            {
+                Assert.That(ActionAttributeFixture.Events[index - numActions - 1], Does.Not.StartWith(testName), "Extra ActionAttribute Before");
+                Assert.That(ActionAttributeFixture.Events[index + numActions + 1], Does.Not.StartWith(testName), "Extra ActionAttribute After");
+            });
         }
 
         private void CheckBeforeAfterActionPair(int index1, int index2, string testName, string tag)
@@ -180,8 +191,11 @@ namespace NUnit.Framework
             var event1 = ActionAttributeFixture.Events[index1];
             var event2 = ActionAttributeFixture.Events[index2];
 
-            Assert.That(event1, Does.StartWith(testName + "." + tag + ".Before"));
-            Assert.That(event2, Does.StartWith(testName + "." + tag + ".After"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(event1, Does.StartWith(testName + "." + tag + ".Before"));
+                Assert.That(event2, Does.StartWith(testName + "." + tag + ".After"));
+            });
 
             int index = event1.LastIndexOf('.');
             var target1 = event1.Substring(index); // Target is last in string
@@ -193,26 +207,26 @@ namespace NUnit.Framework
 
         #region Expected Attributes and Events
 
-        private static readonly string[] ExpectedAssemblyActions = new string[] {
+        private static readonly string[] ExpectedAssemblyActions = new[] {
                         "OnAssembly", "OnAssembly", "OnAssembly" };
 
-        private static readonly string[] ExpectedSetUpFixtureActions = new string[] {
+        private static readonly string[] ExpectedSetUpFixtureActions = new[] {
                         "OnBaseSetupFixture", "OnBaseSetupFixture", "OnBaseSetupFixture",
                         "OnSetupFixture", "OnSetupFixture", "OnSetupFixture"
         };
 
-        private static readonly string[] ExpectedTestFixtureActions = new string[] {
+        private static readonly string[] ExpectedTestFixtureActions = new[] {
                         "OnBaseInterface", "OnBaseInterface", "OnBaseInterface",
                         "OnBaseFixture", "OnBaseFixture", "OnBaseFixture",
                         "OnInterface", "OnInterface", "OnInterface",
                         "OnFixture", "OnFixture", "OnFixture"
         };
 
-        private static readonly string[] ExpectedParameterizedTestActions = new string[] {
+        private static readonly string[] ExpectedParameterizedTestActions = new[] {
                         "OnMethod", "OnMethod"
         };
 
-        private static readonly string[] ExpectedTestCaseActions = new string[] {
+        private static readonly string[] ExpectedTestCaseActions = new[] {
                         "OnMethod", "OnMethod", "OnMethod",
                         "SetUpTearDown",
                         "OnFixture", "OnFixture",
@@ -227,7 +241,7 @@ namespace NUnit.Framework
         // The exact order of events may vary, depending on the runtime framework
         // in use. Consequently, we test heuristically. The following list is
         // only one possible ordering of events.
-        private static readonly List<string> ExpectedEvents = new List<string>(new string[] {
+        private static readonly List<string> ExpectedEvents = new(new[] {
                 ASSEMBLY_NAME + ".OnAssembly.Before.Test, Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Default",

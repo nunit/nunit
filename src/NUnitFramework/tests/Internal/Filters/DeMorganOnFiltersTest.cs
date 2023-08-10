@@ -2,11 +2,14 @@
 
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters {
+namespace NUnit.Framework.Tests.Internal.Filters
+{
     public class DeMorganOnFiltersTest : TestFilterTests
     {
-        private static List<TestFilter[]> filterPairs;
+        private static readonly List<TestFilter[]> FilterPairs;
 
         static DeMorganOnFiltersTest()
         {
@@ -18,21 +21,23 @@ namespace NUnit.Framework.Internal.Filters {
                 new PropertyFilter("Priority", "Low")
             };
 
-            filterPairs = new List<TestFilter[]>();
+            FilterPairs = new List<TestFilter[]>();
             foreach (var part1 in filterParts)
-            foreach (var part2 in filterParts)
             {
-                var and = new AndFilter(part1, new NotFilter(part2));
-                var or = new OrFilter(new NotFilter(part1), part2);
-                filterPairs.Add(new TestFilter[2] {new NotFilter(and), or});
-                filterPairs.Add(new TestFilter[2] {and, new NotFilter(or)});
+                foreach (var part2 in filterParts)
+                {
+                    var and = new AndFilter(part1, new NotFilter(part2));
+                    var or = new OrFilter(new NotFilter(part1), part2);
+                    FilterPairs.Add(new TestFilter[2] { new NotFilter(and), or });
+                    FilterPairs.Add(new TestFilter[2] { and, new NotFilter(or) });
+                }
             }
         }
 
         private IEnumerable<ITest> GetTests()
         {
             var q = new Queue<ITest>();
-            q.Enqueue(_topLevelSuite);
+            q.Enqueue(TopLevelSuite);
             while (q.Count > 0)
             {
                 var test = q.Dequeue();
@@ -48,10 +53,9 @@ namespace NUnit.Framework.Internal.Filters {
         }
 
         [Test]
-        [TestCaseSource(nameof(filterPairs))]
+        [TestCaseSource(nameof(FilterPairs))]
         public void DeMorganPassTests(TestFilter andFilter, TestFilter orFilter)
         {
-
             var disagreements = new List<string>();
             foreach (var test in GetTests())
             {
@@ -59,11 +63,11 @@ namespace NUnit.Framework.Internal.Filters {
                     disagreements.Add(test.FullName);
             }
             var message = CaseErrorMessage("Pass", andFilter, orFilter);
-            Assert.IsEmpty(disagreements, message);
+            Assert.That(disagreements, Is.Empty, message);
         }
 
         [Test]
-        [TestCaseSource(nameof(filterPairs))]
+        [TestCaseSource(nameof(FilterPairs))]
         public void DeMorganMatchTests(TestFilter andFilter, TestFilter orFilter)
         {
             var disagreements = new List<string>();
@@ -73,7 +77,7 @@ namespace NUnit.Framework.Internal.Filters {
                     disagreements.Add(test.FullName);
             }
             var message = CaseErrorMessage("Match", andFilter, orFilter);
-            Assert.IsEmpty(disagreements, message);
+            Assert.That(disagreements, Is.Empty, message);
         }
     }
 }

@@ -1,17 +1,16 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.IO;
-using NUnit.Framework;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Creates a directory for testing purposes
     /// </summary>
     public class TestDirectory : IDisposable
     {
-        private DirectoryInfo _testDir;
+        private readonly DirectoryInfo _testDir;
 
         public TestDirectory()
         {
@@ -32,26 +31,25 @@ namespace NUnit.TestUtilities
         {
             try
             {
-                if (_testDir != null && _testDir.Exists)
+                if (_testDir.Exists)
                 {
                     _testDir.Delete(true);
                 }
             }
             catch { }
-            _testDir = null;
         }
 
         /// <summary>
         /// Gets the test directory.
         /// </summary>
-        public DirectoryInfo Directory { get { return _testDir; } }
+        public DirectoryInfo Directory => _testDir;
 
         /// <summary>
         /// Returns the full path of the contained test directory
         /// </summary>
         public override string ToString()
         {
-            return _testDir == null ? string.Empty : _testDir.FullName;
+            return _testDir is null ? string.Empty : _testDir.FullName;
         }
     }
 }

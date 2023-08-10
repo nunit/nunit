@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -14,7 +12,7 @@ namespace NUnit.Framework
     /// completes and is then reset to its original value.
     /// </summary>
     /// <seealso cref="SetUICultureAttribute"/>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]
     public class SetCultureAttribute : PropertyAttribute, IApplyToContext
     {
         private readonly string _culture;
@@ -23,7 +21,7 @@ namespace NUnit.Framework
         /// Construct given the name of a culture
         /// </summary>
         /// <param name="culture"></param>
-        public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture )
+        public SetCultureAttribute(string culture) : base(PropertyNames.SetCulture, culture)
         {
             _culture = culture;
         }

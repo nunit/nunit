@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnitLite.Tests
 {
@@ -32,7 +31,7 @@ namespace NUnitLite.Tests
             var filter = GetFilter("--test:My.First.Test", "--test:My.Second.Test", "--test:My.Third.Test");
             Assert.That(filter, Is.TypeOf<OrFilter>());
             var filters = ((OrFilter)filter).Filters;
-            Assert.That(filters.Count, Is.EqualTo(3));
+            Assert.That(filters, Has.Length.EqualTo(3));
 
             Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
             Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
@@ -52,7 +51,7 @@ namespace NUnitLite.Tests
                 var filter = GetFilter("--testlist:" + tf.File.FullName);
                 Assert.That(filter, Is.TypeOf<OrFilter>());
                 var filters = ((OrFilter)filter).Filters;
-                Assert.That(filters.Count, Is.EqualTo(3));
+                Assert.That(filters, Has.Length.EqualTo(3));
 
                 Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
                 Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
@@ -71,10 +70,10 @@ namespace NUnitLite.Tests
             using (var tf = new TestFile("TestListFile.txt"))
             using (var tf2 = new TestFile("TestListFile2.txt"))
             {
-                var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
+                var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName);
                 Assert.That(filter, Is.TypeOf<OrFilter>());
                 var filters = ((OrFilter)filter).Filters;
-                Assert.That(filters.Count, Is.EqualTo(6));
+                Assert.That(filters, Has.Length.EqualTo(6));
 
                 Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
                 Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));
@@ -122,14 +121,14 @@ namespace NUnitLite.Tests
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             var filters = ((AndFilter)filter).Filters;
-            Assert.That(filters.Count, Is.EqualTo(2));
+            Assert.That(filters, Has.Length.EqualTo(2));
 
             Assert.That(filters[1], Is.TypeOf<CategoryFilter>());
             Assert.That(((CategoryFilter)filters[1]).ExpectedValue, Is.EqualTo("Urgent"));
 
             Assert.That(filters[0], Is.TypeOf<OrFilter>());
             filters = ((OrFilter)filters[0]).Filters;
-            Assert.That(filters.Count, Is.EqualTo(2));
+            Assert.That(filters, Has.Length.EqualTo(2));
 
             Assert.That(filters[0], Is.TypeOf<FullNameFilter>());
             Assert.That(((FullNameFilter)filters[0]).ExpectedValue, Is.EqualTo("My.First.Test"));

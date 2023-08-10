@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
@@ -105,4 +103,3 @@ namespace NUnit.Framework.Interfaces
         object?[] Arguments { get; }
     }
 }
-

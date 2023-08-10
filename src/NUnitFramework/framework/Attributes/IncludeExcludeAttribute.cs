@@ -1,18 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Abstract base for attributes that are used to include tests in 
+    /// Abstract base for attributes that are used to include tests in
     /// the test run based on environmental settings.
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string? include;
-        private string? exclude;
-        private string? reason;
+        private string? _include;
+        private string? _exclude;
+        private string? _reason;
 
         /// <summary>
         /// Constructor with no included items specified, for use
@@ -26,7 +24,7 @@ namespace NUnit.Framework
         /// <param name="include">Comma-delimited list of included items</param>
         public IncludeExcludeAttribute(string? include)
         {
-            this.include = include;
+            _include = include;
         }
 
         /// <summary>
@@ -36,8 +34,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get { return this.include; }
-            set { include = value; }
+            get => _include;
+            set => _include = value;
         }
 
         /// <summary>
@@ -46,8 +44,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get { return this.exclude; }
-            set { this.exclude = value; }
+            get => _exclude;
+            set => _exclude = value;
         }
 
         /// <summary>
@@ -55,8 +53,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Reason
         {
-            get { return reason; }
-            set { reason = value; }
+            get => _reason;
+            set => _reason = value;
         }
     }
 }

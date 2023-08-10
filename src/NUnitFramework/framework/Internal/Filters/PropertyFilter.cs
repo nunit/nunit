@@ -1,9 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -12,7 +8,7 @@ namespace NUnit.Framework.Internal.Filters
     /// PropertyFilter is able to select or exclude tests
     /// based on their properties.
     /// </summary>
-    internal class PropertyFilter : ValueMatchFilter
+    internal sealed class PropertyFilter : ValueMatchFilter
     {
         private readonly string _propertyName;
 
@@ -22,7 +18,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="propertyName">A property name</param>
         /// <param name="expectedValue">The expected value of the property</param>
         /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
-        public PropertyFilter(string propertyName, string expectedValue, bool isRegex = false) : base(expectedValue, isRegex) 
+        public PropertyFilter(string propertyName, string expectedValue, bool isRegex = false) : base(expectedValue, isRegex)
         {
             _propertyName = propertyName;
         }
@@ -31,15 +27,19 @@ namespace NUnit.Framework.Internal.Filters
         /// Check whether the filter matches a test
         /// </summary>
         /// <param name="test">The test to be matched</param>
-        /// <returns></returns>
         public override bool Match(ITest test)
         {
-            IList values = test.Properties[_propertyName];
-
-            if (values != null)
-                foreach (string val in values)
-                    if (Match(val))
+            if (test.Properties.TryGet(_propertyName, out var values))
+            {
+                // Use for-loop to avoid allocating the enumerator
+                for (var i = 0; i < values.Count; ++i)
+                {
+                    if (Match((string?)values[i]))
+                    {
                         return true;
+                    }
+                }
+            }
 
             return false;
         }
@@ -61,9 +61,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "prop"; }
-        }
+        protected override string ElementName => "prop";
     }
 }

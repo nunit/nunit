@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework;
 
 namespace NUnit.TestData
@@ -14,17 +13,17 @@ namespace NUnit.TestData
         {
         }
 
-        [TestCase(10,20)]
+        [TestCase(10, 20)]
         public void MethodWithParams(int x, int y)
         {
         }
     }
-    
+
     [TestFixture(Category = "XYZ")]
     public class TestFixtureWithSingleCategory
     {
     }
-    
+
     [TestFixture(Category = "X,Y,Z")]
     public class TestFixtureWithMultipleCategories
     {

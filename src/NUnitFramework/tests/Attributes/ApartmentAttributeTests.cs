@@ -5,9 +5,9 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [Platform(Include = "Win, Mono")]
     [TestFixture]
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresSTACanBeSetOnTestFixture()
             {
-                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             }
         }
 
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Attributes
             [TestCase(2)]
             public void TestCasesShouldInheritApartmentFromFixture(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA), "TestCase" + n);
             }
         }
 
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Attributes
             [Apartment(ApartmentState.MTA)]
             public void TestCasesShouldRespectTheirApartment(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA), "TestCase" + n);
             }
         }
 
@@ -185,7 +185,7 @@ namespace NUnit.Framework.Attributes
             [TestCase(2)]
             public void TestCasesShouldInheritApartmentFromFixture(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA), "TestCase" + n);
             }
         }
 
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Attributes
             [Apartment(ApartmentState.MTA)]
             public void TestCasesShouldRespectTheirApartment(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA), "TestCase" + n);
             }
         }
     }

@@ -1,11 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -21,10 +18,9 @@ namespace NUnit.Framework.Internal.Builders
     {
         #region Messages
 
-        const string NO_TYPE_ARGS_MSG =
+        private const string NO_TYPE_ARGS_MSG =
             "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments.";
-
-        const string PARALLEL_NOT_ALLOWED_MSG =
+        private const string PARALLEL_NOT_ALLOWED_MSG =
             "ParallelizableAttribute is only allowed on test methods and fixtures";
 
         #endregion
@@ -55,7 +51,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
-            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly));
+            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.Assembly));
             fixture.ApplyAttributesToTest(typeInfo.Type);
 
             AddTestCasesToFixture(fixture, filter);
@@ -81,12 +77,14 @@ namespace NUnit.Framework.Internal.Builders
             if (typeInfo.ContainsGenericParameters)
             {
                 Type[]? typeArgs = testFixtureData.TypeArgs;
-                if (typeArgs == null || typeArgs.Length == 0)
+                if (typeArgs is null || typeArgs.Length == 0)
                 {
                     int cnt = 0;
                     foreach (object? o in arguments)
+                    {
                         if (o is Type) cnt++;
                         else break;
+                    }
 
                     typeArgs = new Type[cnt];
                     for (int i = 0; i < cnt; i++)
@@ -113,20 +111,20 @@ namespace NUnit.Framework.Internal.Builders
 
             string name = fixture.Name;
 
-            if (testFixtureData.TestName != null)
+            if (testFixtureData.TestName is not null)
             {
                 fixture.Name = testFixtureData.TestName;
             }
             else
             {
                 var argDisplayNames = (testFixtureData as TestParameters)?.ArgDisplayNames;
-                if (argDisplayNames != null)
+                if (argDisplayNames is not null)
                 {
                     fixture.Name = typeInfo.GetDisplayName();
                     if (argDisplayNames.Length != 0)
                         fixture.Name += '(' + string.Join(", ", argDisplayNames) + ')';
                 }
-                else if (arguments != null && arguments.Length > 0)
+                else if (arguments is not null && arguments.Length > 0)
                 {
                     fixture.Name = typeInfo.GetDisplayName(arguments);
                 }
@@ -134,8 +132,8 @@ namespace NUnit.Framework.Internal.Builders
 
             if (fixture.Name != name) // name was changed
             {
-                string nspace = typeInfo.Namespace;
-                fixture.FullName = nspace != null && nspace != ""
+                string? nspace = typeInfo.Namespace;
+                fixture.FullName = !string.IsNullOrEmpty(nspace)
                     ? nspace + "." + fixture.Name
                     : fixture.Name;
             }
@@ -144,8 +142,10 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.RunState = testFixtureData.RunState;
 
             foreach (string key in testFixtureData.Properties.Keys)
+            {
                 foreach (object val in testFixtureData.Properties[key])
                     fixture.Properties.Add(key, val);
+            }
 
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     Test? test = BuildTestCase(method, fixture);
 
-                    if (test != null)
+                    if (test is not null)
                         fixture.Add(test);
                     else // it's not a test, check for disallowed attributes
                         if (method.MethodInfo.HasAttribute<ParallelizableAttribute>(false))

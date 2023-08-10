@@ -63,20 +63,20 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         }
     }
 
-    class CustomException : Exception
+    internal class CustomException : Exception
     {
-        #pragma warning disable 414
-        private CustomType custom;
-        #pragma warning restore 414
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly CustomType _custom;
+#pragma warning restore IDE0052 // Remove unread private members
 
         public CustomException(string msg, CustomType custom)
             : base(msg)
         {
-            this.custom = custom;
+            _custom = custom;
         }
     }
 
-    class CustomType
+    internal class CustomType
     {
     }
 
@@ -85,12 +85,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         public ExceptionWithBadStackTrace(string message)
             : base(message) { }
 
-        public override string StackTrace
-        {
-            get
-            {
-                throw new InvalidOperationException("Simulated failure getting stack trace");
-            }
-        }
+        public override string StackTrace => throw new InvalidOperationException("Simulated failure getting stack trace");
     }
 }

@@ -4,15 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public sealed class TestResultApiTests : TestResultTests
     {
         private IEnumerable<TestResult> TestResults => new[]
         {
-            _testResult,
-            _suiteResult
+            TestResult,
+            SuiteResult
         };
 
         private static IEnumerable<Action<TestResult, Exception>> RecordExceptionMethods => new Action<TestResult, Exception>[]
@@ -26,14 +27,15 @@ namespace NUnit.Framework.Internal.Results
         public void ThrowsForNullException()
         {
             foreach (var method in RecordExceptionMethods)
-            foreach (var result in TestResults)
             {
-                Assert.That(
-                    () => method.Invoke(result, null),
-                    Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
+                foreach (var result in TestResults)
+                {
+                    Assert.That(
+                        () => method.Invoke(result, null!),
+                        Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
+                }
             }
         }
-
 
         [Test]
         public void DoesNotThrowForMissingInnerException()
@@ -46,10 +48,14 @@ namespace NUnit.Framework.Internal.Results
             };
 
             foreach (var method in RecordExceptionMethods)
-            foreach (var result in TestResults)
-            foreach (var exception in exceptions)
             {
-                method.Invoke(result, exception);
+                foreach (var result in TestResults)
+                {
+                    foreach (var exception in exceptions)
+                    {
+                        method.Invoke(result, exception);
+                    }
+                }
             }
         }
     }

@@ -2,9 +2,7 @@
 
 using System;
 using System.Collections;
-using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {
@@ -17,10 +15,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitComparer.
         /// </summary>
-        public static NUnitComparer Default
-        {
-            get { return new NUnitComparer(); }
-        }
+        public static NUnitComparer Default => new();
 
         /// <summary>
         /// Compares two objects
@@ -28,11 +23,11 @@ namespace NUnit.Framework.Constraints
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public int Compare(object x, object y)
+        public int Compare(object? x, object? y)
         {
-            if (x == null)
-                return y == null ? 0 : -1;
-            else if (y == null)
+            if (x is null)
+                return y is null ? 0 : -1;
+            else if (y is null)
                 return +1;
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
@@ -47,13 +42,13 @@ namespace NUnit.Framework.Constraints
             // We fallback to explicitly exclude CompareTo(object)
             static bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
 
-            MethodInfo method = xType.GetMethod("CompareTo", new Type[] { yType });
-            if (method != null && !IsIComparable(method))
-                return (int)method.Invoke(x, new object[] { y });
+            MethodInfo? method = xType.GetMethod("CompareTo", new[] { yType });
+            if (method is not null && !IsIComparable(method))
+                return (int)method.Invoke(x, new[] { y })!;
 
-            method = yType.GetMethod("CompareTo", new Type[] { xType });
-            if (method != null && !IsIComparable(method))
-                return -(int)method.Invoke(y, new object[] { x });
+            method = yType.GetMethod("CompareTo", new[] { xType });
+            if (method is not null && !IsIComparable(method))
+                return -(int)method.Invoke(y, new[] { x })!;
 
             if (x is IComparable xComparable)
                 return xComparable.CompareTo(y);

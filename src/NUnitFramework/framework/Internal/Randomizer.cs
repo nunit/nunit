@@ -1,12 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace NUnit.Framework.Internal
 {
@@ -49,7 +45,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static int InitialSeed
         {
-            get { return _initialSeed; }
+            get => _initialSeed;
             set
             {
                 _initialSeed = value;
@@ -70,8 +66,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)
         {
-            if (Randomizers.ContainsKey(member))
-                return Randomizers[member];
+            if (Randomizers.TryGetValue(member, out var randomizer))
+            {
+                return randomizer;
+            }
             else
             {
                 var r = CreateRandomizer();
@@ -79,7 +77,6 @@ namespace NUnit.Framework.Internal
                 return r;
             }
         }
-
 
         /// <summary>
         /// Get a randomizer for a particular parameter, returning
@@ -210,7 +207,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ushort NextUShort()
         {
-            return NextUShort((ushort)0, ushort.MaxValue);
+            return NextUShort(0, ushort.MaxValue);
         }
 
         /// <summary>
@@ -219,7 +216,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ushort NextUShort(ushort max)
         {
-            return NextUShort((ushort)0, max);
+            return NextUShort(0, max);
         }
 
         /// <summary>
@@ -331,7 +328,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public byte NextByte()
         {
-            return NextByte((byte)0, Byte.MaxValue);
+            return NextByte(0, Byte.MaxValue);
         }
 
         /// <summary>
@@ -339,7 +336,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public byte NextByte(byte max)
         {
-            return NextByte((byte)0, max);
+            return NextByte(0, max);
         }
 
         /// <summary>
@@ -360,7 +357,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public sbyte NextSByte()
         {
-            return NextSByte((sbyte)0, SByte.MaxValue);
+            return NextSByte(0, SByte.MaxValue);
         }
 
         /// <summary>
@@ -369,7 +366,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public sbyte NextSByte(sbyte max)
         {
-            return NextSByte((sbyte)0, max);
+            return NextSByte(0, max);
         }
 
         /// <summary>
@@ -469,7 +466,7 @@ namespace NUnit.Framework.Internal
         public object NextEnum(Type type)
         {
             Array enums = Enum.GetValues(type);
-            return enums.GetValue(Next(0, enums.Length));
+            return enums.GetValue(Next(0, enums.Length))!;
         }
 
         /// <summary>
@@ -640,7 +637,7 @@ namespace NUnit.Framework.Internal
 
         private static uint MaskToRemoveBitsGuaranteedToExceedMaximum(uint maximum)
         {
-            // http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
+            // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
             // without the value-- and value++
 
             var value = maximum;

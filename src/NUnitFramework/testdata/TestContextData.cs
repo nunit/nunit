@@ -65,7 +65,6 @@ namespace NUnit.TestData.TestContextData
         {
             Warn.Unless(2 + 2, Is.EqualTo(5));
 
-
             Assert.Multiple(() =>
             {
                 Assert.That(2 + 2, Is.EqualTo(5));
@@ -147,7 +146,7 @@ namespace NUnit.TestData.TestContextData
         [Test]
         public void AssumeSomething()
         {
-            Assume.That( false );
+            Assume.That(false);
         }
 
         [Test]

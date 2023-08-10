@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace NUnit.TestData.RepeatingTests
@@ -10,58 +8,46 @@ namespace NUnit.TestData.RepeatingTests
     [TestFixture]
     public class RepeatingTestsFixtureBase
     {
-        private int fixtureSetupCount;
-        private int fixtureTeardownCount;
-        private int setupCount;
-        private int teardownCount;
-        private readonly List<string> tearDownResults = new List<string>();
+        private int _fixtureSetupCount;
+        private int _fixtureTeardownCount;
+        private int _setupCount;
+        private int _teardownCount;
+        private readonly List<string> _tearDownResults = new List<string>();
 
         [OneTimeSetUp]
         public void FixtureSetUp()
         {
-            fixtureSetupCount++;
+            _fixtureSetupCount++;
         }
 
         [OneTimeTearDown]
         public void FixtureTearDown()
         {
-            fixtureTeardownCount++;
+            _fixtureTeardownCount++;
         }
 
         [SetUp]
         public void SetUp()
         {
-            setupCount++;
+            _setupCount++;
         }
 
         [TearDown]
         public void TearDown()
         {
-            tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
-            teardownCount++;
+            _tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
+            _teardownCount++;
         }
 
-        public int FixtureSetupCount
-        {
-            get { return fixtureSetupCount; }
-        }
-        public int FixtureTeardownCount
-        {
-            get { return fixtureTeardownCount; }
-        }
-        public int SetupCount
-        {
-            get { return setupCount; }
-        }
-        public int TeardownCount
-        {
-            get { return teardownCount; }
-        }
+        public int FixtureSetupCount => _fixtureSetupCount;
 
-        public List<string> TearDownResults
-        {
-            get { return tearDownResults; }
-        }
+        public int FixtureTeardownCount => _fixtureTeardownCount;
+
+        public int SetupCount => _setupCount;
+
+        public int TeardownCount => _teardownCount;
+
+        public List<string> TearDownResults => _tearDownResults;
         public int Count { get; protected set; }
     }
 }

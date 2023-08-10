@@ -1,11 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Xml;
 using NUnit.Common;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -53,7 +50,7 @@ namespace NUnitLite
 
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
+                        $"Invalid XML output format '{spec.Format}'",
                         nameof(spec));
             }
 
@@ -83,7 +80,7 @@ namespace NUnitLite
 
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid output format '{0}'", spec.Format),
+                        $"Invalid output format '{spec.Format}'",
                         nameof(spec));
             }
 

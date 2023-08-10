@@ -7,26 +7,26 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class CSharpPatternBasedAwaitAdapter
     {
-        private static readonly ConcurrentDictionary<Type, AwaitShapeInfo> ShapeInfoByType = new ConcurrentDictionary<Type, AwaitShapeInfo>();
+        private static readonly ConcurrentDictionary<Type, AwaitShapeInfo?> ShapeInfoByType = new();
 
-        public static AwaitAdapter TryCreate(object awaitable)
+        public static AwaitAdapter? TryCreate(object? awaitable)
         {
-            if (awaitable == null) return null;
+            if (awaitable is null) return null;
 
             return GetShapeInfo(awaitable.GetType())?.CreateAwaitAdapter(awaitable);
         }
 
         public static bool IsAwaitable(Type awaitableType)
         {
-            return GetShapeInfo(awaitableType) != null;
+            return GetShapeInfo(awaitableType) is not null;
         }
 
-        public static Type GetResultType(Type awaitableType)
+        public static Type? GetResultType(Type awaitableType)
         {
             return GetShapeInfo(awaitableType)?.ResultType;
         }
 
-        private static AwaitShapeInfo GetShapeInfo(Type type)
+        private static AwaitShapeInfo? GetShapeInfo(Type type)
         {
             return ShapeInfoByType.GetOrAdd(type, AwaitShapeInfo.TryCreate);
         }

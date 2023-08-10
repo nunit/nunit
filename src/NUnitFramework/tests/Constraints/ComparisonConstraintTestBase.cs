@@ -1,21 +1,20 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     #region ComparisonConstraintTestBase
 
     public abstract class ComparisonConstraintTestBase : ConstraintTestBase
     {
-        protected ComparisonConstraint ComparisonConstraint;
+        protected ComparisonConstraint ComparisonConstraint => (ComparisonConstraint)TheConstraint;
 
         [TestCase(null)]
         [TestCase("xxx")]
-        public void InvalidDataThrowsArgumentException(object data)
+        public void InvalidDataThrowsArgumentException(object? data)
         {
             Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
@@ -56,42 +55,43 @@ namespace NUnit.Framework.Constraints
 
     #region Comparison Test Classes
 
-    class ClassWithIComparable : IComparable
+    internal class ClassWithIComparable : IComparable
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparable(int val)
         {
-            this.val = val;
+            _val = val;
         }
 
-        public int CompareTo(object x)
+        public int CompareTo(object? x)
         {
-            ClassWithIComparable other = x as ClassWithIComparable;
-            if (x is ClassWithIComparable)
-                return val.CompareTo(other.val);
+            if (x is ClassWithIComparable other)
+                return _val.CompareTo(other._val);
 
             throw new ArgumentException();
         }
     }
 
-    class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
+    internal class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparableOfT(int val)
         {
-            this.val = val;
+            _val = val;
         }
 
-        public int CompareTo(ClassWithIComparableOfT other)
+        public int CompareTo(ClassWithIComparableOfT? other)
         {
-            return val.CompareTo(other.val);
+            if (other is null)
+                return 1;
+            return _val.CompareTo(other._val);
         }
 
         public int CompareTo(int other)
         {
-            return val.CompareTo(other);
+            return _val.CompareTo(other);
         }
     }
 

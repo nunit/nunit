@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     [TestFixture]
     public class ResultStateTests
@@ -16,7 +16,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(status);
 
-            Assert.AreEqual(status, resultState.Status);
+            Assert.That(resultState.Status, Is.EqualTo(status));
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed);
 
-            Assert.AreEqual(string.Empty, resultState.Label);
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty));
         }
 
         [TestCase(TestStatus.Failed)]
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(status, string.Empty);
 
-            Assert.AreEqual(status, resultState.Status);
+            Assert.That(resultState.Status, Is.EqualTo(status));
         }
 
         [TestCase("")]
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed, label);
 
-            Assert.AreEqual(label, resultState.Label);
+            Assert.That(resultState.Label, Is.EqualTo(label));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed, null);
 
-            Assert.AreEqual(string.Empty, resultState.Label);
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed);
 
-            Assert.AreEqual(FailureSite.Test, resultState.Site);
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test));
         }
 
         [TestCase("")]
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed, label);
 
-            Assert.AreEqual(FailureSite.Test, resultState.Site);
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test));
         }
 
         [TestCase("", FailureSite.Parent)]
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(TestStatus.Failed, label, site);
 
-            Assert.AreEqual(site, resultState.Site);
+            Assert.That(resultState.Site, Is.EqualTo(site));
         }
 
         [TestCase(TestStatus.Skipped, null, "Skipped")]
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = new ResultState(status, label);
 
-            Assert.AreEqual(expected, resultState.ToString());
+            Assert.That(resultState.ToString(), Is.EqualTo(expected));
         }
 
         #region EqualityTests
@@ -97,45 +97,44 @@ namespace NUnit.Framework.Api
         [Test]
         public void TestEquality_StatusSpecified()
         {
-            Assert.AreEqual(new ResultState(TestStatus.Failed), new ResultState(TestStatus.Failed));
+            Assert.That(new ResultState(TestStatus.Failed), Is.EqualTo(new ResultState(TestStatus.Failed)));
         }
 
         [Test]
         public void TestEquality_StatusAndLabelSpecified()
         {
-            Assert.AreEqual(new ResultState(TestStatus.Skipped, "Ignored"), new ResultState(TestStatus.Skipped, "Ignored"));
+            Assert.That(new ResultState(TestStatus.Skipped, "Ignored"), Is.EqualTo(new ResultState(TestStatus.Skipped, "Ignored")));
         }
 
         [Test]
         public void TestEquality_StatusAndSiteSpecified()
         {
-            Assert.AreEqual(new ResultState(TestStatus.Failed, FailureSite.SetUp), new ResultState(TestStatus.Failed, FailureSite.SetUp));
+            Assert.That(new ResultState(TestStatus.Failed, FailureSite.SetUp), Is.EqualTo(new ResultState(TestStatus.Failed, FailureSite.SetUp)));
         }
 
         [Test]
         public void TestEquality_StatusLabelAndSiteSpecified()
         {
-            Assert.AreEqual(new ResultState(TestStatus.Failed, "Error", FailureSite.Child), new ResultState(TestStatus.Failed, "Error", FailureSite.Child));
+            Assert.That(new ResultState(TestStatus.Failed, "Error", FailureSite.Child), Is.EqualTo(new ResultState(TestStatus.Failed, "Error", FailureSite.Child)));
         }
 
         [Test]
         public void TestEquality_StatusDiffers()
         {
-            Assert.AreNotEqual(new ResultState(TestStatus.Passed), new ResultState(TestStatus.Failed));
+            Assert.That(new ResultState(TestStatus.Failed), Is.Not.EqualTo(new ResultState(TestStatus.Passed)));
         }
 
         [Test]
         public void TestEquality_LabelDiffers()
         {
-            Assert.AreNotEqual(new ResultState(TestStatus.Failed, "Error"), new ResultState(TestStatus.Failed));
+            Assert.That(new ResultState(TestStatus.Failed), Is.Not.EqualTo(new ResultState(TestStatus.Failed, "Error")));
         }
 
         [Test]
         public void TestEquality_SiteDiffers()
         {
-            Assert.AreNotEqual(new ResultState(TestStatus.Failed, "Error", FailureSite.Child), new ResultState(TestStatus.Failed, "Error", FailureSite.SetUp));
+            Assert.That(new ResultState(TestStatus.Failed, "Error", FailureSite.SetUp), Is.Not.EqualTo(new ResultState(TestStatus.Failed, "Error", FailureSite.Child)));
         }
-
 
         [Test]
         public void TestEquality_WrongType()
@@ -143,18 +142,24 @@ namespace NUnit.Framework.Api
             var rs = new ResultState(TestStatus.Passed);
             var s = "123";
 
-            Assert.AreNotEqual(rs, s);
-            Assert.AreNotEqual(s, rs);
-            Assert.False(rs.Equals(s));
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(s, Is.Not.EqualTo(rs));
+            Assert.That(rs, Is.Not.EqualTo(s));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 
         [Test]
         public void TestEquality_Null()
         {
             var rs = new ResultState(TestStatus.Passed);
-            Assert.AreNotEqual(null, rs);
-            Assert.AreNotEqual(rs, null);
-            Assert.False(rs.Equals(null));
+
+            // Ensure real Equals fails, before checking nunit constraint
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
+            Assert.That(rs.Equals(null), Is.False);
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
+
+            Assert.That(rs, Is.Not.EqualTo(null));
+            Assert.That(default(ResultState), Is.Not.EqualTo(rs));
         }
 
         #endregion
@@ -168,9 +173,12 @@ namespace NUnit.Framework.Api
         {
             var result = new ResultState(status, label).WithSite(site);
 
-            Assert.That(result.Status, Is.EqualTo(status));
-            Assert.That(result.Label, Is.EqualTo(label));
-            Assert.That(result.Site, Is.EqualTo(site));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Status, Is.EqualTo(status));
+                Assert.That(result.Label, Is.EqualTo(label));
+                Assert.That(result.Site, Is.EqualTo(site));
+            });
         }
 
         #endregion
@@ -182,9 +190,12 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Inconclusive;
 
-            Assert.AreEqual(TestStatus.Inconclusive, resultState.Status, "Status not correct.");
-            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.Multiple(() =>
+            {
+                Assert.That(resultState.Status, Is.EqualTo(TestStatus.Inconclusive), "Status not correct.");
+                Assert.That(resultState.Label, Is.EqualTo(string.Empty), "Label not correct.");
+                Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
+            });
         }
 
         [Test]
@@ -192,9 +203,12 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.NotRunnable;
 
-            Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
-            Assert.AreEqual("Invalid", resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.Multiple(() =>
+            {
+                Assert.That(resultState.Status, Is.EqualTo(TestStatus.Failed), "Status not correct.");
+                Assert.That(resultState.Label, Is.EqualTo("Invalid"), "Label not correct.");
+                Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
+            });
         }
 
         [Test]
@@ -202,9 +216,12 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Skipped;
 
-            Assert.AreEqual(TestStatus.Skipped, resultState.Status, "Status not correct.");
-            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.Multiple(() =>
+            {
+                Assert.That(resultState.Status, Is.EqualTo(TestStatus.Skipped), "Status not correct.");
+                Assert.That(resultState.Label, Is.EqualTo(string.Empty), "Label not correct.");
+                Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
+            });
         }
 
         [Test]
@@ -212,9 +229,12 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Ignored;
 
-            Assert.AreEqual(TestStatus.Skipped, resultState.Status, "Status not correct.");
-            Assert.AreEqual("Ignored", resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.Multiple(() =>
+            {
+                Assert.That(resultState.Status, Is.EqualTo(TestStatus.Skipped), "Status not correct.");
+                Assert.That(resultState.Label, Is.EqualTo("Ignored"), "Label not correct.");
+                Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
+            });
         }
 
         [Test]
@@ -222,9 +242,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Success;
 
-            Assert.AreEqual(TestStatus.Passed, resultState.Status, "Status not correct.");
-            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Passed), "Status not correct.");
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty), "Label not correct.");
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
         }
 
         [Test]
@@ -232,9 +252,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Warning;
 
-            Assert.AreEqual(TestStatus.Warning, resultState.Status, "Status not correct.");
-            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Warning), "Status not correct.");
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty), "Label not correct.");
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
         }
 
         [Test]
@@ -242,9 +262,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Failure;
 
-            Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
-            Assert.AreEqual(string.Empty, resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Failed), "Status not correct.");
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty), "Label not correct.");
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
         }
 
         [Test]
@@ -252,9 +272,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.ChildFailure;
 
-            Assert.AreEqual(TestStatus.Failed, resultState.Status);
-            Assert.AreEqual(string.Empty, resultState.Label);
-            Assert.AreEqual(FailureSite.Child, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(resultState.Label, Is.EqualTo(string.Empty));
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Child), "Site not correct.");
         }
 
         [Test]
@@ -262,9 +282,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Error;
 
-            Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
-            Assert.AreEqual("Error", resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Failed), "Status not correct.");
+            Assert.That(resultState.Label, Is.EqualTo("Error"), "Label not correct.");
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
         }
 
         [Test]
@@ -272,9 +292,9 @@ namespace NUnit.Framework.Api
         {
             ResultState resultState = ResultState.Cancelled;
 
-            Assert.AreEqual(TestStatus.Failed, resultState.Status, "Status not correct.");
-            Assert.AreEqual("Cancelled", resultState.Label, "Label not correct.");
-            Assert.AreEqual(FailureSite.Test, resultState.Site, "Site not correct.");
+            Assert.That(resultState.Status, Is.EqualTo(TestStatus.Failed), "Status not correct.");
+            Assert.That(resultState.Label, Is.EqualTo("Cancelled"), "Label not correct.");
+            Assert.That(resultState.Site, Is.EqualTo(FailureSite.Test), "Site not correct.");
         }
 
         #endregion

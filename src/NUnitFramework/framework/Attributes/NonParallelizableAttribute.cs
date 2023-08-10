@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 
 namespace NUnit.Framework
@@ -9,7 +7,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks tests that should NOT be run in parallel.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class NonParallelizableAttribute : ParallelizableAttribute
     {
         /// <summary>

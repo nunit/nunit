@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -27,10 +26,10 @@ namespace NUnit.Framework.Internal
         public TestFixture(ITypeInfo fixtureType, object?[]? arguments = null) : base(fixtureType, arguments)
         {
             SetUpMethods = TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
-            TearDownMethods = TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true); 
+            TearDownMethods = TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
             OneTimeSetUpMethods = TypeInfo.GetMethodsWithAttribute<OneTimeSetUpAttribute>(true);
             OneTimeTearDownMethods = TypeInfo.GetMethodsWithAttribute<OneTimeTearDownAttribute>(true);
-            
+
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
             CheckSetUpTearDownMethods(SetUpMethods);
@@ -42,9 +41,19 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixture">The <see cref="TestFixture"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
-        private TestFixture(TestFixture fixture, ITestFilter filter) 
+        private TestFixture(TestFixture fixture, ITestFilter filter)
             : base(fixture, filter)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFixture"/> class that failed to load.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        /// <param name="ex">Exception that was thrown during test discovery.</param>
+        public TestFixture(ITypeInfo fixtureType, Exception ex) : base(fixtureType, null)
+        {
+            MakeInvalid(ex, "Failure building TestFixture");
         }
 
         #endregion

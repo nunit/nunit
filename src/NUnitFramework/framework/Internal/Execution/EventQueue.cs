@@ -6,8 +6,7 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-
-#region Individual Event Classes
+    #region Individual Event Classes
 
     /// <summary>
     /// NUnit.Core.Event is the abstract base for all stored events.
@@ -140,16 +139,16 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
-        private const int spinCount = 5;
+        private const int SpinCount = 5;
 
-//        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+        //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
-        private readonly ConcurrentQueue<Event> _queue = new ConcurrentQueue<Event>();
+        private readonly ConcurrentQueue<Event> _queue = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _mreAdd = new();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection
@@ -166,13 +165,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the count of items in the queue.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _queue.Count;
-            }
-        }
+        public int Count => _queue.Count;
 
         /// <summary>
         /// Enqueues the specified event
@@ -222,7 +215,7 @@ namespace NUnit.Framework.Internal.Execution
         ///   </item>
         /// </list>
         /// </returns>
-        public Event Dequeue(bool blockWhenEmpty)
+        public Event? Dequeue(bool blockWhenEmpty)
         {
             SpinWait sw = new SpinWait();
 
@@ -238,7 +231,7 @@ namespace NUnit.Framework.Internal.Execution
                         return null;
 
                     // Spin a few times to see if something changes
-                    if (sw.Count <= spinCount)
+                    if (sw.Count <= SpinCount)
                     {
                         sw.SpinOnce();
                     }
@@ -266,10 +259,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
-
                 // Dequeue our work item
-                Event e;
-                while (!_queue.TryDequeue (out e))
+                Event? e;
+                while (!_queue.TryDequeue(out e))
                 {
                     if (!blockWhenEmpty || _stopped != 0)
                         return null;

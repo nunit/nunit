@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     public enum ToleranceMode
     {
         /// <summary>
-        /// The tolerance was created with a value, without specifying 
+        /// The tolerance was created with a value, without specifying
         /// how the value would be used. This is used to prevent setting
         /// the mode more than once and is generally changed to Linear
         /// upon execution of the test.

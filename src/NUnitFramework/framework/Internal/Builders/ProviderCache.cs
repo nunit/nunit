@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 
@@ -9,7 +7,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     internal sealed class ProviderCache
     {
-        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _instances = new();
 
         public object GetInstanceOf(Type providerType)
         {

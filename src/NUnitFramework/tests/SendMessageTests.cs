@@ -1,12 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class SendMessageTests : ITestListener
     {
@@ -22,8 +20,9 @@ namespace NUnit.Framework
             var result = TestBuilder.ExecuteWorkItem(work);
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.That(result.Output, Is.EqualTo(string.Empty));
 
+            Assert.That(_testMessage, Is.Not.Null);
             Assert.That(_testMessage.Destination, Is.EqualTo(SOME_DESTINATION));
             Assert.That(_testMessage.Message, Is.EqualTo(SOME_MESSAGE));
             Assert.That(_testMessage.TestId, Is.EqualTo(result.Test.Id));
@@ -31,24 +30,24 @@ namespace NUnit.Framework
 
         #region ITestListener Implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
         }
 
-        TestOutput _testOutput;
+        private TestOutput? _testOutput;
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
             _testOutput = output;
         }
 
-        TestMessage _testMessage;
+        private TestMessage? _testMessage;
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
             _testMessage = message;
         }

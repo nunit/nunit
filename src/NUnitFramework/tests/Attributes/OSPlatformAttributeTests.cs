@@ -3,9 +3,8 @@
 
 using System.IO;
 using System.Runtime.Versioning;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class OSPlatformAttributeTests : ThreadingTests
@@ -20,6 +19,7 @@ namespace NUnit.Framework.Attributes
 
         [SupportedOSPlatform("Windows")]
         [SupportedOSPlatform("Windows10.0")]
+        [SupportedOSPlatform("Windows11.0")]
         [Test]
         public void SupportedBackwardSlashDirectorySeparator()
         {

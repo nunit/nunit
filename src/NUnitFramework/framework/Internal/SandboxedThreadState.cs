@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Globalization;
-using System.Security;
 using System.Threading;
 
 namespace NUnit.Framework.Internal
@@ -18,14 +17,14 @@ namespace NUnit.Framework.Internal
         /// Thread principal.
         /// This will be null on platforms that don't support <see cref="Thread.CurrentPrincipal"/>.
         /// </summary>
-        public System.Security.Principal.IPrincipal Principal { get; }
-        private readonly SynchronizationContext _synchronizationContext;
+        public System.Security.Principal.IPrincipal? Principal { get; }
+        private readonly SynchronizationContext? _synchronizationContext;
 
         private SandboxedThreadState(
             CultureInfo culture,
             CultureInfo uiCulture,
-            System.Security.Principal.IPrincipal principal,
-            SynchronizationContext synchronizationContext)
+            System.Security.Principal.IPrincipal? principal,
+            SynchronizationContext? synchronizationContext)
         {
             Culture = culture;
             UICulture = uiCulture;
@@ -48,7 +47,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Restores the tracked state of the current thread to the previously captured state.
         /// </summary>
-        [SecurityCritical]
         public void Restore()
         {
             Thread.CurrentThread.CurrentCulture = Culture;
@@ -85,7 +83,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns a copy with the specified principal.
         /// </summary>
-        public SandboxedThreadState WithPrincipal(System.Security.Principal.IPrincipal principal)
+        public SandboxedThreadState WithPrincipal(System.Security.Principal.IPrincipal? principal)
         {
             return new SandboxedThreadState(
                 Culture,

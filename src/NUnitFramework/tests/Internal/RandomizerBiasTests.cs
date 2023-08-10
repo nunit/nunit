@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Internal
+using NUnit.Framework.Internal;
+
+namespace NUnit.Framework.Tests.Internal
 {
     public static class RandomizerBiasTests
     {
@@ -39,7 +41,7 @@ namespace NUnit.Framework.Internal
 
         I used this tool to calculate the confidence interval for trial count 100,000, success count 50,000,
         confidence 99.9999999%, and method Agresti-Coull:
-        http://epitools.ausvet.com.au/content.php?page=CIProportion&SampleSize=100000&Positive=50000&Conf=0.999999999&method=5&Digits=17
+        https://epitools.ausvet.com.au/content.php?page=CIProportion&SampleSize=100000&Positive=50000&Conf=0.999999999&method=5&Digits=17
         The result is placed in the ConfidenceInterval constant above.
 
         I chose Agresti-Coull based a citation in https://stats.stackexchange.com/a/82724, Interval Estimation for

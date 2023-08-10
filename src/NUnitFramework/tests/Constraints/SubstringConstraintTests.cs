@@ -1,29 +1,31 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class SubstringConstraintTests : StringConstraintTests
     {
+        protected override Constraint TheConstraint { get; } = new SubstringConstraint("hello");
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new SubstringConstraint("hello");
             ExpectedDescription = "String containing \"hello\"";
             StringRepresentation = "<substring \"hello\">";
         }
 
-        static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
-
-        static object[] FailureData = new object[] {
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
+        private static readonly object[] FailureData = new object[] {
             new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "HELLO", "\"HELLO\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(" ss ", "ß", StringComparison.CurrentCulture)]
         [TestCase(" SS ", "ß", StringComparison.CurrentCulture)]
@@ -64,45 +66,49 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UseDifferentComparisonTypes_ThrowsException()
         {
-            var subStringConstraint = TheConstraint as SubstringConstraint;
-            // Invoke Using method before IgnoreCase
-            Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCultureIgnoreCase).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => subStringConstraint.Using(StringComparison.Ordinal).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => subStringConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
+            var subStringConstraint = (SubstringConstraint)TheConstraint;
 
-            // Invoke IgnoreCase before Using method
-            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.CurrentCulture),
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCulture),
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCultureIgnoreCase),
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.Ordinal).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
-                Throws.TypeOf<InvalidOperationException>());
+            Assert.Multiple(() =>
+            {
+                // Invoke Using method before IgnoreCase
+                Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCultureIgnoreCase).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => subStringConstraint.Using(StringComparison.Ordinal).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => subStringConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+
+                // Invoke IgnoreCase before Using method
+                Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.CurrentCulture),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.InvariantCulture),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.InvariantCultureIgnoreCase),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.Ordinal).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
+                    Throws.TypeOf<InvalidOperationException>());
+            });
         }
 
         [Test]
         public void UseSameComparisonTypes_DoesNotThrowException()
         {
-            var subStringConstraint = TheConstraint as SubstringConstraint;
+            var subStringConstraint = new SubstringConstraint("hello");
             Assert.DoesNotThrow(() =>
             {
                 var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
             });
 
-            var stringConstraint = TheConstraint as StringConstraint;
+            var stringConstraint = (StringConstraint)new SubstringConstraint("hello");
             Assert.DoesNotThrow(() =>
             {
-                var newConstraint = stringConstraint.IgnoreCase as SubstringConstraint;
+                var newConstraint = (SubstringConstraint)stringConstraint.IgnoreCase;
                 newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
             });
         }
@@ -111,20 +117,22 @@ namespace NUnit.Framework.Constraints
     [TestFixture, SetCulture("en-US")]
     public class SubstringConstraintTestsIgnoringCase : StringConstraintTests
     {
+        protected override Constraint TheConstraint { get; } = new SubstringConstraint("hello").IgnoreCase;
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new SubstringConstraint("hello").IgnoreCase;
             ExpectedDescription = "String containing \"hello\", ignoring case";
             StringRepresentation = "<substring \"hello\">";
         }
 
-        static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
-
-        static object[] FailureData = new object[] {
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
+        private static readonly object[] FailureData = new object[] {
             new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
+#pragma warning restore IDE0052 // Remove unread private members
     }
 }

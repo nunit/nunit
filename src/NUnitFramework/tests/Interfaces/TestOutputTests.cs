@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Text;
 namespace NUnit.Framework.Tests.Interfaces
 {
     [TestFixture]
-    class TestOutputTests
+    internal class TestOutputTests
     {
         [TestCase("text", "stream", "testId", "testName")]
         [TestCase("text", "stream", null, "testName")]
@@ -17,12 +17,12 @@ namespace NUnit.Framework.Tests.Interfaces
             var expected = new StringBuilder();
             expected.AppendFormat("<test-output stream=\"{0}\"", stream);
 
-            if (testId != null)
+            if (testId is not null)
             {
                 expected.AppendFormat(" testid=\"{0}\"", testId);
             }
 
-            if (testName != null)
+            if (testName is not null)
             {
                 expected.AppendFormat(" testname=\"{0}\"", testName);
             }

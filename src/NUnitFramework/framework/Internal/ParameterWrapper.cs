@@ -1,10 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -31,10 +28,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the parameter is optional
         /// </summary>
-        public bool IsOptional
-        {
-            get { return ParameterInfo.IsOptional;  }
-        }
+        public bool IsOptional => ParameterInfo.IsOptional;
 
         /// <summary>
         /// Gets an IMethodInfo representing the method for which this is a parameter.
@@ -49,10 +43,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Type of the parameter
         /// </summary>
-        public Type ParameterType
-        {
-            get { return ParameterInfo.ParameterType;  }
-        }
+        public Type ParameterType => ParameterInfo.ParameterType;
 
         #endregion
 

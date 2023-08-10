@@ -1,10 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -48,7 +45,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the namespace of the Type
         /// </summary>
-        string Namespace { get; }
+        string? Namespace { get; }
 
         /// <summary>
         /// Gets a value indicating whether the type is abstract.

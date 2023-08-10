@@ -2,8 +2,9 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     /// <summary>
     /// Mocks a <see cref="TestFilter"/>. Checks that only one specific match-function
@@ -78,8 +79,8 @@ namespace NUnit.Framework.Internal.Filters
 
         private bool AssertAndGetEquality(ITest test, MatchFunction calledFunction)
         {
-            Assert.AreSame(_expectedTest, test);
-            Assert.AreEqual(_expectedFunctionToBeCalled, calledFunction);
+            Assert.That(test, Is.SameAs(_expectedTest));
+            Assert.That(calledFunction, Is.EqualTo(_expectedFunctionToBeCalled));
             NumberOfMatchCalls += 1;
             return _matchFunctionResult;
         }

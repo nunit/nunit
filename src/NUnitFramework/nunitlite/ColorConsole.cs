@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -32,9 +32,11 @@ namespace NUnit.Common
             ConsoleColor bg = Console.BackgroundColor;
 
             if (color == bg || color == ConsoleColor.Red && bg == ConsoleColor.Magenta)
+            {
                 return bg == ConsoleColor.Black
                     ? ConsoleColor.White
                     : ConsoleColor.Black;
+            }
 
             return color;
         }

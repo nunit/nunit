@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Our collection of child tests
         /// </summary>
-        private readonly List<ITest> tests = new List<ITest>();
+        private readonly List<ITest> _tests = new();
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite(string parentSuiteName, string name)
+        public TestSuite(string? parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
             Arguments = TestParameters.NoArguments;
@@ -82,28 +82,30 @@ namespace NUnit.Framework.Internal
         public TestSuite(TestSuite suite, ITestFilter filter)
             : this(suite.Name)
         {
-            this.FullName = suite.FullName;
-            this.Method   = suite.Method;
-            this.RunState = suite.RunState;
-            this.Fixture  = suite.Fixture;
+            FullName = suite.FullName;
+            Method = suite.Method;
+            RunState = suite.RunState;
+            Fixture = suite.Fixture;
 
             foreach (string key in suite.Properties.Keys)
-            foreach (object val in suite.Properties[key])
-                this.Properties.Add(key, val);
-
-            foreach (var child in suite.tests)
             {
-                if(filter.Pass(child))
+                foreach (object val in suite.Properties[key])
+                    Properties.Add(key, val);
+            }
+
+            foreach (var child in suite._tests)
+            {
+                if (filter.Pass(child))
                 {
-                    if(child.IsSuite)
+                    if (child.IsSuite)
                     {
                         TestSuite childSuite = ((TestSuite)child).Copy(filter);
-                        childSuite.Parent    = this;
-                        this.tests.Add(childSuite);
+                        childSuite.Parent = this;
+                        _tests.Add(childSuite);
                     }
                     else
                     {
-                        this.tests.Add(child);
+                        _tests.Add(child);
                     }
                 }
             }
@@ -120,7 +122,7 @@ namespace NUnit.Framework.Internal
         {
             if (!MaintainTestOrder)
             {
-                this.tests.Sort();
+                _tests.Sort();
 
                 foreach (Test test in Tests)
                 {
@@ -155,7 +157,7 @@ namespace NUnit.Framework.Internal
         public void Add(Test test)
         {
             test.Parent = this;
-            tests.Add(test);
+            _tests.Add(test);
         }
 
         /// <summary>
@@ -167,6 +169,38 @@ namespace NUnit.Framework.Internal
             return new TestSuite(this, filter);
         }
 
+        /// <summary>
+        /// Recursively apply the attributes on <paramref name="type"/> to this test suite,
+        /// including attributes on nesting types.
+        /// </summary>
+        /// <param name="type">The </param>
+        public void ApplyAttributesToTestSuite(Type type)
+        {
+            foreach (var t in GetNestedTypes(type).Reverse())
+                ApplyAttributesToTestSuite((ICustomAttributeProvider)t);
+        }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Modify a newly constructed testSuite by applying any of NUnit's common
+        /// attributes, based on a supplied <see cref="ICustomAttributeProvider"/>, which is
+        /// usually the reflection element from which the test was constructed,
+        /// but may not be in some instances. The attributes retrieved are
+        /// saved for use in subsequent operations.
+        /// </summary>
+        private void ApplyAttributesToTestSuite(ICustomAttributeProvider provider)
+        {
+            IApplyToTestSuite[] applyToTestSuiteAttributes = provider.GetAttributes<IApplyToTestSuite>(inherit: true);
+            ApplyAttributesToTestSuite(applyToTestSuiteAttributes);
+        }
+
+        private void ApplyAttributesToTestSuite(IEnumerable<IApplyToTestSuite> attributes)
+        {
+            foreach (IApplyToTestSuite iApply in attributes)
+                iApply.ApplyToTestSuite(this);
+        }
         #endregion
 
         #region Properties
@@ -175,10 +209,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
-        public override IList<ITest> Tests
-        {
-            get { return tests; }
-        }
+        public override IList<ITest> Tests => _tests;
 
         /// <summary>
         /// Gets a count of test cases represented by
@@ -191,10 +222,13 @@ namespace NUnit.Framework.Internal
             {
                 int count = 0;
 
-                foreach (Test test in Tests)
+                // Use for-loop to avoid allocating the enumerator
+                var testsToCheck = Tests;
+                for (var i = 0; i < testsToCheck.Count; i++)
                 {
-                    count += test.TestCaseCount;
+                    count += testsToCheck[i].TestCaseCount;
                 }
+
                 return count;
             }
         }
@@ -236,22 +270,13 @@ namespace NUnit.Framework.Internal
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>
-        public override bool HasChildren
-        {
-            get
-            {
-                return tests.Count > 0;
-            }
-        }
+        public override bool HasChildren => _tests.Count > 0;
 
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string XmlElementName
-        {
-            get { return "test-suite"; }
-        }
+        public override string XmlElementName => "test-suite";
 
         /// <summary>
         /// Returns an XmlNode representing the current result after
@@ -263,15 +288,21 @@ namespace NUnit.Framework.Internal
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode thisNode = parentNode.AddElement("test-suite");
-            thisNode.AddAttribute("type", this.TestType);
+            thisNode.AddAttribute("type", TestType);
 
             PopulateTestNode(thisNode, recursive);
-            thisNode.AddAttribute("testcasecount", this.TestCaseCount.ToString());
-
+            thisNode.AddAttribute("testcasecount", TestCaseCount.ToString());
 
             if (recursive)
-                foreach (Test test in this.Tests)
+            {
+                // Use for-loop to avoid allocating the enumerator
+                var testsToAdd = Tests;
+                for (var i = 0; i < testsToAdd.Count; i++)
+                {
+                    var test = testsToAdd[i];
                     test.AddToXml(thisNode, recursive);
+                }
+            }
 
             return thisNode;
         }
@@ -288,6 +319,8 @@ namespace NUnit.Framework.Internal
         {
             foreach (IMethodInfo method in methods)
             {
+                var methodInfo = MethodInfoCache.Get(method);
+
                 if (method.IsAbstract)
                 {
                     MakeInvalid("An abstract SetUp and TearDown methods cannot be run: " + method.Name);
@@ -296,11 +329,11 @@ namespace NUnit.Framework.Internal
                 {
                     MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
-                else if (method.GetParameters().Length != 0)
+                else if (methodInfo.Parameters.Length != 0)
                 {
                     MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
                 }
-                else if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
+                else if (methodInfo.IsAsyncOperation)
                 {
                     if (method.ReturnType.Type == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
@@ -309,7 +342,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    if (!Reflect.IsVoidOrUnit(method.ReturnType.Type))
+                    if (!methodInfo.IsVoidOrUnit)
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

@@ -1,10 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#region Using Directives
-
 using NUnit.Framework;
-
-#endregion
 
 namespace NUnit.TestData
 {
@@ -39,6 +35,5 @@ namespace NUnit.TestData
         [Author("Charlie Poole", "charlie@poole.org"), Author("NUnit")]
         public void TestMethodMultipleAuthors()
         { }
-
     }
 }

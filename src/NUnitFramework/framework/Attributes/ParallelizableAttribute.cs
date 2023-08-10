@@ -1,18 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework
 {
     /// <summary>
     /// Marks a test assembly, fixture or method that may be run in parallel.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class ParallelizableAttribute : PropertyAttribute, IApplyToContext
     {
         /// <summary>
@@ -25,7 +22,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="scope">The ParallelScope associated with this attribute.</param>
         public ParallelizableAttribute(ParallelScope scope) : base()
-        { 
+        {
             Scope = scope;
 
             Properties.Set(PropertyNames.ParallelScope, scope);

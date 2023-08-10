@@ -2,13 +2,13 @@
 
 using System.Threading.Tasks;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
 #pragma warning disable 1998
     public class RealAsyncSetupTeardownTests
     {
-        private object _initializedOnce;
-        private object _initializedEveryTime;
+        private object? _initializedOnce;
+        private object? _initializedEveryTime;
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()
@@ -23,12 +23,14 @@ namespace NUnit.Framework.Internal
             _initializedEveryTime = new object();
         }
 
-
         [Test]
         public void TestCurrentFixtureInitialization()
         {
-            Assert.That(_initializedOnce, Is.Not.Null);
-            Assert.That(_initializedEveryTime, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_initializedOnce, Is.Not.Null);
+                Assert.That(_initializedEveryTime, Is.Not.Null);
+            });
 
             _initializedEveryTime = null;
         }
@@ -45,7 +47,6 @@ namespace NUnit.Framework.Internal
         {
             Assume.That(_initializedOnce, Is.Null);
         }
-
     }
 #pragma warning restore 1998
 }

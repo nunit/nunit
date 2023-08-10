@@ -10,13 +10,13 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class Logger : ILogger
     {
-        private readonly static string TIME_FMT = "HH:mm:ss.fff";
-        private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
+        private static readonly string TIME_FMT = "HH:mm:ss.fff";
+        private static readonly string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
-        private readonly string name;
-        private readonly string fullname;
-        private readonly InternalTraceLevel maxLevel;
-        private readonly TextWriter writer;
+        private readonly string _name;
+        private readonly string _fullname;
+        private readonly InternalTraceLevel _maxLevel;
+        private readonly TextWriter? _writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -24,14 +24,14 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name.</param>
         /// <param name="level">The log level.</param>
         /// <param name="writer">The writer where logs are sent.</param>
-        public Logger(string name, InternalTraceLevel level, TextWriter writer)
+        public Logger(string name, InternalTraceLevel level, TextWriter? writer)
         {
-            this.maxLevel = level;
-            this.writer = writer;
-            this.fullname = this.name = name;
-            int index = fullname.LastIndexOf('.');
+            _maxLevel = level;
+            _writer = writer;
+            _fullname = _name = name;
+            int index = _fullname.LastIndexOf('.');
             if (index >= 0)
-                this.name = fullname.Substring(index + 1);
+                _name = _fullname.Substring(index + 1);
         }
 
         #region Error
@@ -129,26 +129,26 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
         private void Log(InternalTraceLevel level, string message)
         {
-            if (writer != null && this.maxLevel >= level)
+            if (_maxLevel >= level)
                 WriteLog(level, message);
         }
 
         private void Log(InternalTraceLevel level, string format, params object[] args)
         {
-            if (this.maxLevel >= level)
-                WriteLog(level, string.Format( format, args ) );
+            if (_maxLevel >= level)
+                WriteLog(level, string.Format(format, args));
         }
 
         private void WriteLog(InternalTraceLevel level, string message)
         {
-            writer.WriteLine(TRACE_FMT,
+            _writer?.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
-                name,
+                _name,
                 message);
         }
 
-#endregion
+        #endregion
     }
 }

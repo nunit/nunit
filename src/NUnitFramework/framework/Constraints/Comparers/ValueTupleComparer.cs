@@ -15,9 +15,9 @@ namespace NUnit.Framework.Constraints.Comparers
             return TypeHelper.IsValueTuple(type);
         }
 
-        private static object GetValue(Type type, string propertyName, object obj)
+        private static object? GetValue(Type type, string propertyName, object obj)
         {
-            return type.GetField(propertyName).GetValue(obj);
+            return type.GetField(propertyName)?.GetValue(obj);
         }
 
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)

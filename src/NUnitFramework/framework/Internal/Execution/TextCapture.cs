@@ -1,6 +1,5 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.IO;
 //using System.Runtime.Remoting.Messaging;
 
@@ -29,10 +28,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the Encoding in use by this TextWriter
         /// </summary>
-        public override System.Text.Encoding Encoding
-        {
-            get { return _defaultWriter.Encoding; }
-        }
+        public override System.Text.Encoding Encoding => _defaultWriter.Encoding;
 
         /// <summary>
         /// Writes a single character
@@ -42,7 +38,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.Write(value);
             else
                 _defaultWriter.Write(value);
@@ -52,11 +48,11 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a string
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.Write(value);
             else
                 _defaultWriter.Write(value);
@@ -66,11 +62,11 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a string followed by a line terminator
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.WriteLine(value);
             else
                 _defaultWriter.WriteLine(value);

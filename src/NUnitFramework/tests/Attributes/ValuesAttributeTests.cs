@@ -3,11 +3,10 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class ValuesAttributeTests
     {
@@ -26,94 +25,94 @@ namespace NUnit.Framework.Attributes
         #region Conversion Tests
 
         [Test]
-        public void CanConvertIntsToLong([Values(5, int.MaxValue)]long x)
+        public void CanConvertIntsToLong([Values(5, int.MaxValue)] long x)
         {
             Assert.That(x, Is.Not.EqualTo(default(long)));
         }
 
         [Test]
-        public void CanConvertIntsToNullableLong([Values(5, int.MaxValue)]long? x)
+        public void CanConvertIntsToNullableLong([Values(5, int.MaxValue)] long? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertSmallIntsToShort([Values(5)]short x)
+        public void CanConvertSmallIntsToShort([Values(5)] short x)
         {
         }
 
         [Test]
-        public void CanConvertSmallIntsToNullableShort([Values(5)]short? x)
-        {
-            Assert.That(x.HasValue, Is.True);
-        }
-
-        [Test]
-        public void CanConvertSmallIntsToByte([Values(5)]byte x)
-        {
-        }
-
-        [Test]
-        public void CanConvertSmallIntsToNullableByte([Values(5)]byte? x)
+        public void CanConvertSmallIntsToNullableShort([Values(5)] short? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertSmallIntsToSByte([Values(5)]sbyte x)
+        public void CanConvertSmallIntsToByte([Values(5)] byte x)
         {
         }
 
         [Test]
-        public void CanConvertSmallIntsToNullableSByte([Values(5)]sbyte? x)
+        public void CanConvertSmallIntsToNullableByte([Values(5)] byte? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")]decimal x)
+        public void CanConvertSmallIntsToSByte([Values(5)] sbyte x)
+        {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToNullableSByte([Values(5)] sbyte? x)
+        {
+            Assert.That(x.HasValue, Is.True);
+        }
+
+        [Test]
+        public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")] decimal x)
         {
             Assert.That(x, Is.Not.EqualTo(default(decimal)));
         }
 
         [Test]
-        public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")]decimal? x)
+        public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")] decimal? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset x)
+        public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")] DateTimeOffset x)
         {
             Assert.That(x, Is.Not.EqualTo(default(DateTimeOffset)));
         }
 
         [Test]
-        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
+        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")] DateTimeOffset? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToTimeSpan([Values("4:44:15")]TimeSpan x)
+        public void CanConvertStringToTimeSpan([Values("4:44:15")] TimeSpan x)
         {
             Assert.That(x, Is.Not.EqualTo(default(TimeSpan)));
         }
 
         [Test]
-        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")]TimeSpan? x)
+        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")] TimeSpan? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToDateTime([Values("2018-10-10")]DateTime x)
+        public void CanConvertStringToDateTime([Values("2018-10-10")] DateTime x)
         {
             Assert.That(x, Is.Not.EqualTo(default(DateTime)));
         }
 
         [Test]
-        public void CanConvertStringToNullableDateTime([Values("2018-10-10")]DateTime? x)
+        public void CanConvertStringToNullableDateTime([Values("2018-10-10")] DateTime? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
@@ -124,7 +123,8 @@ namespace NUnit.Framework.Attributes
 
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetTypeInfo().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo? method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.That(method, Is.Not.Null);
             ParameterInfo param = method.GetParameters()[0];
 
             var attr = param.GetAttributes<ValuesAttribute>(false).Single();
@@ -155,22 +155,21 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NullableSimpleFormalParametersWithArgument([Values(1)] int? a)
         {
-            Assert.AreEqual(1, a);
+            Assert.That(a, Is.EqualTo(1));
         }
 
         [Test]
         public void NullableSimpleFormalParametersWithNullArgument([Values(null)] int? a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
-
 
         [Test]
         public void MethodWithArrayArguments([Values(
-            (object)new object[] { 1, "text", null },
-            (object)new object[0],
-            (object)new object[] { 1, new int[] { 2, 3 }, 4 },
-            (object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })] object o)
+            new object?[] { 1, "text", null },
+            new object[0],
+            new object[] { 1, new[] { 2, 3 }, 4 },
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })] object o)
         {
         }
 

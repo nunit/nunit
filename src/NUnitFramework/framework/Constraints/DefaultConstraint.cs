@@ -9,13 +9,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DefaultConstraint : Constraint
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultConstraint"/> class.
-        /// </summary>
-        public DefaultConstraint()
-        {
-            this.Description = "default";
-        }
+        /// <inheritdoc/>
+        public override string Description => "default";
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.

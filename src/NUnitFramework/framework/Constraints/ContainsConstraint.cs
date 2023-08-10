@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-
 namespace NUnit.Framework.Constraints
 {
     // TODO Needs tests
@@ -14,7 +13,7 @@ namespace NUnit.Framework.Constraints
     public class ContainsConstraint : Constraint
     {
         private readonly object _expected;
-        private Constraint _realConstraint;
+        private Constraint? _realConstraint;
         private bool _ignoreCase;
 
         /// <summary>
@@ -23,7 +22,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value contained within the string/collection.</param>
         public ContainsConstraint(object expected)
         {
-            this._expected = expected;
+            _expected = expected;
         }
 
         /// <summary>
@@ -34,7 +33,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (_realConstraint != null)
+                if (_realConstraint is not null)
                 {
                     return _realConstraint.Description;
                 }

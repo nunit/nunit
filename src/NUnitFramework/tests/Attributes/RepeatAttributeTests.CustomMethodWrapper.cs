@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public partial class RepeatAttributeTests
     {
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
                 return _baseInfo.GetParameters();
             }
 
-            public object Invoke(object fixture, params object[] args)
+            public object? Invoke(object? fixture, params object?[]? args)
             {
                 return _baseInfo.Invoke(fixture, args);
             }

@@ -1,8 +1,5 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -13,15 +10,12 @@ namespace NUnit.Framework.Internal.Commands
     /// action is needed after the test runs, since the prior
     /// context will be restored automatically.
     /// </summary>
-    class ApplyChangesToContextCommand : BeforeTestCommand
+    internal class ApplyChangesToContextCommand : BeforeTestCommand
     {
         public ApplyChangesToContextCommand(TestCommand innerCommand, IApplyToContext change)
             : base(innerCommand)
         {
-            BeforeTest = (context) =>
-            {
-                change.ApplyToContext(context);
-            };
+            BeforeTest = change.ApplyToContext;
         }
     }
 }

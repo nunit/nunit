@@ -1,20 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultInconclusiveWithReasonGivenTests : TestResultInconclusiveTests
     {
         public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, node => ReasonNodeExpectedValidation(node, NonWhitespaceIgnoreReason))
-        {
-        }
-    }
-
-    public class TestResultInconclusiveWithNullReasonGivenTests : TestResultInconclusiveTests
-    {
-        public TestResultInconclusiveWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -35,68 +28,79 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultInconclusiveTests : TestResultTests
     {
-        protected string _inconclusiveReason;
+        private readonly string _inconclusiveReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultInconclusiveTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultInconclusiveTests(string inconclusiveReason, Action<TNode> xmlReasonNodeValidation)
         {
-            _inconclusiveReason = ignoreReason;
+            _inconclusiveReason = inconclusiveReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Inconclusive, _inconclusiveReason);
-            _suiteResult.AddResult(_testResult);
+            TestResult.SetResult(ResultState.Inconclusive, _inconclusiveReason);
+            SuiteResult.AddResult(TestResult);
         }
 
         [Test]
         public void TestResultIsInconclusive()
         {
-            Assert.AreEqual(ResultState.Inconclusive, _testResult.ResultState);
-            Assert.AreEqual(_inconclusiveReason, _testResult.Message);
+            Assert.Multiple(() =>
+            {
+                Assert.That(TestResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(TestResult.Message, Is.EqualTo(_inconclusiveReason));
+            });
         }
 
         [Test]
         public void SuiteResultIsInconclusive()
         {
-            Assert.AreEqual(ResultState.Inconclusive, _suiteResult.ResultState);
-            Assert.Null(_suiteResult.Message);
-            Assert.AreEqual(1, _suiteResult.TotalCount);
-            Assert.AreEqual(0, _suiteResult.PassCount);
-            Assert.AreEqual(0, _suiteResult.FailCount);
-            Assert.AreEqual(0, _suiteResult.WarningCount);
-            Assert.AreEqual(0, _suiteResult.SkipCount);
-            Assert.AreEqual(1, _suiteResult.InconclusiveCount);
-            Assert.AreEqual(0, _suiteResult.AssertCount);
+            Assert.Multiple(() =>
+            {
+                Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(SuiteResult.Message, Is.Empty);
+                Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.FailCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.AssertCount, Is.EqualTo(0));
+            });
         }
 
         [Test]
         public void TestResultXmlNodeIsInconclusive()
         {
-            TNode testNode = _testResult.ToXml(true);
+            TNode testNode = TestResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", testNode.Attributes["result"]);
-            Assert.IsNull(testNode.Attributes["label"]);
-            Assert.IsNull(testNode.Attributes["site"]);
-
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.Attributes["result"], Is.EqualTo("Inconclusive"));
+                Assert.That(testNode.Attributes["label"], Is.Null);
+                Assert.That(testNode.Attributes["site"], Is.Null);
+            });
             _xmlReasonNodeValidation(testNode);
         }
 
         [Test]
         public void SuiteResultXmlNodeIsInconclusive()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
 
-            Assert.AreEqual("Inconclusive", suiteNode.Attributes["result"]);
-            Assert.IsNull(suiteNode.Attributes["label"]);
-            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
-            Assert.AreEqual("0", suiteNode.Attributes["asserts"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Inconclusive"));
+                Assert.That(suiteNode.Attributes["label"], Is.Null);
+                Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("0"));
+            });
         }
     }
 }

@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventPump : IDisposable
     {
-        static readonly Logger log = InternalTrace.GetLogger("EventPump");
+        private static readonly Logger Log = InternalTrace.GetLogger("EventPump");
 
         #region Instance Variables
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Thread to do the pumping
         /// </summary>
-        private Thread _pumpThread;
+        private Thread? _pumpThread;
 
         /// <summary>
         /// The current state of the event pump
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="eventListener">The EventListener to receive events</param>
         /// <param name="events">The event queue to pull events from</param>
-        public EventPump( ITestListener eventListener, EventQueue events)
+        public EventPump(ITestListener eventListener, EventQueue events)
         {
             _eventListener = eventListener;
             _events = events;
@@ -81,19 +81,13 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets or sets the current state of the pump
         /// </summary>
-        public EventPumpState PumpState
-        {
-            get
-            {
-                return (EventPumpState)_pumpState;
-            }
-        }
+        public EventPumpState PumpState => (EventPumpState)_pumpState;
 
         /// <summary>
         /// Gets or sets the name of this EventPump
         /// (used only internally and for testing).
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         #endregion
 
@@ -113,13 +107,13 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            if ( Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Pumping, (int)EventPumpState.Stopped) == (int)EventPumpState.Stopped)  // Ignore if already started
+            if (Interlocked.CompareExchange(ref _pumpState, (int)EventPumpState.Pumping, (int)EventPumpState.Stopped) == (int)EventPumpState.Stopped)  // Ignore if already started
             {
-                _pumpThread = new Thread (PumpThreadProc)
-                    {
+                _pumpThread = new Thread(PumpThreadProc)
+                {
                     Name = "EventPumpThread" + Name,
                     Priority = ThreadPriority.Highest
-                    };
+                };
 
                 _pumpThread.Start();
             }
@@ -130,10 +124,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            if (Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
+            if (Interlocked.CompareExchange(ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
             {
                 _events.Stop();
-                _pumpThread.Join();
+                _pumpThread?.Join();
             }
         }
         #endregion
@@ -148,15 +142,15 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void PumpThreadProc()
         {
-            log.Debug("Starting EventPump");
+            Log.Debug("Starting EventPump");
 
             //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
             {
                 while (true)
                 {
-                    Event e = _events.Dequeue( PumpState == EventPumpState.Pumping );
-                    if ( e == null )
+                    Event? e = _events.Dequeue(PumpState == EventPumpState.Pumping);
+                    if (e is null)
                         break;
                     try
                     {
@@ -165,22 +159,22 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     catch (Exception ex)
                     {
-                        log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
+                        Log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
                     }
                 }
 
-                log.Debug("EventPump Terminating");
+                Log.Debug("EventPump Terminating");
             }
             catch (Exception ex)
             {
-                log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
+                Log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
             }
             finally
             {
                 _pumpState = (int)EventPumpState.Stopped;
                 //pumpThread = null;
                 if (_events.Count > 0)
-                    log.Error("Event pump thread exiting with {0} events remaining");
+                    Log.Error("Event pump thread exiting with {0} events remaining");
             }
         }
         #endregion

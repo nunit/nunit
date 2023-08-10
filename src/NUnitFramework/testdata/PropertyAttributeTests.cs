@@ -5,19 +5,19 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.PropertyAttributeTests
 {
-    [TestFixture, Property("ClassUnderTest","SomeClass" )]
+    [TestFixture, Property("ClassUnderTest", "SomeClass")]
     public class FixtureWithProperties
     {
-        [Test, Property("user","Charlie")]
+        [Test, Property("user", "Charlie")]
         public void Test1() { }
 
-        [Test, Property("X",10.0), Property("Y",17.0)]
+        [Test, Property("X", 10.0), Property("Y", 17.0)]
         public void Test2() { }
 
         [Test, Priority(5)]
         public void Test3() { }
-        
-        [Test, CustomProperty]	
+
+        [Test, CustomProperty]
         public void Test4() { }
 
         [Test, Property("A", "A"), Property("B", "B"), Property("C", "C"), Property("D", "D"), Property("E", "E"), Property("F", "F")]
@@ -25,16 +25,16 @@ namespace NUnit.TestData.PropertyAttributeTests
         { }
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class PriorityAttribute : PropertyAttribute
     {
-        public PriorityAttribute( int level ) : base( level ) { }
+        public PriorityAttribute(int level) : base(level) { }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class CustomPropertyAttribute : PropertyAttribute
     {
-        public CustomPropertyAttribute() :base(new SomeClass())
+        public CustomPropertyAttribute() : base(new SomeClass())
         {
         }
     }

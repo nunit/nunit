@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
         /// </summary>
-        public readonly bool TopLevelComparison { get; }
+        public bool TopLevelComparison { get; }
 
         /// <summary>
         /// A list of tracked comparisons
@@ -38,16 +38,18 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool DidCompare(object x, object y)
         {
             foreach (var comparison in _comparisons)
+            {
                 if (ReferenceEquals(comparison.X, x) && ReferenceEquals(comparison.Y, y))
                     return true;
+            }
 
             return false;
         }
 
         private readonly struct Comparison
         {
-            public readonly object X { get; }
-            public readonly object Y { get; }
+            public object X { get; }
+            public object Y { get; }
 
             public Comparison(object x, object y)
             {

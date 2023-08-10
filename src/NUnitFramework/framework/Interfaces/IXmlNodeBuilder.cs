@@ -1,13 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
-using System;
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// An object implementing IXmlNodeBuilder is able to build 
+    /// An object implementing IXmlNodeBuilder is able to build
     /// an XML representation of itself and any children.
     /// </summary>
     public interface IXmlNodeBuilder
@@ -20,7 +16,7 @@ namespace NUnit.Framework.Interfaces
         TNode ToXml(bool recursive);
 
         /// <summary>
-        /// Returns a TNode representing the current object after 
+        /// Returns a TNode representing the current object after
         /// adding it as a child of the supplied parent node.
         /// </summary>
         /// <param name="parentNode">The parent node.</param>

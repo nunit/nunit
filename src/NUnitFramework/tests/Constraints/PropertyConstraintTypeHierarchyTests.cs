@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture(TestOf = typeof(PropertyConstraint))]
     public class PropertyConstraintTypeHierarchyTests
@@ -18,18 +19,17 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
 
-            
             var existSut = new PropertyExistsConstraint(nameof(Derived.SomeProperty));
             var actualExist = existSut.ApplyTo(instance);
             Assert.That(actualExist.IsSuccess, Is.True);
         }
 
-        class Base { }
-        class Derived : Base
+        private class Base { }
+
+        private class Derived : Base
         {
             public int SomeProperty { get; set; } = 42;
         }
-
 
         private int[] _array;
         private PropertyConstraint _countPropertyConstraint;

@@ -3,16 +3,16 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     internal sealed class PlatformInconsistency
     {
         private readonly string _message;
         private readonly RuntimeType _runtimeType;
-        private readonly Version _minVersion;
-        private readonly Version _maxVersion;
+        private readonly Version? _minVersion;
+        private readonly Version? _maxVersion;
 
-        private PlatformInconsistency(string message, RuntimeType runtimeType, Version minVersion, Version maxVersion)
+        private PlatformInconsistency(string message, RuntimeType runtimeType, Version? minVersion, Version? maxVersion)
         {
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Descriptive message must be specified.", nameof(message));
@@ -42,8 +42,8 @@ namespace NUnit.Framework
                 if (RuntimeFramework.CurrentFramework.Runtime != _runtimeType) return false;
 
                 var version = GetCurrentVersion();
-                if (_minVersion != null && version < _minVersion) return false;
-                if (_maxVersion != null && version > _maxVersion) return false;
+                if (_minVersion is not null && version < _minVersion) return false;
+                if (_maxVersion is not null && version > _maxVersion) return false;
 
                 return true;
             }

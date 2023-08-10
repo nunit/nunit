@@ -26,13 +26,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return Left.Description + " and " + Right.Description; }
-        }
+        public override string Description => Left.Description + " and " + Right.Description;
 
         /// <summary>
-        /// Apply both member constraints to an actual value, succeeding 
+        /// Apply both member constraints to an actual value,
         /// succeeding only if both of them succeed.
         /// </summary>
         /// <param name="actual">The actual value</param>
@@ -49,16 +46,16 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class AndConstraintResult : ConstraintResult
+        private class AndConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult leftResult;
-            private readonly ConstraintResult rightResult;
+            private readonly ConstraintResult _leftResult;
+            private readonly ConstraintResult _rightResult;
 
-            public AndConstraintResult(AndConstraint constraint, object actual, ConstraintResult leftResult, ConstraintResult rightResult)
+            public AndConstraintResult(AndConstraint constraint, object? actual, ConstraintResult leftResult, ConstraintResult rightResult)
                 : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess)
             {
-                this.leftResult = leftResult;
-                this.rightResult = rightResult;
+                _leftResult = leftResult;
+                _rightResult = rightResult;
             }
 
             /// <summary>
@@ -70,22 +67,22 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteActualValueTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteActualValueTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteActualValueTo(writer);
                 else
-                    rightResult.WriteActualValueTo(writer);
+                    _rightResult.WriteActualValueTo(writer);
             }
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteAdditionalLinesTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteAdditionalLinesTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteAdditionalLinesTo(writer);
                 else
-                    rightResult.WriteAdditionalLinesTo(writer);
+                    _rightResult.WriteAdditionalLinesTo(writer);
             }
         }
 

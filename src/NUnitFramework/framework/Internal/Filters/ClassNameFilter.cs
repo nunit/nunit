@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -8,8 +7,10 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// ClassName filter selects tests based on the class FullName
     /// </summary>
-    internal class ClassNameFilter : ValueMatchFilter
+    internal sealed class ClassNameFilter : ValueMatchFilter
     {
+        internal const string XmlElementName = "class";
+
         /// <summary>
         /// Construct a FullNameFilter for a single name
         /// </summary>
@@ -24,7 +25,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             // tests below the fixture level may have non-null className
             // but we don't want to match them explicitly.
-            if (!test.IsSuite || test is ParameterizedMethodSuite || test.ClassName == null)
+            if (!test.IsSuite || test is ParameterizedMethodSuite || test.ClassName is null)
                 return false;
 
             return Match(test.ClassName);
@@ -34,9 +35,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "class"; }
-        }
+        protected override string ElementName => XmlElementName;
     }
 }

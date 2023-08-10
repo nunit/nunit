@@ -7,7 +7,7 @@ using System.Text;
 namespace NUnit.Framework.Tests.Interfaces
 {
     [TestFixture]
-    class TestMessageTests
+    internal class TestMessageTests
     {
         [TestCase("destination", "text", "testId")]
         [TestCase("destination", "text", null)]
@@ -18,7 +18,7 @@ namespace NUnit.Framework.Tests.Interfaces
 
             expected.AppendFormat(" destination=\"{0}\"", destination);
 
-            if (testId != null)
+            if (testId is not null)
             {
                 expected.AppendFormat(" testid=\"{0}\"", testId);
             }
@@ -30,13 +30,13 @@ namespace NUnit.Framework.Tests.Interfaces
         [Test]
         public void TextParameterCannotBeNull()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage("destination", null, "testId"); });
+            Assert.Throws(typeof(ArgumentNullException), () => new TestMessage("destination", null!, "testId"));
         }
 
         [Test]
         public void DestinationParameterCannotBeNull()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage(null, "text", "testId"); });
+            Assert.Throws(typeof(ArgumentNullException), () => new TestMessage(null!, "text", "testId"));
         }
     }
 }

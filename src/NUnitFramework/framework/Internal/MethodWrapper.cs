@@ -1,10 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -13,7 +10,7 @@ namespace NUnit.Framework.Internal
     /// The MethodWrapper class wraps a MethodInfo so that it may
     /// be used in a platform-independent manner.
     /// </summary>
-    public class MethodWrapper : IMethodInfo
+    public class MethodWrapper : IMethodInfo, IEquatable<MethodWrapper>
     {
         /// <summary>
         /// Construct a MethodWrapper for a Type and a MethodInfo.
@@ -30,7 +27,9 @@ namespace NUnit.Framework.Internal
         public MethodWrapper(Type type, string methodName)
         {
             TypeInfo = new TypeWrapper(type);
-            MethodInfo = type.GetMethod(methodName);
+            MethodInfo = type.GetMethod(methodName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static) ??
+                throw new ArgumentException($"Method {type}.{methodName} not found");
         }
 
         #region IMethod Implementation
@@ -38,36 +37,27 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Type from which this method was reflected.
         /// </summary>
-        public ITypeInfo TypeInfo { get; private set; }
+        public ITypeInfo TypeInfo { get; }
 
         /// <summary>
         /// Gets the MethodInfo for this method.
         /// </summary>
-        public MethodInfo MethodInfo { get; private set; }
+        public MethodInfo MethodInfo { get; }
 
         /// <summary>
         /// Gets the name of the method.
         /// </summary>
-        public string Name
-        {
-            get { return MethodInfo.Name;  }
-        }
+        public string Name => MethodInfo.Name;
 
         /// <summary>
         /// Gets a value indicating whether the method is abstract.
         /// </summary>
-        public bool IsAbstract
-        {
-            get { return MethodInfo.IsAbstract; }
-        }
+        public bool IsAbstract => MethodInfo.IsAbstract;
 
         /// <summary>
         /// Gets a value indicating whether the method is public.
         /// </summary>
-        public bool IsPublic
-        {
-            get { return MethodInfo.IsPublic;  }
-        }
+        public bool IsPublic => MethodInfo.IsPublic;
 
         /// <summary>
         /// Gets a value indicating whether the method is static.
@@ -77,34 +67,22 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the method contains unassigned generic type parameters.
         /// </summary>
-        public bool ContainsGenericParameters
-        {
-            get { return MethodInfo.ContainsGenericParameters; }
-        }
+        public bool ContainsGenericParameters => MethodInfo.ContainsGenericParameters;
 
         /// <summary>
         /// Gets a value indicating whether the method is a generic method.
         /// </summary>
-        public bool IsGenericMethod
-        {
-            get { return MethodInfo.IsGenericMethod; }
-        }
+        public bool IsGenericMethod => MethodInfo.IsGenericMethod;
 
         /// <summary>
         /// Gets a value indicating whether the MethodInfo represents the definition of a generic method.
         /// </summary>
-        public bool IsGenericMethodDefinition
-        {
-            get { return MethodInfo.IsGenericMethodDefinition; }
-        }
+        public bool IsGenericMethodDefinition => MethodInfo.IsGenericMethodDefinition;
 
         /// <summary>
         /// Gets the return Type of the method.
         /// </summary>
-        public ITypeInfo ReturnType
-        {
-            get { return new TypeWrapper(MethodInfo.ReturnType); }
-        }
+        public ITypeInfo ReturnType => new TypeWrapper(MethodInfo.ReturnType);
 
         /// <summary>
         /// Gets the parameters of the method.
@@ -175,5 +153,48 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public bool Equals(MethodWrapper? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return MethodInfo.Equals(other.MethodInfo);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((MethodWrapper)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return MethodInfo.GetHashCode();
+        }
     }
 }

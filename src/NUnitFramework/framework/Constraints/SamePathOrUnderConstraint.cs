@@ -1,4 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -18,10 +19,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "Path under or matching " + MsgUtils.FormatValue(expected); }
-        }
+        public override string Description => "Path under or matching " + MsgUtils.FormatValue(expected);
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -30,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (actual == null) return false;
+            if (actual is null) return false;
 
             string path1 = Canonicalize(expected);
             string path2 = Canonicalize(actual);

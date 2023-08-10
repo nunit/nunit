@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class DerivedPropertyAttributeTests
     {
@@ -21,9 +21,9 @@ namespace NUnit.Framework.Attributes
 #endif
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)
         {
-            var attr = Reflect.Construct(attrType, new object[] { propValue }) as PropertyAttribute;
-            Assert.NotNull(attr, "{0} is not a PropertyAttribute", attrType.Name);
-            Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
+            var attr = Reflect.Construct(attrType, new object?[] { propValue }) as PropertyAttribute;
+            Assert.That(attr, Is.Not.Null, $"{attrType.Name} is not a PropertyAttribute");
+            Assert.That(attr!.Properties.Get(propName), Is.EqualTo(propValue));
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
@@ -31,8 +31,8 @@ namespace NUnit.Framework.Attributes
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType) as PropertyAttribute;
-            Assert.NotNull(attr, "{0} is not a PropertyAttribute", attrType.Name);
-            Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
+            Assert.That(attr, Is.Not.Null, $"{attrType.Name} is not a PropertyAttribute");
+            Assert.That(attr!.Properties.Get(propName), Is.EqualTo(propValue));
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class EmptyFilterTests : TestFilterTests
     {
@@ -27,25 +25,25 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchesAnything()
         {
-            Assert.That(TestFilter.Empty.Match(_dummyFixture));
-            Assert.That(TestFilter.Empty.Match(_anotherFixture));
-            Assert.That(TestFilter.Empty.Match(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.Match(DummyFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(AnotherFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(YetAnotherFixtureSuite));
         }
 
         [Test]
         public void PassesAnything()
         {
-            Assert.That(TestFilter.Empty.Match(_dummyFixture));
-            Assert.That(TestFilter.Empty.Match(_anotherFixture));
-            Assert.That(TestFilter.Empty.Match(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.Match(DummyFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(AnotherFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(YetAnotherFixtureSuite));
         }
 
         [Test]
         public void MatchesNothingExplicitly()
         {
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_dummyFixture));
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_anotherFixture));
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.IsExplicitMatch(DummyFixtureSuite), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(AnotherFixtureSuite), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(YetAnotherFixtureSuite), Is.False);
         }
     }
 }

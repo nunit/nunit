@@ -1,6 +1,5 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Interfaces;
@@ -21,10 +20,14 @@ namespace NUnitLite
         public override void WriteTestFile(ITest test, TextWriter writer)
         {
             if (test.IsSuite)
+            {
                 foreach (var child in test.Tests)
                     WriteTestFile(child, writer);
+            }
             else
+            {
                 writer.WriteLine(test.FullName);
+            }
         }
 
         /// <summary>

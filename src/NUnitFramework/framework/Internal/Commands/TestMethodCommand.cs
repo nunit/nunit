@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -11,8 +11,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
-        private readonly TestMethod testMethod;
-        private readonly object[] arguments;
+        private readonly TestMethod _testMethod;
+        private readonly object?[] _arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
@@ -20,8 +20,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="testMethod">The test.</param>
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
-            this.testMethod = testMethod;
-            this.arguments = testMethod.Arguments;
+            _testMethod = testMethod;
+            _arguments = testMethod.Arguments;
         }
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace NUnit.Framework.Internal.Commands
             // make it impossible to write a wrapper command to
             // implement ExpectedException, among other things.
 
-            object result = RunTestMethod(context);
+            var result = RunTestMethod(context);
 
-            if (testMethod.HasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
+            if (_testMethod.HasExpectedResult)
+                Assert.That(result, Is.EqualTo(_testMethod.ExpectedResult));
 
             context.CurrentResult.SetResult(ResultState.Success);
 
@@ -53,9 +53,11 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private object RunTestMethod(TestExecutionContext context)
+        private object? RunTestMethod(TestExecutionContext context)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
+            var methodInfo = MethodInfoCache.Get(_testMethod.Method);
+
+            if (methodInfo.IsAsyncOperation)
             {
                 return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
@@ -63,9 +65,9 @@ namespace NUnit.Framework.Internal.Commands
             return InvokeTestMethod(context);
         }
 
-        private object InvokeTestMethod(TestExecutionContext context)
+        private object? InvokeTestMethod(TestExecutionContext context)
         {
-            return testMethod.Method.Invoke(context.TestObject, arguments);
+            return _testMethod.Method.Invoke(context.TestObject, _arguments);
         }
     }
 }
