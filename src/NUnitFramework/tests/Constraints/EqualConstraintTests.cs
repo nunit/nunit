@@ -700,7 +700,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var comparer = new GenericEqualityComparison<int>();
                 Assert.Multiple(() =>
                 {
-                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
                 });
             }

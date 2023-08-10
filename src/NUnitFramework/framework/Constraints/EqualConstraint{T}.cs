@@ -21,7 +21,8 @@ namespace NUnit.Framework.Constraints
         private readonly T _expected;
 
         private Tolerance _tolerance = Tolerance.Default;
-        private Func<T, T, bool> _comparer = null;
+        private Func<T, T, bool> _comparer = null!;
+        private readonly NUnitEqualityComparer _fallbackComparer = new();
 
         #endregion
 
@@ -219,6 +220,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint<T> Using(IComparer<T> comparer)
         {
             _comparer = (l, r) => comparer.Compare(l, r) == 0;
+            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -230,6 +232,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint<T> Using(Func<T, T, bool> comparer)
         {
             _comparer = comparer;
+            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -241,6 +244,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint<T> Using(Comparison<T> comparer)
         {
             _comparer = (l, r) => comparer(l, r) == 0;
+            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -252,6 +256,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint<T> Using(IEqualityComparer comparer)
         {
             _comparer = (l, r) => comparer.Equals(l, r);
+            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -263,6 +268,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint<T> Using(IEqualityComparer<T> comparer)
         {
             _comparer = (l, r) => comparer.Equals(l, r);
+            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -301,6 +307,11 @@ namespace NUnit.Framework.Constraints
 
                 return new ConstraintResult(this, actual, isSuccess);
             }
+            else
+            {
+                var value = _fallbackComparer.AreEqual(_expected, actual, ref _tolerance);
+                return new ConstraintResult(this, actual, value);
+            }
 
             throw new ArgumentException("Wrong type", nameof(actual));
         }
@@ -310,7 +321,7 @@ namespace NUnit.Framework.Constraints
             if (tolerance.IsUnsetOrDefault && (typeof(T) == typeof(double) || typeof(T) == typeof(float)))
             {
                 var defaultFloatingPointTolerance = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (defaultFloatingPointTolerance != null && !defaultFloatingPointTolerance.IsUnsetOrDefault)
+                if (defaultFloatingPointTolerance is not null && !defaultFloatingPointTolerance.IsUnsetOrDefault)
                 {
                     tolerance = defaultFloatingPointTolerance;
                 }
@@ -327,7 +338,7 @@ namespace NUnit.Framework.Constraints
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
 
-                if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+                if (_tolerance is not null && !_tolerance.IsUnsetOrDefault)
                 {
                     sb.Append(" +/- ");
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
