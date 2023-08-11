@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class PartitionFilterTests : TestFilterTests
     {
@@ -14,10 +16,10 @@ namespace NUnit.Framework.Internal.Filters
         public void CreateFilter()
         {
             // Configure a new PartitionFilter with the provided partition count and number
-            _filter = new PartitionFilter(7, 10);
+            _filter = new PartitionFilter(6, 10);
 
-            _testMatchingPartition = FixtureWithMultipleTestsSuite.Tests[1];
-            _testNotMatchingPartition = FixtureWithMultipleTestsSuite.Tests[0];
+            _testMatchingPartition = FixtureWithMultipleTestsSuite.Tests[0];
+            _testNotMatchingPartition = FixtureWithMultipleTestsSuite.Tests[1];
         }
 
         [Test]
@@ -30,8 +32,8 @@ namespace NUnit.Framework.Internal.Filters
         public void MatchTest()
         {
             // Validate
-            Assert.That(_filter.ComputePartitionNumber(_testMatchingPartition), Is.EqualTo(7));
-            Assert.That(_filter.ComputePartitionNumber(_testNotMatchingPartition), Is.EqualTo(8));
+            Assert.That(_filter.ComputePartitionNumber(_testMatchingPartition), Is.EqualTo(6));
+            Assert.That(_filter.ComputePartitionNumber(_testNotMatchingPartition), Is.EqualTo(9));
 
             // Assert
             Assert.That(_filter.Match(_testMatchingPartition), Is.True);
@@ -79,7 +81,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void ToXml()
         {
-            Assert.That(_filter.ToXml(false).OuterXml, Is.EqualTo(@"<partition>7/10</partition>"));
+            Assert.That(_filter.ToXml(false).OuterXml, Is.EqualTo(@"<partition>6/10</partition>"));
         }
     }
 }
