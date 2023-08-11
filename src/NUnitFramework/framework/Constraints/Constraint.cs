@@ -292,7 +292,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-
         #region IResolveConstraint Members
 
         /// <summary>

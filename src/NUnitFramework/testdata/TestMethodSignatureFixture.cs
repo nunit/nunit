@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace NUnit.TestData.TestMethodSignatureFixture
 {
@@ -34,17 +35,17 @@ namespace NUnit.TestData.TestMethodSignatureFixture
         [TestCase(5, 2, "ABC")]
         public void TestMethodWithArgumentsProvided(int x, int y, string label)
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            ClassicAssert.AreEqual(5, x);
+            ClassicAssert.AreEqual(2, y);
+            ClassicAssert.AreEqual("ABC", label);
         }
 
         [TestCase(5, 2, "ABC")]
         public static void StaticTestMethodWithArgumentsProvided(int x, int y, string label)
         {
-            Assert.AreEqual(5, x);
-            Assert.AreEqual(2, y);
-            Assert.AreEqual("ABC", label);
+            ClassicAssert.AreEqual(5, x);
+            ClassicAssert.AreEqual(2, y);
+            ClassicAssert.AreEqual("ABC", label);
         }
 
         [TestCase(2, 2)]
@@ -70,25 +71,27 @@ namespace NUnit.TestData.TestMethodSignatureFixture
         [TestCase(3.7, 2, 5.7)]
         public void TestMethodWithConvertibleArguments(double x, double y, double sum)
         {
-            Assert.AreEqual(sum, x + y, 0.0001);
+            ClassicAssert.AreEqual(sum, x + y, 0.0001);
         }
 
+        // ReSharper disable NUnit.IncorrectArgumentType
         [TestCase(3.7, 2, 5.7)]
         public void TestMethodWithNonConvertibleArguments(int x, int y, int sum)
         {
-            Assert.AreEqual(sum, x + y, 0.0001);
+            ClassicAssert.AreEqual(sum, x + y, 0.0001);
         }
+        // ReSharper enable NUnit.IncorrectArgumentType
 
         [TestCase(12, 3, 4)]
-        [TestCase( 12, 2, 6 )]
-        [TestCase( 12, 4, 3 )]
-        public void TestMethodWithMultipleTestCases( int n, int d, int q )
+        [TestCase(12, 2, 6)]
+        [TestCase(12, 4, 3)]
+        public void TestMethodWithMultipleTestCases(int n, int d, int q)
         {
-            Assert.AreEqual( q, n / d );
+            ClassicAssert.AreEqual(q, n / d);
         }
 
-//		[Test]
-//		public abstract void AbstractTestMethod() { }
+        //		[Test]
+        //		public abstract void AbstractTestMethod() { }
 
         [Test]
         protected void ProtectedTestMethod() { }

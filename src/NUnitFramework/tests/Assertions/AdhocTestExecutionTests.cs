@@ -3,13 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 using NUnit.Framework.Internal;
 
-#if NETFRAMEWORK
-using System.Runtime.Remoting.Messaging;
-#endif
-
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     public class AdhocTestExecutionTests
     {
@@ -65,13 +62,13 @@ namespace NUnit.Framework.Assertions
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
-            CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
+            System.Runtime.Remoting.Messaging.CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
             return savedContext;
         }
 
         private void RestoreExecutionContext(TestExecutionContext savedContext)
         {
-            CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
+            System.Runtime.Remoting.Messaging.CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
         }
 #endif
 
@@ -92,64 +89,64 @@ namespace NUnit.Framework.Assertions
                 }
             }
 
-            static public void TestValidContext()
+            public static void TestValidContext()
             {
                 Assert.That(TestExecutionContext.CurrentContext, Is.Not.Null);
                 Assert.That(TestExecutionContext.CurrentContext, Is.TypeOf<TestExecutionContext.AdhocContext>());
             }
 
-            static public void TestPassingAssert()
+            public static void TestPassingAssert()
             {
                 Assert.That(true, Is.True);
             }
 
-            static public void TestPassingAssumption()
+            public static void TestPassingAssumption()
             {
                 Assume.That(true, Is.True);
             }
 
-            static public void TestPassingWarning()
+            public static void TestPassingWarning()
             {
                 Warn.Unless(true, Is.True);
             }
 
-            static public void TestFailingAssertion()
+            public static void TestFailingAssertion()
             {
                 Assert.That(() => Assert.That(true, Is.False), Throws.TypeOf<AssertionException>());
             }
 
-            static public void TestFailingAssumption()
+            public static void TestFailingAssumption()
             {
                 Assert.That(() => Assume.That(true, Is.False), Throws.TypeOf<InconclusiveException>());
             }
 
-            static public void TestFailingWarning()
+            public static void TestFailingWarning()
             {
                 // Warnings don't throw at all. They are of no use in ad-hoc execution.
                 Assert.That(() => Warn.Unless(true, Is.False), Throws.Nothing);
             }
 
-            static public void TestAssertPass()
+            public static void TestAssertPass()
             {
                 Assert.That(() => Assert.Pass(), Throws.TypeOf<SuccessException>());
             }
 
-            static public void TestAssertInconclusive()
+            public static void TestAssertInconclusive()
             {
                 Assert.That(() => Assert.Inconclusive(), Throws.TypeOf<InconclusiveException>());
             }
 
-            static public void TestAssertIgnore()
+            public static void TestAssertIgnore()
             {
                 Assert.That(() => Assert.Ignore(), Throws.TypeOf<IgnoreException>());
             }
 
-            static public void TestAssertFail()
+            public static void TestAssertFail()
             {
                 Assert.That(() => Assert.Fail(), Throws.TypeOf<AssertionException>());
             }
 
-            static public void TestAssertMultiple_AllAssertsPassing()
+            public static void TestAssertMultiple_AllAssertsPassing()
             {
                 Assert.Multiple(() =>
                 {
@@ -160,7 +157,7 @@ namespace NUnit.Framework.Assertions
                 });
             }
 
-            static public void TestAssertMultiple_OneAssertFailing()
+            public static void TestAssertMultiple_OneAssertFailing()
             {
                 Assert.That(() =>
                     Assert.Multiple(() =>

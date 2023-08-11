@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
         /// </summary>
-        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         #endregion
 

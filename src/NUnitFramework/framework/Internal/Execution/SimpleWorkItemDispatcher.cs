@@ -36,6 +36,12 @@ namespace NUnit.Framework.Internal.Execution
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
+#if NET6_0_OR_GREATER
+                if (OperatingSystem.IsWindows())
+                    _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+                else
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
+#else
                 try
                 {
                     _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
@@ -44,6 +50,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
                 }
+#endif
             }
 
             _runnerThread.Start(topLevelWorkItem);
@@ -65,7 +72,7 @@ namespace NUnit.Framework.Internal.Execution
             _topLevelWorkItem.Execute();
         }
 
-        private readonly object _cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.

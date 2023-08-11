@@ -1,11 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class NotConstraintTests : ConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new NotConstraint( new EqualConstraint(null) );
+        protected override Constraint TheConstraint { get; } = new NotConstraint(new EqualConstraint(null));
 
         [SetUp]
         public void SetUp()
@@ -23,21 +25,21 @@ namespace NUnit.Framework.Constraints
         public void NotHonorsIgnoreCaseUsingConstructors()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase)));
-            Assert.That(ex.Message, Does.Contain("ignoring case"));
+            Assert.That(ex?.Message, Does.Contain("ignoring case"));
         }
 
         [Test]
         public void NotHonorsIgnoreCaseUsingPrefixNotation()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase ));
-            Assert.That(ex.Message, Does.Contain("ignoring case"));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", Is.Not.EqualTo("ABC").IgnoreCase));
+            Assert.That(ex?.Message, Does.Contain("ignoring case"));
         }
 
         [Test]
         public void NotHonorsTolerance()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) ));
-            Assert.That(ex.Message, Does.Contain("+/-"));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(4.99d, Is.Not.EqualTo(5.0d).Within(.05d)));
+            Assert.That(ex?.Message, Does.Contain("+/-"));
         }
 
         [Test]

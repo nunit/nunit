@@ -21,7 +21,6 @@ namespace NUnit.Framework
         /// <param name="test">The test that has just been run.</param>
         void AfterTest(ITest test);
 
-
         /// <summary>
         /// Provides the target for the action attribute
         /// </summary>

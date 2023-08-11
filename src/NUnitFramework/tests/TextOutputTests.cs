@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class TextOutputTests : ITestListener
     {
@@ -41,7 +41,7 @@ namespace NUnit.Framework
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -63,7 +63,7 @@ namespace NUnit.Framework
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -96,7 +96,7 @@ namespace NUnit.Framework
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -118,8 +118,7 @@ namespace NUnit.Framework
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
-
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -148,7 +147,7 @@ namespace NUnit.Framework
         public void TestContextWriteLine_WritesToResult()
         {
             TestContext.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(Framework.Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         #region ITestListener Implementation
@@ -170,7 +169,6 @@ namespace NUnit.Framework
 
         void ITestListener.SendMessage(TestMessage message)
         {
-            
         }
 
         #endregion

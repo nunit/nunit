@@ -15,14 +15,14 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseTimeoutException"/> class.
         /// </summary>
-        public TestCaseTimeoutException() : base() {}
+        public TestCaseTimeoutException() : base() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseTimeoutException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         public TestCaseTimeoutException(string message) : base(message)
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestCaseTimeoutException"/> class.
@@ -36,6 +36,6 @@ namespace NUnit.Framework.Internal
         /// Serialization Constructor
         /// </summary>
         protected TestCaseTimeoutException(SerializationInfo info,
-            StreamingContext context) : base(info,context){}
+            StreamingContext context) : base(info, context) { }
     }
 }

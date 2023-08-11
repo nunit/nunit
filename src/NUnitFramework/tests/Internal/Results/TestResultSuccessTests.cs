@@ -1,20 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultSuccessWithReasonGivenTests : TestResultSuccessTests
     {
         public TestResultSuccessWithReasonGivenTests() : base(TestPassedReason, node => ReasonNodeExpectedValidation(node, TestPassedReason))
-        {
-        }
-    }
-
-    public class TestResultSuccessWithNullReasonGivenTests : TestResultSuccessTests
-    {
-        public TestResultSuccessWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -35,14 +28,14 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultSuccessTests : TestResultTests
     {
-        private readonly string? _successMessage;
+        private readonly string _successMessage;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
         public const string TestPassedReason = "Test passed!";
 
-        protected TestResultSuccessTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultSuccessTests(string successMessage, Action<TNode> xmlReasonNodeValidation)
         {
-            _successMessage = ignoreReason;
+            _successMessage = successMessage;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 

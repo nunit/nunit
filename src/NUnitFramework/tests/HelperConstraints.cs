@@ -5,7 +5,7 @@ using System;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public static class HelperConstraints
     {

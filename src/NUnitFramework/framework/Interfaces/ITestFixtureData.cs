@@ -14,6 +14,6 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Get the TypeArgs if separately set
         /// </summary>
-        Type[]? TypeArgs { get;  }
+        Type[]? TypeArgs { get; }
     }
 }

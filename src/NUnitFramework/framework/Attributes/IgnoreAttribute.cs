@@ -12,7 +12,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as being ignored. Ignored tests result in a warning message when the tests are run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly string _reason;
@@ -39,6 +39,7 @@ namespace NUnit.Framework
         /// property set which will appear in the test results.
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception>
+        [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
         [DisallowNull]
         public string? Until
         {
@@ -67,7 +68,7 @@ namespace NUnit.Framework
                         test.RunState = RunState.Ignored;
                         test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
                     }
-                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
+                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
 
                     return;
                 }

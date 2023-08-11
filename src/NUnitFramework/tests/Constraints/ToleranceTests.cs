@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ToleranceTests
@@ -26,7 +27,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(defaultTolerance.IsUnsetOrDefault, Is.True);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ), Is.True);
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance), Is.True);
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]

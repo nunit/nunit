@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Unique Empty filter.
         /// </summary>
-        public readonly static TestFilter Empty = new EmptyFilter();
+        public static readonly TestFilter Empty = new EmptyFilter();
 
         /// <summary>
         /// Indicates whether this is the EmptyFilter
@@ -220,17 +220,17 @@ namespace NUnit.Framework.Internal
         [Serializable]
         private sealed class EmptyFilter : TestFilter
         {
-            public override bool Match( ITest test )
+            public override bool Match(ITest test)
             {
                 return true;
             }
 
-            public override bool Pass( ITest test, bool negated )
+            public override bool Pass(ITest test, bool negated)
             {
                 return true;
             }
 
-            public override bool IsExplicitMatch( ITest test )
+            public override bool IsExplicitMatch(ITest test)
             {
                 return false;
             }
@@ -241,7 +241,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#region IXmlNodeBuilder Implementation
+        #region IXmlNodeBuilder Implementation
 
         /// <summary>
         /// Adds an XML node
@@ -261,6 +261,6 @@ namespace NUnit.Framework.Internal
         /// <returns>The added XML node</returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
-#endregion
+        #endregion
     }
 }

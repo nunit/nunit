@@ -5,12 +5,12 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class ApplyToTestTests
     {
-        private Test _test;
+        private NUnit.Framework.Internal.Test _test;
 
         [SetUp]
         public void SetUp()
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Attributes
             new CategoryAttribute("group1").ApplyToTest(_test);
             new CategoryAttribute("group2").ApplyToTest(_test);
             Assert.That(_test.Properties[PropertyNames.Category],
-                Is.EquivalentTo( new[] { "group1", "group2" } ));
+                Is.EquivalentTo(new[] { "group1", "group2" }));
         }
 
         #endregion

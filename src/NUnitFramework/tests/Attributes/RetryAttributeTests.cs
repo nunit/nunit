@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.RepeatingTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class RetryAttributeTests
@@ -67,7 +67,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
             Assert.That(fixture.Count, Is.EqualTo(nTries));
         }
-
 
         [Test]
         public void CategoryWorksWithRetry()

@@ -3,9 +3,10 @@
 #if THREAD_ABORT
 using System.Runtime.InteropServices;
 using System.Threading;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class ThreadUtilityTests

@@ -22,7 +22,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private sealed class OperatorStack
         {
-            private readonly Stack<ConstraintOperator> _stack = new Stack<ConstraintOperator>();
+            private readonly Stack<ConstraintOperator> _stack = new();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="OperatorStack"/> class.
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public sealed class ConstraintStack
         {
-            private readonly Stack<IConstraint> _stack = new Stack<IConstraint>();
+            private readonly Stack<IConstraint> _stack = new();
             private readonly ConstraintBuilder _builder;
 
             /// <summary>

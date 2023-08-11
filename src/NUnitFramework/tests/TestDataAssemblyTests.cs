@@ -3,7 +3,7 @@
 using System.Diagnostics;
 using System.Reflection;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public static class TestDataAssemblyTests
     {

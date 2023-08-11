@@ -3,6 +3,7 @@
 using System;
 using NUnit.Framework;
 using System.Threading.Tasks;
+#pragma warning disable IDE0053 // Use expression body for lambda expression
 
 namespace NUnit.TestData.AssertMultipleData
 {
@@ -12,7 +13,7 @@ namespace NUnit.TestData.AssertMultipleData
 
     public class AssertMultipleFixture
     {
-        private static readonly ComplexNumber Complex = new ComplexNumber(5.2, 3.9);
+        private static readonly ComplexNumber Complex = new(5.2, 3.9);
 
         [Test]
         public void EmptyBlock()
@@ -297,8 +298,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(5, 2 + 2, "Failure 1");
-                Assert.True(1 == 0, "Failure 2");
+                Assert.That(2 + 2, Is.EqualTo(5), "Failure 1");
+                Assert.That(1,Is.EqualTo(0), "Failure 2");
                 throw new Exception("Simulated Error");
             });
         }
@@ -369,7 +370,7 @@ namespace NUnit.TestData.AssertMultipleData
                 await Task.Delay(100);
                 Assert.That(2 + 2, Is.EqualTo(4));
 
-                Assert.Multiple(async () =>
+                await Assert.MultipleAsync(async () =>
                 {
                     await Task.Delay(100);
                     Assert.That(Complex.RealPart, Is.EqualTo(5.2));

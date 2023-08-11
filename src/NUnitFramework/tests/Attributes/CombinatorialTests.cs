@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class CombinatorialTests

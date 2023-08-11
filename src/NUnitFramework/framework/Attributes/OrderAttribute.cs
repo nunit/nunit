@@ -46,4 +46,4 @@ namespace NUnit.Framework
                 testSuite.Properties.Set(PropertyNames.Order, Order);
         }
     }
- }
+}

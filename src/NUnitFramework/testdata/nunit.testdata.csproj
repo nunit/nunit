@@ -4,6 +4,7 @@
     <RootNamespace>NUnit.TestData</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <Optimize>false</Optimize>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
@@ -12,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
+    <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
   </ItemGroup>
 
 </Project>

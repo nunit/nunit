@@ -134,6 +134,10 @@ namespace NUnit.Framework.Internal.Execution
                 Name = Name
             };
 
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+                _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+#else
             try
             {
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
@@ -141,12 +145,13 @@ namespace NUnit.Framework.Internal.Execution
             catch (PlatformNotSupportedException)
             {
             }
+#endif
 
             Log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }
 
-        private readonly object _cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem

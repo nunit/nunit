@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = context =>
             {
-                if (typeInfo is {IsStaticClass: false})
+                if (typeInfo is { IsStaticClass: false })
                 {
                     context.TestObject = typeInfo.Construct(testFixture.Arguments);
                     Test.Fixture = context.TestObject;
@@ -40,4 +40,3 @@ namespace NUnit.Framework.Internal.Commands
         }
     }
 }
-

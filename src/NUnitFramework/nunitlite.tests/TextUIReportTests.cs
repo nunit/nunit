@@ -7,6 +7,7 @@ using System.Text;
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnitLite.Tests
@@ -28,8 +29,8 @@ namespace NUnitLite.Tests
         [OneTimeSetUp]
         public void CreateResult()
         {
-            _result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture)) as TestResult;
-            Assert.NotNull(_result, "Unable to run fixture");
+            _result = TestBuilder.RunTestFixture(typeof(MockTestFixture)) as TestResult;
+            Assert.That(_result, Is.Not.Null, "Unable to run fixture");
 
             _result.StartTime = _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, DateTimeKind.Utc);
             _result.Duration = 0.123;
@@ -78,12 +79,12 @@ namespace NUnitLite.Tests
                 "Tests Not Run\n\n" +
                 "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest\n" +
                 "Ignore Message\n\n" +
-                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(1)\n"+
-                "Ignore testcase\n\n"+
-                "3) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(2)\n"+
-                "Ignore testcase\n\n"+
-                "4) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(3)\n"+
-                "Ignore testcase\n\n"+
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(1)\n" +
+                "Ignore testcase\n\n" +
+                "3) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(2)\n" +
+                "Ignore testcase\n\n" +
+                "4) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(3)\n" +
+                "Ignore testcase\n\n" +
                 "5) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest\n\n"));
         }
 
@@ -139,7 +140,7 @@ namespace NUnitLite.Tests
             var lines = new List<string>();
             while ((line = rdr.ReadLine()) is not null)
             {
-                if ( !line.Contains("InvokeStub_") )
+                if (!line.Contains("InvokeStub_"))
                 {
                     lines.Add(line);
                 }

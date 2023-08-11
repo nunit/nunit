@@ -3,9 +3,10 @@
 using System;
 using System.Collections;
 using System.Linq;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionOrderedConstraintTests
@@ -186,7 +187,7 @@ namespace NUnit.Framework.Constraints
                 "  Ordering breaks at index [2]:  \"y\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new[] { "x", "z", "y" }, Is.Ordered));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -201,7 +202,7 @@ namespace NUnit.Framework.Constraints
                 "  Ordering breaks at index [91]:  91" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.Ordered));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         #endregion
@@ -301,7 +302,7 @@ namespace NUnit.Framework.Constraints
         public void IsOrderedByProperty_ThrowsOnNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(new[] { new TestClass4("x"), null, new TestClass4("z") }, Is.Ordered.By("Value")));
-            Assert.That(ex.Message, Does.Contain("index 1"));
+            Assert.That(ex?.Message, Does.Contain("index 1"));
         }
 
         [Test]

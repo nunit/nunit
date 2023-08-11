@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class AssertionResultTests : TestResultTests
     {

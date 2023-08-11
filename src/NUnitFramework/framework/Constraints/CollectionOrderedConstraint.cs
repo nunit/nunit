@@ -15,7 +15,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
-        private readonly List<OrderingStep> _steps = new List<OrderingStep>();
+        private readonly List<OrderingStep> _steps = new();
         // The step we are currently building
         private OrderingStep _activeStep;
         // If not ordered, index where ordering breaks
@@ -350,7 +350,7 @@ namespace NUnit.Framework.Constraints
             public override void WriteActualValueTo(MessageWriter writer)
             {
                 // Choose startIndex in such way that '_breakingIndex' is always visible in message.
-                int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems  + 2);
+                int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems + 2);
                 var enumerable = (IEnumerable?)ActualValue;
                 var actualValueMessage = enumerable is null ? "null" : MsgUtils.FormatCollection(enumerable, startIndex);
                 writer.Write(actualValueMessage);

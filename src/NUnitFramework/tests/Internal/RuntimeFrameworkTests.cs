@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class RuntimeFrameworkTests
@@ -19,7 +20,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanGetCurrentFramework()
         {
-            RuntimeFramework framework = RuntimeFramework.CurrentFramework;
+            var framework = RuntimeFramework.CurrentFramework;
             Assert.Multiple(() =>
             {
                 Assert.That(framework.Runtime, Is.EqualTo(CurrentRuntime), "#1");
@@ -31,14 +32,14 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(NetcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {
-            PlatformHelper platformHelper = new PlatformHelper();
+            var platformHelper = new PlatformHelper();
             Assert.Throws<PlatformNotSupportedException>(() => platformHelper.IsPlatformSupported(netcoreRuntime));
         }
 
         [Test]
         public void SpecifyingNetCoreWithoutVersioningSucceeds()
         {
-            PlatformHelper platformHelper = new PlatformHelper();
+            var platformHelper = new PlatformHelper();
             bool isNetCore;
 #if NETCOREAPP
             isNetCore = true;
@@ -51,7 +52,7 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(FrameworkTestData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            var framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
             Assert.Multiple(() =>
             {
                 Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
@@ -68,7 +69,7 @@ namespace NUnit.Framework.Internal
             Assume.That(data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5, "#0");
             Assume.That(data.Runtime != RuntimeType.NetCore, "#0");
 
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
+            var framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
             Assert.Multiple(() =>
             {
                 Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
@@ -80,7 +81,7 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(FrameworkTestData))]
         public void CanParseRuntimeFramework(FrameworkData data)
         {
-            RuntimeFramework framework = RuntimeFramework.Parse(data.Representation);
+            var framework = RuntimeFramework.Parse(data.Representation);
             Assert.Multiple(() =>
             {
                 Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
@@ -91,7 +92,7 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(FrameworkTestData))]
         public void CanDisplayFrameworkAsString(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            var framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
             Assert.Multiple(() =>
             {
                 Assert.That(framework.ToString(), Is.EqualTo(data.Representation), "#1");

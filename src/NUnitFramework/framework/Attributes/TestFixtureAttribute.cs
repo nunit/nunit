@@ -12,7 +12,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks the class as a TestFixture.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
     {
         private readonly NUnitTestFixtureBuilder _builder = new();

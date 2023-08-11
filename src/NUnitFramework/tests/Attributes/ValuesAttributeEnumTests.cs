@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public enum EnumValues
     {
@@ -62,43 +62,43 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void TestEnumValues([Values]EnumValues value)
+        public void TestEnumValues([Values] EnumValues value)
         {
             _countEnums++;
         }
 
         [Test]
-        public void TestInEnumValues([Values]in EnumValues value)
+        public void TestInEnumValues([Values] in EnumValues value)
         {
             _countInEnums++;
         }
 
         [Test]
-        public void TestRefEnumValues([Values]ref EnumValues value)
+        public void TestRefEnumValues([Values] ref EnumValues value)
         {
             _countRefEnums++;
         }
 
         [Test]
-        public void TestBoolValues([Values]bool value)
+        public void TestBoolValues([Values] bool value)
         {
             _countBools++;
         }
 
         [Test]
-        public void TestInBoolValues([Values]in bool value)
+        public void TestInBoolValues([Values] in bool value)
         {
             _countInBools++;
         }
 
         [Test]
-        public void TestRefBoolValues([Values]ref bool value)
+        public void TestRefBoolValues([Values] ref bool value)
         {
             _countRefBools++;
         }
 
         [Test]
-        public void TestNullableEnum([Values]EnumValues? enumValue)
+        public void TestNullableEnum([Values] EnumValues? enumValue)
         {
             /* runs with null and all enum values in no particular order */
             ++_countNullableEnums;

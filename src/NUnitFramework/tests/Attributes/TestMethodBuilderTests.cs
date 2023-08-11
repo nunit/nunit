@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Collections.Generic;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Interfaces;
 using System;
+using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class TestMethodBuilderTests
     {
@@ -203,8 +203,9 @@ namespace NUnit.Framework.Attributes
         public static void MethodWithoutArgs() { }
         public static void MethodWithIntArgs(int x, int y) { }
         public static void MethodWithIntValues(
-            [Values(1, 2, 3)]int x,
-            [Values(10, 20)]int y) { }
+            [Values(1, 2, 3)] int x,
+            [Values(10, 20)] int y)
+        { }
 #pragma warning restore NUnit1028 // The non-test method is public
 
         private static readonly object[] ZeroData = Array.Empty<object>();

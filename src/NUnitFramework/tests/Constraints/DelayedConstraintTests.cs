@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using NUnit.Framework.Constraints;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture, NonParallelizable]
     public class DelayedConstraintTests : ConstraintTestBase
@@ -243,7 +244,7 @@ namespace NUnit.Framework.Constraints
                 "  Missing (1): < 3 >" + Environment.NewLine +
                 "  Extra (1): < 1 >" + Environment.NewLine;
 
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            Assert.That(exception.Message, Does.Contain(expectedMessage));
         }
 
         private static int _setValuesDelay;

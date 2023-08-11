@@ -2,32 +2,32 @@
 
 #if NETFRAMEWORK
 using System;
-using System.Threading;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
+using System.Threading;
 using NUnit.TestData.TestFixtureTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class CallContextTests
     {
         private const string CONTEXT_DATA = "MyContextData";
-//		IPrincipal savedPrincipal;
+        ////IPrincipal savedPrincipal;
 
-//		[SetUp]
-//		public void SaveCurrentPrincipal()
-//		{
-//			savedPrincipal = System.Threading.Thread.CurrentPrincipal;
-//		}
-//
-//		[TearDown]
-//		public void RestoreCurrentPrincipal()
-//		{
-//			System.Threading.Thread.CurrentPrincipal = savedPrincipal;
-//			CallContext.FreeNamedDataSlot(CONTEXT_DATA);
-//		}
+        ////[SetUp]
+        ////public void SaveCurrentPrincipal()
+        ////{
+        ////    savedPrincipal = System.Threading.Thread.CurrentPrincipal;
+        ////}
+
+        ////[TearDown]
+        ////public void RestoreCurrentPrincipal()
+        ////{
+        ////    System.Threading.Thread.CurrentPrincipal = savedPrincipal;
+        ////    CallContext.FreeNamedDataSlot(CONTEXT_DATA);
+        ////}
 
         [TearDown]
         public void FreeCallContextDataSlot()
@@ -39,13 +39,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ILogicalThreadAffinativeTest()
         {
-            CallContext.SetData( CONTEXT_DATA, new EmptyCallContextData() );
+            CallContext.SetData(CONTEXT_DATA, new EmptyCallContextData());
         }
 
         [Test]
         public void ILogicalThreadAffinativeTestConsole()
         {
-            CallContext.SetData( CONTEXT_DATA, new EmptyCallContextData() );
+            CallContext.SetData(CONTEXT_DATA, new EmptyCallContextData());
             // TODO: make this Assertable
             // Console.WriteLine("ILogicalThreadAffinativeTest");
             Console.Out.Flush();
@@ -56,9 +56,9 @@ namespace NUnit.Framework.Internal
         {
             GenericIdentity ident = new GenericIdentity("Bob");
             GenericPrincipal prpal = new GenericPrincipal(ident,
-                    new[] {"Level1"});
+                    new[] { "Level1" });
 
-            CallContext.SetData( CONTEXT_DATA, new PrincipalCallContextData( prpal ) );
+            CallContext.SetData(CONTEXT_DATA, new PrincipalCallContextData(prpal));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal
         {
             GenericIdentity ident = new GenericIdentity("Bob");
             GenericPrincipal prpal = new GenericPrincipal(ident,
-                    new[] {"Level1"});
+                    new[] { "Level1" });
 
             System.Threading.Thread.CurrentPrincipal = prpal;
         }
@@ -82,8 +82,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void UseCustomIdentity()
         {
-            TestIdentity ident = new TestIdentity( "test" );
-            GenericPrincipal principal = new GenericPrincipal( ident, new[] { "Level1" } );
+            TestIdentity ident = new TestIdentity("test");
+            GenericPrincipal principal = new GenericPrincipal(ident, new[] { "Level1" });
 
             System.Threading.Thread.CurrentPrincipal = principal;
         }
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal
         {
             IPrincipal? principal = Thread.CurrentPrincipal;
 
-            TestBuilder.RunTestFixture( typeof( FixtureThatChangesTheCurrentPrincipal ) );
+            TestBuilder.RunTestFixture(typeof(FixtureThatChangesTheCurrentPrincipal));
 
             Assert.That(
                 Thread.CurrentPrincipal,
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal
     [Serializable]
     public class PrincipalCallContextData : ILogicalThreadAffinative
     {
-        public PrincipalCallContextData( IPrincipal principal )
+        public PrincipalCallContextData(IPrincipal principal)
         {
         }
     }
@@ -136,10 +136,9 @@ namespace NUnit.Framework.Internal
     [Serializable]
     public class TestIdentity : GenericIdentity
     {
-        public TestIdentity( string name ) : base( name )
+        public TestIdentity(string name) : base(name)
         {
         }
     }
-
 }
 #endif

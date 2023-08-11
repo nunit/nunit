@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         private const string CommonOSPlatforms =
             "Win,Win32,Win32S,Win32NT,Win32Windows,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
-            "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+
+            "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8," +
             "Win8.1,Windows8.1,Win10,Windows10,Win11,Windows11,WindowsServer10,Unix,Linux";
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="rt">RuntimeFramework to be used</param>
         /// <param name="os">OperatingSystem to be used</param>
-        public PlatformHelper( OSPlatform os, RuntimeFramework rt )
+        public PlatformHelper(OSPlatform os, RuntimeFramework rt)
         {
             _os = os;
             _rt = rt;
@@ -61,9 +61,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platforms"></param>
         /// <returns></returns>
-        public bool IsPlatformSupported( string[] platforms )
+        public bool IsPlatformSupported(string[] platforms)
         {
-            return platforms.Any( IsPlatformSupported );
+            return platforms.Any(IsPlatformSupported);
         }
 
         /// <summary>
@@ -72,12 +72,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platformAttribute">The attribute to examine</param>
         /// <returns></returns>
-        public bool IsPlatformSupported( PlatformAttribute platformAttribute )
+        public bool IsPlatformSupported(PlatformAttribute platformAttribute)
         {
             string? include = platformAttribute.Include;
             string? exclude = platformAttribute.Exclude;
 
-            return IsPlatformSupported( include, exclude );
+            return IsPlatformSupported(include, exclude);
         }
 
         /// <summary>
@@ -116,15 +116,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="platform">Name of the platform or comma-separated list of platform ids</param>
         /// <returns>True if the platform is in use on the system</returns>
-        public bool IsPlatformSupported( string platform )
+        public bool IsPlatformSupported(string platform)
         {
-            if ( platform.IndexOf( ',' ) >= 0 )
-                return IsPlatformSupported( platform.Split(',') );
+            if (platform.IndexOf(',') >= 0)
+                return IsPlatformSupported(platform.Split(','));
 
             string platformName = platform.Trim();
             bool isSupported;
 
-            switch( platformName.ToUpper() )
+            switch (platformName.ToUpper())
             {
                 case "WIN":
                 case "WIN32":

@@ -20,12 +20,6 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public void CallAssertFailWithMessageAndArgs()
-        {
-            Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4);
-        }
-
-        [Test]
         public void HandleAssertionException()
         {
             try

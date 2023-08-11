@@ -11,7 +11,7 @@ namespace NUnit.Framework
     /// executed from the GUI, command line or included within a test filter.
     /// The test will not be run simply because an enclosing suite is run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly string? _reason;

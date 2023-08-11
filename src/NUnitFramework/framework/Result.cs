@@ -32,7 +32,7 @@ namespace NUnit.Framework
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Error message must be specified.", nameof(message));
 
-            return new Result<T>(default(T), message);
+            return new Result<T>(default, message);
         }
 
         public bool IsSuccess(out T? value)

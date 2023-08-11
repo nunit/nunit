@@ -52,7 +52,7 @@ namespace NUnitLite
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
             string copyright = "Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt";
-            string build = "";
+            string build = string.Empty;
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
             if (copyrightAttr is not null)
@@ -144,11 +144,7 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD2_0
-            Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
-#endif
+            Writer.WriteLabelLine("   OS Version: ", OSPlatform.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             Writer.WriteLine();
         }

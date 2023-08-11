@@ -28,7 +28,7 @@ namespace NUnit.Framework.Api
         private static readonly Logger Log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private readonly ITestAssemblyBuilder _builder;
-        private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _runComplete = new();
 
         // Saved Console.Out and Console.Error
         private TextWriter? _savedOut;
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Api
         // Event Pump
         private EventPump? _pump;
 
-#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
@@ -48,9 +48,9 @@ namespace NUnit.Framework.Api
             _builder = builder;
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets the default level of parallel execution (worker threads)
@@ -97,9 +97,9 @@ namespace NUnit.Framework.Api
         /// </summary>
         private TestExecutionContext? Context { get; set; }
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -118,7 +118,6 @@ namespace NUnit.Framework.Api
 
             LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assemblyNameOrPath, settings));
             return LoadedTest;
-
         }
 
         /// <summary>
@@ -241,9 +240,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         /// <summary>
         /// Initiate the test run.
@@ -363,7 +362,7 @@ namespace NUnit.Framework.Api
         private static int CountTestCases(ITest test, ITestFilter filter)
         {
             if (!test.IsSuite)
-                return filter.Pass(test) ? 1: 0;
+                return filter.Pass(test) ? 1 : 0;
 
             // Use for-loop to avoid allocating the enumerator
             int count = 0;
@@ -397,7 +396,6 @@ namespace NUnit.Framework.Api
                 MessageBoxIcon.Information);
         }
 #endif
-
 #if NETFRAMEWORK
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
@@ -419,7 +417,6 @@ namespace NUnit.Framework.Api
             action();
 #endif
         }
-
 #if NETFRAMEWORK
         /// <summary>
         /// Executes the function within an <see cref="NUnitCallContext" />
@@ -442,6 +439,5 @@ namespace NUnit.Framework.Api
 #endif
         }
     }
-
     #endregion
 }

@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     internal sealed class DummyConstraint : Constraint
     {
@@ -12,7 +12,6 @@ namespace NUnit.TestUtilities
         private DummyConstraint() { }
 
         public override string Description => throw new NotImplementedException();
-
 
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {

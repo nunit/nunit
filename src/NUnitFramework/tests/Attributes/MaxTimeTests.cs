@@ -3,9 +3,9 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Tests for MaxTime decoration.
@@ -13,7 +13,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture, NonParallelizable]
     public class MaxTimeTests
     {
-        [Test,MaxTime(1000)]
+        [Test, MaxTime(1000)]
         public void MaxTimeNotExceeded()
         {
         }

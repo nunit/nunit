@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
@@ -20,8 +21,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ConstraintExpression
     {
-        #region Instance Fields
-
         /// <summary>
         /// The ConstraintBuilder holding the elements recognized so far
         /// </summary>
@@ -30,9 +29,6 @@ namespace NUnit.Framework.Constraints
         // Disregarding naming convention for back-compat
         protected readonly ConstraintBuilder builder;
 #pragma warning restore IDE1006
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -188,7 +184,6 @@ namespace NUnit.Framework.Constraints
                 builder.Append(new ExactCountOperator(1));
                 return new ItemsConstraintExpression(builder);
             }
-
         }
 
         #endregion
@@ -774,7 +769,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public RegexConstraint Match(string pattern)
+        public RegexConstraint Match([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return (RegexConstraint)Append(new RegexConstraint(pattern));
         }
@@ -792,7 +787,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public RegexConstraint Matches(string pattern)
+        public RegexConstraint Matches([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return (RegexConstraint)Append(new RegexConstraint(pattern));
         }

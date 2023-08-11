@@ -3,8 +3,9 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class PredicateConstraintTests : ConstraintTestBase

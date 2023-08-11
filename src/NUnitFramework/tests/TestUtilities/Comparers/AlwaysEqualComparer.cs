@@ -2,9 +2,9 @@
 
 using System.Collections;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
-    internal class AlwaysEqualComparer : IComparer
+    public class AlwaysEqualComparer : IComparer
     {
         public int CallCount = 0;
 

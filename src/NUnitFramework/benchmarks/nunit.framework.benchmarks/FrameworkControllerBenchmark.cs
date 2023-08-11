@@ -26,8 +26,8 @@ using BenchmarkDotNet.Attributes;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Filters;
+using NUnit.Framework.Tests;
 
 namespace NUnit.Framework;
 
@@ -47,7 +47,7 @@ public class FrameworkControllerBenchmark
             { "ProcessModel", "InProcess" },
             { "DomainUsage", "None" },
             { "ShadowCopyFiles", false },
-            { "TestParametersDictionary", "" },
+            { "TestParametersDictionary", string.Empty },
             { "NumberOfTestWorkers", 0 },
             { "SynchronousEvents", "false" },
             { "RandomSeed", 878248866 },

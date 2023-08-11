@@ -3,9 +3,8 @@
 
 using System.IO;
 using System.Runtime.Versioning;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class OSPlatformAttributeTests : ThreadingTests

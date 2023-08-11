@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     #region Not
     public class NotTest : SyntaxTest
@@ -71,7 +71,6 @@ namespace NUnit.Framework.Syntax
             StaticSyntax = Has.Some.With.Some.LessThan(100);
             BuilderSyntax = Builder().Some.With.Some.LessThan(100);
         }
-
     }
 
     public class SomeTest_UseOfAndSome : SyntaxTest

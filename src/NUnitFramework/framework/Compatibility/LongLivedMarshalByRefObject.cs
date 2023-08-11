@@ -12,6 +12,9 @@ namespace NUnit.Compatibility
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
+#if NET6_0_OR_GREATER
+        [Obsolete("Preventing throwing PlatformNotSupportedException")]
+#endif
         public override object InitializeLifetimeService()
         {
             return null!;

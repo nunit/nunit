@@ -12,4 +12,3 @@ using NUnit.Framework;
 [assembly: AssemblyCulture("")]
 
 [assembly: Parallelizable(ParallelScope.Fixtures)]
-

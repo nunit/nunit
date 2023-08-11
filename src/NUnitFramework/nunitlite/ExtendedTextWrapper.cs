@@ -63,7 +63,7 @@ namespace NUnit.Common
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if(_shouldDisposeWriter)
+            if (_shouldDisposeWriter)
             {
                 _writer.Dispose();
             }

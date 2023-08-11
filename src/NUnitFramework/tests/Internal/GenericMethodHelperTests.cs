@@ -3,8 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class GenericMethodHelperTests
     {

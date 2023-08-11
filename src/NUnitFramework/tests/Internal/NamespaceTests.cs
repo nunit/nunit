@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class NamespaceTests

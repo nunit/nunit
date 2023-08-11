@@ -7,7 +7,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Identifies a method to be called immediately before each test is run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class SetUpAttribute : NUnitAttribute
     { }
 }

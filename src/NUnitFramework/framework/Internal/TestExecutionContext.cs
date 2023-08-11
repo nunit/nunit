@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-            
+
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -283,7 +283,7 @@ namespace NUnit.Framework.Internal
         /// The worker that spawned the context.
         /// For builds without the parallel feature, it is null.
         /// </summary>
-        public TestWorker? TestWorker {get; internal set;}
+        public TestWorker? TestWorker { get; internal set; }
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
@@ -455,20 +455,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region InitializeLifetimeService
-
-        /// <summary>
-        /// Obtain lifetime service object
-        /// </summary>
-        /// <returns></returns>
-        public override object InitializeLifetimeService()
-        {
-            return null!;
-        }
-
-#endregion
-
-#region Nested IsolatedContext Class
+        #region Nested IsolatedContext Class
 
         /// <summary>
         /// An IsolatedContext is used when running code
@@ -532,6 +519,6 @@ namespace NUnit.Framework.Internal
             private void AdhocTestMethod() { }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using NUnit.Framework.Internal.Extensions;
 
-namespace NUnit.Framework.Internal.Extensions
+namespace NUnit.Framework.Tests.Internal.Extensions
 {
     public class TypeExtensionTests
     {

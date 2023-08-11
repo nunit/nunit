@@ -1,6 +1,8 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Internal.Filters
+using NUnit.Framework.Internal.Filters;
+
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class MultipleFilterTests : TestFilterTests
     {

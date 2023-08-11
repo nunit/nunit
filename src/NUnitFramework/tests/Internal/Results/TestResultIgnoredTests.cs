@@ -1,20 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultIgnoredWithReasonGivenTests : TestResultIgnoredTests
     {
         public TestResultIgnoredWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, tnode => ReasonNodeExpectedValidation(tnode, NonWhitespaceIgnoreReason))
-        {
-        }
-    }
-
-    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredTests
-    {
-        public TestResultIgnoredWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -35,10 +29,10 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultIgnoredTests : TestResultTests
     {
-        private readonly string? _ignoreReason;
+        private readonly string _ignoreReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultIgnoredTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultIgnoredTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
             _ignoreReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;

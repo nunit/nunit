@@ -4,9 +4,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class ValuesAttributeTests
     {
@@ -25,94 +25,94 @@ namespace NUnit.Framework.Attributes
         #region Conversion Tests
 
         [Test]
-        public void CanConvertIntsToLong([Values(5, int.MaxValue)]long x)
+        public void CanConvertIntsToLong([Values(5, int.MaxValue)] long x)
         {
             Assert.That(x, Is.Not.EqualTo(default(long)));
         }
 
         [Test]
-        public void CanConvertIntsToNullableLong([Values(5, int.MaxValue)]long? x)
+        public void CanConvertIntsToNullableLong([Values(5, int.MaxValue)] long? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertSmallIntsToShort([Values(5)]short x)
+        public void CanConvertSmallIntsToShort([Values(5)] short x)
         {
         }
 
         [Test]
-        public void CanConvertSmallIntsToNullableShort([Values(5)]short? x)
-        {
-            Assert.That(x.HasValue, Is.True);
-        }
-
-        [Test]
-        public void CanConvertSmallIntsToByte([Values(5)]byte x)
-        {
-        }
-
-        [Test]
-        public void CanConvertSmallIntsToNullableByte([Values(5)]byte? x)
+        public void CanConvertSmallIntsToNullableShort([Values(5)] short? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertSmallIntsToSByte([Values(5)]sbyte x)
+        public void CanConvertSmallIntsToByte([Values(5)] byte x)
         {
         }
 
         [Test]
-        public void CanConvertSmallIntsToNullableSByte([Values(5)]sbyte? x)
+        public void CanConvertSmallIntsToNullableByte([Values(5)] byte? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")]decimal x)
+        public void CanConvertSmallIntsToSByte([Values(5)] sbyte x)
+        {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToNullableSByte([Values(5)] sbyte? x)
+        {
+            Assert.That(x.HasValue, Is.True);
+        }
+
+        [Test]
+        public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")] decimal x)
         {
             Assert.That(x, Is.Not.EqualTo(default(decimal)));
         }
 
         [Test]
-        public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")]decimal? x)
+        public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")] decimal? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset x)
+        public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")] DateTimeOffset x)
         {
             Assert.That(x, Is.Not.EqualTo(default(DateTimeOffset)));
         }
 
         [Test]
-        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
+        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")] DateTimeOffset? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToTimeSpan([Values("4:44:15")]TimeSpan x)
+        public void CanConvertStringToTimeSpan([Values("4:44:15")] TimeSpan x)
         {
             Assert.That(x, Is.Not.EqualTo(default(TimeSpan)));
         }
 
         [Test]
-        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")]TimeSpan? x)
+        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")] TimeSpan? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
-        public void CanConvertStringToDateTime([Values("2018-10-10")]DateTime x)
+        public void CanConvertStringToDateTime([Values("2018-10-10")] DateTime x)
         {
             Assert.That(x, Is.Not.EqualTo(default(DateTime)));
         }
 
         [Test]
-        public void CanConvertStringToNullableDateTime([Values("2018-10-10")]DateTime? x)
+        public void CanConvertStringToNullableDateTime([Values("2018-10-10")] DateTime? x)
         {
             Assert.That(x.HasValue, Is.True);
         }
@@ -163,7 +163,6 @@ namespace NUnit.Framework.Attributes
         {
             Assert.That(a, Is.Null);
         }
-
 
         [Test]
         public void MethodWithArrayArguments([Values(

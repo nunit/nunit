@@ -2,10 +2,11 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     public static class SchemaTests
     {
@@ -40,7 +41,6 @@ namespace NUnit.Framework.Api
                 </test-suite>",
                 "Test.xsd");
         }
-
 
         [Test]
         public static void TestResultSchemaIsValid()
@@ -96,7 +96,6 @@ namespace NUnit.Framework.Api
                     "TestResult.xsd");
             });
         }
-
 
         [Test]
         public static void TestResultSchemaDisallowsRootElement_Filter()
@@ -166,7 +165,6 @@ namespace NUnit.Framework.Api
                 </test-run>",
                 "TestResult.xsd");
         }
-
 
         [Test]
         public static void TestFilterSchemaIsValid()

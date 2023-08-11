@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class StartsWithConstraintTests : StringConstraintTests
@@ -18,7 +20,7 @@ namespace NUnit.Framework.Constraints
         private static readonly object[] SuccessData = new object[] { "hello", "hello there" };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "HELLO THERE", "\"HELLO THERE\"" ),
             new TestCaseData( "I said hello", "\"I said hello\"" ),
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
@@ -53,7 +55,7 @@ namespace NUnit.Framework.Constraints
         private static readonly object[] SuccessData = new object[] { "Hello", "HELLO there" };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( "goodbye", "\"goodbye\"" ), 
+            new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( "I said hello", "\"I said hello\"" ),
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),

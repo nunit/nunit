@@ -5,12 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.UI;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Api
             get
             {
                 yield return new TestCaseData(default(object?[]?));
-                yield return new TestCaseData("");
+                yield return new TestCaseData(string.Empty);
                 yield return new TestCaseData(EMPTY_FILTER);
             }
         }
@@ -80,7 +81,7 @@ namespace NUnit.Framework.Api
                 Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
                 Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
             });
-            
+
             var innerNode = inserted.ChildNodes[1].FirstChild;
             Assert.That(innerNode, Is.Not.Null);
             Assert.Multiple(() =>
@@ -214,7 +215,7 @@ namespace NUnit.Framework.Api
         private static IEnumerable SettingsData()
         {
             yield return new TestCaseData("value");
-            yield return new TestCaseData("");
+            yield return new TestCaseData(string.Empty);
             yield return new TestCaseData("<value>");
             yield return new TestCaseData("\"value\"");
             yield return new TestCaseData("'value'");
@@ -372,7 +373,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -431,7 +432,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -452,9 +453,9 @@ namespace NUnit.Framework.Api
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
         }
 
-#endregion
+        #endregion
 
-#region RunTestsAction
+        #region RunTestsAction
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
@@ -488,7 +489,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test]
@@ -539,12 +540,12 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static string? GetSkipReason(TNode result)
         {
@@ -552,6 +553,6 @@ namespace NUnit.Framework.Api
             return propNode?.Attributes["value"];
         }
 
-#endregion
+        #endregion
     }
 }

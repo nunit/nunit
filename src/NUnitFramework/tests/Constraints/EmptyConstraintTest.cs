@@ -5,9 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using NUnit.TestUtilities;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class EmptyConstraintTest : ConstraintTestBase

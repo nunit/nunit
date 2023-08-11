@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for ArrayEqualsFailureMessageFixture.
@@ -25,7 +25,7 @@ namespace NUnit.Framework.Assertions
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Assertions
                 "  Missing:  < 4, 5 >";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Assertions
                 "  Extra:    < 4, 5, 6... >";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "5" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -87,14 +87,14 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "3" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void TripleDimensionedArrays()
         {
-            var expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            var actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
+            var expected = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            var actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "4" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Assertions
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Actual + "0" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace NUnit.Framework.Assertions
                 "  But was:  3" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected).AsCollection));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Assertions
                 "  ------------^" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array2, Is.EqualTo(array1)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

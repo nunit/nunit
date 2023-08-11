@@ -13,7 +13,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestCaseData : TestCaseParameters
     {
-
         #region Constructors
 
         /// <summary>
@@ -151,7 +150,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test case as explicit.
         /// </summary>
-        public TestCaseData Explicit()	{
+        public TestCaseData Explicit()
+        {
             RunState = RunState.Explicit;
             return this;
         }

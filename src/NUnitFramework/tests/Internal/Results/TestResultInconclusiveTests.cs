@@ -1,20 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultInconclusiveWithReasonGivenTests : TestResultInconclusiveTests
     {
         public TestResultInconclusiveWithReasonGivenTests() : base(NonWhitespaceIgnoreReason, node => ReasonNodeExpectedValidation(node, NonWhitespaceIgnoreReason))
-        {
-        }
-    }
-
-    public class TestResultInconclusiveWithNullReasonGivenTests : TestResultInconclusiveTests
-    {
-        public TestResultInconclusiveWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
         {
         }
     }
@@ -35,12 +28,12 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultInconclusiveTests : TestResultTests
     {
-        private readonly string? _inconclusiveReason;
+        private readonly string _inconclusiveReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultInconclusiveTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultInconclusiveTests(string inconclusiveReason, Action<TNode> xmlReasonNodeValidation)
         {
-            _inconclusiveReason = ignoreReason;
+            _inconclusiveReason = inconclusiveReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 
@@ -67,7 +60,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.Multiple(() =>
             {
                 Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
-                Assert.That(SuiteResult.Message, Is.Null);
+                Assert.That(SuiteResult.Message, Is.Empty);
                 Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.FailCount, Is.EqualTo(0));

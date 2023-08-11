@@ -75,7 +75,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [Test, TestCaseSource(nameof(InstanceProperty))]
         public void MethodWithInstancePropertyAsSource(string source)
         {
-            Assert.AreEqual(nameof(InstanceProperty), source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceProperty)));
         }
 
         private IEnumerable InstanceProperty =>
@@ -87,7 +87,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [Test, TestCaseSource(nameof(InstanceMethod))]
         public void MethodWithInstanceMethodAsSource(string source)
         {
-            Assert.AreEqual(nameof(InstanceMethod), source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceMethod)));
         }
 
         private IEnumerable InstanceMethod()
@@ -98,7 +98,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [Test, TestCaseSource(nameof(InstanceField))]
         public void MethodWithInstanceFieldAsSource(string source)
         {
-            Assert.AreEqual(nameof(InstanceField), source);
+            Assert.That(source, Is.EqualTo(nameof(InstanceField)));
         }
 
 #pragma warning disable IDE1006 // Naming Styles

@@ -7,7 +7,6 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
-
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
     /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
@@ -258,6 +257,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -89,7 +89,7 @@ namespace NUnit.Tests
             }
         }
 
-        [TestFixture(Description="Fake Test Fixture")]
+        [TestFixture(Description = "Fake Test Fixture")]
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
@@ -111,7 +111,7 @@ namespace NUnit.Tests
 
             public const int Inconclusive = 1;
 
-            [Test(Description="Mock Test #1")]
+            [Test(Description = "Mock Test #1")]
             [Category("MockCategory")]
             [Property("Severity", "Critical")]
             public void TestWithDescription() { }
@@ -152,7 +152,7 @@ namespace NUnit.Tests
             public void ExplicitTest() { }
 
             [Test]
-            public void NotRunnableTest( int a, int b) { }
+            public void NotRunnableTest(int a, int b) { }
 
             [Test]
             public void InconclusiveTest()
@@ -190,7 +190,7 @@ namespace NUnit.Tests
 
             [Test]
             public virtual void TestCase()
-            {}
+            { }
         }
     }
 
@@ -225,7 +225,7 @@ namespace NUnit.Tests
         public void Test3() { }
     }
 
-    [TestFixture,Explicit]
+    [TestFixture, Explicit]
     public class ExplicitFixture
     {
         public const int Tests = 2;
@@ -257,11 +257,11 @@ namespace NUnit.Tests
         public const int Tests = 4;
         public const int Suites = 3;
 
-        [TestCase(2, 2, ExpectedResult=4)]
-        [TestCase(9, 11, ExpectedResult=20)]
+        [TestCase(2, 2, ExpectedResult = 4)]
+        [TestCase(9, 11, ExpectedResult = 20)]
         public int MethodWithParameters(int x, int y)
         {
-            return x+y;
+            return x + y;
         }
 
         [TestCase(2, 4)]
@@ -297,7 +297,7 @@ namespace NUnit.Tests
     [TestFixture(11.5)]
     public class GenericFixture<T>
     {
-        public GenericFixture(T num){ }
+        public GenericFixture(T num) { }
 
         [Test]
         public void Test1() { }

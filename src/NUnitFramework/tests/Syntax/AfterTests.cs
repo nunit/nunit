@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     // NOTE: The tests in this file ensure that the various
     // syntactic elements work together to create a
@@ -52,7 +52,6 @@ namespace NUnit.Framework.Syntax
             BuilderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
         }
     }
-
 
     public class AfterTest_PropertyTest : SyntaxTest
     {
@@ -137,7 +136,7 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void GreaterTest()
         {
-            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000,200));
+            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000, 200));
         }
 
         [Test]

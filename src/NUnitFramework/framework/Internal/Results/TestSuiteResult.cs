@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
         private int _totalCount = 0;
-        private readonly ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
+        private readonly ConcurrentQueue<ITestResult> _children = new();
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
@@ -28,7 +28,6 @@ namespace NUnit.Framework.Internal
         }
 
         #region Overrides
-
 
         /// <summary>
         /// Gets the number of test cases that executed
@@ -49,7 +48,6 @@ namespace NUnit.Framework.Internal
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the number of test cases that failed

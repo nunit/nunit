@@ -1,12 +1,12 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Text;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public abstract class TestNamingTests
     {
-        protected const string OUTER_CLASS = "NUnit.Framework.Internal.TestNamingTests";
+        protected const string OUTER_CLASS = "NUnit.Framework.Tests.Internal.TestNamingTests";
 
         protected abstract string FixtureName { get; }
 
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Internal
         }
 
         [TestFixture(typeof(int), typeof(string), 42, "Forty-two")]
-        public class GenericParameterizedFixture<T1,T2> : TestNamingTests
+        public class GenericParameterizedFixture<T1, T2> : TestNamingTests
         {
             protected const string CURRENT_CLASS = "GenericParameterizedFixture`2";
 

@@ -1,9 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultFailureWithReasonAndStackGivenTests : TestResultFailureTests
     {
@@ -41,10 +42,10 @@ namespace NUnit.Framework.Internal.Results
         }
     }
 
-    public class TestResultFailureWithNullReasonAndStackTraceGivenTests : TestResultFailureTests
+    public class TestResultFailureWithEmptyReasonAndNullStackTraceGivenTests : TestResultFailureTests
     {
-        public TestResultFailureWithNullReasonAndStackTraceGivenTests()
-            : base(null,
+        public TestResultFailureWithEmptyReasonAndNullStackTraceGivenTests()
+            : base(string.Empty,
                   null,
                   FailureNodeExistsAndIsNotNull,
                   MessageNodeDoesNotExist,
@@ -82,13 +83,13 @@ namespace NUnit.Framework.Internal.Results
         protected const string NonWhitespaceFailureMessage = "message";
         protected const string NonWhitespaceFailureStackTrace = "stack_trace";
 
-        private readonly string? _failureReason;
+        private readonly string _failureReason;
         private readonly string? _stackTrace;
         private readonly Func<TNode, TNode> _xmlFailureNodeValidation;
         private readonly Action<TNode> _xmlMessageNodeValidation;
         private readonly Action<TNode> _xmlStackTraceNodeValidation;
 
-        protected TestResultFailureTests(string? failureReason,
+        protected TestResultFailureTests(string failureReason,
             string? stackTrace,
             Func<TNode, TNode> xmlFailureNodeValidation,
             Action<TNode> xmlMessageNodeValidation,

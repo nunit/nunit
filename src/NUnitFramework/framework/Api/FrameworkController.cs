@@ -329,11 +329,7 @@ namespace NUnit.Framework.Api
 
             env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version?.ToString() ?? "Unknown");
             env.AddAttribute("clr-version", Environment.Version.ToString());
-#if NETSTANDARD2_0
-            env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
-#endif
+            env.AddAttribute("os-version", OSPlatform.OSDescription);
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
             env.AddAttribute("machine-name", Environment.MachineName);
@@ -402,7 +398,7 @@ namespace NUnit.Framework.Api
 
         private static void AddDictionaryEntries(TNode settingNode, IDictionary entries)
         {
-            foreach(var key in entries.Keys)
+            foreach (var key in entries.Keys)
             {
                 var value = entries[key];
                 var entryNode = new TNode("item");
@@ -412,11 +408,11 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested Action Classes
+        #region Nested Action Classes
 
-#region TestContollerAction
+        #region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
@@ -426,9 +422,9 @@ namespace NUnit.Framework.Api
         {
         }
 
-#endregion
+        #endregion
 
-#region LoadTestsAction
+        #region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
@@ -446,9 +442,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region ExploreTestsAction
+        #region ExploreTestsAction
 
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly
@@ -467,9 +463,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region CountTestsAction
+        #region CountTestsAction
 
         /// <summary>
         /// CountTestsAction counts the number of test cases in the loaded TestSuite
@@ -489,9 +485,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region RunTestsAction
+        #region RunTestsAction
 
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the FrameworkController.
@@ -510,9 +506,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region RunAsyncAction
+        #region RunAsyncAction
 
         /// <summary>
         /// RunAsyncAction initiates an asynchronous test run, returning immediately
@@ -531,9 +527,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region StopRunAction
+        #region StopRunAction
 
         /// <summary>
         /// StopRunAction stops an ongoing run.
@@ -554,8 +550,8 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
     }
 }

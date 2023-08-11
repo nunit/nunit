@@ -33,7 +33,8 @@ namespace NUnit.TestData
         { }
 
         [Test]
-        [TestOf(typeof(TestOfAttribute))][TestOf(typeof(TestAttribute))]
+        [TestOf(typeof(TestOfAttribute))]
+        [TestOf(typeof(TestAttribute))]
         public void TestOfMultipleAttributesMethod()
         { }
     }

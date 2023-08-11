@@ -4,11 +4,10 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
-using NUnit.Framework;
 
 #nullable enable
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     internal static class SchemaTestUtils
     {

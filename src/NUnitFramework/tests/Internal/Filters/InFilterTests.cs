@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Attributes;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
+using NUnit.Framework.Tests.Attributes;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class InFilterTests : TestFilterTests
     {
@@ -21,7 +23,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(optimized.Match(new TestDummy { Id = "id-1" }), Is.False);
             Assert.That(optimized.Match(new TestDummy { Id = "Id-" }), Is.False);
-            Assert.That(optimized.Match(new TestDummy { Id = "" }), Is.False);
+            Assert.That(optimized.Match(new TestDummy { Id = string.Empty }), Is.False);
         }
 
         [Test]
@@ -38,7 +40,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void OptimizeEmpty()
         {
-            var filter = new OrFilter(new TestFilter[] {});
+            var filter = new OrFilter(new TestFilter[] { });
 
             Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
@@ -58,7 +60,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
-        
+
         [Test]
         public void BuildFromXmlFullName()
         {
@@ -69,7 +71,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Match(DummyFixtureSuite));
             Assert.That(filter.Match(AnotherFixtureSuite));
         }
-        
+
         [Test]
         public void WriteToXml()
         {

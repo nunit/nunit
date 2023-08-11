@@ -222,7 +222,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _completionEvent = new();
 
         /// <summary>
         /// Wait until the execution of this item is complete
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 #if THREAD_ABORT
-        private readonly object _threadLock = new object();
+        private readonly object _threadLock = new();
         private int _nativeThreadId;
 #endif
 
@@ -288,9 +288,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-#endregion
+        #endregion
 
-#region IDisposable Implementation
+        #region IDisposable Implementation
 
         /// <summary>
         /// Standard Dispose
@@ -300,9 +300,9 @@ namespace NUnit.Framework.Internal.Execution
             _completionEvent?.Dispose();
         }
 
-#endregion
+        #endregion
 
-#region Protected Methods
+        #region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -426,9 +426,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.SetResult(resultState, message);
         }
 
-#endregion
+        #endregion
 
-#region Private Methods
+        #region Private Methods
 
         private Thread? _thread;
 
@@ -445,6 +445,20 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnCurrentThread();
             });
 
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+            {
+                _thread.SetApartmentState(apartment);
+            }
+            else
+            {
+                const string msg = "Apartment state cannot be set on this platform.";
+                Log.Error(msg);
+                Result.SetResult(ResultState.Skipped, msg);
+                WorkItemComplete();
+                return;
+            }
+#else
             try
             {
                 _thread.SetApartmentState(apartment);
@@ -457,6 +471,7 @@ namespace NUnit.Framework.Internal.Execution
                 WorkItemComplete();
                 return;
             }
+#endif
 
             _thread.Start();
             _thread.Join();
@@ -528,6 +543,6 @@ namespace NUnit.Framework.Internal.Execution
             return apartment;
         }
 
-#endregion
+        #endregion
     }
 }

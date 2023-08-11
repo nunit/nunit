@@ -96,13 +96,8 @@ namespace NUnitLite
                                            assemblyName.Version.ToString());
             _xmlWriter.WriteAttributeString("clr-version",
                 Environment.Version.ToString());
-#if NETSTANDARD2_0
             _xmlWriter.WriteAttributeString("os-version",
-                                           System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            _xmlWriter.WriteAttributeString("os-version",
-                                           OSPlatform.CurrentPlatform.ToString());
-#endif
+                                           OSPlatform.OSDescription);
             _xmlWriter.WriteAttributeString("platform",
                 Environment.OSVersion.Platform.ToString());
             _xmlWriter.WriteAttributeString("cwd",
@@ -126,7 +121,7 @@ namespace NUnitLite
             switch (result.ResultState.Status)
             {
                 case TestStatus.Skipped:
-                    if (result.Message is not null)
+                    if (!string.IsNullOrEmpty(result.Message))
                         WriteReasonElement(result.Message);
                     break;
                 case TestStatus.Failed:
@@ -147,7 +142,6 @@ namespace NUnitLite
             _xmlWriter.Flush();
             ((IDisposable)_xmlWriter).Dispose();
         }
-
 
         #region Element Creation Helpers
 
@@ -301,9 +295,9 @@ namespace NUnitLite
             _xmlWriter.WriteEndElement();
         }
 
-#endregion
+        #endregion
 
-#region Output Helpers
+        #region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -357,6 +351,6 @@ namespace NUnitLite
                 _xmlWriter.WriteCData(text);
         }
 
-#endregion
+        #endregion
     }
 }

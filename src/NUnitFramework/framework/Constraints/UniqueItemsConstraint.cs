@@ -156,7 +156,6 @@ namespace NUnit.Framework.Constraints
             else if (!IsTypeSafeForFastPath(memberType))
                 return OriginalAlgorithm(actual);
 
-
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
             {

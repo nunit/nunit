@@ -2,7 +2,7 @@
 
 using System.Runtime.Serialization;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     [Parallelizable(ParallelScope.All)]
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Attributes
         public void EnsureParallelTestsRunInNewInstance1()
         {
             OutputReferenceId("EnsureParallelTestsRunInNewInstance1");
-            Assert.That(_constructorCount, Is.EqualTo(1)); 
+            Assert.That(_constructorCount, Is.EqualTo(1));
             Assert.That(_setupCount, Is.EqualTo(1));
         }
 

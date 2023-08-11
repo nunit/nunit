@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class AndFilterTests : TestFilterTests
     {
@@ -84,7 +86,7 @@ namespace NUnit.Framework.Internal.Filters
         /// 
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
-        [TestCase(new[] { false, false}, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { true, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { false, true }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]

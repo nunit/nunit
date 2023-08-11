@@ -51,10 +51,10 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             static bool IsIEquatableOfT(Type t) => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEquatable<>);
 
-            var interfaces = type.FindInterfaces((t,_) => IsIEquatableOfT(t), string.Empty);
+            var interfaces = type.FindInterfaces((t, _) => IsIEquatableOfT(t), string.Empty);
             var implementations = new EquatableMethodImpl[interfaces.Length];
 
-            for(var i = 0; i < interfaces.Length; i++)
+            for (var i = 0; i < interfaces.Length; i++)
             {
                 var iMap = type.GetInterfaceMap(interfaces[i]);
                 var method = iMap.TargetMethods[0];
@@ -65,9 +65,9 @@ namespace NUnit.Framework.Constraints.Comparers
             return implementations;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo? equals)
+        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
         {
-            return equals is not null && (bool)equals.Invoke(first, new[] { second })!;
+            return (bool)equals.Invoke(first, new[] { second })!;
         }
 
         private readonly struct EquatableMethodImpl

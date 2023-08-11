@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     public class OSPlatform
     {
         #region Static Members
-        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new Lazy<OSPlatform> (() =>
+        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new(() =>
         {
             OSPlatform currentPlatform;
 
@@ -21,17 +21,18 @@ namespace NUnit.Framework.Internal
 
             if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
             {
-                if (os.Version.Major == 6 && os.Version.Minor >= 2)
+                if (
+#if NET6_0_OR_GREATER
+                    OperatingSystem.IsWindows() &&
+#endif
+
+                    os.Version.Major == 6 && os.Version.Minor >= 2)
+                {
                     os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
-#if NETSTANDARD2_0
+                }
+
                 ProductType productType = GetProductType();
                 currentPlatform = new OSPlatform(os.Platform, os.Version, productType);
-#else
-                OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
-                osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
-                GetVersionEx(ref osvi);
-                currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
-#endif
             }
             else if (CheckIfIsMacOSX(os.Platform))
             {
@@ -47,16 +48,15 @@ namespace NUnit.Framework.Internal
             return currentPlatform;
         });
 
-
         /// <summary>
         /// Platform ID for Unix as defined by .NET
         /// </summary>
-        public static readonly PlatformID UnixPlatformID_Microsoft = (PlatformID)4;
+        public static readonly PlatformID UnixPlatformIDMicrosoft = (PlatformID)4;
 
         /// <summary>
         /// Platform ID for Unix as defined by Mono
         /// </summary>
-        public static readonly PlatformID UnixPlatformID_Mono = (PlatformID)128;
+        public static readonly PlatformID UnixPlatformIDMono = (PlatformID)128;
 
         /// <summary>
         /// Platform ID for XBox as defined by .NET and Mono
@@ -89,34 +89,35 @@ namespace NUnit.Framework.Internal
         /// </remarks>
         /// <param name="version">The original version</param>
         /// <returns>The correct OS version</returns>
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         private static Version GetWindows81PlusVersion(Version version)
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                if (key is not null)
                 {
-                    if (key is not null)
+                    var buildStr = key.GetValue("CurrentBuildNumber") as string;
+                    int.TryParse(buildStr, out var build);
+
+                    // These two keys are in Windows 10 only and are DWORDS
+                    var major = key.GetValue("CurrentMajorVersionNumber") as int?;
+                    var minor = key.GetValue("CurrentMinorVersionNumber") as int?;
+                    if (major.HasValue && minor.HasValue)
                     {
-                        var buildStr = key.GetValue("CurrentBuildNumber") as string;
-                        int.TryParse(buildStr, out var build);
+                        return new Version(major.Value, minor.Value, build);
+                    }
 
-                        // These two keys are in Windows 10 only and are DWORDS
-                        var major = key.GetValue("CurrentMajorVersionNumber") as int?;
-                        var minor = key.GetValue("CurrentMinorVersionNumber") as int?;
-                        if (major.HasValue && minor.HasValue)
-                        {
-                            return new Version(major.Value, minor.Value, build);
-                        }
-
-                        // If we get here, we are not Windows 10, so we are Windows 8
-                        // or 8.1. 8.1 might report itself as 6.2, but will have 6.3
-                        // in the registry. We can't do this earlier because for backwards
-                        // compatibility, Windows 10 also has 6.3 for this key.
-                        var currentVersion = key.GetValue("CurrentVersion") as string;
-                        if(currentVersion == "6.3")
-                        {
-                            return new Version(6, 3, build);
-                        }
+                    // If we get here, we are not Windows 10, so we are Windows 8
+                    // or 8.1. 8.1 might report itself as 6.2, but will have 6.3
+                    // in the registry. We can't do this earlier because for backwards
+                    // compatibility, Windows 10 also has 6.3 for this key.
+                    var currentVersion = key.GetValue("CurrentVersion") as string;
+                    if (currentVersion == "6.3")
+                    {
+                        return new Version(6, 3, build);
                     }
                 }
             }
@@ -152,37 +153,48 @@ namespace NUnit.Framework.Internal
             Server,
         }
 
-#if NETSTANDARD2_0
         private static ProductType GetProductType()
+        {
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+                return GetWindowsProductType();
+
+            return ProductType.Unknown;
+#else
+            return GetWindowsProductType();
+#endif
+        }
+
+#if !NETFRAMEWORK
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
+        private static ProductType GetWindowsProductType()
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                if (key is not null)
                 {
-                    if (key is not null)
+                    var installationType = key.GetValue("InstallationType") as string;
+                    return installationType switch
                     {
-                        var installationType = key.GetValue("InstallationType") as string;
-                        switch(installationType)
-                        {
-                            case "Client":
-                                return ProductType.WorkStation;
-                            case "Server":
-                            case "Server Core":
-                                return ProductType.Server;
-                            default:
-                                return ProductType.Unknown;
-                        }
-                    }
+                        "Client" => ProductType.WorkStation,
+                        "Server" or "Server Core" => ProductType.Server,
+                        _ => ProductType.Unknown,
+                    };
                 }
             }
             catch (Exception)
             {
+                // ignored, we don't what it is, so Unknown is fine
             }
+
             return ProductType.Unknown;
         }
 #else
         [StructLayout(LayoutKind.Sequential)]
-        private struct OSVERSIONINFOEX
+        private struct Osversioninfoex
         {
 #pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
             public uint dwOSVersionInfoSize;
@@ -192,18 +204,27 @@ namespace NUnit.Framework.Internal
             public readonly uint dwPlatformId;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
             public readonly string szCSDVersion;
-            public readonly Int16 wServicePackMajor;
-            public readonly Int16 wServicePackMinor;
-            public readonly Int16 wSuiteMask;
+            public readonly short wServicePackMajor;
+            public readonly short wServicePackMinor;
+            public readonly short wSuiteMask;
 #pragma warning restore IDE1006
-            public readonly Byte ProductType;
-            public readonly Byte Reserved;
+            public readonly byte ProductType;
+            public readonly byte Reserved;
         }
 
         [DllImport("Kernel32.dll")]
-        private static extern bool GetVersionEx(ref OSVERSIONINFOEX osvi);
+        private static extern bool GetVersionEx(ref Osversioninfoex osvi);
+
+        private static ProductType GetWindowsProductType()
+        {
+            var osvi = new Osversioninfoex();
+            osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
+            GetVersionEx(ref osvi);
+            return (ProductType)osvi.ProductType;
+        }
 #endif
-#endregion
+
+        #endregion
 
         /// <summary>
         /// Construct from a platform ID and version
@@ -218,7 +239,7 @@ namespace NUnit.Framework.Internal
         /// Construct from a platform ID, version and product type
         /// </summary>
         public OSPlatform(PlatformID platform, Version version, ProductType product)
-            : this( platform, version )
+            : this(platform, version)
         {
             Product = product;
         }
@@ -282,8 +303,8 @@ namespace NUnit.Framework.Internal
         /// Return true if this is a Unix or Linux platform
         /// </summary>
         public bool IsUnix =>
-            Platform == UnixPlatformID_Microsoft
-            || Platform == UnixPlatformID_Mono;
+            Platform == UnixPlatformIDMicrosoft
+            || Platform == UnixPlatformIDMono;
 
         /// <summary>
         /// Return true if the platform is Win32S
@@ -391,7 +412,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows XP
         /// </summary>
-        public bool IsWinXP => IsNT5 && (Version.Minor == 1  || Version.Minor == 2 && Product == ProductType.WorkStation);
+        public bool IsWinXP => IsNT5 && (Version.Minor == 1 || Version.Minor == 2 && Product == ProductType.WorkStation);
 
         /// <summary>
         /// Return true if the platform is Windows 2003 Server
@@ -476,17 +497,27 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows 10
         /// </summary>
-        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor<22000 && Product == ProductType.WorkStation;
+        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor < 22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 11
         /// </summary>
-        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor>=22000 && Product == ProductType.WorkStation;
+        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor >= 22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows Server. This is named Windows
         /// Server 10 to distinguish it from previous versions of Windows Server.
         /// </summary>
         public bool IsWindowsServer10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.Server;
+
+        /// <summary>
+        /// Gets a description for the current OS.
+        /// </summary>
+        public static string OSDescription =>
+#if NET462
+            LazyCurrentPlatform.Value.ToString();
+#else
+            System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+#endif
     }
 }

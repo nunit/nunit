@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
 
                 // We intentionally add one item too many because we use it to trigger
                 // the ellipsis when we call "MsgUtils.FormatCollection" later on.
-                if (itemList.Count <= MsgUtils.DefaultMaxItems )
+                if (itemList.Count <= MsgUtils.DefaultMaxItems)
                     itemList.Add(item);
             }
 
@@ -90,4 +90,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-

@@ -39,4 +39,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints;
 
@@ -28,7 +29,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
         /// </summary>
-        public static FileOrDirectoryExistsConstraint Exist => new FileOrDirectoryExistsConstraint();
+        public static FileOrDirectoryExistsConstraint Exist => new();
 
         #endregion
 
@@ -39,7 +40,7 @@ namespace NUnit.Framework
         /// presence of a particular object in the collection.
         /// </summary>
         public static SomeItemsConstraint Contain(object? expected) =>
-            new SomeItemsConstraint(new EqualConstraint(expected));
+            new(new EqualConstraint(expected));
 
         /// <summary>
         /// Returns a new <see cref="ContainsConstraint"/>. This constraint
@@ -50,7 +51,7 @@ namespace NUnit.Framework
         /// collection member.
         /// </summary>
         public static ContainsConstraint Contain(string expected) =>
-            new ContainsConstraint(expected);
+            new(expected);
 
         #endregion
 
@@ -109,7 +110,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public static RegexConstraint Match(string pattern)
+        public static RegexConstraint Match([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return new RegexConstraint(pattern);
         }

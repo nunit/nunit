@@ -1,6 +1,8 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class AssignableToConstraintTests : ConstraintTestBase
@@ -17,7 +19,7 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { new D1(), new D2() };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( new B(), "<" + typeof(B).FullName + ">" )
         };
 #pragma warning restore IDE0052 // Remove unread private members

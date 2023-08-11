@@ -2,7 +2,7 @@
 
 using System.IO;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     public class SamePathTest : SyntaxTest
     {

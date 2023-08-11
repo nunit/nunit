@@ -26,10 +26,10 @@ namespace NUnit.Framework.Internal
         public TestFixture(ITypeInfo fixtureType, object?[]? arguments = null) : base(fixtureType, arguments)
         {
             SetUpMethods = TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
-            TearDownMethods = TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true); 
+            TearDownMethods = TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
             OneTimeSetUpMethods = TypeInfo.GetMethodsWithAttribute<OneTimeSetUpAttribute>(true);
             OneTimeTearDownMethods = TypeInfo.GetMethodsWithAttribute<OneTimeTearDownAttribute>(true);
-            
+
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
             CheckSetUpTearDownMethods(SetUpMethods);
@@ -45,7 +45,6 @@ namespace NUnit.Framework.Internal
             : base(fixture, filter)
         {
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestFixture"/> class that failed to load.

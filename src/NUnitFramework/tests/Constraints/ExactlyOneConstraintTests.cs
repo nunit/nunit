@@ -1,8 +1,8 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     public class ExactlyOneConstraintTests
     {
@@ -70,8 +70,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ExactlyOneConstraintNotMatchingWhereCollectionIsTwo()
         {
-           Assert.Throws<AssertionException>(() =>
-                Assert.That(TestCollectionLen2, Has.One.EqualTo("blah")));
+            Assert.Throws<AssertionException>(() =>
+                 Assert.That(TestCollectionLen2, Has.One.EqualTo("blah")));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Our collection of child tests
         /// </summary>
-        private readonly List<ITest> _tests = new List<ITest>();
+        private readonly List<ITest> _tests = new();
 
         #endregion
 
@@ -83,24 +83,24 @@ namespace NUnit.Framework.Internal
             : this(suite.Name)
         {
             FullName = suite.FullName;
-            Method   = suite.Method;
+            Method = suite.Method;
             RunState = suite.RunState;
-            Fixture  = suite.Fixture;
+            Fixture = suite.Fixture;
 
             foreach (string key in suite.Properties.Keys)
             {
                 foreach (object val in suite.Properties[key])
-                Properties.Add(key, val);
+                    Properties.Add(key, val);
             }
 
             foreach (var child in suite._tests)
             {
-                if(filter.Pass(child))
+                if (filter.Pass(child))
                 {
-                    if(child.IsSuite)
+                    if (child.IsSuite)
                     {
                         TestSuite childSuite = ((TestSuite)child).Copy(filter);
-                        childSuite.Parent    = this;
+                        childSuite.Parent = this;
                         _tests.Add(childSuite);
                     }
                     else
@@ -292,7 +292,6 @@ namespace NUnit.Framework.Internal
 
             PopulateTestNode(thisNode, recursive);
             thisNode.AddAttribute("testcasecount", TestCaseCount.ToString());
-
 
             if (recursive)
             {

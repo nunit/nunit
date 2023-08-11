@@ -3,10 +3,11 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestMethodSignatureFixture;
-using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class TestMethodSignatureTests
@@ -16,13 +17,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void InstanceTestMethodIsRunnable()
         {
-            TestAssert.IsRunnable(FixtureType, nameof(TestMethodSignatureFixture.InstanceTestMethod) );
+            TestAssert.IsRunnable(FixtureType, nameof(TestMethodSignatureFixture.InstanceTestMethod));
         }
 
         [Test]
         public void StaticTestMethodIsRunnable()
         {
-            TestAssert.IsRunnable(FixtureType, nameof(TestMethodSignatureFixture.StaticTestMethod) );
+            TestAssert.IsRunnable(FixtureType, nameof(TestMethodSignatureFixture.StaticTestMethod));
         }
 
         [Test]
@@ -140,7 +141,7 @@ namespace NUnit.Framework.Internal
         {
             ITestResult result = TestBuilder.RunParameterizedMethodSuite(FixtureType, nameof(TestMethodSignatureFixture.TestMethodWithMultipleTestCases));
 
-            Assert.That( result.ResultState, Is.EqualTo(ResultState.Success) );
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             ResultSummary summary = new ResultSummary(result);
             Assert.That(summary.TestsRun, Is.EqualTo(3));
         }
@@ -149,7 +150,7 @@ namespace NUnit.Framework.Internal
         public void TestMethodWithMultipleTestCasesUsesCorrectNames()
         {
             string name = nameof(TestMethodSignatureFixture.TestMethodWithMultipleTestCases);
-            string fullName = typeof (TestMethodSignatureFixture).FullName + "." + name;
+            string fullName = typeof(TestMethodSignatureFixture).FullName + "." + name;
 
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, name);
             Assert.That(suite.TestCaseCount, Is.EqualTo(3));

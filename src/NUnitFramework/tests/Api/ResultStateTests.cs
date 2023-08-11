@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     [TestFixture]
     public class ResultStateTests
@@ -135,7 +135,6 @@ namespace NUnit.Framework.Api
         {
             Assert.That(new ResultState(TestStatus.Failed, "Error", FailureSite.SetUp), Is.Not.EqualTo(new ResultState(TestStatus.Failed, "Error", FailureSite.Child)));
         }
-
 
         [Test]
         public void TestEquality_WrongType()

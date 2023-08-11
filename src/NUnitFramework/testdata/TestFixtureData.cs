@@ -32,7 +32,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-    [TestFixture(7,3)]
+    [TestFixture(7, 3)]
     public class FixtureWithArgsSupplied
     {
         public FixtureWithArgsSupplied(int x, int y)
@@ -67,7 +67,8 @@ namespace NUnit.TestData.TestFixtureTests
             throw new Exception();
         }
 
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -153,7 +154,8 @@ namespace NUnit.TestData.TestFixtureTests
         {
         }
 
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -171,7 +173,8 @@ namespace NUnit.TestData.TestFixtureTests
         {
         }
 
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -295,7 +298,8 @@ namespace NUnit.TestData.TestFixtureTests
         {
         }
 
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -313,7 +317,8 @@ namespace NUnit.TestData.TestFixtureTests
         {
         }
 
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -322,7 +327,8 @@ namespace NUnit.TestData.TestFixtureTests
     // all have at least one test
     public class OneTestBase
     {
-        [Test] public void OneTest()
+        [Test]
+        public void OneTest()
         {
         }
     }
@@ -518,7 +524,7 @@ namespace NUnit.TestData.TestFixtureTests
         public void ChangeCurrentPrincipal()
         {
             IIdentity identity = new GenericIdentity("NUnit");
-            GenericPrincipal principal = new GenericPrincipal( identity, new string[] { } );
+            GenericPrincipal principal = new GenericPrincipal(identity, new string[] { });
             System.Threading.Thread.CurrentPrincipal = principal;
         }
     }

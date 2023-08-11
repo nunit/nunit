@@ -17,9 +17,9 @@ namespace NUnit.Framework.Internal.Execution
         private const int WAIT_FOR_FORCED_TERMINATION = 5000;
 
         private WorkItem? _topLevelWorkItem;
-        private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
+        private readonly Stack<WorkItem> _savedWorkItems = new();
 
-        private readonly List<CompositeWorkItem> _activeWorkItems = new List<CompositeWorkItem>();
+        private readonly List<CompositeWorkItem> _activeWorkItems = new();
 
         #region Events
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
                 IsolateQueues(work);
         }
 
-#endregion
+        #endregion
 
         #region Properties
 
@@ -126,15 +126,15 @@ namespace NUnit.Framework.Internal.Execution
 
         // WorkShifts - Dispatcher processes tests in three non-overlapping shifts.
         // See comment in Workshift.cs for a more detailed explanation.
-        private WorkShift ParallelShift { get; } = new WorkShift("Parallel");
-        private WorkShift NonParallelShift { get; } = new WorkShift("NonParallel");
-        private WorkShift NonParallelSTAShift { get; } = new WorkShift("NonParallelSTA");
+        private WorkShift ParallelShift { get; } = new("Parallel");
+        private WorkShift NonParallelShift { get; } = new("NonParallel");
+        private WorkShift NonParallelSTAShift { get; } = new("NonParallelSTA");
 
         // WorkItemQueues
-        private WorkItemQueue ParallelQueue { get; } = new WorkItemQueue("ParallelQueue", true, ApartmentState.MTA);
-        private WorkItemQueue ParallelSTAQueue { get; } = new WorkItemQueue("ParallelSTAQueue", true, ApartmentState.STA);
-        private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false, ApartmentState.MTA);
-        private WorkItemQueue NonParallelSTAQueue { get; } = new WorkItemQueue("NonParallelSTAQueue", false, ApartmentState.STA);
+        private WorkItemQueue ParallelQueue { get; } = new("ParallelQueue", true, ApartmentState.MTA);
+        private WorkItemQueue ParallelSTAQueue { get; } = new("ParallelSTAQueue", true, ApartmentState.STA);
+        private WorkItemQueue NonParallelQueue { get; } = new("NonParallelQueue", false, ApartmentState.MTA);
+        private WorkItemQueue NonParallelSTAQueue { get; } = new("NonParallelSTAQueue", false, ApartmentState.STA);
 
         #endregion
 
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly object _queueLock = new object();
+        private readonly object _queueLock = new();
         private int _isolationLevel = 0;
 
         /// <summary>

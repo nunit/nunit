@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [SingleThreaded]
     public class SingleThreadedFixtureTests : ThreadingTests

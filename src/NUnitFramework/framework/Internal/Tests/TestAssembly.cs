@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
             : base(assembly, filter)
         {
-            Name     = assembly.Name;
+            Name = assembly.Name;
             Assembly = assembly.Assembly;
         }
 
@@ -82,4 +82,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-

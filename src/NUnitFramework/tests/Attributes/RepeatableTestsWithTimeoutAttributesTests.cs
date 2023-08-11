@@ -1,5 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if !THREAD_ABORT
+#pragma warning disable format // Temporary until release of https://github.com/dotnet/roslyn/issues/62612
+#endif
+
 #if THREAD_ABORT
 
 using System;
@@ -7,9 +11,9 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class RepeatableTestsWithTimeoutAttributesTests

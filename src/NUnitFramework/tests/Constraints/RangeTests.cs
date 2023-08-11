@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities.Comparers;
 using System;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class RangeTests
@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void InRangeSucceeds()
         {
-            Assert.That( 7, Is.InRange(5, 10) );
+            Assert.That(7, Is.InRange(5, 10));
             Assert.That(0.23, Is.InRange(-1.0, 1.0));
             Assert.That(DateTime.Parse("12-December-2008"),
                 Is.InRange(DateTime.Parse("1-October-2008"), DateTime.Parse("31-December-2008")));
@@ -24,8 +24,8 @@ namespace NUnit.Framework.Constraints
                     Environment.NewLine);
 
             Assert.That(
-                new TestDelegate( FailingInRangeMethod ),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+                new TestDelegate(FailingInRangeMethod),
+                Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingInRangeMethod()
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(
                 new TestDelegate(FailingNotInRangeMethod),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+                Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingNotInRangeMethod()
@@ -61,16 +61,16 @@ namespace NUnit.Framework.Constraints
         public void ShouldThrowExceptionIfFromIsLessThanTo()
         {
             Assert.That(
-                () => Assert.That( 12, Is.InRange( 10, 5 ) ),
-                Throws.ArgumentException );
+                () => Assert.That(12, Is.InRange(10, 5)),
+                Throws.ArgumentException);
         }
 
-        [TestCase( 9, 9, 10 )]
-        [TestCase( 10, 9, 10 )]
-        [TestCase( 9, 9, 9 )]
+        [TestCase(9, 9, 10)]
+        [TestCase(10, 9, 10)]
+        [TestCase(9, 9, 9)]
         public void RangeBoundaryConditions(int actual, int from, int to)
         {
-            Assert.That( actual, Is.InRange(from, to) );
+            Assert.That(actual, Is.InRange(from, to));
         }
 
         [TestCase(5, (short)10, (short)7)]
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Constraints
             var obj1 = new NoComparer(1);
             var obj30 = new NoComparer(30);
             var obj46 = new NoComparer(46);
-            yield return new object[] { testObj, from, to};
+            yield return new object[] { testObj, from, to };
             yield return new object[] { obj30, obj1, obj46 };
             yield return new object[] { testObj, to, from };
             yield return new object[] { obj30, obj46, obj1 };
@@ -136,7 +136,7 @@ namespace NUnit.Framework.Constraints
             yield return new object[] { obj0, obj0, obj0, comparer };
             yield return new object[] { obj0, objN5, obj46, comparer };
             yield return new object[] { objN5, objN5, objN5, comparer };
-            yield return new object[] { objN5, objN7, obj0 , comparer };
+            yield return new object[] { objN5, objN7, obj0, comparer };
         }
 
         private static System.Collections.IEnumerable NotInRangeObjectsWithNoIComparable()

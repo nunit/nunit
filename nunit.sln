@@ -10,8 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		.runsettings = .runsettings
 		appveyor.yml = appveyor.yml
 		build.cake = build.cake
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
 		BUILDING.md = BUILDING.md
 		CHANGES.md = CHANGES.md
 		CONTRIBUTING.md = CONTRIBUTING.md
@@ -54,6 +57,10 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "nunit.testdata.fsharp", "src\NUnitFramework\testdata.fsharp\nunit.testdata.fsharp.fsproj", "{9DF6B262-70E2-44E3-A436-3B65C7FD88DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.benchmarks", "src\NUnitFramework\benchmarks\nunit.framework.benchmarks\nunit.framework.benchmarks.csproj", "{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy", "src\NUnitFramework\nunit.framework.legacy\nunit.framework.legacy.csproj", "{C09BC425-D524-4F75-9BEF-1724B93789B6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy.tests", "src\NUnitFramework\nunit.framework.legacy.tests\nunit.framework.legacy.tests.csproj", "{59DC5039-5FCD-4C0C-AC92-7F06610136D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +108,14 @@ Global
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

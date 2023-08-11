@@ -2,8 +2,9 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     /// <summary>
     /// Mocks a <see cref="TestFilter"/>. Checks that only one specific match-function

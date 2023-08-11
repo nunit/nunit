@@ -2,7 +2,7 @@
 
 using System.Collections;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     /// <summary>
     /// ObjectToStringComparer is used in testing the <see cref="Framework.Constraints.RangeConstraint"/> when the object does not implement the <see cref="IComparer"/>  interface.

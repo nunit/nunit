@@ -28,9 +28,9 @@ namespace NUnit.Framework.Internal
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
-        public static readonly Version DefaultVersion = new Version(0,0);
+        public static readonly Version DefaultVersion = new(0, 0);
 
-        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new Lazy<RuntimeFramework>(() =>
+        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new(() =>
         {
             Type? monoRuntimeType = null;
             Type? monoTouchType = null;
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
                 major = 0;
                 minor = 0;
             }
-            else /* It's windows */
+            else /* It's .net framework */
 #if NETSTANDARD2_0
             {
                 minor = 5;
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
             }
 #endif
 
-            var currentFramework = new RuntimeFramework( runtime, new Version (major, minor) )
+            var currentFramework = new RuntimeFramework(runtime, new Version(major, minor))
             {
                 ClrVersion = Environment.Version
             };
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="runtime">The runtime type of the framework</param>
         /// <param name="version">The version of the framework</param>
-        public RuntimeFramework( RuntimeType runtime, Version version)
+        public RuntimeFramework(RuntimeType runtime, Version version)
         {
             Runtime = runtime;
 
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Internal
             {
                 runtime = ParseRuntimeType(parts[0]);
                 string vstring = parts[1];
-                if (vstring != "")
+                if (vstring != string.Empty)
                 {
                     version = new Version(vstring);
 

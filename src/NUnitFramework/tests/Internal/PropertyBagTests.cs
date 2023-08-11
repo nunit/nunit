@@ -2,9 +2,10 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class PropertyBagTests
@@ -40,7 +41,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IndexSetsListOfValues()
         {
-            _bag["Zip"] = new[] {"junk", "more junk"};
+            _bag["Zip"] = new[] { "junk", "more junk" };
             Assert.That(_bag["Zip"], Has.Count.EqualTo(2));
             Assert.That(_bag["Zip"], Contains.Item("junk"));
             Assert.That(_bag["Zip"], Contains.Item("more junk"));

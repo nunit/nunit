@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class BinarySerializableConstraint : Constraint
     {
-        private readonly BinaryFormatter _serializer = new BinaryFormatter();
+        private readonly BinaryFormatter _serializer = new();
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -36,11 +36,15 @@ namespace NUnit.Framework.Constraints
 
             try
             {
+                // 'BinaryFormatter serialization is obsolete and should not be used.
+                // See https://aka.ms/binaryformatter for more information.'
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
                 _serializer.Serialize(stream, actual);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
                 succeeded = _serializer.Deserialize(stream) is not null;
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
             }
             catch (SerializationException)
             {

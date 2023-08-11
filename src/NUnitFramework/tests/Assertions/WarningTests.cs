@@ -2,13 +2,13 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
-using System.Threading.Tasks;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class WarningTests
@@ -17,40 +17,30 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Boolean))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessage))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessage))]
-        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessageAndArgs))]
-        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambda))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambda))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithMessage))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithMessage))]
-        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithMessageAndArgs))]
-        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessage))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessage))]
-        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs))]
-        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessage))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessage))]
-        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessageAndArgs))]
-        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraint))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessage))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessage))]
-        [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs))]
-        [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Async))]
@@ -71,47 +61,38 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Fails_Boolean), null)]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessage), "message")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessage), "message")]
-        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessageAndArgs), "got 5")]
-        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessageAndArgs), "got 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessageStringFunc), "got 5")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessageStringFunc), "got 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambda), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambda), null)]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessage), "message")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessage), "message")]
-        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessageAndArgs), "got 5")]
-        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessageAndArgs), "got 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessageStringFunc), "got 5")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessageStringFunc), "got 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessage), "Error")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessage), "Error")]
-        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs), "Should be 5")]
-        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessageAndArgs), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessageStringFunc), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessage), "Error")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessage), "Error")]
-        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessageAndArgs), "Should be 5")]
-        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessageAndArgs), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessageStringFunc), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessageStringFunc), "Should be 5")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraint), null)]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessage), "Error")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessage), "Error")]
-        [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
-        [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_Async), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_Async), null)]
-        public void WarningFails(string methodName, string expectedMessage)
+        public void WarningFails(string methodName, string? expectedMessage)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
+            string expectedMethodName = methodName.Contains("WarnUnless") ? "Warn.Unless" : "Warn.If";
 
             Assert.Multiple(() =>
             {
@@ -129,6 +110,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(stackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
+            Assert.That(result.Message, Contains.Substring(expectedMethodName), "Result message should contain assert method name");
 
             if (expectedMessage is not null)
             {
@@ -169,15 +151,16 @@ namespace NUnit.Framework.Assertions
         {
             // Arrange
             var funcWasCalled = false;
-            Func<string> getExceptionMessage = () =>
+
+            string GetExceptionMessage()
             {
                 funcWasCalled = true;
                 return "Func was called";
-            };
+            }
 
             // Act
             using (new TestExecutionContext.IsolatedContext())
-                Warn.Unless(0 + 1 == 1, getExceptionMessage);
+                Warn.Unless(0 + 1 == 1, GetExceptionMessage);
 
             // Assert
             Assert.That(!funcWasCalled, "The getExceptionMessage function was called when it should not have been.");
@@ -188,15 +171,16 @@ namespace NUnit.Framework.Assertions
         {
             // Arrange
             var funcWasCalled = false;
-            Func<string> getExceptionMessage = () =>
+
+            string GetExceptionMessage()
             {
                 funcWasCalled = true;
                 return "Func was called";
-            };
+            }
 
             // Act
             using (new TestExecutionContext.IsolatedContext())
-                Warn.Unless(1 + 1 == 1, getExceptionMessage);
+                Warn.Unless(1 + 1 == 1, (Func<string>)GetExceptionMessage);
 
             // Assert
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
@@ -209,7 +193,7 @@ namespace NUnit.Framework.Assertions
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-            Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+            Assert.That(exception!.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
         }
 
         [Test]
@@ -219,7 +203,7 @@ namespace NUnit.Framework.Assertions
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-            Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+            Assert.That(exception!.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
         }
 
         private static Task<int> One()
@@ -251,7 +235,6 @@ namespace NUnit.Framework.Assertions
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
             if (result.FailCount != 0 &&
-                result.Message is not null &&
                 result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName()))
             {
                 return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
@@ -264,7 +247,7 @@ namespace NUnit.Framework.Assertions
 
             var warningStackTrace = result.AssertionResults[0].StackTrace;
             Assert.That(warningStackTrace, Is.Not.Null);
-            var lines = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = warningStackTrace!.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (maxLineCount < lines.Length)
             {
@@ -274,8 +257,8 @@ namespace NUnit.Framework.Assertions
                     + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine).ToArray())
                     + "(end)");
 
-                 // ^ Most of that is to differentiate it from the current method's stack trace
-                 // reported directly underneath at the same level of indentation.
+                // ^ Most of that is to differentiate it from the current method's stack trace
+                // reported directly underneath at the same level of indentation.
             }
         }
     }

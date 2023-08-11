@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities;
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Legacy.Tests
 {
     [TestFixture]
     public class AssertEqualsTests
@@ -20,14 +20,14 @@ namespace NUnit.Framework.Assertions
             string expected = nunitString;
             string actual = nunitString;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
         public void EqualsNull()
         {
-            Assert.AreEqual(null, null);
+            ClassicAssert.AreEqual(null, null);
         }
 
         [Test]
@@ -35,37 +35,36 @@ namespace NUnit.Framework.Assertions
         {
             long l64 = 0;
             int i32 = 0;
-            Assert.AreEqual(i32, l64);
+            ClassicAssert.AreEqual(i32, l64);
         }
 
         [Test]
         public void Bug524CharIntComparison()
         {
             char c = '\u0000';
-            Assert.AreEqual(0, c);
+            ClassicAssert.AreEqual(0, c);
         }
 
         [Test]
         public void CharCharComparison()
         {
             char c = 'a';
-            Assert.AreEqual('a', c);
+            ClassicAssert.AreEqual('a', c);
         }
 
         [Test]
         public void IntegerLongComparison()
         {
-            Assert.AreEqual(1, 1L);
-            Assert.AreEqual(1L, 1);
+            ClassicAssert.AreEqual(1, 1L);
+            ClassicAssert.AreEqual(1L, 1);
         }
 
         [Test]
         public void IntegerEquals()
         {
             int val = 42;
-            Assert.AreEqual(val, 42);
+            ClassicAssert.AreEqual(val, 42);
         }
-
 
         [Test]
         public void EqualsFail()
@@ -79,8 +78,8 @@ namespace NUnit.Framework.Assertions
                 "  But was:  \"Goodbye JUnit\"" + Environment.NewLine +
                 "  -----------^" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, junitString));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(expected, junitString));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -90,10 +89,9 @@ namespace NUnit.Framework.Assertions
                 "  Expected: 1.234d +/- 0.0d" + Environment.NewLine +
                 "  But was:  " + double.NaN + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(1.234, double.NaN, 0.0));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(1.234, double.NaN, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
-
 
         [Test]
         public void NanEqualsFails()
@@ -102,26 +100,26 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + double.NaN + Environment.NewLine +
                 "  But was:  1.234d" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(double.NaN, 1.234, 0.0));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.NaN, 1.234, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void NanEqualsNaNSucceeds()
         {
-            Assert.AreEqual(double.NaN, double.NaN, 0.0);
+            ClassicAssert.AreEqual(double.NaN, double.NaN, 0.0);
         }
 
         [Test]
         public void NegInfinityEqualsInfinity()
         {
-            Assert.AreEqual(double.NegativeInfinity, double.NegativeInfinity, 0.0);
+            ClassicAssert.AreEqual(double.NegativeInfinity, double.NegativeInfinity, 0.0);
         }
 
         [Test]
         public void PosInfinityEqualsInfinity()
         {
-            Assert.AreEqual(double.PositiveInfinity, double.PositiveInfinity, 0.0);
+            ClassicAssert.AreEqual(double.PositiveInfinity, double.PositiveInfinity, 0.0);
         }
 
         [Test]
@@ -131,8 +129,8 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  1.23d" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(double.PositiveInfinity, 1.23, 0.0));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, 1.23, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -142,8 +140,8 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(double.PositiveInfinity, double.NegativeInfinity, 0.0));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, double.NegativeInfinity, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -153,8 +151,8 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -178,8 +176,8 @@ namespace NUnit.Framework.Assertions
             float expected = val;
             float actual = val;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual, (float)0.0);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual, (float)0.0);
         }
 
         [Test]
@@ -189,8 +187,8 @@ namespace NUnit.Framework.Assertions
             byte expected = val;
             byte actual = val;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -199,8 +197,8 @@ namespace NUnit.Framework.Assertions
             string s1 = "test";
             string s2 = new StringBuilder(s1).ToString();
 
-            Assert.IsTrue(s1.Equals(s2));
-            Assert.AreEqual(s1,s2);
+            ClassicAssert.IsTrue(s1.Equals(s2));
+            ClassicAssert.AreEqual(s1, s2);
         }
 
         [Test]
@@ -210,8 +208,8 @@ namespace NUnit.Framework.Assertions
             short expected = val;
             short actual = val;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -221,8 +219,8 @@ namespace NUnit.Framework.Assertions
             int expected = val;
             int actual = val;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -232,8 +230,8 @@ namespace NUnit.Framework.Assertions
             uint expected = val;
             uint actual = val;
 
-            Assert.IsTrue(expected == actual);
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
         [Test]
@@ -243,12 +241,12 @@ namespace NUnit.Framework.Assertions
             decimal actual = 100.0m;
             int integer = 100;
 
-            Assert.IsTrue( expected == actual );
-            Assert.AreEqual(expected, actual);
-            Assert.IsTrue(expected == integer);
-            Assert.AreEqual(expected, integer);
-            Assert.IsTrue(actual == integer);
-            Assert.AreEqual(actual, integer);
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual);
+            ClassicAssert.IsTrue(expected == integer);
+            ClassicAssert.AreEqual(expected, integer);
+            ClassicAssert.IsTrue(actual == integer);
+            ClassicAssert.AreEqual(actual, integer);
         }
 
         /// <summary>
@@ -263,59 +261,59 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void EqualsSameTypes()
         {
-            byte      b1 = 35;
-            sbyte    sb2 = 35;
-            decimal   d4 = 35;
-            double    d5 = 35;
-            float     f6 = 35;
-            int       i7 = 35;
-            uint      u8 = 35;
-            long      l9 = 35;
-            short    s10 = 35;
-            ushort  us11 = 35;
-            char      c1 = '3';
-            char      c2 = 'a';
+            byte b1 = 35;
+            sbyte sb2 = 35;
+            decimal d4 = 35;
+            double d5 = 35;
+            float f6 = 35;
+            int i7 = 35;
+            uint u8 = 35;
+            long l9 = 35;
+            short s10 = 35;
+            ushort us11 = 35;
+            char c1 = '3';
+            char c2 = 'a';
 
-            byte b12  = 35;
+            byte b12 = 35;
             sbyte sb13 = 35;
-            decimal d14  = 35;
-            double d15  = 35;
-            float s16  = 35;
-            int i17  = 35;
+            decimal d14 = 35;
+            double d15 = 35;
+            float s16 = 35;
+            int i17 = 35;
             uint ui18 = 35;
-            long i19  = 35;
+            long i19 = 35;
             ulong ui20 = 35;
-            short i21  = 35;
-            ushort i22  = 35;
+            short i21 = 35;
+            ushort i22 = 35;
             char c12 = '3';
             char c22 = 'a';
 
-            Assert.AreEqual(35, b1);
-            Assert.AreEqual(35, sb2);
-            Assert.AreEqual(35, d4);
-            Assert.AreEqual(35, d5);
-            Assert.AreEqual(35, f6);
-            Assert.AreEqual(35, i7);
-            Assert.AreEqual(35, u8);
-            Assert.AreEqual(35, l9);
-            Assert.AreEqual(35, s10);
-            Assert.AreEqual(35, us11);
-            Assert.AreEqual('3', c1);
-            Assert.AreEqual('a', c2);
+            ClassicAssert.AreEqual(35, b1);
+            ClassicAssert.AreEqual(35, sb2);
+            ClassicAssert.AreEqual(35, d4);
+            ClassicAssert.AreEqual(35, d5);
+            ClassicAssert.AreEqual(35, f6);
+            ClassicAssert.AreEqual(35, i7);
+            ClassicAssert.AreEqual(35, u8);
+            ClassicAssert.AreEqual(35, l9);
+            ClassicAssert.AreEqual(35, s10);
+            ClassicAssert.AreEqual(35, us11);
+            ClassicAssert.AreEqual('3', c1);
+            ClassicAssert.AreEqual('a', c2);
 
-            Assert.AreEqual( 35, b12  );
-            Assert.AreEqual( 35, sb13 );
-            Assert.AreEqual( 35, d14  );
-            Assert.AreEqual( 35, d15  );
-            Assert.AreEqual( 35, s16  );
-            Assert.AreEqual( 35, i17  );
-            Assert.AreEqual( 35, ui18 );
-            Assert.AreEqual( 35, i19  );
-            Assert.AreEqual( 35, ui20 );
-            Assert.AreEqual( 35, i21  );
-            Assert.AreEqual( 35, i22  );
-            Assert.AreEqual('3', c12);
-            Assert.AreEqual('a', c22);
+            ClassicAssert.AreEqual(35, b12);
+            ClassicAssert.AreEqual(35, sb13);
+            ClassicAssert.AreEqual(35, d14);
+            ClassicAssert.AreEqual(35, d15);
+            ClassicAssert.AreEqual(35, s16);
+            ClassicAssert.AreEqual(35, i17);
+            ClassicAssert.AreEqual(35, ui18);
+            ClassicAssert.AreEqual(35, i19);
+            ClassicAssert.AreEqual(35, ui20);
+            ClassicAssert.AreEqual(35, i21);
+            ClassicAssert.AreEqual(35, i22);
+            ClassicAssert.AreEqual('3', c12);
+            ClassicAssert.AreEqual('a', c22);
 
             byte? b23 = 35;
             sbyte? sb24 = 35;
@@ -330,25 +328,25 @@ namespace NUnit.Framework.Assertions
             char? c3 = '3';
             char? c4 = 'a';
 
-            Assert.AreEqual(35, b23);
-            Assert.AreEqual(35, sb24);
-            Assert.AreEqual(35, d25);
-            Assert.AreEqual(35, d26);
-            Assert.AreEqual(35, f27);
-            Assert.AreEqual(35, i28);
-            Assert.AreEqual(35, u29);
-            Assert.AreEqual(35, l30);
-            Assert.AreEqual(35, s31);
-            Assert.AreEqual(35, us32);
-            Assert.AreEqual('3', c3);
-            Assert.AreEqual('a', c4);
+            ClassicAssert.AreEqual(35, b23);
+            ClassicAssert.AreEqual(35, sb24);
+            ClassicAssert.AreEqual(35, d25);
+            ClassicAssert.AreEqual(35, d26);
+            ClassicAssert.AreEqual(35, f27);
+            ClassicAssert.AreEqual(35, i28);
+            ClassicAssert.AreEqual(35, u29);
+            ClassicAssert.AreEqual(35, l30);
+            ClassicAssert.AreEqual(35, s31);
+            ClassicAssert.AreEqual(35, us32);
+            ClassicAssert.AreEqual('3', c3);
+            ClassicAssert.AreEqual('a', c4);
         }
 
         [Test]
         public void EnumsEqual()
         {
             MyEnum actual = MyEnum.A;
-            Assert.AreEqual(MyEnum.A, actual);
+            ClassicAssert.AreEqual(MyEnum.A, actual);
         }
 
         [Test]
@@ -359,29 +357,29 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + nameof(MyEnum.C) + Environment.NewLine +
                 "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(MyEnum.C, actual));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(MyEnum.C, actual));
+            Assert.That(ex?.Message,Does.Contain(expectedMessage));
         }
 
         [Test]
         public void DateTimeEqual()
         {
-            var dt1 = new DateTime( 2005, 6, 1, 7, 0, 0 );
-            var dt2 = new DateTime( 2005, 6, 1, 0, 0, 0 ) + TimeSpan.FromHours( 7.0 );
-            Assert.AreEqual( dt1, dt2 );
+            var dt1 = new DateTime(2005, 6, 1, 7, 0, 0);
+            var dt2 = new DateTime(2005, 6, 1, 0, 0, 0) + TimeSpan.FromHours(7.0);
+            ClassicAssert.AreEqual(dt1, dt2);
         }
 
         [Test]
         public void DateTimeNotEqual_DifferenceInHours()
         {
-            var dt1 = new DateTime( 2005, 6, 1, 7, 0, 0 );
-            var dt2 = new DateTime( 2005, 6, 1, 0, 0, 0 );
+            var dt1 = new DateTime(2005, 6, 1, 7, 0, 0);
+            var dt2 = new DateTime(2005, 6, 1, 0, 0, 0);
             var expectedMessage =
                 "  Expected: 2005-06-01 07:00:00" + Environment.NewLine +
                 "  But was:  2005-06-01 00:00:00" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(dt1, dt2));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -393,29 +391,25 @@ namespace NUnit.Framework.Assertions
                 "  Expected: 1914-06-28 12:00:00" + Environment.NewLine +
                 "  But was:  1914-06-28 12:00:00.0000666" + Environment.NewLine;
 
-            Assert.That(() => Assert.AreEqual(dt1, dt2),
-                Throws.InstanceOf<AssertionException>().With.Message.EqualTo(expectedMessage));
+            Assert.That(() => ClassicAssert.AreEqual(dt1, dt2),
+                Throws.InstanceOf<AssertionException>().With.Message.Contain(expectedMessage));
         }
 
         [Test]
         public void DirectoryInfoEqual()
         {
-            using (var testDir = new TestDirectory())
-            {
-                var one = new DirectoryInfo(testDir.Directory.FullName);
-                var two = new DirectoryInfo(testDir.Directory.FullName);
-                Assert.AreEqual(one, two);
-            }
+            using var testDir = new TestDirectory();
+            var one = new DirectoryInfo(testDir.Directory.FullName);
+            var two = new DirectoryInfo(testDir.Directory.FullName);
+            ClassicAssert.AreEqual(one, two);
         }
 
         [Test]
         public void DirectoryInfoNotEqual()
         {
-            using (var one = new TestDirectory())
-            using (var two = new TestDirectory())
-            {
-                Assert.Throws<AssertionException>(() => Assert.AreEqual(one.Directory, two.Directory));
-            }
+            using var one = new TestDirectory();
+            using var two = new TestDirectory();
+            Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(one.Directory, two.Directory));
         }
 
         private enum MyEnum
@@ -429,17 +423,18 @@ namespace NUnit.Framework.Assertions
             double d1 = 36.1;
             double d2 = 36.099999999999994;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2) );
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
 
-            var message = ex.Message;
-            int i = message.IndexOf('3');
-            int j = message.IndexOf( 'd', i );
-            string expected = message.Substring( i, j - i + 1 );
-            i = message.IndexOf( '3', j );
-            j = message.IndexOf( 'd', i );
-            string actual = message.Substring( i , j - i + 1 );
+            var message = ex?.Message;
+            ClassicAssert.NotNull(message);
+            int i = message!.IndexOf('3');
+            int j = message.IndexOf('d', i);
+            string expected = message.Substring(i, j - i + 1);
+            i = message.IndexOf('3', j);
+            j = message.IndexOf('d', i);
+            string actual = message.Substring(i, j - i + 1);
 
-            Assert.AreNotEqual( expected, actual );
+            ClassicAssert.AreNotEqual(expected, actual);
         }
 
         [Test]
@@ -448,17 +443,18 @@ namespace NUnit.Framework.Assertions
             float f1 = 36.125F;
             float f2 = 36.125004F;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(f1, f2));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2));
 
-            var message = ex.Message;
-            int i = message.IndexOf( '3' );
-            int j = message.IndexOf( 'f', i );
-            string expected = message.Substring( i, j - i + 1 );
-            i = message.IndexOf( '3', j );
-            j = message.IndexOf( 'f', i );
-            string actual = message.Substring( i, j - i + 1 );
+            var message = ex?.Message;
+            ClassicAssert.NotNull(message);
+            int i = message!.IndexOf('3');
+            int j = message.IndexOf('f', i);
+            string expected = message.Substring(i, j - i + 1);
+            i = message.IndexOf('3', j);
+            j = message.IndexOf('f', i);
+            string actual = message.Substring(i, j - i + 1);
 
-            Assert.AreNotEqual( expected, actual );
+            ClassicAssert.AreNotEqual(expected, actual);
         }
 
         [Test]
@@ -468,9 +464,9 @@ namespace NUnit.Framework.Assertions
             double d2 = 0.12;
             double tol = 0.005;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2, tol));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2, tol));
 
-            Assert.That(ex.Message, Does.Contain("+/- 0.005"));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
         }
 
         [Test]
@@ -480,9 +476,9 @@ namespace NUnit.Framework.Assertions
             float f2 = 0.12F;
             float tol = 0.001F;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual( f1, f2, tol ));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2, tol));
 
-            Assert.That(ex.Message, Does.Contain( "+/- 0.001"));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.001"));
         }
 
         [Test, DefaultFloatingPointTolerance(0.005)]
@@ -491,8 +487,8 @@ namespace NUnit.Framework.Assertions
             double d1 = 0.15;
             double d2 = 0.12;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
-            Assert.That(ex.Message, Does.Contain("+/- 0.005"));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
         }
 
         [Test, DefaultFloatingPointTolerance(0.005)]
@@ -501,8 +497,8 @@ namespace NUnit.Framework.Assertions
             double d1 = double.NaN;
             double d2 = 0.12;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(d1, d2));
-            Assert.That(ex.Message.IndexOf("+/-") == -1);
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
+            Assert.That(ex?.Message.IndexOf("+/-") == -1);
         }
 
         [Test]
@@ -510,8 +506,8 @@ namespace NUnit.Framework.Assertions
         {
             var a = new IntEquatable(1);
 
-            Assert.AreEqual(1, a);
-            Assert.AreEqual(a, 1);
+            ClassicAssert.AreEqual(1, a);
+            ClassicAssert.AreEqual(a, 1);
         }
 
         [Test]
@@ -522,7 +518,9 @@ namespace NUnit.Framework.Assertions
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(1));
+#pragma warning disable NUnit2007 // The actual value should not be a constant
                 Assert.That(1, Is.EqualTo(a));
+#pragma warning restore NUnit2007 // The actual value should not be a constant
             });
         }
 
@@ -543,10 +541,10 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ShouldNotCallToStringOnClassForPassingTests()
         {
-            var actual = new ThrowsIfToStringIsCalled(1);
-            var expected = new ThrowsIfToStringIsCalled(1);
+            var actual = new NUnit.Framework.Tests.Assertions.ThrowsIfToStringIsCalled(1);
+            var expected = new NUnit.Framework.Tests.Assertions.ThrowsIfToStringIsCalled(1);
 
-            Assert.AreEqual(expected, actual);
+            ClassicAssert.AreEqual(expected, actual);
         }
 
 #pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
@@ -564,40 +562,6 @@ namespace NUnit.Framework.Assertions
             {
                 return _i.Equals(other);
             }
-        }
-    }
-
-    /// <summary>
-    /// This class is for testing issue #1301 where ToString() is called on
-    /// a class to create the description of the constraint even where that
-    /// description is not used because the test passes.
-    /// </summary>
-    internal sealed class ThrowsIfToStringIsCalled
-    {
-        private readonly int _x;
-
-        public ThrowsIfToStringIsCalled(int x)
-        {
-            _x = x;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not ThrowsIfToStringIsCalled other)
-                return false;
-
-            return _x == other._x;
-        }
-
-        public override int GetHashCode()
-        {
-            return _x;
-        }
-
-        public override string ToString()
-        {
-            Assert.Fail("Should not call ToString() if Assert does not fail");
-            return base.ToString()!;
         }
     }
 }

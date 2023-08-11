@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
             "Work posted to the synchronization context did not complete within ten seconds. Consider explicitly waiting for the work to complete.";
 
         private readonly TimeSpan _shutdownTimeout;
-        private readonly Queue<ScheduledWork> _queue = new Queue<ScheduledWork>();
+        private readonly Queue<ScheduledWork> _queue = new();
         private Status _status;
         private Stopwatch? _timeSinceShutdown;
 

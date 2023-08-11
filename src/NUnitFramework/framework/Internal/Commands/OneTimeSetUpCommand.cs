@@ -26,4 +26,3 @@ namespace NUnit.Framework.Internal.Commands
         }
     }
 }
-

@@ -4,8 +4,9 @@ using System;
 using System.Globalization;
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultGeneralTests : TestResultTests
     {

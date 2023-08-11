@@ -2,24 +2,26 @@
 
 using System;
 using System.Diagnostics;
-#if NETFRAMEWORK
-using System.Reflection;
-#endif
-using System.Threading;
 using System.Globalization;
 using System.IO;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Interfaces;
+using System.Reflection;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
+#if NETFRAMEWORK
+#endif
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     /// <summary>
     /// Summary description for TestExecutionContextTests.
     /// </summary>
-    [TestFixture][Property("Question", "Why?")]
+    [TestFixture]
+    [Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
         private TestExecutionContext _fixtureContext;
@@ -48,7 +50,7 @@ namespace NUnit.Framework.Internal
             TestExecutionContext ec = TestExecutionContext.CurrentContext;
             Assert.That(ec.CurrentTest.Name, Is.EqualTo("TestExecutionContextTests"));
             Assert.That(ec.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
             Assert.That(_fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
@@ -85,7 +87,7 @@ namespace NUnit.Framework.Internal
                 "Cannot access CurrentResult in TearDown");
         }
 
-#region CurrentContext
+        #region CurrentContext
 
         [Test]
         public async Task CurrentContextFlowsWithAsyncExecution()
@@ -122,9 +124,9 @@ namespace NUnit.Framework.Internal
             Assert.That(threadContext, Is.Not.Null.And.SameAs(TestExecutionContext.CurrentContext));
         }
 
-#endregion
+        #endregion
 
-#region CurrentTest
+        #region CurrentTest
 
         [Test]
         public void FixtureSetUpCanAccessFixtureName()
@@ -136,7 +138,7 @@ namespace NUnit.Framework.Internal
         public void FixtureSetUpCanAccessFixtureFullName()
         {
             Assert.That(_fixtureContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
         }
 
         [Test]
@@ -167,7 +169,7 @@ namespace NUnit.Framework.Internal
         public void SetUpCanAccessTestFullName()
         {
             Assert.That(_setupContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
         }
 
         [Test]
@@ -200,7 +202,7 @@ namespace NUnit.Framework.Internal
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -226,7 +228,7 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public void TestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
 
         [Test]
@@ -241,10 +243,10 @@ namespace NUnit.Framework.Internal
         public async Task AsyncTestCanAccessItsOwnFullName()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -277,9 +279,9 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
 
         [Test]
@@ -290,9 +292,9 @@ namespace NUnit.Framework.Internal
             Assert.That(worker is not null || !isRunningUnderTestWorker);
         }
 
-#endregion
+        #endregion
 
-#region CurrentResult
+        #region CurrentResult
 
         [Test]
         public void CanAccessResultName()
@@ -305,11 +307,11 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanAccessResultFullName()
         {
-            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_setupContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
         }
 
         [Test]
@@ -341,10 +343,10 @@ namespace NUnit.Framework.Internal
         public async Task CanAccessResultFullName_Async()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
         }
 
         [Test]
@@ -365,9 +367,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
 
-#endregion
+        #endregion
 
-#region StartTime
+        #region StartTime
 
         [Test]
         public void CanAccessStartTime()
@@ -386,9 +388,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.EqualTo(startTime));
         }
 
-#endregion
+        #endregion
 
-#region StartTicks
+        #region StartTicks
 
         [Test]
         public void CanAccessStartTicks()
@@ -407,9 +409,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.EqualTo(startTicks));
         }
 
-#endregion
+        #endregion
 
-#region OutWriter
+        #region OutWriter
 
         [Test]
         public void CanAccessOutWriter()
@@ -428,9 +430,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(outWriter));
         }
 
-#endregion
+        #endregion
 
-#region TestObject
+        #region TestObject
 
         [Test]
         public void CanAccessTestObject()
@@ -449,9 +451,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(testObject));
         }
 
-#endregion
+        #endregion
 
-#region StopOnError
+        #region StopOnError
 
         [Test]
         public void CanAccessStopOnError()
@@ -469,9 +471,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(stop));
         }
 
-#endregion
+        #endregion
 
-#region Listener
+        #region Listener
 
         [Test]
         public void CanAccessListener()
@@ -490,9 +492,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(listener));
         }
 
-#endregion
+        #endregion
 
-#region Dispatcher
+        #region Dispatcher
 
         [Test]
         public void CanAccessDispatcher()
@@ -511,9 +513,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(dispatcher));
         }
 
-#endregion
+        #endregion
 
-#region ParallelScope
+        #region ParallelScope
 
         [Test]
         public void CanAccessParallelScope()
@@ -532,9 +534,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
         }
 
-#endregion
+        #endregion
 
-#region TestWorker
+        #region TestWorker
 
         [Test]
         public void CanAccessTestWorker()
@@ -556,9 +558,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(worker));
         }
 
-#endregion
+        #endregion
 
-#region RandomGenerator
+        #region RandomGenerator
 
         [Test]
         public void CanAccessRandomGenerator()
@@ -577,9 +579,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(random));
         }
 
-#endregion
+        #endregion
 
-#region AssertCount
+        #region AssertCount
 
         [Test]
         public void CanAccessAssertCount()
@@ -601,9 +603,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(3));
         }
 
-#endregion
+        #endregion
 
-#region MultipleAssertLevel
+        #region MultipleAssertLevel
 
         [Test]
         public void CanAccessMultipleAssertLevel()
@@ -629,9 +631,9 @@ namespace NUnit.Framework.Internal
             });
         }
 
-#endregion
+        #endregion
 
-#region TestCaseTimeout
+        #region TestCaseTimeout
 
         [Test]
         public void CanAccessTestCaseTimeout()
@@ -650,9 +652,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
         }
 
-#endregion
+        #endregion
 
-#region UpstreamActions
+        #region UpstreamActions
 
         [Test]
         public void CanAccessUpstreamActions()
@@ -671,9 +673,9 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.SameAs(actions));
         }
 
-#endregion
+        #endregion
 
-#region CurrentCulture and CurrentUICulture
+        #region CurrentCulture and CurrentUICulture
 
         [Test]
         public void CanAccessCurrentCulture()
@@ -753,9 +755,9 @@ namespace NUnit.Framework.Internal
             Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
         }
 
-#endregion
+        #endregion
 
-#region CurrentPrincipal
+        #region CurrentPrincipal
 
         [Test]
         public void CanAccessCurrentPrincipal()
@@ -797,9 +799,9 @@ namespace NUnit.Framework.Internal
             Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
         }
 
-#endregion
+        #endregion
 
-#region ValueFormatter
+        #region ValueFormatter
 
         [Test]
         public void SetAndRestoreValueFormatter()
@@ -825,9 +827,9 @@ namespace NUnit.Framework.Internal
             Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
 
-#endregion
+        #endregion
 
-#region SingleThreaded
+        #region SingleThreaded
 
         [Test]
         public void SingleThreadedDefaultsToFalse()
@@ -843,9 +845,9 @@ namespace NUnit.Framework.Internal
             Assert.That(new TestExecutionContext(parent).IsSingleThreaded, Is.True);
         }
 
-#endregion
+        #endregion
 
-#region ExecutionStatus
+        #region ExecutionStatus
 
         [Test]
         public void ExecutionStatusIsPushedToHigherContext()
@@ -881,12 +883,12 @@ namespace NUnit.Framework.Internal
             Assert.That(rightContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#endregion
+        #endregion
 
-#region Cross-domain Tests
+        #region Cross-domain Tests
 
 #if NETFRAMEWORK
-        [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
+        [Test, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
             AppDomain domain = AppDomain.CreateDomain(
@@ -896,7 +898,7 @@ namespace NUnit.Framework.Internal
                 null!,
                 false);
 
-            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
+            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Tests.Internal.TestExecutionContextTests+TestClass");
 
             Assert.That(obj, Is.Not.Null);
         }
@@ -909,7 +911,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#region CurrentRepeatCount Tests
+        #region CurrentRepeatCount Tests
         [Test]
         public void CanAccessCurrentRepeatCount()
         {
@@ -917,9 +919,9 @@ namespace NUnit.Framework.Internal
             _fixtureContext.CurrentRepeatCount++;
             Assert.That(_fixtureContext.CurrentRepeatCount, Is.EqualTo(1), "expected value to be able to be incremented from the TestExecutionContext");
         }
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private async Task YieldAsync()
         {
@@ -937,11 +939,11 @@ namespace NUnit.Framework.Internal
             return TestExecutionContext.CurrentContext;
         }
 
-#endregion
+        #endregion
     }
 
 #if NETFRAMEWORK
-    [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
+    [TestFixture, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {
         private RunsInAppDomain _runsInAppDomain;
@@ -951,7 +953,7 @@ namespace NUnit.Framework.Internal
         {
             var domain = AppDomain.CreateDomain("TestDomain", null!, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath!, false);
             RunsInAppDomain? runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName!,
-                "NUnit.Framework.Internal.RunsInAppDomain") as RunsInAppDomain;
+                "NUnit.Framework.Tests.Internal.RunsInAppDomain") as RunsInAppDomain;
             Assert.That(runsInAppDomain, Is.Not.Null);
             _runsInAppDomain = runsInAppDomain;
         }

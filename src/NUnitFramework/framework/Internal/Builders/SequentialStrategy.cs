@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>The test cases.</returns>
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
-            List<ITestCaseData> testCases = new List<ITestCaseData>();
+            List<ITestCaseData> testCases = new();
 
             IEnumerator[] enumerators = new IEnumerator[sources.Length];
             for (int i = 0; i < sources.Length; i++)

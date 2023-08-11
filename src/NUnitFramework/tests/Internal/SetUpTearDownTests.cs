@@ -3,10 +3,11 @@
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 using NUnit.TestData.SetUpData;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class SetUpTearDownTests
@@ -15,18 +16,17 @@ namespace NUnit.Framework.Internal
         public void SetUpAndTearDownCounter()
         {
             SetUpAndTearDownCounterFixture fixture = new SetUpAndTearDownCounterFixture();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
             Assert.That(fixture.SetUpCounter, Is.EqualTo(3));
             Assert.That(fixture.TearDownCounter, Is.EqualTo(3));
         }
 
-
         [Test]
         public void MakeSureSetUpAndTearDownAreCalled()
         {
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
             Assert.That(fixture.WasSetUpCalled, Is.True);
             Assert.That(fixture.WasTearDownCalled, Is.True);
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
         public void CheckInheritedSetUpAndTearDownAreCalled()
         {
             InheritSetUpAndTearDown fixture = new InheritSetUpAndTearDown();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
             Assert.That(fixture.WasSetUpCalled, Is.True);
             Assert.That(fixture.WasTearDownCalled, Is.True);
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
         public void CheckOverriddenSetUpAndTearDownAreNotCalled()
         {
             DefineInheritSetUpAndTearDown fixture = new DefineInheritSetUpAndTearDown();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
             Assert.That(fixture.WasSetUpCalled, Is.False);
             Assert.That(fixture.WasTearDownCalled, Is.False);

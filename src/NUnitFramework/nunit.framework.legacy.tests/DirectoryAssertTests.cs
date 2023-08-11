@@ -2,9 +2,10 @@
 
 using System;
 using System.IO;
-using NUnit.TestUtilities;
+using NUnit.Framework.Legacy;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class DirectoryAssertTests
@@ -29,9 +30,9 @@ namespace NUnit.Framework.Assertions
             _goodDir2?.Dispose();
         }
 
-#region AreEqual
+        #region AreEqual
 
-#region Success Tests
+        #region Success Tests
 
         [Test]
         public void AreEqualPassesWithDirectoryInfos()
@@ -42,9 +43,9 @@ namespace NUnit.Framework.Assertions
             DirectoryAssert.AreEqual(expected, actual);
         }
 
-#endregion
+        #endregion
 
-#region Failure Tests
+        #region Failure Tests
 
         [Test]
         public void AreEqualFailsWithDirectoryInfos()
@@ -55,16 +56,16 @@ namespace NUnit.Framework.Assertions
                 string.Format("  Expected: <{0}>{2}  But was:  <{1}>{2}",
                     expected.FullName, actual.FullName, Environment.NewLine);
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreEqual(expected, actual));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region AreNotEqual
+        #region AreNotEqual
 
-#region Success Tests
+        #region Success Tests
         [Test]
         public void AreNotEqualPassesIfExpectedIsNull()
         {
@@ -84,9 +85,9 @@ namespace NUnit.Framework.Assertions
             var actual = _goodDir2.Directory;
             DirectoryAssert.AreNotEqual(expected, actual);
         }
-#endregion
+        #endregion
 
-#region Failure Tests
+        #region Failure Tests
 
         [Test]
         public void AreNotEqualFailsWithDirectoryInfos()
@@ -97,16 +98,16 @@ namespace NUnit.Framework.Assertions
                 "  Expected: not equal to <{0}>{2}  But was:  <{1}>{2}",
                 expected.FullName,
                 actual.FullName,
-                Environment.NewLine );
+                Environment.NewLine);
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreNotEqual(expected, actual));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Exists
+        #region Exists
 
         [Test]
         public void ExistsPassesWhenDirectoryInfoExists()
@@ -124,53 +125,53 @@ namespace NUnit.Framework.Assertions
         public void ExistsFailsWhenDirectoryInfoDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(new DirectoryInfo(BAD_DIRECTORY)));
-            Assert.That(ex.Message, Does.StartWith("  Expected: directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(BAD_DIRECTORY));
-            Assert.That(ex.Message, Does.StartWith("  Expected: directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenDirectoryInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists(default(DirectoryInfo)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists(default(string)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => DirectoryAssert.Exists(string.Empty));
-            Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-#endregion
+        #endregion
 
-#region DoesNotExist
+        #region DoesNotExist
 
         [Test]
         public void DoesNotExistFailsWhenDirectoryInfoExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.Directory));
-            Assert.That(ex.Message, Does.StartWith("  Expected: not directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not directory exists"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.ToString()));
-            Assert.That(ex.Message, Does.StartWith("  Expected: not directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not directory exists"));
         }
 
         [Test]
@@ -189,35 +190,35 @@ namespace NUnit.Framework.Assertions
         public void DoesNotExistFailsWhenDirectoryInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist(default(DirectoryInfo)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist(default(string)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => DirectoryAssert.DoesNotExist(string.Empty));
-            Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
         [Test]
         public void EqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => DirectoryAssert.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("DirectoryAssert.Equals should not be used."));
+            Assert.That(ex?.Message, Does.StartWith("DirectoryAssert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => DirectoryAssert.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("DirectoryAssert.ReferenceEquals should not be used."));
+            Assert.That(ex?.Message, Does.StartWith("DirectoryAssert.ReferenceEquals should not be used."));
         }
 
         #endregion

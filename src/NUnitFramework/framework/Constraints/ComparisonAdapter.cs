@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Construct a default ComparisonAdapter
             /// </summary>
-            public DefaultComparisonAdapter() : base( NUnitComparer.Default ) { }
+            public DefaultComparisonAdapter() : base(NUnitComparer.Default) { }
         }
 
         private class ComparerAdapter : ComparisonAdapter

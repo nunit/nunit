@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
 #pragma warning disable 1998
     public class RealAsyncSetupTeardownTests
@@ -22,7 +22,6 @@ namespace NUnit.Framework.Internal
             Assume.That(_initializedOnce, Is.Not.Null);
             _initializedEveryTime = new object();
         }
-
 
         [Test]
         public void TestCurrentFixtureInitialization()
@@ -48,7 +47,6 @@ namespace NUnit.Framework.Internal
         {
             Assume.That(_initializedOnce, Is.Null);
         }
-
     }
 #pragma warning restore 1998
 }

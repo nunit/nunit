@@ -2,10 +2,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.UnexpectedExceptionFixture;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class UnexpectedExceptionTests
@@ -118,7 +119,7 @@ namespace NUnit.Framework.Internal
 
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
-            Assert.That(result, Has.Property("Message").StartWith(
+            Assert.That(result, Has.Property("Message").Contains(
                 "  Expected: null" + Environment.NewLine
                 + "  But was:  <! RecursivelyThrowingException was thrown by RecursivelyThrowingException.ToString() !>"));
         }
@@ -133,7 +134,7 @@ namespace NUnit.Framework.Internal
 
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
-            Assert.That(result, Has.Property("Message").StartWith(
+            Assert.That(result, Has.Property("Message").Contains(
                 "  Expected: <! RecursivelyThrowingException was thrown by RecursivelyThrowingException.ToString() !>" + Environment.NewLine
                 + "  But was:  null"));
         }

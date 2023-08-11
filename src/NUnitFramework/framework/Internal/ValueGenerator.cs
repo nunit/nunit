@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                for (var current = start;;)
+                for (var current = start; ;)
                 {
                     yield return current;
 

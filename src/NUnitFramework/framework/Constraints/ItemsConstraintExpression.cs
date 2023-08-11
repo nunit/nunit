@@ -23,6 +23,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// No-op property for readability.
         /// </summary>
-        public ResolvableConstraintExpression Items => new ResolvableConstraintExpression(builder);
+        public ResolvableConstraintExpression Items => new(builder);
     }
 }

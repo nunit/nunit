@@ -46,7 +46,6 @@ namespace NUnit.Framework
             static void ThrowArgumentNotNullOrEmpty(string name) => throw new ArgumentException("Argument " + name + " must not be the empty string", name);
         }
 
-
         /// <summary>
         /// Throws an ArgumentOutOfRangeException if the specified condition is not met.
         /// </summary>
@@ -78,7 +77,6 @@ namespace NUnit.Framework
             [MethodImpl(MethodImplOptions.NoInlining)]
             static void ThrowArgumentException(string message, string paramName) => throw new ArgumentException(message, paramName);
         }
-
 
         /// <summary>
         /// Throws an InvalidOperationException if the specified condition is not met.

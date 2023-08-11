@@ -4,13 +4,13 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestCaseAttributeFixture;
-using NUnit.TestUtilities;
-using System.Threading.Tasks;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestCaseAttributeTests
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Attributes
             return n / d;
         }
 
-        [TestCase(2, 2, ExpectedResult=4)]
+        [TestCase(2, 2, ExpectedResult = 4)]
         public double CanConvertIntToDouble(double x, double y)
         {
             return x + y;
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Attributes
         [TestCase("1942-10-12")]
         public void CanConvertIso8601DateStringToDateTime(DateTime dt)
         {
-            Assert.That(dt, Is.EqualTo(new DateTime(1942,10,12)));
+            Assert.That(dt, Is.EqualTo(new DateTime(1942, 10, 12)));
         }
 
         [TestCase("1942-10-12", ExpectedResult = "1942-10-12")]
@@ -219,20 +219,20 @@ namespace NUnit.Framework.Attributes
             Assert.That(array[0], Is.EqualTo("c"));
         }
 
-        [TestCase("x", ExpectedResult = new []{"x", "b", "c"})]
+        [TestCase("x", ExpectedResult = new[] { "x", "b", "c" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
         public string[] HandlesOptionalArguments(string s1, string s2 = "b", string s3 = "c")
         {
-            return new[] {s1, s2, s3};
+            return new[] { s1, s2, s3 };
         }
 
-        [TestCase(ExpectedResult = new []{"a", "b"})]
+        [TestCase(ExpectedResult = new[] { "a", "b" })]
         [TestCase("x", ExpectedResult = new[] { "x", "b" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y" })]
         public string[] HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
         {
-            return new[] {s1, s2};
+            return new[] { s1, s2 };
         }
 
 #pragma warning disable NUnit1004 // The TestCaseAttribute provided too many arguments
@@ -585,7 +585,6 @@ namespace NUnit.Framework.Attributes
             };
             Assert.That(suite.Tests.Select(t => t.Name), Is.EquivalentTo(expectedNames));
         }
-
 
         #region Nullable<> tests
 

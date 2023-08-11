@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Applies a category to a test
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = true)]
     public class CategoryAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
@@ -44,8 +44,8 @@ namespace NUnit.Framework
         protected CategoryAttribute()
         {
             categoryName = GetType().Name;
-            if ( categoryName.EndsWith( "Attribute", StringComparison.Ordinal ) )
-                categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
+            if (categoryName.EndsWith("Attribute", StringComparison.Ordinal))
+                categoryName = categoryName.Substring(0, categoryName.Length - 9);
         }
 
         /// <summary>

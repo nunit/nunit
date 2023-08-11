@@ -13,7 +13,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Construct an AssertionResult
         /// </summary>
-        public AssertionResult(AssertionStatus status, string? message, string? stackTrace)
+        public AssertionResult(AssertionStatus status, string message, string? stackTrace)
         {
             Status = status;
             Message = message;
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Interfaces
         public AssertionStatus Status { get; }
 
         /// <summary>The message produced by the assertion, or null</summary>
-        public string? Message { get; }
+        public string Message { get; }
 
         /// <summary>The stack trace associated with the assertion, or null</summary>
         public string? StackTrace { get; }
@@ -51,8 +51,8 @@ namespace NUnit.Framework.Interfaces
         {
             var hashCode = -783279553;
             hashCode = hashCode * -1521134295 + Status.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Message);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(StackTrace);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Message);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(StackTrace ?? string.Empty);
             return hashCode;
         }
 

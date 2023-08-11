@@ -7,20 +7,20 @@ namespace NUnit.TestData.AttributeInheritanceData
 {
     // Sample Test from a post by Scott Bellware
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     internal class ConcernAttribute : TestFixtureAttribute
     {
 #pragma warning disable IDE0052 // Remove unread private members
         private readonly Type _typeOfConcern;
 #pragma warning restore IDE0052 // Remove unread private members
 
-        public ConcernAttribute( Type typeOfConcern )
+        public ConcernAttribute(Type typeOfConcern)
         {
             _typeOfConcern = typeOfConcern;
         }
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     internal class SpecAttribute : TestAttribute
     {
     }

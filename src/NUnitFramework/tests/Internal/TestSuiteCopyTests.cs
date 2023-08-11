@@ -1,11 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Api;
-using NUnit.TestData.OneTimeSetUpTearDownData;
-using NUnit.TestUtilities;
 using System.IO;
+using NUnit.Framework.Api;
+using NUnit.Framework.Internal;
+using NUnit.TestData.OneTimeSetUpTearDownData;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     // Tests that Copy is properly overridden for all types extending TestSuite - #3171
     public class TestSuiteCopyTests
@@ -36,7 +37,6 @@ namespace NUnit.Framework.Internal
                 nameof(NUnit.TestData.ParameterizedTestFixture.MethodWithParams)));
             var copiedparameterizedMethodSuite = parameterizedMethodSuite.Copy(TestFilter.Empty);
             Assert.That(copiedparameterizedMethodSuite, Is.TypeOf<ParameterizedMethodSuite>());
-
         }
 
         [Test]

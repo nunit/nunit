@@ -17,7 +17,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
     {
-        private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _builder = new();
 
         /// <summary>
         /// Error message string is public so the tests can use it
@@ -131,7 +131,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
         {
-            List<ITestFixtureData> data = new List<ITestFixtureData>();
+            List<ITestFixtureData> data = new();
 
             try
             {

@@ -3,10 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 using NUnit.TestData.TestFixtureTests;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class TestProgressReporterTests
     {

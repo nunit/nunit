@@ -5,9 +5,9 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [Platform(Include = "Win, Mono")]
     [TestFixture]
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void RequiresSTACanBeSetOnTestFixture()
             {
-                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             }
         }
 
