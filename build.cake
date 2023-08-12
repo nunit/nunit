@@ -1,11 +1,11 @@
-#tool NUnit.ConsoleRunner&version=3.12.0
-
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var branch = Argument("branch", "unknown");
+var tag = Argument("tag", "4.0.0-alpha-dev");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -17,11 +17,8 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "4.0.0";
-var modifier = "-alpha-1";
-
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
-var packageVersion = version + modifier + dbgSuffix;
+var packageVersion = tag + "-local" + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -72,44 +69,12 @@ var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Sing
 
 Setup(context =>
 {
-    if (BuildSystem.IsRunningOnAppVeyor)
+    if (BuildSystem.IsRunningOnGitHubActions)
     {
-        var tag = AppVeyor.Environment.Repository.Tag;
-
-        if (tag.IsTag)
+        if (BuildSystem.IsPullRequest)
         {
-            packageVersion = tag.Name;
+            packageVersion = tag + "-pr";
         }
-        else
-        {
-            var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-            var branch = AppVeyor.Environment.Repository.Branch;
-            var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
-
-            if (branch == "master" && !isPullRequest)
-            {
-                packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
-            }
-            else
-            {
-                var suffix = "-ci-" + buildNumber + dbgSuffix;
-
-                if (isPullRequest)
-                    suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-                else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                    suffix += "-pre-" + buildNumber;
-                else
-                    suffix += "-" + System.Text.RegularExpressions.Regex.Replace(branch, "[^0-9A-Za-z-]+", "-");
-
-                // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-                if (suffix.Length > 21)
-                    suffix = suffix.Substring(0, 21);
-
-                packageVersion = version + suffix;
-            }
-        }
-
-        AppVeyor.UpdateBuildVersion(packageVersion);
     }
 
     Information("Building {0} version {1} of NUnit.", configuration, packageVersion);
@@ -137,7 +102,7 @@ Task("NuGetRestore")
     .Description("Restores NuGet Packages")
     .Does(() =>
     {
-        DotNetCoreRestore(SOLUTION_FILE);
+        DotNetRestore(SOLUTION_FILE);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -149,15 +114,19 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
-    new DotNetCoreBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() =>
+    new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetCoreVerbosity.Minimal
+        Verbosity = DotNetVerbosity.Minimal,
+        MSBuildSettings = new DotNetMSBuildSettings
+        {
+            Version = packageVersion
+        }
     };
 
 //////////////////////////////////////////////////////////////////////
@@ -229,7 +198,7 @@ var RootFiles = new FilePath[]
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
 // used by the .NET 4.0 framework. 4.0 tests will not run without them.
-var FrameworkFiles = new FilePath[]
+var FrameworkFiles = new String[]
 {
     "mock-assembly.dll",
     "mock-assembly.exe",
@@ -270,7 +239,7 @@ Task("CreateImage")
         var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
-        Information("Created imagedirectory at:" + imageBinDir);
+        Information("Created imagedirectory at: " + imageBinDir);
         var directories = new String[]
         {
             NUNITFRAMEWORKBIN,
@@ -281,11 +250,11 @@ Task("CreateImage")
         {
             foreach (var runtime in LibraryFrameworks)
             {
-                var targetDir = imageBinDir + Directory(runtime);
-                var sourceDir = dir + Directory(runtime);
+                var targetDir = imageBinDir + runtime;
+                var sourceDir = dir + runtime;
                 CreateDirectory(targetDir);
                 Information("Created directory " + targetDir);
-                foreach (FilePath file in FrameworkFiles)
+                foreach (var file in FrameworkFiles)
                 {
                     var sourcePath = sourceDir + "/" + file;
                     if (FileExists(sourcePath))
@@ -300,8 +269,8 @@ Task("CreateImage")
         
         foreach (var dir in RuntimeFrameworks)
         {
-            var targetDir = imageBinDir + Directory(dir);
-            var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
+            var targetDir = imageBinDir + dir;
+            var sourceDir = NUNITLITERUNNERBIN + dir;
             Information("Copying " + sourceDir + " to " + targetDir);
             CopyDirectory(sourceDir, targetDir);
         }
@@ -320,8 +289,7 @@ Task("PackageFramework")
             BasePath = CurrentImageDir,
             OutputDirectory = PACKAGE_DIR,
             Symbols = true,
-            // snupkg is not yet supported by Cake, https://github.com/cake-build/cake/issues/2362
-            ArgumentCustomization = args => args.Append("-SymbolPackageFormat snupkg")
+            SymbolPackageFormat = "snupkg"
         };
 
         NuGetPack("nuget/framework/nunit.nuspec", settings);
