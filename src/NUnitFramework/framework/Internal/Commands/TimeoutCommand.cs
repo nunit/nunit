@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal.Commands
                     var message = $"Test exceeded Timeout value of {timeout}ms";
 
                     context.CurrentResult.SetResult(
-                        new ResultState(TestStatus.Failed, message),
+                        ResultState.Failure,
                         message);
                 }
             };
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal.Commands
                     string message = $"Test exceeded Timeout value of {_timeout}ms";
 
                     context.CurrentResult.SetResult(
-                        new ResultState(TestStatus.Failed, message),
+                        ResultState.Failure,
                         message);
                 }
             }

@@ -40,12 +40,12 @@ namespace NUnit.Framework.Internal.Commands
             {
                 action();
             }
-            catch (Exception ex) when (!context.CancellationToken.IsCancellationRequested)
+            catch (Exception ex)
             {
 #if THREAD_ABORT
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
-#endif 
+#endif
                 context.CurrentResult.RecordException(ex);
             }
         }

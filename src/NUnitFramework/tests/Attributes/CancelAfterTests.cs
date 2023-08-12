@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
-using NUnit.Framework.Tests.Attributes;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [NonParallelizable]
     public sealed class CancelAfterTests : ThreadingTests
@@ -159,7 +158,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
@@ -174,7 +172,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
@@ -189,7 +186,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
         }
 
@@ -205,7 +201,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
         }
 
@@ -229,7 +224,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Is.EqualTo($"Test exceeded CancelAfter value of {SampleTests.CancelAfter}ms"));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
         }
 
         private static readonly CancellationToken CancelledToken = new CancellationToken(true);

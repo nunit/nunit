@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands
@@ -57,15 +56,9 @@ namespace NUnit.Framework.Internal.Commands
             {
                 innerCommand.Execute(context);
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
-                string message = $"Test exceeded CancelAfter value of {_timeout}ms";
-                context.CurrentResult.SetResult(new ResultState(
-                    TestStatus.Failed, message, FailureSite.Test), message);
-            }
-            catch (Exception exception)
-            {
-                context.CurrentResult.RecordException(exception, FailureSite.Test);
+                context.CurrentResult.RecordException(ex);
             }
             finally
             {
