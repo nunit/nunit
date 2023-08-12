@@ -26,14 +26,18 @@ jobs:
           6.0.x
           7.0.x
 
+    - name: Extract branch name
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      id: extract_branch
+
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release --branch="$(git branch --show-current)" --tag="$(git describe)"
+      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release --branch="${{steps.extract_branch.outputs.branch}}" --tag="$(git describe)"
 
     - name: 📦 Package
-      run: dotnet cake --target=Package --configuration=Release --branch="$(git branch --show-current)" --tag="$(git describe)"
+      run: dotnet cake --target=Package --configuration=Release --branch="${{steps.extract_branch.outputs.branch}}" --tag="$(git describe)"
 
     - name: 📦 Publish package
       run: dotnet nuget push --skip-duplicate --source https://nuget.pkg.github.com/nunit/index.json --api-key "${{secrets.GITHUB_TOKEN}}" 'package\*.nupkg'
