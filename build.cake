@@ -73,7 +73,7 @@ Setup(context =>
     {
         if (BuildSystem.IsPullRequest)
         {
-            packageVersion = tag + "-pr";
+            packageVersion = tag + "-pr-" + branch;
         }
     }
 
