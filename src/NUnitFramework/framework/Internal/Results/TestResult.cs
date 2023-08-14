@@ -358,8 +358,9 @@ namespace NUnit.Framework.Internal
                     break;
             }
 
-            if (Output.Length > 0)
-                AddOutputElement(thisNode);
+            var outputContent = Output;
+            if (outputContent.Length > 0)
+                AddOutputElement(thisNode, outputContent);
 
             if (AssertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
@@ -632,9 +633,9 @@ namespace NUnit.Framework.Internal
             return failureNode;
         }
 
-        private TNode AddOutputElement(TNode targetNode)
+        private TNode AddOutputElement(TNode targetNode, string outputContent)
         {
-            return targetNode.AddElementWithCDATA("output", Output);
+            return targetNode.AddElementWithCDATA("output", outputContent);
         }
 
         private TNode AddAssertionsElement(TNode targetNode)
