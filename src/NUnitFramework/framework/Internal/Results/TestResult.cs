@@ -493,8 +493,8 @@ namespace NUnit.Framework.Internal
                 message = Message + Environment.NewLine + message;
 
             string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
-            if (StackTrace is not null)
-                stackTrace = StackTrace + Environment.NewLine + stackTrace;
+            if (StackTrace is { } stackTraceContent)
+                stackTrace = stackTraceContent + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
         }
@@ -503,8 +503,8 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is not null)
-                return ex.InnerException;
+            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is { } innerException)
+                return innerException;
 
             return ex;
         }
@@ -646,10 +646,10 @@ namespace NUnit.Framework.Internal
             {
                 TNode assertionNode = assertionsNode.AddElement("assertion");
                 assertionNode.AddAttribute("result", assertion.Status.ToString());
-                if (assertion.Message is not null)
-                    assertionNode.AddElementWithCDATA("message", assertion.Message);
-                if (assertion.StackTrace is not null)
-                    assertionNode.AddElementWithCDATA("stack-trace", assertion.StackTrace);
+                if (assertion.Message is { } message)
+                    assertionNode.AddElementWithCDATA("message", message);
+                if (assertion.StackTrace is { } stackTrace)
+                    assertionNode.AddElementWithCDATA("stack-trace", stackTrace);
             }
 
             return assertionsNode;
@@ -688,8 +688,8 @@ namespace NUnit.Framework.Internal
 
                 attachmentNode.AddElement("filePath", attachment.FilePath);
 
-                if (attachment.Description is not null)
-                    attachmentNode.AddElementWithCDATA("description", attachment.Description);
+                if (attachment.Description is { } description)
+                    attachmentNode.AddElementWithCDATA("description", description);
             }
 
             return attachmentsNode;
