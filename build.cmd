@@ -1,2 +1,2 @@
 @echo off
-powershell ./build.ps1 %CAKE_ARGS% %*
+powershell -ExecutionPolicy ByPass -NoProfile ./build.ps1 %CAKE_ARGS% %*
