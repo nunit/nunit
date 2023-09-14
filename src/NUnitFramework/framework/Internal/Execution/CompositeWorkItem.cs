@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal.Execution
                                         case TestStatus.Skipped:
                                         case TestStatus.Inconclusive:
                                         case TestStatus.Failed:
-                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
                                             break;
                                     }
                                 }
@@ -313,14 +313,14 @@ namespace NUnit.Framework.Internal.Execution
         private void SkipFixture(ResultState resultState, string message, string stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
-            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
+            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message, stackTrace);
         }
 
-        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message)
+        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message, string stackTrace)
         {
             foreach (WorkItem child in workItem.Children)
             {
-                SetChildWorkItemSkippedResult(child.Result, resultState, message);
+                SetChildWorkItemSkippedResult(child.Result, resultState, message, stackTrace);
                 _suiteResult.AddResult(child.Result);
 
                 // Some runners may depend on getting the TestFinished event
@@ -328,13 +328,13 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Listener.TestFinished(child.Result);
 
                 if (child is CompositeWorkItem)
-                    SkipChildren((CompositeWorkItem)child, resultState, message);
+                    SkipChildren((CompositeWorkItem)child, resultState, message, stackTrace);
             }
         }
 
-        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message)
+        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message, string stackTrace)
         {
-            result.SetResult(resultState, message);
+            result.SetResult(resultState, message, stackTrace);
             result.StartTime = Context.StartTime;
             result.EndTime = DateTime.UtcNow;
             result.Duration = Context.Duration;
