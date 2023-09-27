@@ -479,7 +479,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The Exception to be recorded</param>
         public void RecordTearDownException(Exception ex)
         {
-            ex = ValidateAndUnwrap(ex);
+            var result = new ExceptionResult(ex, FailureSite.TearDown);
 
             ResultState resultState = ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
@@ -487,11 +487,11 @@ namespace NUnit.Framework.Internal
             if (Test.IsSuite)
                 resultState = resultState.WithSite(FailureSite.TearDown);
 
-            string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
+            string message = "TearDown : " + result.Message;
             if (!string.IsNullOrEmpty(Message))
                 message = Message + Environment.NewLine + message;
 
-            string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
+            string stackTrace = "--TearDown" + Environment.NewLine + result.StackTrace;
             if (StackTrace is not null)
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
@@ -532,6 +532,12 @@ namespace NUnit.Framework.Internal
                     StackTrace = ex.GetStackTraceWithoutThrowing();
                 }
 #endif
+                else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
+                {
+                    ResultState = ResultState.Failure.WithSite(site);
+                    Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
                 else
                 {
                     ResultState = ResultState.Error.WithSite(site);

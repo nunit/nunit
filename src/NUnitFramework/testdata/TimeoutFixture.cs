@@ -27,7 +27,7 @@ namespace NUnit.TestData
         [Test, Timeout(50)]
         public void InfiniteLoopWith50msTimeout()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
 
         [Test, Timeout(500)]
@@ -47,9 +47,9 @@ namespace NUnit.TestData
     public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
     {
         [SetUp]
-        public bool SetUp2()
+        public void SetUp2()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
 
         [Test, Timeout(50)]
@@ -61,7 +61,7 @@ namespace NUnit.TestData
         [TearDown]
         public void TearDown2()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
 
         [Test, Timeout(50)]
@@ -76,7 +76,7 @@ namespace NUnit.TestData
         [Test]
         public void Test2WithInfiniteLoop()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
         [Test]
         public void Test3() { }
