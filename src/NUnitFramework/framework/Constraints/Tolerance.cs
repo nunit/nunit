@@ -298,7 +298,7 @@ namespace NUnit.Framework.Constraints
         /// Tolerance.Range represents the range of values that match
         /// a specific tolerance, when applied to a specific value.
         /// </summary>
-        public struct Range
+        public readonly struct Range
         {
             /// <summary>
             /// The lower bound of the range
