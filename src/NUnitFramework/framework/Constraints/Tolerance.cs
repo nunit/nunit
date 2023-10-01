@@ -298,7 +298,7 @@ namespace NUnit.Framework.Constraints
         /// Tolerance.Range represents the range of values that match
         /// a specific tolerance, when applied to a specific value.
         /// </summary>
-        public struct Range
+        public readonly struct Range
         {
             /// <summary>
             /// The lower bound of the range
@@ -321,5 +321,36 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        public override string? ToString()
+        {
+            if (Amount == Exact.Amount && Mode == Exact.Mode)
+            {
+                return "Exact";
+            }
+            switch (Mode)
+            {
+                case ToleranceMode.Unset:
+                    return "Unset";
+
+                case ToleranceMode.Linear:
+                    return Amount.ToString();
+
+                case ToleranceMode.Percent:
+                    return Amount.ToString() + " Percent";
+
+                case ToleranceMode.Ulps:
+                    return Amount.ToString() + " Ulps";
+
+                default:
+                    return "Unknown"; // Unreachable without reflection
+            }
+        }
     }
 }

@@ -2,6 +2,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
@@ -11,6 +13,7 @@ namespace NUnit.Framework.Constraints
     public sealed class CollectionTally
     {
         /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
+        [DebuggerDisplay("Missing = {MissingItems.Count}, Extra = {ExtraItems.Count}")]
         public sealed class CollectionTallyResult
         {
             /// <summary>Items that were not in the expected collection.</summary>
