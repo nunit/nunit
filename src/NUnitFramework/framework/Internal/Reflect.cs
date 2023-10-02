@@ -79,6 +79,24 @@ namespace NUnit.Framework.Internal
             ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
+            ParameterInfo[] parameterInfos = ctor.GetParameters();
+
+            if (parameterInfos.Length > 0)
+            {
+                ParameterInfo parameterInfo = parameterInfos.Last();
+                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
+                {
+                    //TODO need a test that we only do this if the last parameter passed in is the right type
+                    // TODO this assumes all params are arrays is that still true?
+                    int paramsOffset = ctor.GetParameters().Length - 1;
+                    var paramArray = Array.CreateInstance(parameterInfo.ParameterType.GetElementType(), argTypes.Length - ctor.GetParameters().Length + 1);
+                    for (int i = 0; i < paramArray.Length; i++)
+                    {
+                        paramArray.SetValue(arguments[i + paramsOffset], i); 
+                    }
+                    arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
+                }
+            }
 
             return ctor.Invoke(arguments);
         }
@@ -114,6 +132,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
+            if (pinfos.Length > 0 && pinfos[pinfos.Length -1].HasAttribute<ParamArrayAttribute>(false))
+            {
+                //TODO more specific
+                return true;
+            }
             if (pinfos.Length != ptypes.Length)
                 return false;
 

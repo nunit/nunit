@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -203,6 +204,39 @@ namespace NUnit.Framework.Tests.Attributes
         public void MakeSureTypeIsInSystemNamespace()
         {
             Assert.That(_someType.Namespace, Is.EqualTo("System"));
+        }
+    }
+
+    [TestFixture("Zero")]
+    [TestFixture("One", 1)]
+    [TestFixture("Many", 1,2,3,4)]
+    public class ParameterizedTestFixtureWithParamsArgument
+    {
+        public ParameterizedTestFixtureWithParamsArgument(string name, params int[] parameterValues)
+        {
+            Name = name;
+            ParameterValues = parameterValues;
+        }
+
+        public string Name { get; }
+        public int[] ParameterValues { get; }
+
+        [Test]
+        public void CheckParametersPassedInAsExpected()
+        {
+            if (Name == "Zero")
+            {
+                Assert.That(ParameterValues, Is.Empty);
+            }
+            else if (Name == "One")
+            {
+                Assert.That(ParameterValues, Is.EqualTo(new[] {1}));
+            }
+            else
+            {
+                Assert.That(ParameterValues, Is.EqualTo(new[] { 1, 2, 3, 4 }));
+
+            }
         }
     }
 }
