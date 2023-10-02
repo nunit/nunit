@@ -81,20 +81,32 @@ namespace NUnit.Framework.Internal
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
             ParameterInfo[] parameterInfos = ctor.GetParameters();
 
-            // TOOD is it worht sharing code with GetParametersForTestCase
             if (parameterInfos.Length > 0)
             {
                 ParameterInfo parameterInfo = parameterInfos.Last();
                 if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
                 {
-                    //TODO need a test that we only do this if the last parameter passed in is the right type
-                    int paramsOffset = ctor.GetParameters().Length - 1;
-                    var paramArray = Array.CreateInstance(parameterInfo.ParameterType.GetElementType(), argTypes.Length - ctor.GetParameters().Length + 1);
-                    for (int i = 0; i < paramArray.Length; i++)
+                    if (arguments.Length == parameterInfos.Length 
+                        && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
                     {
-                        paramArray.SetValue(arguments[i + paramsOffset], i); 
+                        // Don't convert arguments as there was already an array we could use.
                     }
-                    arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
+                    else
+                    {
+                        Type? elementType = parameterInfo.ParameterType.GetElementType();
+                        if (elementType is null)
+                        {
+                            throw new InvalidTestFixtureException(type.FullName + " params argument did not have an element type");
+                        }
+                        int paramsOffset = ctor.GetParameters().Length - 1;
+                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - ctor.GetParameters().Length + 1);
+                        for (int i = 0; i < paramArray.Length; i++)
+                        {
+                            paramArray.SetValue(arguments[i + paramsOffset], i);
+                        }
+                        arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
+                    }
+
                 }
             }
 
@@ -132,7 +144,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            
             bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length -1].HasAttribute<ParamArrayAttribute>(false);
 
             if (hasParamsArgument)
@@ -151,7 +162,7 @@ namespace NUnit.Framework.Internal
                 if (hasParamsArgument && i == pinfos.Length - 1)
                 {
                     var elementType = pinfos[i].ParameterType.GetElementType();
-                    if(elementType is not null)
+                    if (elementType is not null)
                     {
                         bool allParamArgsMatched = true;
                         for (int j = i; j < ptypes.Length; j++)

@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -209,10 +210,19 @@ namespace NUnit.Framework.Tests.Attributes
 
     [TestFixture("Zero")]
     [TestFixture("One", 1)]
-    [TestFixture("Many", 1,2,3,4)]
-    [TestFixture(1.5,8.2)]
+    [TestFixture("Many", 1, 2, 3, 4)]
+    [TestFixture(1.5, 8.2)]
+    [TestFixtureSource(nameof(SourceData))]
     public class ParameterizedTestFixtureWithParamsArgument
     {
+#pragma warning disable NUnit1028 // The non-test method is public
+        public static IEnumerable SourceData()
+#pragma warning restore NUnit1028 // The non-test method is public
+        {
+            yield return new object[] { "Many", 1, 2, 3, 4 };
+            yield return new object[] { new double[] { 1.5, 8.2} };
+        }
+
         public ParameterizedTestFixtureWithParamsArgument(string name, params int[] parameterValues)
         {
             Name = name;
@@ -225,8 +235,8 @@ namespace NUnit.Framework.Tests.Attributes
         }
         
         public string? Name { get; }
-        public int[] ParameterValues { get; }
-        public double[] ParameterDoubleValues { get; }
+        public int[]? ParameterValues { get; }
+        public double[]? ParameterDoubleValues { get; }
 
         [Test]
         public void CheckParametersPassedInAsExpected()
