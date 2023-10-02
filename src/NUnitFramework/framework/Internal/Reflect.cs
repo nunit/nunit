@@ -81,13 +81,13 @@ namespace NUnit.Framework.Internal
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
             ParameterInfo[] parameterInfos = ctor.GetParameters();
 
+            // TOOD is it worht sharing code with GetParametersForTestCase
             if (parameterInfos.Length > 0)
             {
                 ParameterInfo parameterInfo = parameterInfos.Last();
                 if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
                 {
                     //TODO need a test that we only do this if the last parameter passed in is the right type
-                    // TODO this assumes all params are arrays is that still true?
                     int paramsOffset = ctor.GetParameters().Length - 1;
                     var paramArray = Array.CreateInstance(parameterInfo.ParameterType.GetElementType(), argTypes.Length - ctor.GetParameters().Length + 1);
                     for (int i = 0; i < paramArray.Length; i++)
@@ -132,16 +132,43 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            if (pinfos.Length > 0 && pinfos[pinfos.Length -1].HasAttribute<ParamArrayAttribute>(false))
+            
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length -1].HasAttribute<ParamArrayAttribute>(false);
+
+            if (hasParamsArgument)
             {
-                //TODO more specific
-                return true;
+                if (ptypes.Length < pinfos.Length -1)
+                    return false;
             }
-            if (pinfos.Length != ptypes.Length)
-                return false;
+            else
+            {
+                if (pinfos.Length != ptypes.Length)
+                    return false;
+            }
 
             for (int i = 0; i < pinfos.Length; i++)
             {
+                if (hasParamsArgument && i == pinfos.Length - 1)
+                {
+                    var elementType = pinfos[i].ParameterType.GetElementType();
+                    if(elementType is not null)
+                    {
+                        bool allParamArgsMatched = true;
+                        for (int j = i; j < ptypes.Length; j++)
+                        {
+                            if (!ptypes[j].CanImplicitlyConvertTo(elementType))
+                            {
+                                allParamArgsMatched = false;
+                                break;
+                            }
+                        }
+                        if (allParamArgsMatched)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
                 if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }

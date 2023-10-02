@@ -210,6 +210,7 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture("Zero")]
     [TestFixture("One", 1)]
     [TestFixture("Many", 1,2,3,4)]
+    [TestFixture(1.5,8.2)]
     public class ParameterizedTestFixtureWithParamsArgument
     {
         public ParameterizedTestFixtureWithParamsArgument(string name, params int[] parameterValues)
@@ -218,8 +219,14 @@ namespace NUnit.Framework.Tests.Attributes
             ParameterValues = parameterValues;
         }
 
-        public string Name { get; }
+        public ParameterizedTestFixtureWithParamsArgument(params double[] parameterDoubleValues)
+        {
+            ParameterDoubleValues = parameterDoubleValues;
+        }
+        
+        public string? Name { get; }
         public int[] ParameterValues { get; }
+        public double[] ParameterDoubleValues { get; }
 
         [Test]
         public void CheckParametersPassedInAsExpected()
@@ -232,10 +239,13 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 Assert.That(ParameterValues, Is.EqualTo(new[] {1}));
             }
-            else
+            else if (Name == "Many")
             {
                 Assert.That(ParameterValues, Is.EqualTo(new[] { 1, 2, 3, 4 }));
-
+            }
+            else if (Name is null)
+            {
+                Assert.That(ParameterDoubleValues, Is.EqualTo(new object[] { 1.5, 8.2 }));
             }
         }
     }
