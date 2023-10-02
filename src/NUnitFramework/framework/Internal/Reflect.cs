@@ -106,7 +106,6 @@ namespace NUnit.Framework.Internal
                         }
                         arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
                     }
-
                 }
             }
 
