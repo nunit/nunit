@@ -21,8 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		src\NUnitFramework\Directory.Build.props = src\NUnitFramework\Directory.Build.props
 		global.json = global.json
 		LICENSE.txt = LICENSE.txt
-		NuGet.config = NuGet.config
 		NOTICES.md = NOTICES.md
+		NuGet.config = NuGet.config
 		NUnit.sln.DotSettings = NUnit.sln.DotSettings
 		README.md = README.md
 		THIRD_PARTY_NOTICES.md = THIRD_PARTY_NOTICES.md
@@ -63,6 +63,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy", "src\NUnitFramework\nunit.framework.legacy\nunit.framework.legacy.csproj", "{C09BC425-D524-4F75-9BEF-1724B93789B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy.tests", "src\NUnitFramework\nunit.framework.legacy.tests\nunit.framework.legacy.tests.csproj", "{59DC5039-5FCD-4C0C-AC92-7F06610136D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{B5896A86-789F-4757-8F31-1CBB4A3DF0F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{2E2414F7-4A3B-46A5-8F83-B97BA7E26F65}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\continuous_integration.yml = .github\workflows\continuous_integration.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,6 +133,8 @@ Global
 		{863DEE19-B23F-4FA6-951A-A6304F91ED67} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
 		{CE68713C-2E19-43E8-9333-6ED817110D52} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
 		{8D43A220-7FE8-4214-BBB4-08568B88C7AA} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
+		{B5896A86-789F-4757-8F31-1CBB4A3DF0F3} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
+		{2E2414F7-4A3B-46A5-8F83-B97BA7E26F65} = {B5896A86-789F-4757-8F31-1CBB4A3DF0F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E644AD96-B769-431B-BF0A-500AC32D2975}
