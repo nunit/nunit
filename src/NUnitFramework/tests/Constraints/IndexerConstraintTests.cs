@@ -22,6 +22,18 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer"));
             Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Third indexer"));
         }
+        
+        [Test]
+        public void IndexerOperatorOnRightSideOfAndOperator()
+        {
+            var items = new ClassWithName[]
+            {
+                new("Name 1"),
+            };
+
+            Assert.That(items, Has.Exactly(1).Items
+                                  .And.ItemAt(0).Property(nameof(ClassWithName.Name)).EqualTo("Name 1"));
+        }
 
         [Test]
         public void CanMatchArrayEquality()
@@ -166,6 +178,15 @@ namespace NUnit.Framework.Tests.Constraints
 
         private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer
         {
+        }
+        
+        private class ClassWithName
+        {
+            public ClassWithName(string name)
+            {
+                this.Name = name;
+            }
+            public string Name { get; }
         }
     }
 }
