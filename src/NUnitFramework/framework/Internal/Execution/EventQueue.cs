@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007-2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Concurrent;
 using System.Threading;
@@ -27,8 +6,7 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-
-#region Individual Event Classes
+    #region Individual Event Classes
 
     /// <summary>
     /// NUnit.Core.Event is the abstract base for all stored events.
@@ -161,16 +139,16 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
-        private const int spinCount = 5;
+        private const int SpinCount = 5;
 
-//        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+        //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
-        private readonly ConcurrentQueue<Event> _queue = new ConcurrentQueue<Event>();
+        private readonly ConcurrentQueue<Event> _queue = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _mreAdd = new();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection
@@ -187,13 +165,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the count of items in the queue.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _queue.Count;
-            }
-        }
+        public int Count => _queue.Count;
 
         /// <summary>
         /// Enqueues the specified event
@@ -243,7 +215,7 @@ namespace NUnit.Framework.Internal.Execution
         ///   </item>
         /// </list>
         /// </returns>
-        public Event Dequeue(bool blockWhenEmpty)
+        public Event? Dequeue(bool blockWhenEmpty)
         {
             SpinWait sw = new SpinWait();
 
@@ -259,7 +231,7 @@ namespace NUnit.Framework.Internal.Execution
                         return null;
 
                     // Spin a few times to see if something changes
-                    if (sw.Count <= spinCount)
+                    if (sw.Count <= SpinCount)
                     {
                         sw.SpinOnce();
                     }
@@ -287,10 +259,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
-
                 // Dequeue our work item
-                Event e;
-                while (!_queue.TryDequeue (out e))
+                Event? e;
+                while (!_queue.TryDequeue(out e))
                 {
                     if (!blockWhenEmpty || _stopped != 0)
                         return null;

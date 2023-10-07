@@ -1,3 +1,5 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace NUnit.Framework.Constraints
         /// Constructs a <see cref="PropertyConstraintResult"/> for a particular <see cref="PropertyConstraint"/>.
         /// </summary>
         /// <param name="constraint">The Constraint to which this result applies.</param>
-        /// <param name="baseResult">The base result with actual value to which the Constraint was applied.</param>       
+        /// <param name="baseResult">The base result with actual value to which the Constraint was applied.</param>
         public PropertyConstraintResult(IConstraint constraint, ConstraintResult baseResult) : base(constraint, baseResult.ActualValue, baseResult.Status)
         {
             _baseResult = baseResult;
@@ -22,7 +24,6 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Write Methods
-
 
         /// <summary>
         /// Write the additional failure message for a failing constraint to a
@@ -36,5 +37,4 @@ namespace NUnit.Framework.Constraints
 
         #endregion
     }
-
 }

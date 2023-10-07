@@ -1,30 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestAttachmentXmlTests
     {
@@ -38,7 +18,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
+            _result = NUnit.Framework.Tests.TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]
@@ -64,7 +44,9 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file2.txt", null));
             var xml = _result.ToXml(false);
 
-            var attachmentNodeList = xml.SelectSingleNode(AttachmentsXName).SelectNodes(AttachmentXName);
+            TNode? attachmentsNode = xml.SelectSingleNode(AttachmentsXName);
+            Assert.That(attachmentsNode, Is.Not.Null);
+            var attachmentNodeList = attachmentsNode.SelectNodes(AttachmentXName);
             Assert.That(attachmentNodeList, Has.Count.EqualTo(2));
 
             var filePathsNodes = attachmentNodeList.Select(n => n.SelectSingleNode(FilepathXName)).ToList();
@@ -87,7 +69,10 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file.txt", "description"));
             var xml = _result.ToXml(false);
 
-            var descriptionNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName).SelectSingleNode(DescriptionXName);
+            TNode? attachmentNode = xml.SelectSingleNode(AttachmentsXName)?.SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode, Is.Not.Null);
+
+            var descriptionNode = attachmentNode.SelectSingleNode(DescriptionXName);
             Assert.That(descriptionNode, Has.Property(nameof(TNode.ValueIsCDATA)).True);
             Assert.That(descriptionNode, Has.Property(nameof(TNode.Value)).EqualTo("description"));
         }
@@ -98,7 +83,8 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file.txt", null));
             var xml = _result.ToXml(false);
 
-            var attachmentNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName);
+            TNode? attachmentNode = xml.SelectSingleNode(AttachmentsXName)?.SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode, Is.Not.Null);
             Assert.That(attachmentNode.ChildNodes, Has.Exactly(0).Property(nameof(TNode.Name)).EqualTo(DescriptionXName));
         }
 

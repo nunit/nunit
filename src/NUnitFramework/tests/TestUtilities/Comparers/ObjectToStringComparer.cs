@@ -1,50 +1,59 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     /// <summary>
-    /// ObjectToStringComparer is used in testing the <see cref="NUnit.Framework.Constraints.RangeConstraint"/> when the object does not implement the <see cref="IComparer"/>  interface.
+    /// ObjectToStringComparer is used in testing the <see cref="Framework.Constraints.RangeConstraint"/> when the object does not implement the <see cref="IComparer"/>  interface.
     /// Compares them as numbers when both arguments are <see cref="int"/>, else it uses <seealso cref="string.CompareTo(string)"/>.
     /// </summary>
-    public class ObjectToStringComparer : System.Collections.IComparer
+    public class ObjectToStringComparer : IComparer
     {
-        public bool WasCalled = false;
-        int System.Collections.IComparer.Compare(object x, object y)
+        public bool WasCalled { get; private set; }
+
+        int IComparer.Compare(object? x, object? y)
         {
             WasCalled = true;
 
-            if (int.TryParse(x.ToString(), out var intX) && int.TryParse(y.ToString(), out var intY))
+            string? xAsString = x?.ToString();
+            string? yAsString = y?.ToString();
+            if (xAsString is null)
+            {
+                if (yAsString is null)
+                    return 0;
+                else
+                    return -1;
+            }
+            else if (yAsString is null)
+            {
+                return 1;
+            }
+
+            if (int.TryParse(xAsString, out int intX) && int.TryParse(yAsString, out int intY))
             {
                 return intX.CompareTo(intY);
             }
 
-            return x.ToString().CompareTo(y.ToString());
+            return xAsString.CompareTo(yAsString);
+        }
+    }
 
+    public class ObjectToStringEqualityComparer : IEqualityComparer
+    {
+        private readonly IComparer _comparer = new ObjectToStringComparer();
+
+        public bool WasCalled { get; private set; }
+
+        public new bool Equals(object? x, object? y)
+        {
+            WasCalled = true;
+            return _comparer.Compare(x, y) == 0;
+        }
+
+        public int GetHashCode(object obj)
+        {
+            return obj.ToString()!.GetHashCode();
         }
     }
 
@@ -54,12 +63,12 @@ namespace NUnit.TestUtilities.Comparers
     /// </summary>
     public class NoComparer
     {
-        public readonly object _value;
+        private readonly object _value;
         public NoComparer(object value)
         {
             _value = value;
         }
-        public override string ToString()
+        public override string? ToString()
         {
             return _value.ToString();
         }

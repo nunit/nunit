@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2009-2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -28,15 +7,15 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public partial class RangeAttributeTests
     {
         #region Shared specs
 
-        public static IEnumerable<Type> TestedParameterTypes() => new[]
+        private static IEnumerable<Type> TestedParameterTypes() => new[]
         {
             typeof(sbyte),
             typeof(byte),
@@ -573,20 +552,11 @@ namespace NUnit.Framework.Attributes
 
             public Type ParameterType { get; }
 
-            public bool IsOptional
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public bool IsOptional => throw new NotImplementedException();
 
-            public IMethodInfo Method
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public IMethodInfo Method => throw new NotImplementedException();
 
-            public ParameterInfo ParameterInfo
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public ParameterInfo ParameterInfo => throw new NotImplementedException();
 
             public T[] GetCustomAttributes<T>(bool inherit) where T : class
             {

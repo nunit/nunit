@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework;
@@ -31,11 +10,11 @@ namespace NUnit.TestData.TestCaseAttributeFixture
     {
         [TestCase("12-Octobar-1942")]
         public void MethodHasInvalidDateFormat(DateTime dt)
-        {}
+        { }
 
-        [TestCase(2,3,4,Description="My Description")]
+        [TestCase(2, 3, 4, Description = "My Description")]
         public void MethodHasDescriptionSpecified(int x, int y, int z)
-        {}
+        { }
 
         [TestCase(2, 3, 4, TestName = "XYZ")]
         public void MethodHasTestNameSpecified_FixedText(int x, int y, int z)
@@ -53,7 +32,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodHasMultipleCategories(int x, int y, int z)
         { }
 
-        [TestCase(2, 2_000_000, ExpectedResult=4)]
+        [TestCase(2, 2_000_000, ExpectedResult = 4)]
         public int MethodCausesConversionOverflow(short x, short y)
         {
             return x + y;
@@ -123,7 +102,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
 
         [TestCase((object)new object[] { })]
         [TestCase((object)new object[] { 1, "text", null })]
-        [TestCase((object)new object[] { 1, new int[] { 2, 3 }, 4 })]
+        [TestCase((object)new object[] { 1, new[] { 2, 3 }, 4 })]
         [TestCase((object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })]
         public void MethodWithArrayArguments(object o)
         {

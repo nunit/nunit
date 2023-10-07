@@ -1,71 +1,41 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Collections
+namespace NUnit.Framework.Tests.TestUtilities.Collections
 {
     /// <summary>
     /// SimpleObjectCollection is used in testing to ensure that only
     /// methods of the ICollection interface are accessible.
     /// </summary>
-    class SimpleObjectList : IList
+    public class SimpleObjectList : IList
     {
-        private readonly List<object> contents = new List<object>();
+        private readonly List<object?> _contents;
 
-        public SimpleObjectList(IEnumerable<object> source)
+        public SimpleObjectList(IEnumerable<object?> source)
         {
-            this.contents = new List<object>(source);
+            _contents = new List<object?>(source);
         }
 
-        public SimpleObjectList(params object[] source)
+        public SimpleObjectList(params object?[] source)
         {
-            this.contents = new List<object>(source);
+            _contents = new List<object?>(source);
         }
 
         #region ICollection Members
 
         public void CopyTo(Array array, int index)
         {
-            ((ICollection)contents).CopyTo(array, index);
+            ((ICollection)_contents).CopyTo(array, index);
         }
 
-        public int Count
-        {
-            get { return contents.Count; }
-        }
+        public int Count => _contents.Count;
 
-        public bool IsSynchronized
-        {
-            get { return  ((ICollection)contents).IsSynchronized; }
-        }
+        public bool IsSynchronized => ((ICollection)_contents).IsSynchronized;
 
-        public object SyncRoot
-        {
-            get { return ((ICollection)contents).SyncRoot; }
-        }
+        public object SyncRoot => ((ICollection)_contents).SyncRoot;
 
         #endregion
 
@@ -73,63 +43,57 @@ namespace NUnit.TestUtilities.Collections
 
         public IEnumerator GetEnumerator()
         {
-            return contents.GetEnumerator();
+            return _contents.GetEnumerator();
         }
 
         #endregion
 
         #region IList Members
 
-        public int Add(object value)
+        public int Add(object? value)
         {
-            contents.Add(value);
-            return contents.Count - 1;
+            _contents.Add(value);
+            return _contents.Count - 1;
         }
 
         public void Clear()
         {
-            contents.Clear();
+            _contents.Clear();
         }
 
-        public bool Contains(object value)
+        public bool Contains(object? value)
         {
-            return contents.Contains(value);
+            return _contents.Contains(value);
         }
 
-        public int IndexOf(object value)
+        public int IndexOf(object? value)
         {
-            return contents.IndexOf(value);
+            return _contents.IndexOf(value);
         }
 
-        public void Insert(int index, object value)
+        public void Insert(int index, object? value)
         {
-            contents.Insert(index, value);
+            _contents.Insert(index, value);
         }
 
-        public bool IsFixedSize
-        {
-            get { return false; }
-        }
+        public bool IsFixedSize => false;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
-        public void Remove(object value)
+        public void Remove(object? value)
         {
-            contents.Remove(value);
+            _contents.Remove(value);
         }
 
         public void RemoveAt(int index)
         {
-            contents.RemoveAt(index);
+            _contents.RemoveAt(index);
         }
 
-        public object this[int index]
+        public object? this[int index]
         {
-            get { return contents[index]; }
-            set { contents[index] = value; }
+            get => _contents[index];
+            set => _contents[index] = value;
         }
 
         #endregion

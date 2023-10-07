@@ -1,33 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.CategoryAttributeData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Summary description for CategoryAttributeTests.
@@ -35,25 +13,25 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class CategoryAttributeTests
     {
-        TestSuite fixture;
+        private TestSuite _fixture;
 
         [SetUp]
         public void CreateFixture()
         {
-            fixture = TestBuilder.MakeFixture( typeof( FixtureWithCategories ) );
+            _fixture = TestBuilder.MakeFixture(typeof(FixtureWithCategories));
         }
 
         [Test]
         public void CategoryOnFixture()
         {
-            Assert.That(fixture.Properties["Category"], Contains.Item("DataBase"));
+            Assert.That(_fixture.Properties["Category"], Contains.Item("DataBase"));
             //Assert.That( fixture.Properties.Contains("Category", "DataBase"));
         }
 
         [Test]
         public void CategoryOnTestMethod()
         {
-            Test test1 = (Test)fixture.Tests[0];
+            Test test1 = (Test)_fixture.Tests[0];
             Assert.That(test1.Properties["Category"], Contains.Item("Long"));
             //Assert.That( test1.Properties.Contains("Category", "Long") );
         }
@@ -61,21 +39,21 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanDeriveFromCategoryAttribute()
         {
-            Test test2 = (Test)fixture.Tests[1];
-            Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
+            Test test2 = (Test)_fixture.Tests[1];
+            Assert.That(test2.Properties["Category"], Contains.Item("Critical"));
         }
-        
+
         [Test]
         public void DerivedCategoryMayBeInherited()
         {
-            Assert.That(fixture.Properties["Category"], Contains.Item("MyCategory"));
+            Assert.That(_fixture.Properties["Category"], Contains.Item("MyCategory"));
             //Assert.That(fixture.Properties.Contains("Category", "MyCategory"));
         }
 
         [Test]
         public void CanSpecifyOnMethodAndTestCase()
         {
-            TestSuite test3 = (TestSuite)fixture.Tests[2];
+            TestSuite test3 = (TestSuite)_fixture.Tests[2];
             Assert.That(test3.Name, Is.EqualTo("Test3"));
             Assert.That(test3.Properties["Category"], Contains.Item("Top"));
             Test testCase = (Test)test3.Tests[0];
@@ -86,7 +64,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestWithValidCategoryNameIsNotRunnable()
         {
-            Test testValidSpecialChars = (Test)fixture.Tests[3];
+            Test testValidSpecialChars = (Test)_fixture.Tests[3];
             Assert.That(testValidSpecialChars.RunState, Is.EqualTo(RunState.Runnable));
         }
     }

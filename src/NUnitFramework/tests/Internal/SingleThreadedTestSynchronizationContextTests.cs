@@ -1,33 +1,13 @@
-// ***********************************************************************
-// Copyright (c) 2019 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [Parallelizable(ParallelScope.Children)]
     public static class SingleThreadedTestSynchronizationContextTests
@@ -136,7 +116,7 @@ namespace NUnit.Framework.Internal
                 }, null);
 
                 TestResult testResult;
-                Exception exception;
+                Exception? exception;
 
                 using (wasExecuted.ExpectCallback(count: 0)) // Work is discarded
                 using (new TestExecutionContext.IsolatedContext())
@@ -168,8 +148,8 @@ namespace NUnit.Framework.Internal
             {
                 var wasExecuted = new CallbackWatcher();
 
-                var testResult = (TestResult)null;
-                var exception = (Exception)null;
+                var testResult = default(TestResult);
+                var exception = default(Exception);
 
                 context.Post(state =>
                 {
@@ -179,7 +159,7 @@ namespace NUnit.Framework.Internal
 
                         try
                         {
-                            context.Post(__ => wasExecuted.OnCallback(), null);
+                            context.Post(_ => wasExecuted.OnCallback(), null);
                             exception = null;
                         }
                         catch (Exception ex)
@@ -201,6 +181,7 @@ namespace NUnit.Framework.Internal
 
                 Assert.That(exception, Is.InstanceOf<InvalidOperationException>()); // Run() throws
 
+                Assert.That(testResult, Is.Not.Null);
                 Assert.That(testResult.WorstAssertionStatus, Is.EqualTo(AssertionStatus.Error)); // Run() errors
             }
         }
@@ -233,7 +214,9 @@ namespace NUnit.Framework.Internal
                 return;
             }
 
-            SynchronizationContext.Current.Post(_ => ScheduleWorkRecursively(stopwatch, until, wasExecuted), null);
+            SynchronizationContext? current = SynchronizationContext.Current;
+            Assert.That(current, Is.Not.Null);
+            current.Post(_ => ScheduleWorkRecursively(stopwatch, until, wasExecuted), null);
         }
 
         [Test]

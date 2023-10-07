@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2019 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -34,16 +13,16 @@ namespace NUnit.Framework
 
     internal struct Result<T>
     {
-        private readonly T _value;
-        private readonly string _errorMessage;
+        private readonly T? _value;
+        private readonly string? _errorMessage;
 
-        private Result(T value, string errorMessage)
+        private Result(T? value, string? errorMessage)
         {
             _value = value;
             _errorMessage = errorMessage;
         }
 
-        public static Result<T> Success(T value)
+        public static Result<T> Success(T? value)
         {
             return new Result<T>(value, errorMessage: null);
         }
@@ -53,26 +32,26 @@ namespace NUnit.Framework
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Error message must be specified.", nameof(message));
 
-            return new Result<T>(default(T), message);
+            return new Result<T>(default, message);
         }
 
-        public bool IsSuccess(out T value)
+        public bool IsSuccess(out T? value)
         {
             value = _value;
             return _errorMessage is null;
         }
 
-        public bool IsError(out string message)
+        public bool IsError(out string? message)
         {
             message = _errorMessage;
-            return _errorMessage != null;
+            return _errorMessage is not null;
         }
 
-        public T Value
+        public T? Value
         {
             get
             {
-                if (_errorMessage != null) throw new InvalidOperationException("The result is not success.");
+                if (_errorMessage is not null) throw new InvalidOperationException("The result is not success.");
                 return _value;
             }
         }

@@ -1,42 +1,20 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     #region ComparisonConstraintTestBase
 
     public abstract class ComparisonConstraintTestBase : ConstraintTestBase
     {
-        protected ComparisonConstraint ComparisonConstraint;
+        protected ComparisonConstraint ComparisonConstraint => (ComparisonConstraint)TheConstraint;
 
         [TestCase(null)]
         [TestCase("xxx")]
-        public void InvalidDataThrowsArgumentException(object data)
+        public void InvalidDataThrowsArgumentException(object? data)
         {
             Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
@@ -77,37 +55,43 @@ namespace NUnit.Framework.Constraints
 
     #region Comparison Test Classes
 
-    class ClassWithIComparable : IComparable
+    internal class ClassWithIComparable : IComparable
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparable(int val)
         {
-            this.val = val;
+            _val = val;
         }
 
-        public int CompareTo(object x)
+        public int CompareTo(object? x)
         {
-            ClassWithIComparable other = x as ClassWithIComparable;
-            if (x is ClassWithIComparable)
-                return val.CompareTo(other.val);
+            if (x is ClassWithIComparable other)
+                return _val.CompareTo(other._val);
 
             throw new ArgumentException();
         }
     }
 
-    class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
+    internal class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparableOfT(int val)
         {
-            this.val = val;
+            _val = val;
         }
 
-        public int CompareTo(ClassWithIComparableOfT other)
+        public int CompareTo(ClassWithIComparableOfT? other)
         {
-            return val.CompareTo(other.val);
+            if (other is null)
+                return 1;
+            return _val.CompareTo(other._val);
+        }
+
+        public int CompareTo(int other)
+        {
+            return _val.CompareTo(other);
         }
     }
 

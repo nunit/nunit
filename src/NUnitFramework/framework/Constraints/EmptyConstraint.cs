@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -32,16 +11,13 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyConstraint : Constraint
     {
-        private Constraint realConstraint;
+        private Constraint? _realConstraint;
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return realConstraint == null ? "<empty>" : realConstraint.Description; }
-        }
+        public override string Description => _realConstraint is null ? "<empty>" : _realConstraint.Description;
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -50,19 +26,25 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string           
-            Type actualType = typeof(TActual);
-            
-            if (actualType == typeof(string))
-                realConstraint = new EmptyStringConstraint();
-            else if (actual == null)
-                throw new System.ArgumentException($"The actual value must be a string, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
-            else if (actual is System.IO.DirectoryInfo)
-                realConstraint = new EmptyDirectoryConstraint();
-            else
-                realConstraint = new EmptyCollectionConstraint();
+            // NOTE: actual is string will fail for a null typed as string
+            Type actualType = actual?.GetType() ?? typeof(TActual);
 
-            return realConstraint.ApplyTo(actual);
+            if (actualType == typeof(string))
+                _realConstraint = new EmptyStringConstraint();
+            else if (actual is Guid || actualType == typeof(Guid?))
+                _realConstraint = new EmptyGuidConstraint();
+            else if (actual is System.IO.DirectoryInfo)
+                _realConstraint = new EmptyDirectoryConstraint();
+            else if (actual is System.Collections.ICollection)
+                _realConstraint = new EmptyCollectionConstraint();       // Uses ICollecion.Count
+            else if (actual is System.Collections.IEnumerable)          // Enumerates whole collection
+                _realConstraint = new EmptyCollectionConstraint();
+            else if (actual is not null && CountZeroConstraint.HasCountProperty(actualType))  // For Collections that have Count but are not ICollection
+                _realConstraint = new CountZeroConstraint();
+            else
+                throw new ArgumentException($"The actual value must be not-null, a string, Guid, have an int Count property, IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
+
+            return _realConstraint.ApplyTo(actual);
         }
     }
 }

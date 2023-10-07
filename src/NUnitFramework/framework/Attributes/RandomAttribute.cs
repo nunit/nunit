@@ -1,35 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -163,7 +138,7 @@ namespace NUnit.Framework
 
             Type parmType = parameter.ParameterType;
 
-            if (_source == null)
+            if (_source is null)
             {
                 if (parmType == typeof(int))
                     _source = new IntDataSource(_count);
@@ -187,7 +162,9 @@ namespace NUnit.Framework
                     _source = new SByteDataSource(_count);
                 else if (parmType == typeof(decimal))
                     _source = new DecimalDataSource(_count);
-                else if (parmType.GetTypeInfo().IsEnum)
+                else if (parmType == typeof(Guid))
+                    _source = new GuidDataSource(_count);
+                else if (parmType.IsEnum)
                     _source = new EnumDataSource(_count);
                 else // Default
                     _source = new IntDataSource(_count);
@@ -220,7 +197,7 @@ namespace NUnit.Framework
 
         #region RandomDataSource
 
-        abstract class RandomDataSource : IParameterDataSource
+        private abstract class RandomDataSource : IParameterDataSource
         {
             protected RandomDataSource(Type dataType) => DataType = dataType;
 
@@ -230,7 +207,7 @@ namespace NUnit.Framework
             public abstract IEnumerable GetData(IParameterInfo parameter);
         }
 
-        abstract class RandomDataSource<T> : RandomDataSource
+        private abstract class RandomDataSource<T> : RandomDataSource
         {
             [AllowNull, MaybeNull]
             private readonly T _min;
@@ -241,7 +218,7 @@ namespace NUnit.Framework
             private readonly int _count;
             private readonly bool _inRange;
 
-            private readonly List<T> previousValues = new List<T>();
+            private readonly List<T> _previousValues = new();
 
             protected RandomDataSource(int count) : base(typeof(T))
             {
@@ -265,8 +242,8 @@ namespace NUnit.Framework
 
                 var randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
 
+                Guard.OperationValid(CanUseRange() || !_inRange, $"The value type {parameter.ParameterType} does not support range of values.");
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min!, _max!, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
-
 
                 for (int i = 0; i < _count; i++)
                 {
@@ -279,17 +256,24 @@ namespace NUnit.Framework
                             next = _inRange
                                 ? GetNext(randomizer, _min!, _max!)
                                 : GetNext(randomizer);
-                        } while (previousValues.Contains(next));
+                        } while (_previousValues.Contains(next));
 
-                        previousValues.Add(next);
+                        _previousValues.Add(next);
 
                         yield return next;
                     }
                     else
+                    {
                         yield return _inRange
                             ? GetNext(randomizer, _min!, _max!)
                             : GetNext(randomizer);
+                    }
                 }
+            }
+
+            protected virtual bool CanUseRange()
+            {
+                return true;
             }
 
             protected abstract T GetNext(Randomizer randomizer);
@@ -301,9 +285,9 @@ namespace NUnit.Framework
 
         #region RandomDataConverter
 
-        class RandomDataConverter : RandomDataSource
+        private class RandomDataConverter : RandomDataSource
         {
-            readonly IParameterDataSource _source;
+            private readonly IParameterDataSource _source;
 
             public RandomDataConverter(RandomDataSource source) : base(source.DataType)
             {
@@ -316,9 +300,8 @@ namespace NUnit.Framework
 
                 foreach (object obj in _source.GetData(parameter))
                 {
-                    if (obj is int)
+                    if (obj is int ival)
                     {
-                        int ival = (int)obj; // unbox first
                         if (parmType == typeof(short))
                             yield return (short)ival;
                         else if (parmType == typeof(ushort))
@@ -330,9 +313,8 @@ namespace NUnit.Framework
                         else if (parmType == typeof(decimal))
                             yield return (decimal)ival;
                     }
-                    else if (obj is double)
+                    else if (obj is double d)
                     {
-                        double d = (double)obj; // unbox first
                         if (parmType == typeof(decimal))
                             yield return (decimal)d;
                     }
@@ -344,7 +326,7 @@ namespace NUnit.Framework
 
         #region IntDataSource
 
-        class IntDataSource : RandomDataSource<int>
+        private class IntDataSource : RandomDataSource<int>
         {
             public IntDataSource(int count) : base(count) { }
 
@@ -362,7 +344,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(int min, int max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -370,7 +355,7 @@ namespace NUnit.Framework
 
         #region UIntDataSource
 
-        class UIntDataSource : RandomDataSource<uint>
+        private class UIntDataSource : RandomDataSource<uint>
         {
             public UIntDataSource(int count) : base(count) { }
 
@@ -388,7 +373,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(uint min, uint max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -396,7 +384,7 @@ namespace NUnit.Framework
 
         #region LongDataSource
 
-        class LongDataSource : RandomDataSource<long>
+        private class LongDataSource : RandomDataSource<long>
         {
             public LongDataSource(int count) : base(count) { }
 
@@ -414,7 +402,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(long min, long max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + (long)count > min) && (min + (long)count <= max);
             }
         }
 
@@ -422,7 +413,7 @@ namespace NUnit.Framework
 
         #region ULongDataSource
 
-        class ULongDataSource : RandomDataSource<ulong>
+        private class ULongDataSource : RandomDataSource<ulong>
         {
             public ULongDataSource(int count) : base(count) { }
 
@@ -440,7 +431,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(ulong min, ulong max, int count)
             {
-                return (uint)count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > int.MaxValue
+                // a complicated comparison is required.
+                return (count >= 0) && (min + (ulong)count > min) && (min + (ulong)count <= max);
             }
         }
 
@@ -448,7 +442,7 @@ namespace NUnit.Framework
 
         #region ShortDataSource
 
-        class ShortDataSource : RandomDataSource<short>
+        private class ShortDataSource : RandomDataSource<short>
         {
             public ShortDataSource(int count) : base(count) { }
 
@@ -466,7 +460,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(short min, short max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -474,7 +471,7 @@ namespace NUnit.Framework
 
         #region UShortDataSource
 
-        class UShortDataSource : RandomDataSource<ushort>
+        private class UShortDataSource : RandomDataSource<ushort>
         {
             public UShortDataSource(int count) : base(count) { }
 
@@ -492,7 +489,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(ushort min, ushort max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -500,7 +500,7 @@ namespace NUnit.Framework
 
         #region DoubleDataSource
 
-        class DoubleDataSource : RandomDataSource<double>
+        private class DoubleDataSource : RandomDataSource<double>
         {
             public DoubleDataSource(int count) : base(count) { }
 
@@ -526,7 +526,7 @@ namespace NUnit.Framework
 
         #region FloatDataSource
 
-        class FloatDataSource : RandomDataSource<float>
+        private class FloatDataSource : RandomDataSource<float>
         {
             public FloatDataSource(int count) : base(count) { }
 
@@ -552,7 +552,7 @@ namespace NUnit.Framework
 
         #region ByteDataSource
 
-        class ByteDataSource : RandomDataSource<byte>
+        private class ByteDataSource : RandomDataSource<byte>
         {
             public ByteDataSource(int count) : base(count) { }
 
@@ -570,7 +570,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(byte min, byte max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -578,7 +581,7 @@ namespace NUnit.Framework
 
         #region SByteDataSource
 
-        class SByteDataSource : RandomDataSource<sbyte>
+        private class SByteDataSource : RandomDataSource<sbyte>
         {
             public SByteDataSource(int count) : base(count) { }
 
@@ -596,7 +599,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(sbyte min, sbyte max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -604,11 +610,11 @@ namespace NUnit.Framework
 
         #region EnumDataSource
 
-        class EnumDataSource : RandomDataSource
+        private class EnumDataSource : RandomDataSource
         {
             private readonly int _count;
 
-            private readonly List<object> previousValues = new List<object>();
+            private readonly List<object> _previousValues = new();
 
             public EnumDataSource(int count) : base(typeof(Enum))
             {
@@ -617,7 +623,7 @@ namespace NUnit.Framework
 
             public override IEnumerable GetData(IParameterInfo parameter)
             {
-                Guard.ArgumentValid(parameter.ParameterType.GetTypeInfo().IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
+                Guard.ArgumentValid(parameter.ParameterType.IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
 
                 Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
                 DataType = parameter.ParameterType;
@@ -635,14 +641,16 @@ namespace NUnit.Framework
                         do
                         {
                             next = randomizer.NextEnum(parameter.ParameterType);
-                        } while (previousValues.Contains(next));
+                        } while (_previousValues.Contains(next));
 
-                        previousValues.Add(next);
+                        _previousValues.Add(next);
 
                         yield return next;
                     }
                     else
+                    {
                         yield return randomizer.NextEnum(parameter.ParameterType);
+                    }
                 }
             }
         }
@@ -651,7 +659,7 @@ namespace NUnit.Framework
 
         #region DecimalDataSource
 
-        class DecimalDataSource : RandomDataSource<decimal>
+        private class DecimalDataSource : RandomDataSource<decimal>
         {
             public DecimalDataSource(int count) : base(count) { }
 
@@ -668,6 +676,35 @@ namespace NUnit.Framework
             protected override bool CanBeDistinct(decimal min, decimal max, int count)
             {
                 return true;
+            }
+        }
+
+        #endregion
+
+        #region GuidDataSource
+
+        private class GuidDataSource : RandomDataSource<Guid>
+        {
+            public GuidDataSource(int count) : base(count) { }
+
+            protected override Guid GetNext(Randomizer randomizer)
+            {
+                return randomizer.NextGuid();
+            }
+
+            protected override Guid GetNext(Randomizer randomizer, Guid min, Guid max)
+            {
+                throw new NotSupportedException($"{typeof(Guid)} does not support range of parameters being specified.");
+            }
+
+            protected override bool CanBeDistinct(Guid min, Guid max, int count)
+            {
+                throw new NotSupportedException($"{typeof(Guid)} does not support range of parameters being specified.");
+            }
+
+            protected override bool CanUseRange()
+            {
+                return false;
             }
         }
 

@@ -1,27 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Constraints;
@@ -40,7 +17,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestSnippet delegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Throws(IResolveConstraint expression, TestDelegate code, string? message, params object?[]? args)
+        public static Exception? Throws(IResolveConstraint expression, TestDelegate code, string message, params object?[]? args)
         {
             Exception? caughtException = null;
 
@@ -59,7 +36,7 @@ namespace NUnit.Framework
                 }
             }
 
-            Assert.That(caughtException, expression, message, args);
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
             return caughtException;
         }
@@ -83,7 +60,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Throws(Type expectedExceptionType, TestDelegate code, string? message, params object?[]? args)
+        public static Exception? Throws(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
         }
@@ -111,7 +88,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Throws<TActual>(TestDelegate code, string? message, params object?[]? args) where TActual : Exception
+        public static TActual? Throws<TActual>(TestDelegate code, string message, params object?[]? args) where TActual : Exception
         {
             return (TActual?)Throws(typeof(TActual), code, message, args);
         }
@@ -137,7 +114,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Catch(TestDelegate code, string? message, params object?[]? args)
+        public static Exception? Catch(TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
         }
@@ -160,7 +137,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Catch(Type expectedExceptionType, TestDelegate code, string? message, params object?[]? args)
+        public static Exception? Catch(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
         }
@@ -186,7 +163,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Catch<TActual>(TestDelegate code, string? message, params object?[]? args) where TActual : System.Exception
+        public static TActual? Catch<TActual>(TestDelegate code, string message, params object?[]? args) where TActual : System.Exception
         {
             return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
@@ -211,9 +188,9 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void DoesNotThrow(TestDelegate code, string? message, params object?[]? args)
+        public static void DoesNotThrow(TestDelegate code, string message, params object?[]? args)
         {
-            Assert.That(code, new ThrowsNothingConstraint(), message, args);
+            Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

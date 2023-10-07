@@ -1,33 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Linq;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class NamespaceTests
@@ -35,9 +12,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AllExportedNameSpacesAreNotSystem()
         {
-            var exportedTypes = typeof(FrameworkController).GetTypeInfo().Assembly.GetExportedTypes();
+            var exportedTypes = typeof(FrameworkController).Assembly.GetExportedTypes();
 
-            var exportedTypesWhitelist = new[] 
+            var exportedTypesWhitelist = new[]
             {
                 typeof(System.Web.UI.ICallbackEventHandler)
             };
@@ -46,8 +23,8 @@ namespace NUnit.Framework.Internal
             {
                 foreach (var type in exportedTypes.Except(exportedTypesWhitelist))
                 {
-                    Assert.IsFalse(
-                        type.Namespace.StartsWith("System", StringComparison.OrdinalIgnoreCase),
+                    Assert.That(
+                        type.Namespace!.StartsWith("System", StringComparison.OrdinalIgnoreCase), Is.False,
                         $"Type {type.FullName} is publicly visible in the System namespace but should not be.");
                 }
             });

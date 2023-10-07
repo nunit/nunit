@@ -1,29 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 
 namespace NUnit.TestData.RepeatingTests
@@ -31,58 +8,46 @@ namespace NUnit.TestData.RepeatingTests
     [TestFixture]
     public class RepeatingTestsFixtureBase
     {
-        private int fixtureSetupCount;
-        private int fixtureTeardownCount;
-        private int setupCount;
-        private int teardownCount;
-        private readonly List<string> tearDownResults = new List<string>();
+        private int _fixtureSetupCount;
+        private int _fixtureTeardownCount;
+        private int _setupCount;
+        private int _teardownCount;
+        private readonly List<string> _tearDownResults = new List<string>();
 
         [OneTimeSetUp]
         public void FixtureSetUp()
         {
-            fixtureSetupCount++;
+            _fixtureSetupCount++;
         }
 
         [OneTimeTearDown]
         public void FixtureTearDown()
         {
-            fixtureTeardownCount++;
+            _fixtureTeardownCount++;
         }
 
         [SetUp]
         public void SetUp()
         {
-            setupCount++;
+            _setupCount++;
         }
 
         [TearDown]
         public void TearDown()
         {
-            tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
-            teardownCount++;
+            _tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
+            _teardownCount++;
         }
 
-        public int FixtureSetupCount
-        {
-            get { return fixtureSetupCount; }
-        }
-        public int FixtureTeardownCount
-        {
-            get { return fixtureTeardownCount; }
-        }
-        public int SetupCount
-        {
-            get { return setupCount; }
-        }
-        public int TeardownCount
-        {
-            get { return teardownCount; }
-        }
+        public int FixtureSetupCount => _fixtureSetupCount;
 
-        public List<string> TearDownResults
-        {
-            get { return tearDownResults; }
-        }
+        public int FixtureTeardownCount => _fixtureTeardownCount;
+
+        public int SetupCount => _setupCount;
+
+        public int TeardownCount => _teardownCount;
+
+        public List<string> TearDownResults => _tearDownResults;
         public int Count { get; protected set; }
     }
 }

@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Text;
@@ -39,6 +18,9 @@ namespace NUnit.Framework.Constraints
         /// The value against which a comparison is to be made
         /// </summary>
         private readonly object _expected;
+        private readonly string _comparisonText;
+
+        private string? _description;
 
         /// <summary>
         /// Tolerance used in making the comparison
@@ -56,10 +38,13 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="ComparisonConstraint"/> class.
         /// </summary>
         /// <param name="expected">The value against which to make a comparison.</param>
-        protected ComparisonConstraint(object expected) : base(expected)
+        /// <param name="comparisonText">The text indicating the type of comparison.</param>
+        protected ComparisonConstraint(object expected, string comparisonText)
+            : base(expected)
         {
-            Guard.ArgumentValid(expected != null, "Cannot compare using a null reference.", nameof(_expected));
+            Guard.ArgumentValid(expected is not null, "Cannot compare using a null reference.", nameof(_expected));
             _expected = expected;
+            _comparisonText = comparisonText;
         }
 
         #endregion
@@ -67,13 +52,27 @@ namespace NUnit.Framework.Constraints
         #region Overrides
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value   
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                _description ??= DefaultDescription(_comparisonText);
+
+                return _description;
+            }
+        }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentValid(actual != null, "Cannot compare to a null reference.", nameof(actual));
+            Guard.ArgumentValid(actual is not null, "Cannot compare to a null reference.", nameof(actual));
 
             return new ConstraintResult(this, actual, PerformComparison(_comparer, actual, _expected, _tolerance));
         }
@@ -94,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using(IComparer comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -105,7 +104,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(IComparer<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -116,7 +115,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(Comparison<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -148,9 +147,9 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
+
         #region Protected Methods
-        
+
         /// <summary>
         /// Provides standard description of what the constraint tests
         /// based on comparison text.
@@ -158,15 +157,15 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparisonText">Describes the comparison being tested, throws <see cref="ArgumentNullException"/>
         /// if null</param>
         /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
-        protected string DefaultDescription(string comparisonText)
+        private string DefaultDescription(string comparisonText)
         {
-            if (comparisonText == null)
+            if (comparisonText is null)
                 throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
-            
+
             StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));
-                
-            if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+
+            if (_tolerance is not null && _tolerance.HasVariance)
             {
                 sb.Append(" within ");
                 sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
@@ -176,10 +175,10 @@ namespace NUnit.Framework.Constraints
                     sb.Append(" percent");
                 }
             }
-                
+
             return sb.ToString();
         }
-        
+
         #endregion
     }
 }

@@ -1,42 +1,23 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Internal.Builders
+namespace NUnit.Framework.Tests.Internal
 {
     public class NamespaceTreeBuilderTests
     {
         private TestAssembly _testAssembly;
         private NamespaceTreeBuilder _builder;
-
+        private const string NameofDll = "mytest.dll";
 
         [SetUp]
         public void CreateTreeBuilder()
         {
-            _testAssembly = new TestAssembly("mytest.dll");
+            _testAssembly = new TestAssembly(NameofDll);
             _builder = new NamespaceTreeBuilder(_testAssembly);
         }
 
@@ -44,13 +25,13 @@ namespace NUnit.Framework.Internal.Builders
         public void InitialTreeState()
         {
             Assert.That(_builder.RootSuite, Is.SameAs(_testAssembly));
-            Assert.That(_builder.RootSuite.Tests.Count, Is.Zero);
+            Assert.That(_builder.RootSuite.Tests, Is.Empty);
         }
 
         [Test]
         public void AddSingleFixture()
         {
-            _builder.Add( new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)));
+            _builder.Add(new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)));
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
         }
@@ -62,7 +43,8 @@ namespace NUnit.Framework.Internal.Builders
             {
                 new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)),
                 new TestSuite(typeof(NUnit.TestData.TestFixtureTests.FixtureWithTestFixtureAttribute)),
-                new TestSuite(typeof(NUnit.TestData.TestFixtureTests.FixtureWithoutTestFixtureAttributeContainingTestCase))
+                new TestSuite(
+                    typeof(NUnit.TestData.TestFixtureTests.FixtureWithoutTestFixtureAttributeContainingTestCase))
             });
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
@@ -75,9 +57,9 @@ namespace NUnit.Framework.Internal.Builders
         {
             _builder.Add(new[]
             {
-                new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)),
-                new TestSuite(typeof(NUnit.TestData.SetUpData.SetUpAndTearDownFixture)),
-                new TestSuite(typeof(NUnit.TestData.TheoryFixture.TheoryFixture))
+                new TestSuite(typeof(TestData.TestFixtureTests.RegularFixtureWithOneTest)),
+                new TestSuite(typeof(TestData.SetUpData.SetUpAndTearDownFixture)),
+                new TestSuite(typeof(TestData.TheoryFixture.TheoryFixture))
             });
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
@@ -104,7 +86,8 @@ namespace NUnit.Framework.Internal.Builders
         public void AddSetUpFixture_BottomUp()
         {
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(
+                new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
             Assert.That(_builder.RootSuite.Tests[0].Tests[0].Tests[0].Tests[0], Is.TypeOf<SetUpFixture>());
@@ -113,7 +96,8 @@ namespace NUnit.Framework.Internal.Builders
         [Test]
         public void AddSetUpFixture_TopDown()
         {
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(
+                new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
@@ -161,21 +145,23 @@ namespace NUnit.Framework.Internal.Builders
         private void CheckTree(params string[] names)
         {
             ITest suite = _builder.RootSuite;
-            Assert.That(suite.Name, Is.EqualTo("mytest.dll"));
+            Assert.That(suite.Name, Is.EqualTo(NameofDll));
 
             foreach (var name in names)
             {
                 foreach (var child in suite.Tests)
+                {
                     if (child.Name == name)
                     {
                         suite = child;
                         break;
                     }
+                }
 
                 if (suite.Name != name)
                 {
                     var dump = DumpTree(_builder.RootSuite, "   ");
-                    Assert.Fail("Did not find {0} in tree under {1}\nTree Contains:\n{2}", name, suite.Name, dump);
+                    Assert.Fail($"Did not find {name} in tree under {suite.Name}\nTree Contains:\n{dump}");
                 }
             }
         }

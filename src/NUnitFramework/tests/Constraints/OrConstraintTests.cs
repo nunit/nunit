@@ -1,47 +1,30 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class OrConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
             ExpectedDescription = "42 or 99";
             StringRepresentation = "<or <equal 42> <equal 99>>";
         }
 
-        static object[] SuccessData = new object[] { 99, 42 };
-
-        static object[] FailureData = new object[] { new object[] { 37, "37" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 99, 42 };
+        private static readonly object[] FailureData = new object[] { new object[] { 37, "37" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCombineTestsWithOrOperator()
         {
-            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99) );
+            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99));
         }
     }
 }

@@ -1,30 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -43,14 +21,14 @@ namespace NUnit.Framework.Interfaces
     /// up to the code using the PropertyBag.
     /// 
     /// When working with multi-valued properties, client code
-    /// should use the Add method to add name/value pairs and 
+    /// should use the Add method to add name/value pairs and
     /// indexing to retrieve a list of all values for a given
     /// key. For example:
     /// 
     ///     bag.Add("Tag", "one");
     ///     bag.Add("Tag", "two");
     ///     Assert.That(bag["Tag"],
-    ///       Is.EqualTo(new string[] { "one", "two" })); 
+    ///       Is.EqualTo(new string[] { "one", "two" }));
     /// 
     /// When working with single-valued properties, client code
     /// should use the Set method to set the value and Get to
@@ -74,7 +52,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value</param>
         void Add(string key, object value);
 
-        
         /// <summary>
         /// Sets the value for a key, removing any other
         /// values that are already in the property set.
@@ -99,7 +76,15 @@ namespace NUnit.Framework.Interfaces
         bool ContainsKey(string key);
 
         /// <summary>
-        /// Gets or sets the list of values for a particular key
+        /// Tries to retrieve list of values.
+        /// </summary>
+        /// <param name="key">The key for which the values are to be retrieved</param>
+        /// <param name="values">Values, if found</param>
+        /// <returns>true if found</returns>
+        bool TryGet(string key, [NotNullWhen(true)] out IList? values);
+
+        /// <summary>
+        /// Gets or sets the list of values for a particular key, initializes new list behind the key if not found.
         /// </summary>
         /// <param name="key">The key for which the values are to be retrieved or set</param>
         IList this[string key] { get; set; }

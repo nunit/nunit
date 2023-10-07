@@ -1,4 +1,4 @@
-#tool NUnit.ConsoleRunner&version=3.10.0
+#tool NUnit.ConsoleRunner&version=3.12.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -17,29 +17,11 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.13.0";
-var modifier = "";
+var version = "4.0.0";
+var modifier = "-alpha-1";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
-
-//////////////////////////////////////////////////////////////////////
-// SUPPORTED FRAMEWORKS
-//////////////////////////////////////////////////////////////////////
-
-var AllFrameworks = new string[]
-{
-    "net45",
-    "net40",
-    "net35",
-    "netstandard2.0"
-};
-
-var NetCoreTests = new String[]
-{
-    "netcoreapp2.1",
-    "netcoreapp3.1"
-};
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -49,19 +31,40 @@ var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
 var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
+var NUNITFRAMEWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
+var NUNITFRAMEWORKLEGACYTESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.legacy.tests/bin/" + configuration + "/";
+var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
+var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
+var NUNITFRAMEWORKLEGACYBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.legacy/bin/" + configuration + "/";
+var NUNITLITEBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite/bin/" + configuration + "/";
+var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/" + configuration + "/";
 
 var SOLUTION_FILE = "./nunit.sln";
+
+var DIRECTORY_BUILD_PROPS = PROJECT_DIR + "src/NUnitFramework/Directory.Build.props";
 
 // Test Runners
 var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
+var FRAMEWORKLEGACY_TESTS = "nunit.framework.legacy.tests.dll";
+var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
 var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
 var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
+
+//////////////////////////////////////////////////////////////////////
+// SUPPORTED FRAMEWORKS
+//////////////////////////////////////////////////////////////////////
+
+var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitLibraryFrameworks").Split(';');
+var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
+
+var NetCoreTestRuntimes = RuntimeFrameworks.Where(s => !s.StartsWith("net4")).ToArray();
+var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Single();
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -117,10 +120,13 @@ Setup(context =>
 //////////////////////////////////////////////////////////////////////
 
 Task("Clean")
-    .Description("Deletes all files in the BIN directory")
+    .Description("Deletes all files in the BIN directories")
     .Does(() =>
     {
-        CleanDirectory(BIN_DIR);
+        CleanDirectory(NUNITFRAMEWORKBIN);
+        CleanDirectory(NUNITFRAMEWORKLEGACYBIN);
+        CleanDirectory(NUNITLITEBIN);
+        CleanDirectory(NUNITLITERUNNERBIN);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -143,37 +149,16 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild(SOLUTION_FILE, CreateSettings());
+        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
-MSBuildSettings CreateSettings()
-{
-    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
-
-    if (IsRunningOnWindows())
+DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
+    new DotNetCoreBuildSettings
     {
-        // Find MSBuild for Visual Studio 2019 and newer
-        DirectoryPath vsLatest = VSWhereLatest();
-        FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
-
-        // Find MSBuild for Visual Studio 2017
-        if (msBuildPath != null && !FileExists(msBuildPath))
-            msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
-
-        // Have we found MSBuild yet?
-        if (!FileExists(msBuildPath))
-        {
-            throw new Exception($"Failed to find MSBuild: {msBuildPath}");
-        }
-
-        Information("Building using MSBuild at " + msBuildPath);
-        settings.ToolPath = msBuildPath;
-    }
-    else
-        settings.ToolPath = Context.Tools.Resolve("msbuild");
-
-    return settings;
-}
+        Configuration = configuration,
+        NoRestore = true,
+        Verbosity = DotNetCoreVerbosity.Minimal
+    };
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -183,63 +168,50 @@ Task("CheckForError")
     .Description("Checks for errors running the test suites")
     .Does(() => CheckForError(ref ErrorDetail));
 
-Task("Test45")
-    .Description("Tests the .NET 4.5 version of the framework")
+Task("TestNetFramework")
+    .Description("Tests the .NET Framework version of nunit framework")
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net45";
-        var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        var runtime = NetFrameworkTestRuntime;
+        var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
+        Information("Run tests for " + runtime + " in " + dir + "using runner");
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
+        dir = NUNITFRAMEWORKLEGACYTESTSBIN + runtime + "/";
+        Information("Run legacy tests for " + runtime + " in " + dir + "using runner");
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORKLEGACY_TESTS, dir + "nunit.framework.legacy.tests.xml", runtime, ref ErrorDetail);
+        dir = NUNITLITETESTSBIN + runtime + "/";
+        Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
         PublishTestResults(runtime);
     });
 
-Task("Test40")
-    .Description("Tests the .NET 4.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net40";
-        var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
+var testCore = Task("TestNetCore")
+    .Description("Tests the .NET Core (6.0+) version of the framework");
 
-Task("Test35")
-    .Description("Tests the .NET 3.5 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net35";
-        var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
-
-var testNetStandard20 = Task("TestNetStandard20")
-    .Description("Tests the .NET Standard 2.0 version of the framework");
-
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
+foreach (var runtime in NetCoreTestRuntimes)
 {
-    var task = Task("TestNetStandard20 on " + runtime)
-        .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+    var task = Task("TestNetCore on " + runtime)
+        .Description("Tests the .NET Core (6.0+) version of the framework on " + runtime)
+        .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
         {
-            var dir = BIN_DIR + runtime + "/";
+            var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
+            Information("Run tests for " + runtime + " in " + dir);
             RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            dir = NUNITFRAMEWORKLEGACYTESTSBIN + runtime + "/";
+            Information("Run legacy tests for " + runtime + " in " + dir);
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORKLEGACY_TESTS, runtime, GetResultXmlPath(FRAMEWORKLEGACY_TESTS, runtime), ref ErrorDetail);
+            dir = NUNITLITETESTSBIN + runtime + "/";
+            Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
             RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
             PublishTestResults(runtime);
         });
 
-    testNetStandard20.IsDependentOn(task);
+    testCore.IsDependentOn(task);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -249,8 +221,10 @@ foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
 var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
-    "NOTICES.txt",
-    "CHANGES.md"
+    "NOTICES.md",
+    "CHANGES.md",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
 };
 
 // Not all of these are present in every framework
@@ -261,14 +235,20 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.legacy.dll",
+    "nunit.framework.pdb",
+    "nunit.framework.legacy.pdb",
     "nunit.framework.xml",
+    "nunit.framework.legacy.xml",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
+    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
+    "nunitlite-runner.pdb",
     "nunitlite-runner.dll",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
@@ -291,28 +271,39 @@ Task("CreateImage")
         var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
-        Information("Created directory " + imageBinDir);
-
-        foreach (var runtime in AllFrameworks)
+        Information("Created imagedirectory at:" + imageBinDir);
+        var directories = new String[]
         {
-            var targetDir = imageBinDir + Directory(runtime);
-            var sourceDir = BIN_DIR + Directory(runtime);
-            CreateDirectory(targetDir);
-            foreach (FilePath file in FrameworkFiles)
+            NUNITFRAMEWORKBIN,
+            NUNITFRAMEWORKLEGACYBIN,
+            NUNITLITEBIN
+        };
+        foreach (var dir in directories)
+        {
+            foreach (var runtime in LibraryFrameworks)
             {
-                var sourcePath = sourceDir + "/" + file;
-                if (FileExists(sourcePath))
-                    CopyFileToDirectory(sourcePath, targetDir);
+                var targetDir = imageBinDir + Directory(runtime);
+                var sourceDir = dir + Directory(runtime);
+                CreateDirectory(targetDir);
+                Information("Created directory " + targetDir);
+                foreach (FilePath file in FrameworkFiles)
+                {
+                    var sourcePath = sourceDir + "/" + file;
+                    if (FileExists(sourcePath))
+                        CopyFileToDirectory(sourcePath, targetDir);
+                }
+                Information("Files copied from " + sourceDir + " to " + targetDir);
+                var schemaPath = sourceDir + "/Schemas";
+                if (DirectoryExists(schemaPath))
+                    CopyDirectory(sourceDir, targetDir);
             }
-            var schemaPath = sourceDir + "/Schemas";
-            if (DirectoryExists(schemaPath))
-                CopyDirectory(sourceDir, targetDir);
-        }
-
-        foreach (var dir in NetCoreTests)
+        }    
+        
+        foreach (var dir in RuntimeFrameworks)
         {
             var targetDir = imageBinDir + Directory(dir);
-            var sourceDir = BIN_DIR + Directory(dir);
+            var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
+            Information("Copying " + sourceDir + " to " + targetDir);
             CopyDirectory(sourceDir, targetDir);
         }
     });
@@ -328,7 +319,10 @@ Task("PackageFramework")
         {
             Version = packageVersion,
             BasePath = CurrentImageDir,
-            OutputDirectory = PACKAGE_DIR
+            OutputDirectory = PACKAGE_DIR,
+            Symbols = true,
+            // snupkg is not yet supported by Cake, https://github.com/cake-build/cake/issues/2362
+            ArgumentCustomization = args => args.Append("-SymbolPackageFormat snupkg")
         };
 
         NuGetPack("nuget/framework/nunit.nuspec", settings);
@@ -342,35 +336,14 @@ Task("PackageZip")
     {
         CreateDirectory(PACKAGE_DIR);
 
-        var zipFiles =
-            GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.4/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
+        var zipFiles = GetFiles(CurrentImageDir + "*.*");
+        foreach (var framework in LibraryFrameworks)
+            zipFiles += GetFiles(CurrentImageDir + "bin/"+ framework + "/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
-    });
-
-Task("CreateToolManifest")
-    .Does(() =>
-    {
-        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "new tool-manifest --force" });
-    });
-
-Task("InstallSigningTool")
-    .Description("Installs the signing tool")
-    .IsDependentOn("CreateToolManifest")
-    .Does(() =>
-    {
-        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "tool install SignClient" });
     });
 
 Task("SignPackages")
     .Description("Signs the NuGet packages")
-    .IsDependentOn("InstallSigningTool")
     .IsDependentOn("PackageFramework")
     .Does(() =>
     {
@@ -391,7 +364,7 @@ Task("SignPackages")
         var settings = File("./signclient.json");
 
         // Get the files to sign.
-        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.nupkg"));
+        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.*nupkg"));
 
         foreach(var file in files)
         {
@@ -428,6 +401,7 @@ Task("UploadArtifacts")
     .Does(() =>
     {
         UploadArtifacts(PACKAGE_DIR, "*.nupkg");
+        UploadArtifacts(PACKAGE_DIR, "*.snupkg");
         UploadArtifacts(PACKAGE_DIR, "*.zip");
     });
 
@@ -494,10 +468,10 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
-    RunTest(exePath, workingDir, null, framework, ref errorDetail);
+    RunTest(exePath, workingDir, null, GetResultXmlPath(exePath.FullPath, framework), framework, ref errorDetail);
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, FilePath resultFile, string framework, ref List<string> errorDetail)
 {
     int rc = StartProcess(
         MakeAbsolute(exePath),
@@ -505,7 +479,7 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         {
             Arguments = new ProcessArgumentBuilder()
                 .Append(arguments)
-                .AppendSwitchQuoted("--result", ":", GetResultXmlPath(exePath.FullPath, framework).FullPath)
+                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
                 .Render(),
             WorkingDirectory = workingDir
         });
@@ -523,6 +497,12 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string frame
 
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
+    if (!FileExists(exePath))
+    {
+        Information(string.Format("{0}: {1} not found", framework, exePath));
+        return;
+    }
+
     int rc = StartProcess(
         "dotnet",
         new ProcessSettings
@@ -545,16 +525,17 @@ void PublishTestResults(string framework)
 {
     if (EnvironmentVariable("TF_BUILD", false))
     {
+        Information("Publishing test results to Azure Pipelines");
         var fullTestRunTitle = framework;
         var ciRunName = Argument<string>("test-run-name");
         if (!string.IsNullOrEmpty(ciRunName))
             fullTestRunTitle += '/' + ciRunName;
 
-        TFBuild.Commands.PublishTestResults(new TFBuildPublishTestResultsData
+        AzurePipelines.Commands.PublishTestResults(new AzurePipelinesPublishTestResultsData
         {
             TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
             TestRunTitle = fullTestRunTitle,
-            TestRunner = TFTestRunnerType.NUnit,
+            TestRunner = AzurePipelinesTestRunnerType.NUnit,
             MergeTestResults = true,
             PublishRunAttachments = true,
             Configuration = configuration
@@ -590,10 +571,8 @@ Task("Rebuild")
 Task("Test")
     .Description("Builds and tests all versions of the framework")
     .IsDependentOn("Build")
-    .IsDependentOn("Test45")
-    .IsDependentOn("Test40")
-    .IsDependentOn("Test35")
-    .IsDependentOn("TestNetStandard20");
+    .IsDependentOn("TestNetFramework")
+    .IsDependentOn("TestNetCore");
 
 Task("Package")
     .Description("Packages all versions of the framework")
@@ -607,11 +586,6 @@ Task("Appveyor")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
     .IsDependentOn("UploadArtifacts");
-
-Task("Travis")
-    .Description("Builds and tests on Travis")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test");
 
 Task("Default")
     .Description("Builds all versions of the framework")

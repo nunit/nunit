@@ -1,9 +1,10 @@
-using System;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
-    internal struct ComparisonState
+    internal readonly ref struct ComparisonState
     {
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
@@ -37,13 +38,15 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool DidCompare(object x, object y)
         {
             foreach (var comparison in _comparisons)
+            {
                 if (ReferenceEquals(comparison.X, x) && ReferenceEquals(comparison.Y, y))
                     return true;
+            }
 
             return false;
         }
 
-        private struct Comparison
+        private readonly struct Comparison
         {
             public object X { get; }
             public object Y { get; }

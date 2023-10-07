@@ -1,31 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     // NOTE: The tests in this file ensure that the various
     // syntactic elements work together to create a
@@ -75,7 +53,6 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-
     public class AfterTest_PropertyTest : SyntaxTest
     {
         [SetUp]
@@ -102,23 +79,23 @@ namespace NUnit.Framework.Syntax
     {
         protected bool Flag;
         protected int Num;
-        protected object Ob1, Ob2, Ob3;
+        protected object? Ob1, Ob2, Ob3;
         protected List<object> List;
         protected string Greeting;
 
         [SetUp]
         public void InitializeValues()
         {
-            this.Flag = false;
-            this.Num = 0;
-            this.Ob1 = new object();
-            this.Ob2 = new object();
-            this.Ob3 = new object();
-            this.List = new List<object>();
-            this.List.Add(1);
-            this.List.Add(2);
-            this.List.Add(3);
-            this.Greeting = "hello";
+            Flag = false;
+            Num = 0;
+            Ob1 = new object();
+            Ob2 = new object();
+            Ob3 = new object();
+            List = new List<object>();
+            List.Add(1);
+            List.Add(2);
+            List.Add(3);
+            Greeting = "hello";
 
             new Thread(ModifyValuesAfterDelay).Start();
         }
@@ -127,12 +104,12 @@ namespace NUnit.Framework.Syntax
         {
             Thread.Sleep(100);
 
-            this.Flag = true;
-            this.Num = 1;
-            this.Ob1 = Ob2;
-            this.Ob3 = null;
-            this.List.Add(4);
-            this.Greeting += "world";
+            Flag = true;
+            Num = 1;
+            Ob1 = Ob2;
+            Ob3 = null;
+            List.Add(4);
+            Greeting += "world";
         }
     }
 
@@ -159,7 +136,7 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void GreaterTest()
         {
-            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000,200));
+            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000, 200));
         }
 
         [Test]

@@ -1,28 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if THREAD_ABORT
-using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
@@ -49,9 +27,8 @@ namespace NUnit.TestData
         [Test, Timeout(50)]
         public void InfiniteLoopWith50msTimeout()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
-
 
         [Test, Timeout(500)]
         public void TimeoutWithMessagePumpShouldAbort()
@@ -70,9 +47,9 @@ namespace NUnit.TestData
     public class TimeoutFixtureWithTimeoutInSetUp : TimeoutFixture
     {
         [SetUp]
-        public bool SetUp2()
+        public void SetUp2()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
 
         [Test, Timeout(50)]
@@ -84,7 +61,7 @@ namespace NUnit.TestData
         [TearDown]
         public void TearDown2()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
 
         [Test, Timeout(50)]
@@ -99,7 +76,7 @@ namespace NUnit.TestData
         [Test]
         public void Test2WithInfiniteLoop()
         {
-            while (true) { }
+            Thread.Sleep(5000);
         }
         [Test]
         public void Test3() { }
@@ -107,9 +84,9 @@ namespace NUnit.TestData
 
     public class TimeoutTestCaseFixture
     {
-        const int TIME_OUT_TIME = 100;
-        const int NOT_TIMEOUTED_TIME = 10;
-        const int TIMEOUTED_TIME = 500;
+        private const int TIME_OUT_TIME = 100;
+        private const int NOT_TIMEOUTED_TIME = 10;
+        private const int TIMEOUTED_TIME = 500;
 
         [Test]
         [Timeout(TIME_OUT_TIME)]

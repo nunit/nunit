@@ -1,36 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -92,21 +67,23 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
 
-            AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
+            AddFormatter(next => val => val is DateTime value ? FormatDateTime(value) : next(val));
 
-            AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset((DateTimeOffset)val) : next(val));
+            AddFormatter(next => val => val is DateTimeOffset value ? FormatDateTimeOffset(value) : next(val));
 
-            AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+            AddFormatter(next => val => val is decimal value ? FormatDecimal(value) : next(val));
 
-            AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
+            AddFormatter(next => val => val is float value ? FormatFloat(value) : next(val));
 
-            AddFormatter(next => val => val is double ? FormatDouble((double)val) : next(val));
+            AddFormatter(next => val => val is double value ? FormatDouble(value) : next(val));
 
             AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
 
-            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val) : next(val));
+            AddFormatter(next => val => val is IEnumerable value ? FormatCollection(value) : next(val));
 
-            AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
+            AddFormatter(next => val => val is string value ? FormatString(value) : next(val));
+
+            AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
             AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
 
@@ -117,7 +94,7 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
         }
 
-#if !NET35
+#if NETFRAMEWORK
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
 #endif
         private static string FormatValueWithoutThrowing(object? val)
@@ -151,12 +128,12 @@ namespace NUnit.Framework.Constraints
         /// <returns>The formatted text</returns>
         public static string FormatValue(object? val)
         {
-            if (val == null)
+            if (val is null)
                 return Fmt_Null;
 
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null)
+            if (context is not null)
                 return context.CurrentValueFormatter(val);
             else
                 return DefaultValueFormatter(val);
@@ -245,41 +222,41 @@ namespace NUnit.Framework.Constraints
 
         private static string? TryFormatKeyValuePair(object? value)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
             Type valueType = value.GetType();
-            if (!valueType.GetTypeInfo().IsGenericType)
+            if (!valueType.IsGenericType)
                 return null;
 
             Type baseValueType = valueType.GetGenericTypeDefinition();
             if (baseValueType != typeof(KeyValuePair<,>))
                 return null;
 
-            object? k = valueType.GetProperty("Key").GetValue(value, null);
-            object? v = valueType.GetProperty("Value").GetValue(value, null);
+            object? k = valueType.GetProperty("Key")?.GetValue(value, null);
+            object? v = valueType.GetProperty("Value")?.GetValue(value, null);
 
             return FormatKeyValuePair(k, v);
         }
 
         private static string FormatKeyValuePair(object? key, object? value)
         {
-            return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
+            return $"[{FormatValue(key)}, {FormatValue(value)}]";
         }
 
         private static object? GetValueFromTuple(Type type, string propertyName, object obj)
         {
-            return type.GetProperty(propertyName).GetValue(obj, null);
+            return type.GetProperty(propertyName)?.GetValue(obj, null);
         }
 
         private static object? GetValueFromValueTuple(Type type, string propertyName, object obj)
         {
-            return type.GetField(propertyName).GetValue(obj);
+            return type.GetField(propertyName)?.GetValue(obj);
         }
 
         private static string? TryFormatTuple(object? value, Func<Type, bool> isTuple, Func<Type, string, object, object?> getValue)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
             Type valueType = value.GetType();
@@ -324,7 +301,9 @@ namespace NUnit.Framework.Constraints
         private static string FormatDouble(double d)
         {
             if (double.IsNaN(d) || double.IsInfinity(d))
+            {
                 return d.ToString();
+            }
             else
             {
                 string s = d.ToString("G17", CultureInfo.InvariantCulture);
@@ -339,7 +318,9 @@ namespace NUnit.Framework.Constraints
         private static string FormatFloat(float f)
         {
             if (float.IsNaN(f) || float.IsInfinity(f))
+            {
                 return f.ToString();
+            }
             else
             {
                 string s = f.ToString("G9", CultureInfo.InvariantCulture);
@@ -375,19 +356,18 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public static string GetTypeRepresentation(object obj)
         {
-            Array? array = obj as Array;
-            if (array == null)
-                return string.Format("<{0}>", obj.GetType());
+            if (!(obj is Array array))
+                return $"<{obj.GetType()}>";
 
             StringBuilder sb = new StringBuilder();
             Type elementType = array.GetType();
             int nest = 0;
             while (elementType.IsArray)
             {
-                elementType = elementType.GetElementType();
+                elementType = elementType.GetElementType()!;
                 ++nest;
             }
-            sb.Append(elementType.ToString());
+            sb.Append(elementType);
             sb.Append('[');
             for (int r = 0; r < array.Rank; r++)
             {
@@ -399,7 +379,7 @@ namespace NUnit.Framework.Constraints
             while (--nest > 0)
                 sb.Append("[]");
 
-            return string.Format("<{0}>", sb.ToString());
+            return $"<{sb}>";
         }
 
         /// <summary>
@@ -411,7 +391,7 @@ namespace NUnit.Framework.Constraints
         [return: NotNullIfNotNull("s")]
         public static string? EscapeControlChars(string? s)
         {
-            if (s != null)
+            if (s is not null)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -456,7 +436,7 @@ namespace NUnit.Framework.Constraints
                         case '\x0085':
                         case '\x2028':
                         case '\x2029':
-                            sb.Append(string.Format("\\x{0:X4}", (int)c));
+                            sb.Append($"\\x{(int)c:X4}");
                             break;
 
                         default:
@@ -480,7 +460,7 @@ namespace NUnit.Framework.Constraints
         [return: NotNullIfNotNull("s")]
         public static string? EscapeNullCharacters(string? s)
         {
-            if (s != null)
+            if (s is not null)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -532,7 +512,7 @@ namespace NUnit.Framework.Constraints
         {
             Array? array = collection as Array;
 
-            int rank = array == null ? 1 : array.Rank;
+            int rank = array?.Rank ?? 1;
             int[] result = new int[rank];
 
             for (int r = rank; --r > 0;)
@@ -572,9 +552,13 @@ namespace NUnit.Framework.Constraints
                 sb.Append(ELLIPSIS);
             }
             else if (clipStart > 0)
+            {
                 sb.Append(s.Substring(clipStart));
+            }
             else
+            {
                 sb.Append(s);
+            }
 
             return sb.ToString();
         }
@@ -615,7 +599,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="istart">The index in the strings at which comparison should start</param>
         /// <param name="ignoreCase">Boolean indicating whether case should be ignored</param>
         /// <returns>-1 if no mismatch found, or the index where mismatch found</returns>
-        static public int FindMismatchPosition(string expected, string actual, int istart, bool ignoreCase)
+        public static int FindMismatchPosition(string expected, string actual, int istart, bool ignoreCase)
         {
             int length = Math.Min(expected.Length, actual.Length);
 

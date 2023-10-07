@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -37,16 +16,13 @@ namespace NUnit.Framework.Internal
     {
         private static readonly char[] ARG_START = new char[] { '(', '<' };
 
-        private readonly List<FilterElement> _filters = new List<FilterElement>();
+        private readonly List<FilterElement> _filters = new();
 
         /// <summary>
         /// Return a new PreFilter, without elements, which is considered
         /// empty and always matches.
         /// </summary>
-        public static PreFilter Empty
-        {
-            get { return new PreFilter(); }
-        }
+        public static PreFilter Empty => new();
 
         /// <summary>
         /// Return true if the filter is empty, in which case it
@@ -54,10 +30,7 @@ namespace NUnit.Framework.Internal
         /// you can add elements but it's best to use Empty when
         /// you need an empty filter and new when you plan to add.
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return _filters.Count == 0; }
-        }
+        public bool IsEmpty => _filters.Count == 0;
 
         /// <summary>
         /// Add a new filter element to the filter
@@ -75,13 +48,13 @@ namespace NUnit.Framework.Internal
                     return;
             }
 
-            var newFilter = new FilterElement(filterText);
-
             // Check to see if it makes any of the existing
             // filter elements redundant.
             for (int index = _filters.Count - 1; index >= 0; index--)
+            {
                 if (_filters[index].Text.StartsWith(filterText + "."))
                     _filters.RemoveAt(index);
+            }
 
             _filters.Add(new FilterElement(filterText));
         }
@@ -94,8 +67,6 @@ namespace NUnit.Framework.Internal
         {
             if (IsEmpty)
                 return true;
-
-            string typeName = type.FullName;
 
             foreach (FilterElement filter in _filters)
             {
@@ -146,10 +117,10 @@ namespace NUnit.Framework.Internal
 
         private class FilterElement
         {
-            private FilterElementType ElementType = FilterElementType.Unknown;
+            private FilterElementType _elementType = FilterElementType.Unknown;
             public string Text;
-            public string ClassName;
-            public string MethodName;
+            public string? ClassName;
+            public string? MethodName;
 
             public FilterElement(string text)
             {
@@ -169,7 +140,13 @@ namespace NUnit.Framework.Internal
 
             public bool Match(Type type)
             {
-                switch(ElementType)
+                return MatchElementType(type) ||
+                       MatchSetUpFixture(type);
+            }
+
+            private bool MatchElementType(Type type)
+            {
+                switch (_elementType)
                 {
                     default:
                     case FilterElementType.Unknown:
@@ -187,19 +164,19 @@ namespace NUnit.Framework.Internal
             {
                 if (MatchFixtureElement(type))
                 {
-                    ElementType = FilterElementType.Fixture;
+                    _elementType = FilterElementType.Fixture;
                     return true;
                 }
 
                 if (MatchNamespaceElement(type))
                 {
-                    ElementType = FilterElementType.Namespace;
+                    _elementType = FilterElementType.Namespace;
                     return true;
                 }
 
                 if (MatchMethodElement(type))
                 {
-                    ElementType = FilterElementType.Method;
+                    _elementType = FilterElementType.Method;
                     return true;
                 }
 
@@ -213,12 +190,27 @@ namespace NUnit.Framework.Internal
 
             private bool MatchNamespaceElement(Type type)
             {
-                return type.FullName.StartsWith(Text + ".");
+                return type.FullName?.StartsWith(Text + ".") is true;
             }
 
             private bool MatchMethodElement(Type type)
             {
                 return type.FullName == ClassName;
+            }
+
+            private bool MatchSetUpFixture(Type type)
+            {
+                // checking length instead of for example LINQ .Any(), which would need to box array into IEnumerable
+                return IsSubNamespace(type.Namespace) &&
+                       type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Length > 0;
+            }
+
+            private bool IsSubNamespace(string? typeNamespace)
+            {
+                if (string.IsNullOrEmpty(typeNamespace))
+                    return true;
+
+                return (ClassName + '.').StartsWith(typeNamespace + '.');
             }
         }
 

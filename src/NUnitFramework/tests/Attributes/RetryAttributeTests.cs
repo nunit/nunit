@@ -1,34 +1,12 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.RepeatingTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class RetryAttributeTests
@@ -51,11 +29,11 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.AreEqual(1, fixture.FixtureSetupCount);
-            Assert.AreEqual(1, fixture.FixtureTeardownCount);
-            Assert.AreEqual(nTries, fixture.SetupCount);
-            Assert.AreEqual(nTries, fixture.TeardownCount);
-            Assert.AreEqual(nTries, fixture.Count);
+            Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+            Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+            Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+            Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+            Assert.That(fixture.Count, Is.EqualTo(nTries));
         }
 
         [TestCase(typeof(RetrySucceedsOnFirstTryFixture), "Passed")]
@@ -73,7 +51,7 @@ namespace NUnit.Framework.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.AreEqual(results.Length, fixture.TearDownResults.Count);
+            Assert.That(fixture.TearDownResults, Has.Count.EqualTo(results.Length));
             for (int i = 0; i < results.Length; i++)
                 Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
         }
@@ -87,19 +65,19 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTestCase(fixture, methodName);
 
             Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.AreEqual(nTries, fixture.Count);
+            Assert.That(fixture.Count, Is.EqualTo(nTries));
         }
-
 
         [Test]
         public void CategoryWorksWithRetry()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RetryTestWithCategoryFixture));
-            Test test = suite.Tests[0] as Test;
+            Test? test = suite.Tests[0] as Test;
+            Assert.That(test, Is.Not.Null);
             System.Collections.IList categories = test.Properties["Category"];
-            Assert.IsNotNull(categories);
-            Assert.AreEqual(1, categories.Count);
-            Assert.AreEqual("SAMPLE", categories[0]);
+            Assert.That(categories, Is.Not.Null);
+            Assert.That(categories, Has.Count.EqualTo(1));
+            Assert.That(categories[0], Is.EqualTo("SAMPLE"));
         }
 
         [Test]
@@ -108,8 +86,8 @@ namespace NUnit.Framework.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
 
-            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.AreEqual(result.FailCount, 1, "expected that the test failed all retries");
+            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(1, Is.EqualTo(result.FailCount), "expected that the test failed all retries");
         }
 
         [Test]
@@ -118,8 +96,8 @@ namespace NUnit.Framework.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, "PassesOnLastRetry");
 
-            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.AreEqual(result.FailCount, 0, "expected that the test passed final retry");
+            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
         }
     }
 }

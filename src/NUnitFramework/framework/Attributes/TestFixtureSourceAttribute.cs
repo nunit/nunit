@@ -1,36 +1,13 @@
-// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -40,7 +17,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
     {
-        private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _builder = new();
 
         /// <summary>
         /// Error message string is public so the tests can use it
@@ -55,7 +32,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestFixtureSourceAttribute(string sourceName)
         {
-            this.SourceName = sourceName;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -65,8 +42,8 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestFixtureSourceAttribute(Type sourceType, string sourceName)
         {
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -75,7 +52,7 @@ namespace NUnit.Framework
         /// <param name="sourceType">The type that will provide data</param>
         public TestFixtureSourceAttribute(Type sourceType)
         {
-            this.SourceType = sourceType;
+            SourceType = sourceType;
         }
 
         #endregion
@@ -125,11 +102,17 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? typeInfo.Type;
 
             var fixtureSuite = new ParameterizedFixtureSuite(typeInfo);
-            fixtureSuite.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+            fixtureSuite.ApplyAttributesToTest(typeInfo.Type);
+            var assemblyLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.Assembly);
+            var typeLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type);
+            var parallelizableAttributeProvider = new AttributeProviderWrapper<ParallelizableAttribute>(typeInfo.Type);
 
             foreach (ITestFixtureData parms in GetParametersFor(sourceType))
             {
                 TestSuite fixture = _builder.BuildFrom(typeInfo, filter, parms);
+                fixture.ApplyAttributesToTest(assemblyLifeCycleAttributeProvider);
+                fixture.ApplyAttributesToTest(typeLifeCycleAttributeProvider);
+                fixture.ApplyAttributesToTest(parallelizableAttributeProvider);
                 fixtureSuite.Add(fixture);
             }
 
@@ -148,32 +131,34 @@ namespace NUnit.Framework
         /// <returns></returns>
         public IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
         {
-            List<ITestFixtureData> data = new List<ITestFixtureData>();
+            List<ITestFixtureData> data = new();
 
             try
             {
                 IEnumerable? source = GetTestFixtureSource(sourceType);
 
-                if (source != null)
+                if (source is not null)
                 {
                     foreach (object? item in source)
                     {
                         var parms = item as ITestFixtureData;
 
-                        if (parms == null)
+                        if (parms is null)
                         {
                             object?[]? args = item as object?[];
-                            if (args == null)
+                            if (args is null)
                             {
-                                args = new object?[] { item };
+                                args = new[] { item };
                             }
 
                             parms = new TestFixtureParameters(args);
                         }
 
-                        if (this.Category != null)
-                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                        if (Category is not null)
+                        {
+                            foreach (string cat in Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
+                        }
 
                         data.Add(parms);
                     }
@@ -191,33 +176,40 @@ namespace NUnit.Framework
         private IEnumerable? GetTestFixtureSource(Type sourceType)
         {
             // Handle Type implementing IEnumerable separately
-            if (SourceName == null)
+            if (SourceName is null)
                 return Reflect.Construct(sourceType) as IEnumerable;
 
-            MemberInfo[] members = sourceType.GetMember(SourceName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
 
                 var field = member as FieldInfo;
-                if (field != null)
+                if (field is not null)
+                {
                     return field.IsStatic
-                        ? (IEnumerable)field.GetValue(null)
+                        ? (IEnumerable?)field.GetValue(null)
                         : SourceMustBeStaticError();
+                }
 
                 var property = member as PropertyInfo;
-                if (property != null)
-                    return property.GetGetMethod(true).IsStatic
-                        ? (IEnumerable)property.GetValue(null, null)
+                if (property is not null)
+                {
+                    MethodInfo? getMethod = property.GetGetMethod(true);
+                    return getMethod?.IsStatic is true
+                        ? (IEnumerable?)property.GetValue(null, null)
                         : SourceMustBeStaticError();
+                }
 
                 var m = member as MethodInfo;
-                if (m != null)
+                if (m is not null)
+                {
                     return m.IsStatic
-                        ? (IEnumerable)m.Invoke(null, null)
+                        ? m.InvokeMaybeAwait<IEnumerable?>()
                         : SourceMustBeStaticError();
+                }
             }
 
             return null;
@@ -228,7 +220,7 @@ namespace NUnit.Framework
             var parms = new TestFixtureParameters();
             parms.RunState = RunState.NotRunnable;
             parms.Properties.Set(PropertyNames.SkipReason, MUST_BE_STATIC);
-            return new TestFixtureParameters[] { parms };
+            return new[] { parms };
         }
 
         #endregion

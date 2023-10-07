@@ -1,52 +1,30 @@
-// ***********************************************************************
-// Copyright (c) 2019 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
     internal static class FSharpAsyncAwaitAdapter
     {
-        private static MethodInfo _startImmediateAsTaskMethod;
+        private static MethodInfo? _startImmediateAsTaskMethod;
 
         public static bool IsAwaitable(Type awaitableType)
         {
-            return GetAsyncInfo(awaitableType) != null;
+            return GetAsyncInfo(awaitableType) is not null;
         }
 
-        public static Type GetResultType(Type awaitableType)
+        public static Type? GetResultType(Type awaitableType)
         {
             return GetAsyncInfo(awaitableType)?.ResultType;
         }
 
-        private static AsyncInfo GetAsyncInfo(Type asyncType)
+        private static AsyncInfo? GetAsyncInfo(Type asyncType)
         {
-            if (asyncType == null) return null;
+            if (asyncType is null) return null;
 
-            if (!asyncType.GetTypeInfo().IsGenericType) return null;
+            if (!asyncType.IsGenericType) return null;
             var genericDefinition = asyncType.GetGenericTypeDefinition();
             if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1") return null;
 
@@ -65,17 +43,17 @@ namespace NUnit.Framework.Internal
             public Type ResultType { get; }
         }
 
-        public static AwaitAdapter TryCreate(object awaitable)
+        public static AwaitAdapter? TryCreate(object awaitable)
         {
-            if (awaitable == null) return null;
+            if (awaitable is null) return null;
 
             var info = GetAsyncInfo(awaitable.GetType());
-            if (info == null) return null;
+            if (info is null) return null;
 
-            if (_startImmediateAsTaskMethod == null)
+            if (_startImmediateAsTaskMethod is null)
             {
-                var asyncHelperMethodsType = info.FSharpAsyncTypeDefinition.GetTypeInfo().Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
-                if (asyncHelperMethodsType == null)
+                var asyncHelperMethodsType = info.FSharpAsyncTypeDefinition.Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
+                if (asyncHelperMethodsType is null)
                     throw new InvalidOperationException("Cannot find non-generic FSharpAsync type in the same assembly as the generic one.");
 
                 _startImmediateAsTaskMethod = asyncHelperMethodsType
@@ -91,8 +69,7 @@ namespace NUnit.Framework.Internal
 
                        if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0])) return false;
 
-                       Type someType;
-                       return parameters[1].ParameterType.IsFSharpOption(out someType)
+                       return parameters[1].ParameterType.IsFSharpOption(out Type? someType)
                            && someType.FullName == "System.Threading.CancellationToken";
                    });
             }

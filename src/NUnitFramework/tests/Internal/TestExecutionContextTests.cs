@@ -1,61 +1,38 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Diagnostics;
-using System.Reflection;
-using System.Threading;
 using System.Globalization;
 using System.IO;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Interfaces;
+using System.Reflection;
 using System.Security.Principal;
-
-#if TASK_PARALLEL_LIBRARY_API
+using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
+#if NETFRAMEWORK
 #endif
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     /// <summary>
     /// Summary description for TestExecutionContextTests.
     /// </summary>
-    [TestFixture][Property("Question", "Why?")]
+    [TestFixture]
+    [Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
         private TestExecutionContext _fixtureContext;
         private TestExecutionContext _setupContext;
         private ResultState _fixtureResult;
-
-        string originalDirectory;
-
-        CultureInfo originalCulture;
-        CultureInfo originalUICulture;
-        IPrincipal originalPrincipal;
-
-        readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
-        readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
+        private string _originalDirectory;
+        private CultureInfo _originalCulture;
+        private CultureInfo _originalUICulture;
+        private IPrincipal? _originalPrincipal;
+        private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
+        private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -73,7 +50,7 @@ namespace NUnit.Framework.Internal
             TestExecutionContext ec = TestExecutionContext.CurrentContext;
             Assert.That(ec.CurrentTest.Name, Is.EqualTo("TestExecutionContextTests"));
             Assert.That(ec.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
             Assert.That(_fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
@@ -83,21 +60,21 @@ namespace NUnit.Framework.Internal
         {
             _setupContext = TestExecutionContext.CurrentContext;
 
-            originalDirectory = Directory.GetCurrentDirectory();
+            _originalDirectory = Directory.GetCurrentDirectory();
 
-            originalCulture = CultureInfo.CurrentCulture;
-            originalUICulture = CultureInfo.CurrentUICulture;
-            originalPrincipal = Thread.CurrentPrincipal;
+            _originalCulture = CultureInfo.CurrentCulture;
+            _originalUICulture = CultureInfo.CurrentUICulture;
+            _originalPrincipal = Thread.CurrentPrincipal;
         }
 
         [TearDown]
         public void Cleanup()
         {
-            Directory.SetCurrentDirectory(originalDirectory);
+            Directory.SetCurrentDirectory(_originalDirectory);
 
-            Thread.CurrentThread.CurrentCulture = originalCulture;
-            Thread.CurrentThread.CurrentUICulture = originalUICulture;
-            Thread.CurrentPrincipal = originalPrincipal;
+            Thread.CurrentThread.CurrentCulture = _originalCulture;
+            Thread.CurrentThread.CurrentUICulture = _originalUICulture;
+            Thread.CurrentPrincipal = _originalPrincipal;
 
             Assert.That(
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,
@@ -110,15 +87,14 @@ namespace NUnit.Framework.Internal
                 "Cannot access CurrentResult in TearDown");
         }
 
-#region CurrentContext
+        #region CurrentContext
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CurrentContextFlowsWithAsyncExecution()
         {
             var context = TestExecutionContext.CurrentContext;
             await YieldAsync();
-            Assert.AreSame(context, TestExecutionContext.CurrentContext);
+            Assert.That(TestExecutionContext.CurrentContext, Is.SameAs(context));
         }
 
         [Test]
@@ -127,16 +103,15 @@ namespace NUnit.Framework.Internal
             var expected = TestExecutionContext.CurrentContext;
             var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
 
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-            Assert.AreSame(expected, parallelResult[0]);
-            Assert.AreSame(expected, parallelResult[1]);
+            Assert.That(TestExecutionContext.CurrentContext, Is.SameAs(expected));
+            Assert.That(parallelResult[0], Is.SameAs(expected));
+            Assert.That(parallelResult[1], Is.SameAs(expected));
         }
-#endif
 
         [Test]
         public void CurrentContextFlowsToUserCreatedThread()
         {
-            TestExecutionContext threadContext = null;
+            TestExecutionContext? threadContext = null;
 
             Thread thread = new Thread(() =>
             {
@@ -149,9 +124,9 @@ namespace NUnit.Framework.Internal
             Assert.That(threadContext, Is.Not.Null.And.SameAs(TestExecutionContext.CurrentContext));
         }
 
-#endregion
+        #endregion
 
-#region CurrentTest
+        #region CurrentTest
 
         [Test]
         public void FixtureSetUpCanAccessFixtureName()
@@ -163,7 +138,7 @@ namespace NUnit.Framework.Internal
         public void FixtureSetUpCanAccessFixtureFullName()
         {
             Assert.That(_fixtureContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
         }
 
         [Test]
@@ -194,7 +169,7 @@ namespace NUnit.Framework.Internal
         public void SetUpCanAccessTestFullName()
         {
             Assert.That(_setupContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
         }
 
         [Test]
@@ -227,7 +202,7 @@ namespace NUnit.Framework.Internal
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -253,10 +228,9 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public void TestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessItsOwnName()
         {
@@ -269,10 +243,10 @@ namespace NUnit.Framework.Internal
         public async Task AsyncTestCanAccessItsOwnFullName()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -305,23 +279,22 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
-#endif
 
         [Test]
         public void TestHasWorkerWhenParallel()
         {
             var worker = TestExecutionContext.CurrentContext.TestWorker;
             var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
-            Assert.That(worker != null || !isRunningUnderTestWorker);
+            Assert.That(worker is not null || !isRunningUnderTestWorker);
         }
 
-#endregion
+        #endregion
 
-#region CurrentResult
+        #region CurrentResult
 
         [Test]
         public void CanAccessResultName()
@@ -334,11 +307,11 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CanAccessResultFullName()
         {
-            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_setupContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
         }
 
         [Test]
@@ -358,7 +331,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessResultName_Async()
         {
@@ -371,10 +343,10 @@ namespace NUnit.Framework.Internal
         public async Task CanAccessResultFullName_Async()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
         }
 
         [Test]
@@ -394,11 +366,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region StartTime
+        #region StartTime
 
         [Test]
         public void CanAccessStartTime()
@@ -408,7 +379,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.GreaterThanOrEqualTo(_setupContext.StartTime));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessStartTime_Async()
         {
@@ -417,11 +387,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.EqualTo(startTime));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region StartTicks
+        #region StartTicks
 
         [Test]
         public void CanAccessStartTicks()
@@ -431,7 +400,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.GreaterThanOrEqualTo(_setupContext.StartTicks));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessStartTicks()
         {
@@ -440,11 +408,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.EqualTo(startTicks));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region OutWriter
+        #region OutWriter
 
         [Test]
         public void CanAccessOutWriter()
@@ -454,7 +421,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(_setupContext.OutWriter));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessOutWriter()
         {
@@ -463,11 +429,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(outWriter));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region TestObject
+        #region TestObject
 
         [Test]
         public void CanAccessTestObject()
@@ -477,7 +442,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(_setupContext.TestObject));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestObject_Async()
         {
@@ -486,11 +450,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(testObject));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region StopOnError
+        #region StopOnError
 
         [Test]
         public void CanAccessStopOnError()
@@ -499,7 +462,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(_setupContext.StopOnError));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessStopOnError_Async()
         {
@@ -508,11 +470,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(stop));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region Listener
+        #region Listener
 
         [Test]
         public void CanAccessListener()
@@ -522,7 +483,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(_setupContext.Listener));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessListener_Async()
         {
@@ -531,11 +491,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(listener));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region Dispatcher
+        #region Dispatcher
 
         [Test]
         public void CanAccessDispatcher()
@@ -545,7 +504,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(_setupContext.Dispatcher));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessDispatcher_Async()
         {
@@ -554,11 +512,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(dispatcher));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region ParallelScope
+        #region ParallelScope
 
         [Test]
         public void CanAccessParallelScope()
@@ -568,7 +525,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessParallelScope_Async()
         {
@@ -577,11 +533,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region TestWorker
+        #region TestWorker
 
         [Test]
         public void CanAccessTestWorker()
@@ -594,7 +549,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestWorker_Async()
         {
@@ -603,11 +557,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(worker));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region RandomGenerator
+        #region RandomGenerator
 
         [Test]
         public void CanAccessRandomGenerator()
@@ -617,7 +570,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(_setupContext.RandomGenerator));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessRandomGenerator_Async()
         {
@@ -626,11 +578,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(random));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region AssertCount
+        #region AssertCount
 
         [Test]
         public void CanAccessAssertCount()
@@ -642,7 +593,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(4));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessAssertCount_Async()
         {
@@ -652,11 +602,10 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(2));
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(3));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region MultipleAssertLevel
+        #region MultipleAssertLevel
 
         [Test]
         public void CanAccessMultipleAssertLevel()
@@ -670,7 +619,6 @@ namespace NUnit.Framework.Internal
             });
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessMultipleAssertLevel_Async()
         {
@@ -682,11 +630,10 @@ namespace NUnit.Framework.Internal
                 Assert.That(TestExecutionContext.CurrentContext.MultipleAssertLevel, Is.EqualTo(1));
             });
         }
-#endif
 
-#endregion
+        #endregion
 
-#region TestCaseTimeout
+        #region TestCaseTimeout
 
         [Test]
         public void CanAccessTestCaseTimeout()
@@ -696,7 +643,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestCaseTimeout_Async()
         {
@@ -705,11 +651,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region UpstreamActions
+        #region UpstreamActions
 
         [Test]
         public void CanAccessUpstreamActions()
@@ -719,7 +664,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.EqualTo(actions));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessUpstreamAcxtions_Async()
         {
@@ -728,11 +672,10 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.SameAs(actions));
         }
-#endif
 
-#endregion
+        #endregion
 
-#region CurrentCulture and CurrentUICulture
+        #region CurrentCulture and CurrentUICulture
 
         [Test]
         public void CanAccessCurrentCulture()
@@ -750,7 +693,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessCurrentCulture_Async()
         {
@@ -766,7 +708,6 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
         }
-#endif
 
         [Test]
         public void SetAndRestoreCurrentCulture()
@@ -776,19 +717,19 @@ namespace NUnit.Framework.Internal
             try
             {
                 CultureInfo otherCulture =
-                    new CultureInfo(originalCulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
+                    new CultureInfo(_originalCulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentCulture = otherCulture;
-                Assert.AreEqual(otherCulture, CultureInfo.CurrentCulture, "Culture was not set");
-                Assert.AreEqual(otherCulture, context.CurrentCulture, "Culture not in new context");
-                Assert.AreEqual(_setupContext.CurrentCulture, originalCulture, "Original context should not change");
+                Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(otherCulture), "Culture was not set");
+                Assert.That(context.CurrentCulture, Is.EqualTo(otherCulture), "Culture not in new context");
+                Assert.That(_originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(CultureInfo.CurrentCulture, originalCulture, "Culture was not restored");
-            Assert.AreEqual(_setupContext.CurrentCulture, originalCulture, "Culture not in final context");
+            Assert.That(_originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture was not restored");
+            Assert.That(_originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Culture not in final context");
         }
 
         [Test]
@@ -799,24 +740,24 @@ namespace NUnit.Framework.Internal
             try
             {
                 CultureInfo otherCulture =
-                    new CultureInfo(originalUICulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
+                    new CultureInfo(_originalUICulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentUICulture = otherCulture;
-                Assert.AreEqual(otherCulture, CultureInfo.CurrentUICulture, "UICulture was not set");
-                Assert.AreEqual(otherCulture, context.CurrentUICulture, "UICulture not in new context");
-                Assert.AreEqual(_setupContext.CurrentUICulture, originalUICulture, "Original context should not change");
+                Assert.That(CultureInfo.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture was not set");
+                Assert.That(context.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture not in new context");
+                Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(CultureInfo.CurrentUICulture, originalUICulture, "UICulture was not restored");
-            Assert.AreEqual(_setupContext.CurrentUICulture, originalUICulture, "UICulture not in final context");
+            Assert.That(_originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture was not restored");
+            Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
         }
 
-#endregion
+        #endregion
 
-#region CurrentPrincipal
+        #region CurrentPrincipal
 
         [Test]
         public void CanAccessCurrentPrincipal()
@@ -827,7 +768,6 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "Test");
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessCurrentPrincipal_Async()
         {
@@ -836,7 +776,6 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "After yield");
         }
-#endif
 
         [Test]
         public void SetAndRestoreCurrentPrincipal()
@@ -846,23 +785,23 @@ namespace NUnit.Framework.Internal
             try
             {
                 GenericIdentity identity = new GenericIdentity("foo");
-                context.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
-                Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name, "Principal was not set");
-                Assert.AreEqual("foo", context.CurrentPrincipal.Identity.Name, "Principal not in new context");
-                Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Original context should not change");
+                context.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
+                Assert.That(Thread.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal was not set");
+                Assert.That(context.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal not in new context");
+                Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(Thread.CurrentPrincipal, originalPrincipal, "Principal was not restored");
-            Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
+            Assert.That(_originalPrincipal, Is.EqualTo(Thread.CurrentPrincipal), "Principal was not restored");
+            Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
         }
 
-#endregion
+        #endregion
 
-#region ValueFormatter
+        #region ValueFormatter
 
         [Test]
         public void SetAndRestoreValueFormatter()
@@ -888,14 +827,14 @@ namespace NUnit.Framework.Internal
             Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
 
-#endregion
+        #endregion
 
-#region SingleThreaded
+        #region SingleThreaded
 
         [Test]
         public void SingleThreadedDefaultsToFalse()
         {
-            Assert.False(new TestExecutionContext().IsSingleThreaded);
+            Assert.That(new TestExecutionContext().IsSingleThreaded, Is.False);
         }
 
         [Test]
@@ -903,12 +842,12 @@ namespace NUnit.Framework.Internal
         {
             var parent = new TestExecutionContext();
             parent.IsSingleThreaded = true;
-            Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
+            Assert.That(new TestExecutionContext(parent).IsSingleThreaded, Is.True);
         }
 
-#endregion
+        #endregion
 
-#region ExecutionStatus
+        #region ExecutionStatus
 
         [Test]
         public void ExecutionStatusIsPushedToHigherContext()
@@ -944,24 +883,24 @@ namespace NUnit.Framework.Internal
             Assert.That(rightContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#endregion
+        #endregion
 
-#region Cross-domain Tests
+        #region Cross-domain Tests
 
-#if NET35 || NET40 || NET45
-        [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
+#if NETFRAMEWORK
+        [Test, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
             AppDomain domain = AppDomain.CreateDomain(
                 "TestCanCreateAppDomain",
                 AppDomain.CurrentDomain.Evidence,
                 AssemblyHelper.GetDirectoryName(Assembly.GetExecutingAssembly()),
-                null,
+                null!,
                 false);
 
-            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
+            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Tests.Internal.TestExecutionContextTests+TestClass");
 
-            Assert.NotNull(obj);
+            Assert.That(obj, Is.Not.Null);
         }
 
         [Serializable]
@@ -972,7 +911,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#region CurrentRepeatCount Tests
+        #region CurrentRepeatCount Tests
         [Test]
         public void CanAccessCurrentRepeatCount()
         {
@@ -980,27 +919,18 @@ namespace NUnit.Framework.Internal
             _fixtureContext.CurrentRepeatCount++;
             Assert.That(_fixtureContext.CurrentRepeatCount, Is.EqualTo(1), "expected value to be able to be incremented from the TestExecutionContext");
         }
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
-#if TASK_PARALLEL_LIBRARY_API
         private async Task YieldAsync()
         {
-#if NET40
-            await TaskEx.Yield();
-#else
             await Task.Yield();
-#endif
         }
 
         private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
         {
-#if NET40
-            return TaskEx.WhenAll(tasks);
-#else
             return Task.WhenAll(tasks);
-#endif
         }
 
         private async Task<TestExecutionContext> YieldAndReturnContext()
@@ -1008,13 +938,12 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             return TestExecutionContext.CurrentContext;
         }
-#endif
 
-#endregion
+        #endregion
     }
 
-#if NET35 || NET40 || NET45
-    [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
+#if NETFRAMEWORK
+    [TestFixture, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {
         private RunsInAppDomain _runsInAppDomain;
@@ -1022,10 +951,11 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            var domain = AppDomain.CreateDomain("TestDomain", null, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath, false);
-            _runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
-                "NUnit.Framework.Internal.RunsInAppDomain") as RunsInAppDomain;
-            Assert.That(_runsInAppDomain, Is.Not.Null);
+            var domain = AppDomain.CreateDomain("TestDomain", null!, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath!, false);
+            RunsInAppDomain? runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName!,
+                "NUnit.Framework.Tests.Internal.RunsInAppDomain") as RunsInAppDomain;
+            Assert.That(runsInAppDomain, Is.Not.Null);
+            _runsInAppDomain = runsInAppDomain;
         }
 
         [Test]

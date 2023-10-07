@@ -1,78 +1,57 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 using NUnit.TestData.SetUpData;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class SetUpTearDownTests
-    {	
+    {
         [Test]
         public void SetUpAndTearDownCounter()
         {
             SetUpAndTearDownCounterFixture fixture = new SetUpAndTearDownCounterFixture();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
-            Assert.AreEqual(3, fixture.SetUpCounter);
-            Assert.AreEqual(3, fixture.TearDownCounter);
+            Assert.That(fixture.SetUpCounter, Is.EqualTo(3));
+            Assert.That(fixture.TearDownCounter, Is.EqualTo(3));
         }
 
-        
         [Test]
         public void MakeSureSetUpAndTearDownAreCalled()
         {
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.WasSetUpCalled);
-            Assert.IsTrue(fixture.WasTearDownCalled);
+            Assert.That(fixture.WasSetUpCalled, Is.True);
+            Assert.That(fixture.WasTearDownCalled, Is.True);
         }
 
         [Test]
         public void CheckInheritedSetUpAndTearDownAreCalled()
         {
             InheritSetUpAndTearDown fixture = new InheritSetUpAndTearDown();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.WasSetUpCalled);
-            Assert.IsTrue(fixture.WasTearDownCalled);
+            Assert.That(fixture.WasSetUpCalled, Is.True);
+            Assert.That(fixture.WasTearDownCalled, Is.True);
         }
 
         [Test]
         public void CheckOverriddenSetUpAndTearDownAreNotCalled()
         {
             DefineInheritSetUpAndTearDown fixture = new DefineInheritSetUpAndTearDown();
-            TestBuilder.RunTestFixture( fixture );
+            TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsFalse(fixture.WasSetUpCalled);
-            Assert.IsFalse(fixture.WasTearDownCalled);
-            Assert.IsTrue(fixture.DerivedSetUpCalled);
-            Assert.IsTrue(fixture.DerivedTearDownCalled);
+            Assert.That(fixture.WasSetUpCalled, Is.False);
+            Assert.That(fixture.WasTearDownCalled, Is.False);
+            Assert.That(fixture.DerivedSetUpCalled, Is.True);
+            Assert.That(fixture.DerivedTearDownCalled, Is.True);
         }
 
         [Test]
@@ -81,11 +60,11 @@ namespace NUnit.Framework.Internal
             MultipleSetUpTearDownFixture fixture = new MultipleSetUpTearDownFixture();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.WasSetUp1Called, "SetUp1");
-            Assert.IsTrue(fixture.WasSetUp2Called, "SetUp2");
-            Assert.IsTrue(fixture.WasSetUp3Called, "SetUp3");
-            Assert.IsTrue(fixture.WasTearDown1Called, "TearDown1");
-            Assert.IsTrue(fixture.WasTearDown2Called, "TearDown2");
+            Assert.That(fixture.WasSetUp1Called, Is.True, "SetUp1");
+            Assert.That(fixture.WasSetUp2Called, Is.True, "SetUp2");
+            Assert.That(fixture.WasSetUp3Called, Is.True, "SetUp3");
+            Assert.That(fixture.WasTearDown1Called, Is.True, "TearDown1");
+            Assert.That(fixture.WasTearDown2Called, Is.True, "TearDown2");
         }
 
         [Test]
@@ -94,12 +73,12 @@ namespace NUnit.Framework.Internal
             DerivedClassWithSeparateSetUp fixture = new DerivedClassWithSeparateSetUp();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.WasSetUpCalled, "Base SetUp Called");
-            Assert.IsTrue(fixture.WasTearDownCalled, "Base TearDown Called");
-            Assert.IsTrue(fixture.WasDerivedSetUpCalled, "Derived SetUp Called");
-            Assert.IsTrue(fixture.WasDerivedTearDownCalled, "Derived TearDown Called");
-            Assert.IsTrue(fixture.WasBaseSetUpCalledFirst, "SetUp Order");
-            Assert.IsTrue(fixture.WasBaseTearDownCalledLast, "TearDown Order");
+            Assert.That(fixture.WasSetUpCalled, Is.True, "Base SetUp Called");
+            Assert.That(fixture.WasTearDownCalled, Is.True, "Base TearDown Called");
+            Assert.That(fixture.WasDerivedSetUpCalled, Is.True, "Derived SetUp Called");
+            Assert.That(fixture.WasDerivedTearDownCalled, Is.True, "Derived TearDown Called");
+            Assert.That(fixture.WasBaseSetUpCalledFirst, Is.True, "SetUp Order");
+            Assert.That(fixture.WasBaseTearDownCalledLast, Is.True, "TearDown Order");
         }
 
         [Test]
@@ -109,10 +88,10 @@ namespace NUnit.Framework.Internal
             fixture.ThrowInBaseSetUp = true;
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.WasSetUpCalled, "Base SetUp Called");
-            Assert.IsTrue(fixture.WasTearDownCalled, "Base TearDown Called");
-            Assert.IsFalse(fixture.WasDerivedSetUpCalled, "Derived SetUp Called");
-            Assert.IsFalse(fixture.WasDerivedTearDownCalled, "Derived TearDown Called");
+            Assert.That(fixture.WasSetUpCalled, Is.True, "Base SetUp Called");
+            Assert.That(fixture.WasTearDownCalled, Is.True, "Base TearDown Called");
+            Assert.That(fixture.WasDerivedSetUpCalled, Is.False, "Derived SetUp Called");
+            Assert.That(fixture.WasDerivedTearDownCalled, Is.False, "Derived TearDown Called");
         }
 
         [Test]
@@ -122,15 +101,15 @@ namespace NUnit.Framework.Internal
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
             fixture.SetupException = e;
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
-            Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
-            TestResult result = (TestResult)suiteResult.Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
-            string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
-            Assert.AreEqual(expected, result.Message);
+            Assert.That(suiteResult.HasChildren, Is.True, "Fixture test should have child result.");
+            ITestResult result = suiteResult.Children.ToArray()[0];
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            string expected = $"{e.GetType().FullName} : {e.Message}";
+            Assert.That(result.Message, Is.EqualTo(expected));
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 
@@ -143,14 +122,14 @@ namespace NUnit.Framework.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
-            string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
-            Assert.AreEqual(expected, result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            string expected = $"TearDown : {e.GetType().FullName} : {e.Message}";
+            Assert.That(result.Message, Is.EqualTo(expected));
             Assert.That(result.StackTrace, Does.StartWith("--TearDown"));
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 
@@ -165,15 +144,15 @@ namespace NUnit.Framework.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
-            string expected = string.Format("{0} : {1}", e1.GetType().FullName, e1.Message) + Environment.NewLine
-                + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
-            Assert.AreEqual(expected, result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            string expected = $"{e1.GetType().FullName} : {e1.Message}" + Environment.NewLine
+                                                                        + $"TearDown : {e2.GetType().FullName} : {e2.Message}";
+            Assert.That(result.Message, Is.EqualTo(expected));
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 
@@ -202,7 +181,7 @@ namespace NUnit.Framework.Internal
             [Test]
             public override void AssertCount()
             {
-                Assert.AreEqual(2, SetupCount);
+                Assert.That(SetupCount, Is.EqualTo(2));
             }
         }
     }

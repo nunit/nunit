@@ -1,37 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
-
-#if NET40 || NET45
-using System.Windows.Forms;
-using System.Windows.Threading;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -53,7 +25,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class NoMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly NoMessagePumpStrategy Instance = new NoMessagePumpStrategy();
+            public static readonly NoMessagePumpStrategy Instance = new();
             private NoMessagePumpStrategy() { }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
@@ -64,7 +36,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class WindowsFormsMessagePumpStrategy : MessagePumpStrategy
         {
-            private static WindowsFormsMessagePumpStrategy _instance;
+            private static WindowsFormsMessagePumpStrategy? _instance;
 
             private readonly Action _applicationRun;
             private readonly Action _applicationExit;
@@ -75,20 +47,20 @@ namespace NUnit.Framework.Internal
                 _applicationExit = applicationExit;
             }
 
-            public static MessagePumpStrategy GetIfApplicable()
+            public static MessagePumpStrategy? GetIfApplicable()
             {
                 if (!IsApplicable(SynchronizationContext.Current)) return null;
 
                 if (_instance is null)
                 {
-                    var applicationType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true);
+                    var applicationType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true)!;
 
                     var applicationRun = (Action)applicationType
-                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
                         .CreateDelegate(typeof(Action));
 
                     var applicationExit = (Action)applicationType
-                        .GetMethod("Exit", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                        .GetMethod("Exit", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
                         .CreateDelegate(typeof(Action));
 
                     _instance = new WindowsFormsMessagePumpStrategy(applicationRun, applicationExit);
@@ -97,12 +69,11 @@ namespace NUnit.Framework.Internal
                 return _instance;
             }
 
-            private static bool IsApplicable(SynchronizationContext context)
+            private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
                 return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
             }
 
-            [SecuritySafeCritical]
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
@@ -117,7 +88,7 @@ namespace NUnit.Framework.Internal
                 // shutting it down. Otherwise Application.Exit is a no-op and we would then proceed to do
                 // Application.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, _applicationExit),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, _applicationExit),
                     state: awaiter);
 
                 try
@@ -133,7 +104,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class WpfMessagePumpStrategy : MessagePumpStrategy
         {
-            private static WpfMessagePumpStrategy _instance;
+            private static WpfMessagePumpStrategy? _instance;
 
             private readonly Action _dispatcherRun;
             private readonly Action _dispatcherExitAllFrames;
@@ -144,20 +115,22 @@ namespace NUnit.Framework.Internal
                 _dispatcherExitAllFrames = dispatcherExitAllFrames;
             }
 
-            public static MessagePumpStrategy GetIfApplicable()
+            public static MessagePumpStrategy? GetIfApplicable()
             {
-                if (!IsApplicable(SynchronizationContext.Current)) return null;
+                SynchronizationContext? context = SynchronizationContext.Current;
+
+                if (!IsApplicable(context)) return null;
 
                 if (_instance is null)
                 {
-                    var dispatcherType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true);
+                    var dispatcherType = context.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
 
                     var dispatcherRun = (Action)dispatcherType
-                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
                         .CreateDelegate(typeof(Action));
 
                     var dispatcherExitAllFrames = (Action)dispatcherType
-                        .GetMethod("ExitAllFrames", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                        .GetMethod("ExitAllFrames", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
                         .CreateDelegate(typeof(Action));
 
                     _instance = new WpfMessagePumpStrategy(dispatcherRun, dispatcherExitAllFrames);
@@ -166,7 +139,7 @@ namespace NUnit.Framework.Internal
                 return _instance;
             }
 
-            private static bool IsApplicable(SynchronizationContext context)
+            private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
                 return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
             }
@@ -185,7 +158,7 @@ namespace NUnit.Framework.Internal
                 // shutting it down. Otherwise Dispatcher.ExitAllFrames is a no-op and we would then proceed to do
                 // Dispatcher.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, _dispatcherExitAllFrames),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, _dispatcherExitAllFrames),
                     state: awaiter);
 
                 _dispatcherRun.Invoke();
@@ -194,15 +167,13 @@ namespace NUnit.Framework.Internal
 
         private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly SingleThreadedTestMessagePumpStrategy Instance = new SingleThreadedTestMessagePumpStrategy();
+            public static readonly SingleThreadedTestMessagePumpStrategy Instance = new();
             private SingleThreadedTestMessagePumpStrategy() { }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
-                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext;
-
-                if (context == null)
-                    throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
+                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext
+                    ?? throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
                 if (awaiter.IsCompleted) return;
 
@@ -210,7 +181,7 @@ namespace NUnit.Framework.Internal
                 // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
                 // shutting it down. Otherwise context.ShutDown will throw.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, context.ShutDown),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, context.ShutDown),
                     state: awaiter);
 
                 context.Run();
@@ -219,17 +190,17 @@ namespace NUnit.Framework.Internal
 
         private static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
         {
-            if (awaiter == null) throw new ArgumentNullException(nameof(awaiter));
-            if (continuation == null) throw new ArgumentNullException(nameof(continuation));
+            if (awaiter is null) throw new ArgumentNullException(nameof(awaiter));
+            if (continuation is null) throw new ArgumentNullException(nameof(continuation));
 
             var context = SynchronizationContext.Current;
 
             awaiter.OnCompleted(() =>
             {
-                if (SynchronizationContext.Current == context)
+                if (context is null || SynchronizationContext.Current == context)
                     continuation.Invoke();
                 else
-                    context.Post(state => ((Action)state).Invoke(), state: continuation);
+                    context.Post(_ => continuation.Invoke(), state: continuation);
             });
         }
     }

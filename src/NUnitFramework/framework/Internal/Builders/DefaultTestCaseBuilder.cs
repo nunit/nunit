@@ -1,28 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2008-2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -43,7 +21,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultTestCaseBuilder : ITestCaseBuilder
     {
-        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new();
 
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
@@ -105,23 +83,35 @@ namespace NUnit.Framework.Internal.Builders
         {
             var tests = new List<TestMethod>();
 
-            List<ITestBuilder> builders = new List<ITestBuilder>(
-                method.GetCustomAttributes<ITestBuilder>(false));
-
-            // See if we need to add a CombinatorialAttribute for parameterized data
-            if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
-                && !builders.Any(builder => builder is CombiningStrategyAttribute))
-                builders.Add(new CombinatorialAttribute());
-
-            foreach (var attr in builders)
+            try
             {
-                foreach (var test in attr.BuildFrom(method, parentSuite))
-                    tests.Add(test);
-            }
+                var metadata = MethodInfoCache.Get(method);
 
-            return builders.Count > 0 && method.GetParameters().Length > 0 || tests.Count > 0
-                ? BuildParameterizedMethodSuite(method, tests)
-                : BuildSingleTestMethod(method, parentSuite);
+                List<ITestBuilder> builders = new(metadata.TestBuilderAttributes);
+
+                // See if we need to add a CombinatorialAttribute for parameterized data
+                if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
+                    && !builders.Any(builder => builder is CombiningStrategyAttribute))
+                {
+                    builders.Add(new CombinatorialAttribute());
+                }
+
+                foreach (var attr in builders)
+                {
+                    foreach (var test in attr.BuildFrom(method, parentSuite))
+                        tests.Add(test);
+                }
+
+                return builders.Count > 0 && method.GetParameters().Length > 0 || tests.Count > 0
+                    ? BuildParameterizedMethodSuite(method, tests)
+                    : BuildSingleTestMethod(method, parentSuite);
+            }
+            catch (Exception ex)
+            {
+                var testMethod = new TestMethod(method, parentSuite);
+                testMethod.MakeInvalid(ex, "Failure building Test");
+                return testMethod;
+            }
         }
 
         #endregion

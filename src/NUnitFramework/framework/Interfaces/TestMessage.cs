@@ -1,30 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
-using System;
 using System.Diagnostics;
+using System.IO;
+using System.Xml;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -41,17 +19,10 @@ namespace NUnit.Framework.Interfaces
         /// <param name="destination">Destination of the message</param>
         /// <param name="text">Text to be sent</param>
         /// <param name="testId">ID of the test that produced the message</param>
-        public TestMessage(string destination, string text, string testId)
+        public TestMessage(string destination, string text, string? testId)
         {
-            if (destination == null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
-
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            Guard.ArgumentNotNull(destination, nameof(destination));
+            Guard.ArgumentNotNull(text, nameof(text));
 
             Destination = destination;
             Message = text;
@@ -79,22 +50,33 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The ID of the test that sent the message
         /// </summary>
-        public string TestId { get; }
+        public string? TestId { get; }
 
         /// <summary>
         /// Returns the XML representation of the <see cref="TestMessage"/> object.
         /// </summary>
         public string ToXml()
         {
-            TNode tnode = new TNode("test-message", Message, true);
+            using var stringWriter = new StringWriter();
+            using (var writer = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                ToXml(writer);
+            }
+            return stringWriter.ToString();
+        }
 
-            if (Destination != null)
-                tnode.AddAttribute("destination", Destination);
+        internal void ToXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("test-message");
 
-            if (TestId != null)
-                tnode.AddAttribute("testid", TestId);
+            writer.WriteAttributeString("destination", Destination);
 
-            return tnode.OuterXml;
+            if (TestId is not null)
+                writer.WriteAttributeString("testid", TestId);
+
+            writer.WriteCDataSafe(Message);
+
+            writer.WriteEndElement();
         }
     }
 }

@@ -1,51 +1,30 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class PredicateConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new PredicateConstraint<int>((x) => x < 5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new PredicateConstraint<int>((x) => x < 5);
             ExpectedDescription = @"value matching lambda expression";
             StringRepresentation = "<predicate>";
         }
 
-        static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
             0,
             -5
         };
-
-        static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(123, "123")
         };
@@ -63,7 +42,7 @@ namespace NUnit.Framework.Constraints
         public static void ActualMayBeNullForNullableTypes(Type type)
         {
             // https://github.com/nunit/nunit/issues/1215
-            var methodInfo = typeof(PredicateConstraintTests).GetTypeInfo()
+            var methodInfo = typeof(PredicateConstraintTests)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
                 .Single(method => method.Name == nameof(ActualMayBeNullForNullableTypes) && method.GetParameters().Length == 0)
                 .MakeGenericMethod(type);
@@ -73,7 +52,7 @@ namespace NUnit.Framework.Constraints
 
         private static void ActualMayBeNullForNullableTypes<T>()
         {
-            Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+            Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
         }
 
         [TestCase(typeof(int))]
@@ -81,7 +60,7 @@ namespace NUnit.Framework.Constraints
         public static void ActualMustNotBeNullForNonNullableTypes(Type type)
         {
             // https://github.com/nunit/nunit/issues/1215
-            var methodInfo = typeof(PredicateConstraintTests).GetTypeInfo()
+            var methodInfo = typeof(PredicateConstraintTests)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
                 .Single(method => method.Name == nameof(ActualMustNotBeNullForNonNullableTypes) && method.GetParameters().Length == 0)
                 .MakeGenericMethod(type);
@@ -93,7 +72,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(() =>
             {
-                Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+                Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
             }, Throws.ArgumentException);
         }
     }

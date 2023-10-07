@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Constraints
 {
@@ -47,13 +26,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return Left.Description + " and " + Right.Description; }
-        }
+        public override string Description => Left.Description + " and " + Right.Description;
 
         /// <summary>
-        /// Apply both member constraints to an actual value, succeeding 
+        /// Apply both member constraints to an actual value,
         /// succeeding only if both of them succeed.
         /// </summary>
         /// <param name="actual">The actual value</param>
@@ -70,16 +46,16 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class AndConstraintResult : ConstraintResult
+        private class AndConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult leftResult;
-            private readonly ConstraintResult rightResult;
+            private readonly ConstraintResult _leftResult;
+            private readonly ConstraintResult _rightResult;
 
-            public AndConstraintResult(AndConstraint constraint, object actual, ConstraintResult leftResult, ConstraintResult rightResult)
+            public AndConstraintResult(AndConstraint constraint, object? actual, ConstraintResult leftResult, ConstraintResult rightResult)
                 : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess)
             {
-                this.leftResult = leftResult;
-                this.rightResult = rightResult;
+                _leftResult = leftResult;
+                _rightResult = rightResult;
             }
 
             /// <summary>
@@ -91,22 +67,22 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteActualValueTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteActualValueTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteActualValueTo(writer);
                 else
-                    rightResult.WriteActualValueTo(writer);
+                    _rightResult.WriteActualValueTo(writer);
             }
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteAdditionalLinesTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteAdditionalLinesTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteAdditionalLinesTo(writer);
                 else
-                    rightResult.WriteAdditionalLinesTo(writer);
+                    _rightResult.WriteAdditionalLinesTo(writer);
             }
         }
 

@@ -1,33 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
-using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
-using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
@@ -42,7 +17,7 @@ namespace NUnit.Framework.Internal
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
         private int _totalCount = 0;
-        private readonly ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
+        private readonly ConcurrentQueue<ITestResult> _children = new();
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
@@ -53,7 +28,6 @@ namespace NUnit.Framework.Internal
         }
 
         #region Overrides
-
 
         /// <summary>
         /// Gets the number of test cases that executed
@@ -74,7 +48,6 @@ namespace NUnit.Framework.Internal
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -179,21 +152,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Indicates whether this result has any child results.
         /// </summary>
-        public override bool HasChildren
-        {
-            get
-            {
-                return !_children.IsEmpty;
-            }
-        }
+        public override bool HasChildren => !_children.IsEmpty;
 
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override IEnumerable<ITestResult> Children
-        {
-            get { return _children; }
-        }
+        public override IEnumerable<ITestResult> Children => _children;
 
         #endregion
 
@@ -256,8 +220,11 @@ namespace NUnit.Framework.Internal
 
                 case TestStatus.Skipped:
                     if (childResultState.Label == "Ignored")
+                    {
                         if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
                             SetResult(ResultState.ChildIgnored, CHILD_IGNORE_MESSAGE);
+                    }
+
                     break;
             }
         }

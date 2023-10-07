@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +58,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(4)]
         public void Success(int i)
         {
-            Assert.Pass("Passed with test case {0}", i);
+            Assert.Pass($"Passed with test case {i}");
         }
     }
 
@@ -118,7 +97,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [Theory]
         public void TheoryTest(Data entry)
         {
-            Assert.Pass("Passed with theory id {0}", entry.Id);
+            Assert.Pass($"Passed with theory id {entry.Id}");
         }
     }
 
@@ -195,14 +174,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public void Init2()
         {
             DerivedSetUpCount++;
-            BaseSetUpCalledFirst = this.SetUpCount > 0;
+            BaseSetUpCalledFirst = SetUpCount > 0;
         }
 
         [OneTimeTearDown]
         public void Destroy2()
         {
             DerivedTearDownCount++;
-            BaseTearDownCalledLast = this.TearDownCount == 0;
+            BaseTearDownCalledLast = TearDownCount == 0;
         }
 
         [Test]
@@ -242,7 +221,6 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
 
         public static bool BaseSetUpCalledFirst;
         public static bool BaseTearDownCalledLast;
-
 
         [OneTimeSetUp]
         public static void Init2()
@@ -296,7 +274,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     }
 
     [TestFixture]
-    public class MisbehavingFixture 
+    public class MisbehavingFixture
     {
         public bool BlowUpInSetUp = false;
         public bool BlowUpInTest = false;
@@ -315,7 +293,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [OneTimeSetUp]
-        public void SetUp() 
+        public void SetUp()
         {
             SetUpCount++;
             if (BlowUpInSetUp)
@@ -331,7 +309,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Test() 
+        public void Test()
         {
             if (BlowUpInTest)
                 throw new Exception("This was thrown from a test");
@@ -343,7 +321,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         public ExceptionInConstructor()
         {
-            throw new Exception( "This was thrown in constructor" );
+            throw new Exception("This was thrown in constructor");
         }
 
         [Test]
@@ -356,13 +334,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class IgnoreInFixtureSetUp
     {
         [OneTimeSetUp]
-        public void SetUpCallsIgnore() 
+        public void SetUpCallsIgnore()
         {
             Assert.Ignore("OneTimeSetUp called Ignore");
         }
 
         [Test]
-        public void NothingToTest() 
+        public void NothingToTest()
         {
         }
     }
@@ -386,13 +364,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
-    [TestFixture, Ignore( "Do Not Run This" )]
+    [TestFixture, Ignore("Do Not Run This")]
     public class IgnoredFixture
     {
         public bool SetupCalled = false;
@@ -411,10 +389,10 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]
@@ -440,8 +418,8 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class DisposableFixture : IDisposable
     {
         public int DisposeCalled = 0;
-        public List<String> Actions = new List<String>();
-        
+        public List<string> Actions = new();
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -474,7 +452,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(3)]
         [TestCase(4)]
         public void TestCaseTest(int data) { }
-        
+
         public void Dispose()
         {
             DisposeCalled++;

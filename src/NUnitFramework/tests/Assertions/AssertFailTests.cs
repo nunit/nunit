@@ -1,32 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssertFailTests
@@ -34,34 +13,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ThrowsAssertionException()
         {
-            Assert.That(
-                () => Assert.Fail(),
-                Throws.TypeOf<AssertionException>());
+            Assert.That(Assert.Fail, Throws.TypeOf<AssertionException>());
         }
 
         [Test]
         public void ThrowsAssertionException_MessageSpecified()
         {
-            Assert.That(
-                () => Assert.Fail(),
-                Throws.TypeOf<AssertionException>(),
-                "My Message");
+            Assert.That(Assert.Fail, Throws.TypeOf<AssertionException>(), "My Message");
         }
 
         [Test]
         public void ThrowsAssertionExceptionWithMessage()
         {
-            Assert.That(
-                () => Assert.Fail("MESSAGE"), 
-                Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE"));
-        }
-
-        [Test]
-        public void ThrowsAssertionExceptionWithMessageAndArgs()
-        {
-            Assert.That(
-                () => Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4),
-                Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
+            Assert.That(() => Assert.Fail("MESSAGE"), Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE"));
         }
 
         [Test]
@@ -71,9 +35,8 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 "CallAssertFail");
 
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-
-            Assert.AreEqual(1, result.AssertionResults.Count);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
         }
@@ -81,33 +44,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertFailWorksWithMessage()
         {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(AssertFailFixture),
-                "CallAssertFailWithMessage");
-
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("MESSAGE", result.Message);
-
-            Assert.AreEqual(1, result.AssertionResults.Count);
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertFailFixture), "CallAssertFailWithMessage");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("MESSAGE"));
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
+            });
             var assertion = result.AssertionResults[0];
-            Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(assertion.Message, Is.EqualTo("MESSAGE"));
-        }
-
-        [Test]
-        public void AssertFailWorksWithMessageAndArgs()
-        {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(AssertFailFixture),
-                "CallAssertFailWithMessageAndArgs");
-
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
-
-            Assert.AreEqual(1, result.AssertionResults.Count);
-            var assertion = result.AssertionResults[0];
-            Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(assertion.Message, Is.EqualTo("MESSAGE: 2+2=4"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
+                Assert.That(assertion.Message, Is.EqualTo("MESSAGE"));
+            });
         }
 
         [Test]
@@ -117,18 +66,18 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 nameof(AssertFailFixture.HandleAssertionException));
 
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(1));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Custom message"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Custom message"));
+            });
         }
 
         [Test]
         public void AssertCatchMakesTestPass()
         {
-            Assert.Catch(() =>
-            {
-                Assert.Fail("This should not be seen");
-            });
+            Assert.Catch(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
@@ -137,13 +86,10 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThrowsMakesTestPass()
         {
-            Assert.Throws<AssertionException>(() =>
-            {
-                Assert.Fail("This should not be seen");
-            });
+            Assert.Throws<AssertionException>(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
         }
     }
 }

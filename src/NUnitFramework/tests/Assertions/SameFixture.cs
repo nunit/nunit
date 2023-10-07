@@ -1,31 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2004 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Text;
-using NUnit.Framework;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class SameFixture
@@ -34,19 +11,19 @@ namespace NUnit.Framework.Assertions
         public void Same()
         {
             string s1 = "S1";
-            Assert.AreSame(s1, s1);
+            Assert.That(s1, Is.SameAs(s1));
         }
 
         [Test]
         public void SameFails()
         {
-            Exception ex1 = new Exception( "one" );
-            Exception ex2 = new Exception( "two" );
+            Exception ex1 = new Exception("one");
+            Exception ex2 = new Exception("two");
             var expectedMessage =
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(ex1, ex2));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ex2, Is.SameAs(ex1)));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -56,8 +33,10 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: same as 2" + Environment.NewLine +
                 "  But was:  2" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(index, index));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+#pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
+#pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -65,7 +44,7 @@ namespace NUnit.Framework.Assertions
         {
             var actual = new ThrowsIfToStringIsCalled(1);
 
-            Assert.AreSame(actual, actual);
+            Assert.That(actual, Is.SameAs(actual));
         }
     }
 }

@@ -1,44 +1,21 @@
-// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseAttribute : NUnitAttribute, ITestBuilder, ITestCaseData, IImplyFixture
     {
         #region Constructors
@@ -52,7 +29,7 @@ namespace NUnit.Framework
         {
             RunState = RunState.Runnable;
 
-            if (arguments == null)
+            if (arguments is null)
                 Arguments = new object?[] { null };
             else
                 Arguments = arguments;
@@ -67,7 +44,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg };
+            Arguments = new[] { arg };
             Properties = new PropertyBag();
         }
 
@@ -79,7 +56,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg1, arg2 };
+            Arguments = new[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
 
@@ -92,7 +69,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg1, arg2, arg3 };
+            Arguments = new[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
 
@@ -131,7 +108,7 @@ namespace NUnit.Framework
         /// <value>The result.</value>
         public object? ExpectedResult
         {
-            get { return _expectedResult; }
+            get => _expectedResult;
             set
             {
                 _expectedResult = value;
@@ -163,7 +140,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Description
         {
-            get { return Properties.Get(PropertyNames.Description) as string; }
+            get => Properties.Get(PropertyNames.Description) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -177,7 +154,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Author
         {
-            get { return Properties.Get(PropertyNames.Author) as string; }
+            get => Properties.Get(PropertyNames.Author) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -191,12 +168,12 @@ namespace NUnit.Framework
         [DisallowNull]
         public Type? TestOf
         {
-            get { return _testOf; }
+            get => _testOf;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName);
+                Properties.Set(PropertyNames.TestOf, value.FullName());
             }
         }
         private Type? _testOf;
@@ -207,7 +184,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Ignore
         {
-            get { return IgnoreReason; }
+            get => IgnoreReason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -223,8 +200,8 @@ namespace NUnit.Framework
         /// </value>
         public bool Explicit
         {
-            get { return RunState == RunState.Explicit; }
-            set { RunState = value ? RunState.Explicit : RunState.Runnable; }
+            get => RunState == RunState.Explicit;
+            set => RunState = value ? RunState.Explicit : RunState.Runnable;
         }
 
         /// <summary>
@@ -234,7 +211,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Reason
         {
-            get { return Properties.Get(PropertyNames.SkipReason) as string; }
+            get => Properties.Get(PropertyNames.SkipReason) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -250,7 +227,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? IgnoreReason
         {
-            get { return Reason; }
+            get => Reason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -277,12 +254,12 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Category
         {
-            get { return Properties.Get(PropertyNames.Category) as string; }
+            get => Properties.Get(PropertyNames.Category) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
 
-                foreach (string cat in value.Split(new char[] { ',' }) )
+                foreach (string cat in value.Tokenize(','))
                     Properties.Add(PropertyNames.Category, cat);
             }
         }
@@ -290,9 +267,11 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets and sets the ignore until date for this test case.
         /// </summary>
+        [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+        [DisallowNull]
         public string? Until
         {
-            get { return Properties.Get(PropertyNames.IgnoreUntilDate) as string; }
+            get => Properties.Get(PropertyNames.IgnoreUntilDate) as string;
             set
             {
                 if (!string.IsNullOrEmpty(IgnoreReason))
@@ -301,7 +280,9 @@ namespace NUnit.Framework
                     Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
                 }
                 else
-                    this.RunState = RunState.NotRunnable;
+                {
+                    RunState = RunState.NotRunnable;
+                }
             }
         }
 
@@ -328,12 +309,20 @@ namespace NUnit.Framework
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
 
+                // Special handling for CancellationToken
+                if (parameters.LastParameterAcceptsCancellationToken() &&
+                   (!Arguments.LastArgumentIsCancellationToken()))
+                {
+                    // Implict CancellationToken argument
+                    argsProvided++;
+                }
+
                 // Special handling for params arguments
                 if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
                 {
                     IParameterInfo lastParameter = parameters[argsNeeded - 1];
                     Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType();
+                    Type elementType = lastParameterType.GetElementType()!;
 
                     if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
                     {
@@ -364,26 +353,25 @@ namespace NUnit.Framework
                     }
                 }
 
-                //Special handling for optional parameters
-                if (parms.Arguments.Length < argsNeeded)
+                // Special handling for optional parameters
+                if (argsProvided < argsNeeded)
                 {
-                    object?[] newArgList = new object?[parameters.Length];
+                    var newArgList = new object?[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
 
                     //Fill with Type.Missing for remaining required parameters where optional
                     for (var i = parms.Arguments.Length; i < parameters.Length; i++)
                     {
                         if (parameters[i].IsOptional)
+                        {
                             newArgList[i] = Type.Missing;
+                        }
                         else
                         {
                             if (i < parms.Arguments.Length)
                                 newArgList[i] = parms.Arguments[i];
                             else
-                                throw new TargetParameterCountException(string.Format(
-                                    "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
-                                    argsNeeded,
-                                    argsProvided));
+                                throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
                         }
                     }
                     parms.Arguments = newArgList;
@@ -441,13 +429,13 @@ namespace NUnit.Framework
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
-            
+
             if (_untilDate.HasValue)
             {
                 if (_untilDate > DateTimeOffset.UtcNow)
                 {
                     test.RunState = RunState.Ignored;
-                    string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), IgnoreReason);
+                    string reason = $"Ignoring until {_untilDate.Value:u}. {IgnoreReason}";
                     test.Properties.Set(PropertyNames.SkipReason, reason);
                 }
                 else
@@ -456,9 +444,9 @@ namespace NUnit.Framework
                 }
             }
 
-            if (IncludePlatform != null || ExcludePlatform != null)
+            if (IncludePlatform is not null || ExcludePlatform is not null)
             {
-                if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
+                if (test.RunState is RunState.NotRunnable or RunState.Ignored)
                 {
                     yield return test;
                     yield break;

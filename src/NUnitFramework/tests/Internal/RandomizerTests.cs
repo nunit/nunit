@@ -1,32 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2013-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class RandomizerTests
     {
@@ -210,7 +189,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomUShortsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUShort((ushort)27, (ushort)200), 10, 100);
+            UniqueValues.Check(() => _randomizer.NextUShort(27, 200), 10, 100);
         }
 
         #endregion
@@ -278,7 +257,7 @@ namespace NUnit.Framework.Internal
         public void RandomULongWithMaximum()
         {
             ulong val = _randomizer.NextULong(1066UL);
-            Assert.That(val < 1066UL, "Out of range");
+            Assert.That(val, Is.LessThan(1066UL), "Out of range");
         }
 
         [Test]
@@ -327,7 +306,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteWithMaximum()
         {
-            byte max = (byte)96;
+            byte max = 96;
             byte b = _randomizer.NextByte(max);
             Assert.That(b >= byte.MinValue && b < max);
         }
@@ -335,8 +314,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteInRange()
         {
-            byte min = (byte)16;
-            byte max = (byte)96;
+            byte min = 16;
+            byte max = 96;
             byte b = _randomizer.NextByte(min, max);
             Assert.That(b >= min && b < max);
         }
@@ -344,8 +323,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteInRange_Reversed()
         {
-            byte min = (byte)96;
-            byte max = (byte)16;
+            byte min = 96;
+            byte max = 16;
             Assert.That(() => _randomizer.NextByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
@@ -382,7 +361,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteWithMaximum()
         {
-            sbyte max = (sbyte)96;
+            sbyte max = 96;
             sbyte b = _randomizer.NextSByte(max);
             Assert.That(b >= 0 && b < max);
         }
@@ -390,8 +369,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteInRange()
         {
-            sbyte min = (sbyte)16;
-            sbyte max = (sbyte)96;
+            sbyte min = 16;
+            sbyte max = 96;
             sbyte b = _randomizer.NextSByte(min, max);
             Assert.That(b >= min && b < max);
         }
@@ -399,8 +378,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteInRange_Reversed()
         {
-            sbyte min = (sbyte)96;
-            sbyte max = (sbyte)16;
+            sbyte min = 96;
+            sbyte max = 16;
             Assert.That(() => _randomizer.NextSByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
@@ -449,13 +428,14 @@ namespace NUnit.Framework.Internal
         public void RandomBoolWithProbabilityZeroIsAlwaysFalse()
         {
             for (int i = 0; i < 10; i++)
-                Assert.False(_randomizer.NextBool(0.0));
+                Assert.That(_randomizer.NextBool(0.0), Is.False);
         }
 
+        [Test]
         public void RandomBoolWithProbabilityOneIsAlwaysTrue()
         {
             for (int i = 0; i < 10; i++)
-                Assert.True(_randomizer.NextBool(1.0));
+                Assert.That(_randomizer.NextBool(1.0), Is.True);
         }
 
         #endregion
@@ -556,32 +536,6 @@ namespace NUnit.Framework.Internal
         public void RandomFloatsInRangeAreUnique()
         {
             UniqueValues.Check(() => _randomizer.NextFloat(0.5f, 1.5f), 10, 100);
-        }
-
-        /// <summary>
-        /// Return an array of random floats between 0.0 and 1.0.
-        /// </summary>
-        public float[] GetFloats(int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = _randomizer.NextFloat();
-
-            return floats;
-        }
-
-        /// <summary>
-        /// Return an array of random floats with values in a specified range.
-        /// </summary>
-        public float[] GetFloats(float min, float max, int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = _randomizer.NextFloat(min, max);
-
-            return floats;
         }
 
         #endregion
@@ -736,7 +690,7 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForSameParameter()
             {
-                ParameterInfo p = testMethod1.GetParameters()[0];
+                ParameterInfo p = TestMethod1Info.GetParameters()[0];
                 var r1 = Randomizer.GetRandomizer(p);
                 var r2 = Randomizer.GetRandomizer(p);
                 Assert.That(r1, Is.SameAs(r2));
@@ -745,8 +699,8 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForDifferentParametersOfSameMethod()
             {
-                ParameterInfo p1 = testMethod1.GetParameters()[0];
-                ParameterInfo p2 = testMethod1.GetParameters()[1];
+                ParameterInfo p1 = TestMethod1Info.GetParameters()[0];
+                ParameterInfo p2 = TestMethod1Info.GetParameters()[1];
                 var r1 = Randomizer.GetRandomizer(p1);
                 var r2 = Randomizer.GetRandomizer(p2);
                 Assert.That(r1, Is.SameAs(r2));
@@ -755,27 +709,27 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForSameMethod()
             {
-                var r1 = Randomizer.GetRandomizer(testMethod1);
-                var r2 = Randomizer.GetRandomizer(testMethod1);
+                var r1 = Randomizer.GetRandomizer(TestMethod1Info);
+                var r2 = Randomizer.GetRandomizer(TestMethod1Info);
                 Assert.That(r1, Is.SameAs(r2));
             }
 
             [Test]
             public static void ReturnsDifferentRandomizersForDifferentMethods()
             {
-                var r1 = Randomizer.GetRandomizer(testMethod1);
-                var r2 = Randomizer.GetRandomizer(testMethod2);
+                var r1 = Randomizer.GetRandomizer(TestMethod1Info);
+                var r2 = Randomizer.GetRandomizer(TestMethod2Info);
                 Assert.That(r1, Is.Not.SameAs(r2));
             }
 
-            static readonly MethodInfo testMethod1 =
-                typeof(Repeatability).GetMethod("TestMethod1", BindingFlags.NonPublic | BindingFlags.Static);
+            private static readonly MethodInfo TestMethod1Info =
+                typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod1(int x, int y)
             {
             }
 
-            static readonly MethodInfo testMethod2 =
-                typeof(Repeatability).GetMethod("TestMethod2", BindingFlags.NonPublic | BindingFlags.Static);
+            private static readonly MethodInfo TestMethod2Info =
+                typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod2(int x, int y)
             {
             }

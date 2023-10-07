@@ -1,31 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class ParallelizableAttributeTests
     {
@@ -60,7 +39,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(scope));
         }
 
-        [TestCaseSourceAttribute(nameof(Scopes))]
+        [TestCaseSource(nameof(Scopes))]
         public void ApplyScopeToTestFixture(ParallelScope scope)
         {
             var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
@@ -80,7 +59,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(context.ParallelScope, Is.EqualTo(scope & ParallelScope.ContextMask));
         }
 
-        static ParallelScope[] Scopes = new ParallelScope[]
+        private static readonly ParallelScope[] Scopes = new ParallelScope[]
         {
             ParallelScope.None,
             ParallelScope.Self,
@@ -138,7 +117,7 @@ namespace NUnit.Framework.Attributes
 
         public class FixtureClass { }
 
-        public void DummyMethod() { }
+        private void DummyMethod() { }
 
         [TestCase(1)]
         public void DummyTestCase(int i) { }

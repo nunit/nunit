@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 // Enable these tests if you need to debug unhandled exceptions
 #if false
@@ -28,68 +7,68 @@ using System.Collections;
 using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests
 {
     [TestFixture, Explicit("These tests fail by design")]
     public class UnhandledExceptionTests
     {
-        #region Normal
+#region Normal
         [NUnit.Framework.Test]
         public void Normal()
         {
-            testDummy("Normal", false);
+            TestDummy("Normal", false);
         }
 
-        private static void testDummy(string dummyName, bool shouldPass)
+        private static void TestDummy(string dummyName, bool shouldPass)
         {
             Type fixtureType = typeof(NUnit.TestData.UnhandledExceptionData.UnhandledExceptions);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, dummyName);
             if (shouldPass)
-                Assert.IsTrue(result.ResultState == ResultState.Success, "{0} test should have passed", dummyName);
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), "{0} test should have passed", dummyName);
             else
             {
-                Assert.IsTrue(result.ResultState == ResultState.Failure, "{0} test should have failed", dummyName);
-                Assert.AreEqual("System.ApplicationException : Test exception", result.Message);
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), "{0} test should have failed", dummyName);
+                Assert.That(result.Message, Is.EqualTo("System.ApplicationException : Test exception"));
             }
         }
-        #endregion Normal
+#endregion Normal
 
-        #region Threaded
+#region Threaded
         //[NUnit.Framework.Test]
         //public void Threaded()
         //{
         //    // TODO: Make this fail
         //    testDummy("Threaded", true);
         //}
-        #endregion Threaded
+#endregion Threaded
 
-        #region ThreadedAndWait
+#region ThreadedAndWait
         [NUnit.Framework.Test]
         public void ThreadedAndWait()
         {
             // TODO: Make this fail
-            testDummy("ThreadedAndWait", true);
+            TestDummy("ThreadedAndWait", true);
         }
-        #endregion ThreadedAndWait
+#endregion ThreadedAndWait
 
-        #region ThreadedAndForget
+#region ThreadedAndForget
         [NUnit.Framework.Test]
         public void ThreadedAndForget()
         {
             // TODO: Make this fail
-            testDummy("ThreadedAndForget", true);
+            TestDummy("ThreadedAndForget", true);
         }
-        #endregion ThreadedAndForget
+#endregion ThreadedAndForget
 
-        #region ThreadedAssert
+#region ThreadedAssert
         [NUnit.Framework.Test]
         public void ThreadedAssert()
         {
-            testDummy("ThreadedAssert", true);
+            TestDummy("ThreadedAssert", true);
         }
-        #endregion
+#endregion
     }
 }
 #endif

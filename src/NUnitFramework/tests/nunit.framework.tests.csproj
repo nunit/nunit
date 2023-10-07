@@ -1,47 +1,33 @@
-﻿<Project>
-  <PropertyGroup Condition="'$(OS)' == 'Windows_NT' and '$(TargetFramework)' != 'netcoreapp2.1'">
-    <UseWindowsFormsAndWPF>true</UseWindowsFormsAndWPF>
-    <DefineConstants>$(DefineConstants);UseWindowsFormsAndWPF</DefineConstants>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
-    <RootNamespace>NUnit.Framework</RootNamespace>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
+    <Nullable>enable</Nullable>
+    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
 
-    <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
+      <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
-    <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
-    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+    <PackageReference Include="System.ValueTuple" version="4.5.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\slow-tests\slow-nunit-tests.csproj" />
     <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
     <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
-
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
-    <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
-    <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net35'">
-    <PackageReference Include="System.ValueTuple" version="4.5.0" />
+    <ProjectReference Include="..\nunitlite-runner\nunitlite-runner.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
@@ -63,10 +49,9 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+ <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.CompareTo('net5.0')) &lt; 0">
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 </Project>

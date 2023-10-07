@@ -1,18 +1,17 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+
 using NUnit.Framework.Internal;
 
-#if NET35 || NET40 || NET45 || NET46 // NET46 should be removed when the framework project adds a net46 target
-using System.Runtime.Remoting.Messaging;
-#endif
-
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     public class AdhocTestExecutionTests
     {
         // These unit tests demonstrate that the user can call a test directly
-        // and have it execute. Only information from exceptions thrown is 
+        // and have it execute. Only information from exceptions thrown is
         // available in this case, but it appears that a number of users do this.
         // When a user calls a test method directly, without use of NUnit,
         // the TestExecutionContext is null. We provide an AdhocContext in
@@ -24,14 +23,14 @@ namespace NUnit.Framework.Assertions
         public void CanCallAssertWithoutTestExecutionContext(MethodInfo method)
         {
             var savedContext = ClearExecutionContext();
-            Exception testException = null;
+            Exception? testException = null;
 
             try
             {
                 // Currently, we know all the tests are static, without arguments
                 method.Invoke(null, null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 testException = ex is TargetInvocationException
                     ? ex.InnerException
@@ -43,11 +42,11 @@ namespace NUnit.Framework.Assertions
             }
 
             // Throw any exception we got only after context is restored
-            if (testException != null)
+            if (testException is not null)
                 throw testException;
         }
 
-#if !(NET35 || NET40 || NET45 || NET46) // NET46 should be removed when the framework project adds a net46 target
+#if !NETFRAMEWORK
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
@@ -63,89 +62,91 @@ namespace NUnit.Framework.Assertions
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
-            CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
+            System.Runtime.Remoting.Messaging.CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
             return savedContext;
         }
 
         private void RestoreExecutionContext(TestExecutionContext savedContext)
         {
-            CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
+            System.Runtime.Remoting.Messaging.CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
         }
 #endif
 
-        static class AdhocTests
+        private static class AdhocTests
         {
-            private static readonly MethodInfo[] _methods =
+            private static readonly MethodInfo[] Methods =
                 typeof(AdhocTests).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 
             public static IEnumerable<MethodInfo> TestMethods
             {
                 get
                 {
-                    foreach (var method in _methods)
+                    foreach (var method in Methods)
+                    {
                         if (method.Name.StartsWith("Test"))
                             yield return method;
+                    }
                 }
             }
 
-            static public void TestValidContext()
+            public static void TestValidContext()
             {
-                Assert.NotNull(TestExecutionContext.CurrentContext);
+                Assert.That(TestExecutionContext.CurrentContext, Is.Not.Null);
                 Assert.That(TestExecutionContext.CurrentContext, Is.TypeOf<TestExecutionContext.AdhocContext>());
             }
 
-            static public void TestPassingAssert()
+            public static void TestPassingAssert()
             {
                 Assert.That(true, Is.True);
             }
 
-            static public void TestPassingAssumption()
+            public static void TestPassingAssumption()
             {
                 Assume.That(true, Is.True);
             }
 
-            static public void TestPassingWarning()
+            public static void TestPassingWarning()
             {
                 Warn.Unless(true, Is.True);
             }
 
-            static public void TestFailingAssertion()
+            public static void TestFailingAssertion()
             {
                 Assert.That(() => Assert.That(true, Is.False), Throws.TypeOf<AssertionException>());
             }
 
-            static public void TestFailingAssumption()
+            public static void TestFailingAssumption()
             {
                 Assert.That(() => Assume.That(true, Is.False), Throws.TypeOf<InconclusiveException>());
             }
 
-            static public void TestFailingWarning()
+            public static void TestFailingWarning()
             {
                 // Warnings don't throw at all. They are of no use in ad-hoc execution.
                 Assert.That(() => Warn.Unless(true, Is.False), Throws.Nothing);
             }
 
-            static public void TestAssertPass()
+            public static void TestAssertPass()
             {
                 Assert.That(() => Assert.Pass(), Throws.TypeOf<SuccessException>());
             }
 
-            static public void TestAssertInconclusive()
+            public static void TestAssertInconclusive()
             {
                 Assert.That(() => Assert.Inconclusive(), Throws.TypeOf<InconclusiveException>());
             }
 
-            static public void TestAssertIgnore()
+            public static void TestAssertIgnore()
             {
                 Assert.That(() => Assert.Ignore(), Throws.TypeOf<IgnoreException>());
             }
 
-            static public void TestAssertFail()
+            public static void TestAssertFail()
             {
                 Assert.That(() => Assert.Fail(), Throws.TypeOf<AssertionException>());
             }
 
-            static public void TestAssertMultiple_AllAssertsPassing()
+            public static void TestAssertMultiple_AllAssertsPassing()
             {
                 Assert.Multiple(() =>
                 {
@@ -156,7 +157,7 @@ namespace NUnit.Framework.Assertions
                 });
             }
 
-            static public void TestAssertMultiple_OneAssertFailing()
+            public static void TestAssertMultiple_OneAssertFailing()
             {
                 Assert.That(() =>
                     Assert.Multiple(() =>

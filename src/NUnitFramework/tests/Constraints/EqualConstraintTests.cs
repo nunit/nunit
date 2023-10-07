@@ -1,56 +1,74 @@
-// ***********************************************************************
-// Copyright (c) 2007-2013 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class EqualConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new EqualConstraint(4);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new EqualConstraint(4);
             ExpectedDescription = "4";
             StringRepresentation = "<equal 4>";
         }
 
-        static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 4, 4.0f, 4.0d, 4.0000m };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData(5, "5"),
+            new TestCaseData(null, "null"),
+            new TestCaseData("Hello", "\"Hello\""),
+            new TestCaseData(double.NaN, double.NaN.ToString()),
+            new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
-        static object[] FailureData = new object[]
-            {
-                new TestCaseData(5, "5"),
-                new TestCaseData(null, "null"),
-                new TestCaseData("Hello", "\"Hello\""),
-                new TestCaseData(double.NaN, double.NaN.ToString()),
-                new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
-            };
+        [Test]
+        public void Complex_PassesEquality()
+        {
+            Assert.That(new System.Numerics.Complex(1, 100), Is.EqualTo(new System.Numerics.Complex(1, 100)));
+        }
+
+        #region StringEquality
+        [Test]
+        public void RespectsCultureWhenCaseIgnored()
+        {
+            var constraint = new EqualConstraint("r\u00E9sum\u00E9").IgnoreCase;
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void DoesntRespectCultureWhenCasingMatters()
+        {
+            var constraint = new EqualConstraint("r\u00E9sum\u00E9");
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void Bug524CharIntWithoutOverload()
+        {
+            char c = '\u0000';
+            Assert.That(c, Is.EqualTo(0));
+        }
+
+        #endregion
 
         #region DateTimeEquality
 
@@ -89,7 +107,6 @@ namespace NUnit.Framework.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Hours);
             }
 
-
             [Test]
             public void CanMatchUsingIsEqualToWithinTimeSpan()
             {
@@ -97,7 +114,6 @@ namespace NUnit.Framework.Constraints
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromMinutes(2)));
             }
-
 
             [Test]
             public void CanMatchDatesWithinMinutes()
@@ -136,7 +152,7 @@ namespace NUnit.Framework.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
-                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
             [Test]
@@ -182,7 +198,6 @@ namespace NUnit.Framework.Constraints
 
         public class DateTimeOffsetShouldBeSame
         {
-
             [Datapoints]
             public static readonly DateTimeOffset[] SameDateTimeOffsets =
                 {
@@ -291,7 +306,7 @@ namespace NUnit.Framework.Constraints
             public void CanMatchDatesWithinMinutes()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Minutes);
             }
 
@@ -299,7 +314,7 @@ namespace NUnit.Framework.Constraints
             public void CanMatchDatesWithinSeconds()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300).Seconds);
             }
 
@@ -307,7 +322,7 @@ namespace NUnit.Framework.Constraints
             public void CanMatchDatesWithinMilliseconds()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
@@ -315,8 +330,8 @@ namespace NUnit.Framework.Constraints
             public void CanMatchDatesWithinTicks()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
-                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
             [Test]
@@ -325,6 +340,16 @@ namespace NUnit.Framework.Constraints
                 var a = DateTimeOffset.Parse("2012-01-01T12:00Z");
                 var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
                 Assert.That(a, Is.EqualTo(b).Within(TimeSpan.FromMinutes(2)));
+            }
+
+            [Test]
+            public void FailsOnDateTimeOffsetOutsideOfTimeSpanTolerance()
+            {
+                var a = DateTimeOffset.Parse("2012-01-01T12:00Z");
+                var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(a, new EqualConstraint(b).Within(10).Seconds));
+                Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(TimeSpan.FromSeconds(10))}"));
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(TimeSpan.FromMinutes(1))}"));
             }
         }
 
@@ -337,52 +362,45 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void CanMatchDictionaries_SameOrder()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}});
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchDictionaries_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                          new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}));
+                    () => Assert.That(new Dictionary<int, int> { { 0, 0 }, { 1, 5 }, { 2, 2 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } })));
             }
 
             [Test]
             public void CanMatchDictionaries_DifferentOrder()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {1, 1}, {2, 2}});
+                Assert.That(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtables_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                          new Hashtable {{0, 0}, {1, 5}, {2, 2}}));
+                    () => Assert.That(new Hashtable { { 0, 0 }, { 1, 5 }, { 2, 2 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } })));
             }
 
             [Test]
             public void CanMatchHashtables_DifferentOrder()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Hashtable { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtableWithDictionary()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
         }
 
@@ -415,7 +433,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnDoublesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps));
-                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
+                Assert.That(ex?.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(19999998.0f)]
@@ -430,7 +448,7 @@ namespace NUnit.Framework.Constraints
             public void FailsOnSinglesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps));
-                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
+                Assert.That(ex?.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(9500.0)]
@@ -446,7 +464,9 @@ namespace NUnit.Framework.Constraints
             public void FailsOnDoublesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
-                Assert.That(ex.Message, Does.Contain("+/- 10.0d Percent"));
+                Assert.That(ex?.Message, Does.Contain("+/- 10.0d Percent"));
+                var expectedPercentDiff = (10000 - (double)value) / 100;
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -462,7 +482,20 @@ namespace NUnit.Framework.Constraints
             public void FailsOnSinglesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
-                Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
+                Assert.That(ex?.Message, Does.Contain("+/- 10.0f Percent"));
+                double expectedPercentDiff = (10000 - (float)value) / 100;
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
+            }
+
+            [TestCase(1.21)]
+            [TestCase(1.19)]
+            public void FailsOnDoublesOutsideOfAbsoluteTolerance(object value)
+            {
+                const double tolerance = 0.001;
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
+                Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
+                var expectedAbsoluteDiff = 1.2 - (double)value;
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
@@ -511,6 +544,39 @@ namespace NUnit.Framework.Constraints
             {
                 Assert.Throws<InvalidOperationException>(() => Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps));
             }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForDoubles()
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.That(0d, Is.EqualTo(-0d).Within(1).Ulps);
+                    Assert.That(-0d, Is.EqualTo(0d).Within(1).Ulps);
+                });
+            }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForFloats()
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
+                    Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+                });
+            }
+        }
+
+        #endregion
+
+        #region ObjectEquality
+
+        public class ObjectEquality
+        {
+            [Test]
+            public void CompareObjectsWithToleranceAsserts()
+            {
+                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+            }
         }
 
         #endregion
@@ -523,14 +589,19 @@ namespace NUnit.Framework.Constraints
             public void UsesProvidedIComparer()
             {
                 var comparer = new ObjectComparer();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void CanCompareUncomparableTypes()
             {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
                 Assert.That(2 + 2, Is.Not.EqualTo("4"));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
                 var comparer = new ConvertibleComparer();
                 Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
             }
@@ -539,40 +610,99 @@ namespace NUnit.Framework.Constraints
             public void UsesProvidedEqualityComparer()
             {
                 var comparer = new ObjectEqualityComparer();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.Called, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.Called, "Comparer was not called");
+                });
+            }
+
+            [Test]
+            public void UsesProvidedEqualityComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.Multiple(() =>
+                {
+                    Assert.That(4, Is.EqualTo("4").Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
+            }
+
+            [Test]
+            public void UsesProvidedEqualityComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.Multiple(() =>
+                {
+                    Assert.That("4", Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
+            }
+
+            [Test]
+            public void UsesProvidedComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.Multiple(() =>
+                {
+                    Assert.That(4, Is.EqualTo("4").Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
+            }
+
+            [Test]
+            public void UsesProvidedComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.Multiple(() =>
+                {
+                    Assert.That("4", Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericEqualityComparer()
             {
                 var comparer = new GenericEqualityComparer<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericComparer()
             {
                 var comparer = new GenericComparer<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericComparison()
             {
                 var comparer = new GenericComparison<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericEqualityComparison()
             {
                 var comparer = new GenericEqualityComparison<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
@@ -596,11 +726,11 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void UsesProvidedListComparer()
             {
-                var list1 = new List<int>() {2, 3};
-                var list2 = new List<int>() {3, 4};
+                var list1 = new List<int>() { 2, 3 };
+                var list2 = new List<int>() { 3, 4 };
 
-                var list11 = new List<List<int>>() {list1};
-                var list22 = new List<List<int>>() {list2};
+                var list11 = new List<List<int>>() { list1 };
+                var list22 = new List<List<int>>() { list2 };
                 var comparer = new IntListEqualComparer();
 
                 Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
@@ -608,8 +738,13 @@ namespace NUnit.Framework.Constraints
 
             public class IntListEqualComparer : IEqualityComparer<List<int>>
             {
-                public bool Equals(List<int> x, List<int> y)
+                public bool Equals(List<int>? x, List<int>? y)
                 {
+                    if (ReferenceEquals(x, y))
+                        return true;
+                    if (x is null || y is null)
+                        return false;
+
                     return x.Count == y.Count;
                 }
 
@@ -622,11 +757,11 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void UsesProvidedArrayComparer()
             {
-                var array1 = new int[] {2, 3};
-                var array2 = new int[] {3, 4};
+                var array1 = new[] { 2, 3 };
+                var array2 = new[] { 3, 4 };
 
-                var list11 = new List<int[]>() {array1};
-                var list22 = new List<int[]>() {array2};
+                var list11 = new List<int[]>() { array1 };
+                var list22 = new List<int[]>() { array2 };
                 var comparer = new IntArrayEqualComparer();
 
                 Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
@@ -634,8 +769,13 @@ namespace NUnit.Framework.Constraints
 
             public class IntArrayEqualComparer : IEqualityComparer<int[]>
             {
-                public bool Equals(int[] x, int[] y)
+                public bool Equals(int[]? x, int[]? y)
                 {
+                    if (ReferenceEquals(x, y))
+                        return true;
+                    if (x is null || y is null)
+                        return false;
+
                     return x.Length == y.Length;
                 }
 
@@ -674,59 +814,61 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region TypeEqualityMessages
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
         private static IEnumerable DifferentTypeSameValueTestData
         {
             get
             {
                 var ptr = new System.IntPtr(0);
-                var ExampleTestA = new ExampleTest.ClassA(0);
-                var ExampleTestB = new ExampleTest.ClassB(0);
+                var exampleTestA = new ExampleTest.ClassA(0);
+                var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 yield return new object[] { 0, ptr };
-                yield return new object[] { ExampleTestA, ExampleTestB };
+                yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
         }
         [Test]
         public void SameValueDifferentTypeExactMessageMatch()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
-            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(ex?.Message, Does.Contain("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL));
         }
 
-        class Dummy
+        private class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
-        class Dummy1
+        private class Dummy1
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy1(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
-        class DummyGenericClass<T>
+        private class DummyGenericClass<T>
         {
             private readonly object _obj;
 
@@ -735,7 +877,7 @@ namespace NUnit.Framework.Constraints
                 _obj = obj;
             }
 
-            public override string ToString()
+            public override string? ToString()
             {
                 return _obj.ToString();
             }
@@ -749,37 +891,41 @@ namespace NUnit.Framework.Constraints
             var dc1 = new DummyGenericClass<Dummy>(d1);
             var dc2 = new DummyGenericClass<Dummy1>(d2);
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dc1, dc2));
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(dc2, Is.EqualTo(dc1)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             var expectedMsg =
                 "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
                 "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
-            Assert.AreEqual(expectedMsg, ex.Message);
+            Assert.That(ex?.Message, Does.Contain(expectedMsg));
         }
 
         [Test]
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Is.Zero, Is.Zero));
-            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
+            Assert.That(ex?.Message, Does.Contain("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL));
         }
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
-            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex?.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
     }
-    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
-        class ReallyLongClassNameShouldBeHere {
-            public override bool Equals(object obj)
+    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
+    {
+        internal class ReallyLongClassNameShouldBeHere
+        {
+            public override bool Equals(object? obj)
             {
-                if (obj == null || GetType() != obj.GetType())
+                if (obj is null || GetType() != obj.GetType())
                 {
                     return false;
                 }
-                return obj.ToString() == this.ToString();
+                return obj.ToString() == ToString();
             }
             public override int GetHashCode()
             {
@@ -789,20 +935,19 @@ namespace NUnit.Framework.Constraints
             {
                 return "a";
             }
-
         }
-
     }
     namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
     {
-        class ReallyLongClassNameShouldBeHere {
-            public override bool Equals(object obj)
+        internal class ReallyLongClassNameShouldBeHere
+        {
+            public override bool Equals(object? obj)
             {
-                if (obj == null || GetType() != obj.GetType())
+                if (obj is null || GetType() != obj.GetType())
                 {
                     return false;
                 }
-                return obj.ToString()==this.ToString();
+                return obj.ToString() == ToString();
             }
             public override int GetHashCode()
             {
@@ -814,21 +959,23 @@ namespace NUnit.Framework.Constraints
                 return "a";
             }
         }
-
     }
-    namespace ExampleTest {
-        class BaseTest {
-            readonly int _value;
+    namespace ExampleTest
+    {
+        internal class BaseTest
+        {
+            private readonly int _value;
             public BaseTest()
             {
                 _value = 0;
             }
-            public BaseTest(int value) {
+            public BaseTest(int value)
+            {
                 _value = value;
             }
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
-                if (obj == null || GetType() != obj.GetType())
+                if (obj is null || GetType() != obj.GetType())
                 {
                     return false;
                 }
@@ -846,14 +993,14 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class ClassA : BaseTest {
+        internal class ClassA : BaseTest
+        {
             public ClassA(int x) : base(x) { }
-
         }
 
-        class ClassB : BaseTest
+        internal class ClassB : BaseTest
         {
-             public ClassB(int x) : base(x) { }
+            public ClassB(int x) : base(x) { }
         }
     }
     #endregion
@@ -867,8 +1014,15 @@ namespace NUnit.Framework.Constraints
     /// </remark>
     public class ConvertibleComparer : IComparer<IConvertible>
     {
-        public int Compare(IConvertible x, IConvertible y)
+        public int Compare(IConvertible? x, IConvertible? y)
         {
+            if (ReferenceEquals(x, y))
+                return 0;
+            if (x is null)
+                return -1;
+            if (y is null)
+                return 1;
+
             var str1 = Convert.ToString(x, CultureInfo.InvariantCulture);
             var str2 = Convert.ToString(y, CultureInfo.InvariantCulture);
             return string.Compare(str1, str2, StringComparison.Ordinal);

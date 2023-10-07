@@ -1,91 +1,68 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 using NUnit.TestData.PropertyAttributeTests;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
-	[TestFixture]
-	public class PropertyAttributeTests
-	{
-		TestSuite fixture;
+    [TestFixture]
+    public class PropertyAttributeTests
+    {
+        private TestSuite _fixture;
 
-		[SetUp]
-		public void CreateFixture()
-		{
-			fixture = TestBuilder.MakeFixture( typeof( FixtureWithProperties ) );
-		}
+        [SetUp]
+        public void CreateFixture()
+        {
+            _fixture = TestBuilder.MakeFixture(typeof(FixtureWithProperties));
+        }
 
-		[Test]
-		public void PropertyWithStringValue()
-		{
-			Test test1 = (Test)fixture.Tests[0];
-			Assert.That( test1.Properties["user"].Contains("Charlie"));
-		}
+        [Test]
+        public void PropertyWithStringValue()
+        {
+            Test test1 = (Test)_fixture.Tests[0];
+            Assert.That(test1.Properties["user"].Contains("Charlie"));
+        }
 
-		[Test]
-		public void PropertiesWithNumericValues()
-		{
-			Test test2 = (Test)fixture.Tests[1];
-			Assert.AreEqual( 10.0, test2.Properties.Get("X") );
-			Assert.AreEqual( 17.0, test2.Properties.Get("Y") );
-		}
+        [Test]
+        public void PropertiesWithNumericValues()
+        {
+            Test test2 = (Test)_fixture.Tests[1];
+            Assert.That(test2.Properties.Get("X"), Is.EqualTo(10.0));
+            Assert.That(test2.Properties.Get("Y"), Is.EqualTo(17.0));
+        }
 
-		[Test]
-		public void PropertyWorksOnFixtures()
-		{
-			Assert.AreEqual( "SomeClass", fixture.Properties.Get("ClassUnderTest") );
-		}
+        [Test]
+        public void PropertyWorksOnFixtures()
+        {
+            Assert.That(_fixture.Properties.Get("ClassUnderTest"), Is.EqualTo("SomeClass"));
+        }
 
-		[Test]
-		public void CanDeriveFromPropertyAttribute()
-		{
-			Test test3 = (Test)fixture.Tests[2];
-			Assert.AreEqual( 5, test3.Properties.Get("Priority") );
-		}
+        [Test]
+        public void CanDeriveFromPropertyAttribute()
+        {
+            Test test3 = (Test)_fixture.Tests[2];
+            Assert.That(test3.Properties.Get("Priority"), Is.EqualTo(5));
+        }
 
         [Test]
         public void CustomPropertyAttribute()
         {
-            Test test4 = (Test)fixture.Tests[3];
-            Assert.IsNotNull(test4.Properties.Get("CustomProperty"));
+            Test test4 = (Test)_fixture.Tests[3];
+            Assert.That(test4.Properties.Get("CustomProperty"), Is.Not.Null);
         }
 
         [Test]
         public void ManyProperties()
         {
-            Test test5 = (Test)fixture.Tests[4];
-            Assert.AreEqual(6, test5.Properties.Keys.Count);
-            Assert.AreEqual("A", test5.Properties.Get("A"));
-            Assert.AreEqual("B", test5.Properties.Get("B"));
-            Assert.AreEqual("C", test5.Properties.Get("C"));
-            Assert.AreEqual("D", test5.Properties.Get("D"));
-            Assert.AreEqual("E", test5.Properties.Get("E"));
-            Assert.AreEqual("F", test5.Properties.Get("F"));
+            Test test5 = (Test)_fixture.Tests[4];
+            Assert.That(test5.Properties.Keys, Has.Count.EqualTo(6));
+            Assert.That(test5.Properties.Get("A"), Is.EqualTo("A"));
+            Assert.That(test5.Properties.Get("B"), Is.EqualTo("B"));
+            Assert.That(test5.Properties.Get("C"), Is.EqualTo("C"));
+            Assert.That(test5.Properties.Get("D"), Is.EqualTo("D"));
+            Assert.That(test5.Properties.Get("E"), Is.EqualTo("E"));
+            Assert.That(test5.Properties.Get("F"), Is.EqualTo("F"));
         }
     }
 }

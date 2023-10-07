@@ -1,29 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System.Reflection;
 using NUnit.Compatibility;
 
-namespace NUnit.Framework.Compatibility
+namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
     public class AttributeHelperTests
@@ -31,11 +11,11 @@ namespace NUnit.Framework.Compatibility
         [Test]
         public void CanGetAttributesOnAssemblies()
         {
-            var assembly = typeof(TestAttribute).GetTypeInfo().Assembly;
+            var assembly = typeof(TestAttribute).Assembly;
             Assert.That(assembly, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(assembly, typeof(AssemblyCompanyAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.GreaterThanOrEqualTo(1));
+            Assert.That(attr, Is.Not.Empty);
         }
 
         [Test]
@@ -45,7 +25,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -55,7 +35,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -65,7 +45,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), false);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(0));
+            Assert.That(attr, Is.Empty);
         }
 
         [Test]
@@ -73,11 +53,11 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetTypeInfo().GetMethod("Add");
+            var method = type.GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(method, typeof(AuthorAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -85,11 +65,11 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var property = type.GetTypeInfo().GetProperty("MyProperty");
+            var property = type.GetProperty("MyProperty");
             Assert.That(property, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(property, typeof(DatapointSourceAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -97,11 +77,11 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var field = type.GetTypeInfo().GetField(nameof(A.Field));
+            var field = type.GetField(nameof(A.Field));
             Assert.That(field, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(field, typeof(DatapointAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -109,24 +89,24 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetTypeInfo().GetMethod("Add");
+            var method = type.GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             ParameterInfo[] param = method.GetParameters();
             Assert.That(param, Is.Not.Null);
-            Assert.That(param.Length, Is.EqualTo(2));
+            Assert.That(param, Has.Length.EqualTo(2));
             foreach (var p in param)
             {
                 var attr = AttributeHelper.GetCustomAttributes(p, typeof(RandomAttribute), true);
                 Assert.That(attr, Is.Not.Null);
-                Assert.That(attr.Length, Is.EqualTo(1));
+                Assert.That(attr, Has.Length.EqualTo(1));
             }
         }
 
         [Category("A Category")]
-        class A
+        private class A
         {
             [Author("John Doe")]
-            public int Add([Random(1)]int x, [Random(1)]int y)
+            public int Add([Random(1)] int x, [Random(1)] int y)
             {
                 return x + y;
             }
@@ -138,7 +118,7 @@ namespace NUnit.Framework.Compatibility
             public int Field = 1;
         }
 
-        class B : A
+        private class B : A
         {
         }
     }

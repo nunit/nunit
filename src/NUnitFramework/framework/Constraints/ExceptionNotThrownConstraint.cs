@@ -1,3 +1,5 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -8,10 +10,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "No Exception to be thrown"; }
-        }
+        public override string Description => "No Exception to be thrown";
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
@@ -21,7 +20,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var exception = actual as Exception;
-            return new ConstraintResult(this, exception, exception == null);
+            return new ConstraintResult(this, exception, exception is null);
         }
     }
 }

@@ -1,28 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -65,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         private const int NORMAL_PRIORITY = 1;
         private const int PRIORITY_LEVELS = 2;
 
-        private readonly Logger log = InternalTrace.GetLogger("WorkItemQueue");
+        private readonly Logger _log = InternalTrace.GetLogger("WorkItemQueue");
 
         private ConcurrentQueue<WorkItem>[] _innerQueues;
 
@@ -83,12 +63,12 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly Stack<SavedState> _savedState = new Stack<SavedState>();
+        private readonly Stack<SavedState> _savedState = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _mreAdd = new();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection
@@ -117,6 +97,7 @@ namespace NUnit.Framework.Internal.Execution
             InitializeQueues();
         }
 
+        [MemberNotNull(nameof(_innerQueues))]
         private void InitializeQueues()
         {
             ConcurrentQueue<WorkItem>[] newQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
@@ -128,7 +109,7 @@ namespace NUnit.Framework.Internal.Execution
             _addId = _removeId = 0;
         }
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets the name of the work item queue.
@@ -151,8 +132,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public int ItemsProcessed
         {
-            get { return _itemsProcessed; }
-            private set { _itemsProcessed = value; }
+            get => _itemsProcessed;
+            private set => _itemsProcessed = value;
         }
 
         private int _state;
@@ -161,8 +142,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public WorkItemQueueState State
         {
-            get { return (WorkItemQueueState)_state; }
-            private set { _state = (int)value; }
+            get => (WorkItemQueueState)_state;
+            private set => _state = (int)value;
         }
 
         /// <summary>
@@ -173,16 +154,18 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in _innerQueues)
+                {
                     if (!q.IsEmpty)
                         return false;
+                }
 
                 return true;
             }
         }
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Enqueue a WorkItem to be processed
@@ -225,7 +208,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Dequeue a WorkItem for processing
         /// </summary>
         /// <returns>A WorkItem or null if the queue has stopped</returns>
-        public WorkItem Dequeue()
+        public WorkItem? Dequeue()
         {
             SpinWait sw = new SpinWait();
 
@@ -271,13 +254,16 @@ namespace NUnit.Framework.Internal.Execution
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
-
                 // Dequeue our work item
-                WorkItem work = null;
-                while (work == null)
+                WorkItem? work = null;
+                while (work is null)
+                {
                     foreach (var q in _innerQueues)
+                    {
                         if (q.TryDequeue(out work))
                             break;
+                    }
+                }
 
                 // Add to items processed using CAS
                 Interlocked.Increment(ref _itemsProcessed);
@@ -291,7 +277,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            log.Info("{0}.{1} starting", Name, _savedState.Count);
+            _log.Info("{0}.{1} starting", Name, _savedState.Count);
 
             if (Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Running, (int)WorkItemQueueState.Paused) == (int)WorkItemQueueState.Paused)
                 _mreAdd.Set();
@@ -302,7 +288,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            log.Info("{0}.{1} stopping - {2} WorkItems processed", Name, _savedState.Count, ItemsProcessed);
+            _log.Info("{0}.{1} stopping - {2} WorkItems processed", Name, _savedState.Count, ItemsProcessed);
 
             if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
                 _mreAdd.Set();
@@ -313,7 +299,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            log.Debug("{0}.{1} pausing", Name, _savedState.Count);
+            _log.Debug("{0}.{1} pausing", Name, _savedState.Count);
 
             Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
         }
@@ -362,9 +348,9 @@ namespace NUnit.Framework.Internal.Execution
             _removeId += state.RemoveId;
         }
 
-#endregion
+        #endregion
 
-#region Internal Methods for Testing
+        #region Internal Methods for Testing
 
         internal string DumpContents()
         {
@@ -372,13 +358,17 @@ namespace NUnit.Framework.Internal.Execution
             sb.AppendLine($"Contents of {Name} at isolation level {_savedState.Count}");
 
             if (IsEmpty)
+            {
                 sb.AppendLine("  <empty>");
+            }
             else
+            {
                 for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
                 {
                     foreach (WorkItem work in _innerQueues[priority])
                         sb.AppendLine($"pri-{priority}: {work.Name}");
                 }
+            }
 
             int level = 0;
             foreach (var state in _savedState)
@@ -400,6 +390,6 @@ namespace NUnit.Framework.Internal.Execution
             return sb.ToString();
         }
 
-#endregion
+        #endregion
     }
 }

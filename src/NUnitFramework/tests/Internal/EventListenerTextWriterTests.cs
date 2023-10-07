@@ -1,33 +1,13 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class EventListenerTextWriterTests
@@ -36,10 +16,10 @@ namespace NUnit.Framework.Internal
         private static readonly string NL = Environment.NewLine;
 
 #pragma warning disable IDE1006 // Naming Styles
-        TestListenerIntercepter ListenerResult;
+        private TestListenerIntercepter ListenerResult;
 #pragma warning restore IDE1006 // Naming Styles
 #pragma warning disable IDE1006 // Naming Styles
-        TextWriter ListenerWriter;
+        private TextWriter ListenerWriter;
 #pragma warning restore IDE1006 // Naming Styles
 
         [SetUp]
@@ -68,7 +48,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(format, arg);
 
             var expected = "Hello 4 2 World";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -83,9 +63,12 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(format, arg0);
 
             var expected = $"{arg0:dd MMM yyyy}";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -99,9 +82,12 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(format, arg0, arg1);
 
             var expected = $"{5:00.00} @";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -116,10 +102,12 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(format, arg0, arg1, arg2);
 
             var expected = $"Quick {9:#.00} Fox";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
-
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -131,7 +119,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(obj);
 
             var expected = "{ Mary = Lamb, Sheep = White }";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -145,7 +133,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(str);
 
             var expected = "Insert coin here";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -159,7 +147,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = $"{2.731:0.000}";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -173,7 +161,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = $"{-1.5:0.0}";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -187,7 +175,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "1234567890123456";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -201,7 +189,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "-987654321";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -215,7 +203,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "255";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -229,7 +217,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "255";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -242,8 +230,8 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = Boolean.TrueString;
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            var expected = bool.TrueString;
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -257,7 +245,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "x";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -271,7 +259,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(buffer);
 
             var expected = "Hello World";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -287,7 +275,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(buffer, index, count);
 
             var expected = " Miss M";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -301,7 +289,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine(value);
 
             var expected = "-5";
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(2));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
         }
@@ -312,11 +300,11 @@ namespace NUnit.Framework.Internal
             ListenerWriter.WriteLine();
 
             var expected = NL;
-            Assert.That(ListenerResult.Outputs.Count, Is.EqualTo(1));
+            Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(1));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
         }
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
         private class TestListenerIntercepter : ITestListener
         {
@@ -331,31 +319,27 @@ namespace NUnit.Framework.Internal
 
             void ITestListener.TestStarted(ITest test)
             {
-                if (DefaultListener != null)
-                    DefaultListener.TestStarted(test);
+                DefaultListener?.TestStarted(test);
             }
 
             void ITestListener.TestFinished(ITestResult result)
             {
-                if (DefaultListener != null)
-                    DefaultListener.TestFinished(result);
+                DefaultListener?.TestFinished(result);
             }
 
             void ITestListener.TestOutput(TestOutput output)
             {
-                Assert.IsNotNull(output);
+                Assert.That(output, Is.Not.Null);
                 Outputs.Add(output.Text);
 
-                if (DefaultListener != null)
-                    DefaultListener.TestOutput(output);
+                DefaultListener?.TestOutput(output);
             }
 
             void ITestListener.SendMessage(TestMessage message)
             {
-
             }
         }
 
-#endregion
+        #endregion
     }
 }

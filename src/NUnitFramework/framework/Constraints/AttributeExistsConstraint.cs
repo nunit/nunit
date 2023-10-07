@@ -1,27 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
-using System.Reflection;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
@@ -32,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeExistsConstraint : Constraint
     {
-        private readonly Type expectedType;
+        private readonly Type _expectedType;
 
         /// <summary>
         /// Constructs an AttributeExistsConstraint for a specific attribute Type
@@ -41,21 +20,17 @@ namespace NUnit.Framework.Constraints
         public AttributeExistsConstraint(Type type)
             : base(type)
         {
-            this.expectedType = type;
+            _expectedType = type;
 
-            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
-                throw new ArgumentException(string.Format(
-                    "Type {0} is not an attribute", expectedType), nameof(type));
+            if (!typeof(Attribute).IsAssignableFrom(_expectedType))
+                throw new ArgumentException($"Type {_expectedType} is not an attribute", nameof(type));
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "type with attribute " + MsgUtils.FormatValue(expectedType); }
-        }
+        public override string Description => "type with attribute " + MsgUtils.FormatValue(_expectedType);
 
         /// <summary>
         /// Tests whether the object provides the expected attribute.
@@ -65,7 +40,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
-            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
+            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
             result.Status = attrs.Length > 0
                 ? ConstraintStatus.Success : ConstraintStatus.Failure;

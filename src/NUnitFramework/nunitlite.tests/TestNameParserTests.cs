@@ -1,27 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework;
 
 namespace NUnit.Common.Tests
@@ -40,8 +18,8 @@ namespace NUnit.Common.Tests
         public void SingleName(string name)
         {
             string[] names = TestNameParser.Parse(name);
-            Assert.AreEqual(1, names.Length);
-            Assert.AreEqual(name.Trim(new char[] { ' ', ',' }), names[0]);
+            Assert.That(names, Has.Length.EqualTo(1));
+            Assert.That(names[0], Is.EqualTo(name.Trim(new char[] { ' ', ',' })));
         }
 
         [TestCase("Test.Namespace.Fixture.Method1", "Test.Namespace.Fixture.Method2")]
@@ -52,9 +30,9 @@ namespace NUnit.Common.Tests
         {
             char[] delims = new char[] { ' ', ',' };
             string[] names = TestNameParser.Parse(name1 + "," + name2);
-            Assert.AreEqual(2, names.Length);
-            Assert.AreEqual(name1.Trim(delims), names[0]);
-            Assert.AreEqual(name2.Trim(delims), names[1]);
+            Assert.That(names, Has.Length.EqualTo(2));
+            Assert.That(names[0], Is.EqualTo(name1.Trim(delims)));
+            Assert.That(names[1], Is.EqualTo(name2.Trim(delims)));
         }
     }
 }

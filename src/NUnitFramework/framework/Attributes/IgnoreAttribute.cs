@@ -1,29 +1,7 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -34,7 +12,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as being ignored. Ignored tests result in a warning message when the tests are run.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly string _reason;
@@ -51,7 +29,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// The date in the future to stop ignoring the test as a string in UTC time. 
+        /// The date in the future to stop ignoring the test as a string in UTC time.
         /// For example for a date and time, "2014-12-25 08:10:00Z" or for just a date,
         /// "2014-12-25". If just a date is given, the Ignore will expire at midnight UTC.
         /// </summary>
@@ -60,10 +38,12 @@ namespace NUnit.Framework
         /// as runnable. Tests with an ignore until date will have an IgnoreUntilDate
         /// property set which will appear in the test results.
         /// </remarks>
-        /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
+        /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception>
+        [StringSyntax(StringSyntaxAttribute.DateTimeFormat)]
+        [DisallowNull]
         public string? Until
         {
-            get { return _until; }
+            get => _until;
             set
             {
                 _until = value;
@@ -88,7 +68,7 @@ namespace NUnit.Framework
                         test.RunState = RunState.Ignored;
                         test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
                     }
-                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
+                    test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
 
                     return;
                 }

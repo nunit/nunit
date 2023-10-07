@@ -1,28 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2010-2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -46,7 +24,7 @@ namespace NUnit.Framework.Internal
         public TestAssembly(Assembly assembly, string assemblyNameOrPath)
             : this(assemblyNameOrPath)
         {
-            this.Assembly = assembly;
+            Assembly = assembly;
         }
 
         /// <summary>
@@ -58,7 +36,7 @@ namespace NUnit.Framework.Internal
         /// </param>
         public TestAssembly(string assemblyNameOrPath) : base(assemblyNameOrPath)
         {
-            this.Name = Path.GetFileName(assemblyNameOrPath);
+            Name = Path.GetFileName(assemblyNameOrPath);
         }
 
         /// <summary>
@@ -67,10 +45,10 @@ namespace NUnit.Framework.Internal
         /// <param name="assembly">The <see cref="TestAssembly"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
-            : base(assembly as TestSuite, filter)
+            : base(assembly, filter)
         {
-            this.Name     = assembly.Name;
-            this.Assembly = assembly.Assembly;
+            Name = assembly.Name;
+            Assembly = assembly.Assembly;
         }
 
         /// <summary>
@@ -82,22 +60,16 @@ namespace NUnit.Framework.Internal
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string TestType
-        {
-            get
-            {
-                return "Assembly";
-            }
-        }
+        public override string TestType => "Assembly";
 
         /// <summary>
         /// Get custom attributes specified on the assembly
         /// </summary>
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
-            return Assembly != null
+            return Assembly is not null
                 ? Assembly.GetAttributes<TAttr>()
-                : new TAttr[0];
+                : Array.Empty<TAttr>();
         }
 
         /// <summary>
@@ -110,4 +82,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-

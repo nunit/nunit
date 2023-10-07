@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -34,11 +13,11 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EqualConstraintResult : ConstraintResult
     {
-        private readonly object expectedValue;
-        private readonly Tolerance tolerance;
-        private readonly bool caseInsensitive;
-        private readonly bool clipStrings;
-        private readonly IList<NUnitEqualityComparer.FailurePoint> failurePoints;
+        private readonly object? _expectedValue;
+        private readonly Tolerance _tolerance;
+        private readonly bool _caseInsensitive;
+        private readonly bool _clipStrings;
+        private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -62,14 +41,14 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an EqualConstraintResult
         /// </summary>
-        public EqualConstraintResult(EqualConstraint constraint, object actual, bool hasSucceeded)
+        public EqualConstraintResult(EqualConstraint constraint, object? actual, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded)
         {
-            this.expectedValue = constraint.Arguments[0];
-            this.tolerance = constraint.Tolerance;
-            this.caseInsensitive = constraint.CaseInsensitive;
-            this.clipStrings = constraint.ClipStrings;
-            this.failurePoints = constraint.FailurePoints;
+            _expectedValue = constraint.Arguments[0];
+            _tolerance = constraint.Tolerance;
+            _caseInsensitive = constraint.CaseInsensitive;
+            _clipStrings = constraint.ClipStrings;
+            _failurePoints = constraint.FailurePoints;
         }
 
         /// <summary>
@@ -79,21 +58,21 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The MessageWriter to write to</param>
         public override void WriteMessageTo(MessageWriter writer)
         {
-            DisplayDifferences(writer, expectedValue, ActualValue, 0);
+            DisplayDifferences(writer, _expectedValue, ActualValue, 0);
         }
 
-        private void DisplayDifferences(MessageWriter writer, object expected, object actual, int depth)
+        private void DisplayDifferences(MessageWriter writer, object? expected, object? actual, int depth)
         {
-            if (expected is string && actual is string)
-                DisplayStringDifferences(writer, (string)expected, (string)actual);
-            else if (expected is ICollection && actual is ICollection)
-                DisplayCollectionDifferences(writer, (ICollection)expected, (ICollection)actual, depth);
-            else if (expected is IEnumerable && actual is IEnumerable)
-                DisplayEnumerableDifferences(writer, (IEnumerable)expected, (IEnumerable)actual, depth);
-            else if (expected is Stream && actual is Stream)
-                DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
-            else if (tolerance != null)
-                writer.DisplayDifferences(expected, actual, tolerance);
+            if (expected is string expectedString && actual is string actualString)
+                DisplayStringDifferences(writer, expectedString, actualString);
+            else if (expected is ICollection expectedCollection && actual is ICollection actualCollection)
+                DisplayCollectionDifferences(writer, expectedCollection, actualCollection, depth);
+            else if (expected is IEnumerable expectedEnumerable && actual is IEnumerable actualEnumerable)
+                DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
+            else if (expected is Stream expectedStream && actual is Stream actualStream)
+                DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
+            else if (_tolerance is not null)
+                writer.DisplayDifferences(expected, actual, _tolerance);
             else
                 writer.DisplayDifferences(expected, actual);
         }
@@ -101,14 +80,14 @@ namespace NUnit.Framework.Constraints
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, caseInsensitive);
+            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, _caseInsensitive);
 
             if (expected.Length == actual.Length)
                 writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
             else
                 writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, caseInsensitive, clipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatch, _caseInsensitive, _clipStrings);
         }
         #endregion
 
@@ -117,11 +96,13 @@ namespace NUnit.Framework.Constraints
         {
             if (expected.Length == actual.Length)
             {
-                long offset = failurePoints[depth].Position;
+                long offset = _failurePoints[depth].Position;
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
             }
             else
+            {
                 writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+            }
         }
         #endregion
 
@@ -137,18 +118,20 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
+                {
                     DisplayDifferences(
                         writer,
                         failurePoint.ExpectedValue,
                         failurePoint.ActualValue,
                         ++depth);
+                }
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
@@ -174,12 +157,12 @@ namespace NUnit.Framework.Constraints
         private void DisplayTypesAndSizes(MessageWriter writer, IEnumerable expected, IEnumerable actual, int indent)
         {
             string sExpected = MsgUtils.GetTypeRepresentation(expected);
-            if (expected is ICollection && !(expected is Array))
-                sExpected += string.Format(" with {0} elements", ((ICollection)expected).Count);
+            if (expected is ICollection expectedCollection && !(expected is Array))
+                sExpected += $" with {expectedCollection.Count} elements";
 
             string sActual = MsgUtils.GetTypeRepresentation(actual);
-            if (actual is ICollection && !(actual is Array))
-                sActual += string.Format(" with {0} elements", ((ICollection)actual).Count);
+            if (actual is ICollection actualCollection && !(actual is Array))
+                sActual += $" with {actualCollection.Count} elements";
 
             if (sExpected == sActual)
                 writer.WriteMessageLine(indent, CollectionType_1, sExpected);
@@ -199,18 +182,22 @@ namespace NUnit.Framework.Constraints
         /// <param name="indent">The indentation level for the message line</param>
         private void DisplayFailurePoint(MessageWriter writer, IEnumerable expected, IEnumerable actual, NUnitEqualityComparer.FailurePoint failurePoint, int indent)
         {
-            Array expectedArray = expected as Array;
-            Array actualArray = actual as Array;
+            Array? expectedArray = expected as Array;
+            Array? actualArray = actual as Array;
 
-            int expectedRank = expectedArray != null ? expectedArray.Rank : 1;
-            int actualRank = actualArray != null ? actualArray.Rank : 1;
+            int expectedRank = expectedArray?.Rank ?? 1;
+            int actualRank = actualArray?.Rank ?? 1;
 
             bool useOneIndex = expectedRank == actualRank;
 
-            if (expectedArray != null && actualArray != null)
+            if (expectedArray is not null && actualArray is not null)
+            {
                 for (int r = 1; r < expectedRank && useOneIndex; r++)
+                {
                     if (expectedArray.GetLength(r) != actualArray.GetLength(r))
                         useOneIndex = false;
+                }
+            }
 
             int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, failurePoint.Position);
             if (useOneIndex)
@@ -240,18 +227,20 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
-                NUnitEqualityComparer.FailurePoint failurePoint = failurePoints[depth];
+                NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
+                {
                     DisplayDifferences(
                         writer,
                         failurePoint.ExpectedValue,
                         failurePoint.ActualValue,
                         ++depth);
+                }
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write($"  Extra:    < {MsgUtils.FormatValue(failurePoint.ActualValue)}, ... >");

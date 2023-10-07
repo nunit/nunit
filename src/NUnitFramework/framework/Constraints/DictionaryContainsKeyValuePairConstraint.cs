@@ -1,27 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2020 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -48,25 +30,47 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsKeyValuePair"; } }
+        public override string DisplayName => "ContainsKeyValuePair";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing entry " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "dictionary containing entry " + MsgUtils.FormatValue(_expected);
 
-        private bool Matches(object actual)
+        private bool Matches(object? actual)
         {
-            var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-            foreach (var entry in dictionary)
-                if (ItemsEqual(entry, _expected))
-                    return true;
+            if (actual is null)
+                throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
 
-            return false;
+            if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
+            {
+                foreach (var entry in dictionary)
+                {
+                    if (ItemsEqual(entry, _expected))
+                        return true;
+                }
+
+                return false;
+            }
+
+            // If 'actual' implements IDictionary<TKey, TValue>, construct an 'expected' KeyValuePair<TKey, TValue>
+            // and look it up by iterating using IEnumerable
+            if (actual.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
+            {
+                var expected = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
+                var enumerable = (IEnumerable)actual;
+
+                foreach (var item in enumerable)
+                {
+                    if (ItemsEqual(item, expected))
+                        return true;
+                }
+
+                return false;
+            }
+
+            throw new ArgumentException($"Expected: IDictionary But was: {actual.GetType()}", nameof(actual));
         }
 
         /// <summary>

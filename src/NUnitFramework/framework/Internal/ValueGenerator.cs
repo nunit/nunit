@@ -1,32 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -59,7 +38,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                for (var current = start;;)
+                for (var current = start; ;)
                 {
                     yield return current;
 
@@ -118,13 +97,13 @@ namespace NUnit.Framework.Internal
             /// </param>
             public ComparableStep(TStep value, Func<T, TStep, T> apply)
             {
-                if (apply == null) throw new ArgumentNullException(nameof(apply));
+                if (apply is null) throw new ArgumentNullException(nameof(apply));
                 _step = value;
                 _apply = apply;
             }
 
-            public override bool IsPositive => Comparer<TStep>.Default.Compare(default(TStep), _step) < 0;
-            public override bool IsNegative => Comparer<TStep>.Default.Compare(_step, default(TStep)) < 0;
+            public override bool IsPositive => Comparer<TStep>.Default.Compare(default, _step) < 0;
+            public override bool IsNegative => Comparer<TStep>.Default.Compare(_step, default) < 0;
 
             /// <summary>
             /// Increments the given value and returns the result.
@@ -171,7 +150,7 @@ namespace NUnit.Framework.Internal
         /// use it to increment values of type <typeparamref name="T"/>. A return value indicates
         /// whether the creation succeeded.
         /// </summary>
-        public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+        public override bool TryCreateStep(object value, [NotNullWhen(true)] out ValueGenerator.Step? step)
         {
             Guard.ArgumentNotNull(value, nameof(value));
             step = null;
@@ -247,6 +226,6 @@ namespace NUnit.Framework.Internal
         /// use it to increment values on which it operates. A return value indicates
         /// whether the creation succeeded.
         /// </summary>
-        public abstract bool TryCreateStep(object value, out Step step);
+        public abstract bool TryCreateStep(object value, [NotNullWhen(true)] out Step? step);
     }
 }

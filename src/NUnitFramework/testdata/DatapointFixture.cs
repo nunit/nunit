@@ -1,25 +1,4 @@
-﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -44,31 +23,31 @@ namespace NUnit.TestData.DatapointFixture
     public class SquareRootTest_Field_Double : SquareRootTest
     {
         [Datapoint]
-        public double zero = 0;
+        public double Zero = 0;
 
         [Datapoint]
-        public double positive = 1;
+        public double Positive = 1;
 
         [Datapoint]
-        public double negative = -1;
+        public double Negative = -1;
 
         [Datapoint]
-        public double max = double.MaxValue;
+        public double Max = double.MaxValue;
 
         [Datapoint]
-        public double infinity = double.PositiveInfinity;
+        public double Infinity = double.PositiveInfinity;
     }
 
     public class SquareRootTest_Field_ArrayOfDouble : SquareRootTest
     {
         [Datapoints]
-        public double[] values = new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+        public double[] Values = new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
 
     public class SquareRootTest_Field_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]
-        public IEnumerable<double> values = new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+        public IEnumerable<double> Values = new List<double> { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
 
     public class SquareRootTest_Property_IEnumerableOfDouble : SquareRootTest
@@ -76,7 +55,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public IEnumerable<double> Values
         {
-            get 
+            get
             {
                 List<double> list = new List<double>();
                 list.Add(0.0);
@@ -107,10 +86,15 @@ namespace NUnit.TestData.DatapointFixture
     public class SquareRootTest_Property_ArrayOfDouble : SquareRootTest
     {
         [Datapoints]
-        public double[] Values
-        {
-            get { return new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity }; }
-        }
+        public double[] Values =>
+            new[]
+            {
+                0.0,
+                1.0,
+                -1.0,
+                double.MaxValue,
+                double.PositiveInfinity
+            };
     }
 
     public class SquareRootTest_Method_ArrayOfDouble : SquareRootTest
@@ -118,10 +102,10 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetValues()
         {
-            return new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+            return new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
         }
     }
- 
+
     public class SquareRootTest_Iterator_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]
@@ -139,22 +123,22 @@ namespace NUnit.TestData.DatapointFixture
     public class InheritedDatapointSquareRoot : SquareRootTest
     {
         [Datapoint]
-        public double zero = 0;
+        public double Zero = 0;
 
         [Datapoint]
-        public double positive = 1;
+        public double Positive = 1;
 
         [Datapoint]
-        public double negative = -1;
+        public double Negative = -1;
     }
 
     public class DatapointCanBeInherited : InheritedDatapointSquareRoot
     {
         [Datapoint]
-        public double max = double.MaxValue;
+        public double Max = double.MaxValue;
 
         [Datapoint]
-        public double infinity = double.PositiveInfinity;
+        public double Infinity = double.PositiveInfinity;
     }
 
     public class InheritedDatapointsSquareRoot : SquareRootTest
@@ -162,7 +146,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetCommonValues()
         {
-            return new double[] { 0.0, 1.0, -1.0 };
+            return new[] { 0.0, 1.0, -1.0 };
         }
     }
 
@@ -171,7 +155,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetValues()
         {
-            return new double[] { double.MaxValue, double.PositiveInfinity };
+            return new[] { double.MaxValue, double.PositiveInfinity };
         }
     }
 }

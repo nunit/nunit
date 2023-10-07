@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -27,9 +6,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class DictionaryContainsKeyConstraintTests
@@ -84,23 +62,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hello"));
         }
 
-#pragma warning disable CS0618 // DictionaryContainsKeyConstraint.IgnoreCase and .Using are deprecated
-        [Test, SetCulture("en-US")]
-        public void IgnoreCaseIsHonored()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
-        }
-
-        [Test, SetCulture("en-US")]
-        public void UsingIsHonored()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
-        }
-
         [Test]
         public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
         {
@@ -108,8 +69,6 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello"));
         }
-
-#pragma warning restore CS0618
 
         [Test]
         public void SucceedsWhenKeyIsPresentUsingContainsKeyWhenDictionaryUsingCustomComparer()
@@ -218,8 +177,6 @@ namespace NUnit.Framework.Constraints
             Assert.DoesNotThrow(() => Assert.That(poco, Does.ContainKey("Peter")));
         }
 
-#if NET45
-
         [Test]
         public void ShouldCallContainsKeysMethodOnReadOnlyInterface()
         {
@@ -237,8 +194,6 @@ namespace NUnit.Framework.Constraints
             Assert.Catch<ArgumentException>(() => Assert.That(set, Does.ContainKey("NotHappening")));
         }
 
-#endif
-
         [Test]
         public void ShouldCallContainsKeysMethodOnLookupInterface()
         {
@@ -247,58 +202,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, Does.ContainKey(20));
             Assert.That(dictionary, !Does.ContainKey(43));
         }
-
-#pragma warning disable CS0618 // DictionaryContainsKeyConstraint.Using is obsolete
-
-        [Test]
-        public void UsingDictionaryContainsKeyConstraintComparisonFunc()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string, string>((x, y) => x.ToUpper().Equals(y.ToUpper())));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintNonGenericComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintGenericComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer<string>)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintNonGenericEqualityComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintGenericEqualityComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintComparerFunc()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using<string>((x, y) => x.ToLower().Equals(y.ToLower())));
-        }
-
-#pragma warning restore CS0618
 
         #region Test Assets
 
@@ -333,6 +236,7 @@ namespace NUnit.Framework.Constraints
         }
 
         public class TestPlainObjectContainsGeneric<TKey>
+            where TKey : notnull
         {
             private readonly TKey _key;
 
@@ -360,6 +264,8 @@ namespace NUnit.Framework.Constraints
         }
 
         public class TestDictionaryGeneric<TKey, TItem> : Dictionary<TKey, TItem>
+            where TKey : notnull
+            where TItem : notnull
         {
             public new bool ContainsKey(TKey key)
             {
@@ -435,12 +341,12 @@ namespace NUnit.Framework.Constraints
 
             public string this[int key]
             {
-                get { throw new NotImplementedException(); }
-                set { throw new NotImplementedException(); }
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
             }
 
-            public ICollection<int> Keys { get; }
-            public ICollection<string> Values { get; }
+            public ICollection<int> Keys => throw new NotImplementedException();
+            public ICollection<string> Values => throw new NotImplementedException();
         }
 
         public class TestNonGenericDictionary : IDictionary
@@ -457,7 +363,7 @@ namespace NUnit.Framework.Constraints
                 return _key == (int)key;
             }
 
-            public void Add(object key, object value)
+            public void Add(object key, object? value)
             {
                 throw new NotImplementedException();
             }
@@ -477,14 +383,14 @@ namespace NUnit.Framework.Constraints
                 throw new NotImplementedException();
             }
 
-            public object this[object key]
+            public object? this[object key]
             {
-                get { throw new NotImplementedException(); }
-                set { throw new NotImplementedException(); }
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
             }
 
-            public ICollection Keys { get; }
-            public ICollection Values { get; }
+            public ICollection Keys => throw new NotImplementedException();
+            public ICollection Values => throw new NotImplementedException();
             public bool IsReadOnly { get; }
             public bool IsFixedSize { get; }
 
@@ -499,7 +405,7 @@ namespace NUnit.Framework.Constraints
             }
 
             public int Count { get; }
-            public object SyncRoot { get; }
+            public object SyncRoot => throw new NotImplementedException();
             public bool IsSynchronized { get; }
         }
 
@@ -529,13 +435,9 @@ namespace NUnit.Framework.Constraints
 
             public int Count { get; }
 
-            public IEnumerable<string> this[int key]
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public IEnumerable<string> this[int key] => throw new NotImplementedException();
         }
 
-#if !(NET35 || NET40)
         public class TestReadOnlyDictionary : IReadOnlyDictionary<string, string>
         {
             private readonly string _key;
@@ -566,13 +468,10 @@ namespace NUnit.Framework.Constraints
                 throw new NotImplementedException();
             }
 
-            public string this[string key]
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public string this[string key] => throw new NotImplementedException();
 
-            public IEnumerable<string> Keys { get; }
-            public IEnumerable<string> Values { get; }
+            public IEnumerable<string> Keys => throw new NotImplementedException();
+            public IEnumerable<string> Values => throw new NotImplementedException();
         }
 
         public class TestSet : ISet<int>
@@ -670,8 +569,6 @@ namespace NUnit.Framework.Constraints
             public int Count { get; }
             public bool IsReadOnly { get; }
         }
-#endif
-
         #endregion
     }
 }

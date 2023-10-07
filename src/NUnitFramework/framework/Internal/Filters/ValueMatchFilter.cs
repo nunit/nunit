@@ -1,28 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2013 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Interfaces;
 
@@ -34,6 +11,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal abstract class ValueMatchFilter : TestFilter
     {
+        private readonly Regex? _regex;
+
         /// <summary>
         /// Returns the value matched by the filter - used for testing
         /// </summary>
@@ -42,28 +21,33 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Indicates whether the value is a regular expression
         /// </summary>
-        public bool IsRegex { get; set; }
+        public bool IsRegex => _regex is not null;
 
         /// <summary>
         /// Construct a ValueMatchFilter for a single value.
         /// </summary>
         /// <param name="expectedValue">The value to be included.</param>
-        public ValueMatchFilter(string expectedValue)
+        /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
+        protected ValueMatchFilter(string expectedValue, bool isRegex)
         {
             ExpectedValue = expectedValue;
+            if (isRegex)
+            {
+                _regex = new Regex(expectedValue, RegexOptions.Compiled);
+            }
         }
 
         /// <summary>
         /// Match the input provided by the derived class
         /// </summary>
-        /// <param name="input">The value to be matchedT</param>
+        /// <param name="input">The value to be matched</param>
         /// <returns>True for a match, false otherwise.</returns>
-        protected bool Match(string input)
+        protected bool Match(string? input)
         {
-            if (IsRegex)
-                return input != null && new Regex(ExpectedValue).IsMatch(input);
-            else
+            if (_regex is null)
                 return ExpectedValue == input;
+            else
+                return input is not null && _regex.IsMatch(input);
         }
 
         /// <summary>
@@ -75,7 +59,7 @@ namespace NUnit.Framework.Internal.Filters
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode result = parentNode.AddElement(ElementName, ExpectedValue);
-            if (IsRegex)
+            if (_regex is not null)
                 result.AddAttribute("re", "1");
             return result;
         }

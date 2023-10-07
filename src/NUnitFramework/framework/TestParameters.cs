@@ -1,27 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -37,23 +14,17 @@ namespace NUnit.Framework
     {
         private static readonly IFormatProvider MODIFIED_INVARIANT_CULTURE = CreateModifiedInvariantCulture();
 
-        private readonly Dictionary<string, string> _parameters = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _parameters = new();
 
         /// <summary>
         /// Gets the number of test parameters
         /// </summary>
-        public int Count
-        {
-            get { return _parameters.Count; }
-        }
+        public int Count => _parameters.Count;
 
         /// <summary>
         /// Gets a collection of the test parameter names
         /// </summary>
-        public ICollection<string> Names
-        {
-            get { return _parameters.Keys; }
-        }
+        public ICollection<string> Names => _parameters.Keys;
 
         /// <summary>
         /// Gets a flag indicating whether a parameter with the specified name exists.
@@ -70,10 +41,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <returns>Value of the parameter or null if not present</returns>
-        public string? this[string name]
-        {
-            get { return Get(name); }
-        }
+        public string? this[string name] => Get(name);
 
         /// <summary>
         /// Get method is a simple alternative to the indexer
@@ -108,7 +76,7 @@ namespace NUnit.Framework
         public T Get<T>(string name, [MaybeNull] T defaultValue)
         {
             string? val = Get(name);
-            return val != null ? (T)Convert.ChangeType(val, typeof(T), MODIFIED_INVARIANT_CULTURE) : defaultValue;
+            return val is not null ? (T)Convert.ChangeType(val, typeof(T), MODIFIED_INVARIANT_CULTURE) : defaultValue;
         }
 
         /// <summary>

@@ -1,31 +1,13 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Linq;
 using System.Threading;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal
 {
     public class WorkItemQueueTests
     {
@@ -63,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void StopQueue_WithWorkers()
         {
-            var workers = new TestWorker[]
+            var workers = new[]
             {
                 new TestWorker(_queue, "1"),
                 new TestWorker(_queue, "2"),
@@ -73,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
             foreach (var worker in workers)
             {
                 worker.Start();
-                Assert.That(worker.IsAlive, "Worker thread {0} did not start", worker.Name);
+                Assert.That(worker.IsAlive, $"Worker thread {worker.Name} did not start");
             }
 
             _queue.Start();
@@ -87,15 +69,14 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Thread.Sleep(60);  // Allow time for workers to stop
 
-                alive = 0;
-                foreach (var worker in workers)
-                    if (worker.IsAlive)
-                        alive++;
+                alive = workers.Count(worker => worker.IsAlive);
             }
 
             if (alive > 0)
+            {
                 foreach (var worker in workers)
-                    Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
+                    Assert.That(worker.IsAlive, Is.False, $"Worker thread {worker.Name} did not stop");
+            }
         }
 
         [Test]
@@ -120,7 +101,7 @@ namespace NUnit.Framework.Internal.Execution
         public void DequeueBeforeEnqueue()
         {
             _queue.Start();
-            var names = new string[] { "Test1", "Test2", "Test3" };
+            var names = new[] { "Test1", "Test2", "Test3" };
 
             new Thread(new ThreadStart(() =>
             {
@@ -146,8 +127,8 @@ namespace NUnit.Framework.Internal.Execution
             VerifyQueueContents(names);
         }
 
-        const int HIGH_PRIORITY = 0;
-        const int NORMAL_PRIORITY = 1;
+        private const int HIGH_PRIORITY = 0;
+        private const int NORMAL_PRIORITY = 1;
 
         [Test]
         public void PriorityIsHonored()
@@ -165,7 +146,9 @@ namespace NUnit.Framework.Internal.Execution
             var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
 
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem as CompositeWorkItem);
+            Assert.That(fixtureItem, Is.Not.Null);
+            // TODO: Remove '!' when https://github.com/nunit/nunit.analyzers/issues/535 is released
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem!);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");
@@ -192,7 +175,7 @@ namespace NUnit.Framework.Internal.Execution
         private void VerifyQueueContents(params string[] names)
         {
             foreach (string name in names)
-                Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo(name));
+                Assert.That(_queue.Dequeue()?.Test.Name, Is.EqualTo(name));
         }
 
         private void Test1()

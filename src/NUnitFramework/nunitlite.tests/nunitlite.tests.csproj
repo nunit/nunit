@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite.Tests</RootNamespace>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,8 +21,8 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+ <ItemGroup>
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
   </ItemGroup>
 
 </Project>

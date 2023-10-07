@@ -1,27 +1,7 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.IO;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -31,17 +11,11 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyDirectoryConstraint : Constraint
     {
-        private int files = 0;
-        private int subdirs = 0;
-
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "an empty directory"; }
-        }
+        public override string Description => "an empty directory";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -51,11 +25,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var dirInfo = ConstraintUtils.RequireActual<DirectoryInfo>(actual, nameof(actual));
-
-            files = dirInfo.GetFiles().Length;
-            subdirs = dirInfo.GetDirectories().Length;
-            bool hasSucceeded = files == 0 && subdirs == 0;
-
+            bool hasSucceeded = !dirInfo.EnumerateFileSystemInfos().Any();
             return new ConstraintResult(this, actual, hasSucceeded);
         }
 

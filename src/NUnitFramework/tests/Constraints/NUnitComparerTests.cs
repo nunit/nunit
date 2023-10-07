@@ -1,39 +1,19 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class NUnitComparerTests
     {
-        private NUnitComparer comparer;
+        private NUnitComparer _comparer;
 
         [SetUp]
         public void SetUp()
         {
-            comparer = new NUnitComparer();
+            _comparer = new NUnitComparer();
         }
 
         [TestCase(4, 4)]
@@ -51,7 +31,7 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)4)]
         public void EqualItems(object x, object y)
         {
-            Assert.That(comparer.Compare(x, y) == 0);
+            Assert.That(_comparer.Compare(x, y), Is.EqualTo(0));
         }
 
         [TestCase(4, 2)]
@@ -69,8 +49,120 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)2)]
         public void UnequalItems(object greater, object lesser)
         {
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
+
+        [Test]
+        public void Comparables()
+        {
+            var greater = new ClassWithIComparable(42);
+            var lesser = new ClassWithIComparable(-42);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
+        }
+
+        [Test]
+        public void ComparablesOfT()
+        {
+            var greater = new ClassWithIComparableOfT(42);
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
+        }
+
+        [Test]
+        public void ComparablesOfInt1()
+        {
+            int greater = 42;
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
+        }
+
+        [Test]
+        public void ComparablesOfInt2()
+        {
+            var greater = new ClassWithIComparableOfT(42);
+            int lesser = -42;
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
+        }
+
+        [Test]
+        public void ComparablesOfInt3()
+        {
+            short greater = 42;
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
+        }
+
+        #region Comparison Test Classes
+
+        private class ClassWithIComparable : IComparable
+        {
+            private readonly int _val;
+
+            public ClassWithIComparable(int val)
+            {
+                _val = val;
+            }
+
+            public int CompareTo(object? x)
+            {
+                if (x is ClassWithIComparable other)
+                    return _val.CompareTo(other._val);
+
+                throw new ArgumentException();
+            }
+        }
+
+        private class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
+        {
+            private readonly int _val;
+
+            public ClassWithIComparableOfT(int val)
+            {
+                _val = val;
+            }
+
+            public int CompareTo(ClassWithIComparableOfT? other)
+            {
+                if (other is null)
+                    return 1;
+                return _val.CompareTo(other._val);
+            }
+
+            public int CompareTo(int other)
+            {
+                return _val.CompareTo(other);
+            }
+        }
+
+        #endregion
     }
 }

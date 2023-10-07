@@ -1,35 +1,9 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-// 
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#region Using Directives
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-#endregion
-
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ToleranceTests
@@ -50,20 +24,34 @@ namespace NUnit.Framework.Constraints
         public void TestToleranceDefault()
         {
             var defaultTolerance = Tolerance.Default;
-            Assert.IsTrue(defaultTolerance.IsUnsetOrDefault);
+            Assert.That(defaultTolerance.IsUnsetOrDefault, Is.True);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsTrue(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance), Is.True);
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]
         public void TestToleranceExact()
         {
             var noneTolerance = Tolerance.Exact;
-            Assert.IsFalse(noneTolerance.IsUnsetOrDefault);
+            Assert.That(noneTolerance.IsUnsetOrDefault, Is.False);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsFalse(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance), Is.False);
+        }
+
+        [Test]
+        public void TestToleranceVarianceExact()
+        {
+            var noneTolerance = Tolerance.Exact;
+            Assert.That(noneTolerance.HasVariance, Is.False);
+        }
+
+        [Test]
+        public void TestToleranceVarianceDefault()
+        {
+            var noneTolerance = Tolerance.Default;
+            Assert.That(noneTolerance.HasVariance, Is.False);
         }
 
         [Test]
@@ -93,8 +81,35 @@ namespace NUnit.Framework.Constraints
         public void TestModeMustFollowTolerance()
         {
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)
-            Assert.That(() => tolerance.Percent, 
+            Assert.That(() => tolerance.Percent,
                 Throws.TypeOf<InvalidOperationException>().With.Message.Contains("Tolerance amount must be specified"));
+        }
+
+        [Test]
+        public void TestToleranceDefaultIsSameAs()
+        {
+            Assert.That(Tolerance.Default, Is.SameAs(Tolerance.Default));
+        }
+
+        [Test]
+        public void TestToleranceExactIsSameAs()
+        {
+            Assert.That(Tolerance.Exact, Is.SameAs(Tolerance.Exact));
+        }
+
+        [Test]
+        public void ToStringTests()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(Tolerance.Default.ToString(), Is.EqualTo("Unset"));
+                Assert.That(Tolerance.Exact.ToString(), Is.EqualTo("Exact"));
+                Assert.That(Is.EqualTo(5).Within(2).Tolerance.ToString(), Is.EqualTo("2"));
+                Assert.That(Is.EqualTo(5).Within(2).Ulps.Tolerance.ToString(), Is.EqualTo("2 Ulps"));
+                Assert.That(Is.EqualTo(5).Within(2).Percent.Tolerance.ToString(), Is.EqualTo("2 Percent"));
+                Assert.That(Is.EqualTo(5).Within(2).Seconds.Tolerance.ToString(), Is.EqualTo("00:00:02"));
+                Assert.That(Is.EqualTo(5).Within(2).Minutes.Tolerance.ToString(), Is.EqualTo("00:02:00"));
+            });
         }
     }
 }

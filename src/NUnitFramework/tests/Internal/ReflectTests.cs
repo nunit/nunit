@@ -1,17 +1,19 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public static class ReflectTests
     {
         [Test]
         public static void TypeAndBaseTypesReturnsEmptyForNull()
         {
-            Assert.That(((Type)null).TypeAndBaseTypes(), Is.Empty);
+            Assert.That((default(Type)).TypeAndBaseTypes(), Is.Empty);
         }
 
         [Test]
@@ -165,9 +167,21 @@ namespace NUnit.Framework.Internal
 
             internal int InternalProperty { get; set; }
 
-            public int this[object arg] { get { return 0; } set { } }
-            public int this[int arg] { get { return 0; } set { } }
-            public int this[byte a, byte b = 42] { get { return 0; } set { } }
+            public int this[object arg]
+            {
+                get => 0;
+                set { }
+            }
+            public int this[int arg]
+            {
+                get => 0;
+                set { }
+            }
+            public int this[byte a, byte b = 42]
+            {
+                get => 0;
+                set { }
+            }
         }
 
         private class B : A
@@ -177,11 +191,15 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsReturnsCorrectValue()
         {
-            Assert.That(
-                typeof(ReflectTests)
-                    .GetMethod(nameof(MethodReturning42), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(GetPrivateMethod(nameof(MethodReturning42))
                     .InvokeWithTransparentExceptions(instance: null),
                 Is.EqualTo(42));
+        }
+
+        private static MethodInfo GetPrivateMethod(string methodName)
+        {
+            MethodInfo? methodInfo = typeof(ReflectTests).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+            return methodInfo ?? throw new ArgumentException($"Method ReflectTests.{methodName} not found");
         }
 
         [Test]
@@ -195,9 +213,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsDoesNotWrap()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingException), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(() => GetPrivateMethod(nameof(MethodThrowingException))
                     .InvokeWithTransparentExceptions(instance: null),
                 Throws.TypeOf<Exception>());
         }
@@ -213,9 +229,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsDoesNotUnwrap()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(() => GetPrivateMethod(nameof(MethodThrowingTargetInvocationException))
                     .InvokeWithTransparentExceptions(instance: null),
                 Throws.TypeOf<TargetInvocationException>());
         }
@@ -233,9 +247,7 @@ namespace NUnit.Framework.Internal
         {
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
             {
-                Assert.That(
-                    () => typeof(ReflectTests)
-                        .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+                Assert.That(() => GetPrivateMethod(nameof(MethodThrowingTargetInvocationException))
                         .InvokeWithTransparentExceptions(instance: null),
                     Throws.Exception
                         .With.Property(nameof(Exception.StackTrace))
@@ -266,6 +278,48 @@ namespace NUnit.Framework.Internal
         private static int MethodThrowingTargetInvocationException()
         {
             throw new TargetInvocationException(new Exception());
+        }
+
+        private const string ValueInBase = "Base";
+        private const string ValueInDerived = "Derived";
+
+        [TestCase(typeof(DerivedWithoutMember), ValueInBase)]
+        [TestCase(typeof(DerivedWithMember), ValueInDerived)]
+        public static void FindMember(Type type, string expected)
+        {
+            MemberInfo[] members = type.GetMemberIncludingFromBase("Data",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+            Assert.That(members, Has.Length.EqualTo(1), "Expected one result");
+            string? actual = null;
+            if (members[0] is FieldInfo field)
+            {
+                actual = (string?)field.GetValue(null);
+            }
+            else if (members[0] is PropertyInfo property)
+            {
+                actual = (string?)property.GetValue(null, null);
+            }
+
+            Assert.That(actual, Is.EqualTo(expected), "Value");
+        }
+
+        private abstract class BaseWithMember
+        {
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CS0414 // Remove unused private members
+            private static readonly string Data = ValueInBase;
+#pragma warning restore CS0414 // Remove unused private members
+#pragma warning restore IDE0051 // Remove unused private members
+        }
+
+        private sealed class DerivedWithMember : BaseWithMember
+        {
+            public static string Data => ValueInDerived;
+        }
+
+        private sealed class DerivedWithoutMember : BaseWithMember
+        {
         }
     }
 }

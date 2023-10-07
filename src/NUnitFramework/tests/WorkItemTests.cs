@@ -1,32 +1,14 @@
-// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests
 {
     public class WorkItemTests
     {
@@ -47,9 +29,12 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void ConstructWorkItem()
         {
-            Assert.That(_workItem, Is.TypeOf<SimpleWorkItem>());
-            Assert.That(_workItem.Test.Name, Is.EqualTo("DummyTest"));
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Ready));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem, Is.TypeOf<SimpleWorkItem>());
+                Assert.That(_workItem.Test.Name, Is.EqualTo("DummyTest"));
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Ready));
+            });
         }
 
         [Test]
@@ -57,9 +42,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workItem.Execute();
 
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.Running));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.Running));
+            });
         }
 
         [Test]
@@ -67,27 +55,17 @@ namespace NUnit.Framework.Internal.Execution
         {
             _context.ExecutionStatus = TestExecutionStatus.StopRequested;
             _workItem.Execute();
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+            });
         }
-
-        Thread _thread;
-
-        private void StartExecution()
-        {
-            _thread = new Thread(ThreadProc);
-            _thread.Start();
-        }
-
-        private void ThreadProc()
-        {
-            _workItem.Execute();
-        }
-
 
         // Use static for simplicity
-        static class DummyFixture
+        private static class DummyFixture
         {
             public static readonly int Delay = 0;
 
@@ -97,7 +75,6 @@ namespace NUnit.Framework.Internal.Execution
                     Thread.Sleep(Delay);
             }
         }
-
 
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
@@ -116,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(wrapped.TargetApartment, Is.EqualTo(expected));
         }
 
-        public static IEnumerable<TestCaseData> GetTargetApartmentTestData()
+        private static IEnumerable<TestCaseData> GetTargetApartmentTestData()
         {
             yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.Unknown), ApartmentState.Unknown);
             yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.STA), ApartmentState.STA);
@@ -129,7 +106,7 @@ namespace NUnit.Framework.Internal.Execution
             yield return new TestCaseData(CreateFakeTests(ApartmentState.MTA, ApartmentState.STA, ApartmentState.Unknown), ApartmentState.STA);
         }
 
-        static ITest CreateFakeTests(ApartmentState assemblyApartment, ApartmentState fixtureApartment, ApartmentState methodApartment) =>
+        private static ITest CreateFakeTests(ApartmentState assemblyApartment, ApartmentState fixtureApartment, ApartmentState methodApartment) =>
             new FakeTest("Method", methodApartment)
             {
                 Parent = new FakeTest("Fixture", fixtureApartment)
@@ -138,7 +115,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
             };
 
-        class FakeTest : Test
+        private class FakeTest : Test
         {
             public FakeTest(string name, ApartmentState apartmentState) : base(name)
             {
@@ -146,10 +123,7 @@ namespace NUnit.Framework.Internal.Execution
                     Properties.Add(PropertyNames.ApartmentState, apartmentState);
             }
 
-            public override object[] Arguments
-            {
-                get { throw new System.NotImplementedException(); }
-            }
+            public override object[] Arguments => throw new System.NotImplementedException();
 
             public override string XmlElementName => "MockTest";
 
@@ -165,7 +139,7 @@ namespace NUnit.Framework.Internal.Execution
             public override TestResult MakeTestResult() => new FakeTestResult(this);
         }
 
-        class FakeTestResult : TestResult
+        private class FakeTestResult : TestResult
         {
             public FakeTestResult(ITest test) : base(test)
             {
@@ -185,10 +159,10 @@ namespace NUnit.Framework.Internal.Execution
 
             public override bool HasChildren => false;
 
-            public override IEnumerable<ITestResult> Children => null;
+            public override IEnumerable<ITestResult> Children => Enumerable.Empty<ITestResult>();
         }
 
-        class FakeWorkItem : WorkItem
+        private class FakeWorkItem : WorkItem
         {
             public FakeWorkItem(WorkItem wrappedItem) : base(wrappedItem)
             {

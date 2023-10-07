@@ -1,16 +1,16 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
-#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsTask))]
     [TestFixture(nameof(F.ReturnsCustomTask))]
-#endif
     [TestFixture(nameof(F.ReturnsCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitUnsafeOnCompleted))]
@@ -64,7 +64,7 @@ namespace NUnit.Framework
             using (var continuationIsAvailable = new ManualResetEventSlim())
             using (var getResultWasCalled = new ManualResetEventSlim())
             {
-                var continuation = (Action)null;
+                var continuation = default(Action);
 
                 ThreadPool.QueueUserWorkItem(state =>
                 {
@@ -88,7 +88,7 @@ namespace NUnit.Framework
                 if (getResultWasCalled.IsSet)
                     Assert.Fail("GetResult was called before the continuation passed to OnCompleted was invoked.");
 
-                continuation.Invoke();
+                continuation!.Invoke();
 
                 if (!getResultWasCalled.Wait(10_000))
                     Assert.Fail("GetResult was not called after the continuation passed to OnCompleted was invoked.");
@@ -211,7 +211,6 @@ namespace NUnit.Framework
             Assert.That(result.Message, Contains.Substring("OperationCanceledException"));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void TaskCanceledExceptionThrownInGetResultShouldBeReportedAsSuch()
         {
@@ -223,6 +222,5 @@ namespace NUnit.Framework
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.Message, Contains.Substring("TaskCanceledException"));
         }
-#endif
     }
 }

@@ -1,13 +1,13 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
-#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsNonVoidResultTask))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomTask))]
-#endif
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted))]
@@ -16,7 +16,6 @@ namespace NUnit.Framework
         public NonVoidResultAwaitableReturnTypeTests(string methodName)
             : base(methodName)
         {
-
         }
 
         [Test]

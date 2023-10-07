@@ -1,47 +1,29 @@
-// ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Security;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
     /// <summary>
     /// Indicates the source to be used to provide test fixture instances for a test class.
+    /// <list>
+    /// <listheader>The name parameter is a <see cref="string"/> representing the name of the source used to provide test cases. It has the following characteristics:</listheader>
+    /// <item>It must be a static field, property, or method in the same class as the test case.</item>
+    /// <item>It must return an <see cref="IEnumerable"/> or a type that implements <see cref="IEnumerable"/>, such as an array, a <c>List</c>, or your own iterator.</item>
+    /// <item>Each item returned by the enumerator must be compatible with the signature of the method on which the attribute appears.</item>
+    /// </list>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
-        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new();
 
         #region Constructors
 
@@ -51,7 +33,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(string sourceName)
         {
-            this.SourceName = sourceName;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -63,9 +45,9 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName, object?[]? methodParams)
         {
-            this.MethodParams = methodParams;
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            MethodParams = methodParams;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
         /// <summary>
         /// Construct with a Type and name
@@ -74,8 +56,8 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName)
         {
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -86,8 +68,8 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(string sourceName, object?[]? methodParams)
         {
-            this.MethodParams = methodParams;
-            this.SourceName = sourceName;
+            MethodParams = methodParams;
+            SourceName = sourceName;
         }
         /// <summary>
         /// Construct with a Type
@@ -95,7 +77,7 @@ namespace NUnit.Framework
         /// <param name="sourceType">The type that will provide data</param>
         public TestCaseSourceAttribute(Type sourceType)
         {
-            this.SourceType = sourceType;
+            SourceType = sourceType;
         }
 
         #endregion
@@ -157,16 +139,15 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        [SecuritySafeCritical]
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
-            List<ITestCaseData> data = new List<ITestCaseData>();
+            List<ITestCaseData> data = new();
 
             try
             {
                 IEnumerable? source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
 
-                if (source != null)
+                if (source is not null)
                 {
                     foreach (object? item in source)
                     {
@@ -177,19 +158,18 @@ namespace NUnit.Framework
                         //    single null argument will cause an error to be
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
-                        ITestCaseData? parms = item == null
+                        ITestCaseData? parms = item is null
                             ? new TestCaseParameters(new object?[] { null })
                             : item as ITestCaseData;
 
-                        if (parms == null)
+                        if (parms is null)
                         {
                             object?[]? args = null;
 
                             // 3. An array was passed, it may be an object[]
                             //    or possibly some other kind of array, which
                             //    TestCaseSource can accept.
-                            var array = item as Array;
-                            if (array != null)
+                            if (item is Array array)
                             {
                                 // If array has the same number of elements as parameters
                                 // and it does not fit exactly into single existing parameter
@@ -205,17 +185,19 @@ namespace NUnit.Framework
                                 }
                             }
 
-                            if (args == null)
+                            if (args is null)
                             {
-                                args = new object?[] { item };
+                                args = new[] { item };
                             }
 
                             parms = new TestCaseParameters(args);
                         }
 
-                        if (this.Category != null)
-                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                        if (Category is not null)
+                        {
+                            foreach (string cat in Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
+                        }
 
                         data.Add(parms);
                     }
@@ -240,37 +222,44 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
-            if (SourceName == null)
+            if (SourceName is null)
                 return Reflect.Construct(sourceType, null) as IEnumerable;
 
-            MemberInfo[] members = sourceType.GetMember(SourceName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
             if (members.Length == 1)
             {
                 MemberInfo member = members[0];
 
                 var field = member as FieldInfo;
-                if (field != null)
+                if (field is not null)
+                {
                     return field.IsStatic
-                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null)
+                        ? (MethodParams is null ? (IEnumerable?)field.GetValue(null)
                                                 : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
+                }
 
                 var property = member as PropertyInfo;
-                if (property != null)
-                    return property.GetGetMethod(true).IsStatic
-                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null)
+                if (property is not null)
+                {
+                    MethodInfo? getMethod = property.GetGetMethod(true);
+                    return getMethod?.IsStatic is true
+                        ? (MethodParams is null ? (IEnumerable?)property.GetValue(null, null)
                                                 : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
+                }
 
                 var m = member as MethodInfo;
-                if (m != null)
+                if (m is not null)
+                {
                     return m.IsStatic
-                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
-                            ? (IEnumerable)m.Invoke(null, MethodParams)
+                        ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
+                            ? m.InvokeMaybeAwait<IEnumerable?>(MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
+                }
             }
 
             return null;
@@ -281,7 +270,7 @@ namespace NUnit.Framework
             var parms = new TestCaseParameters();
             parms.RunState = RunState.NotRunnable;
             parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
-            return new TestCaseParameters[] { parms };
+            return new[] { parms };
         }
 
         private const string SourceMustBeStatic =
@@ -296,6 +285,6 @@ namespace NUnit.Framework
                                                         ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
                                                         "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.";
 
-#endregion
+        #endregion
     }
 }

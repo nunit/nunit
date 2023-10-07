@@ -1,32 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -66,18 +44,12 @@ namespace NUnit.Framework
         /// use within a test, but it should not be used
         /// outside the test for which it is created.
         /// </summary>
-        public static TestContext CurrentContext
-        {
-            get { return new TestContext(TestExecutionContext.CurrentContext); }
-        }
+        public static TestContext CurrentContext => new(TestExecutionContext.CurrentContext);
 
         /// <summary>
         /// Gets a TextWriter that will send output to the current test result.
         /// </summary>
-        public static TextWriter Out
-        {
-            get { return TestExecutionContext.CurrentContext.OutWriter; }
-        }
+        public static TextWriter Out => TestExecutionContext.CurrentContext.OutWriter;
 
         /// <summary>
         /// Gets a TextWriter that will send output directly to Console.Error
@@ -92,7 +64,7 @@ namespace NUnit.Framework
         /// <summary>
         /// TestParameters object holds parameters for the test run, if any are specified
         /// </summary>
-        public static readonly TestParameters Parameters = new TestParameters();
+        public static readonly TestParameters Parameters = new();
 
         /// <summary>
         /// Static DefaultWorkDirectory is now used as the source
@@ -104,26 +76,17 @@ namespace NUnit.Framework
         /// <summary>
         /// Get a representation of the current test.
         /// </summary>
-        public TestAdapter Test
-        {
-            get { return _test ?? (_test = new TestAdapter(_testExecutionContext.CurrentTest)); }
-        }
+        public TestAdapter Test => _test ??= new(_testExecutionContext.CurrentTest);
 
         /// <summary>
         /// Gets a Representation of the TestResult for the current test.
         /// </summary>
-        public ResultAdapter Result
-        {
-            get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
-        }
+        public ResultAdapter Result => _result ??= new(_testExecutionContext.CurrentResult);
 
         /// <summary>
         /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
-        public string? WorkerId
-        {
-            get { return _testExecutionContext.TestWorker?.Name; }
-        }
+        public string? WorkerId => _testExecutionContext.TestWorker?.Name;
 
         /// <summary>
         /// Gets the directory containing the current test assembly.
@@ -134,7 +97,7 @@ namespace NUnit.Framework
             {
                 Assembly? assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
 
-                if (assembly != null)
+                if (assembly is not null)
                     return AssemblyHelper.GetDirectoryName(assembly);
 
                 // Test is null, we may be loading tests rather than executing.
@@ -156,29 +119,24 @@ namespace NUnit.Framework
         /// <value>
         /// The random generator.
         /// </value>
-        public Randomizer Random
-        {
-            get { return _testExecutionContext.RandomGenerator; }
-        }
+        public Randomizer Random => _testExecutionContext.RandomGenerator;
 
         /// <summary>
         /// Gets the number of assertions executed
         /// up to this point in the test.
         /// </summary>
-        public int AssertCount
-        {
-            get { return _testExecutionContext.AssertCount; }
-        }
+        public int AssertCount => _testExecutionContext.AssertCount;
 
         /// <summary>
-        /// Get the number of times the current Test has been repeated. This is currently only
-        /// set when using the <see cref="RetryAttribute"/>.
-        /// TODO: add this to the RepeatAttribute as well
+        /// Get the number of times the current Test has been repeated
+        /// when using the <see cref="RetryAttribute"/> or <see cref="RepeatAttribute"/>.
         /// </summary>
-        public int CurrentRepeatCount
-        {
-            get { return _testExecutionContext.CurrentRepeatCount; }
-        }
+        public int CurrentRepeatCount => _testExecutionContext.CurrentRepeatCount;
+
+        /// <summary>
+        /// Gets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken => _testExecutionContext.CancellationToken;
 
         #endregion
 
@@ -197,10 +155,10 @@ namespace NUnit.Framework
         public static void Write(double value) { Out.Write(value); }
 
         /// <summary>Write the string representation of an Int32 value to the current result</summary>
-        public static void Write(Int32 value) { Out.Write(value); }
+        public static void Write(int value) { Out.Write(value); }
 
         /// <summary>Write the string representation of an Int64 value to the current result</summary>
-        public static void Write(Int64 value) { Out.Write(value); }
+        public static void Write(long value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a decimal value to the current result</summary>
         public static void Write(decimal value) { Out.Write(value); }
@@ -209,18 +167,18 @@ namespace NUnit.Framework
         public static void Write(object? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a Single value to the current result</summary>
-        public static void Write(Single value) { Out.Write(value); }
+        public static void Write(float value) { Out.Write(value); }
 
         /// <summary>Write a string to the current result</summary>
         public static void Write(string? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(UInt32 value) { Out.Write(value); }
+        public static void Write(uint value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a UInt64 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(UInt64 value) { Out.Write(value); }
+        public static void Write(ulong value) { Out.Write(value); }
 
         /// <summary>Write a formatted string to the current result</summary>
         public static void Write(string format, object? arg1) { Out.Write(format, arg1); }
@@ -250,10 +208,10 @@ namespace NUnit.Framework
         public static void WriteLine(double value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of an Int32 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Int32 value) { Out.WriteLine(value); }
+        public static void WriteLine(int value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of an Int64 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Int64 value) { Out.WriteLine(value); }
+        public static void WriteLine(long value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a decimal value to the current result followed by a line terminator</summary>
         public static void WriteLine(decimal value) { Out.WriteLine(value); }
@@ -262,18 +220,18 @@ namespace NUnit.Framework
         public static void WriteLine(object? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a Single value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Single value) { Out.WriteLine(value); }
+        public static void WriteLine(float value) { Out.WriteLine(value); }
 
         /// <summary>Write a string to the current result followed by a line terminator</summary>
         public static void WriteLine(string? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(UInt32 value) { Out.WriteLine(value); }
+        public static void WriteLine(uint value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a UInt64 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(UInt64 value) { Out.WriteLine(value); }
+        public static void WriteLine(ulong value) { Out.WriteLine(value); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
         public static void WriteLine(string format, object? arg1) { Out.WriteLine(format, arg1); }
@@ -333,9 +291,9 @@ namespace NUnit.Framework
             AddFormatter(next => val => (val is TSupported) ? formatter(val) : next(val));
         }
 
-#endregion
+        #endregion
 
-#region Nested TestAdapter Class
+        #region Nested TestAdapter Class
 
         /// <summary>
         /// TestAdapter adapts a Test for consumption by
@@ -345,7 +303,7 @@ namespace NUnit.Framework
         {
             private readonly Test _test;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a TestAdapter for a Test
@@ -356,73 +314,80 @@ namespace NUnit.Framework
                 _test = test;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public String ID
-            {
-                get { return _test.Id; }
-            }
+            public string ID => _test.Id;
 
             /// <summary>
             /// The name of the test, which may or may not be
             /// the same as the method name.
             /// </summary>
-            public string Name
-            {
-                get { return _test.Name; }
-            }
+            public string Name => _test.Name;
+
+            /// <summary>
+            /// Get the Namespace of the test.
+            /// </summary>
+            public string? Namespace => _test.TypeInfo?.Namespace;
+
+            /// <summary>
+            /// Get the display name of the test.
+            /// </summary>
+            public string? DisplayName => _test.TypeInfo?.GetDisplayName();
 
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-            public string? MethodName
-            {
-                get { return (_test as TestMethod)?.Method.Name; }
-            }
+            public string? MethodName => (_test as TestMethod)?.Method.Name;
+
+            /// <summary>
+            /// The method representing the test.
+            /// </summary>
+            public IMethodInfo? Method => (_test as TestMethod)?.Method;
+
+            /// <summary>
+            /// Gets the underlying Type.
+            /// </summary>
+            public Type? Type => _test.TypeInfo?.Type;
 
             /// <summary>
             /// The FullName of the test
             /// </summary>
-            public string FullName
-            {
-                get { return _test.FullName; }
-            }
+            public string FullName => _test.FullName;
 
             /// <summary>
             /// The ClassName of the test
             /// </summary>
-            public string? ClassName
-            {
-                get { return _test.ClassName;  }
-            }
+            public string? ClassName => _test.ClassName;
 
             /// <summary>
             /// A shallow copy of the properties of the test.
             /// </summary>
-            public PropertyBagAdapter Properties
-            {
-                get { return new PropertyBagAdapter(_test.Properties); }
-            }
+            public PropertyBagAdapter Properties => new(_test.Properties);
 
             /// <summary>
             /// The arguments to use in creating the test or empty array if none are required.
             /// </summary>
-            public object?[] Arguments
+            public object?[] Arguments => _test.Arguments;
+
+            /// <summary>
+            /// The expected result if there is one for the test
+            /// </summary>
+            public object? ExpectedResult
             {
-                get { return _test.Arguments; }
+                get { return (_test as TestMethod)?.ExpectedResult; }
             }
 
             #endregion
         }
 
-#endregion
+        #endregion
 
-#region Nested ResultAdapter Class
+        #region Nested ResultAdapter Class
 
         /// <summary>
         /// ResultAdapter adapts a TestResult for consumption by
@@ -432,7 +397,7 @@ namespace NUnit.Framework
         {
             private readonly TestResult _result;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a ResultAdapter for a TestResult
@@ -443,92 +408,65 @@ namespace NUnit.Framework
                 _result = result;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets a ResultState representing the outcome of the test
             /// up to this point in its execution.
             /// </summary>
-            public ResultState Outcome
-            {
-                get { return _result.ResultState; }
-            }
+            public ResultState Outcome => _result.ResultState;
 
             /// <summary>
             /// Gets a list of the assertion results generated
             /// up to this point in the test.
             /// </summary>
-            public IEnumerable<AssertionResult> Assertions
-            {
-                get { return _result.AssertionResults; }
-            }
+            public IEnumerable<AssertionResult> Assertions => _result.AssertionResults;
 
             /// <summary>
             /// Gets the message associated with a test
             /// failure or with not running the test
             /// </summary>
-            public string? Message
-            {
-                get { return _result.Message; }
-            }
+            public string Message => _result.Message;
 
             /// <summary>
             /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
-            public virtual string? StackTrace
-            {
-                get { return _result.StackTrace; }
-            }
+            public virtual string? StackTrace => _result.StackTrace;
 
             /// <summary>
             /// Gets the number of test cases that failed
             /// when running the test and all its children.
             /// </summary>
-            public int FailCount
-            {
-                get { return _result.FailCount; }
-            }
+            public int FailCount => _result.FailCount;
 
             /// <summary>
             /// Gets the number of test cases that had warnings
             /// when running the test and all its children.
             /// </summary>
-            public int WarningCount
-            {
-                get { return _result.WarningCount; }
-            }
+            public int WarningCount => _result.WarningCount;
 
             /// <summary>
             /// Gets the number of test cases that passed
             /// when running the test and all its children.
             /// </summary>
-            public int PassCount
-            {
-                get { return _result.PassCount; }
-            }
+            public int PassCount => _result.PassCount;
 
             /// <summary>
             /// Gets the number of test cases that were skipped
             /// when running the test and all its children.
             /// </summary>
-            public int SkipCount
-            {
-                get { return _result.SkipCount; }
-            }
+            public int SkipCount => _result.SkipCount;
 
             /// <summary>
             /// Gets the number of test cases that were inconclusive
             /// when running the test and all its children.
             /// </summary>
-            public int InconclusiveCount
-            {
-                get { return _result.InconclusiveCount; }
-            }
+            public int InconclusiveCount => _result.InconclusiveCount;
 
-#endregion
+            #endregion
         }
 
         #endregion
@@ -578,13 +516,13 @@ namespace NUnit.Framework
             {
                 get
                 {
-                    var list = new List<object>();
-                    foreach(var item in _source[key])
+                    if (_source.TryGet(key, out var values))
                     {
-                        list.Add(item);
+                        foreach (var item in values)
+                        {
+                            yield return item;
+                        }
                     }
-
-                    return list;
                 }
             }
 
@@ -593,19 +531,13 @@ namespace NUnit.Framework
             /// </summary>
             public int Count(string key)
             {
-                return _source[key].Count;
+                return _source.TryGet(key, out var values) ? values.Count : 0;
             }
 
             /// <summary>
             /// Returns a collection of the property keys.
             /// </summary>
-            public ICollection<string> Keys
-            {
-                get
-                {
-                    return _source.Keys;
-                }
-            }
+            public ICollection<string> Keys => _source.Keys;
         }
 
         #endregion

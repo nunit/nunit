@@ -1,31 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class OrFilterTests : TestFilterTests
     {
@@ -34,7 +14,15 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
 
-            Assert.False(filter.IsEmpty);
+            Assert.That(filter.IsEmpty, Is.False);
+        }
+
+        [Test]
+        public void IsNotEmptyFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter("Dummy"), new FullNameFilter("Another"));
+
+            Assert.That(filter.IsEmpty, Is.False);
         }
 
         [Test]
@@ -42,10 +30,53 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
 
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
 
-            Assert.False(filter.Match(_yetAnotherFixture));
+            Assert.That(filter.Match(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void MatchTestMixed()
+        {
+            var filter = new OrFilter(new CategoryFilter("Dummy"), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
+
+            Assert.That(filter.Match(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void MatchTestEmpty()
+        {
+            var filter = new OrFilter(new TestFilter[] { });
+
+            Assert.That(filter.Match(DummyFixtureSuite), Is.False);
+            Assert.That(filter.Match(AnotherFixtureSuite), Is.False);
+            Assert.That(filter.Match(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void MatchTestFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
+
+            Assert.That(filter.Match(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void MatchTestFullNameRegex()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, isRegex: true), new FullNameFilter(ANOTHER_CLASS_REGEX, isRegex: true));
+
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
+
+            Assert.That(filter.Match(YetAnotherFixtureSuite), Is.False);
         }
 
         [Test]
@@ -53,13 +84,41 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
 
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
-            Assert.That(filter.Pass(_anotherFixture));
-            Assert.That(filter.Pass(_anotherFixture.Tests[0]));
+            Assert.That(filter.Pass(TopLevelSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite.Tests[0]));
+            Assert.That(filter.Pass(AnotherFixtureSuite));
+            Assert.That(filter.Pass(AnotherFixtureSuite.Tests[0]));
 
-            Assert.False(filter.Pass(_yetAnotherFixture));
+            Assert.That(filter.Pass(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void PassTestFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Pass(TopLevelSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite.Tests[0]));
+            Assert.That(filter.Pass(AnotherFixtureSuite));
+            Assert.That(filter.Pass(AnotherFixtureSuite.Tests[0]));
+
+            Assert.That(filter.Pass(YetAnotherFixtureSuite), Is.False);
+        }
+
+        [Test]
+        public void PassTestFullNameRegex()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, isRegex: true), new FullNameFilter(ANOTHER_CLASS_REGEX, isRegex: true));
+
+            Assert.That(filter.Pass(TopLevelSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite.Tests[0]));
+            Assert.That(filter.Pass(AnotherFixtureSuite));
+            Assert.That(filter.Pass(AnotherFixtureSuite.Tests[0]));
+
+            Assert.That(filter.Pass(YetAnotherFixtureSuite), Is.False);
         }
 
         [Test]
@@ -67,13 +126,13 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
 
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
-            Assert.That(filter.IsExplicitMatch(_anotherFixture));
-            Assert.False(filter.IsExplicitMatch(_anotherFixture.Tests[0]));
+            Assert.That(filter.IsExplicitMatch(TopLevelSuite));
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite));
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite.Tests[0]), Is.False);
+            Assert.That(filter.IsExplicitMatch(AnotherFixtureSuite));
+            Assert.That(filter.IsExplicitMatch(AnotherFixtureSuite.Tests[0]), Is.False);
 
-            Assert.False(filter.IsExplicitMatch(_yetAnotherFixture));
+            Assert.That(filter.IsExplicitMatch(YetAnotherFixtureSuite), Is.False);
         }
 
         /// <summary>
@@ -81,7 +140,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <see cref="OrFilter"/> correctly combines the results from its sub-filters.
         /// Furthermore it checks that the result from the correct match-function of the
         /// sub-filters is used to calculate the OR combination.
-        /// 
+        ///
         /// The input is an array of booleans (<paramref name="inputBooleans"/>). For each boolean
         /// value a <see cref="MockTestFilter"/> is added to the <see cref="OrFilter"/>
         /// whose match-function (defined through the parameter <paramref name="matchFunction"/>)
@@ -93,36 +152,36 @@ namespace NUnit.Framework.Internal.Filters
         /// <see cref="OrFilter"/> calls not the same match-function on the
         /// <see cref="MockTestFilter"/>, thus checking that the <see cref="OrFilter"/>
         /// combines the correct results from the sub-filters.
-        /// 
+        ///
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.Pass)]
         public void CombineTest(IEnumerable<bool> inputBooleans, bool expectedResult,
             MockTestFilter.MatchFunction matchFunction)
         {
             var filters = new List<MockTestFilter>();
             foreach (var inputBool in inputBooleans)
             {
-                var strictFilter = new MockTestFilter(_dummyFixture, matchFunction, inputBool);
-                Assert.AreEqual(inputBool, ExecuteMatchFunction(strictFilter, matchFunction));
+                var strictFilter = new MockTestFilter(DummyFixtureSuite, matchFunction, inputBool);
+                Assert.That(ExecuteMatchFunction(strictFilter, matchFunction), Is.EqualTo(inputBool));
 
                 filters.Add(strictFilter);
             }
 
             var filter = new OrFilter(filters.ToArray());
             bool calculatedResult = ExecuteMatchFunction(filter, matchFunction);
-            Assert.AreEqual(expectedResult, calculatedResult);
+            Assert.That(calculatedResult, Is.EqualTo(expectedResult));
         }
 
         /// <summary>
@@ -134,11 +193,11 @@ namespace NUnit.Framework.Internal.Filters
             switch (matchFunction)
             {
                 case MockTestFilter.MatchFunction.IsExplicitMatch:
-                    return filter.IsExplicitMatch(_dummyFixture);
+                    return filter.IsExplicitMatch(DummyFixtureSuite);
                 case MockTestFilter.MatchFunction.Match:
-                    return filter.Match(_dummyFixture);
+                    return filter.Match(DummyFixtureSuite);
                 case MockTestFilter.MatchFunction.Pass:
-                    return filter.Pass(_dummyFixture);
+                    return filter.Pass(DummyFixtureSuite);
                 default:
                     throw new ArgumentException(
                         "Unexpected StrictIdFilterForTests.EqualValueFunction.", nameof(matchFunction));
@@ -152,8 +211,19 @@ namespace NUnit.Framework.Internal.Filters
                 "<filter><or><cat>Dummy</cat><cat>Another</cat></or></filter>");
 
             Assert.That(filter, Is.TypeOf<OrFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
+        }
+
+        [Test]
+        public void BuildFromXmlFullNameRegex()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                $"<filter><or><test re=\"1\">{DUMMY_CLASS_REGEX}</test><test re=\"1\">{ANOTHER_CLASS_REGEX}</test></or></filter>");
+
+            Assert.That(filter, Is.TypeOf<OrFilter>());
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
         }
     }
 }

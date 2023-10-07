@@ -1,38 +1,17 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Linq;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionOrderedConstraintTests
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         #region Ordering Tests
 
@@ -208,7 +187,7 @@ namespace NUnit.Framework.Constraints
                 "  Ordering breaks at index [2]:  \"y\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new[] { "x", "z", "y" }, Is.Ordered));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -223,7 +202,7 @@ namespace NUnit.Framework.Constraints
                 "  Ordering breaks at index [91]:  91" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.Ordered));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         #endregion
@@ -323,7 +302,7 @@ namespace NUnit.Framework.Constraints
         public void IsOrderedByProperty_ThrowsOnNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => Assert.That(new[] { new TestClass4("x"), null, new TestClass4("z") }, Is.Ordered.By("Value")));
-            Assert.That(ex.Message, Does.Contain("index 1"));
+            Assert.That(ex?.Message, Does.Contain("index 1"));
         }
 
         [Test]
@@ -403,7 +382,7 @@ namespace NUnit.Framework.Constraints
 
             public override string ToString()
             {
-                return A.ToString() + "," + B.ToString();
+                return $"{A},{B}";
             }
         }
 
@@ -450,7 +429,7 @@ namespace NUnit.Framework.Constraints
 
             public override string ToString()
             {
-                return A.ToString() + "," + B.ToString();
+                return $"{A},{B}";
             }
         }
 

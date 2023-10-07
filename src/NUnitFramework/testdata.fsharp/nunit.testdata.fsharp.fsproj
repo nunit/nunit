@@ -1,8 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <Deterministic>false</Deterministic>
+    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
+    <NoWarn>$(NoWarn);NU1604</NoWarn>
+    <Optimize>false</Optimize>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FSharp.Core" Version="7.0.200" />
+    <PackageReference Update="System.ValueTuple" Version="4.5.0" />
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 

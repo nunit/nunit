@@ -1,38 +1,16 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.IO;
-using NUnit.Framework;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Creates a directory for testing purposes
     /// </summary>
     public class TestDirectory : IDisposable
     {
-        private DirectoryInfo _testDir;
+        private readonly DirectoryInfo _testDir;
 
         public TestDirectory()
         {
@@ -53,26 +31,25 @@ namespace NUnit.TestUtilities
         {
             try
             {
-                if (_testDir != null && _testDir.Exists)
+                if (_testDir.Exists)
                 {
                     _testDir.Delete(true);
                 }
             }
             catch { }
-            _testDir = null;
         }
 
         /// <summary>
         /// Gets the test directory.
         /// </summary>
-        public DirectoryInfo Directory { get { return _testDir; } }
+        public DirectoryInfo Directory => _testDir;
 
         /// <summary>
         /// Returns the full path of the contained test directory
         /// </summary>
         public override string ToString()
         {
-            return _testDir == null ? string.Empty : _testDir.FullName;
+            return _testDir is null ? string.Empty : _testDir.FullName;
         }
     }
 }

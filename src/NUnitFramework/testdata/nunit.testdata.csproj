@@ -1,29 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net46;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
-
-    <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
-    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <Optimize>false</Optimize>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
-    <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
-    <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
-    <PackageReference Include="System.Security.Principal.Windows" Version="4.6.0" />
+    <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+    <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
   </ItemGroup>
 
 </Project>

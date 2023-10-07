@@ -1,76 +1,25 @@
-// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
-using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// ExceptionHelper provides static methods for working with exceptions
     /// </summary>
-    public class ExceptionHelper
+    public static class ExceptionHelper
     {
-#if NET35 || NET40
-        private static readonly Action<Exception> PreserveStackTrace;
-
-        static ExceptionHelper()
-        {
-            var method = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (method != null)
-            {
-                try
-                {
-                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
-                    return;
-                }
-                catch (InvalidOperationException) { }
-            }
-            PreserveStackTrace = _ => { };
-        }
-#endif
-
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET35 || NET40
-            PreserveStackTrace(exception);
-            throw exception;
-#else
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
-#endif
         }
 
         /// <summary>
@@ -81,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception.</param>
         /// <param name="excludeExceptionNames">Flag indicating whether exception names should be excluded.</param>
         /// <returns>A combined message string.</returns>
-        public static string BuildMessage(Exception exception, bool excludeExceptionNames=false)
+        public static string BuildMessage(Exception exception, bool excludeExceptionNames = false)
         {
             Guard.ArgumentNotNull(exception, nameof(exception));
 
@@ -133,8 +82,7 @@ namespace NUnit.Framework.Internal
             if (string.IsNullOrEmpty(message))
             {
                 // Special handling for Mono 5.0, which returns an empty message
-                var fnfEx = ex as System.IO.FileNotFoundException;
-                return fnfEx != null
+                return ex is System.IO.FileNotFoundException fnfEx
                     ? "Could not load assembly. File not found: " + fnfEx.FileName
                     : "No message provided";
             }
@@ -151,14 +99,18 @@ namespace NUnit.Framework.Internal
                 sb.AppendLine();
                 sb.Append(message);
             }
-            else if (data.Value.Count != 0)
+            else
             {
-                sb.AppendLine();
-                sb.Append("Data:");
-                foreach (DictionaryEntry kvp in data.Value)
+                IDictionary dictionary = data.Value!;
+                if (dictionary.Count != 0)
                 {
                     sb.AppendLine();
-                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    sb.Append("Data:");
+                    foreach (DictionaryEntry kvp in dictionary)
+                    {
+                        sb.AppendLine();
+                        sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    }
                 }
             }
         }
@@ -169,12 +121,18 @@ namespace NUnit.Framework.Internal
 
             if (exception is ReflectionTypeLoadException reflectionException)
             {
-                result.AddRange(reflectionException.LoaderExceptions);
+                foreach (var innerException in reflectionException.LoaderExceptions)
+                {
+                    if (innerException is not null)
+                        result.Add(exception);
+                }
 
                 foreach (var innerException in reflectionException.LoaderExceptions)
-                    result.AddRange(FlattenExceptionHierarchy(innerException));
+                {
+                    if (innerException is not null)
+                        result.AddRange(FlattenExceptionHierarchy(innerException));
+                }
             }
-#if TASK_PARALLEL_LIBRARY_API
             if (exception is AggregateException aggregateException)
             {
                 result.AddRange(aggregateException.InnerExceptions);
@@ -182,9 +140,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in aggregateException.InnerExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-            else
-#endif
-            if (exception.InnerException != null)
+            else if (exception.InnerException is not null)
             {
                 result.Add(exception.InnerException);
                 result.AddRange(FlattenExceptionHierarchy(exception.InnerException));
@@ -201,7 +157,7 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
-                parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
+                parameterlessDelegate.GetType().GetMethod("Invoke")?.GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
                 parameterName);
 

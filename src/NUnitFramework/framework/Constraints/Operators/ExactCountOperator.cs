@@ -1,37 +1,14 @@
-// ***********************************************************************
-// Copyright (c) 2011-2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-using System;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Represents a constraint that succeeds if the specified 
+    /// Represents a constraint that succeeds if the specified
     /// count of members of a collection match a base constraint.
     /// </summary>
     public class ExactCountOperator : SelfResolvingOperator
     {
-        private readonly int expectedCount;
+        private readonly int _expectedCount;
 
         /// <summary>
         /// Construct an ExactCountOperator for a specified count
@@ -41,25 +18,24 @@ namespace NUnit.Framework.Constraints
         {
             // Collection Operators stack on everything
             // and allow all other ops to stack on them
-            this.left_precedence = 1;
-            this.right_precedence = 10;
+            left_precedence = 1;
+            right_precedence = 10;
 
-            this.expectedCount = expectedCount;
+            _expectedCount = expectedCount;
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
-                stack.Push(new ExactCountConstraint(expectedCount));
+            if (RightContext is null || RightContext is BinaryOperator)
+                stack.Push(new ExactCountConstraint(_expectedCount));
             else
-                stack.Push(new ExactCountConstraint(expectedCount, stack.Pop()));
+                stack.Push(new ExactCountConstraint(_expectedCount, stack.Pop()));
         }
     }
 }
-

@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Constraints;
@@ -39,10 +18,7 @@ namespace NUnit.Framework
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public static ConstraintExpression No
-        {
-            get { return new ConstraintExpression().Not; }
-        }
+        public static ConstraintExpression No => new ConstraintExpression().Not;
 
         #endregion
 
@@ -53,10 +29,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public static ConstraintExpression All
-        {
-            get { return new ConstraintExpression().All; }
-        }
+        public static ConstraintExpression All => new ConstraintExpression().All;
 
         #endregion
 
@@ -67,10 +40,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-        public static ConstraintExpression Some
-        {
-            get { return new ConstraintExpression().Some; }
-        }
+        public static ConstraintExpression Some => new ConstraintExpression().Some;
 
         #endregion
 
@@ -81,15 +51,12 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-        public static ConstraintExpression None
-        {
-            get { return new ConstraintExpression().None; }
-        }
+        public static ConstraintExpression None => new ConstraintExpression().None;
 
         #endregion
 
         #region Exactly(n)
- 
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -109,13 +76,7 @@ namespace NUnit.Framework
         /// the following constraint to only one member of the collection,
         /// and fail if none or more than one match occurs.
         /// </summary>
-        public static ItemsConstraintExpression One
-        {
-            get
-            {
-                return new ConstraintExpression().Exactly(1);
-            }
-        }
+        public static ItemsConstraintExpression One => new ConstraintExpression().Exactly(1);
 
         #endregion
 
@@ -139,10 +100,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Length
-        {
-            get { return Property("Length"); }
-        }
+        public static ResolvableConstraintExpression Length => Property(nameof(Length));
 
         #endregion
 
@@ -152,10 +110,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Count
-        {
-            get { return Property("Count"); }
-        }
+        public static ResolvableConstraintExpression Count => Property(nameof(Count));
 
         #endregion
 
@@ -165,10 +120,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Message
-        {
-            get { return Property("Message"); }
-        }
+        public static ResolvableConstraintExpression Message => Property(nameof(Message));
 
         #endregion
 
@@ -178,15 +130,12 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression InnerException
-        {
-            get { return Property("InnerException"); }
-        }
+        public static ResolvableConstraintExpression InnerException => Property(nameof(InnerException));
 
         #endregion
 
         #region Attribute
-        
+
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
@@ -213,12 +162,25 @@ namespace NUnit.Framework
         /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static SomeItemsConstraint Member(object expected)
+        public static SomeItemsConstraint Member(object? expected)
         {
             return new SomeItemsConstraint(new EqualConstraint(expected));
         }
 
         #endregion
 
+        #region ItemAt
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public static ConstraintExpression ItemAt(params object[] indexArgs)
+        {
+            return new ConstraintExpression().ItemAt(indexArgs);
+        }
+
+        #endregion
     }
 }

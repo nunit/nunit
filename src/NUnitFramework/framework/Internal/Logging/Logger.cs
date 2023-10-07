@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008-2013 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.IO;
@@ -31,13 +10,13 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class Logger : ILogger
     {
-        private readonly static string TIME_FMT = "HH:mm:ss.fff";
-        private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
+        private static readonly string TIME_FMT = "HH:mm:ss.fff";
+        private static readonly string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
-        private readonly string name;
-        private readonly string fullname;
-        private readonly InternalTraceLevel maxLevel;
-        private readonly TextWriter writer;
+        private readonly string _name;
+        private readonly string _fullname;
+        private readonly InternalTraceLevel _maxLevel;
+        private readonly TextWriter? _writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -45,14 +24,14 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name.</param>
         /// <param name="level">The log level.</param>
         /// <param name="writer">The writer where logs are sent.</param>
-        public Logger(string name, InternalTraceLevel level, TextWriter writer)
+        public Logger(string name, InternalTraceLevel level, TextWriter? writer)
         {
-            this.maxLevel = level;
-            this.writer = writer;
-            this.fullname = this.name = name;
-            int index = fullname.LastIndexOf('.');
+            _maxLevel = level;
+            _writer = writer;
+            _fullname = _name = name;
+            int index = _fullname.LastIndexOf('.');
             if (index >= 0)
-                this.name = fullname.Substring(index + 1);
+                _name = _fullname.Substring(index + 1);
         }
 
         #region Error
@@ -150,26 +129,26 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
         private void Log(InternalTraceLevel level, string message)
         {
-            if (writer != null && this.maxLevel >= level)
+            if (_maxLevel >= level)
                 WriteLog(level, message);
         }
 
         private void Log(InternalTraceLevel level, string format, params object[] args)
         {
-            if (this.maxLevel >= level)
-                WriteLog(level, string.Format( format, args ) );
+            if (_maxLevel >= level)
+                WriteLog(level, string.Format(format, args));
         }
 
         private void WriteLog(InternalTraceLevel level, string message)
         {
-            writer.WriteLine(TRACE_FMT,
+            _writer?.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
-                name,
+                _name,
                 message);
         }
 
-#endregion
+        #endregion
     }
 }

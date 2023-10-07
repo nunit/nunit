@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2015-2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -28,8 +7,9 @@ using System.Text;
 using NUnit.Common;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnitLite.Tests
 {
@@ -76,7 +56,7 @@ namespace NUnitLite.Tests
         [Test]
         public void DisplayErrors()
         {
-            CreateTextUI().DisplayErrors(new string[] { "This is an error", "Another error", "Final error" });
+            CreateTextUI().DisplayErrors(new[] { "This is an error", "Another error", "Final error" });
 
             Assert.That(Report, Is.EqualTo("This is an error\nAnother error\nFinal error\n"));
         }
@@ -92,7 +72,7 @@ namespace NUnitLite.Tests
         [Test]
         public void DisplayTestFiles()
         {
-            CreateTextUI().DisplayTestFiles(new string[] { "test1.dll", "another.test.dll", "final.test.dll" });
+            CreateTextUI().DisplayTestFiles(new[] { "test1.dll", "another.test.dll", "final.test.dll" });
 
             Assert.That(Report, Is.EqualTo("Test Files\n    test1.dll\n    another.test.dll\n    final.test.dll\n\n"));
         }
@@ -206,10 +186,10 @@ namespace NUnitLite.Tests
             var result = new TestCaseResult(Fakes.GetTestMethod(this, "MyFakeMethod"));
             result.SetResult(ResultState.Success);
 
-            result.OutWriter.Write(new [] { 'A', 'B', 'C' });
+            result.OutWriter.Write(new[] { 'A', 'B', 'C' });
             result.OutWriter.Write('+');
             result.OutWriter.WriteLine("XYZ");
-            
+
             CreateTextUI(labels).TestFinished(result);
 
             Assert.That(Report, Is.EqualTo(expected));
@@ -248,52 +228,50 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(expected));
         }
 
-#pragma warning disable 414
-        static readonly TestCaseData[] ImmediateOutputData = new[] {
+        private static readonly TestCaseData[] ImmediateOutputData = new[] {
             new TestCaseData("Off",
-                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "OUTPUT\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("All",
-                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("Before",
-                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("After",
-                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("Off",
-                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", string.Empty, null, "SomeMethod") },
                 "OUTPUT"),
             new TestCaseData("On",
-                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("All",
-                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("Before",
-                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("After",
-                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", string.Empty, null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("On",
-                new [] { new TestOutput("A", "", null, "T1"), new TestOutput("B", "", null, "T1"), new TestOutput("C", "", null, "T1") },
+                new [] { new TestOutput("A", string.Empty, null, "T1"), new TestOutput("B", string.Empty, null, "T1"), new TestOutput("C", string.Empty, null, "T1") },
                 "=> T1\nABC"),
             new TestCaseData("On",
-                new [] { new TestOutput("A", "", null, "T1"), new TestOutput("B", "", null, "T1"), new TestOutput("C", "", null, "T1"), new TestOutput("\n", "", null, "T1") },
+                new [] { new TestOutput("A", string.Empty, null, "T1"), new TestOutput("B", string.Empty, null, "T1"), new TestOutput("C", string.Empty, null, "T1"), new TestOutput("\n", string.Empty, null, "T1") },
                 "=> T1\nABC\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("Hello\n", "", null, "EN"), new TestOutput("Ciao!\n", "", null, "IT"), new TestOutput("World!\n", "", null, "EN") },
+                new [] { new TestOutput("Hello\n", string.Empty, null, "EN"), new TestOutput("Ciao!\n", string.Empty, null, "IT"), new TestOutput("World!\n", string.Empty, null, "EN") },
                 "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("Hello", "", null, "EN"), new TestOutput("Ciao!", "", null, "IT"), new TestOutput("World!", "", null, "EN") },
+                new [] { new TestOutput("Hello", string.Empty, null, "EN"), new TestOutput("Ciao!", string.Empty, null, "IT"), new TestOutput("World!", string.Empty, null, "EN") },
                 "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!"),
         };
-#pragma warning restore 414
 
         [TestCaseSource(nameof(ImmediateOutputData))]
         public void ImmediateOutput(string labels, TestOutput[] outputs, string expected)
@@ -301,7 +279,7 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
             foreach (var output in outputs)
                 textUI.TestOutput(output);
-            
+
             Assert.That(Report, Is.EqualTo(expected));
         }
 
@@ -337,7 +315,7 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test);
-            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT\n", "", null, test.FullName));
+            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT\n", string.Empty, null, test.FullName));
             result.OutWriter.WriteLine("NORMAL OUTPUT");
             textUI.TestFinished(result);
 
@@ -454,10 +432,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", string.Empty, null, test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", null, test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", null, test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", string.Empty, null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", string.Empty, null, test2.FullName));
             result1.OutWriter.WriteLine("OUTPUT1");
             textUI.TestFinished(result1);
             result2.OutWriter.WriteLine("OUTPUT2");
@@ -527,10 +505,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", string.Empty, null, test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", null, test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", null, test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", string.Empty, null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", string.Empty, null, test2.FullName));
             result2.OutWriter.WriteLine("OUTPUT2");
             textUI.TestFinished(result2);
             result1.OutWriter.WriteLine("OUTPUT1");
@@ -545,10 +523,7 @@ namespace NUnitLite.Tests
 
         private void AnotherFakeMethod() { }
 
-        private string Report
-        {
-            get { return _reportBuilder.ToString().Replace(NL, "\n"); }
-        }
+        private string Report => _reportBuilder.ToString().Replace(NL, "\n");
 
         private IList<string> GetReportLines()
         {
@@ -556,7 +531,7 @@ namespace NUnitLite.Tests
 
             string line;
             var lines = new List<string>();
-            while ((line = rdr.ReadLine()) != null)
+            while ((line = rdr.ReadLine()) is not null)
                 lines.Add(line);
 
             return lines;

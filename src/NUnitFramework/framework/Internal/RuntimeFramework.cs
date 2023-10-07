@@ -1,34 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2007-2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 #if NETSTANDARD2_0
-using System.Runtime.Versioning;
-#else
-using Microsoft.Win32;
+using System.Runtime.CompilerServices;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -51,12 +28,12 @@ namespace NUnit.Framework.Internal
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
-        public static readonly Version DefaultVersion = new Version(0,0);
+        public static readonly Version DefaultVersion = new(0, 0);
 
-        private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
+        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new(() =>
         {
-            Type monoRuntimeType = null;
-            Type monoTouchType = null;
+            Type? monoRuntimeType = null;
+            Type? monoTouchType = null;
 
             try
             {
@@ -68,8 +45,8 @@ namespace NUnit.Framework.Internal
                 //If exception thrown, assume no valid installation
             }
 
-            bool isMonoTouch = monoTouchType != null;
-            bool isMono = monoRuntimeType != null;
+            bool isMonoTouch = monoTouchType is not null;
+            bool isMono = monoRuntimeType is not null;
             bool isNetCore = !isMono && !isMonoTouch && IsNetCore();
 
             RuntimeType runtime = isMonoTouch
@@ -78,7 +55,7 @@ namespace NUnit.Framework.Internal
                     ? RuntimeType.Mono
                     : isNetCore
                         ? RuntimeType.NetCore
-                        : RuntimeType.Net;
+                        : RuntimeType.NetFramework;
 
             int major = Environment.Version.Major;
             int minor = Environment.Version.Minor;
@@ -101,7 +78,7 @@ namespace NUnit.Framework.Internal
                 major = 0;
                 minor = 0;
             }
-            else /* It's windows */
+            else /* It's .net framework */
 #if NETSTANDARD2_0
             {
                 minor = 5;
@@ -113,23 +90,23 @@ namespace NUnit.Framework.Internal
                 major = 3;
                 minor = 5;
             }
-            else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") != null)
+            else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") is not null)
             {
                 minor = 5;
             }
 #endif
 
-            var currentFramework = new RuntimeFramework( runtime, new Version (major, minor) )
+            var currentFramework = new RuntimeFramework(runtime, new Version(major, minor))
             {
                 ClrVersion = Environment.Version
             };
 
             if (isMono)
             {
-                MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
+                MethodInfo? getDisplayNameMethod = monoRuntimeType!.GetMethod(
                     "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
-                if (getDisplayNameMethod != null)
-                    currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
+                if (getDisplayNameMethod is not null)
+                    currentFramework.DisplayName = (string?)getDisplayNameMethod.Invoke(null, Array.Empty<object>()) ?? "Mono";
             }
             return currentFramework;
         });
@@ -146,7 +123,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="runtime">The runtime type of the framework</param>
         /// <param name="version">The version of the framework</param>
-        public RuntimeFramework( RuntimeType runtime, Version version)
+        public RuntimeFramework(RuntimeType runtime, Version version)
         {
             Runtime = runtime;
 
@@ -158,18 +135,21 @@ namespace NUnit.Framework.Internal
             DisplayName = GetDefaultDisplayName(runtime, version);
         }
 
+        [MemberNotNull(nameof(FrameworkVersion))]
+        [MemberNotNull(nameof(ClrVersion))]
         private void InitFromFrameworkVersion(Version version)
         {
             FrameworkVersion = ClrVersion = version;
 
             if (version.Major > 0) // 0 means any version
+            {
                 switch (Runtime)
                 {
                     case RuntimeType.NetCore:
                         ClrVersion = new Version(4, 0, 30319);
                         break;
 
-                    case RuntimeType.Net:
+                    case RuntimeType.NetFramework:
                     case RuntimeType.Mono:
                     case RuntimeType.Any:
                         switch (version.Major)
@@ -205,6 +185,7 @@ namespace NUnit.Framework.Internal
                         }
                         break;
                 }
+            }
         }
 
         private static void ThrowInvalidFrameworkVersion(Version version)
@@ -212,13 +193,15 @@ namespace NUnit.Framework.Internal
             throw new ArgumentException("Unknown framework version " + version, nameof(version));
         }
 
+        [MemberNotNull(nameof(FrameworkVersion))]
+        [MemberNotNull(nameof(ClrVersion))]
         private void InitFromClrVersion(Version version)
         {
             FrameworkVersion = new Version(version.Major, version.Minor);
             ClrVersion = version;
             if (Runtime == RuntimeType.Mono && version.Major == 1)
                 FrameworkVersion = new Version(1, 0);
-            if (Runtime == RuntimeType.Net && version.Major == 4 && version.Minor == 5)
+            if (Runtime == RuntimeType.NetFramework && version.Major == 4 && version.Minor >= 5)
                 ClrVersion = new Version(4, 0, 30319);
             if (Runtime == RuntimeType.NetCore)
                 ClrVersion = new Version(4, 0, 30319);
@@ -231,13 +214,7 @@ namespace NUnit.Framework.Internal
         /// Static method to return a RuntimeFramework object
         /// for the framework that is currently in use.
         /// </summary>
-        public static RuntimeFramework CurrentFramework
-        {
-            get
-            {
-                return currentFramework.Value;
-            }
-        }
+        public static RuntimeFramework CurrentFramework => LazyCurrentFramework.Value;
 
         /// <summary>
         /// The type of this runtime framework
@@ -258,10 +235,7 @@ namespace NUnit.Framework.Internal
         /// Return true if any CLR version may be used in
         /// matching this RuntimeFramework object.
         /// </summary>
-        public bool AllowAnyVersion
-        {
-            get { return ClrVersion == DefaultVersion; }
-        }
+        public bool AllowAnyVersion => ClrVersion == DefaultVersion;
 
         /// <summary>
         /// Returns the Display name for this framework
@@ -288,18 +262,23 @@ namespace NUnit.Framework.Internal
             string[] parts = s.Split('-');
             if (parts.Length == 2)
             {
-                runtime = (RuntimeType)Enum.Parse(typeof(RuntimeType), parts[0], true);
+                runtime = ParseRuntimeType(parts[0]);
                 string vstring = parts[1];
-                if (vstring != "")
+                if (vstring != string.Empty)
+                {
                     version = new Version(vstring);
+
+                    if (runtime == RuntimeType.NetFramework && version.Major >= 5)
+                        runtime = RuntimeType.NetCore;
+                }
             }
-            else if (char.ToLower(s[0]) == 'v')
+            else if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase))
             {
                 version = new Version(s.Substring(1));
             }
             else if (IsRuntimeTypeName(s))
             {
-                runtime = (RuntimeType)Enum.Parse(typeof(RuntimeType), s, true);
+                runtime = ParseRuntimeType(s);
             }
             else
             {
@@ -317,7 +296,7 @@ namespace NUnit.Framework.Internal
         {
             if (AllowAnyVersion)
             {
-                return Runtime.ToString().ToLower();
+                return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant();
             }
             else
             {
@@ -325,7 +304,7 @@ namespace NUnit.Framework.Internal
                 if (Runtime == RuntimeType.Any)
                     return "v" + vstring;
                 else
-                    return Runtime.ToString().ToLower() + "-" + vstring;
+                    return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant() + "-" + vstring;
             }
         }
 
@@ -344,7 +323,9 @@ namespace NUnit.Framework.Internal
             if (Runtime != RuntimeType.Any
                 && target.Runtime != RuntimeType.Any
                 && Runtime != target.Runtime)
+            {
                 return false;
+            }
 
             if (AllowAnyVersion || target.AllowAnyVersion)
                 return true;
@@ -363,11 +344,13 @@ namespace NUnit.Framework.Internal
 
         private static bool IsNetCore()
         {
+            if (Environment.Version.Major >= 5) return true;
+
 #if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
-            Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
-            if (runtimeInfoType != null)
+            Type? runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
+            if (runtimeInfoType is not null)
             {
                 try
                 {
@@ -380,33 +363,48 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
+#if NETSTANDARD2_0
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool IsNetCore_Internal()
         {
-#if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
             // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
             if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
-#endif
+
             return false;
         }
+#endif
 
-        private static bool IsRuntimeTypeName(string name)
+        private static RuntimeType ParseRuntimeType(string s)
         {
-            return Enum.GetNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
+            if (s.ToLowerInvariant() == "net")
+                s = "NetFramework";
+
+            return (RuntimeType)Enum.Parse(typeof(RuntimeType), s, true);
+        }
+
+        private static bool IsRuntimeTypeName(string name) =>
+            name.ToLowerInvariant() == "net" ||
+            Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
+
+        private static string GetShortName(RuntimeType runtime, Version version)
+        {
+            return runtime == RuntimeType.NetFramework || (runtime == RuntimeType.NetCore && version.Major >= 5)
+                ? "Net"
+                : runtime.ToString();
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
         {
             if (version == DefaultVersion)
-                return runtime.ToString();
+                return GetShortName(runtime, version);
             else if (runtime == RuntimeType.Any)
                 return "v" + version;
             else
-                return runtime + " " + version;
+                return GetShortName(runtime, version) + " " + version;
         }
 
         private static bool VersionsMatch(Version v1, Version v2)

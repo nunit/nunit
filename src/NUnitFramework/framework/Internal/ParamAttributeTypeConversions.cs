@@ -1,36 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2017–2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-
-#if !(NET35 || NET40 || NET45)
-using System.Reflection;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -60,7 +34,7 @@ namespace NUnit.Framework.Internal
         public static IEnumerable ConvertData(object?[] data, Type targetType)
         {
             Guard.ArgumentNotNull(data, nameof(data));
-            Guard.ArgumentNotNull(targetType, nameof(targetType));           
+            Guard.ArgumentNotNull(targetType, nameof(targetType));
             return GetData(data, targetType);
         }
 
@@ -78,13 +52,13 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
         /// </summary>
-        public static object? Convert(object? value, Type targetType)
+        public static object Convert(object? value, Type targetType)
         {
             if (TryConvert(value, targetType, out var convertedValue))
                 return convertedValue;
 
             throw new InvalidOperationException(
-                (value == null ? "Null" : $"A value of type {value.GetType()} ({value})")
+                (value is null ? "Null" : $"A value of type {value.GetType()} ({value})")
                 + $" cannot be passed to a parameter of type {targetType}.");
         }
 
@@ -100,7 +74,7 @@ namespace NUnit.Framework.Internal
         /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
         /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
         /// </returns>
-        public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
+        public static bool TryConvert(object? value, Type targetType, [NotNullWhen(true)] out object? convertedValue)
         {
             if (targetType.IsInstanceOfType(value))
             {
@@ -108,7 +82,7 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            if (value == null || value.GetType().FullName == "System.DBNull")
+            if (value is null || value.GetType().FullName == "System.DBNull")
             {
                 convertedValue = null;
                 return Reflect.IsAssignableFromNull(targetType);
@@ -141,7 +115,7 @@ namespace NUnit.Framework.Internal
             if (converter.CanConvertFrom(value.GetType()))
             {
                 convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-                return true;
+                return convertedValue is not null;
             }
 
             convertedValue = null;

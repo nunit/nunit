@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Internal;
@@ -27,12 +6,12 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ThrowsConstraint is used to test the exception thrown by 
+    /// ThrowsConstraint is used to test the exception thrown by
     /// a delegate by applying a constraint to it.
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
     {
-        private Exception caughtException;
+        private Exception? _caughtException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThrowsConstraint"/> class,
@@ -40,25 +19,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
         public ThrowsConstraint(IConstraint baseConstraint)
-            : base(baseConstraint) { }
+            : base(baseConstraint, string.Empty) { }
 
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.
         /// </summary>
-        public Exception ActualException
-        {
-            get { return caughtException; }
-        }
+        public Exception? ActualException => _caughtException;
 
         #region Constraint Overrides
 
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return BaseConstraint.Description; }
-        }
+        public override string Description => BaseConstraint.Description;
 
         /// <summary>
         /// Executes the code of the delegate and captures any exception.
@@ -71,14 +44,16 @@ namespace NUnit.Framework.Constraints
         {
             var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+            _caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            return new ThrowsConstraintResult(
-                this,
-                caughtException,
-                caughtException != null
-                    ? BaseConstraint.ApplyTo(caughtException)
-                    : null);
+            if (_caughtException is not null)
+            {
+                return new ThrowsConstraintResult(
+                    this,
+                    _caughtException,
+                    BaseConstraint.ApplyTo(_caughtException));
+            }
+            return new ThrowsConstraintResult(this);
         }
 
         /// <summary>
@@ -98,19 +73,25 @@ namespace NUnit.Framework.Constraints
 
         private sealed class ThrowsConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult baseResult;
+            private readonly ConstraintResult? _baseResult;
+
+            public ThrowsConstraintResult(ThrowsConstraint constraint)
+                : base(constraint, null)
+            {
+                Status = ConstraintStatus.Failure;
+            }
 
             public ThrowsConstraintResult(ThrowsConstraint constraint,
                 Exception caughtException,
                 ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
-                if (caughtException != null && baseResult.IsSuccess)
+                if (baseResult.IsSuccess)
                     Status = ConstraintStatus.Success;
                 else
                     Status = ConstraintStatus.Failure;
 
-                this.baseResult = baseResult;
+                _baseResult = baseResult;
             }
 
             /// <summary>
@@ -121,10 +102,10 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (ActualValue == null)
+                if (_baseResult is null)
                     writer.Write("no exception thrown");
                 else
-                    baseResult.WriteActualValueTo(writer);
+                    _baseResult.WriteActualValueTo(writer);
             }
         }
 

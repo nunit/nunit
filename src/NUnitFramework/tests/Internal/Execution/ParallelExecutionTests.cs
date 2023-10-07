@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Concurrent;
@@ -28,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.ParallelExecutionData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal.Execution
 {
     [TestFixtureSource(nameof(GetParallelSuites))]
     [NonParallelizable]
@@ -43,14 +24,9 @@ namespace NUnit.Framework.Internal.Execution
         private ConcurrentQueue<TestEvent> _events;
         private TestResult _result;
 
-        private IEnumerable<TestEvent> AllEvents { get { return _events.AsEnumerable();  } }
-        private IEnumerable<TestEvent> ShiftEvents {  get { return AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);  } }
-        private IEnumerable<TestEvent> TestEvents {  get { return AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished); } }
-
-        public ParallelExecutionTests(TestSuite testSuite)
-        {
-            _testSuite = testSuite;
-        }
+        private IEnumerable<TestEvent> AllEvents => _events.AsEnumerable();
+        private IEnumerable<TestEvent> ShiftEvents => AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);
+        private IEnumerable<TestEvent> TestEvents => AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished);
 
         public ParallelExecutionTests(TestSuite testSuite, Expectations expectations)
         {
@@ -94,7 +70,6 @@ namespace NUnit.Framework.Internal.Execution
             _result = workItem.Result;
         }
 
-
         [Test]
         public void AllTestsPassed()
         {
@@ -122,7 +97,7 @@ namespace NUnit.Framework.Internal.Execution
             string expected = "NonParallel";
             if (_testSuite.Properties.ContainsKey(PropertyNames.ParallelScope))
             {
-                var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope);
+                var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope)!;
                 if ((scope & ParallelScope.Self) != 0)
                     expected = "Parallel";
             }
@@ -144,7 +119,7 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Test Data
 
-        static IEnumerable<TestFixtureData> GetParallelSuites()
+        private static IEnumerable<TestFixtureData> GetParallelSuites()
         {
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")
@@ -429,44 +404,42 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
                 Action = TestAction.TestStarting,
                 TestName = test.Name,
-                ThreadName = Thread.CurrentThread.Name
+                ThreadName = Thread.CurrentThread.Name ?? "NoThreadName",
             });
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
             _events.Enqueue(new TestEvent()
             {
                 Action = TestAction.TestFinished,
                 TestName = result.Name,
                 Result = result.ResultState.ToString(),
-                ThreadName = Thread.CurrentThread.Name
+                ThreadName = Thread.CurrentThread.Name ?? "NoThreadName",
             });
         }
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
-
         }
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
-
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static TestSuite Suite(string name)
         {
@@ -498,9 +471,9 @@ namespace NUnit.Framework.Internal.Execution
             return sb.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Nested Types
+        #region Nested Types
 
         public enum TestAction
         {
@@ -513,10 +486,10 @@ namespace NUnit.Framework.Internal.Execution
         public class TestEvent
         {
             public TestAction Action;
-            public string TestName;
-            public string ThreadName;
-            public string ShiftName;
-            public string Result;
+            public string? TestName;
+            public string? ThreadName;
+            public string? ShiftName;
+            public string? Result;
 
             public override string ToString()
             {
@@ -598,11 +571,13 @@ namespace NUnit.Framework.Internal.Execution
 
             public void Verify(TestEvent e)
             {
-                Assert.That(_expectations, Does.ContainKey(e.TestName), $"The test {e.TestName} is not in the dictionary.");
-                _expectations[e.TestName].Verify(e);
+                string? testName = e.TestName;
+                Assert.That(testName, Is.Not.Null);
+                Assert.That(_expectations, Does.ContainKey(testName), $"The test {e.TestName} is not in the dictionary.");
+                _expectations[testName].Verify(e);
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -1,43 +1,27 @@
-// ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Internal;
-namespace NUnit.Framework.Constraints
+using System.Collections.Generic;
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class AnyOfConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AnyOfConstraint(new object[] { 1, 2, 3 });
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AnyOfConstraint(new object[] { 1, 2, 3 });
             ExpectedDescription = "any of < 1, 2, 3 >";
             StringRepresentation = "<anyof 1 2 3>";
         }
 
-        private static object[] SuccessData = new object[] { 1, 2, 3 };
-        private static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 1, 2, 3 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void ItemIsPresent_IgnoreCase()
@@ -52,6 +36,32 @@ namespace NUnit.Framework.Constraints
             Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);
             var anyOf = new AnyOfConstraint(new[] { "A", "B", "C" }).Using(comparer);
             Assert.That(anyOf.ApplyTo("1. A").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ValidMemberInParams()
+        {
+            Assert.That(42, Is.AnyOf(0, -1, 42, 100));
+        }
+
+        [Test]
+        public void ValidMemberInArray()
+        {
+            var array = new[] { 0, -1, 42, 100 };
+            Assert.That(42, Is.AnyOf(array));
+        }
+
+        [Test]
+        public void ValidMemberInList()
+        {
+            var list = new List<int>() { 0, -1, 42, 100 };
+            Assert.That(42, Is.AnyOf(list));
+        }
+
+        [Test]
+        public void MissingMember()
+        {
+            Assert.That(42, Is.Not.AnyOf(0, -1, 100));
         }
     }
 }

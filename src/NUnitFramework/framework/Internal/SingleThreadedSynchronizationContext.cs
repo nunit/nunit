@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2018–2019 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -35,9 +14,9 @@ namespace NUnit.Framework.Internal
             "Work posted to the synchronization context did not complete within ten seconds. Consider explicitly waiting for the work to complete.";
 
         private readonly TimeSpan _shutdownTimeout;
-        private readonly Queue<ScheduledWork> _queue = new Queue<ScheduledWork>();
+        private readonly Queue<ScheduledWork> _queue = new();
         private Status _status;
-        private Stopwatch _timeSinceShutdown;
+        private Stopwatch? _timeSinceShutdown;
 
         public SingleThreadedTestSynchronizationContext(TimeSpan shutdownTimeout)
         {
@@ -55,7 +34,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// May be called from any thread.
         /// </summary>
-        public override void Post(SendOrPostCallback d, object state)
+        public override void Post(SendOrPostCallback d, object? state)
         {
             Guard.ArgumentNotNull(d, nameof(d));
 
@@ -65,7 +44,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// May be called from any thread.
         /// </summary>
-        public override void Send(SendOrPostCallback d, object state)
+        public override void Send(SendOrPostCallback d, object? state)
         {
             Guard.ArgumentNotNull(d, nameof(d));
 
@@ -90,7 +69,7 @@ namespace NUnit.Framework.Internal
                 switch (_status)
                 {
                     case Status.ShuttingDown:
-                        if (_timeSinceShutdown.Elapsed < _shutdownTimeout) break;
+                        if (_timeSinceShutdown!.Elapsed < _shutdownTimeout) break;
                         goto case Status.ShutDown;
 
                     case Status.ShutDown:
@@ -162,7 +141,7 @@ namespace NUnit.Framework.Internal
                     Monitor.Wait(_queue);
                 }
 
-                if (_status == Status.ShuttingDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
+                if (_status == Status.ShuttingDown && _timeSinceShutdown!.Elapsed > _shutdownTimeout)
                 {
                     _status = Status.ShutDown;
                     throw ErrorAndGetExceptionForShutdownTimeout();

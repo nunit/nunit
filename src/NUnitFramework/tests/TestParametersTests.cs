@@ -1,6 +1,8 @@
-﻿using System;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework
+using System;
+
+namespace NUnit.Framework.Tests
 {
     public class TestParametersTests
     {
@@ -23,19 +25,19 @@ namespace NUnit.Framework
         [Test]
         public void Initially_ValuesAreNull()
         {
-            Assert.Null(_parameters["ABC"]);
+            Assert.That(_parameters["ABC"], Is.Null);
         }
 
         [Test]
         public void Initially_ExistsIsFalse()
         {
-            Assert.False(_parameters.Exists("ABC"));
+            Assert.That(_parameters.Exists("ABC"), Is.False);
         }
 
         [Test]
         public void Initially_NamesAreEmpty()
         {
-            Assert.That(_parameters.Names.Count, Is.EqualTo(0));
+            Assert.That(_parameters.Names, Is.Empty);
         }
 
         #endregion
@@ -45,7 +47,7 @@ namespace NUnit.Framework
         [Test]
         public void Add_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Add((string)null, "X"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Add(null!, "X"), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -85,7 +87,7 @@ namespace NUnit.Framework
         [Test]
         public void Indexer_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters[null], Throws.ArgumentNullException);
+            Assert.That(() => _parameters[null!], Throws.ArgumentNullException);
         }
 
         #endregion
@@ -102,7 +104,7 @@ namespace NUnit.Framework
         [Test]
         public void Get_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!), Throws.ArgumentNullException);
         }
 
         #endregion
@@ -125,7 +127,7 @@ namespace NUnit.Framework
         [Test]
         public void GetString_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null, "JUNK"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!, "JUNK"), Throws.ArgumentNullException);
         }
 
         #endregion
@@ -148,7 +150,7 @@ namespace NUnit.Framework
         [Test]
         public void GetInt_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null, 99), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!, 99), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -277,7 +279,7 @@ namespace NUnit.Framework
         public void GetDateTime_ValueIsCorrect()
         {
             _parameters.Add("SomeParm", "1-January-2016");
-            Assert.That(_parameters.Get("SomeParm", DEFAULT_DATE_TIME), Is.EqualTo(new DateTime(2016,1,1,0,0,0)));
+            Assert.That(_parameters.Get("SomeParm", DEFAULT_DATE_TIME), Is.EqualTo(new DateTime(2016, 1, 1, 0, 0, 0)));
         }
 
         [Test]
@@ -308,7 +310,7 @@ namespace NUnit.Framework
 
         #region
 
-        class UnsupportedDefaultType
+        private class UnsupportedDefaultType
         {
         }
 

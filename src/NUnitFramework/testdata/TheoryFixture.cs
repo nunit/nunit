@@ -1,26 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-using System;
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using NUnit.Framework;
 
 namespace NUnit.TestData.TheoryFixture
@@ -28,12 +7,14 @@ namespace NUnit.TestData.TheoryFixture
     [TestFixture]
     public class TheoryFixture
     {
-#pragma warning disable 414
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CS0414 // The field is assigned but its value is never used
         [Datapoint]
-        private int i0 = 0;
+        private readonly int _i0 = 0;
         [Datapoint]
-        static int i1 = 1;
-#pragma warning restore 414
+        private static readonly int I1 = 1;
+#pragma warning restore CS0414 // The field is assigned but its value is never used
+#pragma warning restore IDE0051 // Remove unused private members
         [Datapoint]
         public int I100 = 100;
 
@@ -86,14 +67,14 @@ namespace NUnit.TestData.TheoryFixture
         [Theory]
         public void TestWithBothDatapointAndAttributeData(
             int i,
-            [Values(0, 5)]decimal d)
+            [Values(0, 5)] decimal d)
         {
         }
 
         [Theory]
         public void TestWithAllDataSuppliedByAttributes(
-            [Values(1.0, 2.0)]double d1,
-            [Values(3.0, 4.0)]double d2)
+            [Values(1.0, 2.0)] double d1,
+            [Values(3.0, 4.0)] double d2)
         {
         }
 
@@ -103,6 +84,71 @@ namespace NUnit.TestData.TheoryFixture
         {
             Assume.That(d > 0);
             Assert.Pass();
+        }
+
+        public class NestedWhileSearchingInDeclaringType
+        {
+            [Theory(true)]
+            public void WithNoArguments()
+            {
+            }
+
+            [Theory(true)]
+            public void WithArgumentsButNoDatapoints(decimal x, decimal y)
+            {
+            }
+
+            [Theory(true)]
+            public void WithUnsupportedNullableTypeArgumentWithNoDataPoints(decimal? x)
+            {
+            }
+
+            [Theory(true)]
+            public void WithArgumentsAndDatapoints(int x, int y)
+            {
+            }
+
+            [Theory(true)]
+            public void WithBooleanArguments(bool a, bool b)
+            {
+            }
+
+            [Theory(true)]
+            public void WithNullableBooleanArguments(bool? a, bool? b)
+            {
+            }
+
+            [Theory(true)]
+            public void WithEnumAsArgument(System.AttributeTargets targets)
+            {
+            }
+
+            [Theory(true)]
+            public void WithNullableEnumAsArgument(System.AttributeTargets? targets)
+            {
+            }
+
+            [Theory(true)]
+            public void WithBothDatapointAndAttributeData(
+                int i,
+                [Values(0, 5)] decimal d)
+            {
+            }
+
+            [Theory(true)]
+            public void WithAllDataSuppliedByAttributes(
+                [Values(1.0, 2.0)] double d1,
+                [Values(3.0, 4.0)] double d2)
+            {
+            }
+
+            [Theory(true)]
+            public void WithAllBadValues(
+                [Values(-12.0, -4.0, -9.0)] double d)
+            {
+                Assume.That(d > 0);
+                Assert.Pass();
+            }
         }
     }
 }

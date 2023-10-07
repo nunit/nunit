@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2012-2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Reflection;
@@ -30,10 +9,12 @@ using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Extensions;
 
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
 using System.Windows.Forms;
 #endif
 
@@ -44,19 +25,19 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger Log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private readonly ITestAssemblyBuilder _builder;
-        private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _runComplete = new();
 
         // Saved Console.Out and Console.Error
-        private TextWriter _savedOut;
-        private TextWriter _savedErr;
+        private TextWriter? _savedOut;
+        private TextWriter? _savedErr;
 
         // Event Pump
-        private EventPump _pump;
+        private EventPump? _pump;
 
-#region Constructors
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
@@ -67,73 +48,58 @@ namespace NUnit.Framework.Api
             _builder = builder;
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets the default level of parallel execution (worker threads)
         /// </summary>
-        public static int DefaultLevelOfParallelism
-        {
-            get { return Math.Max(Environment.ProcessorCount, 2); }
-        }
+        public static int DefaultLevelOfParallelism => Math.Max(Environment.ProcessorCount, 2);
 
         /// <summary>
         /// The tree of tests that was loaded by the builder
         /// </summary>
-        public ITest LoadedTest { get; private set; }
+        public ITest? LoadedTest { get; private set; }
 
         /// <summary>
         /// The test result, if a run has completed
         /// </summary>
-        public ITestResult Result
-        {
-            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result; }
-        }
+        public ITestResult? Result => TopLevelWorkItem?.Result;
 
         /// <summary>
         /// Indicates whether a test is loaded
         /// </summary>
-        public bool IsTestLoaded
-        {
-            get { return LoadedTest != null; }
-        }
+        public bool IsTestLoaded => LoadedTest is not null;
 
         /// <summary>
         /// Indicates whether a test is running
         /// </summary>
-        public bool IsTestRunning
-        {
-            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Running; }
-        }
+        public bool IsTestRunning => TopLevelWorkItem is not null && TopLevelWorkItem.State == WorkItemState.Running;
 
         /// <summary>
         /// Indicates whether a test run is complete
         /// </summary>
-        public bool IsTestComplete
-        {
-            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Complete; }
-        }
+        public bool IsTestComplete => TopLevelWorkItem is not null && TopLevelWorkItem.State == WorkItemState.Complete;
 
         /// <summary>
         /// Our settings, specified when loading the assembly
         /// </summary>
-        private IDictionary<string, object> Settings { get; set; }
+        private IDictionary<string, object> Settings { get; set; } = null!; /* Cheating */
 
         /// <summary>
         /// The top level WorkItem created for the assembly as a whole
         /// </summary>
-        private WorkItem TopLevelWorkItem { get; set; }
+        private WorkItem? TopLevelWorkItem { get; set; }
 
         /// <summary>
         /// The TestExecutionContext for the top level WorkItem
         /// </summary>
-        private TestExecutionContext Context { get; set; }
+        private TestExecutionContext? Context { get; set; }
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Loads the tests found in an Assembly
@@ -145,12 +111,13 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
+            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeedValue))
+            {
+                Randomizer.InitialSeed = (int)randomSeedValue;
+            }
 
-            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assemblyNameOrPath, settings));
+            LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assemblyNameOrPath, settings));
             return LoadedTest;
-
         }
 
         /// <summary>
@@ -163,10 +130,12 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
+            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
+            {
+                Randomizer.InitialSeed = (int)randomSeed;
+            }
 
-            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assembly, settings));
+            LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assembly, settings));
             return LoadedTest;
         }
 
@@ -177,7 +146,7 @@ namespace NUnit.Framework.Api
         /// <returns>The number of test cases found</returns>
         public int CountTestCases(ITestFilter filter)
         {
-            if (LoadedTest == null)
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before counting test cases.");
 
             return CountTestCases(LoadedTest, filter);
@@ -190,13 +159,13 @@ namespace NUnit.Framework.Api
         /// <returns>Test Assembly with test cases that matches the filter</returns>
         public ITest ExploreTests(ITestFilter filter)
         {
-            if (LoadedTest == null)
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before exploring them.");
 
             if (filter == TestFilter.Empty)
                 return LoadedTest;
 
-            return new TestAssembly(LoadedTest as TestAssembly, filter);
+            return new TestAssembly((TestAssembly)LoadedTest, filter);
         }
 
         /// <summary>
@@ -210,7 +179,7 @@ namespace NUnit.Framework.Api
         {
             RunAsync(listener, filter);
             WaitForCompletion(Timeout.Infinite);
-            return Result;
+            return Result!;
         }
 
         /// <summary>
@@ -224,19 +193,25 @@ namespace NUnit.Framework.Api
         /// </remarks>
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
-            log.Info("Running tests");
-            if (LoadedTest == null)
+            Log.Info("Running tests");
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before running them.");
 
             _runComplete.Reset();
 
-            CreateTestExecutionContext(listener);
+            var context = CreateTestExecutionContext(LoadedTest, listener);
 
             TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, new DebuggerProxy(), true);
-            TopLevelWorkItem.InitializeContext(Context);
+            if (TopLevelWorkItem is null)
+                throw new InvalidOperationException("Loaded test didn't result in a WorkItem");
+
+            TopLevelWorkItem.InitializeContext(context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
-            WrapInNUnitCallContext(() => StartRun(listener));
+            // Needs to be set for StopRun
+            Context = context;
+
+            WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));
         }
 
         /// <summary>
@@ -255,7 +230,7 @@ namespace NUnit.Framework.Api
         /// <param name="force">If true, kill any tests that are currently running</param>
         public void StopRun(bool force)
         {
-            if (IsTestRunning)
+            if (IsTestRunning && Context is not null)
             {
                 Context.ExecutionStatus = force
                     ? TestExecutionStatus.AbortRequested
@@ -265,14 +240,14 @@ namespace NUnit.Framework.Api
             }
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         /// <summary>
         /// Initiate the test run.
         /// </summary>
-        private void StartRun(ITestListener listener)
+        private void StartRun(TestExecutionContext context, WorkItem topLevelWorkItem, ITestListener listener)
         {
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
@@ -282,120 +257,135 @@ namespace NUnit.Framework.Api
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
 
             // Queue and pump events, unless settings have SynchronousEvents == false
-            if (!Settings.ContainsKey(FrameworkPackageSettings.SynchronousEvents) || !(bool)Settings[FrameworkPackageSettings.SynchronousEvents])
+            if (!Settings.TryGetValue(FrameworkPackageSettings.SynchronousEvents, out var synchronousEvents) ||
+                !(bool)synchronousEvents)
             {
                 QueuingEventListener queue = new QueuingEventListener();
-                Context.Listener = queue;
+                context.Listener = queue;
 
                 _pump = new EventPump(listener, queue.Events);
                 _pump.Start();
             }
 
-            if (!System.Diagnostics.Debugger.IsAttached &&
-                Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
-                (bool)Settings[FrameworkPackageSettings.DebugTests])
+            if (!Debugger.IsAttached &&
+                Settings.TryGetValue(FrameworkPackageSettings.DebugTests, out var debugTests) &&
+                (bool)debugTests)
             {
                 try
                 {
-                    System.Diagnostics.Debugger.Launch();
+                    Debugger.Launch();
                 }
                 catch (SecurityException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
+                    topLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
                     return;
                 }
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
+                    topLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
                     return;
                 }
             }
 
-#if NET35 || NET40 || NET45
-            if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
-                (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
+#if NETFRAMEWORK
+            if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
+                (bool)pauseBeforeRun)
+            {
                 PauseBeforeRun();
+            }
 #endif
 
-            Context.Dispatcher.Start(TopLevelWorkItem);
+            context.Dispatcher.Start(topLevelWorkItem);
         }
 
         /// <summary>
         /// Create the initial TestExecutionContext used to run tests
         /// </summary>
+        /// <param name="loadedTest">The test loaded.</param>
         /// <param name="listener">The ITestListener specified in the RunAsync call</param>
-        private void CreateTestExecutionContext(ITestListener listener)
+        private TestExecutionContext CreateTestExecutionContext(ITest loadedTest, ITestListener listener)
         {
-            Context = new TestExecutionContext();
+            var context = new TestExecutionContext();
 
             // Apply package settings to the context
-            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultTimeout))
-                Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
-            if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
-                Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
+                context.TestCaseTimeout = (int)timeout;
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
+                context.CurrentCulture = new CultureInfo((string)culture, false);
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
+                context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
+            if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
+                context.StopOnError = (bool)stopOnError;
 
             // Apply attributes to the context
 
             // Set the listener - overriding runners may replace this
-            Context.Listener = listener;
+            context.Listener = listener;
 
-            int levelOfParallelism = GetLevelOfParallelism();
+            int levelOfParallelism = GetLevelOfParallelism(loadedTest);
 
-            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
-                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
-                Context.Dispatcher = new MainThreadWorkItemDispatcher();
+            if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
+                (bool)runOnMainThread)
+            {
+                context.Dispatcher = new MainThreadWorkItemDispatcher();
+            }
             else if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            {
+                context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            }
             else
-                Context.Dispatcher = new SimpleWorkItemDispatcher();
+            {
+                context.Dispatcher = new SimpleWorkItemDispatcher();
+            }
+
+            return context;
         }
 
         /// <summary>
         /// Handle the Completed event for the top level work item
         /// </summary>
-        private void OnRunCompleted(object sender, EventArgs e)
+        private void OnRunCompleted(object? sender, EventArgs e)
         {
-            if (_pump != null)
+            if (_pump is not null)
                 _pump.Dispose();
 
-            Console.SetOut(_savedOut);
-            Console.SetError(_savedErr);
+            if (_savedOut is not null)
+                Console.SetOut(_savedOut);
+
+            if (_savedErr is not null)
+                Console.SetError(_savedErr);
 
             _runComplete.Set();
         }
 
-        private int CountTestCases(ITest test, ITestFilter filter)
+        private static int CountTestCases(ITest test, ITestFilter filter)
         {
             if (!test.IsSuite)
-                return 1;
+                return filter.Pass(test) ? 1 : 0;
 
+            // Use for-loop to avoid allocating the enumerator
             int count = 0;
-            foreach (ITest child in test.Tests)
-                if (filter.Pass(child))
-                    count += CountTestCases(child, filter);
+            var tests = test.Tests;
+            for (var i = 0; i < tests.Count; i++)
+            {
+                count += CountTestCases(tests[i], filter);
+            }
 
             return count;
         }
 
-        private int GetLevelOfParallelism()
+        private int GetLevelOfParallelism(ITest loadedTest)
         {
-            return Settings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers)
-                ? (int)Settings[FrameworkPackageSettings.NumberOfTestWorkers]
-                : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
-                   ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
-                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+            return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
+                ? (int)numberOfTestWorkers
+                : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 
-#if NET35 || NET40 || NET45
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
-        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
-        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
-        [SecuritySafeCritical]
+#if NETFRAMEWORK
         private static void PauseBeforeRun()
         {
-            var process = Process.GetCurrentProcess();
+            using var process = Process.GetCurrentProcess();
 
             MessageBox.Show(
                 $"Pausing as requested. If you would like to attach a debugger, the process name and ID are {process.ProcessName}.exe and {process.Id}." + Environment.NewLine
@@ -406,8 +396,7 @@ namespace NUnit.Framework.Api
                 MessageBoxIcon.Information);
         }
 #endif
-
-#if (NET35 || NET40 || NET45)
+#if NETFRAMEWORK
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
         /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
@@ -421,14 +410,34 @@ namespace NUnit.Framework.Api
 #endif
         protected void WrapInNUnitCallContext(Action action)
         {
-#if !(NET35 || NET40 || NET45)
-            action();
-#else
+#if NETFRAMEWORK
             using (new NUnitCallContext())
                 action();
+#else
+            action();
+#endif
+        }
+#if NETFRAMEWORK
+        /// <summary>
+        /// Executes the function within an <see cref="NUnitCallContext" />
+        /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
+        /// suitably at the end of the test run. This method only has an effect running
+        /// the full .NET Framework.
+        /// </summary>
+#else
+        /// <summary>
+        /// This method is a no-op in .NET Standard builds.
+        /// </summary>
+#endif
+        protected T WrapInNUnitCallContext<T>(Func<T> function)
+        {
+#if NETFRAMEWORK
+            using (new NUnitCallContext())
+                return function();
+#else
+            return function();
 #endif
         }
     }
-
-#endregion
+    #endregion
 }

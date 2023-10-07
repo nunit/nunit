@@ -1,29 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -34,17 +14,16 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SomeItemsConstraint : PrefixConstraint
     {
-        private readonly EqualConstraint _equalConstraint;
+        private readonly EqualConstraint? _equalConstraint;
 
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
         /// </summary>
         /// <param name="itemConstraint"></param>
         public SomeItemsConstraint(IConstraint itemConstraint)
-            : base(itemConstraint)
+            : base(itemConstraint, "some item")
         {
             _equalConstraint = itemConstraint as EqualConstraint;
-            DescriptionPrefix = "some item";
         }
 
         /// <summary>
@@ -53,7 +32,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "Some"; } }
+        public override string DisplayName => "Some";
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
@@ -66,8 +45,10 @@ namespace NUnit.Framework.Constraints
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
             foreach (object item in enumerable)
+            {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);
+            }
 
             return new ConstraintResult(this, actual, ConstraintStatus.Failure);
         }
@@ -146,9 +127,10 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        [MemberNotNull(nameof(_equalConstraint))]
         private void CheckPrecondition(string argument)
         {
-            if (_equalConstraint == null)
+            if (_equalConstraint is null)
             {
                 var message = "Using may only be used with constraints that check the equality of the items";
                 throw new ArgumentException(message, argument);

@@ -1,31 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class StackFilterTests
@@ -34,26 +12,26 @@ namespace NUnit.Framework.Internal
 
         private static readonly string NL = Environment.NewLine;
 
-        private static readonly string shortTrace_Assert =
+        private static readonly string ShortTrace_Assert =
     @"   at NUnit.Framework.Assert.Fail(String message) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 56" + NL +
     @"   at NUnit.Framework.Assert.That(String label, Object actual, Matcher expectation, String message) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 50" + NL +
     @"   at NUnit.Framework.Assert.That(Object actual, Matcher expectation) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 19" + NL +
     @"   at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
 
-        private static readonly string shortTrace_Assume =
+        private static readonly string ShortTrace_Assume =
     @"   at NUnit.Framework.Assert.Fail(String message) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 56" + NL +
     @"   at NUnit.Framework.Assume.That(String label, Object actual, Matcher expectation, String message) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 50" + NL +
     @"   at NUnit.Framework.Assume.That(Object actual, Matcher expectation) in D:\Dev\NUnitLite\NUnitLite\Framework\Assert.cs:line 19" + NL +
     @"   at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
 
-        private static readonly string shortTrace_Result =
+        private static readonly string ShortTrace_Result =
     @"   at NUnit.Tests.GreaterThanMatcherTest.MatchesGoodValue() in D:\Dev\NUnitLite\NUnitLiteTests\GreaterThanMatcherTest.cs:line 12" + NL;
 
         // NOTE: In most cases, NUnit does not have to deal with traces
         // like this because the InnerException of a TargetInvocationException
         // only includes the methods called from the point of invocation.
         // However, in the compact framework, such long traces may arise.
-        private static readonly string longTrace =
+        private static readonly string LongTrace =
     @"   at NUnit.Framework.Assert.Fail(String message, Object[] args)" + NL +
     @"   at MyNamespace.MyAppsTests.AssertFailTest()" + NL +
     @"   at System.Reflection.RuntimeMethodInfo.InternalInvoke(RuntimeMethodInfo rtmi, Object obj, BindingFlags invokeAttr, Binder binder, Object parameters, CultureInfo culture, Boolean isBinderDefault, Assembly caller, Boolean verifyAccess, StackCrawlMark& stackMark)" + NL +
@@ -74,30 +52,30 @@ namespace NUnit.Framework.Internal
     @"   at NUnitLite.Runner.ConsoleUI.Main(String[] args)" + NL +
     @"   at OpenNETCF.Linq.Demo.Program.Main(String[] args)" + NL;
 
-        private static readonly string longTrace_Result =
+        private static readonly string LongTrace_Result =
     @"   at MyNamespace.MyAppsTests.AssertFailTest()" + NL;
 
         #endregion
 
-        // NOTE: Using individual tests rather than test cases 
+        // NOTE: Using individual tests rather than test cases
         // to make the error messages easier to read.
 
         [Test]
         public void FilterShortTraceWithAssert()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(shortTrace_Assert), Is.EqualTo(shortTrace_Result));
+            Assert.That(StackFilter.DefaultFilter.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Result));
         }
 
         [Test]
         public void FilterShortTraceWithAssume_Trace1()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(shortTrace_Assume), Is.EqualTo(shortTrace_Result));
+            Assert.That(StackFilter.DefaultFilter.Filter(ShortTrace_Assume), Is.EqualTo(ShortTrace_Result));
         }
 
         [Test]
         public void FilterLongTrace()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(longTrace), Is.EqualTo(longTrace_Result));
+            Assert.That(StackFilter.DefaultFilter.Filter(LongTrace), Is.EqualTo(LongTrace_Result));
         }
     }
 }

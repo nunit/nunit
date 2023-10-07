@@ -1,29 +1,7 @@
-// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -33,9 +11,9 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
-        private static readonly Logger log = InternalTrace.GetLogger("TestWorker");
+        private static readonly Logger Log = InternalTrace.GetLogger("TestWorker");
 
-        private Thread _workerThread;
+        private Thread? _workerThread;
 
         private int _workItemCount = 0;
 
@@ -53,12 +31,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
-        public event TestWorkerEventHandler Busy;
+        public event TestWorkerEventHandler? Busy;
 
         /// <summary>
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
-        public event TestWorkerEventHandler Idle;
+        public event TestWorkerEventHandler? Idle;
 
         #endregion
 
@@ -94,17 +72,14 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Indicates whether the worker thread is running
         /// </summary>
-        public bool IsAlive
-        {
-            get { return _workerThread.IsAlive; }
-        }
+        public bool IsAlive => _workerThread?.IsAlive is true;
 
         #endregion
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
         /// </summary>
-        private WorkItem _currentWorkItem;
+        private WorkItem? _currentWorkItem;
 
         private void TestWorkerThreadProc()
         {
@@ -115,10 +90,10 @@ namespace NUnit.Framework.Internal.Execution
                 while (_running)
                 {
                     _currentWorkItem = WorkQueue.Dequeue();
-                    if (_currentWorkItem == null)
+                    if (_currentWorkItem is null)
                         break;
 
-                    log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
+                    Log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
 
                     _currentWorkItem.TestWorker = this;
 
@@ -129,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
                     // TODO: If we had a separate NonParallelTestWorker, it
                     // could simply create the isolated queue without any
                     // worrying about competing workers.
-                    Busy(this, _currentWorkItem);
+                    Busy?.Invoke(this, _currentWorkItem);
 
                     // Because we execute the current item AFTER the queue state
                     // is saved, its children end up in the new queue set.
@@ -138,14 +113,14 @@ namespace NUnit.Framework.Internal.Execution
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
                     // the queues unless all child items have finished.
-                    Idle(this, _currentWorkItem);
+                    Idle?.Invoke(this, _currentWorkItem);
 
                     ++_workItemCount;
                 }
             }
             finally
             {
-                log.Info("{0} stopping - {1} WorkItems processed.", Name, _workItemCount);
+                Log.Info("{0} stopping - {1} WorkItems processed.", Name, _workItemCount);
             }
         }
 
@@ -154,9 +129,15 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
-            _workerThread.Name = Name;
+            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc))
+            {
+                Name = Name
+            };
 
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+                _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+#else
             try
             {
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
@@ -164,12 +145,13 @@ namespace NUnit.Framework.Internal.Execution
             catch (PlatformNotSupportedException)
             {
             }
+#endif
 
-            log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
+            Log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }
 
-        private readonly object cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem
@@ -180,13 +162,15 @@ namespace NUnit.Framework.Internal.Execution
             if (force)
                 _running = false;
 
-            lock (cancelLock)
-                if (_workerThread != null && _currentWorkItem != null)
+            lock (_cancelLock)
+            {
+                if (_workerThread is not null && _currentWorkItem is not null)
                 {
                     _currentWorkItem.Cancel(force);
                     if (force)
                         _currentWorkItem = null;
                 }
+            }
         }
     }
 }

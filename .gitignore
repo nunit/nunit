@@ -116,7 +116,6 @@ AppPackages/
 sql/
 *.Cache
 ClientBin/
-[Ss]tyle[Cc]op.*
 ~$*
 *~
 *.dbmdl
@@ -185,4 +184,8 @@ PortabilityAnalysis*.html
 project.lock.json
 *.project.lock.json
 .dotnet
-.config/dotnet-tools.json
+*.err
+*.out
+.ionide
+.fake
+BenchmarkDotNet.Artifacts*

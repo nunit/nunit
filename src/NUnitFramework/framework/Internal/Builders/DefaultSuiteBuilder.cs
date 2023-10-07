@@ -1,27 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
-
-#nullable enable
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -35,7 +12,7 @@ namespace NUnit.Framework.Internal.Builders
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
         // Builder we use for fixtures without any fixture attribute specified
-        private readonly NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _defaultBuilder = new();
 
         #region ISuiteBuilder Methods
 
@@ -114,11 +91,9 @@ namespace NUnit.Framework.Internal.Builders
             }
             catch (Exception ex)
             {
-                var fixture = new TestFixture(typeInfo);
                 if (ex is System.Reflection.TargetInvocationException)
-                    ex = ex.InnerException;
-
-                fixture.MakeInvalid("An exception was thrown while loading the test." + Environment.NewLine + ex.ToString());
+                    ex = ex.InnerException!;
+                var fixture = new TestFixture(typeInfo, ex);
 
                 return fixture;
             }
@@ -131,6 +106,8 @@ namespace NUnit.Framework.Internal.Builders
         private TestSuite BuildMultipleFixtures(ITypeInfo typeInfo, IEnumerable<TestSuite> fixtures)
         {
             TestSuite suite = new ParameterizedFixtureSuite(typeInfo);
+
+            suite.ApplyAttributesToTestSuite(typeInfo.Type);
 
             foreach (var fixture in fixtures)
                 suite.Add(fixture);
@@ -147,9 +124,9 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="typeInfo">The type being examined for attributes</param>
         private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo? typeInfo)
         {
-            IFixtureBuilder[] attrs = new IFixtureBuilder[0];
+            IFixtureBuilder[] attrs = Array.Empty<IFixtureBuilder>();
 
-            while (typeInfo != null && !typeInfo.IsType(typeof(object)))
+            while (typeInfo is not null && !typeInfo.IsType(typeof(object)))
             {
                 attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
 
@@ -163,8 +140,10 @@ namespace NUnit.Framework.Internal.Builders
                     // Count how many have arguments
                     int withArgs = 0;
                     foreach (var attr in attrs)
+                    {
                         if (HasArguments(attr))
                             withArgs++;
+                    }
 
                     // If all have args, just return them
                     if (withArgs == attrs.Length)
@@ -172,14 +151,16 @@ namespace NUnit.Framework.Internal.Builders
 
                     // If none of them have args, return the first one
                     if (withArgs == 0)
-                        return new IFixtureBuilder[] { attrs[0] };
+                        return new[] { attrs[0] };
 
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];
                     int count = 0;
                     foreach (var attr in attrs)
+                    {
                         if (HasArguments(attr))
                             result[count++] = attr;
+                    }
 
                     return result;
                 }
@@ -195,7 +176,7 @@ namespace NUnit.Framework.Internal.Builders
             // Only TestFixtureAttribute can be used without arguments
             var temp = attr as TestFixtureAttribute;
 
-            return temp == null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
+            return temp is null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
         }
 
         #endregion

@@ -1,39 +1,17 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Reflection;
-using System.Globalization;
 using NUnit.Common;
 using NUnit.Options;
 using NUnit.Framework;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnitLite.Tests
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using NUnit.TestUtilities;
 
     [TestFixture]
     public class CommandLineTests
@@ -69,7 +47,7 @@ namespace NUnitLite.Tests
         {
             var actualArgs = CommandLineOptions.GetArgs(cmdline);
 
-            Assert.AreEqual(expectedArgs, actualArgs);
+            Assert.That(actualArgs, Is.EqualTo(expectedArgs));
         }
 
         [TestCase("--arg1 @file1.txt --arg2", "file1.txt:--filearg1 --filearg2", "--arg1", "--filearg1", "--filearg2", "--arg2")]
@@ -119,7 +97,7 @@ namespace NUnitLite.Tests
             for (int ix = 0; ix < filespecs.Length; ++ix)
             {
                 var filespec = filespecs[ix];
-                var split = filespec.IndexOf( ':' );
+                var split = filespec.IndexOf(':');
                 if (split < 0) throw new Exception("Invalid test data");
 
                 var fileName = filespec.Substring(0, split);
@@ -142,8 +120,8 @@ namespace NUnitLite.Tests
                     tf.Dispose();
             }
 
-            Assert.AreEqual(expectedArgs, expandedArgs);
-            Assert.Zero(options.ErrorMessages.Count);
+            Assert.That(expandedArgs, Is.EqualTo(expectedArgs));
+            Assert.That(options.ErrorMessages.Count, Is.Zero);
         }
 
         [TestCase("--arg1 @file1.txt --arg2", "The file \"file1.txt\" was not found.")]
@@ -162,14 +140,14 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions();
             var args = new[] { "--arg1", "@file1.txt", "--arg2" };
-            var expectedErrors = new string[] { "@ nesting exceeds maximum depth of 3." };
+            var expectedErrors = new[] { "@ nesting exceeds maximum depth of 3." };
 
             using (new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, "file1.txt"), "@file1.txt", true))
             {
                 var expandedArgs = options.PreParse(args);
 
-                Assert.AreEqual(args, expandedArgs);
-                Assert.AreEqual(expectedErrors, options.ErrorMessages);
+                Assert.That(expandedArgs, Is.EqualTo(args));
+                Assert.That(options.ErrorMessages, Is.EqualTo(expectedErrors));
             }
         }
         #endregion
@@ -180,8 +158,8 @@ namespace NUnitLite.Tests
         public void NoInputFiles()
         {
             var options = new NUnitLiteOptions();
-            Assert.True(options.Validate());
-            Assert.Null(options.InputFile);
+            Assert.That(options.Validate());
+            Assert.That(options.InputFile, Is.Null);
         }
 
         [TestCase("ShowHelp", "help|h")]
@@ -196,7 +174,7 @@ namespace NUnitLite.Tests
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.AreEqual(typeof(bool), property.PropertyType, "Property '{0}' is wrong type", propertyName);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(bool)), $"Property '{propertyName}' is wrong type");
 
             NUnitLiteOptions options;
             foreach (string option in prototypes)
@@ -204,65 +182,65 @@ namespace NUnitLite.Tests
                 if (option.Length == 1)
                 {
                     options = new NUnitLiteOptions("-" + option);
-                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize -" + option);
+                    Assert.That((bool)property.GetValue(options, null), Is.EqualTo(true), "Didn't recognize -" + option);
                 }
                 else
                 {
                     options = new NUnitLiteOptions("--" + option);
-                    Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize --" + option);
+                    Assert.That((bool)property.GetValue(options, null), Is.EqualTo(true), "Didn't recognize --" + option);
                 }
 
                 options = new NUnitLiteOptions("/" + option);
-                Assert.AreEqual(true, (bool)property.GetValue(options, null), "Didn't recognize /" + option);
+                Assert.That((bool)property.GetValue(options, null), Is.EqualTo(true), "Didn't recognize /" + option);
             }
         }
 
-        [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
-        [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
-        [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
-        [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+        [TestCase("WhereClause", "where", new[] { "cat==Fast" }, new string[0])]
+        [TestCase("DisplayTestLabels", "labels", new[] { "Off", "On", "Before", "After", "All" }, new[] { "JUNK" })]
+        [TestCase("OutFile", "output|out", new[] { "output.txt" }, new string[0])]
+        [TestCase("ErrFile", "err", new[] { "error.txt" }, new string[0])]
+        [TestCase("WorkDirectory", "work", new[] { "results" }, new string[0])]
+        [TestCase("InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.AreEqual(typeof(string), property.PropertyType);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(string)));
 
             foreach (string option in prototypes)
             {
                 foreach (string value in goodValues)
                 {
-                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    string optionPlusValue = $"--{option}:{value}";
                     var options = new NUnitLiteOptions(optionPlusValue);
-                    Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
-                    Assert.AreEqual(value, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                    Assert.That(options.Validate(), "Should be valid: " + optionPlusValue);
+                    Assert.That((string)property.GetValue(options, null), Is.EqualTo(value), "Didn't recognize " + optionPlusValue);
                 }
 
                 foreach (string value in badValues)
                 {
-                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    string optionPlusValue = $"--{option}:{value}";
                     var options = new NUnitLiteOptions(optionPlusValue);
-                    Assert.False(options.Validate(), "Should not be valid: " + optionPlusValue);
+                    Assert.That(options.Validate(), Is.False, "Should not be valid: " + optionPlusValue);
                 }
             }
         }
 
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+        [TestCase("DisplayTestLabels", "labels", new[] { "Off", "On", "All" })]
+        [TestCase("InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.AreEqual(typeof(string), property.PropertyType);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(string)));
 
             foreach (string canonicalValue in canonicalValues)
             {
                 string lowercaseValue = canonicalValue.ToLowerInvariant();
-                string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
+                string optionPlusValue = $"--{optionName}:{lowercaseValue}";
                 var options = new NUnitLiteOptions(optionPlusValue);
-                Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
-                Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
+                Assert.That(options.Validate(), "Should be valid: " + optionPlusValue);
+                Assert.That((string)property.GetValue(options, null), Is.EqualTo(canonicalValue), "Didn't recognize " + optionPlusValue);
             }
         }
 
@@ -274,12 +252,12 @@ namespace NUnitLite.Tests
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.AreEqual(typeof(int), property.PropertyType);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(int)));
 
             foreach (string option in prototypes)
             {
                 var options = new NUnitLiteOptions("--" + option + ":42");
-                Assert.AreEqual(42, (int)property.GetValue(options, null), "Didn't recognize --" + option + ":text");
+                Assert.That((int)property.GetValue(options, null), Is.EqualTo(42), "Didn't recognize --" + option + ":text");
             }
         }
 
@@ -294,7 +272,7 @@ namespace NUnitLite.Tests
             var property = GetPropertyInfo(propertyName);
             Assert.That(property.PropertyType, Is.EqualTo(typeof(IList<string>)));
 
-            var options = new NUnitLiteOptions(args.Split(new char[] { '|' }));
+            var options = new NUnitLiteOptions(args.Split(new[] { '|' }));
             var list = (IList<string>)property.GetValue(options, null);
             Assert.That(list, Is.EqualTo(expected));
         }
@@ -332,16 +310,16 @@ namespace NUnitLite.Tests
         public void MissingValuesAreReported(string option)
         {
             var options = new NUnitLiteOptions(option + "=");
-            Assert.False(options.Validate(), "Missing value should not be valid");
-            Assert.AreEqual("Missing required value for option '" + option + "'.", options.ErrorMessages[0]);
+            Assert.That(options.Validate(), Is.False, "Missing value should not be valid");
+            Assert.That(options.ErrorMessages[0], Is.EqualTo("Missing required value for option '" + option + "'."));
         }
 
         [Test]
         public void AssemblyIsInvalidByDefault()
         {
             var options = new NUnitLiteOptions("nunit.tests.dll");
-            Assert.False(options.Validate());
-            Assert.AreEqual(1, options.ErrorMessages.Count);
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
             Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: nunit.tests.dll"));
         }
 
@@ -349,8 +327,8 @@ namespace NUnitLite.Tests
         public void MultipleAssembliesAreInvalidByDefault()
         {
             var options = new NUnitLiteOptions("nunit.tests.dll", "another.dll");
-            Assert.False(options.Validate());
-            Assert.AreEqual(2, options.ErrorMessages.Count);
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(2));
             Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: nunit.tests.dll"));
             Assert.That(options.ErrorMessages[1], Contains.Substring("Invalid entry: another.dll"));
         }
@@ -359,36 +337,36 @@ namespace NUnitLite.Tests
         public void AssemblyIsValidIfAllowed()
         {
             var options = new NUnitLiteOptions(true, "nunit.tests.dll");
-            Assert.True(options.Validate());
-            Assert.AreEqual(0, options.ErrorMessages.Count);
+            Assert.That(options.Validate());
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void MultipleAssembliesAreInvalidEvenIfOneIsAllowed()
         {
             var options = new NUnitLiteOptions(true, "nunit.tests.dll", "another.dll");
-            Assert.False(options.Validate());
-            Assert.AreEqual(1, options.ErrorMessages.Count);
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
             Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: another.dll"));
         }
 
         [Test]
         public void InvalidOption()
         {
-            var options = new NUnitLiteOptions("-asembly:nunit.tests.dll");
-            Assert.False(options.Validate());
-            Assert.AreEqual(1, options.ErrorMessages.Count);
-            Assert.AreEqual("Invalid argument: -asembly:nunit.tests.dll", options.ErrorMessages[0]);
+            var options = new NUnitLiteOptions("-asembly:nunit.tests.dll"); // Deliberately misspell "assembly"
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
+            Assert.That(options.ErrorMessages[0], Is.EqualTo("Invalid argument: -asembly:nunit.tests.dll"));
         }
 
         [Test]
         public void InvalidCommandLineParms()
         {
             var options = new NUnitLiteOptions("-garbage:TestFixture", "-assembly:Tests.dll");
-            Assert.False(options.Validate());
-            Assert.AreEqual(2, options.ErrorMessages.Count);
-            Assert.AreEqual("Invalid argument: -garbage:TestFixture", options.ErrorMessages[0]);
-            Assert.AreEqual("Invalid argument: -assembly:Tests.dll", options.ErrorMessages[1]);
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(2));
+            Assert.That(options.ErrorMessages[0], Is.EqualTo("Invalid argument: -garbage:TestFixture"));
+            Assert.That(options.ErrorMessages[1], Is.EqualTo("Invalid argument: -assembly:Tests.dll"));
         }
 
         #endregion
@@ -399,8 +377,8 @@ namespace NUnitLite.Tests
         public void TimeoutIsMinusOneIfNoOptionIsProvided()
         {
             var options = new NUnitLiteOptions();
-            Assert.True(options.Validate());
-            Assert.AreEqual(-1, options.DefaultTimeout);
+            Assert.That(options.Validate());
+            Assert.That(options.DefaultTimeout, Is.EqualTo(-1));
         }
 
         [Test]
@@ -413,16 +391,16 @@ namespace NUnitLite.Tests
         public void TimeoutParsesIntValueCorrectly()
         {
             var options = new NUnitLiteOptions("-timeout:5000");
-            Assert.True(options.Validate());
-            Assert.AreEqual(5000, options.DefaultTimeout);
+            Assert.That(options.Validate());
+            Assert.That(options.DefaultTimeout, Is.EqualTo(5000));
         }
 
         [Test]
         public void TimeoutCausesErrorIfValueIsNotInteger()
         {
             var options = new NUnitLiteOptions("-timeout:abc");
-            Assert.False(options.Validate());
-            Assert.AreEqual(-1, options.DefaultTimeout);
+            Assert.That(options.Validate(), Is.False);
+            Assert.That(options.DefaultTimeout, Is.EqualTo(-1));
         }
 
         #endregion
@@ -433,83 +411,83 @@ namespace NUnitLite.Tests
         public void FileNameWithoutResultOptionLooksLikeParameter()
         {
             var options = new NUnitLiteOptions(true, "results.xml");
-            Assert.True(options.Validate());
-            Assert.AreEqual(0, options.ErrorMessages.Count);
+            Assert.That(options.Validate());
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(0));
             //Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: results.xml"));
-            Assert.AreEqual("results.xml", options.InputFile);
+            Assert.That(options.InputFile, Is.EqualTo("results.xml"));
         }
 
         [Test]
         public void ResultOptionWithFilePath()
         {
             var options = new NUnitLiteOptions("-result:results.xml");
-            Assert.True(options.Validate());
+            Assert.That(options.Validate());
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("nunit3", spec.Format);
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
         }
 
         [Test]
         public void ResultOptionWithFilePathAndFormat()
         {
             var options = new NUnitLiteOptions("-result:results.xml;format=nunit2");
-            Assert.True(options.Validate());
+            Assert.That(options.Validate());
 
             OutputSpecification spec = options.ResultOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("nunit2", spec.Format);
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit2"));
         }
 
         [Test]
         public void ResultOptionWithoutFileNameIsInvalid()
         {
             var options = new NUnitLiteOptions("-result:");
-            Assert.False(options.Validate(), "Should not be valid");
-            Assert.AreEqual(1, options.ErrorMessages.Count, "An error was expected");
+            Assert.That(options.Validate(), Is.False, "Should not be valid");
+            Assert.That(options.ErrorMessages.Count, Is.EqualTo(1), "An error was expected");
         }
 
         [Test]
         public void ResultOptionMayBeRepeated()
         {
             var options = new NUnitLiteOptions("-result:results.xml", "-result:nunit2results.xml;format=nunit2");
-            Assert.True(options.Validate(), "Should be valid");
+            Assert.That(options.Validate(), "Should be valid");
 
             var specs = options.ResultOutputSpecifications;
             Assert.That(specs, Has.Count.EqualTo(2));
 
             var spec1 = specs[0];
-            Assert.AreEqual("results.xml", spec1.OutputPath);
-            Assert.AreEqual("nunit3", spec1.Format);
+            Assert.That(spec1.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec1.Format, Is.EqualTo("nunit3"));
 
             var spec2 = specs[1];
-            Assert.AreEqual("nunit2results.xml", spec2.OutputPath);
-            Assert.AreEqual("nunit2", spec2.Format);
+            Assert.That(spec2.OutputPath, Is.EqualTo("nunit2results.xml"));
+            Assert.That(spec2.Format, Is.EqualTo("nunit2"));
         }
 
         [Test]
         public void DefaultResultSpecification()
         {
             var options = new NUnitLiteOptions();
-            Assert.AreEqual(1, options.ResultOutputSpecifications.Count);
+            Assert.That(options.ResultOutputSpecifications.Count, Is.EqualTo(1));
 
             var spec = options.ResultOutputSpecifications[0];
-            Assert.AreEqual("TestResult.xml", spec.OutputPath);
-            Assert.AreEqual("nunit3", spec.Format);
+            Assert.That(spec.OutputPath, Is.EqualTo("TestResult.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
         }
 
         [Test]
         public void NoResultSuppressesDefaultResultSpecification()
         {
             var options = new NUnitLiteOptions("-noresult");
-            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
+            Assert.That(options.ResultOutputSpecifications.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void NoResultSuppressesAllResultSpecifications()
         {
             var options = new NUnitLiteOptions("-result:results.xml", "-noresult", "-result:nunit2results.xml;format=nunit2");
-            Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
+            Assert.That(options.ResultOutputSpecifications.Count, Is.EqualTo(0));
         }
 
         [Test, SetCulture("en-US")]
@@ -529,41 +507,41 @@ namespace NUnitLite.Tests
         public void ExploreOptionWithoutPath()
         {
             var options = new NUnitLiteOptions("-explore");
-            Assert.True(options.Validate());
-            Assert.True(options.Explore);
+            Assert.That(options.Validate());
+            Assert.That(options.Explore);
         }
 
         [Test]
         public void ExploreOptionWithFilePath()
         {
             var options = new NUnitLiteOptions("-explore:results.xml");
-            Assert.True(options.Validate());
-            Assert.True(options.Explore);
+            Assert.That(options.Validate());
+            Assert.That(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("nunit3", spec.Format);
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("nunit3"));
         }
 
         [Test]
         public void ExploreOptionWithFilePathAndFormat()
         {
             var options = new NUnitLiteOptions("-explore:results.xml;format=cases");
-            Assert.True(options.Validate());
-            Assert.True(options.Explore);
+            Assert.That(options.Validate());
+            Assert.That(options.Explore);
 
             OutputSpecification spec = options.ExploreOutputSpecifications[0];
-            Assert.AreEqual("results.xml", spec.OutputPath);
-            Assert.AreEqual("cases", spec.Format);
+            Assert.That(spec.OutputPath, Is.EqualTo("results.xml"));
+            Assert.That(spec.Format, Is.EqualTo("cases"));
         }
 
         [Test]
         public void ExploreOptionWithFilePathUsingEqualSign()
         {
             var options = new NUnitLiteOptions("-explore=C:/nunit/tests/bin/Debug/console-test.xml");
-            Assert.True(options.Validate());
-            Assert.True(options.Explore);
-            Assert.AreEqual("C:/nunit/tests/bin/Debug/console-test.xml", options.ExploreOutputSpecifications[0].OutputPath);
+            Assert.That(options.Validate());
+            Assert.That(options.Explore);
+            Assert.That(options.ExploreOutputSpecifications[0].OutputPath, Is.EqualTo("C:/nunit/tests/bin/Debug/console-test.xml"));
         }
 
         [TestCase(true, null, true)]
@@ -595,7 +573,7 @@ namespace NUnitLite.Tests
             var actualTeamCity = options.TeamCity;
 
             // Then
-            Assert.AreEqual(actualTeamCity, expectedTeamCity);
+            Assert.That(expectedTeamCity, Is.EqualTo(actualTeamCity));
         }
 
         #endregion
@@ -607,7 +585,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("--params=X=5");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { {"X", "5" } }));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" } }));
         }
 
         [Test]
@@ -670,7 +648,7 @@ namespace NUnitLite.Tests
         private static PropertyInfo GetPropertyInfo(string propertyName)
         {
             PropertyInfo property = typeof(NUnitLiteOptions).GetProperty(propertyName);
-            Assert.IsNotNull(property, "The property '{0}' is not defined", propertyName);
+            Assert.That(property, Is.Not.Null, $"The property '{propertyName}' is not defined");
             return property;
         }
 

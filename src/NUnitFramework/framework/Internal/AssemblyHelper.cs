@@ -1,29 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.IO;
 using System.Reflection;
+#if !NETFRAMEWORK
+using System.Runtime.Loader;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -33,8 +15,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-        static readonly string UriSchemeFile = Uri.UriSchemeFile;
-        static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
+        private static readonly string UriSchemeFile = Uri.UriSchemeFile;
+        private static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
 
         #region GetAssemblyPath
 
@@ -47,10 +29,16 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-            string codeBase = assembly.CodeBase;
+#if NETFRAMEWORK
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location 
+            // .NET Framework only: 
+            // If the loaded file was shadow-copied, the location is that of the file after being shadow-copied.
+            // To get the location before the file has been shadow-copied, use the CodeBase property.
+            string? codeBase = assembly.CodeBase;
 
-            if (IsFileUri(codeBase))
+            if (codeBase is not null && IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
+#endif
 
             return assembly.Location;
         }
@@ -66,7 +54,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetDirectoryName(Assembly assembly)
         {
-            return Path.GetDirectoryName(GetAssemblyPath(assembly));
+            return Path.GetDirectoryName(GetAssemblyPath(assembly))!;
         }
 
         #endregion
@@ -87,42 +75,42 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD2_0
+#if !NETFRAMEWORK
         private sealed class ReflectionAssemblyLoader
         {
-            private static ReflectionAssemblyLoader instance;
-            private static bool isInitialized;
+            private static ReflectionAssemblyLoader? _instance;
+            private static bool _isInitialized;
 
-            private readonly Func<string, Assembly> loadFromAssemblyPath;
+            private readonly Func<string, Assembly> _loadFromAssemblyPath;
 
-            public Assembly LoadFromAssemblyPath(string assemblyPath) => loadFromAssemblyPath.Invoke(assemblyPath);
+            public Assembly LoadFromAssemblyPath(string assemblyPath) => _loadFromAssemblyPath.Invoke(assemblyPath);
 
             private ReflectionAssemblyLoader(Func<string, Assembly> loadFromAssemblyPath)
             {
-                this.loadFromAssemblyPath = loadFromAssemblyPath;
+                _loadFromAssemblyPath = loadFromAssemblyPath;
             }
 
-            public static ReflectionAssemblyLoader TryGet()
+            public static ReflectionAssemblyLoader? TryGet()
             {
-                if (isInitialized) return instance;
-                instance = TryInitialize();
-                isInitialized = true;
-                return instance;
+                if (_isInitialized) return _instance;
+                _instance = TryInitialize();
+                _isInitialized = true;
+                return _instance;
             }
 
-            private static ReflectionAssemblyLoader TryInitialize()
+            private static ReflectionAssemblyLoader? TryInitialize()
             {
                 var assemblyLoadContextType = Type.GetType("System.Runtime.Loader.AssemblyLoadContext", throwOnError: false);
-                if (assemblyLoadContextType == null) return null;
+                if (assemblyLoadContextType is null) return null;
 
-                var defaultContext = assemblyLoadContextType.GetRuntimeProperty("Default").GetValue(null);
+                var defaultContext = assemblyLoadContextType.GetRuntimeProperty("Default")!.GetValue(null);
 
                 var loadFromAssemblyPath = (Func<string, Assembly>)assemblyLoadContextType
-                        .GetRuntimeMethod("LoadFromAssemblyPath", new[] { typeof(string) })
+                        .GetRuntimeMethod("LoadFromAssemblyPath", new[] { typeof(string) })!
                         .CreateDelegate(typeof(Func<string, Assembly>), defaultContext);
 
-                assemblyLoadContextType.GetRuntimeEvent("Resolving").AddEventHandler(defaultContext,
-                    new Func<object, AssemblyName, Assembly>((context, assemblyName) =>
+                assemblyLoadContextType.GetRuntimeEvent("Resolving")!.AddEventHandler(defaultContext,
+                    new Func<AssemblyLoadContext, AssemblyName, Assembly?>((context, assemblyName) =>
                     {
                         var dllPath = Path.Combine(AppContext.BaseDirectory, assemblyName.Name + ".dll");
                         if (File.Exists(dllPath)) return loadFromAssemblyPath.Invoke(dllPath);
@@ -147,7 +135,7 @@ namespace NUnit.Framework.Internal
                 || ext.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 var fromLoader = ReflectionAssemblyLoader.TryGet()?.LoadFromAssemblyPath(Path.GetFullPath(name));
-                if (fromLoader != null) return fromLoader;
+                if (fromLoader is not null) return fromLoader;
 
                 name = Path.GetFileNameWithoutExtension(name);
             }
@@ -161,10 +149,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static Assembly Load(string nameOrPath)
         {
-            var ext = Path.GetExtension(nameOrPath).ToLower();
+            var ext = Path.GetExtension(nameOrPath);
 
             // Handle case where this is the path to an assembly
-            if (ext == ".dll" || ext == ".exe")
+            if (ext.Equals(".dll", StringComparison.OrdinalIgnoreCase) || ext.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 return Assembly.Load(AssemblyName.GetAssemblyName(nameOrPath));
             }
@@ -180,7 +168,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsFileUri(string uri)
         {
-            return uri.ToLower().StartsWith(UriSchemeFile);
+            return uri.StartsWith(UriSchemeFile, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

@@ -1,36 +1,12 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Compatibility;
-using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
-
     /// <summary>
     /// EqualityAdapter class handles all equality comparisons
     /// that use an <see cref="IEqualityComparer"/>, <see cref="IEqualityComparer{T}"/>
@@ -44,18 +20,31 @@ namespace NUnit.Framework.Constraints
         public abstract bool AreEqual(object x, object y);
 
         /// <summary>
+        /// Compares two objects, within a tolerance returning true if they are equal
+        /// </summary>
+        public virtual bool AreEqual(object x, object y, ref Tolerance tolerance)
+        {
+            // For backwards compatibility all existing equality operators can continue
+            // to use the existing AreEqual.  Attempting to use a tolerance when it's
+            // not supported is now thrown to the caller, rather than silently ignored.
+            if (!tolerance.HasVariance)
+            {
+                return AreEqual(x, y);
+            }
+            else
+            {
+                throw new InvalidOperationException("Tolerance is not supported for this comparison");
+            }
+        }
+
+        /// <summary>
         /// Returns true if the two objects can be compared by this adapter.
         /// The base adapter cannot handle IEnumerables except for strings.
         /// </summary>
         public virtual bool CanCompare(object x, object y)
         {
-            if (x is string && y is string)
-                return true;
-
-            if (x is IEnumerable || y is IEnumerable)
-                return false;
-
-            return true;
+            return (x is string || x is not IEnumerable) &&
+                   (y is string || y is not IEnumerable);
         }
 
         #region Nested IComparer Adapter
@@ -71,18 +60,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
-        class ComparerAdapter : EqualityAdapter
+        private class ComparerAdapter : EqualityAdapter
         {
-            private readonly IComparer comparer;
+            private readonly IComparer _comparer;
 
             public ComparerAdapter(IComparer comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
-                return comparer.Compare(x, y) == 0;
+                return _comparer.Compare(x, y) == 0;
             }
         }
 
@@ -98,18 +87,18 @@ namespace NUnit.Framework.Constraints
             return new EqualityComparerAdapter(comparer);
         }
 
-        class EqualityComparerAdapter : EqualityAdapter
+        private class EqualityComparerAdapter : EqualityAdapter
         {
-            private readonly IEqualityComparer comparer;
+            private readonly IEqualityComparer _comparer;
 
             public EqualityComparerAdapter(IEqualityComparer comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
-                return comparer.Equals(x, y);
+                return _comparer.Equals(x, y);
             }
         }
 
@@ -156,7 +145,7 @@ namespace NUnit.Framework.Constraints
 
         #region Nested GenericEqualityAdapter<T>
 
-        abstract class GenericEqualityAdapter<T> : EqualityAdapter
+        private abstract class GenericEqualityAdapter<T> : EqualityAdapter
         {
             /// <summary>
             /// Returns true if the two objects can be compared by this adapter.
@@ -167,13 +156,17 @@ namespace NUnit.Framework.Constraints
                 return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
             }
 
-            protected void CastOrThrow(object x, object y, out T xValue, out T yValue)
+            protected void CastOrThrow(object? x, object? y, out T xValue, out T yValue)
             {
-                if (!TypeHelper.TryCast(x, out xValue))
+                if (!TypeHelper.TryCast(x, out T? xValueOrNull))
                     throw new ArgumentException($"Cannot compare {x?.ToString() ?? "null"}");
 
-                if (!TypeHelper.TryCast(y, out yValue))
+                if (!TypeHelper.TryCast(y, out T? yValueOrNull))
                     throw new ArgumentException($"Cannot compare {y?.ToString() ?? "null"}");
+
+                // The are now verified to be not null.
+                xValue = xValueOrNull;
+                yValue = yValueOrNull;
             }
         }
 
@@ -189,19 +182,19 @@ namespace NUnit.Framework.Constraints
             return new EqualityComparerAdapter<T>(comparer);
         }
 
-        class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
+        private class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly IEqualityComparer<T> comparer;
+            private readonly IEqualityComparer<T> _comparer;
 
             public EqualityComparerAdapter(IEqualityComparer<T> comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Equals(xValue, yValue);
+                return _comparer.Equals(xValue, yValue);
             }
         }
 
@@ -220,19 +213,19 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
-        class ComparerAdapter<T> : GenericEqualityAdapter<T>
+        private class ComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly IComparer<T> comparer;
+            private readonly IComparer<T> _comparer;
 
             public ComparerAdapter(IComparer<T> comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Compare(xValue, yValue) == 0;
+                return _comparer.Compare(xValue, yValue) == 0;
             }
         }
 
@@ -248,22 +241,22 @@ namespace NUnit.Framework.Constraints
             return new ComparisonAdapter<T>(comparer);
         }
 
-        class ComparisonAdapter<T> : GenericEqualityAdapter<T>
+        private class ComparisonAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly Comparison<T> comparer;
+            private readonly Comparison<T> _comparer;
 
             public ComparisonAdapter(Comparison<T> comparer)
             {
-                this.comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Invoke(xValue, yValue) == 0;
+                return _comparer.Invoke(xValue, yValue) == 0;
             }
         }
 
-#endregion
+        #endregion
     }
 }

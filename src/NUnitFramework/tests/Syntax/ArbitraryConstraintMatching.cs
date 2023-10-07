@@ -1,57 +1,36 @@
-﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
     public class ArbitraryConstraintMatching
     {
-        readonly Constraint custom = new CustomConstraint();
-        readonly Constraint another = new AnotherConstraint();
+        private readonly Constraint _custom = new CustomConstraint();
+        private readonly Constraint _another = new AnotherConstraint();
 
         [Test]
         public void CanMatchCustomConstraint()
         {
-            IResolveConstraint constraint = new ConstraintExpression().Matches(custom);
+            IResolveConstraint constraint = new ConstraintExpression().Matches(_custom);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<custom>"));
         }
 
         [Test]
         public void CanMatchCustomConstraintAfterPrefix()
         {
-            IResolveConstraint constraint = Is.All.Matches(custom);
+            IResolveConstraint constraint = Is.All.Matches(_custom);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <custom>>"));
         }
 
         [Test]
         public void CanMatchCustomConstraintsUnderAndOperator()
         {
-            IResolveConstraint constraint = Is.All.Matches(custom).And.Matches(another);
-            Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>")); 
+            IResolveConstraint constraint = Is.All.Matches(_custom).And.Matches(_another);
+            Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>"));
         }
 
         [Test]
@@ -62,7 +41,7 @@ namespace NUnit.Framework.Syntax
             Assert.That(42, constraint);
         }
 
-        bool IsEven(int num)
+        private bool IsEven(int num)
         {
             return (num & 1) == 0;
         }
@@ -70,20 +49,22 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void CanMatchLambda()
         {
-            IResolveConstraint constraint = new ConstraintExpression().Matches<int>( (x) => (x & 1) == 0);
+            IResolveConstraint constraint = new ConstraintExpression().Matches<int>((x) => (x & 1) == 0);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<predicate>"));
             Assert.That(42, constraint);
         }
 
-        class CustomConstraint : Constraint
+        private class CustomConstraint : Constraint
         {
+            public override string Description => throw new NotImplementedException();
+
             public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
                 throw new NotImplementedException();
             }
         }
 
-        class AnotherConstraint : CustomConstraint
+        private class AnotherConstraint : CustomConstraint
         {
         }
 
@@ -107,7 +88,7 @@ namespace NUnit.Framework.Syntax
             public List<int> Items { get; }
             public Unit()
             {
-                Items = new List<int>(new int[] { 1, 2, 3, 4, 5 });
+                Items = new List<int>(new[] { 1, 2, 3, 4, 5 });
             }
         }
     }

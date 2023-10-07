@@ -1,48 +1,33 @@
-﻿// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class AssignableFromConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AssignableFromConstraint(typeof(D1));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AssignableFromConstraint(typeof(D1));
-            ExpectedDescription = string.Format("assignable from <{0}>", typeof(D1));
-            StringRepresentation = string.Format("<assignablefrom {0}>", typeof(D1));
+            ExpectedDescription = $"assignable from <{typeof(D1)}>";
+            StringRepresentation = $"<assignablefrom {typeof(D1)}>";
         }
 
-        static object[] SuccessData = new object[] { new D1(), new B() };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { new D1(), new B() };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
-        static object[] FailureData = new object[] { 
-            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" ) };
+        private class B { }
 
-        class B { }
+        private class D1 : B { }
 
-        class D1 : B { }
-
-        class D2 : D1 { }
+        private class D2 : D1 { }
     }
 }

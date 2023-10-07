@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework;
@@ -28,8 +7,8 @@ namespace NUnit.TestData.CategoryAttributeData
 {
     [TestFixture, InheritableCategory("MyCategory")]
     public abstract class AbstractBase { }
-    
-    [TestFixture, Category( "DataBase" )]
+
+    [TestFixture, Category("DataBase")]
     public class FixtureWithCategories : AbstractBase
     {
         [Test, Category("Long")]
@@ -45,17 +24,15 @@ namespace NUnit.TestData.CategoryAttributeData
         [Test, Category("A-B"), Category("A,B"), Category("A!B"), Category("A+B")]
         public void TestValidSpecialChars() { }
 
-#pragma warning disable 414
-        private static TestCaseData[] Test3Data = new TestCaseData[] {
+        private static readonly TestCaseData[] Test3Data = new TestCaseData[] {
             new TestCaseData(5).SetCategory("Bottom")
         };
-#pragma warning restore 414
     }
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class CriticalAttribute : CategoryAttribute { }
-    
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class InheritableCategoryAttribute : CategoryAttribute
     {
         public InheritableCategoryAttribute(string name) : base(name) { }

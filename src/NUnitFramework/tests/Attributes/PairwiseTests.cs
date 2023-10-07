@@ -1,33 +1,9 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class PairwiseTest
@@ -35,18 +11,18 @@ namespace NUnit.Framework.Attributes
         [TestFixture]
         public class LiveTest
         {
-            private PairCounter pairsTested = new PairCounter();
+            private PairCounter _pairsTested = new PairCounter();
 
             [OneTimeSetUp]
             public void OneTimeSetUp()
             {
-                pairsTested = new PairCounter();
+                _pairsTested = new PairCounter();
             }
 
             [OneTimeTearDown]
             public void OneTimeTearDown()
             {
-                Assert.That(pairsTested.Count, Is.EqualTo(16));
+                Assert.That(_pairsTested, Has.Count.EqualTo(16));
             }
 
             [Test, Pairwise]
@@ -57,29 +33,29 @@ namespace NUnit.Framework.Attributes
             {
                 //Console.WriteLine("Pairwise: {0} {1} {2}", a, b, c);
 
-                pairsTested[a + b] = null;
-                pairsTested[a + c] = null;
-                pairsTested[b + c] = null;
+                _pairsTested[a + b] = null;
+                _pairsTested[a + c] = null;
+                _pairsTested[b + c] = null;
             }
         }
 
         // Test data is taken from various sources. See "Lessons Learned
-        // in Software Testing" pp 53-59, for example. For orthogonal cases, see 
+        // in Software Testing" pp 53-59, for example. For orthogonal cases, see
         // https://web.archive.org/web/20100305233703/www.freequality.org/sites/www_freequality_org/documents/tools/Tagarray_files/tamatrix.htm
-        static internal object[] cases = new object[]
+        internal static object[] Cases = new object[]
         {
-            new TestCaseData( new int[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
-            new TestCaseData( new int[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2 }, 6, 6 ).SetName("Test 3x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2, 2 }, 8, 8 ).SetName("Test 3x2x2x2x2x2"),
-            new TestCaseData( new int[] { 3, 3, 3 }, 9, 9 ).SetName("Test 3x3x3"),
-            new TestCaseData( new int[] { 4, 4, 4 }, 17, 16 ).SetName("Test 4x4x4"),
-            new TestCaseData( new int[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
+            new TestCaseData( new[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
+            new TestCaseData( new[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2 }, 6, 6 ).SetName("Test 3x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2, 2, 2 }, 8, 8 ).SetName("Test 3x2x2x2x2x2"),
+            new TestCaseData( new[] { 3, 3, 3 }, 9, 9 ).SetName("Test 3x3x3"),
+            new TestCaseData( new[] { 4, 4, 4 }, 17, 16 ).SetName("Test 4x4x4"),
+            new TestCaseData( new[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
         };
 
-        [Test, TestCaseSource(nameof(cases))]
+        [Test, TestCaseSource(nameof(Cases))]
         public void Test(int[] dimensions, int bestSoFar, int targetCases)
         {
             int features = dimensions.Length;
@@ -93,7 +69,7 @@ namespace NUnit.Framework.Attributes
                 int n = dimensions[i];
                 sources[i] = new string[n];
                 for (int j = 0; j < n; j++)
-                    sources[i][j] = featureName + j.ToString();
+                    sources[i][j] = featureName + j;
             }
 
             ICombiningStrategy strategy = new PairwiseStrategy();
@@ -103,28 +79,32 @@ namespace NUnit.Framework.Attributes
             foreach (NUnit.Framework.Internal.TestCaseParameters parms in strategy.GetTestCases(sources))
             {
                 for (int i = 1; i < features; i++)
+                {
                     for (int j = 0; j < i; j++)
                     {
-                        string a = parms.Arguments[i] as string;
-                        string b = parms.Arguments[j] as string;
+                        string? a = parms.Arguments[i] as string;
+                        string? b = parms.Arguments[j] as string;
                         pairs[a + b] = null;
                     }
+                }
 
                 ++cases;
             }
 
             int expectedPairs = 0;
             for (int i = 1; i < features; i++)
+            {
                 for (int j = 0; j < i; j++)
                     expectedPairs += dimensions[i] * dimensions[j];
+            }
 
-            Assert.That(pairs.Count, Is.EqualTo(expectedPairs), "Number of pairs is incorrect");
+            Assert.That(pairs, Has.Count.EqualTo(expectedPairs), "Number of pairs is incorrect");
             Assert.That(cases, Is.AtMost(bestSoFar), "Regression: Number of test cases exceeded target previously reached");
 #if DEBUG
             //Assert.That(cases, Is.AtMost(targetCases), "Number of test cases exceeded target");
 #endif
         }
-        
-        class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
+
+        private class PairCounter : System.Collections.Generic.Dictionary<string, object?> { }
     }
 }

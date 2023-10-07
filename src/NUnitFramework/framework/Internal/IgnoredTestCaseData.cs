@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.ComponentModel;
@@ -41,7 +20,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The previous RunState
         /// </summary>
-        private RunState _prevRunState;
+        private readonly RunState _prevRunState;
 
         #endregion
 
@@ -49,15 +28,15 @@ namespace NUnit.Framework
 
         internal IgnoredTestCaseData(TestCaseData data, RunState prevRunState)
         {
-            this.Arguments = data.Arguments;
-            this.ArgDisplayNames = data.ArgDisplayNames;
-            this.ExpectedResult = data.ExpectedResult;
-            this.HasExpectedResult = data.HasExpectedResult;
-            this.OriginalArguments = data.OriginalArguments;
-            this.Properties = data.Properties;
-            this.RunState = data.RunState;
-            this.TestName = data.TestName;
-            this._prevRunState = prevRunState;
+            Arguments = data.Arguments;
+            ArgDisplayNames = data.ArgDisplayNames;
+            ExpectedResult = data.ExpectedResult;
+            HasExpectedResult = data.HasExpectedResult;
+            OriginalArguments = data.OriginalArguments;
+            Properties = data.Properties;
+            RunState = data.RunState;
+            TestName = data.TestName;
+            _prevRunState = prevRunState;
         }
 
         #endregion
@@ -76,14 +55,14 @@ namespace NUnit.Framework
                 if (datetime > DateTimeOffset.UtcNow)
                 {
                     RunState = RunState.Ignored;
-                    string reason = (string)Properties.Get(PropertyNames.SkipReason);
+                    string? reason = (string?)Properties.Get(PropertyNames.SkipReason);
                     Properties.AddIgnoreUntilReason(datetime, reason);
                 }
                 else
                 {
                     RunState = _prevRunState;
                 }
-                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u") );
+                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u"));
             }
             return this;
         }

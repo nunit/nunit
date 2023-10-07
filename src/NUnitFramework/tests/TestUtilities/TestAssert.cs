@@ -1,49 +1,27 @@
-﻿// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Linq;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     public class TestAssert
     {
         #region IsRunnable
         public static void IsRunnable(Test test)
         {
-            Assert.AreEqual(RunState.Runnable, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         public static void IsRunnable(Type type)
         {
             TestSuite suite = TestBuilder.MakeFixture(type);
-            Assert.NotNull(suite, "Unable to construct fixture");
-            Assert.AreEqual(RunState.Runnable, suite.RunState);
+            Assert.That(suite, Is.Not.Null, "Unable to construct fixture");
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             ITestResult result = TestBuilder.RunTest(suite, null);
-            Assert.AreEqual(ResultState.Success, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
         public static void IsRunnable(Type type, string name)
@@ -66,7 +44,7 @@ namespace NUnit.TestUtilities
         #region IsNotRunnable
         public static void IsNotRunnable(Test test)
         {
-            Assert.AreEqual(RunState.NotRunnable, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
             //ITestResult result = TestBuilder.RunTest(test, null);
             //Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
             //Assert.AreEqual("Invalid", result.ResultState.Label);
@@ -75,7 +53,7 @@ namespace NUnit.TestUtilities
         public static void IsNotRunnable(Type type)
         {
             TestSuite fixture = TestBuilder.MakeFixture(type);
-            Assert.NotNull(fixture, "Unable to construct fixture");
+            Assert.That(fixture, Is.Not.Null, "Unable to construct fixture");
             IsNotRunnable(fixture);
         }
 

@@ -1,46 +1,25 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class GreaterThanOrEqualConstraintTests : ComparisonConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new GreaterThanOrEqualConstraint(5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = ComparisonConstraint = new GreaterThanOrEqualConstraint(5);
             ExpectedDescription = "greater than or equal to 5";
             StringRepresentation = "<greaterthanorequal 5>";
         }
 
-        static object[] SuccessData = new object[] { 6, 5 };
-
-        static object[] FailureData = new object[] { new object[] { 4, "4" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 6, 5 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCompareIComparables()
@@ -54,6 +33,14 @@ namespace NUnit.Framework.Constraints
         public void CanCompareIComparablesOfT()
         {
             ClassWithIComparableOfT expected = new ClassWithIComparableOfT(0);
+            ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
+            Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
+        }
+
+        [Test]
+        public void CanCompareIComparablesOfInt()
+        {
+            int expected = 0;
             ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
@@ -72,18 +59,22 @@ namespace NUnit.Framework.Constraints
         [TestCase(195, 200, 5)] // lower range bound
         public void SimpleTolerance(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance));
+#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         [TestCase(4.9, 5.0, 0.05)]
         [TestCase(190, 200, 5)]
         public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance)),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + expected.ToString()));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + expected));
         }
 
         [TestCase(6.0, 5.0, 1)]
@@ -107,11 +98,13 @@ namespace NUnit.Framework.Constraints
         [TestCase(190, 200, 2.5)]
         public void PercentTolerance_Failure(object actual, object expected, object tolerance)
         {
+#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThanOrEqualTo(expected).Within(tolerance).Percent),
                 "Assertion should have failed");
+#pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent" ));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
     }
 }

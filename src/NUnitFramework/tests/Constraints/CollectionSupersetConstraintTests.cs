@@ -1,59 +1,41 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionSupersetConstraintTests : ConstraintTestBaseNoData
     {
+        protected override Constraint TheConstraint { get; } = new CollectionSupersetConstraint(new[] { 1, 2, 3, 4, 5 });
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new CollectionSupersetConstraint(new int[] { 1, 2, 3, 4, 5 });
             StringRepresentation = "<supersetof System.Int32[]>";
             ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
-        static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
-            new int[] { 1, 2, 3, 4, 5, 6 }
-            , new int[] { 1, 2, 3, 4, 5 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 3 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 7 }
+            new[] { 1, 2, 3, 4, 5, 6 }
+            , new[] { 1, 2, 3, 4, 5 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
-
-        static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
-            new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
-            , new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
+            new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
+            , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
         };
 
         [Test, TestCaseSource(nameof(SuccessData))]
@@ -66,7 +48,7 @@ namespace NUnit.Framework.Constraints
         public void FailsWithBadValues(object badActualValue, string actualMessage, string missingMessage)
         {
             var constraintResult = TheConstraint.ApplyTo(badActualValue);
-            Assert.IsFalse(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
@@ -88,6 +70,69 @@ namespace NUnit.Framework.Constraints
                 constraintResult.WriteMessageTo(writer);
                 Assert.Fail(writer.ToString());
             }
+        }
+
+        [Test]
+        public void WorksOnTuples()
+        {
+            var actual = new[] { Tuple.Create('a', 1), Tuple.Create('b', 2), Tuple.Create('c', 3), Tuple.Create('d', 4) };
+            var expected = new[] { Tuple.Create('b', 2), Tuple.Create('c', 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void WorksOnTuples_OneTypeIsntIComparer()
+        {
+            var a = new S { C = 'a' };
+            var b = new S { C = 'b' };
+            var c = new S { C = 'c' };
+            var d = new S { C = 'd' };
+
+            var actual = new[] { Tuple.Create(a, 1), Tuple.Create(b, 2), Tuple.Create(c, 3), Tuple.Create(d, 4) };
+            var expected = new[] { Tuple.Create(b, 2), Tuple.Create(c, 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void WorksOnValueTuples()
+        {
+            var actual = new[] { ('a', 1), ('b', 2), ('c', 3), ('d', 4) };
+            var expected = new[] { ('b', 2), ('c', 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void WorksOnValueTuples_OneTypeIsntIComparer()
+        {
+            var a = new S { C = 'a' };
+            var b = new S { C = 'b' };
+            var c = new S { C = 'c' };
+            var d = new S { C = 'd' };
+
+            var actual = new[] { (a, 1), (b, 2), (c, 3), (d, 4) };
+            var expected = new[] { (b, 2), (c, 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        private class S
+        {
+            public char C;
         }
 
         public class IgnoreCaseDataProvider
@@ -119,6 +164,16 @@ namespace NUnit.Framework.Constraints
             ICollection superSet = new SimpleObjectCollection(1, 2, 3, 4, 5);
 
             Assert.That(superSet, Is.SupersetOf(set).Using<int, string>((i, s) => i.ToString() == s));
+        }
+
+        [Test]
+        public void WorksWithImmutableDictionary()
+        {
+            var numbers = Enumerable.Range(1, 3);
+            var test1 = numbers.ToImmutableDictionary(t => t);
+            var test2 = numbers.ToImmutableDictionary(t => t);
+
+            Assert.That(test1, Is.SupersetOf(test2));
         }
     }
 }

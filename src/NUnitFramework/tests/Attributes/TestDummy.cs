@@ -1,65 +1,29 @@
-﻿// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
-    public class TestDummy : Test
+    public class TestDummy : NUnit.Framework.Internal.Test
     {
         public TestDummy() : base("TestDummy") { }
 
         #region Overrides
 
-        public string TestKind
-        {
-            get { return "dummy-test"; }
-        }
+        public string TestKind => "dummy-test";
 
-        public override bool HasChildren
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool HasChildren => false;
 
-        public override System.Collections.Generic.IList<ITest> Tests
-        {
-            get
-            {
-                return new ITest[0];
-            }
-        }
+        public override System.Collections.Generic.IList<ITest> Tests => Array.Empty<ITest>();
 
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             throw new NotImplementedException();
         }
 
-        public Internal.Commands.TestCommand MakeTestCommand()
+        public Framework.Internal.Commands.TestCommand MakeTestCommand()
         {
             throw new NotImplementedException();
         }
@@ -69,18 +33,9 @@ namespace NUnit.Framework.Attributes
             throw new NotImplementedException();
         }
 
-        public override string XmlElementName
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override string XmlElementName => throw new NotImplementedException();
 
-        public override object[] Arguments
-        {
-            get
-            {
-                return new object[0];
-            }
-        }
+        public override object[] Arguments => Array.Empty<object>();
 
         #endregion
     }

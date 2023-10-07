@@ -1,44 +1,16 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestCaseAttributeFixture;
-using NUnit.TestUtilities;
 
-#if TASK_PARALLEL_LIBRARY_API
-using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
-
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestCaseAttributeTests
@@ -48,7 +20,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 4, 3)]
         public void IntegerDivisionWithResultPassedToTest(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [TestCase(12, 3, ExpectedResult = 4)]
@@ -59,7 +31,7 @@ namespace NUnit.Framework.Attributes
             return n / d;
         }
 
-        [TestCase(2, 2, ExpectedResult=4)]
+        [TestCase(2, 2, ExpectedResult = 4)]
         public double CanConvertIntToDouble(double x, double y)
         {
             return x + y;
@@ -108,19 +80,19 @@ namespace NUnit.Framework.Attributes
         {
             var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName).Tests[0];
-            Assert.AreEqual(expectedState, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(expectedState));
         }
 
         [TestCase("12-October-1942")]
         public void CanConvertStringToDateTime(DateTime dt)
         {
-            Assert.AreEqual(1942, dt.Year);
+            Assert.That(dt.Year, Is.EqualTo(1942));
         }
 
         [TestCase("1942-10-12")]
         public void CanConvertIso8601DateStringToDateTime(DateTime dt)
         {
-            Assert.AreEqual(new DateTime(1942,10,12), dt);
+            Assert.That(dt, Is.EqualTo(new DateTime(1942, 10, 12)));
         }
 
         [TestCase("1942-10-12", ExpectedResult = "1942-10-12")]
@@ -132,9 +104,9 @@ namespace NUnit.Framework.Attributes
         [TestCase("4:44:15")]
         public void CanConvertStringToTimeSpan(TimeSpan ts)
         {
-            Assert.AreEqual(4, ts.Hours);
-            Assert.AreEqual(44, ts.Minutes);
-            Assert.AreEqual(15, ts.Seconds);
+            Assert.That(ts.Hours, Is.EqualTo(4));
+            Assert.That(ts.Minutes, Is.EqualTo(44));
+            Assert.That(ts.Seconds, Is.EqualTo(15));
         }
 
         [TestCase("4:44:15", ExpectedResult = "4:44:15")]
@@ -146,16 +118,16 @@ namespace NUnit.Framework.Attributes
         [TestCase("2018-10-09 15:15:00+02:30")]
         public void CanConvertStringToDateTimeOffset(DateTimeOffset offset)
         {
-            Assert.AreEqual(2018, offset.Year);
-            Assert.AreEqual(10, offset.Month);
-            Assert.AreEqual(9, offset.Day);
+            Assert.That(offset.Year, Is.EqualTo(2018));
+            Assert.That(offset.Month, Is.EqualTo(10));
+            Assert.That(offset.Day, Is.EqualTo(9));
 
-            Assert.AreEqual(15, offset.Hour);
-            Assert.AreEqual(15, offset.Minute);
-            Assert.AreEqual(0, offset.Second);
+            Assert.That(offset.Hour, Is.EqualTo(15));
+            Assert.That(offset.Minute, Is.EqualTo(15));
+            Assert.That(offset.Second, Is.EqualTo(0));
 
-            Assert.AreEqual(2, offset.Offset.Hours);
-            Assert.AreEqual(30, offset.Offset.Minutes);
+            Assert.That(offset.Offset.Hours, Is.EqualTo(2));
+            Assert.That(offset.Offset.Minutes, Is.EqualTo(30));
         }
 
         [TestCase("2018-10-09 15:15:00+02:30", ExpectedResult = "2018-10-09 15:15:00+02:30")]
@@ -167,7 +139,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
 
         [TestCase(new object[] { 1, "two", 3.0 })]
@@ -179,32 +151,32 @@ namespace NUnit.Framework.Attributes
         [TestCase(new object[] { "a", "b" })]
         public void CanPassArrayAsArgument(object[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase("a", "b")]
         public void ArgumentsAreCoalescedInObjectArray(object[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase(1, "b")]
         public void ArgumentsOfDifferentTypeAreCoalescedInObjectArray(object[] array)
         {
-            Assert.AreEqual(1, array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo(1));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
-        [TestCase(new object[] { null })]
-        public void NullArgumentsAreCoalescedInObjectArray(object[] array)
+        [TestCase(new object?[] { null })]
+        public void NullArgumentsAreCoalescedInObjectArray(object?[] array)
         {
-            Assert.That(array, Is.EqualTo(new object[] { null }));
+            Assert.That(array, Is.EqualTo(new object?[] { null }));
         }
 
         [TestCase(ExpectedResult = null)]
-        public object ResultCanBeNull()
+        public object? ResultCanBeNull()
         {
             return null;
         }
@@ -212,69 +184,71 @@ namespace NUnit.Framework.Attributes
         [TestCase("a", "b")]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase("a")]
         public void HandlesParamsArrayWithOneItemAsSoleArgument(params string[] array)
         {
-            Assert.AreEqual("a", array[0]);
+            Assert.That(array[0], Is.EqualTo("a"));
         }
 
         [TestCase("a", "b", "c", "d")]
         public void HandlesParamsArrayAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual("c", array[0]);
-            Assert.AreEqual("d", array[1]);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
+            Assert.That(array[1], Is.EqualTo("d"));
         }
 
         [TestCase("a", "b")]
         public void HandlesParamsArrayWithNoItemsAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual(0, array.Length);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array, Is.Empty);
         }
 
         [TestCase("a", "b", "c")]
         public void HandlesParamsArrayWithOneItemAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual("c", array[0]);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
         }
 
-        [TestCase("x", ExpectedResult = new []{"x", "b", "c"})]
+        [TestCase("x", ExpectedResult = new[] { "x", "b", "c" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
         public string[] HandlesOptionalArguments(string s1, string s2 = "b", string s3 = "c")
         {
-            return new[] {s1, s2, s3};
+            return new[] { s1, s2, s3 };
         }
 
-        [TestCase(ExpectedResult = new []{"a", "b"})]
+        [TestCase(ExpectedResult = new[] { "a", "b" })]
         [TestCase("x", ExpectedResult = new[] { "x", "b" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y" })]
         public string[] HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
         {
-            return new[] {s1, s2};
+            return new[] { s1, s2 };
         }
 
+#pragma warning disable NUnit1004 // The TestCaseAttribute provided too many arguments
         [TestCase("a", "b", Explicit = true)]
         public void ShouldNotRunAndShouldNotFailInConsoleRunner()
         {
             Assert.Fail();
         }
+#pragma warning restore NUnit1004 // The TestCaseAttribute provided too many arguments
 
         [Test]
         public void CanSpecifyDescription()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasDescriptionSpecified)).Tests[0];
-            Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
+            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("My Description"));
         }
 
         [Test]
@@ -282,8 +256,8 @@ namespace NUnit.Framework.Attributes
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_FixedText)).Tests[0];
-            Assert.AreEqual("XYZ", test.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
+            Assert.That(test.Name, Is.EqualTo("XYZ"));
+            Assert.That(test.FullName, Is.EqualTo("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ"));
         }
 
         [Test]
@@ -292,8 +266,8 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_WithMethodName)).Tests[0];
             var expectedName = "MethodHasTestNameSpecified_WithMethodName+XYZ";
-            Assert.AreEqual(expectedName, test.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName, test.FullName);
+            Assert.That(test.Name, Is.EqualTo(expectedName));
+            Assert.That(test.FullName, Is.EqualTo("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName));
         }
 
         [Test]
@@ -302,7 +276,7 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasSingleCategory)).Tests[0];
             IList categories = test.Properties["Category"];
-            Assert.AreEqual(new string[] { "XYZ" }, categories);
+            Assert.That(categories, Is.EqualTo(new[] { "XYZ" }));
         }
 
         [Test]
@@ -311,7 +285,7 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasMultipleCategories)).Tests[0];
             IList categories = test.Properties["Category"];
-            Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
+            Assert.That(categories, Is.EqualTo(new[] { "X", "Y", "Z" }));
         }
 
         [Test]
@@ -321,13 +295,16 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
 
             testCase = TestFinder.Find($"{methodName}(2)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
 
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
         }
@@ -338,29 +315,34 @@ namespace NUnit.Framework.Attributes
             var methodName = nameof(TestCaseAttributeFixture.MethodWithIgnoredWithUntilDateTestCases);
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
-            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
 
             string untilDateString = DateTimeOffset.Parse("4242-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
             testCase = TestFinder.Find($"{methodName}(2)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Should not run", untilDateString)));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDateString}. Should not run"));
             Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
 
             untilDateString = DateTimeOffset.Parse("1942-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
 
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
 
             untilDateString = DateTimeOffset.Parse("4242-01-01T01:23:45Z", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
 
             testCase = TestFinder.Find($"{methodName}(4)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Don't Run Me!", untilDateString)));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDateString}. Don't Run Me!"));
             Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
 
             testCase = TestFinder.Find($"{methodName}(5)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
@@ -371,13 +353,16 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
 
             testCase = TestFinder.Find($"{methodName}(2)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
 
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
@@ -392,30 +377,43 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
-            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
-            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
-            Test testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
+            Test? testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test? testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test? testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
+            Assert.That(testCase1, Is.Not.Null);
+            Assert.That(testCase2, Is.Not.Null);
+            Assert.That(testCase3, Is.Not.Null);
+            Assert.That(testCase4, Is.Not.Null);
             if (isLinux)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
             else if (isMacOSX)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
             else
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
         }
 
@@ -429,30 +427,43 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
-            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
-            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
-            Test testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
+            Test? testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test? testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test? testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
+            Assert.That(testCase1, Is.Not.Null);
+            Assert.That(testCase2, Is.Not.Null);
+            Assert.That(testCase3, Is.Not.Null);
+            Assert.That(testCase4, Is.Not.Null);
             if (isLinux)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
             else if (isMacOSX)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
             else
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
         }
 
@@ -460,8 +471,8 @@ namespace NUnit.Framework.Attributes
         public void CanIncludeRuntime()
         {
             bool isNetCore;
-            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            bool isMono = monoRuntimeType != null;
+            Type? monoRuntimeType = Type.GetType("Mono.Runtime", false);
+            bool isMono = monoRuntimeType is not null;
 #if NETCOREAPP
             isNetCore = true;
 #else
@@ -472,26 +483,38 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
-            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
-            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test? testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test? testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase1, Is.Not.Null);
+            Assert.That(testCase2, Is.Not.Null);
+            Assert.That(testCase3, Is.Not.Null);
             if (isNetCore)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
             else if (isMono)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
             else
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
         }
 
@@ -499,8 +522,8 @@ namespace NUnit.Framework.Attributes
         public void CanExcludeRuntime()
         {
             bool isNetCore;
-            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            bool isMono = monoRuntimeType != null;
+            Type? monoRuntimeType = Type.GetType("Mono.Runtime", false);
+            bool isMono = monoRuntimeType is not null;
 #if NETCOREAPP
             isNetCore = true;
 #else
@@ -511,26 +534,38 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName);
 
-            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
-            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
-            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test? testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test? testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test? testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase1, Is.Not.Null);
+            Assert.That(testCase2, Is.Not.Null);
+            Assert.That(testCase3, Is.Not.Null);
             if (isNetCore)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
             else if (isMono)
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+                });
             }
             else
             {
-                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
-                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                    Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                    Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
         }
 
@@ -551,7 +586,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests.Select(t => t.Name), Is.EquivalentTo(expectedNames));
         }
 
-
         #region Nullable<> tests
 
         [TestCase(12, 3, 4)]
@@ -559,7 +593,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 4, 3)]
         public void NullableIntegerDivisionWithResultPassedToTest(int? n, int? d, int? q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [TestCase(12, 3, ExpectedResult = 4)]
@@ -639,26 +673,26 @@ namespace NUnit.Framework.Attributes
         [TestCase(5, 2, ExpectedResult = 7)]
         public short? CanConvertSmallIntsToNullableShort(short? x, short? y)
         {
-            return (short)(x + y);
+            return (short?)(x + y);
         }
 
         [TestCase(5, 2, ExpectedResult = 7)]
         public byte? CanConvertSmallIntsToNullableByte(byte? x, byte? y)
         {
-            return (byte)(x + y);
+            return (byte?)(x + y);
         }
 
         [TestCase(5, 2, ExpectedResult = 7)]
         public sbyte? CanConvertSmallIntsToNullableSByte(sbyte? x, sbyte? y)
         {
-            return (sbyte)(x + y);
+            return (sbyte?)(x + y);
         }
 
         [TestCase("12-October-1942")]
         public void CanConvertStringToNullableDateTime(DateTime? dt)
         {
             Assert.That(dt.HasValue);
-            Assert.AreEqual(1942, dt.Value.Year);
+            Assert.That(dt.Value.Year, Is.EqualTo(1942));
         }
 
         [TestCase(null)]
@@ -671,9 +705,9 @@ namespace NUnit.Framework.Attributes
         public void CanConvertStringToNullableTimeSpan(TimeSpan? ts)
         {
             Assert.That(ts.HasValue);
-            Assert.AreEqual(4, ts.Value.Hours);
-            Assert.AreEqual(44, ts.Value.Minutes);
-            Assert.AreEqual(15, ts.Value.Seconds);
+            Assert.That(ts.Value.Hours, Is.EqualTo(4));
+            Assert.That(ts.Value.Minutes, Is.EqualTo(44));
+            Assert.That(ts.Value.Seconds, Is.EqualTo(15));
         }
 
         [TestCase(null)]
@@ -685,13 +719,13 @@ namespace NUnit.Framework.Attributes
         [TestCase(1)]
         public void NullableSimpleFormalParametersWithArgument(int? a)
         {
-            Assert.AreEqual(1, a);
+            Assert.That(a, Is.EqualTo(1));
         }
 
         [TestCase(null)]
         public void NullableSimpleFormalParametersWithNullArgument(int? a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
 
         [TestCase(null, ExpectedResult = null)]
@@ -707,13 +741,11 @@ namespace NUnit.Framework.Attributes
             return arg1;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(1, ExpectedResult = 1)]
         public async Task<T> TestWithAsyncGenericReturnType<T>(T arg1)
         {
             return await Task.Run(() => arg1);
         }
-#endif
 
         #endregion
     }

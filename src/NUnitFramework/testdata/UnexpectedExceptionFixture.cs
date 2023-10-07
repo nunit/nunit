@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007–2019 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework;
@@ -43,7 +22,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                     new Exception("Inner Inner Exception")));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThrowsWithAggregateException()
         {
@@ -59,7 +37,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                 new Exception("Inner Exception",
                     new Exception("Inner Inner Exception")));
         }
-#endif
 
         [Test]
         public void ThrowsWithBadStackTrace()
@@ -86,20 +63,20 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         }
     }
 
-    class CustomException : Exception
+    internal class CustomException : Exception
     {
-        #pragma warning disable 414
-        private CustomType custom;
-        #pragma warning restore 414
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly CustomType _custom;
+#pragma warning restore IDE0052 // Remove unread private members
 
         public CustomException(string msg, CustomType custom)
             : base(msg)
         {
-            this.custom = custom;
+            _custom = custom;
         }
     }
 
-    class CustomType
+    internal class CustomType
     {
     }
 
@@ -108,12 +85,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         public ExceptionWithBadStackTrace(string message)
             : base(message) { }
 
-        public override string StackTrace
-        {
-            get
-            {
-                throw new InvalidOperationException("Simulated failure getting stack trace");
-            }
-        }
+        public override string StackTrace => throw new InvalidOperationException("Simulated failure getting stack trace");
     }
 }

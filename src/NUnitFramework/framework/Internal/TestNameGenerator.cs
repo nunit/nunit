@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -47,7 +26,7 @@ namespace NUnit.Framework.Internal
         private readonly string _pattern;
 
         // The list of NameFragments used to generate names
-        private List<NameFragment> _fragments;
+        private List<NameFragment>? _fragments;
 
         /// <summary>
         /// Construct a TestNameGenerator
@@ -82,15 +61,15 @@ namespace NUnit.Framework.Internal
         /// <param name="testMethod">A TestMethod</param>
         /// <param name="args">Arguments to be used</param>
         /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod, object[] args)
+        public string GetDisplayName(TestMethod testMethod, object?[]? args)
         {
-            if (_fragments == null)
+            if (_fragments is null)
                 _fragments = BuildFragmentList(_pattern);
 
             var result = new StringBuilder();
 
             foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(testMethod, args));
+                fragment.AppendTextTo(result, testMethod, args);
 
             return result.ToString();
         }
@@ -183,7 +162,6 @@ namespace NUnit.Framework.Internal
                 start = rcurly + 1;
             }
 
-
             // Output any trailing plain text
             if (start < pattern.Length)
                 fragments.Add(new FixedTextFragment(pattern.Substring(start)));
@@ -199,12 +177,12 @@ namespace NUnit.Framework.Internal
         {
             private const string THREE_DOTS = "...";
 
-            public virtual string GetText(TestMethod testMethod, object[] args)
+            public virtual void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
             {
-                return GetText(testMethod.Method.MethodInfo, args);
+                AppendTextTo(sb, testMethod.Method.MethodInfo, args);
             }
 
-            public abstract string GetText(MethodInfo method, object[] args);
+            public abstract void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args);
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
@@ -218,17 +196,18 @@ namespace NUnit.Framework.Internal
                 sb.Append(">");
             }
 
-            protected static string GetDisplayString(object arg, int stringMax)
+            protected static string GetDisplayString(object? arg, int stringMax)
             {
-                string display = arg == null
+                string display = arg is null
                     ? "null"
-                    : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
+                    : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
 
-                var argArray = arg as Array;
-                if (argArray != null && argArray.Rank == 1)
+                if (arg is Array { Rank: 1 } argArray)
                 {
                     if (argArray.Length == 0)
+                    {
                         display = "[]";
+                    }
                     else
                     {
                         var builder = new StringBuilder();
@@ -243,11 +222,10 @@ namespace NUnit.Framework.Internal
                                 builder.Append(", ");
 
                             var element = argArray.GetValue(i);
-                            var childArray = element as Array;
 
-                            if (childArray != null && childArray.Rank == 1)
+                            if (element is Array { Rank: 1 } childArray)
                             {
-                                builder.Append(childArray.GetType().GetElementType().Name);
+                                builder.Append(childArray.GetType().GetElementType()!.Name);
                                 builder.Append("[]");
                             }
                             else
@@ -264,20 +242,28 @@ namespace NUnit.Framework.Internal
                         display = builder.ToString();
                     }
                 }
-                else if (arg is double)
+                else if (arg is double dbl)
                 {
-                    double d = (double)arg;
-
-                    if (double.IsNaN(d))
+                    if (double.IsNaN(dbl))
+                    {
                         display = "double.NaN";
-                    else if (double.IsPositiveInfinity(d))
+                    }
+                    else if (double.IsPositiveInfinity(dbl))
+                    {
                         display = "double.PositiveInfinity";
-                    else if (double.IsNegativeInfinity(d))
+                    }
+                    else if (double.IsNegativeInfinity(dbl))
+                    {
                         display = "double.NegativeInfinity";
-                    else if (d == double.MaxValue)
+                    }
+                    else if (dbl == double.MaxValue)
+                    {
                         display = "double.MaxValue";
-                    else if (d == double.MinValue)
+                    }
+                    else if (dbl == double.MinValue)
+                    {
                         display = "double.MinValue";
+                    }
                     else
                     {
                         if (display.IndexOf('.') == -1)
@@ -285,20 +271,28 @@ namespace NUnit.Framework.Internal
                         display += "d";
                     }
                 }
-                else if (arg is float)
+                else if (arg is float f)
                 {
-                    float f = (float)arg;
-
                     if (float.IsNaN(f))
+                    {
                         display = "float.NaN";
+                    }
                     else if (float.IsPositiveInfinity(f))
+                    {
                         display = "float.PositiveInfinity";
+                    }
                     else if (float.IsNegativeInfinity(f))
+                    {
                         display = "float.NegativeInfinity";
+                    }
                     else if (f == float.MaxValue)
+                    {
                         display = "float.MaxValue";
+                    }
                     else if (f == float.MinValue)
+                    {
                         display = "float.MinValue";
+                    }
                     else
                     {
                         if (display.IndexOf('.') == -1)
@@ -306,28 +300,26 @@ namespace NUnit.Framework.Internal
                         display += "f";
                     }
                 }
-                else if (arg is decimal)
+                else if (arg is decimal dec)
                 {
-                    decimal d = (decimal)arg;
-                    if (d == decimal.MinValue)
+                    if (dec == decimal.MinValue)
                         display = "decimal.MinValue";
-                    else if (d == decimal.MaxValue)
+                    else if (dec == decimal.MaxValue)
                         display = "decimal.MaxValue";
                     else
                         display += "m";
                 }
-                else if (arg is long)
+                else if (arg is long l)
                 {
-                    if (arg.Equals(long.MinValue))
+                    if (l.Equals(long.MinValue))
                         display = "long.MinValue";
-                    else if (arg.Equals(long.MaxValue))
+                    else if (l.Equals(long.MaxValue))
                         display = "long.MaxValue";
                     else
                         display += "L";
                 }
-                else if (arg is ulong)
+                else if (arg is ulong ul)
                 {
-                    ulong ul = (ulong)arg;
                     if (ul == ulong.MinValue)
                         display = "ulong.MinValue";
                     else if (ul == ulong.MaxValue)
@@ -335,74 +327,108 @@ namespace NUnit.Framework.Internal
                     else
                         display += "UL";
                 }
-                else if (arg is string)
+                else if (arg is string str)
                 {
-                    var str = (string)arg;
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
                     int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
-                    var sb = new StringBuilder();
-                    sb.Append("\"");
-                    foreach (char c in str)
+                    if (!tooLong && !MayNeedEscape(str))
                     {
-                        sb.Append(EscapeCharInString(c));
-                        if (tooLong && sb.Length > limit)
-                        {
-                            sb.Append(THREE_DOTS);
-                            break;
-                        }
+                        // common case, no need to process with string builder
+                        display = "\"" + str + "\"";
                     }
-                    sb.Append("\"");
-                    display = sb.ToString();
+                    else
+                    {
+                        // cleanup
+                        var sb = new StringBuilder();
+                        sb.Append("\"");
+                        foreach (char c in str)
+                        {
+                            sb.Append(EscapeCharInString(c));
+
+                            if (tooLong && sb.Length > limit)
+                            {
+                                sb.Append(THREE_DOTS);
+                                break;
+                            }
+                        }
+                        sb.Append("\"");
+                        display = sb.ToString();
+                    }
                 }
-                else if (arg is char)
+                else if (arg is char c)
                 {
-                    display = "\'" + EscapeSingleChar((char)arg) + "\'";
+                    display = "\'" + EscapeSingleChar(c) + "\'";
                 }
-                else if (arg is int)
+                else if (arg is int i)
                 {
-                    if (arg.Equals(int.MaxValue))
+                    if (i.Equals(int.MaxValue))
                         display = "int.MaxValue";
-                    else if (arg.Equals(int.MinValue))
+                    else if (i.Equals(int.MinValue))
                         display = "int.MinValue";
                 }
-                else if (arg is uint)
+                else if (arg is uint ui)
                 {
-                    if (arg.Equals(uint.MaxValue))
+                    if (ui.Equals(uint.MaxValue))
                         display = "uint.MaxValue";
-                    else if (arg.Equals(uint.MinValue))
+                    else if (ui.Equals(uint.MinValue))
                         display = "uint.MinValue";
                 }
-                else if (arg is short)
+                else if (arg is short s)
                 {
-                    if (arg.Equals(short.MaxValue))
+                    if (s.Equals(short.MaxValue))
                         display = "short.MaxValue";
-                    else if (arg.Equals(short.MinValue))
+                    else if (s.Equals(short.MinValue))
                         display = "short.MinValue";
                 }
-                else if (arg is ushort)
+                else if (arg is ushort us)
                 {
-                    if (arg.Equals(ushort.MaxValue))
+                    if (us.Equals(ushort.MaxValue))
                         display = "ushort.MaxValue";
-                    else if (arg.Equals(ushort.MinValue))
+                    else if (us.Equals(ushort.MinValue))
                         display = "ushort.MinValue";
                 }
-                else if (arg is byte)
+                else if (arg is byte b)
                 {
-                    if (arg.Equals(byte.MaxValue))
+                    if (b.Equals(byte.MaxValue))
                         display = "byte.MaxValue";
-                    else if (arg.Equals(byte.MinValue))
+                    else if (b.Equals(byte.MinValue))
                         display = "byte.MinValue";
                 }
-                else if (arg is sbyte)
+                else if (arg is sbyte sb)
                 {
-                    if (arg.Equals(sbyte.MaxValue))
+                    if (sb.Equals(sbyte.MaxValue))
                         display = "sbyte.MaxValue";
-                    else if (arg.Equals(sbyte.MinValue))
+                    else if (sb.Equals(sbyte.MinValue))
                         display = "sbyte.MinValue";
                 }
 
                 return display;
+            }
+
+            /// <summary>
+            /// Checks if string contains any character that might need escaping.
+            /// </summary>
+            private static bool MayNeedEscape(string s)
+            {
+                foreach (var c in s)
+                {
+                    if (MayNeedEscape(c))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Checks whether given char *might* need escaping.
+            /// </summary>
+            /// <returns>False when absolutely no escaping is needed, otherwise true.</returns>
+            private static bool MayNeedEscape(char c)
+            {
+                return !char.IsLetterOrDigit(c) && c != '.' && c != '/' && c != '-' && c != '_';
             }
 
             private static string EscapeSingleChar(char c)
@@ -447,7 +473,7 @@ namespace NUnit.Framework.Internal
                     case '\x0085':
                     case '\x2028':
                     case '\x2029':
-                        return string.Format("\\x{0:X4}", (int)c);
+                        return $"\\x{(int)c:X4}";
 
                     default:
                         return c.ToString();
@@ -455,20 +481,20 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private class TestIDFragment : NameFragment
+        private sealed class TestIDFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return "{i}"; // No id available using MethodInfo
+                sb.Append("{i}"); // No id available using MethodInfo
             }
 
-            public override string GetText(TestMethod testMethod, object[] args)
+            public override void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
             {
-                return testMethod.Id;
+                sb.Append(testMethod.Id);
             }
         }
 
-        private class FixedTextFragment : NameFragment
+        private sealed class FixedTextFragment : NameFragment
         {
             private readonly string _text;
 
@@ -477,69 +503,61 @@ namespace NUnit.Framework.Internal
                 _text = text;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return _text;
+                sb.Append(_text);
             }
         }
 
-        private class MethodNameFragment : NameFragment
+        private sealed class MethodNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                var sb = new StringBuilder();
-
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
                     AppendGenericTypeNames(sb, method);
-
-                return sb.ToString();
             }
         }
 
-        private class NamespaceFragment : NameFragment
+        private sealed class NamespaceFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return method.DeclaringType.Namespace;
+                sb.Append(method.DeclaringType!.Namespace);
             }
         }
 
-        private class MethodFullNameFragment : NameFragment
+        private sealed class MethodFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                var sb = new StringBuilder();
-
-                sb.Append(method.DeclaringType.FullName);
+                sb.Append(method.DeclaringType!.FullName);
                 sb.Append('.');
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
                     AppendGenericTypeNames(sb, method);
-
-                return sb.ToString();
             }
         }
 
-        private class ClassNameFragment : NameFragment
+        private sealed class ClassNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return method.DeclaringType.Name;
+                sb.Append(method.DeclaringType!.Name);
             }
         }
 
-        private class ClassFullNameFragment : NameFragment
+        private sealed class ClassFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return method.DeclaringType.FullName;
+                sb.Append(method.DeclaringType!.FullName);
             }
         }
 
-        private class ArgListFragment : NameFragment
+        private sealed class ArgListFragment : NameFragment
         {
             private readonly int _maxStringLength;
 
@@ -548,11 +566,9 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] arglist)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? arglist)
             {
-                var sb = new StringBuilder();
-
-                if (arglist != null)
+                if (arglist is not null)
                 {
                     sb.Append('(');
 
@@ -564,12 +580,10 @@ namespace NUnit.Framework.Internal
 
                     sb.Append(')');
                 }
-
-                return sb.ToString();
             }
         }
 
-        private class ArgumentFragment : NameFragment
+        private sealed class ArgumentFragment : NameFragment
         {
             private readonly int _index;
             private readonly int _maxStringLength;
@@ -580,15 +594,14 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                return _index < args.Length
-                    ? GetDisplayString(args[_index], _maxStringLength)
-                    : string.Empty;
+                if (args is not null && _index < args.Length)
+                    sb.Append(GetDisplayString(args[_index], _maxStringLength));
             }
         }
 
-        private class ParamArgListFragment : NameFragment
+        private sealed class ParamArgListFragment : NameFragment
         {
             private readonly int _maxStringLength;
 
@@ -597,16 +610,14 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                var sb = new StringBuilder();
-
-                if (args != null)
+                if (args is not null)
                 {
                     sb.Append('(');
 
                     var parameters = method.GetParameters();
-                    
+
                     for (int i = 0; i < args.Length; i++)
                     {
                         if (i > 0) sb.Append(", ");
@@ -622,7 +633,6 @@ namespace NUnit.Framework.Internal
 
                     sb.Append(')');
                 }
-                return sb.ToString();
             }
         }
 

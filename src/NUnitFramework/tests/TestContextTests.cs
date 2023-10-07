@@ -1,40 +1,16 @@
-// ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 using NUnit.Framework.Interfaces;
-using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
-using static NUnit.Framework.TestContext;
+using NUnit.TestData.TestContextData;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     [TestFixture]
     public class TestContextTests
@@ -83,7 +59,7 @@ namespace NUnit.Framework
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
         }
 
-        static IEnumerable<string> TestDirectorySource()
+        private static IEnumerable<string> TestDirectorySource()
         {
             yield return TestContext.CurrentContext.TestDirectory;
         }
@@ -102,8 +78,8 @@ namespace NUnit.Framework
         public void TestCanAccessWorkDirectory()
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
-            Assert.NotNull(workDirectory);
-            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
+            Assert.That(workDirectory, Is.Not.Null);
+            Assert.That(Directory.Exists(workDirectory), $"Directory {workDirectory} does not exist");
         }
 
         [TestCaseSource(nameof(WorkDirectorySource))]
@@ -112,42 +88,42 @@ namespace NUnit.Framework
             Assert.That(workDirectory, Is.EqualTo(_workDirectory));
         }
 
-        static IEnumerable<string> WorkDirectorySource()
+        private static IEnumerable<string> WorkDirectorySource()
         {
             yield return TestContext.CurrentContext.WorkDirectory;
         }
 
-    #endregion
+        #endregion
 
         #region Test
 
         #region Name
 
         [Test]
-            public void ConstructorCanAccessFixtureName()
-            {
-                Assert.That(_name, Is.EqualTo("TestContextTests"));
-            }
+        public void ConstructorCanAccessFixtureName()
+        {
+            Assert.That(_name, Is.EqualTo("TestContextTests"));
+        }
 
-            [Test]
-            public void TestCanAccessItsOwnName()
-            {
-                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
-            }
+        [Test]
+        public void TestCanAccessItsOwnName()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+        }
 
-            [Test]
-            public void SetUpCanAccessTestName()
-            {
-                Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
-            }
+        [Test]
+        public void SetUpCanAccessTestName()
+        {
+            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+        }
 
-            [TestCase(5)]
-            public void TestCaseCanAccessItsOwnName(int x)
-            {
-                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
-            }
+        [TestCase(5)]
+        public void TestCaseCanAccessItsOwnName(int x)
+        {
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+        }
 
-            #endregion
+        #endregion
 
         #region FullName
 
@@ -161,14 +137,14 @@ namespace NUnit.Framework
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.TestContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [TestCase(42)]
         public void TestCaseCanAccessItsOwnFullName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
         #endregion
@@ -233,7 +209,7 @@ namespace NUnit.Framework
         [Test]
         public void TestCanAccessEmptyArgumentsArrayWhenDoesNotHaveArguments()
         {
-            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[0]));
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(Array.Empty<object>()));
         }
 
         #endregion
@@ -249,7 +225,7 @@ namespace NUnit.Framework
 
             // These are counted as asserts
             Assert.That(context.AssertCount, Is.EqualTo(0));
-            Assert.AreEqual(4, 2 + 2);
+            Assert.That(2 + 2, Is.EqualTo(4));
             Warn.Unless(2 + 2, Is.EqualTo(4));
 
             // This one is counted below
@@ -331,26 +307,28 @@ namespace NUnit.Framework
         {
             var fixture = new TestTestContextInOneTimeTearDown();
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.PassCount, Is.EqualTo(2));
-            Assert.That(fixture.FailCount, Is.EqualTo(1));
-            Assert.That(fixture.WarningCount, Is.EqualTo(0));
-            Assert.That(fixture.SkipCount, Is.EqualTo(3));
-            Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
-            Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
-            Assert.That(fixture.StackTrace, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(fixture.PassCount, Is.EqualTo(2));
+                Assert.That(fixture.FailCount, Is.EqualTo(1));
+                Assert.That(fixture.WarningCount, Is.EqualTo(0));
+                Assert.That(fixture.SkipCount, Is.EqualTo(3));
+                Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
+                Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+                Assert.That(fixture.StackTrace, Is.Null);
+            });
         }
 
         #endregion
 
         #region Out
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {
             var expected = TestContext.Out;
             await YieldAsync();
-            Assert.AreEqual(expected, TestContext.Out);
+            Assert.That(TestContext.Out, Is.EqualTo(expected));
         }
 
         [Test]
@@ -367,20 +345,15 @@ namespace NUnit.Framework
             var isTestContextOutAvailable = false;
             Task.Factory.StartNew(() =>
             {
-                isTestContextOutAvailable = TestContext.Out != null;
+                isTestContextOutAvailable = TestContext.Out is not null;
             }).Wait();
-            Assert.True(isTestContextOutAvailable);
+            Assert.That(isTestContextOutAvailable, Is.True);
         }
 
         private async Task YieldAsync()
         {
-#if NET40
-            await TaskEx.Yield();
-#else
             await Task.Yield();
-#endif
         }
-#endif
 
         #endregion
 

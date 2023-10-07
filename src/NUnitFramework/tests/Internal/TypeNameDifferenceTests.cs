@@ -1,51 +1,31 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     #region Mock types
 
     namespace DifferingNamespace1
     {
-        class Dummy
+        internal class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
-        class DummyGeneric<T>
+        internal class DummyGeneric<T>
         {
             public DummyGeneric(T obj)
             { }
@@ -54,60 +34,60 @@ namespace NUnit.Framework.Internal
 
     namespace DifferingNamespace2
     {
-        class Dummy
+        internal class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
     }
 
     namespace A
     {
-        class GenA<T>
+        internal class GenA<T>
         { }
 
-        class GenB<T>
+        internal class GenB<T>
         { }
 
-        class GenC<T, R>
+        internal class GenC<T, R>
         { }
 
         namespace B
         {
-            class GenX<T>
+            internal class GenX<T>
             { }
 
-            class GenY<T>
+            internal class GenY<T>
             { }
         }
     }
 
     namespace B
     {
-        class GenA<T>
+        internal class GenA<T>
         { }
 
-        class GenB<T>
+        internal class GenB<T>
         { }
 
-        class GenC<T, R>
+        internal class GenC<T, R>
         { }
 
         namespace B
         {
-            class GenX<T>
+            internal class GenX<T>
             { }
 
-            class GenY<T>
+            internal class GenY<T>
             { }
         }
     }
@@ -118,37 +98,37 @@ namespace NUnit.Framework.Internal
     {
         #region Mock types
 
-        class Dummy
+        private class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
-        class Dummy1
+        private class Dummy1
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy1(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
-        class DummyGenericClass<T>
+        private class DummyGenericClass<T>
         {
             private readonly object _obj;
 
@@ -157,7 +137,7 @@ namespace NUnit.Framework.Internal
                 _obj = obj;
             }
 
-            public override string ToString()
+            public override string? ToString()
             {
                 return _obj.ToString();
             }
@@ -165,7 +145,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        TypeNameDifferenceResolver _differenceGetter;
+        private TypeNameDifferenceResolver _differenceGetter;
 
         [SetUp]
         public void TestSetup()
@@ -175,7 +155,6 @@ namespace NUnit.Framework.Internal
 
         private void TestShortenedNameDifference(object objA, object objB, string expectedA, string expectedB)
         {
-
             _differenceGetter.ResolveTypeNameDifference(
                  objA, objB, out var actualA, out var actualB);
 
@@ -260,12 +239,12 @@ namespace NUnit.Framework.Internal
         {
             TestShortenedNameDifference(
                 new DummyGenericClass<Dummy>(new Dummy(1)),
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]",
                 "KeyValuePair`2[Int32,String]");
 
             TestShortenedNameDifference(
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 new DummyGenericClass<Dummy>(new Dummy(1)),
                 "KeyValuePair`2[Int32,String]",
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");
@@ -370,7 +349,7 @@ namespace NUnit.Framework.Internal
 
             TestShortenedNameDifference(
                new B.GenC<A.GenA<List<int>>, B.GenC<string, B.GenC<string, int>>>(),
-               new A.GenA<B.GenC<string, B.GenC<string,int>>>(),
+               new A.GenA<B.GenC<string, B.GenC<string, int>>>(),
                "GenC`2[GenA`1[List`1[Int32]],GenC`2[String,GenC`2[String,Int32]]]",
                "GenA`1[GenC`2[String,GenC`2[String,Int32]]]");
 
@@ -386,7 +365,7 @@ namespace NUnit.Framework.Internal
         {
             var notGeneric = new DifferingNamespace1.Dummy(1);
 
-            Assert.False(_differenceGetter.IsTypeGeneric(notGeneric.GetType()));
+            Assert.That(_differenceGetter.IsTypeGeneric(notGeneric.GetType()), Is.False);
 
             var generic = new DifferingNamespace1.DummyGeneric<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1));
 
@@ -398,11 +377,11 @@ namespace NUnit.Framework.Internal
         {
             var generic = new DifferingNamespace1.DummyGeneric<int>(1).GetType();
 
-            var expected = "NUnit.Framework.Internal.DifferingNamespace1.DummyGeneric`1";
+            var expected = "NUnit.Framework.Tests.Internal.DifferingNamespace1.DummyGeneric`1";
 
             var actual = _differenceGetter.GetGenericTypeName(generic);
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -422,16 +401,15 @@ namespace NUnit.Framework.Internal
                 "KeyValuePair`2",
                 new List<string>() { "String", "Int32" });
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         private void TestShortenTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.ShortenTypeNames(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
-            Assert.AreEqual(shortenedA, actualA);
-            Assert.AreEqual(shortenedB, actualB);
+            Assert.That(actualA, Is.EqualTo(shortenedA));
+            Assert.That(actualB, Is.EqualTo(shortenedB));
         }
 
         [Test]
@@ -446,11 +424,10 @@ namespace NUnit.Framework.Internal
 
         private void TestShortenGenericTopLevelTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.GetShortenedGenericTypes(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
-            Assert.AreEqual(shortenedA, actualA);
-            Assert.AreEqual(shortenedB, actualB);
+            Assert.That(actualA, Is.EqualTo(shortenedA));
+            Assert.That(actualB, Is.EqualTo(shortenedB));
         }
 
         [Test]
@@ -473,7 +450,7 @@ namespace NUnit.Framework.Internal
         {
             string actual = _differenceGetter.FullyShortenTypeName(type);
 
-            Assert.AreEqual(expectedOutput, actual);
+            Assert.That(actual, Is.EqualTo(expectedOutput));
         }
 
         [Test]
