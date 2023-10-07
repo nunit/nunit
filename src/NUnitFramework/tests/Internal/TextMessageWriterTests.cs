@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -86,6 +87,42 @@ namespace NUnit.Framework.Tests.Internal
             expected = "  " + expected.Replace("\0", "\\0") + NL;
 
             Assert.That(message, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", null, mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenExpected_IsNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences(null, "2023-01-01 13:00:00", mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNotNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", "2023-01-01 13:00:12", mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
         }
 
         private string Q(string s)
