@@ -157,14 +157,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(expectedStream, Is.Not.EqualTo(actualStream));
             }
 
-            private static string GetString(Stream str)
-            {
-                using var ms = new MemoryStream();
-                str.CopyTo(ms);
-                var bytes = ms.ToArray();
-                return Encoding.UTF8.GetString(bytes);
-            }
-
             private static ZipArchive CreateZipArchive(string content)
             {
                 var archiveContents = new MemoryStream();
