@@ -28,6 +28,8 @@ namespace NUnit.Framework.Constraints
             "Stream lengths are both {0}. Streams differ at offset {1}.";
         private static readonly string StreamsDiffer_2 =
             "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
+        private static readonly string UnSeekableStreamsDiffer =
+            "Streams differ at offset {0}.";// Streams differ at offset {2}.";
         private static readonly string CollectionType_1 =
             "Expected and actual are both {0}";
         private static readonly string CollectionType_2 =
@@ -94,14 +96,21 @@ namespace NUnit.Framework.Constraints
         #region DisplayStreamDifferences
         private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
         {
-            if (expected.Length == actual.Length)
+            if (expected.CanSeek && actual.CanSeek)
             {
-                long offset = _failurePoints[depth].Position;
-                writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
+                if (expected.Length == actual.Length)
+                {
+                    long offset = _failurePoints[depth].Position;
+                    writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
+                }
+                else
+                {
+                    writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+                }
             }
             else
             {
-                writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+                writer.WriteMessageLine(UnSeekableStreamsDiffer, _failurePoints[depth].Position);
             }
         }
         #endregion
