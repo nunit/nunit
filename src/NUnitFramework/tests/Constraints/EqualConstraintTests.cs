@@ -4,6 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO.Compression;
+using System.IO;
+using System.Text;
+
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
@@ -66,6 +70,69 @@ namespace NUnit.Framework.Tests.Constraints
         {
             char c = '\u0000';
             Assert.That(c, Is.EqualTo(0));
+        }
+
+        #endregion
+
+        #region StreamEquality
+
+        public class StreamEquality
+        {
+            private const string FileContentString = "Hello!";
+
+            [Test]
+            public void UnSeekableActualStream()
+            {
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(FileContentString));
+
+                using var actualArchive = CreateZipArchive();
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
+                Assert.That(entryStream, Is.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableExpectedStream()
+            {
+                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(FileContentString));
+
+                using var actualArchive = CreateZipArchive();
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream expectedStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
+                Assert.That(actualStream, Is.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableActualAndExpectedStreams()
+            {
+                using var expectedArchive = CreateZipArchive();
+                ZipArchiveEntry expectedEntry = expectedArchive.Entries[0];
+                using Stream expectedStream = expectedEntry.Open();
+
+                using var actualArchive = CreateZipArchive();
+                ZipArchiveEntry actualEntry = actualArchive.Entries[0];
+                using Stream actualStream = expectedEntry.Open();
+
+                Assert.That(actualStream, Is.EqualTo(expectedStream));
+            }
+
+            private static ZipArchive CreateZipArchive()
+            {
+                var archiveContents = new MemoryStream();
+                using (var archive = new ZipArchive(archiveContents, ZipArchiveMode.Create, leaveOpen: true))
+                {
+                    ZipArchiveEntry demoFile = archive.CreateEntry("Hello entry");
+
+                    using Stream entryStream = demoFile.Open();
+
+                    using var entryFs = new StreamWriter(entryStream);
+                    entryFs.Write(FileContentString);
+                }
+
+                return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
+            }
         }
 
         #endregion
