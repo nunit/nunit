@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
         private static readonly string StreamsDiffer_2 =
             "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
         private static readonly string UnSeekableStreamsDiffer =
-            "Streams differ at offset {0}.";// Streams differ at offset {2}.";
+            "Streams differ at offset {0}.";
         private static readonly string CollectionType_1 =
             "Expected and actual are both {0}";
         private static readonly string CollectionType_2 =
