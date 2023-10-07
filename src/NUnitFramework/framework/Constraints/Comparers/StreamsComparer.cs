@@ -39,9 +39,12 @@ namespace NUnit.Framework.Constraints.Comparers
 
             try
             {
-                if (bothSeekable)
+                if (xStream.CanSeek)
                 {
                     binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
+                }
+                if (yStream.CanSeek)
+                {
                     binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
                 }
 
@@ -73,9 +76,12 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             finally
             {
-                if (bothSeekable)
+                if (xStream.CanSeek)
                 {
                     xStream.Position = expectedPosition;
+                }
+                if (yStream.CanSeek)
+                {
                     yStream.Position = actualPosition;
                 }
             }
