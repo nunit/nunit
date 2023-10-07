@@ -16,30 +16,27 @@ jobs:
     steps:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Needed to gets tags until https://github.com/actions/checkout/issues/701 is fixed
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: |
+          6.0.x
+          7.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
+      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release --tag="$(git describe)"
 
     - name: 📦 Package
-      run: dotnet cake --target=Package
+      run: dotnet cake --target=Package --configuration=Release --tag="$(git describe)"
+
+    - name: 📦 Publish package
+      run: dotnet nuget push --skip-duplicate --source https://nuget.pkg.github.com/nunit/index.json --api-key "${{secrets.GITHUB_TOKEN}}" 'package\*.nupkg'
 
     - name: 💾 Upload build artifacts
       uses: actions/upload-artifact@v2
@@ -63,20 +60,12 @@ jobs:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: |
+          6.0.x
+          7.0.x
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -103,20 +92,12 @@ jobs:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: |
+          6.0.x
+          7.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
