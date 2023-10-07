@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -82,6 +83,48 @@ namespace NUnit.Framework.Tests.Internal
             expected = message = "Here we have embedded control characters \b\f in the string!";
 
             _writer.WriteMessageLine(0, message, null);
+            message = _writer.ToString();
+            expected = "  " + expected.Replace("\0", "\\0") + NL;
+
+            Assert.That(message, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNull()
+        {
+            string expected, message;
+            Tolerance mockTolerance = new Tolerance("00:00:10");
+            expected = "Expected: \"2023-01-01 13:00:00\" +/- \"00:00:10\"\r\n  But was:  null";
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", null, mockTolerance);
+            message = _writer.ToString();
+            expected = "  " + expected.Replace("\0", "\\0") + NL;
+
+            Assert.That(message, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenExpected_IsNull()
+        {
+            string expected, message;
+            Tolerance mockTolerance = new Tolerance("00:00:10");
+            expected = "Expected: null +/- \"00:00:10\"\r\n  But was:  \"2023-01-01 13:00:00\"";
+
+            _writer.DisplayDifferences(null, "2023-01-01 13:00:00", mockTolerance);
+            message = _writer.ToString();
+            expected = "  " + expected.Replace("\0", "\\0") + NL;
+
+            Assert.That(message, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNotNull()
+        {
+            string expected, message;
+            Tolerance mockTolerance = new Tolerance("00:00:10");
+            expected = "Expected: \"2023-01-01 13:00:00\" +/- \"00:00:10\"\r\n  But was:  \"2023-01-01 13:00:12\"";
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", "2023-01-01 13:00:12", mockTolerance);
             message = _writer.ToString();
             expected = "  " + expected.Replace("\0", "\\0") + NL;
 

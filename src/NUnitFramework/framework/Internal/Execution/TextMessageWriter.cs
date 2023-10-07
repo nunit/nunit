@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
             }
             WriteExpectedLine(expected, tolerance);
             WriteActualLine(actual);
-            if (tolerance is not null)
+            if (tolerance is not null && expected is not null && actual is not null)
             {
                 WriteDifferenceLine(expected, actual, tolerance);
             }
