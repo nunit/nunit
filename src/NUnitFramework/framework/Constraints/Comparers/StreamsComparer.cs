@@ -45,8 +45,8 @@ namespace NUnit.Framework.Constraints.Comparers
                     binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
                 }
 
-                int readExpected = -1;
-                int readActual = -1;
+                int readExpected = 1;
+                int readActual = 1;
                 long readByte = 0;
 
                 while (readExpected > 0 && readActual > 0)
@@ -54,7 +54,8 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
-                    for (int count = 0; count < BUFFER_SIZE; ++count)
+                    var actuallyRead = Math.Max(readExpected, readActual);
+                    for (int count = 0; count < actuallyRead; ++count)
                     {
                         if (bufferExpected[count] != bufferActual[count])
                         {

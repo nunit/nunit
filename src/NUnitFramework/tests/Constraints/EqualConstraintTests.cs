@@ -78,14 +78,15 @@ namespace NUnit.Framework.Tests.Constraints
 
         public class StreamEquality
         {
-            private const string FileContentString = "Hello!";
+            private const string HelloString = "Greetings";
+            private const string GoodbyeString = "GoodByte!";
 
             [Test]
-            public void UnSeekableActualStream()
+            public void UnSeekableActualStreamEqual()
             {
-                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(FileContentString));
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(HelloString));
 
-                using var actualArchive = CreateZipArchive();
+                using var actualArchive = CreateZipArchive(HelloString);
                 ZipArchiveEntry entry = actualArchive.Entries[0];
 
                 using Stream entryStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
@@ -93,11 +94,23 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
-            public void UnSeekableExpectedStream()
+            public void UnSeekableActualStreamUnequal()
             {
-                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(FileContentString));
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(HelloString));
 
-                using var actualArchive = CreateZipArchive();
+                using var actualArchive = CreateZipArchive(GoodbyeString);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
+                Assert.That(entryStream, Is.Not.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableExpectedStreamEqual()
+            {
+                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(HelloString));
+
+                using var actualArchive = CreateZipArchive(HelloString);
                 ZipArchiveEntry entry = actualArchive.Entries[0];
 
                 using Stream expectedStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
@@ -105,30 +118,66 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
-            public void UnSeekableActualAndExpectedStreams()
+            public void UnSeekableExpectedStreamUnequal()
             {
-                using var expectedArchive = CreateZipArchive();
+                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(HelloString));
+
+                using var actualArchive = CreateZipArchive(GoodbyeString);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream expectedStream = entry.Open(); // an archive in read mode returns a DeflateStream, which is un-seekable
+                Assert.That(actualStream, Is.Not.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableActualAndExpectedStreamsEqual()
+            {
+                using var expectedArchive = CreateZipArchive(HelloString);
                 ZipArchiveEntry expectedEntry = expectedArchive.Entries[0];
                 using Stream expectedStream = expectedEntry.Open();
 
-                using var actualArchive = CreateZipArchive();
+                using var actualArchive = CreateZipArchive(HelloString);
                 ZipArchiveEntry actualEntry = actualArchive.Entries[0];
                 using Stream actualStream = expectedEntry.Open();
 
                 Assert.That(actualStream, Is.EqualTo(expectedStream));
             }
 
-            private static ZipArchive CreateZipArchive()
+            [Test]
+            public void UnSeekableActualAndExpectedStreamsUnequal()
+            {
+                using var expectedArchive = CreateZipArchive(HelloString);
+                ZipArchiveEntry expectedEntry = expectedArchive.Entries[0];
+                using Stream expectedStream = expectedEntry.Open();
+
+                using var actualArchive = CreateZipArchive(GoodbyeString);
+                ZipArchiveEntry actualEntry = actualArchive.Entries[0];
+                using Stream actualStream = actualEntry.Open();
+
+                Assert.That(expectedStream, Is.Not.EqualTo(actualStream));
+            }
+
+            private static string GetString(Stream str)
+            {
+                using var ms = new MemoryStream();
+                str.CopyTo(ms);
+                var bytes = ms.ToArray();
+                return Encoding.UTF8.GetString(bytes);
+
+            }
+
+            private static ZipArchive CreateZipArchive(string content)
             {
                 var archiveContents = new MemoryStream();
                 using (var archive = new ZipArchive(archiveContents, ZipArchiveMode.Create, leaveOpen: true))
                 {
-                    ZipArchiveEntry demoFile = archive.CreateEntry("Hello entry");
+                    ZipArchiveEntry demoFile = archive.CreateEntry($"{content} entry");
 
                     using Stream entryStream = demoFile.Open();
 
                     using var entryFs = new StreamWriter(entryStream);
-                    entryFs.Write(FileContentString);
+                    entryFs.Write(content);
+                    entryFs.Flush();
                 }
 
                 return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
