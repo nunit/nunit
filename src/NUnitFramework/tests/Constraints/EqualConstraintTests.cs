@@ -163,7 +163,6 @@ namespace NUnit.Framework.Tests.Constraints
                 str.CopyTo(ms);
                 var bytes = ms.ToArray();
                 return Encoding.UTF8.GetString(bytes);
-
             }
 
             private static ZipArchive CreateZipArchive(string content)
