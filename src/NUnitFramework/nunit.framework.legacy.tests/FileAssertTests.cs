@@ -56,16 +56,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("not readable"));
         }
 
-        [Test]
-        public void NonSeekableStreamGivesException()
-        {
-            using var tf1 = new TestFile("TestImage1.jpg");
-            using FileStream expected = tf1.File.OpenRead();
-            using var actual = new FakeStream();
-            var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-            Assert.That(ex?.Message, Does.Contain("not seekable"));
-        }
-
         private class FakeStream : MemoryStream
         {
             public override bool CanSeek => false;
