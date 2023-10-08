@@ -1,3 +1,8 @@
+## NUnit 4.0.0-beta.1 - October 8, 2023
+
+This release is the first beta release of NUnit 4.0.
+All changes, see [release notes](https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-400-beta1---tba)
+
 ## NUnit 3.13.2 - April 27, 2021
 
 This release fixes a new issue with the `FixtureLifeCycle` attribute where `IDisposable` test fixtures were not being disposed properly. As always, [@gleb-osokin](https://github.com/gleb-osokin) has been a great help with this new feature.

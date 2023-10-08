@@ -18,7 +18,7 @@ var ErrorDetail = new List<string>();
 //////////////////////////////////////////////////////////////////////
 
 var version = "4.0.0";
-var modifier = "-alpha-1";
+var modifier = "-beta.1";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;

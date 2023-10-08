@@ -1,4 +1,4 @@
-# NUnit 3 Framework #
+# NUnit 4 Framework #
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Github Actions Build Status](https://github.com/nunit/nunit/actions/workflows/continuous_integration.yml/badge.svg?branch=master&event=push)](https://github.com/nunit/nunit/actions/workflows/continuous_integration.yml) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
 
@@ -37,7 +37,7 @@ Earlier versions of NUnit were developed by Charlie Poole, James W. Newkirk, Ale
 
 ## License ##
 
-NUnit is Open Source software and NUnit 3 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt). Earlier releases used the [NUnit license](https://nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
+NUnit is Open Source software and NUnit 4 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt). Earlier releases used the [NUnit license](https://nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
 
 ## NUnit Projects ##
 
@@ -68,4 +68,3 @@ NUnit is made up of several projects. When reporting issues, please try to repor
 - [NUnit 2 Result Writer](https://github.com/nunit/nunit-v2-result-writer) - Writes test results in the legacy NUnit 2 format
 - [Visual Studio Project Loader](https://github.com/nunit/vs-project-loader) - Loads and parses Visual Studio projects and solutions
 - [NUnit Project Loader](https://github.com/nunit/nunit-project-loader) - Loads NUnit projects
-- [TeamCity Event Listener](https://github.com/nunit/teamcity-event-listener) - Allows you to run and integrate NUnit tests into TeamCity
