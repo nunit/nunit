@@ -232,6 +232,20 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
+        private int _pollCount;
+        
+        [Test]
+        public void ThatPollingCallsDelegateCorrectNumberOfTimes()
+        {
+            _pollCount = 0;
+            Assert.That(PollCount, Is.EqualTo(4).After(100, 25));
+        }
+
+        private int PollCount()
+        {
+            return _pollCount++;
+        }
+
         [Test]
         public void PreservesOriginalResultAdditionalLines()
         {

@@ -229,6 +229,7 @@ namespace NUnit.Framework.Constraints
                 {
                     if (nextPoll > now)
                         ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                    now = Stopwatch.GetTimestamp();
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
