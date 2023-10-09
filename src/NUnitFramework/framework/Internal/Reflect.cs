@@ -98,8 +98,9 @@ namespace NUnit.Framework.Internal
                         {
                             throw new InvalidTestFixtureException(type.FullName + " params argument did not have an element type");
                         }
-                        int paramsOffset = ctor.GetParameters().Length - 1;
-                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - ctor.GetParameters().Length + 1);
+
+                        int paramsOffset = parameterInfos.Length - 1;
+                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - parameterInfos.Length + 1);
                         for (int i = 0; i < paramArray.Length; i++)
                         {
                             paramArray.SetValue(arguments[i + paramsOffset], i);
