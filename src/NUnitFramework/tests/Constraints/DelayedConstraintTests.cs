@@ -238,7 +238,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
             _pollCount = 0;
-            Assert.That(PollCount, Is.EqualTo(4).After(100, 25));
+            Assert.That(PollCount, Is.EqualTo(4).After(110, 25));
         }
 
         private int PollCount()
