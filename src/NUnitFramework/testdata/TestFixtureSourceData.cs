@@ -270,7 +270,7 @@ namespace NUnit.TestData.TestFixtureSourceData
             for (int i = 0; i < Parameters.Length; i++)
                 Assert.That(Parameters[i], Is.EqualTo(i + 1));
         }
-        public static IEnumerable MyData()
+        private static IEnumerable MyData()
         {
             yield return new object[] { 1, 2, 3 };
             yield return new object[] { };
