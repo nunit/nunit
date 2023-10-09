@@ -215,9 +215,7 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixtureSource(nameof(SourceData))]
     public class ParameterizedTestFixtureWithParamsArgument
     {
-#pragma warning disable NUnit1028 // The non-test method is public
-        public static IEnumerable SourceData()
-#pragma warning restore NUnit1028 // The non-test method is public
+        private static IEnumerable SourceData()
         {
             yield return new object[] { "Many", 1, 2, 3, 4 };
             yield return new object[] { new double[] { 1.5, 8.2} };
