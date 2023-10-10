@@ -11,6 +11,17 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly string NL = Environment.NewLine;
 
         [Test]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", "NUnit2024", Justification = "Testing this negative case")]
+        public void RegexTypeMatches()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(() => Assert.That(1, Does.Match("[A-Z]")), Throws.ArgumentException);
+                Assert.That(() => Assert.That((string?)null, Does.Match("[A-Z]")), Throws.ArgumentException);
+            });
+        }
+
+        [Test]
         public void RegExMatchSucceeds()
         {
             const string testMatcher = "Make.*tests.*pass";
