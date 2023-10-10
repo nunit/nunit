@@ -38,8 +38,8 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">An IMethodInfo for the method being used as a test method</param>
         public bool CanBuildFrom(IMethodInfo method)
         {
-            return method.IsDefined<ITestBuilder>(false)
-                || method.IsDefined<ISimpleTestBuilder>(false);
+            return method.IsDefined<ITestBuilder>(true)
+                || method.IsDefined<ISimpleTestBuilder>(true);
         }
 
         /// <summary>
