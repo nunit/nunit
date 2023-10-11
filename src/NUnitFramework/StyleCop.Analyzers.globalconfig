@@ -109,7 +109,7 @@ dotnet_diagnostic.SA1022.severity = warning
 dotnet_diagnostic.SA1023.severity = warning
 
 # Colons should be spaced correctly
-dotnet_diagnostic.SA1024.severity = none
+dotnet_diagnostic.SA1024.severity = warning
 
 # Code should not contain multiple whitespace in a row
 dotnet_diagnostic.SA1025.severity = none
