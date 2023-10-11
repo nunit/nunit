@@ -106,7 +106,7 @@ dotnet_diagnostic.SA1021.severity = warning
 dotnet_diagnostic.SA1022.severity = warning
 
 # Dereference and access of symbols should be spaced correctly
-dotnet_diagnostic.SA1023.severity = none
+dotnet_diagnostic.SA1023.severity = warning
 
 # Colons should be spaced correctly
 dotnet_diagnostic.SA1024.severity = none
