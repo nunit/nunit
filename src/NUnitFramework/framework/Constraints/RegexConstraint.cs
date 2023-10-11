@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         {
             string actualString = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: false);
 
-            return new ConstraintResult(this, actual,_regex.IsMatch(actualString));
+            return new ConstraintResult(this, actual, _regex.IsMatch(actualString));
         }
     }
 }

@@ -11,13 +11,14 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly string NL = Environment.NewLine;
 
         [Test]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", "NUnit2024", Justification = "Testing this negative case")]
         public void RegexTypeMatches()
         {
             Assert.Multiple(() =>
             {
+#pragma warning disable NUnit2024 // Wrong actual type used with String Constraint
                 Assert.That(() => Assert.That(1, Does.Match("[A-Z]")), Throws.ArgumentException);
-                Assert.That(() => Assert.That((string?)null, Does.Match("[A-Z]")), Throws.ArgumentException);
+#pragma warning restore NUnit2024 // Wrong actual type used with String Constraint
+                Assert.That(() => Assert.That(default(string), Does.Match("[A-Z]")), Throws.ArgumentException);
             });
         }
 
