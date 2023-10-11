@@ -37,10 +37,10 @@ dotnet_diagnostic.SA0001.severity = none
 dotnet_diagnostic.SA0002.severity = none
 
 # Keywords should be spaced correctly
-dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1000.severity = warning
 
 # Commas should be spaced correctly
-dotnet_diagnostic.SA1001.severity = none
+dotnet_diagnostic.SA1001.severity = warning
 
 # Semicolons should be spaced correctly
 dotnet_diagnostic.SA1002.severity = none

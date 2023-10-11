@@ -86,7 +86,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly object[] IgnoreCaseData =
         {
-            new object[] {new SimpleObjectCollection("x", "y", "z"),new SimpleObjectCollection("x", "Y", "Z")},
+            new object[] {new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("x", "Y", "Z")},
             new object[] {new[] {'A', 'B', 'C'}, new object[] {'a', 'b', 'c'}},
             new object[] {new[] {"a", "b", "c"}, new object[] {"A", "B", "C"}},
             new object[] {new Dictionary<int, string> {{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" }}},

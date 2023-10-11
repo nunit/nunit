@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData( "I said hello", "\"I said hello\"" ),
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" )
+            new TestCaseData( null, "null" )
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData( "I said hello", "\"I said hello\"" ),
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null , "null" )
+            new TestCaseData( null, "null" )
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
