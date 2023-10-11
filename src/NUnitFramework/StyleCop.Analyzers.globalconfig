@@ -43,7 +43,7 @@ dotnet_diagnostic.SA1000.severity = warning
 dotnet_diagnostic.SA1001.severity = warning
 
 # Semicolons should be spaced correctly
-dotnet_diagnostic.SA1002.severity = none
+dotnet_diagnostic.SA1002.severity = warning
 
 # Symbols should be spaced correctly
 dotnet_diagnostic.SA1003.severity = none

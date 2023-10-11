@@ -41,7 +41,8 @@ namespace NUnit.Framework.Internal.Builders
 
                 index = sources.Length;
 
-                while (--index >= 0 && !enumerators[index].MoveNext()) ;
+                while (--index >= 0 && !enumerators[index].MoveNext())
+                    ;
 
                 if (index < 0) break;
             }

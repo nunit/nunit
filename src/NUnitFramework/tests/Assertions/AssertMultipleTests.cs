@@ -63,7 +63,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
             ITestResult result = CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
-            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));//
+            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));
         }
 
         [TestCase(nameof(AM.AssertPassInBlock), "Assert.Pass")]

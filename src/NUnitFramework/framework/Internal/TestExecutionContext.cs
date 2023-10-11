@@ -24,9 +24,11 @@ namespace NUnit.Framework.Internal
     /// singleton settings in the environment that affect tests
     /// or which might be changed by the user tests.
     /// </summary>
-    public class TestExecutionContext : LongLivedMarshalByRefObject
+    public class TestExecutionContext
 #if NETFRAMEWORK
-        , ILogicalThreadAffinative
+        : LongLivedMarshalByRefObject, ILogicalThreadAffinative
+#else
+        : LongLivedMarshalByRefObject
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses
