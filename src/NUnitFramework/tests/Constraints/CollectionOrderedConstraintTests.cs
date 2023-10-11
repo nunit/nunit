@@ -78,34 +78,34 @@ namespace NUnit.Framework.Tests.Constraints
                 Is.Ordered.By("Value")),
             // Ordered By Two Properties
             new TestCaseData(
-                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
                 Is.Ordered.By("A").By("B")),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
                 Is.Ordered.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
                 Is.Ordered.Ascending.By("A").Then.Ascending.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 1), new TestClass3("ABC", 42), new TestClass3("XYZ", 2) },
                 Is.Ordered.By("A").Ascending.Then.By("B").Ascending),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 42), new TestClass3("XYZ", 99), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 42), new TestClass3("XYZ", 99), new TestClass3("XYZ", 2) },
                 Is.Not.Ordered.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
+                new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
                 Is.Ordered.By("A").Descending.Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
+                new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 1), new TestClass3("ABC", 42) },
                 Is.Ordered.Descending.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
                 Is.Ordered.By("A").Ascending.Then.By("B").Descending),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
                 Is.Ordered.Ascending.By("A").Then.Descending.By("B")),
             new TestCaseData(
-                new [] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
+                new[] { new TestClass3("ABC", 42), new TestClass3("ABC", 1), new TestClass3("XYZ", 2) },
                 Is.Not.Ordered.By("A").Then.By("B")),
             new TestCaseData(
                 new[] { new TestClass3("XYZ", 2), new TestClass3("ABC", 42), new TestClass3("ABC", 1) },
@@ -137,34 +137,34 @@ namespace NUnit.Framework.Tests.Constraints
                 Is.Ordered.By("Value")),
             // Ordered By Two Fields
             new TestCaseData(
-                new [] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
                 Is.Ordered.By("A").By("B")),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
                 Is.Ordered.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
                 Is.Ordered.Ascending.By("A").Then.Ascending.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 10), new TestClass6("ABC", 420), new TestClass6("XYZ", 20) },
                 Is.Ordered.By("A").Ascending.Then.By("B").Ascending),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 420), new TestClass6("XYZ", 990), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 420), new TestClass6("XYZ", 990), new TestClass6("XYZ", 20) },
                 Is.Not.Ordered.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("XYZ", 20), new TestClass6("ABC", 10), new TestClass6("ABC", 420) },
+                new[] { new TestClass6("XYZ", 20), new TestClass6("ABC", 10), new TestClass6("ABC", 420) },
                 Is.Ordered.By("A").Descending.Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("XYZ", 20), new TestClass6("ABC", 10), new TestClass6("ABC", 420) },
+                new[] { new TestClass6("XYZ", 20), new TestClass6("ABC", 10), new TestClass6("ABC", 420) },
                 Is.Ordered.Descending.By("A").Then.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
                 Is.Ordered.By("A").Ascending.Then.By("B").Descending),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
                 Is.Ordered.Ascending.By("A").Then.Descending.By("B")),
             new TestCaseData(
-                new [] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
+                new[] { new TestClass6("ABC", 420), new TestClass6("ABC", 10), new TestClass6("XYZ", 20) },
                 Is.Not.Ordered.By("A").Then.By("B")),
             new TestCaseData(
                 new[] { new TestClass6("XYZ", 20), new TestClass6("ABC", 420), new TestClass6("ABC", 10) },
