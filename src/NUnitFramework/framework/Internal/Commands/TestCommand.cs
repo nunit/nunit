@@ -7,7 +7,7 @@ namespace NUnit.Framework.Internal.Commands
     /// in the framework. A TestCommand represents a single stage in
     /// the execution of a test, e.g.: SetUp/TearDown, checking for
     /// Timeout, verifying the returned result from a method, etc.
-    /// 
+    ///
     /// TestCommands may decorate other test commands so that the
     /// execution of a lower-level command is nested within that
     /// of a higher level command. All nested commands are executed

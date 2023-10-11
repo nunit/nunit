@@ -30,8 +30,8 @@ namespace NUnit.Framework.Internal
         public static string GetAssemblyPath(Assembly assembly)
         {
 #if NETFRAMEWORK
-            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location 
-            // .NET Framework only: 
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location
+            // .NET Framework only:
             // If the loaded file was shadow-copied, the location is that of the file after being shadow-copied.
             // To get the location before the file has been shadow-copied, use the CodeBase property.
             string? codeBase = assembly.CodeBase;

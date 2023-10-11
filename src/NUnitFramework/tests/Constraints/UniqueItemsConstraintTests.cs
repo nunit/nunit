@@ -64,7 +64,7 @@ namespace NUnit.Framework.Tests.Constraints
             new(new List<double>(Range.Select(v => (double)v)), false),
             new(new List<string>(Range.Select(v => v.ToString())), false),
             new(new List<string>(Range.Select(v => v.ToString())), true),
-            
+
             // Non-generic container
             new(new SimpleObjectCollection(Range), false)
             {

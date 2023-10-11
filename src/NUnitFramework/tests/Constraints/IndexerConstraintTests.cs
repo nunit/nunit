@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer"));
             Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Third indexer"));
         }
-        
+
         [Test]
         public void IndexerOperatorOnRightSideOfAndOperator()
         {
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Tests.Constraints
         private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer
         {
         }
-        
+
         private class ClassWithName
         {
             public ClassWithName(string name)

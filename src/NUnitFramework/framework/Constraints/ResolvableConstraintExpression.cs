@@ -7,7 +7,7 @@ namespace NUnit.Framework.Constraints
     /// constraint being constructed at a point where the last operator
     /// may either terminate the expression or may have additional
     /// qualifying constraints added to it.
-    /// 
+    ///
     /// It is used, for example, for a Property element or for
     /// an Exception element, either of which may be optionally
     /// followed by constraints that apply to the property or

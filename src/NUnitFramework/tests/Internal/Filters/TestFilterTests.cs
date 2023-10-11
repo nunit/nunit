@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
     // Id Filter:
     //    <id>1</id>
     //    <id>1,2,3</id>
-    // 
+    //
     // TestName filter
     //    <test>xxxxxxx.xxx</test>
     //

@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
-        /// <param name="testMethod">The test.</param> 
+        /// <param name="testMethod">The test.</param>
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
             _testMethod = testMethod;

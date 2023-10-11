@@ -6,7 +6,7 @@ namespace NUnit.Framework.Constraints
     /// The ConstraintOperator class is used internally by a
     /// ConstraintBuilder to represent an operator that
     /// modifies or combines constraints.
-    /// 
+    ///
     /// Constraint operators use left and right precedence
     /// values to determine whether the top operator on the
     /// stack should be reduced before pushing a new operator.
