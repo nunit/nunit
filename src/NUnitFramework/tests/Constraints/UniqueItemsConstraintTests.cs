@@ -43,17 +43,17 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly object[] IgnoreCaseData =
         {
-            new object[] {new SimpleObjectCollection("x", "y", "z", "Z") },
-            new object[] {new[] {'A', 'B', 'C', 'c'}},
-            new object[] {new[] {"a", "b", "c", "C"}}
+            new object[] { new SimpleObjectCollection("x", "y", "z", "Z") },
+            new object[] { new[] { 'A', 'B', 'C', 'c' } },
+            new object[] { new[] { "a", "b", "c", "C" } }
         };
 
         private static readonly object[] DuplicateItemsData =
         {
-            new object[] {new[] { 1, 2, 3, 2 }, new[] { 2 }},
-            new object[] {new[] { 2, 1, 2, 3, 2 }, new[] { 2 }},
-            new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }},
-            new object[] {new[] { "x", null, "x" }, new[] { "x" }}
+            new object[] { new[] { 1, 2, 3, 2 }, new[] { 2 } },
+            new object[] { new[] { 2, 1, 2, 3, 2 }, new[] { 2 } },
+            new object[] { new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 } },
+            new object[] { new[] { "x", null, "x" }, new[] { "x" } }
         };
         private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10000);
         private static readonly TestCaseData[] PerformanceDataFastPath =

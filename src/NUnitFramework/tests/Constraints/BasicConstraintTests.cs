@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             new object?[] { null, "null" },
             new object[] { "hello", "\"hello\"" },
-            new object[] { false, "False"},
+            new object[] { false, "False" },
             new object[] { 2 + 2 == 5, "False" }
         };
 #pragma warning restore IDE0052 // Remove unread private members

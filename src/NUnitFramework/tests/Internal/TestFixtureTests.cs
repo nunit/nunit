@@ -104,8 +104,8 @@ namespace NUnit.Framework.Tests.Internal
 
             var expectedArgumentSeries = new[]
             {
-                new object[] {8, 4},
-                new object[] {7, 3}
+                new object[] { 8, 4 },
+                new object[] { 7, 3 }
             };
 
             var actualArgumentSeries = fixture.Tests.Select(x => x.Arguments).ToArray();

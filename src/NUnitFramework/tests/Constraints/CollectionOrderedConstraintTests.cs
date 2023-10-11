@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
                 new[] { null, "x", "y" },
                 Is.Ordered),
             new TestCaseData(
-                new[] {"y", "x", null},
+                new[] { "y", "x", null },
                 Is.Ordered.Descending),
             new TestCaseData(
                 new[] { "x", null, "y" },
