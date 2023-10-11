@@ -133,16 +133,16 @@ dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SX1101.severity = warning
 
 # Query clause should follow previous clause
-dotnet_diagnostic.SA1102.severity = none
+dotnet_diagnostic.SA1102.severity = warning
 
 # Query clauses should be on separate lines or all on one line
-dotnet_diagnostic.SA1103.severity = none
+dotnet_diagnostic.SA1103.severity = warning
 
 # Query clause should begin on new line when previous clause spans multiple lines
-dotnet_diagnostic.SA1104.severity = none
+dotnet_diagnostic.SA1104.severity = warning
 
 # Query clauses spanning multiple lines should begin on own line
-dotnet_diagnostic.SA1105.severity = none
+dotnet_diagnostic.SA1105.severity = warning
 
 # Code should not contain empty statements
 dotnet_diagnostic.SA1106.severity = none
