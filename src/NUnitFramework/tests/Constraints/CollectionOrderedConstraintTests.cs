@@ -326,11 +326,11 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] InvalidOrderedByData = new[]
         {
             new TestCaseData(
-                new object [] { "a", "b" },
+                new object[] { "a", "b" },
                 "A",
                 "index 0"),
             new TestCaseData(
-                new object [] { new TestClass3("a", 1), "b" },
+                new object[] { new TestClass3("a", 1), "b" },
                 "A",
                 "index 1"),
         };
