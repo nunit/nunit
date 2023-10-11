@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal.Builders
             IEnumerator[] enumerators = new IEnumerator[sources.Length];
             int index = -1;
 
-            for (; ; )
+            for (; ;)
             {
                 while (++index < sources.Length)
                 {

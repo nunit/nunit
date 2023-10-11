@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly object[] IgnoreCaseData =
         {
-            new object[] {new SimpleObjectCollection("x", "y", "z", "Z")},
+            new object[] {new SimpleObjectCollection("x", "y", "z", "Z") },
             new object[] {new[] {'A', 'B', 'C', 'c'}},
             new object[] {new[] {"a", "b", "c", "C"}}
         };
@@ -253,8 +253,7 @@ namespace NUnit.Framework.Tests.Constraints
                         {
                             new SimpleObjectCollection(
                                 new TestReferenceTypeOverridesEquals() { A = 1 },
-                                new TestReferenceTypeOverridesEquals() { A = 1 }
-                            ),
+                                new TestReferenceTypeOverridesEquals() { A = 1 }),
                             false
                         },
                         ArgDisplayNames = new[] { "ReferenceTypesOverridesEquals", "false" }

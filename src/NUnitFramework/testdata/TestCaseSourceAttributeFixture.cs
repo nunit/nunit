@@ -20,7 +20,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
 
         private static readonly object[] Source = new object[] {
-            new TestCaseData( 2, 3, 4 ) };
+            new TestCaseData(2, 3, 4) };
 
         #endregion
 

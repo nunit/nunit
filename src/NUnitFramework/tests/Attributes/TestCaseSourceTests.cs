@@ -475,9 +475,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly object[] FourArgs = new object[] {
-            new TestCaseData( 12, 3, 4, 0 ),
-            new TestCaseData( 12, 4, 3, 0 ),
-            new TestCaseData( 12, 5, 2, 2 ) };
+            new TestCaseData(12, 3, 4, 0),
+            new TestCaseData(12, 4, 3, 0),
+            new TestCaseData(12, 5, 2, 2) };
         private static readonly int[] EvenNumbers = new[] { 2, 4, 6, 8 };
         private static readonly object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },

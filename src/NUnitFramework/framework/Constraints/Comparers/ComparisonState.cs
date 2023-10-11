@@ -31,8 +31,7 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             return new ComparisonState(
                 false,
-                _comparisons.Push(new Comparison(x, y))
-            );
+                _comparisons.Push(new Comparison(x, y)));
         }
 
         public bool DidCompare(object x, object y)

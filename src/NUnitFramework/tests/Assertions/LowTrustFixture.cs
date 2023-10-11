@@ -38,8 +38,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.That(1, Is.EqualTo(1))),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
 
         [Test]
@@ -47,8 +46,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.That(10.5, Is.EqualTo(10.5))),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
 
         [Test]
@@ -56,8 +54,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand())),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
     }
 

@@ -641,7 +641,7 @@ namespace NUnit.Options
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
             Option p = new ActionOption(prototype, description, 1,
-                    delegate (OptionValueCollection v) { action(v[0]); });
+                    delegate(OptionValueCollection v) { action(v[0]); });
             base.Add(p);
             return this;
         }
@@ -656,7 +656,7 @@ namespace NUnit.Options
             if (action is null)
                 throw new ArgumentNullException(nameof(action));
             Option p = new ActionOption(prototype, description, 2,
-                    delegate (OptionValueCollection v) { action(v[0], v[1]); });
+                    delegate(OptionValueCollection v) { action(v[0], v[1]); });
             base.Add(p);
             return this;
         }

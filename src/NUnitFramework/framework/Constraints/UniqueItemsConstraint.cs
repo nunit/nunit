@@ -189,8 +189,7 @@ namespace NUnit.Framework.Constraints
         {
             var result = NonUniqueItemsInternal(
                 actual.Select(x => x.ToString()),
-                new NUnitStringEqualityComparer(IgnoringCase)
-            );
+                new NUnitStringEqualityComparer(IgnoringCase));
             return result.Select(x => x[0]).ToList();
         }
 

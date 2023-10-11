@@ -61,10 +61,10 @@ dotnet_diagnostic.SA1006.severity = warning
 dotnet_diagnostic.SA1007.severity = warning
 
 # Opening parenthesis should be spaced correctly
-dotnet_diagnostic.SA1008.severity = none
+dotnet_diagnostic.SA1008.severity = warning
 
 # Closing parenthesis should be spaced correctly
-dotnet_diagnostic.SA1009.severity = none
+dotnet_diagnostic.SA1009.severity = warning
 
 # Opening square brackets should be spaced correctly
 dotnet_diagnostic.SA1010.severity = none

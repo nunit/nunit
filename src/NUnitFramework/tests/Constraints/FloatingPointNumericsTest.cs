@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(
                 FloatingPointNumerics.AreAlmostEqualUlps(1000000.00f, 1000000.13f, 1),
                 Is.False);
-            Assert.That( // Ensure we don't overflow on twos complement values
+            Assert.That(// Ensure we don't overflow on twos complement values
                 FloatingPointNumerics.AreAlmostEqualUlps(2.0f, -2.0f, 1),
                 Is.False);
         }
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(
                 FloatingPointNumerics.AreAlmostEqualUlps(1000000.00, 1000000.0000000002, 1),
                 Is.False);
-            Assert.That( // Ensure we don't overflow on twos complement values
+            Assert.That(// Ensure we don't overflow on twos complement values
                 FloatingPointNumerics.AreAlmostEqualUlps(2.0, -2.0, 1),
                 Is.False);
         }
