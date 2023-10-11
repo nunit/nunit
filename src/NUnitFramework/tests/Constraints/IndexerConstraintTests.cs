@@ -184,7 +184,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             public ClassWithName(string name)
             {
-                this.Name = name;
+                Name = name;
             }
             public string Name { get; }
         }

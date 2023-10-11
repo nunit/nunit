@@ -130,7 +130,7 @@ dotnet_diagnostic.SA1100.severity = none
 dotnet_diagnostic.SA1101.severity = none
 
 # Do not prefix local member with this
-dotnet_diagnostic.SX1101.severity = none
+dotnet_diagnostic.SX1101.severity = warning
 
 # Query clause should follow previous clause
 dotnet_diagnostic.SA1102.severity = none
