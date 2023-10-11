@@ -139,11 +139,13 @@ namespace NUnit.Framework.Tests.Assertions
         public static PermissionSet GetLowTrustPermissionSet()
         {
             var permissions = new PermissionSet(PermissionState.None);
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             permissions.AddPermission(new SecurityPermission(
                 SecurityPermissionFlag.Execution |                  // Required to execute test code
                 SecurityPermissionFlag.SerializationFormatter));    // Required to support cross-appdomain test result formatting by NUnit TestContext
             permissions.AddPermission(new ReflectionPermission(
                 ReflectionPermissionFlag.MemberAccess));            // Required to instantiate classes that contain test code and to get cross-appdomain communication to work.
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
             return permissions;
         }
 

@@ -112,7 +112,7 @@ dotnet_diagnostic.SA1023.severity = warning
 dotnet_diagnostic.SA1024.severity = warning
 
 # Code should not contain multiple whitespace in a row
-dotnet_diagnostic.SA1025.severity = none
+dotnet_diagnostic.SA1025.severity = warning
 
 # Code should not contain space after new or stackalloc keyword in implicitly typed array allocation
 dotnet_diagnostic.SA1026.severity = none

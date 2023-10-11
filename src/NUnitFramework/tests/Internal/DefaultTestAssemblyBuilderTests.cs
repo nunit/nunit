@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests.Internal
             {
                 "en-US", // US English
                 "th-TH", // Thai
-                "tr-TR"  // Turkish
+                "tr-TR", // Turkish
             };
 
         private class ThreadCultureContext : IDisposable

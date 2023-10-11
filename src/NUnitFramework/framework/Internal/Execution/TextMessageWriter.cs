@@ -175,8 +175,8 @@ namespace NUnit.Framework.Internal
         {
             // Maximum string we can display without truncating
             int maxDisplayLength = MaxLineLength
-                - PrefixLength   // Allow for prefix
-                - 2;             // 2 quotation marks
+                - PrefixLength // Allow for prefix
+                - 2;           // 2 quotation marks
 
             if (clipping)
                 MsgUtils.ClipExpectedAndActual(ref expected, ref actual, maxDisplayLength, mismatch);

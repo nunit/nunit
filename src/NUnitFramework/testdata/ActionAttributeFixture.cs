@@ -68,7 +68,7 @@ namespace NUnit.TestData.ActionAttributeTests
         [TaggedAction("OnMethod", ActionTargets.Suite | ActionTargets.Test)] // Applies to both suite and test
         [TaggedAction("OnMethod", ActionTargets.Suite)] // Applies to parameterized suite
         [TaggedAction("OnMethod", ActionTargets.Test)] // Applies to each case
-        [TaggedAction("OnMethod")]                     // Ditto
+        [TaggedAction("OnMethod")] // Ditto
         public void ParameterizedTest(string message)
         {
             ((IWithAction)this).Events.Add("Case" + message);
