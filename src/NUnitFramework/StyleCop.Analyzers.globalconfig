@@ -91,7 +91,7 @@ dotnet_diagnostic.SA1016.severity = warning
 dotnet_diagnostic.SA1017.severity = warning
 
 # Nullable type symbols should be spaced correctly
-dotnet_diagnostic.SA1018.severity = none
+dotnet_diagnostic.SA1018.severity = warning
 
 # Member access symbols should be spaced correctly
 dotnet_diagnostic.SA1019.severity = none
