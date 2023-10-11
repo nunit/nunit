@@ -195,7 +195,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="type">The type to be examined.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified type is numeric; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the specified type is numeric; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool IsNumeric(Type type)
         {
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Internal
         /// <param name="arglist">The arglist.</param>
         /// <param name="typeArgsOut">The type args to be used.</param>
         /// <returns>
-        /// 	<see langword="true"/> if this the provided args give sufficient information to determine the type args to be used; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if this the provided args give sufficient information to determine the type args to be used; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool CanDeduceTypeArgsFromArgs(Type type, object?[] arglist, [NotNullWhen(true)] ref Type[]? typeArgsOut)
         {

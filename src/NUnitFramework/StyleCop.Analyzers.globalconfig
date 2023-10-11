@@ -118,7 +118,7 @@ dotnet_diagnostic.SA1025.severity = warning
 dotnet_diagnostic.SA1026.severity = warning
 
 # Use tabs correctly
-dotnet_diagnostic.SA1027.severity = none
+dotnet_diagnostic.SA1027.severity = warning
 
 # Code should not contain trailing whitespace
 dotnet_diagnostic.SA1028.severity = none

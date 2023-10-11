@@ -90,8 +90,8 @@ namespace NUnit.TestData.TestMethodSignatureFixture
             ClassicAssert.AreEqual(q, n / d);
         }
 
-        //		[Test]
-        //		public abstract void AbstractTestMethod() { }
+        // [Test]
+        // public abstract void AbstractTestMethod() { }
 
         [Test]
         protected void ProtectedTestMethod() { }
