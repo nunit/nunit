@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests.Constraints
             new object?[] { null, "null" },
             new object[] { "hello", "\"hello\"" },
             new object[] { false, "False"},
-            new object[] { 2+2==5, "False" }
+            new object[] { 2 + 2 == 5, "False" }
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( true, "True" ),
-            new TestCaseData( 2+2==4, "True" )
+            new TestCaseData( 2 + 2 == 4, "True" )
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }

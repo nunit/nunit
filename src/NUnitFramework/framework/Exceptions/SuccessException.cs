@@ -22,8 +22,7 @@ namespace NUnit.Framework
         /// <param name="inner">The exception that caused the
         /// current exception</param>
         public SuccessException(string message, Exception? inner)
-            :
-            base(message, inner)
+            : base(message, inner)
         { }
 
         /// <summary>

@@ -21,8 +21,7 @@ namespace NUnit.Framework
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public ResultStateException(string message, Exception? inner) :
-            base(message, inner)
+        public ResultStateException(string message, Exception? inner) : base(message, inner)
         { }
 
         /// <summary>
