@@ -97,7 +97,7 @@ dotnet_diagnostic.SA1018.severity = warning
 dotnet_diagnostic.SA1019.severity = warning
 
 # Increment decrement symbols should be spaced correctly
-dotnet_diagnostic.SA1020.severity = none
+dotnet_diagnostic.SA1020.severity = warning
 
 # Negative signs should be spaced correctly
 dotnet_diagnostic.SA1021.severity = none
