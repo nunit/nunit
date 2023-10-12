@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -218,7 +217,7 @@ namespace NUnit.Framework.Tests.Attributes
         private static IEnumerable SourceData()
         {
             yield return new object[] { "Many", 1, 2, 3, 4 };
-            yield return new object[] { new double[] { 1.5, 8.2} };
+            yield return new object[] { new double[] { 1.5, 8.2 } };
         }
 
         public ParameterizedTestFixtureWithParamsArgument(string name, params int[] parameterValues)
@@ -231,7 +230,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             ParameterDoubleValues = parameterDoubleValues;
         }
-        
+
         public string? Name { get; }
         public int[]? ParameterValues { get; }
         public double[]? ParameterDoubleValues { get; }
@@ -245,7 +244,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
             else if (Name == "One")
             {
-                Assert.That(ParameterValues, Is.EqualTo(new[] {1}));
+                Assert.That(ParameterValues, Is.EqualTo(new[] { 1 }));
             }
             else if (Name == "Many")
             {

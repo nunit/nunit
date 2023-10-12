@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
                 ParameterInfo parameterInfo = parameterInfos.Last();
                 if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
                 {
-                    if (arguments.Length == parameterInfos.Length 
+                    if (arguments.Length == parameterInfos.Length
                         && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
                     {
                         // Don't convert arguments as there was already an array we could use.
@@ -144,11 +144,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length -1].HasAttribute<ParamArrayAttribute>(false);
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
 
             if (hasParamsArgument)
             {
-                if (ptypes.Length < pinfos.Length -1)
+                if (ptypes.Length < pinfos.Length - 1)
                     return false;
             }
             else
