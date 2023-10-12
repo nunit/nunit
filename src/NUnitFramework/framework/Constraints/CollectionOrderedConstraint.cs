@@ -150,7 +150,8 @@ namespace NUnit.Framework.Constraints
                 int index = 0;
                 foreach (var step in _steps)
                 {
-                    if (index++ != 0) description += " then";
+                    if (index++ != 0)
+                        description += " then";
 
                     if (step.PropertyName is not null)
                         description += " by " + MsgUtils.FormatValue(step.PropertyName);
@@ -212,14 +213,16 @@ namespace NUnit.Framework.Constraints
                             {
                                 if (step.Direction == OrderDirection.Descending)
                                     return false;
-                                else break;
+                                else
+                                    break;
                             }
 
                             if (comparisonResult > 0)
                             {
                                 if (step.Direction != OrderDirection.Descending)
                                     return false;
-                                else break;
+                                else
+                                    break;
                             }
                         }
                     }

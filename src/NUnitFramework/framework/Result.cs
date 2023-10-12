@@ -51,7 +51,8 @@ namespace NUnit.Framework
         {
             get
             {
-                if (_errorMessage is not null) throw new InvalidOperationException("The result is not success.");
+                if (_errorMessage is not null)
+                    throw new InvalidOperationException("The result is not success.");
                 return _value;
             }
         }

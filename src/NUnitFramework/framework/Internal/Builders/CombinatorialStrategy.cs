@@ -44,7 +44,8 @@ namespace NUnit.Framework.Internal.Builders
                 while (--index >= 0 && !enumerators[index].MoveNext())
                     ;
 
-                if (index < 0) break;
+                if (index < 0)
+                    break;
             }
 
             return testCases;

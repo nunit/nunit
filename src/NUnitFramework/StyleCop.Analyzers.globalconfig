@@ -391,7 +391,7 @@ dotnet_diagnostic.SA1414.severity = none
 dotnet_diagnostic.SA1500.severity = warning
 
 # Statement should not be on a single line
-dotnet_diagnostic.SA1501.severity = none
+dotnet_diagnostic.SA1501.severity = warning
 
 # Element should not be on a single line
 dotnet_diagnostic.SA1502.severity = none

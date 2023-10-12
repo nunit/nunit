@@ -43,7 +43,8 @@ namespace NUnit.Framework.Tests.Syntax
 
         private static bool IsInheritable(Type type)
         {
-            if (type.IsSealed) return false;
+            if (type.IsSealed)
+                return false;
 
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Any()
                 || type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Any(IsAccessibleFromExternalSubclass);

@@ -32,10 +32,12 @@ namespace NUnit.Framework.Internal
             {
                 string name = type.FullName();
                 int index = name.IndexOf('[');
-                if (index >= 0) name = name.Substring(0, index);
+                if (index >= 0)
+                    name = name.Substring(0, index);
 
                 index = name.LastIndexOf('.');
-                if (index >= 0) name = name.Substring(index + 1);
+                if (index >= 0)
+                    name = name.Substring(index + 1);
 
                 var genericArguments = type.GetGenericArguments();
                 var currentArgument = 0;
@@ -100,7 +102,8 @@ namespace NUnit.Framework.Internal
             sb.Append("(");
             for (int i = 0; i < arglist.Length; i++)
             {
-                if (i > 0) sb.Append(",");
+                if (i > 0)
+                    sb.Append(",");
 
                 object? arg = arglist[i];
                 string display = arg?.ToString() ?? "null";
@@ -144,6 +147,7 @@ namespace NUnit.Framework.Internal
         public static bool TryGetBestCommonType(Type? type1, Type? type2, [NotNullIfNotNull("type1"), NotNullIfNotNull("type2")] out Type? bestCommonType)
         {
 #pragma warning disable SA1107 // Code should not contain multiple statements on one line
+#pragma warning disable SA1501 // Statement should not be on a single line
             if (type1 == type2) { bestCommonType = type1; return true; }
             if (type1 is null) { bestCommonType = type2; return true; }
             if (type2 is null) { bestCommonType = type1; return true; }
@@ -189,6 +193,7 @@ namespace NUnit.Framework.Internal
 
             bestCommonType = typeof(object);
             return false;
+#pragma warning restore SA1501 // Statement should not be on a single line
 #pragma warning restore SA1107 // Code should not contain multiple statements on one line
         }
 

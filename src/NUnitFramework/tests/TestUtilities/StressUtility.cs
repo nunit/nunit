@@ -11,11 +11,15 @@ namespace NUnit.Framework.Tests.TestUtilities
     {
         public static void RunParallel(Action action, int times, int maxParallelism, bool useThreadPool = true)
         {
-            if (action is null) throw new ArgumentNullException(nameof(action));
-            if (times < 0) throw new ArgumentOutOfRangeException(nameof(times), times, "Number of times to run must be greater than or equal to 0.");
-            if (maxParallelism < 1) throw new ArgumentOutOfRangeException(nameof(maxParallelism), maxParallelism, "Max parallelism must be greater than or equal to 1.");
+            if (action is null)
+                throw new ArgumentNullException(nameof(action));
+            if (times < 0)
+                throw new ArgumentOutOfRangeException(nameof(times), times, "Number of times to run must be greater than or equal to 0.");
+            if (maxParallelism < 1)
+                throw new ArgumentOutOfRangeException(nameof(maxParallelism), maxParallelism, "Max parallelism must be greater than or equal to 1.");
 
-            if (times == 0) return;
+            if (times == 0)
+                return;
 
             maxParallelism = Math.Min(times, maxParallelism);
             var exception = default(Exception);

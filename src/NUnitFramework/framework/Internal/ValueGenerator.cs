@@ -55,13 +55,17 @@ namespace NUnit.Framework.Internal
 
                     if (startToEnd < 0)
                     {
-                        if (Compare(next, end) > 0) break; // We stepped past the end of the range.
+                        if (Compare(next, end) > 0)
+                            break; // We stepped past the end of the range.
+
                         if (Compare(next, current) <= 0)
                             throw new InvalidOperationException("The step must strictly increase.");
                     }
                     else
                     {
-                        if (Compare(next, end) < 0) break; // We stepped past the end of the range.
+                        if (Compare(next, end) < 0)
+                            break; // We stepped past the end of the range.
+
                         if (Compare(next, current) >= 0)
                             throw new InvalidOperationException("The step must strictly decrease.");
                     }
@@ -98,7 +102,8 @@ namespace NUnit.Framework.Internal
             /// </param>
             public ComparableStep(TStep value, Func<T, TStep, T> apply)
             {
-                if (apply is null) throw new ArgumentNullException(nameof(apply));
+                if (apply is null)
+                    throw new ArgumentNullException(nameof(apply));
                 _step = value;
                 _apply = apply;
             }
@@ -142,7 +147,8 @@ namespace NUnit.Framework.Internal
         /// <exception cref="NotSupportedException"/>
         public sealed override ValueGenerator.Step CreateStep(object value)
         {
-            if (TryCreateStep(value, out var step)) return step;
+            if (TryCreateStep(value, out var step))
+                return step;
             throw CreateNotSupportedException($"creating a step of type {value.GetType()}");
         }
 
@@ -180,27 +186,38 @@ namespace NUnit.Framework.Internal
             // The JIT removes all branches which do not match T since it generates a separate version
             // of this method at runtime for every value type T.
 
-            if (typeof(T) == typeof(sbyte)) return (ValueGenerator<T>)(object)new SByteValueGenerator();
+            if (typeof(T) == typeof(sbyte))
+                return (ValueGenerator<T>)(object)new SByteValueGenerator();
 
-            if (typeof(T) == typeof(byte)) return (ValueGenerator<T>)(object)new ByteValueGenerator();
+            if (typeof(T) == typeof(byte))
+                return (ValueGenerator<T>)(object)new ByteValueGenerator();
 
-            if (typeof(T) == typeof(short)) return (ValueGenerator<T>)(object)new Int16ValueGenerator();
+            if (typeof(T) == typeof(short))
+                return (ValueGenerator<T>)(object)new Int16ValueGenerator();
 
-            if (typeof(T) == typeof(ushort)) return (ValueGenerator<T>)(object)new UInt16ValueGenerator();
+            if (typeof(T) == typeof(ushort))
+                return (ValueGenerator<T>)(object)new UInt16ValueGenerator();
 
-            if (typeof(T) == typeof(int)) return (ValueGenerator<T>)(object)new Int32ValueGenerator();
+            if (typeof(T) == typeof(int))
+                return (ValueGenerator<T>)(object)new Int32ValueGenerator();
 
-            if (typeof(T) == typeof(uint)) return (ValueGenerator<T>)(object)new UInt32ValueGenerator();
+            if (typeof(T) == typeof(uint))
+                return (ValueGenerator<T>)(object)new UInt32ValueGenerator();
 
-            if (typeof(T) == typeof(long)) return (ValueGenerator<T>)(object)new Int64ValueGenerator();
+            if (typeof(T) == typeof(long))
+                return (ValueGenerator<T>)(object)new Int64ValueGenerator();
 
-            if (typeof(T) == typeof(ulong)) return (ValueGenerator<T>)(object)new UInt64ValueGenerator();
+            if (typeof(T) == typeof(ulong))
+                return (ValueGenerator<T>)(object)new UInt64ValueGenerator();
 
-            if (typeof(T) == typeof(float)) return (ValueGenerator<T>)(object)new SingleValueGenerator();
+            if (typeof(T) == typeof(float))
+                return (ValueGenerator<T>)(object)new SingleValueGenerator();
 
-            if (typeof(T) == typeof(double)) return (ValueGenerator<T>)(object)new DoubleValueGenerator();
+            if (typeof(T) == typeof(double))
+                return (ValueGenerator<T>)(object)new DoubleValueGenerator();
 
-            if (typeof(T) == typeof(decimal)) return (ValueGenerator<T>)(object)new DecimalValueGenerator();
+            if (typeof(T) == typeof(decimal))
+                return (ValueGenerator<T>)(object)new DecimalValueGenerator();
 
             return new DefaultValueGenerator<T>();
         }

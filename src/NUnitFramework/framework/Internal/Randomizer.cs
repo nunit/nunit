@@ -607,7 +607,8 @@ namespace NUnit.Framework.Internal
                     // twice is < 25%. Three times, 12.5%. And so on.
                     // For the average scenario of 25% chance per iteration, the total chance of having to iterate twice
                     // is < 6.25%. Three times, 1.5625%. And so on.
-                    if (result < max) return result;
+                    if (result < max)
+                        return result;
                 }
             }
         }

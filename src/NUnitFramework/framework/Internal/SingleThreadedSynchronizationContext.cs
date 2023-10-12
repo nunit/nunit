@@ -69,7 +69,8 @@ namespace NUnit.Framework.Internal
                 switch (_status)
                 {
                     case Status.ShuttingDown:
-                        if (_timeSinceShutdown!.Elapsed < _shutdownTimeout) break;
+                        if (_timeSinceShutdown!.Elapsed < _shutdownTimeout)
+                            break;
                         goto case Status.ShutDown;
 
                     case Status.ShutDown:

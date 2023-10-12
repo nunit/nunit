@@ -54,7 +54,8 @@ namespace NUnit.Framework.Tests.Internal
 
             foreach (int n in array)
             {
-                if (n > 1) sb.Append(",");
+                if (n > 1)
+                    sb.Append(",");
                 sb.Append(n.ToString());
             }
 

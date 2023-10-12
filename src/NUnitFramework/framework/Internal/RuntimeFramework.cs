@@ -344,7 +344,8 @@ namespace NUnit.Framework.Internal
 
         private static bool IsNetCore()
         {
-            if (Environment.Version.Major >= 5) return true;
+            if (Environment.Version.Major >= 5)
+                return true;
 
 #if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch

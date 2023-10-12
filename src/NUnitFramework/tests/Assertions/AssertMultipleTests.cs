@@ -141,7 +141,9 @@ namespace NUnit.Framework.Tests.Assertions
                 // Place one failure in the context
                 Assert.That(false);
             }
-            catch { }
+            catch
+            {
+            }
 
             var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
             var previousFailureCount = currentResult.AssertionResults.Count;

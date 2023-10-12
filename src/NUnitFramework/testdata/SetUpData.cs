@@ -158,13 +158,15 @@ namespace NUnit.TestData.SetUpData
         [SetUp]
         public void SetUp()
         {
-            if (SetupException is not null) throw SetupException;
+            if (SetupException is not null)
+                throw SetupException;
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (TearDownException is not null) throw TearDownException;
+            if (TearDownException is not null)
+                throw TearDownException;
         }
 
         [Test]

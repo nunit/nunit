@@ -43,7 +43,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (actual is null) return false;
+            if (actual is null)
+                return false;
 
             var actualComparison = _comparisonType ?? StringComparison.CurrentCulture;
             return actual.IndexOf(expected, actualComparison) >= 0;

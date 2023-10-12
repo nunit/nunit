@@ -57,7 +57,8 @@ namespace NUnit.Framework.Internal
         /// <returns>A filtered stack trace</returns>
         public string? Filter(string? rawTrace)
         {
-            if (rawTrace is null) return null;
+            if (rawTrace is null)
+                return null;
 
             StringReader sr = new StringReader(rawTrace);
             StringWriter sw = new StringWriter();

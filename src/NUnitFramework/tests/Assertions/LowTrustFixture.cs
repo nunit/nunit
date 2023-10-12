@@ -159,8 +159,10 @@ namespace NUnit.Framework.Tests.Assertions
         }
         public object? Run(MethodInfo method, params object[] parameters)
         {
-            if (method is null) throw new ArgumentNullException(nameof(method));
-            if (_appDomain is null) throw new ObjectDisposedException(null);
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+            if (_appDomain is null)
+                throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);
             var methodRunnerProxy = (MethodRunner?)_appDomain.CreateInstanceAndUnwrap(
@@ -214,7 +216,8 @@ namespace NUnit.Framework.Tests.Assertions
                 }
                 catch (TargetInvocationException e)
                 {
-                    if (e.InnerException is null) throw;
+                    if (e.InnerException is null)
+                        throw;
                     throw e.InnerException;
                 }
             }

@@ -88,7 +88,8 @@ namespace NUnit.Framework.Internal
         {
             if (message is not null)
             {
-                while (level-- >= 0) Write("  ");
+                while (level-- >= 0)
+                    Write("  ");
 
                 if (args is not null && args.Length > 0)
                     message = string.Format(message, args);

@@ -221,7 +221,8 @@ namespace NUnit.Framework.Constraints
         // Return true if NUnitEqualityHandler has special logic for Type
         private static bool IsHandledSpeciallyByNUnit(Type type)
         {
-            if (type == typeof(string)) return false; // even though it's IEnumerable
+            if (type == typeof(string))
+                return false; // even though it's IEnumerable
 
             return type.IsArray
                 || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well

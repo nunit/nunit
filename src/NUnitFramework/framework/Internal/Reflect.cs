@@ -72,7 +72,8 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type, object?[]? arguments)
         {
-            if (arguments is null) return Construct(type);
+            if (arguments is null)
+                return Construct(type);
 
             Type?[] argTypes = GetTypeArray(arguments);
             ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
@@ -250,7 +251,8 @@ namespace NUnit.Framework.Internal
                 for (var publicSearchType = type; publicSearchType is not null; publicSearchType = publicSearchType.BaseType)
                 {
                     var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
-                    if (property is not null) return property;
+                    if (property is not null)
+                        return property;
                 }
 
                 // There is no public property, so may as well not ask to include them during the second search.
@@ -260,7 +262,8 @@ namespace NUnit.Framework.Internal
             for (var searchType = type; searchType is not null; searchType = searchType.BaseType)
             {
                 var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
-                if (property is not null) return property;
+                if (property is not null)
+                    return property;
             }
 
             return null;
@@ -302,10 +305,12 @@ namespace NUnit.Framework.Internal
                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                    .SingleOrDefault(candidate =>
                    {
-                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0) return false;
+                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0)
+                            return false;
 
                        var parameters = candidate.GetParameters();
-                       if (parameters.Length != parameterTypes.Length) return false;
+                       if (parameters.Length != parameterTypes.Length)
+                            return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
                        {
@@ -316,7 +321,8 @@ namespace NUnit.Framework.Internal
                        return true;
                    });
 
-                if (method is not null) return method;
+                if (method is not null)
+                    return method;
             }
 
             return null;
@@ -334,15 +340,20 @@ namespace NUnit.Framework.Internal
                              return false;
 
                          var indexParameters = candidate.GetIndexParameters();
-                         if (indexParameters.Length != indexParameterTypes.Length) return false;
+                         if (indexParameters.Length != indexParameterTypes.Length)
+                            return false;
 
                          for (var i = 0; i < indexParameterTypes.Length; i++)
-                             if (indexParameters[i].ParameterType != indexParameterTypes[i]) return false;
+                         {
+                             if (indexParameters[i].ParameterType != indexParameterTypes[i])
+                                return false;
+                         }
 
                          return true;
                      });
 
-                if (property is not null) return property;
+                if (property is not null)
+                    return property;
             }
 
             return null;
