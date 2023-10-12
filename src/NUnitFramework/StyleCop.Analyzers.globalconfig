@@ -418,7 +418,7 @@ dotnet_diagnostic.SA1508.severity = warning
 dotnet_diagnostic.SA1509.severity = warning
 
 # Chained statement blocks should not be preceded by blank line
-dotnet_diagnostic.SA1510.severity = none
+dotnet_diagnostic.SA1510.severity = warning
 
 # While-do footer should not be preceded by blank line
 dotnet_diagnostic.SA1511.severity = none
