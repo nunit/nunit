@@ -154,7 +154,7 @@ dotnet_diagnostic.SA1107.severity = warning
 dotnet_diagnostic.SA1108.severity = none
 
 # Block statements should not contain embedded regions
-dotnet_diagnostic.SA1109.severity = none
+dotnet_diagnostic.SA1109.severity = warning
 
 # Opening parenthesis or bracket should be on declaration line
 dotnet_diagnostic.SA1110.severity = none
