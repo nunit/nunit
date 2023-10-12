@@ -148,7 +148,7 @@ dotnet_diagnostic.SA1105.severity = warning
 dotnet_diagnostic.SA1106.severity = none
 
 # Code should not contain multiple statements on one line
-dotnet_diagnostic.SA1107.severity = none
+dotnet_diagnostic.SA1107.severity = warning
 
 # Block statements should not contain embedded comments
 dotnet_diagnostic.SA1108.severity = none

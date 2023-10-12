@@ -143,6 +143,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool TryGetBestCommonType(Type? type1, Type? type2, [NotNullIfNotNull("type1"), NotNullIfNotNull("type2")] out Type? bestCommonType)
         {
+#pragma warning disable SA1107 // Code should not contain multiple statements on one line
             if (type1 == type2) { bestCommonType = type1; return true; }
             if (type1 is null) { bestCommonType = type2; return true; }
             if (type2 is null) { bestCommonType = type1; return true; }
@@ -188,6 +189,7 @@ namespace NUnit.Framework.Internal
 
             bestCommonType = typeof(object);
             return false;
+#pragma warning restore SA1107 // Code should not contain multiple statements on one line
         }
 
         /// <summary>

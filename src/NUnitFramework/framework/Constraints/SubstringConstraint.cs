@@ -29,7 +29,11 @@ namespace NUnit.Framework.Constraints
         /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
         public override StringConstraint IgnoreCase
         {
-            get { Using(StringComparison.CurrentCultureIgnoreCase); return base.IgnoreCase; }
+            get
+            {
+                Using(StringComparison.CurrentCultureIgnoreCase);
+                return base.IgnoreCase;
+            }
         }
 
         /// <summary>

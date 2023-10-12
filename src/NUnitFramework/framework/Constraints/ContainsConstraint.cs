@@ -52,7 +52,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ContainsConstraint IgnoreCase
         {
-            get { _ignoreCase = true; return this; }
+            get
+            {
+                _ignoreCase = true;
+                return this;
+            }
         }
 
         /// <summary>
