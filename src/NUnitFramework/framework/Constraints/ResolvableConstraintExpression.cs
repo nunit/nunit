@@ -18,14 +18,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Create a new instance of ResolvableConstraintExpression
         /// </summary>
-        public ResolvableConstraintExpression() { }
+        public ResolvableConstraintExpression()
+        {
+        }
 
         /// <summary>
         /// Create a new instance of ResolvableConstraintExpression,
         /// passing in a pre-populated ConstraintBuilder.
         /// </summary>
         public ResolvableConstraintExpression(ConstraintBuilder builder)
-            : base(builder) { }
+            : base(builder)
+        {
+        }
 
         /// <summary>
         /// Appends an And Operator to the expression

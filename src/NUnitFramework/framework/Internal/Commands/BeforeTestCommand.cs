@@ -13,7 +13,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Construct a BeforeCommand
         /// </summary>
-        public BeforeTestCommand(TestCommand innerCommand) : base(innerCommand) { }
+        public BeforeTestCommand(TestCommand innerCommand) : base(innerCommand)
+        {
+        }
 
         /// <summary>
         /// Execute the command

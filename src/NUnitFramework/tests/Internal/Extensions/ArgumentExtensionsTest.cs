@@ -33,16 +33,26 @@ namespace NUnit.Framework.Internal.Extensions
             return methodWrapper.GetParameters().LastParameterAcceptsCancellationToken();
         }
 
-        private void MethodWithNoParameters() { }
+        private void MethodWithNoParameters()
+        {
+        }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        private void MethodWithIntegerParameter(int i) { }
+        private void MethodWithIntegerParameter(int i)
+        {
+        }
 
-        private void MethodWithCancellationTokenParameter(CancellationToken cancellationToken) { }
+        private void MethodWithCancellationTokenParameter(CancellationToken cancellationToken)
+        {
+        }
 
-        private void MethodWithIntAndCancellationTokenParameter(int i, CancellationToken cancellationToken) { }
+        private void MethodWithIntAndCancellationTokenParameter(int i, CancellationToken cancellationToken)
+        {
+        }
 
-        private void MethodWithCancellationTokenAndIntParameter(CancellationToken cancellationToken, int i) { }
+        private void MethodWithCancellationTokenAndIntParameter(CancellationToken cancellationToken, int i)
+        {
+        }
 #pragma warning restore IDE0060 // Remove unused parameter
     }
 }

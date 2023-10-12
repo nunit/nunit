@@ -10,7 +10,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Create a new instance of ItemsConstraintExpression
         /// </summary>
-        public ItemsConstraintExpression() { }
+        public ItemsConstraintExpression()
+        {
+        }
 
         /// <summary>
         /// Create a new instance of ResolvableConstraintExpression,
@@ -18,7 +20,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="builder"></param>
         public ItemsConstraintExpression(ConstraintBuilder builder)
-            : base(builder) { }
+            : base(builder)
+        {
+        }
 
         /// <summary>
         /// No-op property for readability.

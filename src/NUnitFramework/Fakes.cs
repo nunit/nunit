@@ -70,10 +70,14 @@ namespace NUnit.Framework.Tests.TestUtilities
     public class FakeTestMethod : TestMethod
     {
         public FakeTestMethod(object obj, string name)
-            : this(obj.GetType(), name) { }
+            : this(obj.GetType(), name)
+        {
+        }
 
         public FakeTestMethod(Type type, string name)
-            : base(new MethodWrapper(type, name)) { }
+            : base(new MethodWrapper(type, name))
+        {
+        }
     }
 
     #endregion
@@ -88,7 +92,9 @@ namespace NUnit.Framework.Tests.TestUtilities
         public event EventHandler? Executed;
 
         public FakeWorkItem(Test test)
-            : this(test, new TestExecutionContext()) { }
+            : this(test, new TestExecutionContext())
+        {
+        }
 
         public FakeWorkItem(Test test, TestExecutionContext context)
             : base(test, TestFilter.Empty)
@@ -101,7 +107,9 @@ namespace NUnit.Framework.Tests.TestUtilities
             Executed?.Invoke(this, EventArgs.Empty);
         }
 
-        protected override void PerformWork() { }
+        protected override void PerformWork()
+        {
+        }
     }
 
     #endregion

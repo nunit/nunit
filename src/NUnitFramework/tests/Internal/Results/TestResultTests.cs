@@ -47,7 +47,9 @@ namespace NUnit.Framework.Tests.Internal.Results
 
         public class DummySuite
         {
-            public void DummyMethod() { }
+            public void DummyMethod()
+            {
+            }
         }
 
         #endregion

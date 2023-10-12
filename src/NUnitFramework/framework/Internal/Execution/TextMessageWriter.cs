@@ -49,7 +49,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Construct a TextMessageWriter
         /// </summary>
-        public TextMessageWriter() { }
+        public TextMessageWriter()
+        {
+        }
 
         /// <summary>
         /// Construct a TextMessageWriter, specifying a user message

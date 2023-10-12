@@ -12,7 +12,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="left">The first constraint</param>
         /// <param name="right">The second constraint</param>
-        public OrConstraint(IConstraint left, IConstraint right) : base(left, right) { }
+        public OrConstraint(IConstraint left, IConstraint right) : base(left, right)
+        {
+        }
 
         /// <summary>
         /// Gets text describing a constraint

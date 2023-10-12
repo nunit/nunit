@@ -520,9 +520,13 @@ namespace NUnitLite.Tests
 
         #region Private Properties and Methods
 
-        private void MyFakeMethod() { }
+        private void MyFakeMethod()
+        {
+        }
 
-        private void AnotherFakeMethod() { }
+        private void AnotherFakeMethod()
+        {
+        }
 
         private string Report => _reportBuilder.ToString().Replace(NL, "\n");
 

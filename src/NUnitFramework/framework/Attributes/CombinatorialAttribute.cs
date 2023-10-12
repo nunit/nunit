@@ -15,6 +15,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public CombinatorialAttribute() : base(new CombinatorialStrategy(), new ParameterDataSourceProvider()) { }
+        public CombinatorialAttribute() : base(new CombinatorialStrategy(), new ParameterDataSourceProvider())
+        {
+        }
     }
 }

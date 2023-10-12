@@ -134,11 +134,17 @@ namespace NUnit.Framework.Tests.Internal
 
         #region Methods Used as Data
 
-        private void TestMethod() { }
+        private void TestMethod()
+        {
+        }
 
-        private void TestMethodWithArgs(int a, int b, int c = 0) { }
+        private void TestMethodWithArgs(int a, int b, int c = 0)
+        {
+        }
 
-        private void GenericTest<T1, T2, T3>() { }
+        private void GenericTest<T1, T2, T3>()
+        {
+        }
 
         #endregion
     }

@@ -48,7 +48,9 @@ namespace NUnit.Framework
         /// Constructor for derived classes that set the
         /// property dictionary directly.
         /// </summary>
-        protected PropertyAttribute() { }
+        protected PropertyAttribute()
+        {
+        }
 
         /// <summary>
         /// Constructor for use by derived classes that use the

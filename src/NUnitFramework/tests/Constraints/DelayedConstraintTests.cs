@@ -249,11 +249,20 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static int _setValuesDelay;
 
-        private static object MethodReturningValue() { return _boolValue; }
+        private static object MethodReturningValue()
+        {
+            return _boolValue;
+        }
 
-        private static object MethodReturningFalse() { return false; }
+        private static object MethodReturningFalse()
+        {
+            return false;
+        }
 
-        private static object MethodReturningZero() { return 0; }
+        private static object MethodReturningZero()
+        {
+            return 0;
+        }
 
         private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
 

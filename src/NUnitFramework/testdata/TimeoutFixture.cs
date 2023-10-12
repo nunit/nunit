@@ -53,7 +53,9 @@ namespace NUnit.TestData
         }
 
         [Test, Timeout(50)]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
     }
 
     public class TimeoutFixtureWithTimeoutInTearDown : TimeoutFixture
@@ -65,21 +67,27 @@ namespace NUnit.TestData
         }
 
         [Test, Timeout(50)]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
     }
 
     [TestFixture, Timeout(50)]
     public class TimeoutFixtureWithTimeoutOnFixture
     {
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
         [Test]
         public void Test2WithInfiniteLoop()
         {
             Thread.Sleep(5000);
         }
         [Test]
-        public void Test3() { }
+        public void Test3()
+        {
+        }
     }
 
     public class TimeoutTestCaseFixture

@@ -28,7 +28,8 @@ namespace NUnit.Framework.Tests.Internal
         internal class DummyGeneric<T>
         {
             public DummyGeneric(T obj)
-            { }
+            {
+            }
         }
     }
 
@@ -53,42 +54,52 @@ namespace NUnit.Framework.Tests.Internal
     namespace A
     {
         internal class GenA<T>
-        { }
+        {
+        }
 
         internal class GenB<T>
-        { }
+        {
+        }
 
         internal class GenC<T1, T2>
-        { }
+        {
+        }
 
         namespace B
         {
             internal class GenX<T>
-            { }
+            {
+            }
 
             internal class GenY<T>
-            { }
+            {
+            }
         }
     }
 
     namespace B
     {
         internal class GenA<T>
-        { }
+        {
+        }
 
         internal class GenB<T>
-        { }
+        {
+        }
 
         internal class GenC<T1, T2>
-        { }
+        {
+        }
 
         namespace B
         {
             internal class GenX<T>
-            { }
+            {
+            }
 
             internal class GenY<T>
-            { }
+            {
+            }
         }
     }
 

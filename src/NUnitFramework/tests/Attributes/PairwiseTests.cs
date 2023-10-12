@@ -105,6 +105,8 @@ namespace NUnit.Framework.Tests.Attributes
 #endif
         }
 
-        private class PairCounter : System.Collections.Generic.Dictionary<string, object?> { }
+        private class PairCounter : System.Collections.Generic.Dictionary<string, object?>
+        {
+        }
     }
 }

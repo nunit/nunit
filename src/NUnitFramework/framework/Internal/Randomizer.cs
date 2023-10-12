@@ -107,13 +107,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Randomizer() { }
+        public Randomizer()
+        {
+        }
 
         /// <summary>
         /// Construct based on seed value
         /// </summary>
         /// <param name="seed"></param>
-        public Randomizer(int seed) : base(seed) { }
+        public Randomizer(int seed) : base(seed)
+        {
+        }
 
         #endregion
 

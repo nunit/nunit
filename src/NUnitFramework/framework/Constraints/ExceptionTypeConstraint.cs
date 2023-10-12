@@ -15,7 +15,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs an ExceptionTypeConstraint
         /// </summary>
-        public ExceptionTypeConstraint(Type type) : base(type) { }
+        public ExceptionTypeConstraint(Type type) : base(type)
+        {
+        }
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.

@@ -15,7 +15,9 @@ namespace NUnit.Framework.Internal
         /// Construct a TestCaseResult based on a TestMethod
         /// </summary>
         /// <param name="test">A TestMethod to which the result applies.</param>
-        public TestCaseResult(TestMethod test) : base(test) { }
+        public TestCaseResult(TestMethod test) : base(test)
+        {
+        }
 
         #region Overrides
 

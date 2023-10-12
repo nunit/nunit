@@ -590,7 +590,9 @@ namespace NUnit.TestData.SetupFixture
         public class SomeFixture
         {
             [Test]
-            public void Test() { }
+            public void Test()
+            {
+            }
         }
     }
 }

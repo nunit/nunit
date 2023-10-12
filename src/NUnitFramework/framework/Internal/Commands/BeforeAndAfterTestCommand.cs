@@ -15,7 +15,9 @@ namespace NUnit.Framework.Internal.Commands
         /// Initializes a new instance of the <see cref="TestActionCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command.</param>
-        public BeforeAndAfterTestCommand(TestCommand innerCommand) : base(innerCommand) { }
+        public BeforeAndAfterTestCommand(TestCommand innerCommand) : base(innerCommand)
+        {
+        }
 
         /// <summary>
         /// Runs the test, saving a TestResult in the supplied TestExecutionContext.

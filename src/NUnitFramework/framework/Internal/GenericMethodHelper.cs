@@ -12,7 +12,9 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class GenericMethodHelper
     {
-        private static class ConflictingTypesMarkerClass { }
+        private static class ConflictingTypesMarkerClass
+        {
+        }
 
         /// <summary>
         /// A special value, which is used to indicate that BestCommonType() method

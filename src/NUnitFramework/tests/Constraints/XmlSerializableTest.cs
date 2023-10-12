@@ -37,9 +37,11 @@ namespace NUnit.Framework.Tests.Constraints
     }
 
     internal class InternalClass
-    { }
+    {
+    }
 
     [Serializable]
     internal class InternalWithSerializableAttributeClass
-    { }
+    {
+    }
 }

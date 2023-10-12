@@ -16,7 +16,8 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
         /// </summary>
         public NUnitException() : base()
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
@@ -24,7 +25,8 @@ namespace NUnit.Framework.Internal
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         public NUnitException(string message) : base(message)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitException"/> class.
@@ -35,12 +37,15 @@ namespace NUnit.Framework.Internal
         /// current exception</param>
         public NUnitException(string message, Exception? inner)
             : base(message, inner)
-        { }
+        {
+        }
 
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected NUnitException(SerializationInfo info,
-            StreamingContext context) : base(info, context) { }
+            StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

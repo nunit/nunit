@@ -200,12 +200,17 @@ namespace NUnit.Framework.Tests.Attributes
 
         // These are indirect test method and therefore need to be public
 #pragma warning disable NUnit1028 // The non-test method is public
-        public static void MethodWithoutArgs() { }
-        public static void MethodWithIntArgs(int x, int y) { }
+        public static void MethodWithoutArgs()
+        {
+        }
+        public static void MethodWithIntArgs(int x, int y)
+        {
+        }
         public static void MethodWithIntValues(
             [Values(1, 2, 3)] int x,
             [Values(10, 20)] int y)
-        { }
+        {
+        }
 #pragma warning restore NUnit1028 // The non-test method is public
 
         private static readonly object[] ZeroData = Array.Empty<object>();

@@ -42,13 +42,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="topOfStackPattern">Regex pattern used to delete lines from the top of the stack</param>
         public StackFilter(string topOfStackPattern)
-            : this(topOfStackPattern, DEFAULT_BOTTOM_OF_STACK_PATTERN) { }
+            : this(topOfStackPattern, DEFAULT_BOTTOM_OF_STACK_PATTERN)
+        {
+        }
 
         /// <summary>
         /// Construct a stack filter instance
         /// </summary>
         public StackFilter()
-            : this(DEFAULT_TOP_OF_STACK_PATTERN, DEFAULT_BOTTOM_OF_STACK_PATTERN) { }
+            : this(DEFAULT_TOP_OF_STACK_PATTERN, DEFAULT_BOTTOM_OF_STACK_PATTERN)
+        {
+        }
 
         /// <summary>
         /// Filters a raw stack trace and returns the result.

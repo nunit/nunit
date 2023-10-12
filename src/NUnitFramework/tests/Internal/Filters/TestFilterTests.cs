@@ -74,33 +74,44 @@ namespace NUnit.Framework.Tests.Internal.Filters
         private class DummyFixture
         {
             [Test]
-            public void Test() { }
+            public void Test()
+            {
+            }
         }
 
         [Category("Special,Character-Fixture+!")]
         private class SpecialCharactersFixture
         {
             [Test]
-            public void Test() { }
+            public void Test()
+            {
+            }
         }
 
         [Category("Another"), Property("Priority", "Low"), Author("Fred Smith")]
         private class AnotherFixture
         {
             [Test]
-            public void Test() { }
+            public void Test()
+            {
+            }
         }
 
         private class YetAnotherFixture
-        { }
+        {
+        }
 
         private class FixtureWithMultipleTests
         {
             [Test]
-            public void Test1() { }
+            public void Test1()
+            {
+            }
 
             [Test, Category("Dummy")]
-            public void Test2() { }
+            public void Test2()
+            {
+            }
         }
 
         private class NestingFixture
@@ -108,15 +119,20 @@ namespace NUnit.Framework.Tests.Internal.Filters
             public class NestedFixture
             {
                 [Test]
-                public void Test() { }
+                public void Test()
+                {
+                }
             }
 
-            internal class EmptyNestedFixture { }
+            internal class EmptyNestedFixture
+            {
+            }
         }
 
         [Explicit]
         private class ExplicitFixture
-        { }
+        {
+        }
         #endregion
     }
 }

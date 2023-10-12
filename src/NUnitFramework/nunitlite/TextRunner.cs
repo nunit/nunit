@@ -64,7 +64,9 @@ namespace NUnitLite
         /// without specifying an assembly. This is interpreted as allowing
         /// a single input file in the argument list to Execute().
         /// </summary>
-        public TextRunner() { }
+        public TextRunner()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextRunner"/> class

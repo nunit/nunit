@@ -46,10 +46,16 @@ namespace NUnit.Framework.Tests.Constraints
                 Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
 
-        private class B { }
+        private class B
+        {
+        }
 
-        private class D1 : B { }
+        private class D1 : B
+        {
+        }
 
-        private class D2 : D1 { }
+        private class D2 : D1
+        {
+        }
     }
 }

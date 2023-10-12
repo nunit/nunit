@@ -24,10 +24,16 @@ namespace NUnit.Framework.Tests.Constraints
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
-        private class B { }
+        private class B
+        {
+        }
 
-        private class D1 : B { }
+        private class D1 : B
+        {
+        }
 
-        private class D2 : D1 { }
+        private class D2 : D1
+        {
+        }
     }
 }

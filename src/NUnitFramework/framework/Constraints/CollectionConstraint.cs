@@ -15,13 +15,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an empty CollectionConstraint
         /// </summary>
-        protected CollectionConstraint() { }
+        protected CollectionConstraint()
+        {
+        }
 
         /// <summary>
         /// Construct a CollectionConstraint
         /// </summary>
         /// <param name="arg"></param>
-        protected CollectionConstraint(object? arg) : base(arg) { }
+        protected CollectionConstraint(object? arg) : base(arg)
+        {
+        }
 
         /// <summary>
         /// Determines whether the specified enumerable is empty.

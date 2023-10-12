@@ -17,19 +17,25 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
-        public TestFixtureParameters() { }
+        public TestFixtureParameters()
+        {
+        }
 
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
         /// the provider exception that made it invalid.
         /// </summary>
-        public TestFixtureParameters(Exception exception) : base(exception) { }
+        public TestFixtureParameters(Exception exception) : base(exception)
+        {
+        }
 
         /// <summary>
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestFixtureParameters(params object?[] args) : base(args) { }
+        public TestFixtureParameters(params object?[] args) : base(args)
+        {
+        }
 
         /// <summary>
         /// Construct a ParameterSet from an object implementing ITestCaseData

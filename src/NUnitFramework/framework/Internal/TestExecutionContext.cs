@@ -530,7 +530,9 @@ namespace NUnit.Framework.Internal
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 
-            private void AdhocTestMethod() { }
+            private void AdhocTestMethod()
+            {
+            }
         }
 
         #endregion

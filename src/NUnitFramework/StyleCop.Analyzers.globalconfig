@@ -394,7 +394,7 @@ dotnet_diagnostic.SA1500.severity = warning
 dotnet_diagnostic.SA1501.severity = warning
 
 # Element should not be on a single line
-dotnet_diagnostic.SA1502.severity = none
+dotnet_diagnostic.SA1502.severity = warning
 
 # Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = none

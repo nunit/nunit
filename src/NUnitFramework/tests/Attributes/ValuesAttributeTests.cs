@@ -18,7 +18,9 @@ namespace NUnit.Framework.Tests.Attributes
             CheckValues("MethodWithValues", 1, 2, 3);
         }
 
-        private void MethodWithValues([Values(1, 2, 3)] int x) { }
+        private void MethodWithValues([Values(1, 2, 3)] int x)
+        {
+        }
 
         #endregion
 

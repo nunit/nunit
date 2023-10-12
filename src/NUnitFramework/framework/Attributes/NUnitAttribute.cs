@@ -12,6 +12,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NUnitAttribute() { }
+        public NUnitAttribute()
+        {
+        }
     }
 }

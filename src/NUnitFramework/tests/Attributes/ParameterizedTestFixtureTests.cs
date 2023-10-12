@@ -58,7 +58,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         public ParameterizedTestFixture(string? eq1, string? eq2)
-            : this(eq1, eq2, null) { }
+            : this(eq1, eq2, null)
+        {
+        }
 
         public ParameterizedTestFixture(int eq1, int eq2, int neq)
         {

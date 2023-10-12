@@ -110,7 +110,9 @@ namespace NUnit.Framework.Tests.Internal
                 CheckNames("SimpleTestInDerivedClass", "SimpleTestInDerivedClass", OUTER_CLASS + "+" + CURRENT_CLASS);
             }
 
-            public ParameterizedFixture(int x, string s) { }
+            public ParameterizedFixture(int x, string s)
+            {
+            }
 
             protected override string FixtureName => "ParameterizedFixture(42,\"Forty-two\")";
         }
@@ -126,7 +128,9 @@ namespace NUnit.Framework.Tests.Internal
                 CheckNames("SimpleTestInDerivedClass", "SimpleTestInDerivedClass", OUTER_CLASS + "+" + CURRENT_CLASS);
             }
 
-            public ParameterizedFixtureWithLongStringArgument(string s) { }
+            public ParameterizedFixtureWithLongStringArgument(string s)
+            {
+            }
 
             protected override string FixtureName => "ParameterizedFixtureWithLongStringArgument(\"This is really much too long to be us...\")";
         }
@@ -142,7 +146,9 @@ namespace NUnit.Framework.Tests.Internal
                 CheckNames("SimpleTestInDerivedClass", "SimpleTestInDerivedClass", OUTER_CLASS + "+" + CURRENT_CLASS);
             }
 
-            public GenericParameterizedFixture(T1 x, T2 y) { }
+            public GenericParameterizedFixture(T1 x, T2 y)
+            {
+            }
 
             protected override string FixtureName => "GenericParameterizedFixture<Int32,String>(42,\"Forty-two\")";
         }

@@ -9,7 +9,9 @@ namespace NUnit.Framework.Tests.TestUtilities
     {
         public static DummyConstraint Instance { get; } = new DummyConstraint();
 
-        private DummyConstraint() { }
+        private DummyConstraint()
+        {
+        }
 
         public override string Description => throw new NotImplementedException();
 

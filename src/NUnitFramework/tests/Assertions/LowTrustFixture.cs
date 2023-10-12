@@ -73,7 +73,8 @@ namespace NUnit.Framework.Tests.Assertions
         /// <param name="fullTrustAssemblies">Strong named assemblies that will have full trust in the sandbox.</param>
         public TestSandBox(params Assembly[] fullTrustAssemblies)
             : this(null, fullTrustAssemblies)
-        { }
+        {
+        }
 
         /// <summary>
         /// Creates a partial trust <see cref="TestSandBox"/> instance with a given set of permissions.

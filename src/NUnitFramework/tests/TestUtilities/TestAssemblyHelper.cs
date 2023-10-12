@@ -35,9 +35,15 @@ namespace NUnit.Framework.Tests.TestUtilities
 
     public class CompileErrorException : Exception
     {
-        public CompileErrorException() { }
-        public CompileErrorException(string message) : base(message) { }
-        public CompileErrorException(string message, Exception inner) : base(message, inner) { }
+        public CompileErrorException()
+        {
+        }
+        public CompileErrorException(string message) : base(message)
+        {
+        }
+        public CompileErrorException(string message, Exception inner) : base(message, inner)
+        {
+        }
     }
 }
 #endif

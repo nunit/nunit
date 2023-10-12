@@ -15,11 +15,17 @@ namespace NUnitLite
         /// <summary>
         /// Constructor
         /// </summary>
-        public NUnitLiteOptions(params string[] args) : base(false, args) { }
+        public NUnitLiteOptions(params string[] args) : base(false, args)
+        {
+        }
 
-        public NUnitLiteOptions(bool requireInputFile, params string[] args) : base(requireInputFile, args) { }
+        public NUnitLiteOptions(bool requireInputFile, params string[] args) : base(requireInputFile, args)
+        {
+        }
 
         // Currently used only by test
-        internal NUnitLiteOptions(IDefaultOptionsProvider provider, params string[] args) : base(provider, false, args) { }
+        internal NUnitLiteOptions(IDefaultOptionsProvider provider, params string[] args) : base(provider, false, args)
+        {
+        }
     }
 }

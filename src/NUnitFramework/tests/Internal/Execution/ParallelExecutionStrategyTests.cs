@@ -74,8 +74,12 @@ namespace NUnit.Framework.Tests.Internal.Execution
             return TestBuilder.CreateWorkItem(test, _context);
         }
 
-        private void TestMethod() { }
+        private void TestMethod()
+        {
+        }
 
-        private class MyFixture { }
+        private class MyFixture
+        {
+        }
     }
 }
