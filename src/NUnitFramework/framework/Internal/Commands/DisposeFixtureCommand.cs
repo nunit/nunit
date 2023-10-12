@@ -46,7 +46,8 @@ namespace NUnit.Framework.Internal.Commands
                     return true;
 
                 current = current.Parent;
-            } while (current is not null);
+            }
+            while (current is not null);
 
             return false;
         }

@@ -106,7 +106,8 @@ namespace NUnit.Framework.Tests.Internal
             return f1.Supports(f2);
         }
 
-        internal static TestCaseData[] MatchData = new TestCaseData[] {
+        internal static TestCaseData[] MatchData = new TestCaseData[]
+        {
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(3, 5)),
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(2, 0)))
@@ -301,7 +302,8 @@ namespace NUnit.Framework.Tests.Internal
             }
         }
 
-        internal static FrameworkData[] FrameworkTestData = new FrameworkData[] {
+        internal static FrameworkData[] FrameworkTestData = new FrameworkData[]
+        {
             new FrameworkData(RuntimeType.NetFramework, new Version(1, 0), new Version(1, 0, 3705), "net-1.0", "Net 1.0"),
             new FrameworkData(RuntimeType.NetFramework, new Version(1, 1), new Version(1, 1, 4322), "net-1.1", "Net 1.1"),
             new FrameworkData(RuntimeType.NetFramework, new Version(2, 0), new Version(2, 0, 50727), "net-2.0", "Net 2.0"),
@@ -327,7 +329,8 @@ namespace NUnit.Framework.Tests.Internal
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
 
-        internal static string[] NetcoreRuntimes = new string[] {
+        internal static string[] NetcoreRuntimes = new string[]
+        {
             "netcore-1.0",
             "netcore-1.1",
             "netcore-2.0",

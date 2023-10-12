@@ -47,9 +47,32 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void CanMatchArrayWithMultiDimensionsEquality()
         {
-            var tester = new[,,,] {
-                { { { 1 }, { 2 }, { 3 } }, { { 4 }, { 5 }, { 6 } } },
-                { { { 7 }, { 8 }, { 9 } }, { { 10 }, { 11 }, { 12 } } }
+            var tester = new[,,,]
+            {
+                {
+                    {
+                        { 1 },
+                        { 2 },
+                        { 3 }
+                    },
+                    {
+                        { 4 },
+                        { 5 },
+                        { 6 }
+                    }
+                },
+                {
+                    {
+                        { 7 },
+                        { 8 },
+                        { 9 }
+                    },
+                    {
+                        { 10 },
+                        { 11 },
+                        { 12 }
+                    }
+                }
             };
 
             Assert.That(tester, Has.ItemAt(0, 0, 0, 0).EqualTo(1));

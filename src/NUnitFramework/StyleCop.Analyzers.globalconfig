@@ -247,7 +247,6 @@ dotnet_diagnostic.SA1139.severity = none
 dotnet_diagnostic.SA1200.severity = none
 
 # Elements should appear in the correct order
-# Replaced with FA0014
 dotnet_diagnostic.SA1201.severity = none
 
 # Elements should be ordered by access
@@ -347,11 +346,9 @@ dotnet_diagnostic.SA1316.severity = none
 dotnet_diagnostic.SA1400.severity = warning
 
 # Fields should be private
-# Replaced with Fugro Rule: FA0006 which allows 'public readonly'
 dotnet_diagnostic.SA1401.severity = none
 
 # File may only contain a single type
-# Replaced with Fugro Rule: FA0008 which allows for related types to be in one file
 dotnet_diagnostic.SA1402.severity = none
 
 # File may only contain a single namespace
@@ -391,7 +388,7 @@ dotnet_diagnostic.SA1413.severity = none
 dotnet_diagnostic.SA1414.severity = none
 
 # Braces for multi-line statements should not share line
-dotnet_diagnostic.SA1500.severity = none
+dotnet_diagnostic.SA1500.severity = warning
 
 # Statement should not be on a single line
 dotnet_diagnostic.SA1501.severity = none
@@ -448,10 +445,10 @@ dotnet_diagnostic.SA1517.severity = warning
 dotnet_diagnostic.SA1518.severity = warning
 
 # Braces should not be omitted from multi-line child statement
-dotnet_diagnostic.SA1519.severity = none
+dotnet_diagnostic.SA1519.severity = warning
 
 # Use braces consistently
-dotnet_diagnostic.SA1520.severity = none
+dotnet_diagnostic.SA1520.severity = warning
 
 # Elements should be documented
 dotnet_diagnostic.SA1600.severity = none

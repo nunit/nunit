@@ -210,15 +210,19 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static readonly object[] ZeroData = Array.Empty<object>();
 
-        private static readonly object[] GoodData = new object[] {
+        private static readonly object[] GoodData = new object[]
+        {
             new object[] { 12, 3 },
             new object[] { 12, 4 },
-            new object[] { 12, 6 } };
+            new object[] { 12, 6 }
+        };
 
-        private static readonly object[] BadData = new object[] {
+        private static readonly object[] BadData = new object[]
+        {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
-            new object[] { 12, 6, 2 } };
+            new object[] { 12, 6, 2 }
+        };
 
         [DatapointSource]
         private readonly int[] _ints = new int[] { 1, 2, 3 };

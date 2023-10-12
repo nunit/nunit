@@ -118,10 +118,14 @@ namespace NUnit.Framework.Tests.Attributes
                 fullnames.Add(test.FullName);
             }
 
-            Assert.That(names, Is.EquivalentTo(new[] {
-                "ParameterizedTestFixture(1)", "ParameterizedTestFixture(2)" }));
-            Assert.That(fullnames, Is.EquivalentTo(new[] {
-                "NUnit.TestData.ParameterizedTestFixture(1)", "NUnit.TestData.ParameterizedTestFixture(2)" }));
+            Assert.That(names, Is.EquivalentTo(new[]
+            {
+                "ParameterizedTestFixture(1)", "ParameterizedTestFixture(2)"
+            }));
+            Assert.That(fullnames, Is.EquivalentTo(new[]
+            {
+                "NUnit.TestData.ParameterizedTestFixture(1)", "NUnit.TestData.ParameterizedTestFixture(2)"
+            }));
         }
 
         [Test]

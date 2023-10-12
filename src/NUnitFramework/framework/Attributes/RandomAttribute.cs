@@ -256,7 +256,8 @@ namespace NUnit.Framework
                             next = _inRange
                                 ? GetNext(randomizer, _min!, _max!)
                                 : GetNext(randomizer);
-                        } while (_previousValues.Contains(next));
+                        }
+                        while (_previousValues.Contains(next));
 
                         _previousValues.Add(next);
 
@@ -641,7 +642,8 @@ namespace NUnit.Framework
                         do
                         {
                             next = randomizer.NextEnum(parameter.ParameterType);
-                        } while (_previousValues.Contains(next));
+                        }
+                        while (_previousValues.Contains(next));
 
                         _previousValues.Add(next);
 

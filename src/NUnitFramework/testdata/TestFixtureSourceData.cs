@@ -211,9 +211,11 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new object[] { 12, 6, 2 };
         }
 
-        private static readonly object[] MoreData = new object[] {
+        private static readonly object[] MoreData = new object[]
+        {
             new object[] { 12, 1, 12 },
-            new object[] { 12, 2, 6 } };
+            new object[] { 12, 2, 6 }
+        };
     }
 
     [TestFixtureSource(nameof(IgnoredData))]

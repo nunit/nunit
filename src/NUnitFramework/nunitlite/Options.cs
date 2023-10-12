@@ -1030,7 +1030,8 @@ namespace NUnit.Options
                 do
                 {
                     start = description.IndexOf(nameStart[i], j);
-                } while (start >= 0 && j != 0 ? description[j++ - 1] == '{' : false);
+                }
+                while (start >= 0 && j != 0 ? description[j++ - 1] == '{' : false);
                 if (start == -1)
                     continue;
                 int end = description.IndexOf("}", start);
@@ -1114,7 +1115,8 @@ namespace NUnit.Options
                 if (char.IsWhiteSpace(c))
                     ++start;
                 length = 80 - OptionWidth - 2 - 1;
-            } while (end < description.Length);
+            }
+            while (end < description.Length);
         }
 
         private static bool IsEolChar(char c)

@@ -24,7 +24,8 @@ namespace NUnit.TestData.CategoryAttributeData
         [Test, Category("A-B"), Category("A,B"), Category("A!B"), Category("A+B")]
         public void TestValidSpecialChars() { }
 
-        private static readonly TestCaseData[] Test3Data = new TestCaseData[] {
+        private static readonly TestCaseData[] Test3Data = new TestCaseData[]
+        {
             new TestCaseData(5).SetCategory("Bottom")
         };
     }

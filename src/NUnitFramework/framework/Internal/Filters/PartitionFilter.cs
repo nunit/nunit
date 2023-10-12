@@ -47,7 +47,8 @@ namespace NUnit.Framework.Internal.Filters
             string[] parts = value.Split('/');
 
             // Parts must be exactly 2, and be in the format of "number/count"
-            if (parts.Length == 2 && uint.TryParse(parts[0], out uint number) && uint.TryParse(parts[1], out uint count)) {
+            if (parts.Length == 2 && uint.TryParse(parts[0], out uint number) && uint.TryParse(parts[1], out uint count))
+            {
                 // Number must be between 1 and Count, inclusive
                 // Return a new PartitionFilter with the parsed values
                 if (number >= 1 && number <= count)

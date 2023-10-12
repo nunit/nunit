@@ -13,6 +13,9 @@ namespace NUnit.Framework.Tests.Assertions
     [TestFixture]
     public class ArrayEqualsFailureMessageFixture
     {
+        // This class is full of multi-dimensional array initializer
+#pragma warning disable SA1500 // Braces for multi-line statements should not share line
+
         private static readonly string NL = Environment.NewLine;
 
         [Test]

@@ -228,7 +228,8 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(expected));
         }
 
-        private static readonly TestCaseData[] ImmediateOutputData = new[] {
+        private static readonly TestCaseData[] ImmediateOutputData = new[]
+        {
             new TestCaseData("Off",
                 new[] { new TestOutput("OUTPUT\n", string.Empty, null, "SomeMethod") },
                 "OUTPUT\n"),

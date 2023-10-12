@@ -25,9 +25,13 @@ namespace NUnit.Framework.Tests.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
-        private static readonly object[] FailureData = { new object[] {
-            new[] { 1, 3, 17, 3, 34 },
-            "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
+        private static readonly object[] FailureData =
+        {
+            new object[]
+            {
+                new[] { 1, 3, 17, 3, 34 },
+                "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >"
+            }
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -103,7 +107,8 @@ namespace NUnit.Framework.Tests.Constraints
                 container.AddRange(refTypes);
                 container.AddRange(valueTypes);
 
-                return new[] {
+                return new[]
+                {
                     new TestCaseData(new SimpleObjectCollection(container), true)
                     {
                         ArgDisplayNames = new[] { "IEnumerable<dynamic>", "true" }
@@ -211,8 +216,10 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var sameRef = new TestReferenceType() { A = 1 };
 
-                return new[] {
-                    new TestCaseData() {
+                return new[]
+                {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestValueType() { A = 2 }),
@@ -221,7 +228,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "ValueTypes", "true" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestValueType() { A = 1 }),
@@ -230,7 +238,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "ValueTypes", "false" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(new TestReferenceType() { A = 1 }, new TestReferenceType() { A = 1 }),
@@ -239,7 +248,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "ReferenceTypes", "true" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(sameRef, sameRef),
@@ -248,7 +258,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "ReferenceTypes", "false" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(
@@ -259,7 +270,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "ReferenceTypesOverridesEquals", "false" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestReferenceType() { A = 1 }),
@@ -268,7 +280,8 @@ namespace NUnit.Framework.Tests.Constraints
                         ArgDisplayNames = new[] { "MixedTypes", "true" }
                     },
 
-                    new TestCaseData() {
+                    new TestCaseData()
+                    {
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(new TestValueType() { A = 1 }, sameRef, sameRef),

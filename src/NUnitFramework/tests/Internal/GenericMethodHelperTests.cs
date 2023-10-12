@@ -9,7 +9,8 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class GenericMethodHelperTests
     {
-        private static readonly TestCaseData[] TypeArgData = new[] {
+        private static readonly TestCaseData[] TypeArgData = new[]
+        {
             new TestCaseData("MethodWithOneTypeAndOneParameter",
                 ArgList(42),
                 TypeArgs<int>()),
