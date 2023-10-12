@@ -26,17 +26,20 @@ namespace NUnit.Framework
             return ((ICustomAttributeProvider)type).HasAttribute<T>(inherit);
         }
 
-        public static T[] GetAttributes<T>(this ICustomAttributeProvider attributeProvider, bool inherit) where T : class
+        public static T[] GetAttributes<T>(this ICustomAttributeProvider attributeProvider, bool inherit)
+            where T : class
         {
             return (T[])attributeProvider.GetCustomAttributes(typeof(T), inherit);
         }
 
-        public static T[] GetAttributes<T>(this Assembly assembly) where T : class
+        public static T[] GetAttributes<T>(this Assembly assembly)
+            where T : class
         {
             return assembly.GetAttributes<T>(inherit: false);
         }
 
-        public static T[] GetAttributes<T>(this Type type, bool inherit) where T : class
+        public static T[] GetAttributes<T>(this Type type, bool inherit)
+            where T : class
         {
             return ((ICustomAttributeProvider)type).GetAttributes<T>(inherit);
         }

@@ -80,7 +80,8 @@ namespace NUnit.Framework.Internal
         /// Provides a convenient shorthand when <typeparamref name="TStep"/> is <see cref="IComparable{TStep}"/>
         /// and the default value of <typeparamref name="TStep"/> represents zero.
         /// </summary>
-        public sealed class ComparableStep<TStep> : Step where TStep : IComparable<TStep>
+        public sealed class ComparableStep<TStep> : Step
+            where TStep : IComparable<TStep>
         {
             private readonly TStep _step;
             private readonly Func<T, TStep, T> _apply;

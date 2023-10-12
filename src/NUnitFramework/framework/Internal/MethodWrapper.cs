@@ -120,7 +120,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this method
         /// </summary>
-        public T[] GetCustomAttributes<T>(bool inherit) where T : class
+        public T[] GetCustomAttributes<T>(bool inherit)
+            where T : class
         {
             return MethodInfo.GetAttributes<T>(inherit);
         }
@@ -128,7 +129,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether one or more attributes of the specified type are defined on the method.
         /// </summary>
-        public bool IsDefined<T>(bool inherit) where T : class
+        public bool IsDefined<T>(bool inherit)
+            where T : class
         {
             return MethodInfo.HasAttribute<T>(inherit);
         }

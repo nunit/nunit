@@ -10,11 +10,13 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this object
         /// </summary>
-        T[] GetCustomAttributes<T>(bool inherit) where T : class;
+        T[] GetCustomAttributes<T>(bool inherit)
+            where T : class;
 
         /// <summary>
         /// Returns a value indicating whether an attribute of the specified type is defined on this object.
         /// </summary>
-        bool IsDefined<T>(bool inherit) where T : class;
+        bool IsDefined<T>(bool inherit)
+            where T : class;
     }
 }

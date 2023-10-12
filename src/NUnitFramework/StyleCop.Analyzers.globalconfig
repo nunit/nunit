@@ -208,7 +208,7 @@ dotnet_diagnostic.SA1125.severity = none
 dotnet_diagnostic.SA1126.severity = none
 
 # Generic type constraints should be on their own line
-dotnet_diagnostic.SA1127.severity = none
+dotnet_diagnostic.SA1127.severity = warning
 
 # Put constructor initializers on their own line
 dotnet_diagnostic.SA1128.severity = none
