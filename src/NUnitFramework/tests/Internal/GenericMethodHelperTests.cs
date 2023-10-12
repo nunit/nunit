@@ -108,21 +108,21 @@ namespace NUnit.Framework.Tests.Internal
 
         private void MethodWithOneTypeAndThreeParameters<T>(T x, T y, T z) { }
 
-        private void MethodWithTwoTypesAndTwoParameters<T, U>(T x, U y) { }
+        private void MethodWithTwoTypesAndTwoParameters<T1, T2>(T1 x, T2 y) { }
 
-        private void MethodWithTwoTypesAndTwoParameters_Reversed<T, U>(U x, T y) { }
+        private void MethodWithTwoTypesAndTwoParameters_Reversed<T1, T2>(T2 x, T1 y) { }
 
-        private void MethodWithTwoTypesAndThreeParameters<T, U>(T x, U y, T z) { }
+        private void MethodWithTwoTypesAndThreeParameters<T1, T2>(T1 x, T2 y, T1 z) { }
 
-        private void MethodWithTwoTypesAndFourParameters<T, U>(U q, T x, U y, T z) { }
+        private void MethodWithTwoTypesAndFourParameters<T1, T2>(T2 q, T1 x, T2 y, T1 z) { }
 
-        private void MethodWithThreeTypes_Order123<T, U, V>(T x, U y, V z) { }
+        private void MethodWithThreeTypes_Order123<T1, T2, T3>(T1 x, T2 y, T3 z) { }
 
-        private void MethodWithThreeTypes_Order132<T, U, V>(T x, V y, U z) { }
+        private void MethodWithThreeTypes_Order132<T1, T2, T3>(T1 x, T3 y, T2 z) { }
 
-        private void MethodWithThreeTypes_Order321<T, U, V>(V x, U y, T z) { }
+        private void MethodWithThreeTypes_Order321<T1, T2, T3>(T3 x, T2 y, T1 z) { }
 
-        private void MethodWithThreeTypes_Order213<T, U, V>(U x, T y, V z) { }
+        private void MethodWithThreeTypes_Order213<T1, T2, T3>(T2 x, T1 y, T3 z) { }
 
         private void MethodWithGenericListOfType<T>(List<T> c) { }
 
@@ -130,11 +130,16 @@ namespace NUnit.Framework.Tests.Internal
 
         private void MethodWithGenericEnumerableOfType<T>(IEnumerable<T> c) { }
 
-        private void MethodWithGenericEnumerableOfTypeAsSecondArg<T, U>(T x, IEnumerable<U> c) { }
+        private void MethodWithGenericEnumerableOfTypeAsSecondArg<T1, T2>(T1 x, IEnumerable<T2> c) { }
 
-        private void MethodTakingDictionary<T, U>(Dictionary<T, U> d) where T : notnull { }
+        private void MethodTakingDictionary<T1, T2>(Dictionary<T1, T2> d)
+            where T1 : notnull
+        { }
 
-        private void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) where T : notnull where U : notnull { }
+        private void MethodWithNestedTypes<T1, T2, T3>(List<Dictionary<T1, T2>> x, Dictionary<T2, List<T3>> z)
+            where T1 : notnull
+            where T2 : notnull
+        { }
 
         private void MethodWithOneTypeUsedDirectlyAndAsAnArray<T>(T value, T[] array) { }
 

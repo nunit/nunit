@@ -337,7 +337,7 @@ dotnet_diagnostic.SA1312.severity = none
 dotnet_diagnostic.SA1313.severity = none
 
 # Type parameter names should begin with T
-dotnet_diagnostic.SA1314.severity = none
+dotnet_diagnostic.SA1314.severity = warning
 
 # Tuple element names should use correct casing
 dotnet_diagnostic.SA1316.severity = none

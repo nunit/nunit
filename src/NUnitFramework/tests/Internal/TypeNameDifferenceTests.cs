@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests.Internal
         internal class GenB<T>
         { }
 
-        internal class GenC<T, R>
+        internal class GenC<T1, T2>
         { }
 
         namespace B
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Tests.Internal
         internal class GenB<T>
         { }
 
-        internal class GenC<T, R>
+        internal class GenC<T1, T2>
         { }
 
         namespace B

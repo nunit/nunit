@@ -75,13 +75,13 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [TestCase("FIXED", ExpectedResult = "FIXED")]
-        [TestCase("{m}", ExpectedResult = "GenericTest<T,U,V>")]
+        [TestCase("{m}", ExpectedResult = "GenericTest<T1,T2,T3>")]
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Tests.Internal")]
         [TestCase("{c}", ExpectedResult = "TestNameGeneratorTests")]
         [TestCase("{C}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
-        [TestCase("{M}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T,U,V>")]
-        [TestCase("{m}_SpecialCase", ExpectedResult = "GenericTest<T,U,V>_SpecialCase")]
-        [TestCase("{n}.{c}.{m}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T,U,V>")]
+        [TestCase("{M}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T1,T2,T3>")]
+        [TestCase("{m}_SpecialCase", ExpectedResult = "GenericTest<T1,T2,T3>_SpecialCase")]
+        [TestCase("{n}.{c}.{m}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T1,T2,T3>")]
         public string GenericTestNames(string pattern)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_genericTest);
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Tests.Internal
 
         private void TestMethodWithArgs(int a, int b, int c = 0) { }
 
-        private void GenericTest<T, U, V>() { }
+        private void GenericTest<T1, T2, T3>() { }
 
         #endregion
     }
