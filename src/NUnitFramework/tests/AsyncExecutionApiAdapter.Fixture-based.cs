@@ -12,8 +12,8 @@ namespace NUnit.Framework.Tests
         private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
         {
             TestBuilder.RunTest(
-                new NUnitTestFixtureBuilder().BuildFrom(new TypeWrapper(fixtureType), PreFilter.Empty, new TestFixtureData(asyncUserCode))
-            ).AssertPassed();
+                new NUnitTestFixtureBuilder().BuildFrom(new TypeWrapper(fixtureType), PreFilter.Empty, new TestFixtureData(asyncUserCode)))
+            .AssertPassed();
         }
 
         private sealed class TaskReturningTestMethodAdapter : AsyncExecutionApiAdapter

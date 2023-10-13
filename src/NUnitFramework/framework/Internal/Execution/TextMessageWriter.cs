@@ -49,7 +49,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Construct a TextMessageWriter
         /// </summary>
-        public TextMessageWriter() { }
+        public TextMessageWriter()
+        {
+        }
 
         /// <summary>
         /// Construct a TextMessageWriter, specifying a user message
@@ -88,7 +90,8 @@ namespace NUnit.Framework.Internal
         {
             if (message is not null)
             {
-                while (level-- >= 0) Write("  ");
+                while (level-- >= 0)
+                    Write("  ");
 
                 if (args is not null && args.Length > 0)
                     message = string.Format(message, args);
@@ -175,8 +178,8 @@ namespace NUnit.Framework.Internal
         {
             // Maximum string we can display without truncating
             int maxDisplayLength = MaxLineLength
-                - PrefixLength   // Allow for prefix
-                - 2;             // 2 quotation marks
+                - PrefixLength // Allow for prefix
+                - 2;           // 2 quotation marks
 
             if (clipping)
                 MsgUtils.ClipExpectedAndActual(ref expected, ref actual, maxDisplayLength, mismatch);

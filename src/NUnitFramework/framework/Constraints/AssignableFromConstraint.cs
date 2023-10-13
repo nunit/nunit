@@ -14,7 +14,9 @@ namespace NUnit.Framework.Constraints
         /// Construct an AssignableFromConstraint for the type provided
         /// </summary>
         /// <param name="type"></param>
-        public AssignableFromConstraint(Type type) : base(type, "assignable from ") { }
+        public AssignableFromConstraint(Type type) : base(type, "assignable from ")
+        {
+        }
 
         /// <summary>
         /// Apply the constraint to an actual value, returning true if it succeeds

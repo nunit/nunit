@@ -15,7 +15,9 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="name">A category name</param>
         /// <param name="isRegex">Indicated that the value in <paramref name="name"/> is a regular expression.</param>
-        public CategoryFilter(string name, bool isRegex = false) : base(name, isRegex) { }
+        public CategoryFilter(string name, bool isRegex = false) : base(name, isRegex)
+        {
+        }
 
         /// <summary>
         /// Check whether the filter matches a test

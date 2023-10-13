@@ -52,7 +52,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this method
         /// </summary>
-        public T[] GetCustomAttributes<T>(bool inherit) where T : class
+        public T[] GetCustomAttributes<T>(bool inherit)
+            where T : class
         {
             return ParameterInfo.GetAttributes<T>(inherit);
         }
@@ -60,7 +61,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether one or more attributes of the specified type are defined on the parameter.
         /// </summary>
-        public bool IsDefined<T>(bool inherit) where T : class
+        public bool IsDefined<T>(bool inherit)
+            where T : class
         {
             return ParameterInfo.HasAttribute<T>(inherit);
         }

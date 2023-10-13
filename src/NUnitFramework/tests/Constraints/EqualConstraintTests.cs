@@ -1102,12 +1102,16 @@ namespace NUnit.Framework.Tests.Constraints
 
         internal class ClassA : BaseTest
         {
-            public ClassA(int x) : base(x) { }
+            public ClassA(int x) : base(x)
+            {
+            }
         }
 
         internal class ClassB : BaseTest
         {
-            public ClassB(int x) : base(x) { }
+            public ClassB(int x) : base(x)
+            {
+            }
         }
     }
     #endregion

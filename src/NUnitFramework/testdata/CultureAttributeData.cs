@@ -8,12 +8,18 @@ namespace NUnit.TestData.CultureAttributeData
     public class FixtureWithCultureAttribute
     {
         [Test, Culture("en,de")]
-        public void EnglishAndGermanTest() { }
+        public void EnglishAndGermanTest()
+        {
+        }
 
         [Test, Culture("fr")]
-        public void FrenchTest() { }
+        public void FrenchTest()
+        {
+        }
 
         [Test, Culture("fr-CA")]
-        public void FrenchCanadaTest() { }
+        public void FrenchCanadaTest()
+        {
+        }
     }
 }

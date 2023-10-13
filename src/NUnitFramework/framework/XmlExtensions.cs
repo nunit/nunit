@@ -58,7 +58,8 @@ namespace NUnit.Framework
         [return: NotNullIfNotNull("str")]
         internal static string? EscapeInvalidXmlCharacters(string? str)
         {
-            if (str is null) return null;
+            if (str is null)
+                return null;
 
             // quick check when we expect valid input
             foreach (var c in str)

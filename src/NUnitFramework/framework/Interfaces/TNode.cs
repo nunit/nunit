@@ -40,7 +40,9 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="value">The text content of the node</param>
-        public TNode(string name, string? value) : this(name, value, false) { }
+        public TNode(string name, string? value) : this(name, value, false)
+        {
+        }
 
         /// <summary>
         /// Constructs a new instance of TNode with a value

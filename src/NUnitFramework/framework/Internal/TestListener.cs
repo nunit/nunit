@@ -14,30 +14,40 @@ namespace NUnit.Framework.Internal
         /// Called when a test has just started
         /// </summary>
         /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test) { }
+        public void TestStarted(ITest test)
+        {
+        }
 
         /// <summary>
         /// Called when a test case has finished
         /// </summary>
         /// <param name="result">The result of the test</param>
-        public void TestFinished(ITestResult result) { }
+        public void TestFinished(ITestResult result)
+        {
+        }
 
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>
         /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output) { }
+        public void TestOutput(TestOutput output)
+        {
+        }
 
         /// <summary>
         /// Called when a test produces a message to be sent to listeners
         /// </summary>
         /// <param name="message">A <see cref="TestMessage"/> object containing the message to send</param>
-        public void SendMessage(TestMessage message) { }
+        public void SendMessage(TestMessage message)
+        {
+        }
 
         /// <summary>
         /// Construct a new TestListener - private so it may not be used.
         /// </summary>
-        private TestListener() { }
+        private TestListener()
+        {
+        }
 
         /// <summary>
         /// Get a listener that does nothing

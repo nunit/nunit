@@ -139,16 +139,23 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Repeat(1), Retry(1)]
-        private void TestMethodForRepeatAndRetryExpectedFail() { }
+        private void TestMethodForRepeatAndRetryExpectedFail()
+        {
+        }
 
         [Repeat(1), CustomRepeater]
-        private void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
+        private void TestMethodForRepeatAndCustomRepeatExpectedFail()
+        {
+        }
 
         #region TestCustomAttribute
 
         internal class CustomRepeater : Attribute, IRepeatTest
         {
-            public TestCommand Wrap(TestCommand command) { return command; }
+            public TestCommand Wrap(TestCommand command)
+            {
+                return command;
+            }
         }
 
         #endregion

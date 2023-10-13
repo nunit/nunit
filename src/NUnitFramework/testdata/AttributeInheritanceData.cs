@@ -37,5 +37,7 @@ namespace NUnit.TestData.AttributeInheritanceData
         }
     }
 
-    internal class ClassUnderTest { }
+    internal class ClassUnderTest
+    {
+    }
 }

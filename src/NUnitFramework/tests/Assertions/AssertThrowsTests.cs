@@ -36,8 +36,12 @@ namespace NUnit.Framework.Tests.Assertions
         public void ThrowsConstraintDoesNotDiscardOutput()
         {
             Console.WriteLine(1);
-            Assert.That(
-                () => { Console.WriteLine(2); TestContext.WriteLine(3); throw new Exception("test"); },
+            Assert.That(() =>
+                {
+                    Console.WriteLine(2);
+                    TestContext.WriteLine(3);
+                    throw new Exception("test");
+                },
                 Throws.Exception);
             Console.WriteLine(4);
 

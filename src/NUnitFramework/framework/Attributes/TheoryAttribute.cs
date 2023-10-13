@@ -13,7 +13,7 @@ namespace NUnit.Framework
     /// called Description which is optional which you can provide a more detailed test
     /// description. This class cannot be inherited.
     /// </summary>
-    /// 
+    ///
     /// <example>
     /// [TestFixture]
     /// public class Fixture
@@ -21,13 +21,13 @@ namespace NUnit.Framework
     ///   [Test]
     ///   public void MethodToTest()
     ///   {}
-    ///   
+    ///
     ///   [Test(Description = "more detailed description")]
     ///   public void TestDescriptionMethod()
     ///   {}
     /// }
     /// </example>
-    /// 
+    ///
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TheoryAttribute : CombiningStrategyAttribute, ITestBuilder, IImplyFixture
     {

@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer"));
             Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Third indexer"));
         }
-        
+
         [Test]
         public void IndexerOperatorOnRightSideOfAndOperator()
         {
@@ -47,9 +47,32 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void CanMatchArrayWithMultiDimensionsEquality()
         {
-            var tester = new[, , ,] {
-                { { {1}, {2}, {3} }, { {4}, {5}, {6} } },
-                { { {7}, {8}, {9} }, { {10}, {11}, {12} } }
+            var tester = new[,,,]
+            {
+                {
+                    {
+                        { 1 },
+                        { 2 },
+                        { 3 }
+                    },
+                    {
+                        { 4 },
+                        { 5 },
+                        { 6 }
+                    }
+                },
+                {
+                    {
+                        { 7 },
+                        { 8 },
+                        { 9 }
+                    },
+                    {
+                        { 10 },
+                        { 11 },
+                        { 12 }
+                    }
+                }
             };
 
             Assert.That(tester, Has.ItemAt(0, 0, 0, 0).EqualTo(1));
@@ -179,12 +202,12 @@ namespace NUnit.Framework.Tests.Constraints
         private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer
         {
         }
-        
+
         private class ClassWithName
         {
             public ClassWithName(string name)
             {
-                this.Name = name;
+                Name = name;
             }
             public string Name { get; }
         }

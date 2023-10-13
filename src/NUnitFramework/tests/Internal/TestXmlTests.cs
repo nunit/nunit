@@ -185,9 +185,15 @@ namespace NUnit.Framework.Tests.Internal
 
         public class DummyFixture
         {
-            public void DummyMethod() { }
-            public void ParameterizedMethod(int x) { }
-            public void GenericMethod<T>(T x) { }
+            public void DummyMethod()
+            {
+            }
+            public void ParameterizedMethod(int x)
+            {
+            }
+            public void GenericMethod<T>(T x)
+            {
+            }
         }
 
         public class DummyGenericFixture<T>

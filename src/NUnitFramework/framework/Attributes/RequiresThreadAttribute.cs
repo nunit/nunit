@@ -17,7 +17,9 @@ namespace NUnit.Framework
         /// Construct a RequiresThreadAttribute
         /// </summary>
         public RequiresThreadAttribute()
-            : base(true) { }
+            : base(true)
+        {
+        }
 
         /// <summary>
         /// Construct a RequiresThreadAttribute, specifying the apartment

@@ -15,7 +15,9 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Constructs an empty OrFilter
         /// </summary>
-        public OrFilter() { }
+        public OrFilter()
+        {
+        }
 
         /// <summary>
         /// Constructs an OrFilter from an array of filters

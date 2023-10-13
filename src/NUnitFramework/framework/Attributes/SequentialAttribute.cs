@@ -16,6 +16,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SequentialAttribute() : base(new SequentialStrategy(), new ParameterDataSourceProvider()) { }
+        public SequentialAttribute() : base(new SequentialStrategy(), new ParameterDataSourceProvider())
+        {
+        }
     }
 }

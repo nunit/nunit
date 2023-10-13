@@ -82,7 +82,8 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args) where TActual : Exception
+        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
+            where TActual : Exception
         {
             return (TActual?)ThrowsAsync(typeof(TActual), code, message, args);
         }
@@ -93,7 +94,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code) where TActual : Exception
+        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code)
+            where TActual : Exception
         {
             return ThrowsAsync<TActual>(code, string.Empty, null);
         }
@@ -159,7 +161,8 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args) where TActual : Exception
+        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
+            where TActual : Exception
         {
             return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
@@ -169,7 +172,8 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code) where TActual : Exception
+        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code)
+            where TActual : Exception
         {
             return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code);
         }

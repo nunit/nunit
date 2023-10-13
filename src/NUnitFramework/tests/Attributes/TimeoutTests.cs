@@ -231,19 +231,22 @@ namespace NUnit.Framework.Tests.Attributes
             [Test, Timeout(50)]
             public void TestTimesOut()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             [Test, Timeout(50), RequiresThread]
             public void TestTimesOutUsingRequiresThread()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             [Test, Timeout(50), Apartment(ApartmentState.STA)]
             public void TestTimesOutInSTA()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             // TODO: The test in TimeoutTestCaseFixture work as expected when run

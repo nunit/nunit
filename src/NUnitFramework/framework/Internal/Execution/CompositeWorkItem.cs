@@ -469,7 +469,9 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             /// PerformWork is not used in CompositeWorkItem
             /// </summary>
-            protected override void PerformWork() { }
+            protected override void PerformWork()
+            {
+            }
 
             /// <summary>
             /// WorkItemCancelled is called directly by the parallel dispatcher

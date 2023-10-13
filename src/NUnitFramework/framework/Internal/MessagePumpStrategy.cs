@@ -26,7 +26,9 @@ namespace NUnit.Framework.Internal
         private sealed class NoMessagePumpStrategy : MessagePumpStrategy
         {
             public static readonly NoMessagePumpStrategy Instance = new();
-            private NoMessagePumpStrategy() { }
+            private NoMessagePumpStrategy()
+            {
+            }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
@@ -49,7 +51,8 @@ namespace NUnit.Framework.Internal
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
-                if (!IsApplicable(SynchronizationContext.Current)) return null;
+                if (!IsApplicable(SynchronizationContext.Current))
+                    return null;
 
                 if (_instance is null)
                 {
@@ -81,7 +84,8 @@ namespace NUnit.Framework.Internal
                 if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a WindowsFormsSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
@@ -119,7 +123,8 @@ namespace NUnit.Framework.Internal
             {
                 SynchronizationContext? context = SynchronizationContext.Current;
 
-                if (!IsApplicable(context)) return null;
+                if (!IsApplicable(context))
+                    return null;
 
                 if (_instance is null)
                 {
@@ -151,7 +156,8 @@ namespace NUnit.Framework.Internal
                 if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a DispatcherSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
@@ -168,14 +174,17 @@ namespace NUnit.Framework.Internal
         private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
         {
             public static readonly SingleThreadedTestMessagePumpStrategy Instance = new();
-            private SingleThreadedTestMessagePumpStrategy() { }
+            private SingleThreadedTestMessagePumpStrategy()
+            {
+            }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext
                     ?? throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
@@ -190,8 +199,10 @@ namespace NUnit.Framework.Internal
 
         private static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
         {
-            if (awaiter is null) throw new ArgumentNullException(nameof(awaiter));
-            if (continuation is null) throw new ArgumentNullException(nameof(continuation));
+            if (awaiter is null)
+                throw new ArgumentNullException(nameof(awaiter));
+            if (continuation is null)
+                throw new ArgumentNullException(nameof(continuation));
 
             var context = SynchronizationContext.Current;
 

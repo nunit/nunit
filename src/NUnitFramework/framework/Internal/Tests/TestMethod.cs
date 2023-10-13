@@ -26,7 +26,9 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
-        public TestMethod(IMethodInfo method) : base(method) { }
+        public TestMethod(IMethodInfo method) : base(method)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.

@@ -16,7 +16,9 @@ namespace NUnit.Framework
         /// Constructor with no included items specified, for use
         /// with named property syntax.
         /// </summary>
-        public IncludeExcludeAttribute() { }
+        public IncludeExcludeAttribute()
+        {
+        }
 
         /// <summary>
         /// Constructor taking one or more included items

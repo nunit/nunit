@@ -115,11 +115,17 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
-        public class FixtureClass { }
+        public class FixtureClass
+        {
+        }
 
-        private void DummyMethod() { }
+        private void DummyMethod()
+        {
+        }
 
         [TestCase(1)]
-        public void DummyTestCase(int i) { }
+        public void DummyTestCase(int i)
+        {
+        }
     }
 }

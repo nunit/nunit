@@ -16,13 +16,17 @@ namespace NUnit.Framework
         /// Executed before each test is run
         /// </summary>
         /// <param name="test">The test that is going to be run.</param>
-        public virtual void BeforeTest(ITest test) { }
+        public virtual void BeforeTest(ITest test)
+        {
+        }
 
         /// <summary>
         /// Executed after each test is run
         /// </summary>
         /// <param name="test">The test that has just been run.</param>
-        public virtual void AfterTest(ITest test) { }
+        public virtual void AfterTest(ITest test)
+        {
+        }
 
         /// <summary>
         /// Provides the target for the action attribute

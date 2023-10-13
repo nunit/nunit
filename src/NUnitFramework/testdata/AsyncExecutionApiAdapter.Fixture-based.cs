@@ -33,7 +33,9 @@ namespace NUnit.TestData
             public Task SetUp() => _asyncUserCode.Invoke();
 
             [Test]
-            public void DummyTest() { }
+            public void DummyTest()
+            {
+            }
         }
 
         public sealed class TaskReturningTearDownFixture
@@ -46,7 +48,9 @@ namespace NUnit.TestData
             }
 
             [Test]
-            public void DummyTest() { }
+            public void DummyTest()
+            {
+            }
 
             [TearDown]
             public Task TearDown() => _asyncUserCode.Invoke();
@@ -65,7 +69,9 @@ namespace NUnit.TestData
             public Task OneTimeSetUp() => _asyncUserCode.Invoke();
 
             [Test]
-            public void DummyTest() { }
+            public void DummyTest()
+            {
+            }
         }
 
         public sealed class TaskReturningOneTimeTearDownFixture
@@ -78,7 +84,9 @@ namespace NUnit.TestData
             }
 
             [Test]
-            public void DummyTest() { }
+            public void DummyTest()
+            {
+            }
 
             [OneTimeTearDown]
             public Task OneTimeTearDown() => _asyncUserCode.Invoke();

@@ -23,7 +23,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Constructs a range of <see cref="int"/> values using the default step of 1.
         /// </summary>
-        public RangeAttribute(int from, int to) : this(from, to, from > to ? -1 : 1) { }
+        public RangeAttribute(int from, int to) : this(from, to, from > to ? -1 : 1)
+        {
+        }
 
         /// <summary>
         /// Constructs a range of <see cref="int"/> values with the specified step size.
@@ -46,7 +48,9 @@ namespace NUnit.Framework
         /// Constructs a range of <see cref="uint"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
-        public RangeAttribute(uint from, uint to) : this(from, to, 1u) { }
+        public RangeAttribute(uint from, uint to) : this(from, to, 1u)
+        {
+        }
 
         /// <summary>
         /// Constructs a range of <see cref="uint"/> values with the specified step size.
@@ -69,7 +73,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Constructs a range of <see cref="long"/> values using a default step of 1.
         /// </summary>
-        public RangeAttribute(long from, long to) : this(from, to, from > to ? -1L : 1L) { }
+        public RangeAttribute(long from, long to) : this(from, to, from > to ? -1L : 1L)
+        {
+        }
 
         /// <summary>
         /// Constructs a range of <see cref="long"/> values with the specified step size.
@@ -92,7 +98,9 @@ namespace NUnit.Framework
         /// Constructs a range of <see cref="ulong"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
-        public RangeAttribute(ulong from, ulong to) : this(from, to, 1ul) { }
+        public RangeAttribute(ulong from, ulong to) : this(from, to, 1ul)
+        {
+        }
 
         /// <summary>
         /// Constructs a range of <see cref="ulong"/> values with the specified step size.

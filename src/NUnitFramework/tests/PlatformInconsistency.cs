@@ -39,11 +39,14 @@ namespace NUnit.Framework.Tests
         {
             get
             {
-                if (RuntimeFramework.CurrentFramework.Runtime != _runtimeType) return false;
+                if (RuntimeFramework.CurrentFramework.Runtime != _runtimeType)
+                    return false;
 
                 var version = GetCurrentVersion();
-                if (_minVersion is not null && version < _minVersion) return false;
-                if (_maxVersion is not null && version > _maxVersion) return false;
+                if (_minVersion is not null && version < _minVersion)
+                    return false;
+                if (_maxVersion is not null && version > _maxVersion)
+                    return false;
 
                 return true;
             }
@@ -56,7 +59,8 @@ namespace NUnit.Framework.Tests
         {
             Guard.ArgumentNotNull(action, nameof(action));
 
-            if (!CurrentPlatformIsInconsistent) action.Invoke();
+            if (!CurrentPlatformIsInconsistent)
+                action.Invoke();
         }
 
         /// <summary>

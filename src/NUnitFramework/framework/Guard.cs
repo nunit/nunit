@@ -106,8 +106,10 @@ namespace NUnit.Framework
         /// </summary>
         public static void ArgumentNotAsyncVoid(MethodInfo method, string paramName)
         {
-            if (method.ReturnType != typeof(void)) return;
-            if (!AsyncToSyncAdapter.IsAsyncOperation(method)) return;
+            if (method.ReturnType != typeof(void))
+                return;
+            if (!AsyncToSyncAdapter.IsAsyncOperation(method))
+                return;
 
             ThrowArgumentNotAsyncVoid(paramName);
 

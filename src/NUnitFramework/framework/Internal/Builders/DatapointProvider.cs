@@ -166,7 +166,8 @@ namespace NUnit.Framework.Internal.Builders
         {
             while (type is not null)
             {
-                foreach (var tuple in GetDirectMembersOfType(type)) yield return tuple;
+                foreach (var tuple in GetDirectMembersOfType(type))
+                    yield return tuple;
                 type = type.DeclaringType;
             }
         }

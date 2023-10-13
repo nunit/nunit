@@ -22,9 +22,9 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { 1, "a", new List<string>() };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
-            new TestCaseData( new InternalClass(), "<" + typeof(InternalClass).FullName + ">" ),
-            new TestCaseData( new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">" )
+            new TestCaseData(new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>"),
+            new TestCaseData(new InternalClass(), "<" + typeof(InternalClass).FullName + ">"),
+            new TestCaseData(new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -37,9 +37,11 @@ namespace NUnit.Framework.Tests.Constraints
     }
 
     internal class InternalClass
-    { }
+    {
+    }
 
     [Serializable]
     internal class InternalWithSerializableAttributeClass
-    { }
+    {
+    }
 }

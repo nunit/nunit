@@ -18,9 +18,13 @@ namespace NUnit.Common
 
     public class Token
     {
-        public Token(TokenKind kind) : this(kind, string.Empty) { }
+        public Token(TokenKind kind) : this(kind, string.Empty)
+        {
+        }
 
-        public Token(TokenKind kind, char ch) : this(kind, ch.ToString()) { }
+        public Token(TokenKind kind, char ch) : this(kind, ch.ToString())
+        {
+        }
 
         public Token(TokenKind kind, string text)
         {

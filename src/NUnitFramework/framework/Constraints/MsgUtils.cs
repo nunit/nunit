@@ -202,7 +202,8 @@ namespace NUnit.Framework.Constraints
                 for (int r = 0; r < rank; r++)
                 {
                     startSegment = startSegment || count % products[r] == 0;
-                    if (startSegment) sb.Append("< ");
+                    if (startSegment)
+                        sb.Append("< ");
                 }
 
                 sb.Append(FormatValue(obj));
@@ -213,7 +214,8 @@ namespace NUnit.Framework.Constraints
                 for (int r = 0; r < rank; r++)
                 {
                     nextSegment = nextSegment || count % products[r] == 0;
-                    if (nextSegment) sb.Append(" >");
+                    if (nextSegment)
+                        sb.Append(" >");
                 }
             }
 
@@ -277,7 +279,8 @@ namespace NUnit.Framework.Constraints
 
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
-                if (i > 0) sb.Append(", ");
+                if (i > 0)
+                    sb.Append(", ");
 
                 bool notLastElement = i < 7;
                 string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
@@ -371,7 +374,8 @@ namespace NUnit.Framework.Constraints
             sb.Append('[');
             for (int r = 0; r < array.Rank; r++)
             {
-                if (r > 0) sb.Append(',');
+                if (r > 0)
+                    sb.Append(',');
                 sb.Append(array.GetLength(r));
             }
             sb.Append(']');
@@ -494,7 +498,8 @@ namespace NUnit.Framework.Constraints
             sb.Append('[');
             for (int r = 0; r < indices.Length; r++)
             {
-                if (r > 0) sb.Append(',');
+                if (r > 0)
+                    sb.Append(',');
                 sb.Append(indices[r].ToString());
             }
             sb.Append(']');

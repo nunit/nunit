@@ -33,21 +33,27 @@ namespace NUnit.Framework.Internal
                 // since this code is needed as a fallback anyway.
 
                 var getAwaiterMethod = awaitableType.GetNonGenericPublicInstanceMethod("GetAwaiter", Type.EmptyTypes);
-                if (getAwaiterMethod is null || getAwaiterMethod.GetGenericArguments().Length != 0) return null;
+                if (getAwaiterMethod is null || getAwaiterMethod.GetGenericArguments().Length != 0)
+                    return null;
 
                 var awaiterType = getAwaiterMethod.ReturnType;
                 var notifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.INotifyCompletion");
-                if (notifyCompletionInterface is null) return null;
+                if (notifyCompletionInterface is null)
+                    return null;
                 var onCompletedMethod = notifyCompletionInterface.GetNonGenericPublicInstanceMethod("OnCompleted", new[] { typeof(Action) });
-                if (onCompletedMethod is null) return null;
+                if (onCompletedMethod is null)
+                    return null;
 
                 var isCompletedProperty = awaiterType.GetPublicInstanceProperty("IsCompleted", Type.EmptyTypes);
-                if (isCompletedProperty is null || isCompletedProperty.PropertyType != typeof(bool)) return null;
+                if (isCompletedProperty is null || isCompletedProperty.PropertyType != typeof(bool))
+                    return null;
                 var isCompletedGetter = isCompletedProperty.GetGetMethod();
-                if (isCompletedGetter is null) return null;
+                if (isCompletedGetter is null)
+                    return null;
 
                 var getResultMethod = awaiterType.GetNonGenericPublicInstanceMethod("GetResult", Type.EmptyTypes);
-                if (getResultMethod is null) return null;
+                if (getResultMethod is null)
+                    return null;
 
                 var criticalNotifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.ICriticalNotifyCompletion");
                 var unsafeOnCompletedMethod = criticalNotifyCompletionInterface?.GetNonGenericPublicInstanceMethod("UnsafeOnCompleted", new[] { typeof(Action) });

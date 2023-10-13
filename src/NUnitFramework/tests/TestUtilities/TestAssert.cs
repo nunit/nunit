@@ -68,6 +68,8 @@ namespace NUnit.Framework.Tests.TestUtilities
         }
         #endregion
 
-        private TestAssert() { }
+        private TestAssert()
+        {
+        }
     }
 }

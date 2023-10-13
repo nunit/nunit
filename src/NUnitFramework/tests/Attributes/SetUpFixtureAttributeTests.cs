@@ -73,28 +73,38 @@ namespace NUnit.Framework.Tests.Attributes
         private static class StaticSetupClass
         {
             [OneTimeSetUp]
-            public static void SomeSetUpMethod() { }
+            public static void SomeSetUpMethod()
+            {
+            }
 
             [OneTimeTearDown]
-            public static void SomeTearDownMethod() { }
+            public static void SomeTearDownMethod()
+            {
+            }
         }
 
         private abstract class AbstractSetupClass
         {
             [OneTimeSetUp]
-            public void SomeSetUpMethod() { }
+            public void SomeSetUpMethod()
+            {
+            }
         }
 
         private class TestSetupClass
         {
             [SetUp]
-            public void SomeMethod() { }
+            public void SomeMethod()
+            {
+            }
         }
 
         private class TestTearDownClass
         {
             [TearDown]
-            public void SomeMethod() { }
+            public void SomeMethod()
+            {
+            }
         }
     }
 }

@@ -188,7 +188,8 @@ namespace NUnit.Framework.Internal.Execution
                 _mreAdd.Set();
 
                 break;
-            } while (true);
+            }
+            while (true);
 
             // Setting this to anything other than 0 causes NUnit to be sensitive
             // to the windows timer resolution - see issue #2217
@@ -268,7 +269,8 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 return e;
-            } while (true);
+            }
+            while (true);
         }
 
         /// <summary>

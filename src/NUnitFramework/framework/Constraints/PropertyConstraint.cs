@@ -43,7 +43,8 @@ namespace NUnit.Framework.Constraints
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
                     property = Reflect.GetUltimateShadowingProperty(@interface, _name, bindingFlags);
-                    if (property is not null) break;
+                    if (property is not null)
+                        break;
                 }
             }
 

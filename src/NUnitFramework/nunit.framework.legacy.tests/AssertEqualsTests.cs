@@ -358,7 +358,7 @@ namespace NUnit.Framework.Legacy.Tests
                 "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(MyEnum.C, actual));
-            Assert.That(ex?.Message,Does.Contain(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]

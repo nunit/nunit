@@ -58,7 +58,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         public ParameterizedTestFixture(string? eq1, string? eq2)
-            : this(eq1, eq2, null) { }
+            : this(eq1, eq2, null)
+        {
+        }
 
         public ParameterizedTestFixture(int eq1, int eq2, int neq)
         {
@@ -118,10 +120,14 @@ namespace NUnit.Framework.Tests.Attributes
                 fullnames.Add(test.FullName);
             }
 
-            Assert.That(names, Is.EquivalentTo(new[] {
-                "ParameterizedTestFixture(1)", "ParameterizedTestFixture(2)" }));
-            Assert.That(fullnames, Is.EquivalentTo(new[] {
-                "NUnit.TestData.ParameterizedTestFixture(1)", "NUnit.TestData.ParameterizedTestFixture(2)" }));
+            Assert.That(names, Is.EquivalentTo(new[]
+            {
+                "ParameterizedTestFixture(1)", "ParameterizedTestFixture(2)"
+            }));
+            Assert.That(fullnames, Is.EquivalentTo(new[]
+            {
+                "NUnit.TestData.ParameterizedTestFixture(1)", "NUnit.TestData.ParameterizedTestFixture(2)"
+            }));
         }
 
         [Test]

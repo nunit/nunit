@@ -558,12 +558,14 @@ namespace NUnit.Framework.Tests.Attributes
 
             public ParameterInfo ParameterInfo => throw new NotImplementedException();
 
-            public T[] GetCustomAttributes<T>(bool inherit) where T : class
+            public T[] GetCustomAttributes<T>(bool inherit)
+                where T : class
             {
                 throw new NotImplementedException();
             }
 
-            public bool IsDefined<T>(bool inherit) where T : class
+            public bool IsDefined<T>(bool inherit)
+                where T : class
             {
                 throw new NotImplementedException();
             }

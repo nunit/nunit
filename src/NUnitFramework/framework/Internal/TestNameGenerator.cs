@@ -190,7 +190,8 @@ namespace NUnit.Framework.Internal
                 int cnt = 0;
                 foreach (Type t in method.GetGenericArguments())
                 {
-                    if (cnt++ > 0) sb.Append(",");
+                    if (cnt++ > 0)
+                        sb.Append(",");
                     sb.Append(t.Name);
                 }
                 sb.Append(">");
@@ -574,7 +575,8 @@ namespace NUnit.Framework.Internal
 
                     for (int i = 0; i < arglist.Length; i++)
                     {
-                        if (i > 0) sb.Append(",");
+                        if (i > 0)
+                            sb.Append(",");
                         sb.Append(GetDisplayString(arglist[i], _maxStringLength));
                     }
 
@@ -620,7 +622,8 @@ namespace NUnit.Framework.Internal
 
                     for (int i = 0; i < args.Length; i++)
                     {
-                        if (i > 0) sb.Append(", ");
+                        if (i > 0)
+                            sb.Append(", ");
 
                         if (i < parameters.Length)
                         {

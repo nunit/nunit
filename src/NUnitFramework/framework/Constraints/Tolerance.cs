@@ -37,7 +37,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
         /// </summary>
-        public Tolerance(object amount) : this(amount, ToleranceMode.Linear) { }
+        public Tolerance(object amount) : this(amount, ToleranceMode.Linear)
+        {
+        }
 
         /// <summary>
         /// Constructs a tolerance given an amount and <see cref="ToleranceMode"/>

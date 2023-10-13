@@ -88,6 +88,8 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(_shift.HasWork, "Should have work after starting");
         }
 
-        private void Test1() { }
+        private void Test1()
+        {
+        }
     }
 }

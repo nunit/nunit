@@ -87,7 +87,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly object[] StaticField =
-            { new object[] { "StaticField" } };
+            {
+                new object[] { "StaticField" }
+            };
 
         [Test]
         public void SourceUsingInstanceFieldIsNotRunnable()
@@ -454,14 +456,18 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         #region Sources used by the tests
-        private static readonly object[] MyData = new object[] {
+        private static readonly object[] MyData = new object[]
+        {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
-            new object[] { 12, 6, 2 } };
-        private static readonly object[] MyIntData = new object[] {
+            new object[] { 12, 6, 2 }
+        };
+        private static readonly object[] MyIntData = new object[]
+        {
             new[] { 12, 3, 4 },
             new[] { 12, 4, 3 },
-            new[] { 12, 6, 2 } };
+            new[] { 12, 6, 2 }
+        };
         private static readonly object[] MyArrayData = new object[]
         {
             new[] { 12 },
@@ -474,17 +480,23 @@ namespace NUnit.Framework.Tests.Attributes
             yield return new object[] { inject1, inject2, inject3 };
         }
 
-        private static readonly object[] FourArgs = new object[] {
-            new TestCaseData( 12, 3, 4, 0 ),
-            new TestCaseData( 12, 4, 3, 0 ),
-            new TestCaseData( 12, 5, 2, 2 ) };
+        private static readonly object[] FourArgs = new object[]
+        {
+            new TestCaseData(12, 3, 4, 0),
+            new TestCaseData(12, 4, 3, 0),
+            new TestCaseData(12, 5, 2, 2)
+        };
         private static readonly int[] EvenNumbers = new[] { 2, 4, 6, 8 };
-        private static readonly object[] MoreData = new object[] {
+        private static readonly object[] MoreData = new object[]
+        {
             new object[] { 12, 1, 12 },
-            new object[] { 12, 2, 6 } };
-        private static readonly object[] Params = new object[] {
+            new object[] { 12, 2, 6 }
+        };
+        private static readonly object[] Params = new object[]
+        {
             new TestCaseData(24, 3).Returns(8),
-            new TestCaseData(24, 2).Returns(12) };
+            new TestCaseData(24, 2).Returns(12)
+        };
 
         private class DivideDataProvider
         {
@@ -505,7 +517,8 @@ namespace NUnit.Framework.Tests.Attributes
         public class DivideDataProviderWithReturnValue
         {
             public static IEnumerable TestCases =>
-                new object[] {
+                new object[]
+                {
                     new TestCaseData(12, 3).Returns(4).SetName("TC1"),
                     new TestCaseData(12, 2).Returns(6).SetName("TC2"),
                     new TestCaseData(12, 4).Returns(3).SetName("TC3")

@@ -13,29 +13,29 @@ namespace NUnit.Framework.Interfaces
     /// a key to a single value. All keys are strings but values
     /// may be of any type. Null values are not permitted, since
     /// a null entry represents the absence of the key.
-    /// 
+    ///
     /// The entries in a PropertyBag are of two kinds: those that
     /// take a single value and those that take multiple values.
     /// However, the PropertyBag has no knowledge of which entries
     /// fall into each category and the distinction is entirely
     /// up to the code using the PropertyBag.
-    /// 
+    ///
     /// When working with multi-valued properties, client code
     /// should use the Add method to add name/value pairs and
     /// indexing to retrieve a list of all values for a given
     /// key. For example:
-    /// 
+    ///
     ///     bag.Add("Tag", "one");
     ///     bag.Add("Tag", "two");
     ///     Assert.That(bag["Tag"],
     ///       Is.EqualTo(new string[] { "one", "two" }));
-    /// 
+    ///
     /// When working with single-valued properties, client code
     /// should use the Set method to set the value and Get to
     /// retrieve the value. The GetSetting methods may also be
     /// used to retrieve the value in a type-safe manner while
     /// also providing default. For example:
-    /// 
+    ///
     ///     bag.Set("Priority", "low");
     ///     bag.Set("Priority", "high"); // replaces value
     ///     Assert.That(bag.Get("Priority"),

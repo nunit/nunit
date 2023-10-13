@@ -239,7 +239,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether this instance is resolvable.
         /// </summary>
         /// <value>
-        /// 	<see langword="true"/> if this instance is resolvable; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if this instance is resolvable; otherwise, <see langword="false"/>.
         /// </value>
         private bool IsResolvable => _lastPushed is Constraint || _lastPushed is SelfResolvingOperator;
 
