@@ -108,31 +108,35 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         private static uint ComputeHashValue(string name)
         {
-            var encoding = Encoding.UTF8;
-
 #if NETFRAMEWORK
             using var hashAlgorithm = SHA256.Create();
 
             // SHA256 ComputeHash will return 32 bytes, we will use the first 4 bytes of that to convert to an unsigned integer
-            var hashValue = hashAlgorithm.ComputeHash(encoding.GetBytes(name));
+            var hashValue = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(name));
 
             return BitConverter.ToUInt32(hashValue, 0);
 #else
+            const int maxStack = 256;
+
+            var encoding = Encoding.UTF8;
             var bufferLength = encoding.GetMaxByteCount(name.Length);
-            var buffer = ArrayPool<byte>.Shared.Rent(bufferLength);
+
+            byte[]? pooledBuffer = null;
+            var buffer = bufferLength <= maxStack ? stackalloc byte[maxStack] : (pooledBuffer = ArrayPool<byte>.Shared.Rent(bufferLength));
 
             try
             {
                 var bytesWritten = encoding.GetBytes(name, buffer);
 
                 Span<byte> hashValue = stackalloc byte[32];
-                SHA256.HashData(new Span<byte>(buffer, 0, bytesWritten), hashValue);
+                SHA256.HashData(buffer[..bytesWritten], hashValue);
 
                 return BitConverter.ToUInt32(hashValue[..4]);
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(buffer);
+                if (pooledBuffer is not null)
+                    ArrayPool<byte>.Shared.Return(pooledBuffer);
             }
 #endif
         }
