@@ -1,12 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if THREAD_ABORT
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData
 {
+#if !NETFRAMEWORK
+#pragma warning disable CS0618 // Type or member is obsolete
+#endif
+
     [TestFixture]
     public class TimeoutFixture
     {
@@ -25,9 +28,9 @@ namespace NUnit.TestData
         }
 
         [Test, Timeout(50)]
-        public void InfiniteLoopWith50msTimeout()
+        public void VeryLongTestWith50msTimeout()
         {
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
         }
 
         [Test, Timeout(500)]
@@ -49,7 +52,7 @@ namespace NUnit.TestData
         [SetUp]
         public void SetUp2()
         {
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
         }
 
         [Test, Timeout(50)]
@@ -63,7 +66,7 @@ namespace NUnit.TestData
         [TearDown]
         public void TearDown2()
         {
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
         }
 
         [Test, Timeout(50)]
@@ -80,9 +83,9 @@ namespace NUnit.TestData
         {
         }
         [Test]
-        public void Test2WithInfiniteLoop()
+        public void Test2WithLongDuration()
         {
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
         }
         [Test]
         public void Test3()
@@ -106,4 +109,3 @@ namespace NUnit.TestData
         }
     }
 }
-#endif
