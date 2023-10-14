@@ -233,7 +233,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         private int _pollCount;
-     
+
         [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
