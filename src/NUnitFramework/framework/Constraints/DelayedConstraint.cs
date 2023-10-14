@@ -72,6 +72,9 @@ namespace NUnit.Framework.Constraints
             /// <returns></returns>
             public WithRawPollingInterval PollEvery(int milliSeconds)
             {
+                if (milliSeconds < 0)
+                    throw new ArgumentException("Interval cannot be negative");
+
                 _parent.PollingInterval = new Interval(milliSeconds).InMilliseconds;
                 return new WithRawPollingInterval(_parent);
             }
@@ -102,6 +105,9 @@ namespace NUnit.Framework.Constraints
             /// <returns></returns>
             public WithRawPollingInterval PollEvery(int milliSeconds)
             {
+                if (milliSeconds < 0)
+                    throw new ArgumentException("Interval cannot be negative");
+
                 _parent.PollingInterval = new Interval(milliSeconds).InMilliseconds;
                 return new WithRawPollingInterval(_parent);
             }
@@ -195,6 +201,8 @@ namespace NUnit.Framework.Constraints
         {
             if (delayInMilliseconds < 0)
                 throw new ArgumentException("Cannot check a condition in the past", nameof(delayInMilliseconds));
+            if (pollingIntervalInMilliseconds < 0)
+                throw new ArgumentException("Interval cannot be negative", nameof(pollingIntervalInMilliseconds));
 
             DelayInterval = new Interval(delayInMilliseconds).InMilliseconds;
             PollingInterval = new Interval(pollingIntervalInMilliseconds).InMilliseconds;
@@ -224,13 +232,10 @@ namespace NUnit.Framework.Constraints
 
             if (PollingInterval.IsNotZero)
             {
-                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
-                    if (nextPoll > now)
-                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    now = Stopwatch.GetTimestamp();
-                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
+                    long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
+                    ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
