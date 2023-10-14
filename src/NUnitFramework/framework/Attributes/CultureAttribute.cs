@@ -21,13 +21,17 @@ namespace NUnit.Framework
         /// Constructor with no cultures specified, for use
         /// with named property syntax.
         /// </summary>
-        public CultureAttribute() { }
+        public CultureAttribute()
+        {
+        }
 
         /// <summary>
         /// Constructor taking one or more cultures
         /// </summary>
         /// <param name="cultures">Comma-delimited list of cultures</param>
-        public CultureAttribute(string? cultures) : base(cultures) { }
+        public CultureAttribute(string? cultures) : base(cultures)
+        {
+        }
 
         #region IApplyToTest members
 

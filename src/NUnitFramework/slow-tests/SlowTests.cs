@@ -11,31 +11,58 @@ namespace NUnit.Tests
         public class AAA
         {
             [Test]
-            public void Test1() { SlowTests.Delay(); }
+            public void Test1()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test2() { SlowTests.Delay(); }
+            public void Test2()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test3() { SlowTests.Delay(); }
+            public void Test3()
+            {
+                SlowTests.Delay();
+            }
         }
 
         public class BBB
         {
             [Test]
-            public void Test1() { SlowTests.Delay(); }
+            public void Test1()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test2() { SlowTests.Delay(); }
+            public void Test2()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test3() { SlowTests.Delay(); }
+            public void Test3()
+            {
+                SlowTests.Delay();
+            }
         }
 
         public class CCC
         {
             [Test]
-            public void Test1() { SlowTests.Delay(); }
+            public void Test1()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test2() { SlowTests.Delay(); }
+            public void Test2()
+            {
+                SlowTests.Delay();
+            }
             [Test]
-            public void Test3() { SlowTests.Delay(); }
+            public void Test3()
+            {
+                SlowTests.Delay();
+            }
         }
 
         private static void Delay()

@@ -61,7 +61,8 @@ namespace NUnit.Framework.Tests.Attributes
                 return _baseInfo.GetConstructor(argTypes);
             }
 
-            public T[] GetCustomAttributes<T>(bool inherit) where T : class
+            public T[] GetCustomAttributes<T>(bool inherit)
+                where T : class
             {
                 return _baseInfo.GetCustomAttributes<T>(inherit);
             }
@@ -91,7 +92,8 @@ namespace NUnit.Framework.Tests.Attributes
                 return _baseInfo.HasMethodWithAttribute(attrType);
             }
 
-            public bool IsDefined<T>(bool inherit) where T : class
+            public bool IsDefined<T>(bool inherit)
+                where T : class
             {
                 return _baseInfo.IsDefined<T>(inherit);
             }
@@ -106,7 +108,8 @@ namespace NUnit.Framework.Tests.Attributes
                 return _baseInfo.MakeGenericType(typeArgs);
             }
 
-            public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
+            public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit)
+                where T : class
             {
                 return _baseInfo.GetMethodsWithAttribute<T>(inherit);
             }

@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" )
+            new TestCaseData(typeof(D2), "<" + typeof(D2).FullName + ">")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -46,10 +46,16 @@ namespace NUnit.Framework.Tests.Constraints
                 Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
 
-        private class B { }
+        private class B
+        {
+        }
 
-        private class D1 : B { }
+        private class D1 : B
+        {
+        }
 
-        private class D2 : D1 { }
+        private class D2 : D1
+        {
+        }
     }
 }

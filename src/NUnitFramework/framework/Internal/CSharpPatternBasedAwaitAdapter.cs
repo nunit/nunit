@@ -11,7 +11,8 @@ namespace NUnit.Framework.Internal
 
         public static AwaitAdapter? TryCreate(object? awaitable)
         {
-            if (awaitable is null) return null;
+            if (awaitable is null)
+                return null;
 
             return GetShapeInfo(awaitable.GetType())?.CreateAwaitAdapter(awaitable);
         }

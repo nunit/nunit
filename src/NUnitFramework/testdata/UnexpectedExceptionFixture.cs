@@ -83,7 +83,9 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
     public class ExceptionWithBadStackTrace : Exception
     {
         public ExceptionWithBadStackTrace(string message)
-            : base(message) { }
+            : base(message)
+        {
+        }
 
         public override string StackTrace => throw new InvalidOperationException("Simulated failure getting stack trace");
     }

@@ -382,7 +382,10 @@ namespace NUnit.Framework.Tests.Constraints
 
     internal class SelfContainer : IEnumerable
     {
-        public IEnumerator GetEnumerator() { yield return this; }
+        public IEnumerator GetEnumerator()
+        {
+            yield return this;
+        }
     }
 
     internal class EnumerableWithDisposeChecks<T> : IEnumerable<T>

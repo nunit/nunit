@@ -11,9 +11,13 @@ namespace NUnit.Framework.Tests.Syntax
 
         public CompilerParameters Options { get; } = new CompilerParameters();
 
-        public TestCompiler() : this(null, null) { }
+        public TestCompiler() : this(null, null)
+        {
+        }
 
-        public TestCompiler(string[]? assemblyNames) : this(assemblyNames, null) { }
+        public TestCompiler(string[]? assemblyNames) : this(assemblyNames, null)
+        {
+        }
 
         public TestCompiler(string[]? assemblyNames, string? outputName)
         {

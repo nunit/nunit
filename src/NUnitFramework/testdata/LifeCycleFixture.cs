@@ -175,7 +175,9 @@ namespace NUnit.TestData.LifeCycleTests
         }
 
         [Test]
-        public void DummyTest1() { }
+        public void DummyTest1()
+        {
+        }
     }
     #endregion
 

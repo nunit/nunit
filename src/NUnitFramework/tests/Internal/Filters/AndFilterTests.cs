@@ -71,7 +71,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         /// <see cref="AndFilter"/> correctly combines the results from its sub-filters.
         /// Furthermore it checks that the result from the correct match-function of the
         /// sub-filters is used to calculate the AND combination.
-        /// 
+        ///
         /// The input is an array of booleans (<paramref name="inputBooleans"/>). For each boolean
         /// value a <see cref="MockTestFilter"/> is added to the <see cref="AndFilter"/>
         /// whose match-function (defined through the parameter <paramref name="matchFunction"/>)
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         /// <see cref="AndFilter"/> calls not the same match-function on the
         /// <see cref="MockTestFilter"/>, thus checking that the <see cref="AndFilter"/>
         /// combines the correct results from the sub-filters.
-        /// 
+        ///
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
         [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]

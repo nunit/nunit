@@ -500,7 +500,8 @@ namespace NUnit.TestData
                     }
                 }).BeginInvoke(ar => { }, null);
 
-                if (!finished.WaitOne(10_000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
+                if (!finished.WaitOne(10_000))
+                    Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
             }
         }
 

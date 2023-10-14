@@ -69,6 +69,20 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void CanSpecifyParametrizedTestFixturesWithParamsArgs()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(TestFixtureSourceMayUseParamsArguments));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Runnable));
+            });
+        }
+
+        [Test]
         public void CanMarkIndividualFixturesExplicit()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayBeExplicit));

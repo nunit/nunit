@@ -13,7 +13,9 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="SamePathOrUnderConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
-        public SamePathOrUnderConstraint(string expected) : base(expected) { }
+        public SamePathOrUnderConstraint(string expected) : base(expected)
+        {
+        }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -28,7 +30,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (actual is null) return false;
+            if (actual is null)
+                return false;
 
             string path1 = Canonicalize(expected);
             string path2 = Canonicalize(actual);

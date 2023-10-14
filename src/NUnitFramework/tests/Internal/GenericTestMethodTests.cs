@@ -180,7 +180,8 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(validTest.ResultState, Is.EqualTo(ResultState.Success));
         }
 
-        private static readonly object[] Source = new object[] {
+        private static readonly object[] Source = new object[]
+        {
             new object[] { 5, 2, "ABC" },
             new object[] { 5.0, 2.0, "ABC" },
             new object[] { 5, 2.0, "ABC" },

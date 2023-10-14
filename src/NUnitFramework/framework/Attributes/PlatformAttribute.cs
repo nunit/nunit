@@ -18,13 +18,17 @@ namespace NUnit.Framework
         /// Constructor with no platforms specified, for use
         /// with named property syntax.
         /// </summary>
-        public PlatformAttribute() { }
+        public PlatformAttribute()
+        {
+        }
 
         /// <summary>
         /// Constructor taking one or more platforms
         /// </summary>
         /// <param name="platforms">Comma-delimited list of platforms</param>
-        public PlatformAttribute(string? platforms) : base(platforms) { }
+        public PlatformAttribute(string? platforms) : base(platforms)
+        {
+        }
 
         #region IApplyToTest members
 

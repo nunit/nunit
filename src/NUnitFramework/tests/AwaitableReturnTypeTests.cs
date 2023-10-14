@@ -38,8 +38,12 @@ namespace NUnit.Framework.Tests
             RunCurrentTestMethod(new AsyncWorkload(
                 isCompleted: true,
                 onCompleted: continuation => Assert.Fail("OnCompleted should not be called when IsCompleted is true."),
-                getResult: () => { wasCalled = true; return 42; })
-            ).AssertPassed();
+                getResult: () =>
+                    {
+                        wasCalled = true;
+                        return 42;
+                    }))
+            .AssertPassed();
 
             Assert.That(wasCalled);
         }
@@ -52,8 +56,12 @@ namespace NUnit.Framework.Tests
             RunCurrentTestMethod(new AsyncWorkload(
                 isCompleted: false,
                 onCompleted: continuation => continuation.Invoke(),
-                getResult: () => { wasCalled = true; return 42; })
-            ).AssertPassed();
+                getResult: () =>
+                    {
+                        wasCalled = true;
+                        return 42;
+                    }))
+            .AssertPassed();
 
             Assert.That(wasCalled);
         }
@@ -79,8 +87,7 @@ namespace NUnit.Framework.Tests
                         {
                             getResultWasCalled.Set();
                             return 42;
-                        })
-                    );
+                        }));
                 });
 
                 continuationIsAvailable.Wait();

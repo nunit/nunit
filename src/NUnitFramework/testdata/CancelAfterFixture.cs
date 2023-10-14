@@ -57,14 +57,18 @@ namespace NUnit.TestData
         }
 
         [Test, CancelAfter(50)]
-        public void Test() { }
+        public void Test()
+        {
+        }
     }
 
     [TestFixture, CancelAfter(50)]
     public sealed class CancelAfterFixtureWithCancelAfterOnFixture
     {
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test]
         public async Task Test2ExceedsTimeout()
@@ -73,6 +77,8 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public void Test3() { }
+        public void Test3()
+        {
+        }
     }
 }

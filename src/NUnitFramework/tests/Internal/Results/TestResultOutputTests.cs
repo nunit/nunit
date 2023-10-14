@@ -91,6 +91,8 @@ namespace NUnit.Framework.Tests.Internal.Results
             TestContext.Progress.WriteLine("The characters &, ', \", < and > must be escaped.");
         }
 
-        private void FakeMethod() { }
+        private void FakeMethod()
+        {
+        }
     }
 }

@@ -13,7 +13,9 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="SamePathConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
-        public SamePathConstraint(string expected) : base(expected) { }
+        public SamePathConstraint(string expected) : base(expected)
+        {
+        }
 
         /// <summary>
         /// The Description of what this constraint tests, for

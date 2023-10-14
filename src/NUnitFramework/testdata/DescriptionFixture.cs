@@ -9,24 +9,29 @@ namespace NUnit.TestData
     {
         [Test(Description = "Test Description")]
         public void Method()
-        { }
+        {
+        }
 
         [Test]
         public void NoDescriptionMethod()
-        { }
+        {
+        }
 
         [Test]
         [Description("Separate Description")]
         public void SeparateDescriptionMethod()
-        { }
+        {
+        }
 
         [Test, Description("method description")]
         [TestCase(5, Description = "case description")]
         public void TestCaseWithDescription(int x)
-        { }
+        {
+        }
 
         [Test, Description("This is a really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really, really long description")]
         public void TestWithLongDescription()
-        { }
+        {
+        }
     }
 }

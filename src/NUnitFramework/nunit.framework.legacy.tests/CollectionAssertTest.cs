@@ -782,12 +782,12 @@ namespace NUnit.Framework.Legacy.Tests
         {
             var a = new Dictionary<string, (string, Dictionary<string, string>)>()
             {
-                { "key", ("name", new Dictionary<string, string>())}
+                { "key", ("name", new Dictionary<string, string>()) }
             };
 
             var b = new Dictionary<string, (string, Dictionary<string, string>)>()
             {
-                { "key", ("name", new Dictionary<string, string>())}
+                { "key", ("name", new Dictionary<string, string>()) }
             };
 
             CollectionAssert.AreEquivalent(a, b);

@@ -21,7 +21,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="left">The first constraint</param>
         /// <param name="right">The second constraint</param>
-        public AndConstraint(IConstraint left, IConstraint right) : base(left, right) { }
+        public AndConstraint(IConstraint left, IConstraint right) : base(left, right)
+        {
+        }
 
         /// <summary>
         /// Gets text describing a constraint

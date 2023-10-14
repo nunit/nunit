@@ -15,6 +15,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public PairwiseAttribute() : base(new PairwiseStrategy(), new ParameterDataSourceProvider()) { }
+        public PairwiseAttribute() : base(new PairwiseStrategy(), new ParameterDataSourceProvider())
+        {
+        }
     }
 }

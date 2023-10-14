@@ -179,7 +179,9 @@ namespace NUnit.Framework.Constraints
         ///<param name="delayInMilliseconds">The time interval after which the match is performed</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
         public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds)
-            : this(baseConstraint, delayInMilliseconds, 0) { }
+            : this(baseConstraint, delayInMilliseconds, 0)
+        {
+        }
 
         ///<summary>
         /// Creates a new DelayedConstraint

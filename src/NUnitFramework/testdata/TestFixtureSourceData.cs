@@ -53,7 +53,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(StaticField))]
     public class StaticField_SameClass : TestFixtureSourceTest
     {
-        public StaticField_SameClass(string arg) : base(arg, "StaticFieldInClass") { }
+        public StaticField_SameClass(string arg) : base(arg, "StaticFieldInClass")
+        {
+        }
 
         private static readonly object[] StaticField = new object[] { "StaticFieldInClass" };
     }
@@ -61,9 +63,13 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(StaticProperty))]
     public class StaticProperty_SameClass : TestFixtureSourceTest
     {
-        public StaticProperty_SameClass(string arg) : base(arg, "StaticPropertyInClass") { }
+        public StaticProperty_SameClass(string arg) : base(arg, "StaticPropertyInClass")
+        {
+        }
 
-        public StaticProperty_SameClass(string arg, string expected) : base(arg, expected) { }
+        public StaticProperty_SameClass(string arg, string expected) : base(arg, expected)
+        {
+        }
 
         public static object[] StaticProperty
         {
@@ -74,13 +80,17 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(StaticProperty))]
     public class StaticProperty_InheritedClass : StaticProperty_SameClass
     {
-        public StaticProperty_InheritedClass(string arg) : base(arg, "StaticPropertyInClass") { }
+        public StaticProperty_InheritedClass(string arg) : base(arg, "StaticPropertyInClass")
+        {
+        }
     }
 
     [TestFixtureSource(nameof(StaticMethod))]
     public class StaticMethod_SameClass : TestFixtureSourceTest
     {
-        public StaticMethod_SameClass(string arg) : base(arg, "StaticMethodInClass") { }
+        public StaticMethod_SameClass(string arg) : base(arg, "StaticMethodInClass")
+        {
+        }
 
         private static object[] StaticMethod()
         {
@@ -91,7 +101,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource("StaticAsyncMethod")]
     public class StaticAsyncMethod_SameClass : TestFixtureSourceTest
     {
-        public StaticAsyncMethod_SameClass(string arg) : base(arg, "StaticAsyncMethodInClass") { }
+        public StaticAsyncMethod_SameClass(string arg) : base(arg, "StaticAsyncMethodInClass")
+        {
+        }
 
         private static Task<object[]> StaticAsyncMethod()
         {
@@ -102,7 +114,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(InstanceField))]
     public class InstanceField_SameClass : TestFixtureSourceTest
     {
-        public InstanceField_SameClass(string arg) : base(arg, "InstanceFieldInClass") { }
+        public InstanceField_SameClass(string arg) : base(arg, "InstanceFieldInClass")
+        {
+        }
 
 #pragma warning disable IDE1006 // Naming Styles
         private readonly object[] InstanceField = new object[] { "InstanceFieldInClass" };
@@ -112,7 +126,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(InstanceProperty))]
     public class InstanceProperty_SameClass : TestFixtureSourceTest
     {
-        public InstanceProperty_SameClass(string arg) : base(arg, "InstancePropertyInClass") { }
+        public InstanceProperty_SameClass(string arg) : base(arg, "InstancePropertyInClass")
+        {
+        }
 
         private object[] InstanceProperty =>
             new object[]
@@ -124,7 +140,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(InstanceMethod))]
     public class InstanceMethod_SameClass : TestFixtureSourceTest
     {
-        public InstanceMethod_SameClass(string arg) : base(arg, "InstanceMethodInClass") { }
+        public InstanceMethod_SameClass(string arg) : base(arg, "InstanceMethodInClass")
+        {
+        }
 
         private object[] InstanceMethod()
         {
@@ -135,31 +153,41 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(typeof(SourceData), "StaticField")]
     public class StaticField_DifferentClass : TestFixtureSourceTest
     {
-        public StaticField_DifferentClass(string arg) : base(arg, "StaticField") { }
+        public StaticField_DifferentClass(string arg) : base(arg, "StaticField")
+        {
+        }
     }
 
     [TestFixtureSource(typeof(SourceData), "StaticProperty")]
     public class StaticProperty_DifferentClass : TestFixtureSourceTest
     {
-        public StaticProperty_DifferentClass(string arg) : base(arg, "StaticProperty") { }
+        public StaticProperty_DifferentClass(string arg) : base(arg, "StaticProperty")
+        {
+        }
     }
 
     [TestFixtureSource(typeof(SourceData), "StaticMethod")]
     public class StaticMethod_DifferentClass : TestFixtureSourceTest
     {
-        public StaticMethod_DifferentClass(string arg) : base(arg, "StaticMethod") { }
+        public StaticMethod_DifferentClass(string arg) : base(arg, "StaticMethod")
+        {
+        }
     }
 
     [TestFixtureSource(typeof(SourceData_IEnumerable))]
     public class IEnumerableSource : TestFixtureSourceTest
     {
-        public IEnumerableSource(string arg) : base(arg, nameof(SourceData_IEnumerable)) { }
+        public IEnumerableSource(string arg) : base(arg, nameof(SourceData_IEnumerable))
+        {
+        }
     }
 
     [TestFixtureSource(nameof(MyData))]
     public class SourceReturnsObjectArray : TestFixtureSourceDivideTest
     {
-        public SourceReturnsObjectArray(int x, int y, int z) : base(x, y, z) { }
+        public SourceReturnsObjectArray(int x, int y, int z) : base(x, y, z)
+        {
+        }
 
         private static IEnumerable MyData()
         {
@@ -172,7 +200,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(MyData))]
     public class SourceReturnsFixtureParameters : TestFixtureSourceDivideTest
     {
-        public SourceReturnsFixtureParameters(int x, int y, int z) : base(x, y, z) { }
+        public SourceReturnsFixtureParameters(int x, int y, int z) : base(x, y, z)
+        {
+        }
 
         private static IEnumerable MyData()
         {
@@ -186,7 +216,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(MyData))]
     public class ExtraTestFixtureAttributeIsIgnored : TestFixtureSourceDivideTest
     {
-        public ExtraTestFixtureAttributeIsIgnored(int x, int y, int z) : base(x, y, z) { }
+        public ExtraTestFixtureAttributeIsIgnored(int x, int y, int z) : base(x, y, z)
+        {
+        }
 
         private static IEnumerable MyData()
         {
@@ -202,7 +234,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixture(12, 12, 1)]
     public class TestFixtureMayUseMultipleSourceAttributes : TestFixtureSourceDivideTest
     {
-        public TestFixtureMayUseMultipleSourceAttributes(int n, int d, int q) : base(n, d, q) { }
+        public TestFixtureMayUseMultipleSourceAttributes(int n, int d, int q) : base(n, d, q)
+        {
+        }
 
         private static IEnumerable MyData()
         {
@@ -211,15 +245,45 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new object[] { 12, 6, 2 };
         }
 
-        private static readonly object[] MoreData = new object[] {
+        private static readonly object[] MoreData = new object[]
+        {
             new object[] { 12, 1, 12 },
-            new object[] { 12, 2, 6 } };
+            new object[] { 12, 2, 6 }
+        };
+    }
+
+    [TestFixture]
+    [TestFixtureSource(nameof(MyData))]
+    public class TestFixtureSourceMayUseParamsArguments
+    {
+        public TestFixtureSourceMayUseParamsArguments(params int[] parameters)
+        {
+            Parameters = parameters;
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.That(Parameters, Is.Not.Null);
+            for (int i = 0; i < Parameters.Length; i++)
+                Assert.That(Parameters[i], Is.EqualTo(i + 1));
+        }
+        private static IEnumerable MyData()
+        {
+            yield return new object[] { 1, 2, 3 };
+            yield return new object[] { };
+            yield return new object[] { new int[] { 1, 2, 3, 4 } };
+        }
     }
 
     [TestFixtureSource(nameof(IgnoredData))]
     public class IndividualInstancesMayBeIgnored : TestFixtureSourceTest
     {
-        public IndividualInstancesMayBeIgnored(string arg) : base(arg, "IgnoredData") { }
+        public IndividualInstancesMayBeIgnored(string arg) : base(arg, "IgnoredData")
+        {
+        }
 
         private static IEnumerable IgnoredData()
         {
@@ -232,7 +296,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(nameof(ExplicitData))]
     public class IndividualInstancesMayBeExplicit : TestFixtureSourceTest
     {
-        public IndividualInstancesMayBeExplicit(string arg) : base(arg, "ExplicitData") { }
+        public IndividualInstancesMayBeExplicit(string arg) : base(arg, "ExplicitData")
+        {
+        }
 
         private static IEnumerable ExplicitData()
         {
@@ -252,7 +318,9 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
 
         [Test]
-        public void Test() { }
+        public void Test()
+        {
+        }
 
         public static IEnumerable<TestFixtureData> IndividualInstanceNameTestDataSource() =>
             from spec in TestDataSpec.Specs
@@ -483,7 +551,9 @@ namespace NUnit.TestData.TestFixtureSourceData
 [TestFixtureSource(nameof(MyData))]
 public class NoNamespaceTestFixtureSourceWithTwoValues
 {
-    public NoNamespaceTestFixtureSourceWithTwoValues(int i) { }
+    public NoNamespaceTestFixtureSourceWithTwoValues(int i)
+    {
+    }
 
     [Test]
     public void Test()
@@ -496,7 +566,9 @@ public class NoNamespaceTestFixtureSourceWithTwoValues
 [TestFixtureSource(nameof(MyData))]
 public class NoNamespaceTestFixtureSourceWithSingleValue
 {
-    public NoNamespaceTestFixtureSourceWithSingleValue(int i) { }
+    public NoNamespaceTestFixtureSourceWithSingleValue(int i)
+    {
+    }
 
     [Test]
     public void Test()
@@ -510,7 +582,9 @@ public class NoNamespaceTestFixtureSourceWithSingleValue
 [Parallelizable(ParallelScope.All)]
 public class TextFixtureSourceWithParallelizableAttribute
 {
-    public TextFixtureSourceWithParallelizableAttribute(string arg) { }
+    public TextFixtureSourceWithParallelizableAttribute(string arg)
+    {
+    }
 
     private static IEnumerable Data()
     {

@@ -8,7 +8,9 @@ namespace NUnit.Framework.Tests.Attributes
 {
     public class TestDummy : NUnit.Framework.Internal.Test
     {
-        public TestDummy() : base("TestDummy") { }
+        public TestDummy() : base("TestDummy")
+        {
+        }
 
         #region Overrides
 

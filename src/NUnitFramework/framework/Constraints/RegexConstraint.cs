@@ -3,6 +3,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -68,8 +70,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure.</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual,
-                actual is string actualString && _regex.Match(actualString).Success);
+            string actualString = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: false);
+
+            return new ConstraintResult(this, actual, _regex.IsMatch(actualString));
         }
     }
 }

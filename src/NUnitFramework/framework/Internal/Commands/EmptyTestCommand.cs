@@ -13,7 +13,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Construct a NullCommand for a test
         /// </summary>
-        public EmptyTestCommand(Test test) : base(test) { }
+        public EmptyTestCommand(Test test) : base(test)
+        {
+        }
 
         /// <summary>
         /// Execute the command

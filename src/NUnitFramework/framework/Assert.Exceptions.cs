@@ -88,7 +88,8 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Throws<TActual>(TestDelegate code, string message, params object?[]? args) where TActual : Exception
+        public static TActual? Throws<TActual>(TestDelegate code, string message, params object?[]? args)
+            where TActual : Exception
         {
             return (TActual?)Throws(typeof(TActual), code, message, args);
         }
@@ -99,7 +100,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? Throws<TActual>(TestDelegate code) where TActual : Exception
+        public static TActual? Throws<TActual>(TestDelegate code)
+            where TActual : Exception
         {
             return Throws<TActual>(code, string.Empty, null);
         }
@@ -163,7 +165,8 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Catch<TActual>(TestDelegate code, string message, params object?[]? args) where TActual : System.Exception
+        public static TActual? Catch<TActual>(TestDelegate code, string message, params object?[]? args)
+            where TActual : System.Exception
         {
             return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
@@ -173,7 +176,8 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? Catch<TActual>(TestDelegate code) where TActual : System.Exception
+        public static TActual? Catch<TActual>(TestDelegate code)
+            where TActual : System.Exception
         {
             return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code);
         }

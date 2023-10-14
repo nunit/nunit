@@ -76,7 +76,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public virtual StringConstraint IgnoreCase
         {
-            get { caseInsensitive = true; return this; }
+            get
+            {
+                caseInsensitive = true;
+                return this;
+            }
         }
 
         /// <summary>

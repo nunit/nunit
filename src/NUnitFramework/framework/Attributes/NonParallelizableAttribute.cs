@@ -13,6 +13,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct a NonParallelizableAttribute.
         /// </summary>
-        public NonParallelizableAttribute() : base(ParallelScope.None) { }
+        public NonParallelizableAttribute() : base(ParallelScope.None)
+        {
+        }
     }
 }

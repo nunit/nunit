@@ -44,7 +44,9 @@ namespace NUnitLite
         /// <summary>
         /// Default Constructor, only used where GetCallingAssembly is available
         /// </summary>
-        public AutoRun() : this(Assembly.GetCallingAssembly()) { }
+        public AutoRun() : this(Assembly.GetCallingAssembly())
+        {
+        }
 
         /// <summary>
         /// Execute the tests in the assembly, passing in

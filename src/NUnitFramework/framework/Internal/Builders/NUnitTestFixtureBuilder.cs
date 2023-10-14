@@ -82,8 +82,10 @@ namespace NUnit.Framework.Internal.Builders
                     int cnt = 0;
                     foreach (object? o in arguments)
                     {
-                        if (o is Type) cnt++;
-                        else break;
+                        if (o is Type)
+                            cnt++;
+                        else
+                            break;
                     }
 
                     typeArgs = new Type[cnt];

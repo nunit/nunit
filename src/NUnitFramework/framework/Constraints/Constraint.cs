@@ -159,9 +159,12 @@ namespace NUnit.Framework.Constraints
 
             static string Displayable(object? o)
             {
-                if (o is null) return "null";
-                else if (o is string s) return $"\"{s}\"";
-                else return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
+                if (o is null)
+                    return "null";
+                else if (o is string s)
+                    return $"\"{s}\"";
+                else
+                    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
             }
         }
 

@@ -37,16 +37,16 @@ dotnet_diagnostic.SA0001.severity = none
 dotnet_diagnostic.SA0002.severity = none
 
 # Keywords should be spaced correctly
-dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1000.severity = warning
 
 # Commas should be spaced correctly
-dotnet_diagnostic.SA1001.severity = none
+dotnet_diagnostic.SA1001.severity = warning
 
 # Semicolons should be spaced correctly
-dotnet_diagnostic.SA1002.severity = none
+dotnet_diagnostic.SA1002.severity = warning
 
 # Symbols should be spaced correctly
-dotnet_diagnostic.SA1003.severity = none
+dotnet_diagnostic.SA1003.severity = warning
 
 # Documentation lines should begin with single space
 dotnet_diagnostic.SA1004.severity = none
@@ -55,73 +55,73 @@ dotnet_diagnostic.SA1004.severity = none
 dotnet_diagnostic.SA1005.severity = none
 
 # Preprocessor keywords should not be preceded by space
-dotnet_diagnostic.SA1006.severity = none
+dotnet_diagnostic.SA1006.severity = warning
 
 # Operator keyword should be followed by space
-dotnet_diagnostic.SA1007.severity = none
+dotnet_diagnostic.SA1007.severity = warning
 
 # Opening parenthesis should be spaced correctly
-dotnet_diagnostic.SA1008.severity = none
+dotnet_diagnostic.SA1008.severity = warning
 
 # Closing parenthesis should be spaced correctly
-dotnet_diagnostic.SA1009.severity = none
+dotnet_diagnostic.SA1009.severity = warning
 
 # Opening square brackets should be spaced correctly
-dotnet_diagnostic.SA1010.severity = none
+dotnet_diagnostic.SA1010.severity = warning
 
 # Closing square brackets should be spaced correctly
-dotnet_diagnostic.SA1011.severity = none
+dotnet_diagnostic.SA1011.severity = warning
 
 # Opening braces should be spaced correctly
-dotnet_diagnostic.SA1012.severity = none
+dotnet_diagnostic.SA1012.severity = warning
 
 # Closing braces should be spaced correctly
-dotnet_diagnostic.SA1013.severity = none
+dotnet_diagnostic.SA1013.severity = warning
 
 # Opening generic brackets should be spaced correctly
-dotnet_diagnostic.SA1014.severity = none
+dotnet_diagnostic.SA1014.severity = warning
 
 # Closing generic brackets should be spaced correctly
-dotnet_diagnostic.SA1015.severity = none
+dotnet_diagnostic.SA1015.severity = warning
 
 # Opening attribute brackets should be spaced correctly
-dotnet_diagnostic.SA1016.severity = none
+dotnet_diagnostic.SA1016.severity = warning
 
 # Closing attribute brackets should be spaced correctly
-dotnet_diagnostic.SA1017.severity = none
+dotnet_diagnostic.SA1017.severity = warning
 
 # Nullable type symbols should be spaced correctly
-dotnet_diagnostic.SA1018.severity = none
+dotnet_diagnostic.SA1018.severity = warning
 
 # Member access symbols should be spaced correctly
-dotnet_diagnostic.SA1019.severity = none
+dotnet_diagnostic.SA1019.severity = warning
 
 # Increment decrement symbols should be spaced correctly
-dotnet_diagnostic.SA1020.severity = none
+dotnet_diagnostic.SA1020.severity = warning
 
 # Negative signs should be spaced correctly
-dotnet_diagnostic.SA1021.severity = none
+dotnet_diagnostic.SA1021.severity = warning
 
 # Positive signs should be spaced correctly
-dotnet_diagnostic.SA1022.severity = none
+dotnet_diagnostic.SA1022.severity = warning
 
 # Dereference and access of symbols should be spaced correctly
-dotnet_diagnostic.SA1023.severity = none
+dotnet_diagnostic.SA1023.severity = warning
 
 # Colons should be spaced correctly
-dotnet_diagnostic.SA1024.severity = none
+dotnet_diagnostic.SA1024.severity = warning
 
 # Code should not contain multiple whitespace in a row
-dotnet_diagnostic.SA1025.severity = none
+dotnet_diagnostic.SA1025.severity = warning
 
 # Code should not contain space after new or stackalloc keyword in implicitly typed array allocation
-dotnet_diagnostic.SA1026.severity = none
+dotnet_diagnostic.SA1026.severity = warning
 
 # Use tabs correctly
-dotnet_diagnostic.SA1027.severity = none
+dotnet_diagnostic.SA1027.severity = warning
 
 # Code should not contain trailing whitespace
-dotnet_diagnostic.SA1028.severity = none
+dotnet_diagnostic.SA1028.severity = warning
 
 # Do not prefix calls with base unless local implementation exists
 dotnet_diagnostic.SA1100.severity = none
@@ -130,31 +130,31 @@ dotnet_diagnostic.SA1100.severity = none
 dotnet_diagnostic.SA1101.severity = none
 
 # Do not prefix local member with this
-dotnet_diagnostic.SX1101.severity = none
+dotnet_diagnostic.SX1101.severity = warning
 
 # Query clause should follow previous clause
-dotnet_diagnostic.SA1102.severity = none
+dotnet_diagnostic.SA1102.severity = warning
 
 # Query clauses should be on separate lines or all on one line
-dotnet_diagnostic.SA1103.severity = none
+dotnet_diagnostic.SA1103.severity = warning
 
 # Query clause should begin on new line when previous clause spans multiple lines
-dotnet_diagnostic.SA1104.severity = none
+dotnet_diagnostic.SA1104.severity = warning
 
 # Query clauses spanning multiple lines should begin on own line
-dotnet_diagnostic.SA1105.severity = none
+dotnet_diagnostic.SA1105.severity = warning
 
 # Code should not contain empty statements
 dotnet_diagnostic.SA1106.severity = none
 
 # Code should not contain multiple statements on one line
-dotnet_diagnostic.SA1107.severity = none
+dotnet_diagnostic.SA1107.severity = warning
 
 # Block statements should not contain embedded comments
 dotnet_diagnostic.SA1108.severity = none
 
 # Block statements should not contain embedded regions
-dotnet_diagnostic.SA1109.severity = none
+dotnet_diagnostic.SA1109.severity = warning
 
 # Opening parenthesis or bracket should be on declaration line
 dotnet_diagnostic.SA1110.severity = none
@@ -208,7 +208,7 @@ dotnet_diagnostic.SA1125.severity = none
 dotnet_diagnostic.SA1126.severity = none
 
 # Generic type constraints should be on their own line
-dotnet_diagnostic.SA1127.severity = none
+dotnet_diagnostic.SA1127.severity = warning
 
 # Put constructor initializers on their own line
 dotnet_diagnostic.SA1128.severity = none
@@ -247,7 +247,6 @@ dotnet_diagnostic.SA1139.severity = none
 dotnet_diagnostic.SA1200.severity = none
 
 # Elements should appear in the correct order
-# Replaced with FA0014
 dotnet_diagnostic.SA1201.severity = none
 
 # Elements should be ordered by access
@@ -338,7 +337,7 @@ dotnet_diagnostic.SA1312.severity = none
 dotnet_diagnostic.SA1313.severity = none
 
 # Type parameter names should begin with T
-dotnet_diagnostic.SA1314.severity = none
+dotnet_diagnostic.SA1314.severity = warning
 
 # Tuple element names should use correct casing
 dotnet_diagnostic.SA1316.severity = none
@@ -347,11 +346,9 @@ dotnet_diagnostic.SA1316.severity = none
 dotnet_diagnostic.SA1400.severity = warning
 
 # Fields should be private
-# Replaced with Fugro Rule: FA0006 which allows 'public readonly'
 dotnet_diagnostic.SA1401.severity = none
 
 # File may only contain a single type
-# Replaced with Fugro Rule: FA0008 which allows for related types to be in one file
 dotnet_diagnostic.SA1402.severity = none
 
 # File may only contain a single namespace
@@ -391,13 +388,13 @@ dotnet_diagnostic.SA1413.severity = none
 dotnet_diagnostic.SA1414.severity = none
 
 # Braces for multi-line statements should not share line
-dotnet_diagnostic.SA1500.severity = none
+dotnet_diagnostic.SA1500.severity = warning
 
 # Statement should not be on a single line
-dotnet_diagnostic.SA1501.severity = none
+dotnet_diagnostic.SA1501.severity = warning
 
 # Element should not be on a single line
-dotnet_diagnostic.SA1502.severity = none
+dotnet_diagnostic.SA1502.severity = warning
 
 # Braces should not be omitted
 dotnet_diagnostic.SA1503.severity = none
@@ -421,7 +418,7 @@ dotnet_diagnostic.SA1508.severity = warning
 dotnet_diagnostic.SA1509.severity = warning
 
 # Chained statement blocks should not be preceded by blank line
-dotnet_diagnostic.SA1510.severity = none
+dotnet_diagnostic.SA1510.severity = warning
 
 # While-do footer should not be preceded by blank line
 dotnet_diagnostic.SA1511.severity = none
@@ -448,10 +445,10 @@ dotnet_diagnostic.SA1517.severity = warning
 dotnet_diagnostic.SA1518.severity = warning
 
 # Braces should not be omitted from multi-line child statement
-dotnet_diagnostic.SA1519.severity = none
+dotnet_diagnostic.SA1519.severity = warning
 
 # Use braces consistently
-dotnet_diagnostic.SA1520.severity = none
+dotnet_diagnostic.SA1520.severity = warning
 
 # Elements should be documented
 dotnet_diagnostic.SA1600.severity = none

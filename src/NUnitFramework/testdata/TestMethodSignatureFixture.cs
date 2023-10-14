@@ -15,22 +15,34 @@ namespace NUnit.TestData.TestMethodSignatureFixture
         public static int Failures = 0;
 
         [Test]
-        public void InstanceTestMethod() { }
+        public void InstanceTestMethod()
+        {
+        }
 
         [Test]
-        public static void StaticTestMethod() { }
+        public static void StaticTestMethod()
+        {
+        }
 
         [Test]
-        public void TestMethodWithArgumentsNotProvided(int x, int y, string label) { }
+        public void TestMethodWithArgumentsNotProvided(int x, int y, string label)
+        {
+        }
 
         [Test, Ignore("BECAUSE"), Description("My test"), MaxTime(47)]
-        public void TestMethodWithArgumentsNotProvidedAndExtraAttributes(int x, int y, string label) { }
+        public void TestMethodWithArgumentsNotProvidedAndExtraAttributes(int x, int y, string label)
+        {
+        }
 
         [Test]
-        public static void StaticTestMethodWithArgumentsNotProvided(int x, int y, string label) { }
+        public static void StaticTestMethodWithArgumentsNotProvided(int x, int y, string label)
+        {
+        }
 
         [TestCase(5, 2, "ABC")]
-        public void TestMethodWithoutParametersWithArgumentsProvided() { }
+        public void TestMethodWithoutParametersWithArgumentsProvided()
+        {
+        }
 
         [TestCase(5, 2, "ABC")]
         public void TestMethodWithArgumentsProvided(int x, int y, string label)
@@ -90,14 +102,18 @@ namespace NUnit.TestData.TestMethodSignatureFixture
             ClassicAssert.AreEqual(q, n / d);
         }
 
-        //		[Test]
-        //		public abstract void AbstractTestMethod() { }
+        // [Test]
+        // public abstract void AbstractTestMethod() { }
 
         [Test]
-        protected void ProtectedTestMethod() { }
+        protected void ProtectedTestMethod()
+        {
+        }
 
         [Test]
-        private void PrivateTestMethod() { }
+        private void PrivateTestMethod()
+        {
+        }
 
         [Test]
         public bool TestMethodWithReturnValue_WithoutExpectedResult()

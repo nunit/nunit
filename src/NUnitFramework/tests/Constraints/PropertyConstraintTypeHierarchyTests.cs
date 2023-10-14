@@ -24,7 +24,9 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actualExist.IsSuccess, Is.True);
         }
 
-        private class Base { }
+        private class Base
+        {
+        }
 
         private class Derived : Base
         {

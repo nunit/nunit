@@ -21,13 +21,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an empty CollectionConstraint
         /// </summary>
-        protected CollectionItemsEqualConstraint() { }
+        protected CollectionItemsEqualConstraint()
+        {
+        }
 
         /// <summary>
         /// Construct a CollectionConstraint
         /// </summary>
         /// <param name="arg"></param>
-        protected CollectionItemsEqualConstraint(object? arg) : base(arg) { }
+        protected CollectionItemsEqualConstraint(object? arg) : base(arg)
+        {
+        }
 
         #region Protected Properties
 

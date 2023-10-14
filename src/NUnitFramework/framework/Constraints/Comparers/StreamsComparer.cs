@@ -17,7 +17,8 @@ namespace NUnit.Framework.Constraints.Comparers
             if (x is not Stream xStream || y is not Stream yStream)
                 return null;
 
-            if (xStream == yStream) return true;
+            if (xStream == yStream)
+                return true;
 
             if (!xStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
@@ -26,7 +27,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
 
-            if (bothSeekable && xStream.Length != yStream.Length) return false;
+            if (bothSeekable && xStream.Length != yStream.Length)
+                return false;
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];

@@ -100,6 +100,8 @@ namespace NUnitLite.Tests
                 "##teamcity[testFinished name='FakeTestMethod' duration='1234']" + NL));
         }
 
-        private void FakeTestMethod() { }
+        private void FakeTestMethod()
+        {
+        }
     }
 }

@@ -22,7 +22,8 @@ namespace NUnit.TestData
         {
         }
 
-        private static readonly object[] Source = new object[] {
+        private static readonly object[] Source = new object[]
+        {
             new object[] { 5, 2, "ABC" },
             new object[] { 5, "Y", "ABC" },
             new object[] { "X", 2, "ABC" },

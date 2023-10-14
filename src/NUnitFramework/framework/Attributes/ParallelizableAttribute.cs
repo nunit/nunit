@@ -15,7 +15,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct a ParallelizableAttribute using default ParallelScope.Self.
         /// </summary>
-        public ParallelizableAttribute() : this(ParallelScope.Self) { }
+        public ParallelizableAttribute() : this(ParallelScope.Self)
+        {
+        }
 
         /// <summary>
         /// Construct a ParallelizableAttribute with a specified scope.

@@ -18,10 +18,13 @@ namespace NUnit.Framework.Tests
                     {
                         ex = Assert.ThrowsAsync<Exception>(asyncUserCode);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
 
-                if (ex is not null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null)
+                    ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.ThrowsAsync(…)";
@@ -48,10 +51,13 @@ namespace NUnit.Framework.Tests
                     {
                         ex = Assert.CatchAsync(asyncUserCode);
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
 
-                if (ex is not null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null)
+                    ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.CatchAsync(…)";

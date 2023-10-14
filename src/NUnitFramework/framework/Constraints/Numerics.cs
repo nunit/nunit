@@ -37,9 +37,12 @@ namespace NUnit.Framework.Constraints
         {
             if (obj is not null)
             {
-                if (obj is double) return true;
-                if (obj is float) return true;
-                if (obj is decimal) return true;
+                if (obj is double)
+                    return true;
+                if (obj is float)
+                    return true;
+                if (obj is decimal)
+                    return true;
             }
             return false;
         }
@@ -48,9 +51,12 @@ namespace NUnit.Framework.Constraints
         {
             if (type is not null)
             {
-                if (type == typeof(double)) return true;
-                if (type == typeof(float)) return true;
-                if (type == typeof(decimal)) return true;
+                if (type == typeof(double))
+                    return true;
+                if (type == typeof(float))
+                    return true;
+                if (type == typeof(decimal))
+                    return true;
             }
             return false;
         }
@@ -65,15 +71,24 @@ namespace NUnit.Framework.Constraints
         {
             if (obj is not null)
             {
-                if (obj is byte) return true;
-                if (obj is sbyte) return true;
-                if (obj is int) return true;
-                if (obj is uint) return true;
-                if (obj is long) return true;
-                if (obj is ulong) return true;
-                if (obj is short) return true;
-                if (obj is ushort) return true;
-                if (obj is char) return true;
+                if (obj is byte)
+                    return true;
+                if (obj is sbyte)
+                    return true;
+                if (obj is int)
+                    return true;
+                if (obj is uint)
+                    return true;
+                if (obj is long)
+                    return true;
+                if (obj is ulong)
+                    return true;
+                if (obj is short)
+                    return true;
+                if (obj is ushort)
+                    return true;
+                if (obj is char)
+                    return true;
             }
             return false;
         }
@@ -82,15 +97,24 @@ namespace NUnit.Framework.Constraints
         {
             if (type is not null)
             {
-                if (type == typeof(byte)) return true;
-                if (type == typeof(sbyte)) return true;
-                if (type == typeof(int)) return true;
-                if (type == typeof(uint)) return true;
-                if (type == typeof(long)) return true;
-                if (type == typeof(ulong)) return true;
-                if (type == typeof(short)) return true;
-                if (type == typeof(ushort)) return true;
-                if (type == typeof(char)) return true;
+                if (type == typeof(byte))
+                    return true;
+                if (type == typeof(sbyte))
+                    return true;
+                if (type == typeof(int))
+                    return true;
+                if (type == typeof(uint))
+                    return true;
+                if (type == typeof(long))
+                    return true;
+                if (type == typeof(ulong))
+                    return true;
+                if (type == typeof(short))
+                    return true;
+                if (type == typeof(ushort))
+                    return true;
+                if (type == typeof(char))
+                    return true;
             }
             return false;
         }

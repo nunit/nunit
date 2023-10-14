@@ -31,8 +31,8 @@ namespace NUnit.Framework.Tests.Constraints
         };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( @"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\"" ),
-            new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
+            new TestCaseData(@"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\""),
+            new TestCaseData(@"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -71,12 +71,12 @@ namespace NUnit.Framework.Tests.Constraints
         };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( "folder1/folder2", "\"folder1/folder2\""),
-            new TestCaseData( "//folder1/folder2", "\"//folder1/folder2\""),
-            new TestCaseData( @"/junk/folder2", "\"/junk/folder2\"" ),
-            new TestCaseData( @"/folder1/./junk/../file.temp", "\"/folder1/./junk/../file.temp\"" ),
-            new TestCaseData( @"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\"" ),
-            new TestCaseData( @"/FOLDER1/./junk/../FOLDER2", "\"/FOLDER1/./junk/../FOLDER2\"" )
+            new TestCaseData("folder1/folder2", "\"folder1/folder2\""),
+            new TestCaseData("//folder1/folder2", "\"//folder1/folder2\""),
+            new TestCaseData(@"/junk/folder2", "\"/junk/folder2\""),
+            new TestCaseData(@"/folder1/./junk/../file.temp", "\"/folder1/./junk/../file.temp\""),
+            new TestCaseData(@"/Folder1/FOLDER2", "\"/Folder1/FOLDER2\""),
+            new TestCaseData(@"/FOLDER1/./junk/../FOLDER2", "\"/FOLDER1/./junk/../FOLDER2\"")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -199,8 +199,8 @@ namespace NUnit.Framework.Tests.Constraints
         };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( @"C:\folder1\folder3", "\"C:\\folder1\\folder3\"" ),
-            new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
+            new TestCaseData(@"C:\folder1\folder3", "\"C:\\folder1\\folder3\""),
+            new TestCaseData(@"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"")
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }
@@ -231,12 +231,12 @@ namespace NUnit.Framework.Tests.Constraints
         };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( "/Folder1/Folder2", "\"/Folder1/Folder2\"" ),
-            new TestCaseData( "/FOLDER1/./junk/../Folder2", "\"/FOLDER1/./junk/../Folder2\"" ),
-            new TestCaseData( "/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\"" ),
-            new TestCaseData( "/folder1/folder3", "\"/folder1/folder3\"" ),
-            new TestCaseData( "/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\"" ),
-            new TestCaseData( "/folder1", "\"/folder1\"" )
+            new TestCaseData("/Folder1/Folder2", "\"/Folder1/Folder2\""),
+            new TestCaseData("/FOLDER1/./junk/../Folder2", "\"/FOLDER1/./junk/../Folder2\""),
+            new TestCaseData("/FOLDER1/./junk/../Folder2/temp/../Folder3", "\"/FOLDER1/./junk/../Folder2/temp/../Folder3\""),
+            new TestCaseData("/folder1/folder3", "\"/folder1/folder3\""),
+            new TestCaseData("/folder1/./folder2/../folder3", "\"/folder1/./folder2/../folder3\""),
+            new TestCaseData("/folder1", "\"/folder1\"")
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }

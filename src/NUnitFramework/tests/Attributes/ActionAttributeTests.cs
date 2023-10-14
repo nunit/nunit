@@ -207,41 +207,48 @@ namespace NUnit.Framework.Tests.Attributes
 
         #region Expected Attributes and Events
 
-        private static readonly string[] ExpectedAssemblyActions = new[] {
-                        "OnAssembly", "OnAssembly", "OnAssembly" };
-
-        private static readonly string[] ExpectedSetUpFixtureActions = new[] {
-                        "OnBaseSetupFixture", "OnBaseSetupFixture", "OnBaseSetupFixture",
-                        "OnSetupFixture", "OnSetupFixture", "OnSetupFixture"
+        private static readonly string[] ExpectedAssemblyActions = new[]
+        {
+                "OnAssembly", "OnAssembly", "OnAssembly"
         };
 
-        private static readonly string[] ExpectedTestFixtureActions = new[] {
-                        "OnBaseInterface", "OnBaseInterface", "OnBaseInterface",
-                        "OnBaseFixture", "OnBaseFixture", "OnBaseFixture",
-                        "OnInterface", "OnInterface", "OnInterface",
-                        "OnFixture", "OnFixture", "OnFixture"
+        private static readonly string[] ExpectedSetUpFixtureActions = new[]
+        {
+                "OnBaseSetupFixture", "OnBaseSetupFixture", "OnBaseSetupFixture",
+                "OnSetupFixture", "OnSetupFixture", "OnSetupFixture"
         };
 
-        private static readonly string[] ExpectedParameterizedTestActions = new[] {
-                        "OnMethod", "OnMethod"
+        private static readonly string[] ExpectedTestFixtureActions = new[]
+        {
+                "OnBaseInterface", "OnBaseInterface", "OnBaseInterface",
+                "OnBaseFixture", "OnBaseFixture", "OnBaseFixture",
+                "OnInterface", "OnInterface", "OnInterface",
+                "OnFixture", "OnFixture", "OnFixture"
         };
 
-        private static readonly string[] ExpectedTestCaseActions = new[] {
-                        "OnMethod", "OnMethod", "OnMethod",
-                        "SetUpTearDown",
-                        "OnFixture", "OnFixture",
-                        "OnInterface", "OnInterface",
-                        "OnBaseFixture", "OnBaseFixture",
-                        "OnBaseInterface", "OnBaseInterface",
-                        "OnSetupFixture", "OnSetupFixture",
-                        "OnBaseSetupFixture", "OnBaseSetupFixture",
-                        "OnAssembly", "OnAssembly"
+        private static readonly string[] ExpectedParameterizedTestActions = new[]
+        {
+                "OnMethod", "OnMethod"
+        };
+
+        private static readonly string[] ExpectedTestCaseActions = new[]
+        {
+                "OnMethod", "OnMethod", "OnMethod",
+                "SetUpTearDown",
+                "OnFixture", "OnFixture",
+                "OnInterface", "OnInterface",
+                "OnBaseFixture", "OnBaseFixture",
+                "OnBaseInterface", "OnBaseInterface",
+                "OnSetupFixture", "OnSetupFixture",
+                "OnBaseSetupFixture", "OnBaseSetupFixture",
+                "OnAssembly", "OnAssembly"
         };
 
         // The exact order of events may vary, depending on the runtime framework
         // in use. Consequently, we test heuristically. The following list is
         // only one possible ordering of events.
-        private static readonly List<string> ExpectedEvents = new(new[] {
+        private static readonly List<string> ExpectedEvents = new(new[]
+        {
                 ASSEMBLY_NAME + ".OnAssembly.Before.Test, Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Default",
@@ -399,7 +406,7 @@ namespace NUnit.Framework.Tests.Attributes
                 ASSEMBLY_NAME + ".OnAssembly.After.Default",
                 ASSEMBLY_NAME + ".OnAssembly.After.Suite",
                 ASSEMBLY_NAME + ".OnAssembly.After.Test, Suite"
-            });
+        });
 
         private static readonly int NumTestCaseActions = ExpectedTestCaseActions.Length;
         private static readonly int EventsPerTestCase = 2 * NumTestCaseActions + 1;

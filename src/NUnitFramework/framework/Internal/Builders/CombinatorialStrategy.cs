@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal.Builders
             IEnumerator[] enumerators = new IEnumerator[sources.Length];
             int index = -1;
 
-            for (; ; )
+            for (; ;)
             {
                 while (++index < sources.Length)
                 {
@@ -41,9 +41,11 @@ namespace NUnit.Framework.Internal.Builders
 
                 index = sources.Length;
 
-                while (--index >= 0 && !enumerators[index].MoveNext()) ;
+                while (--index >= 0 && !enumerators[index].MoveNext())
+                    ;
 
-                if (index < 0) break;
+                if (index < 0)
+                    break;
             }
 
             return testCases;

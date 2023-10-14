@@ -86,13 +86,13 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly object[] IgnoreCaseData =
         {
-            new object[] {new SimpleObjectCollection("x", "y", "z"),new SimpleObjectCollection("x", "Y", "Z")},
-            new object[] {new[] {'A', 'B', 'C'}, new object[] {'a', 'b', 'c'}},
-            new object[] {new[] {"a", "b", "c"}, new object[] {"A", "B", "C"}},
-            new object[] {new Dictionary<int, string> {{ 1, "a" }}, new Dictionary<int, string> {{ 1, "A" }}},
-            new object[] {new Dictionary<int, char> {{ 1, 'A' }}, new Dictionary<int, char> {{ 1, 'a' }}},
-            new object[] {new List<char> {'A', 'B', 'C'}, new List<char> {'a', 'b', 'c'}},
-            new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
+            new object[] { new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("x", "Y", "Z") },
+            new object[] { new[] { 'A', 'B', 'C' }, new object[] { 'a', 'b', 'c' } },
+            new object[] { new[] { "a", "b", "c" }, new object[] { "A", "B", "C" } },
+            new object[] { new Dictionary<int, string> { { 1, "a" } }, new Dictionary<int, string> { { 1, "A" } } },
+            new object[] { new Dictionary<int, char> { { 1, 'A' } }, new Dictionary<int, char> { { 1, 'a' } } },
+            new object[] { new List<char> { 'A', 'B', 'C' }, new List<char> { 'a', 'b', 'c' } },
+            new object[] { new List<string> { "a", "b", "c" }, new List<string> { "A", "B", "C" } },
         };
 
         [Test]

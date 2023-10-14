@@ -201,7 +201,8 @@ namespace NUnit.Framework.Internal.Execution
                 _mreAdd.Set();
 
                 return;
-            } while (true);
+            }
+            while (true);
         }
 
         /// <summary>
@@ -269,7 +270,8 @@ namespace NUnit.Framework.Internal.Execution
                 Interlocked.Increment(ref _itemsProcessed);
 
                 return work;
-            } while (true);
+            }
+            while (true);
         }
 
         /// <summary>

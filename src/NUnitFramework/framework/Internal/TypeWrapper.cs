@@ -136,7 +136,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns an array of custom attributes of the specified type applied to this type
         /// </summary>
-        public T[] GetCustomAttributes<T>(bool inherit) where T : class
+        public T[] GetCustomAttributes<T>(bool inherit)
+            where T : class
         {
             return Type.GetAttributes<T>(inherit);
         }
@@ -147,7 +148,8 @@ namespace NUnit.Framework.Internal
         /// <typeparam name="T"></typeparam>
         /// <param name="inherit"></param>
         /// <returns></returns>
-        public bool IsDefined<T>(bool inherit) where T : class
+        public bool IsDefined<T>(bool inherit)
+            where T : class
         {
             return Type.HasAttribute<T>(inherit);
         }
@@ -215,7 +217,8 @@ namespace NUnit.Framework.Internal
         /// inherits from it.
         /// </summary>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
+        public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit)
+            where T : class
         {
             if (!inherit)
             {

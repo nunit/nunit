@@ -13,7 +13,8 @@ namespace NUnit.Framework
         /// </summary>
         public static string? GetStackTraceWithoutThrowing(this Exception exception)
         {
-            if (exception is null) throw new ArgumentNullException(nameof(exception));
+            if (exception is null)
+                throw new ArgumentNullException(nameof(exception));
 
             try
             {
@@ -31,7 +32,8 @@ namespace NUnit.Framework
         /// </summary>
         public static string GetMessageWithoutThrowing(this Exception exception)
         {
-            if (exception is null) throw new ArgumentNullException(nameof(exception));
+            if (exception is null)
+                throw new ArgumentNullException(nameof(exception));
 
             try
             {
@@ -48,7 +50,8 @@ namespace NUnit.Framework
         /// </summary>
         public static Result<IDictionary> GetDataWithoutThrowing(this Exception exception)
         {
-            if (exception is null) throw new ArgumentNullException(nameof(exception));
+            if (exception is null)
+                throw new ArgumentNullException(nameof(exception));
 
             try
             {

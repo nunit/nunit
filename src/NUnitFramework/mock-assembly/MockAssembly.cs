@@ -114,10 +114,14 @@ namespace NUnit.Tests
             [Test(Description = "Mock Test #1")]
             [Category("MockCategory")]
             [Property("Severity", "Critical")]
-            public void TestWithDescription() { }
+            public void TestWithDescription()
+            {
+            }
 
             [Test]
-            protected static void NonPublicTest() { }
+            protected static void NonPublicTest()
+            {
+            }
 
             [Test]
             public void FailingTest()
@@ -133,7 +137,9 @@ namespace NUnit.Tests
             }
 
             [Test, Ignore("Ignore Message")]
-            public void IgnoreTest() { }
+            public void IgnoreTest()
+            {
+            }
 
             [TestCaseSource(nameof(SkippedTestCaseData))]
             public void SkippedTest(int _)
@@ -149,10 +155,14 @@ namespace NUnit.Tests
             };
 
             [Test, Explicit]
-            public void ExplicitTest() { }
+            public void ExplicitTest()
+            {
+            }
 
             [Test]
-            public void NotRunnableTest(int a, int b) { }
+            public void NotRunnableTest(int a, int b)
+            {
+            }
 
             [Test]
             public void InconclusiveTest()
@@ -190,7 +200,8 @@ namespace NUnit.Tests
 
             [Test]
             public virtual void TestCase()
-            { }
+            {
+            }
         }
     }
 
@@ -216,13 +227,19 @@ namespace NUnit.Tests
         public const int Suites = 1;
 
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test]
-        public void Test2() { }
+        public void Test2()
+        {
+        }
 
         [Test]
-        public void Test3() { }
+        public void Test3()
+        {
+        }
     }
 
     [TestFixture, Explicit]
@@ -233,10 +250,14 @@ namespace NUnit.Tests
         public const int Nodes = Tests + Suites;
 
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test]
-        public void Test2() { }
+        public void Test2()
+        {
+        }
     }
 
     [TestFixture]
@@ -245,10 +266,14 @@ namespace NUnit.Tests
         public const int Tests = 1;
         public const int Suites = 1;
 
-        public BadFixture(int val) { }
+        public BadFixture(int val)
+        {
+        }
 
         [Test]
-        public void SomeTest() { }
+        public void SomeTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -278,13 +303,19 @@ namespace NUnit.Tests
         public const int Tests = 4;
         public const int Suites = 3;
 
-        public ParameterizedFixture(int num) { }
+        public ParameterizedFixture(int num)
+        {
+        }
 
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test]
-        public void Test2() { }
+        public void Test2()
+        {
+        }
     }
 
     public class GenericFixtureConstants
@@ -297,12 +328,18 @@ namespace NUnit.Tests
     [TestFixture(11.5)]
     public class GenericFixture<T>
     {
-        public GenericFixture(T num) { }
+        public GenericFixture(T num)
+        {
+        }
 
         [Test]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test]
-        public void Test2() { }
+        public void Test2()
+        {
+        }
     }
 }

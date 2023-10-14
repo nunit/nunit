@@ -32,7 +32,8 @@ namespace NUnit.Common
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, bool requireInputFile, params string[] args)
         {
             // Apply default options
-            if (defaultOptionsProvider is null) throw new ArgumentNullException(nameof(defaultOptionsProvider));
+            if (defaultOptionsProvider is null)
+                throw new ArgumentNullException(nameof(defaultOptionsProvider));
 
             TeamCity = defaultOptionsProvider.TeamCity;
 
@@ -266,7 +267,8 @@ namespace NUnit.Common
 
         protected int RequiredInt(string val, string option)
         {
-            if (int.TryParse(val, out var result)) return result;
+            if (int.TryParse(val, out var result))
+                return result;
 
             ErrorMessages.Add(string.IsNullOrEmpty(val)
                 ? "Missing required value for option '" + option + "'."
@@ -280,7 +282,8 @@ namespace NUnit.Common
 
         private string ExpandToFullPath(string path)
         {
-            if (path is null) return null;
+            if (path is null)
+                return null;
 
             return Path.GetFullPath(path);
         }

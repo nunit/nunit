@@ -98,7 +98,8 @@ namespace NUnitLite.Tests
             {
                 var filespec = filespecs[ix];
                 var split = filespec.IndexOf(':');
-                if (split < 0) throw new Exception("Invalid test data");
+                if (split < 0)
+                    throw new Exception("Invalid test data");
 
                 var fileName = filespec.Substring(0, split);
                 var fileContent = filespec.Substring(split + 1);

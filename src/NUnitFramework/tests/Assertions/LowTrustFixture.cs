@@ -38,8 +38,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.That(1, Is.EqualTo(1))),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
 
         [Test]
@@ -47,8 +46,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.That(10.5, Is.EqualTo(10.5))),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
 
         [Test]
@@ -56,8 +54,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => _sandBox.Run(() => Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand())),
-                Throws.Exception.InstanceOf<MemberAccessException>()
-            );
+                Throws.Exception.InstanceOf<MemberAccessException>());
         }
     }
 
@@ -76,7 +73,8 @@ namespace NUnit.Framework.Tests.Assertions
         /// <param name="fullTrustAssemblies">Strong named assemblies that will have full trust in the sandbox.</param>
         public TestSandBox(params Assembly[] fullTrustAssemblies)
             : this(null, fullTrustAssemblies)
-        { }
+        {
+        }
 
         /// <summary>
         /// Creates a partial trust <see cref="TestSandBox"/> instance with a given set of permissions.
@@ -142,11 +140,13 @@ namespace NUnit.Framework.Tests.Assertions
         public static PermissionSet GetLowTrustPermissionSet()
         {
             var permissions = new PermissionSet(PermissionState.None);
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
             permissions.AddPermission(new SecurityPermission(
                 SecurityPermissionFlag.Execution |                  // Required to execute test code
                 SecurityPermissionFlag.SerializationFormatter));    // Required to support cross-appdomain test result formatting by NUnit TestContext
             permissions.AddPermission(new ReflectionPermission(
                 ReflectionPermissionFlag.MemberAccess));            // Required to instantiate classes that contain test code and to get cross-appdomain communication to work.
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
             return permissions;
         }
 
@@ -160,8 +160,10 @@ namespace NUnit.Framework.Tests.Assertions
         }
         public object? Run(MethodInfo method, params object[] parameters)
         {
-            if (method is null) throw new ArgumentNullException(nameof(method));
-            if (_appDomain is null) throw new ObjectDisposedException(null);
+            if (method is null)
+                throw new ArgumentNullException(nameof(method));
+            if (_appDomain is null)
+                throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);
             var methodRunnerProxy = (MethodRunner?)_appDomain.CreateInstanceAndUnwrap(
@@ -215,7 +217,8 @@ namespace NUnit.Framework.Tests.Assertions
                 }
                 catch (TargetInvocationException e)
                 {
-                    if (e.InnerException is null) throw;
+                    if (e.InnerException is null)
+                        throw;
                     throw e.InnerException;
                 }
             }

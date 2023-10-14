@@ -253,9 +253,13 @@ namespace NUnit.Framework.Tests.Constraints
 
         public class TestKeyedCollection : KeyedCollection<string, string>
         {
-            public TestKeyedCollection() { }
+            public TestKeyedCollection()
+            {
+            }
 
-            public TestKeyedCollection(IEqualityComparer<string> comparer) : base(comparer) { }
+            public TestKeyedCollection(IEqualityComparer<string> comparer) : base(comparer)
+            {
+            }
 
             protected override string GetKeyForItem(string item)
             {

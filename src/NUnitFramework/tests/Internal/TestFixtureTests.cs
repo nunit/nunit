@@ -104,8 +104,8 @@ namespace NUnit.Framework.Tests.Internal
 
             var expectedArgumentSeries = new[]
             {
-                new object[] {8, 4},
-                new object[] {7, 3}
+                new object[] { 8, 4 },
+                new object[] { 7, 3 }
             };
 
             var actualArgumentSeries = fixture.Tests.Select(x => x.Arguments).ToArray();
@@ -172,11 +172,11 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("ParallelizableAttribute is only allowed on test methods and fixtures"));
         }
 
-        //		[Test]
-        //		public void CannotRunAbstractFixture()
-        //		{
-        //            TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
-        //		}
+        // [Test]
+        // public void CannotRunAbstractFixture()
+        // {
+        //     TestAssert.IsNotRunnable(typeof(AbstractTestFixture));
+        // }
 
         [Test]
         public void CanRunFixtureDerivedFromAbstractTestFixture()
@@ -190,11 +190,11 @@ namespace NUnit.Framework.Tests.Internal
             TestAssert.IsRunnable(typeof(DerivedFromAbstractDerivedTestFixture));
         }
 
-        //		[Test]
-        //		public void CannotRunAbstractDerivedFixture()
-        //		{
-        //            TestAssert.IsNotRunnable(typeof(AbstractDerivedTestFixture));
-        //		}
+        // [Test]
+        // public void CannotRunAbstractDerivedFixture()
+        // {
+        //     TestAssert.IsNotRunnable(typeof(AbstractDerivedTestFixture));
+        // }
 
         [Test]
         public void FixtureInheritingTwoTestFixtureAttributesIsLoadedOnlyOnce()
@@ -407,22 +407,22 @@ namespace NUnit.Framework.Tests.Internal
             TestAssert.IsRunnable(typeof(StaticFixtureTearDown));
         }
 
-        //		[TestFixture]
-        //			[Category("fixture category")]
-        //			[Category("second")]
-        //			private class HasCategories
-        //		{
-        //			[Test] public void OneTest()
-        //			{}
-        //		}
+        // [TestFixture]
+        // [Category("fixture category")]
+        // [Category("second")]
+        // private class HasCategories
+        // {
+        //    [Test] public void OneTest()
+        //    {}
+        // }
         //
-        //		[Test]
-        //		public void LoadCategories()
-        //		{
-        //			TestSuite fixture = LoadFixture("NUnit.Core.Tests.TestFixtureBuilderTests+HasCategories");
-        //			Assert.IsNotNull(fixture);
-        //			Assert.AreEqual(2, fixture.Categories.Count);
-        //		}
+        // [Test]
+        // public void LoadCategories()
+        // {
+        //     TestSuite fixture = LoadFixture("NUnit.Core.Tests.TestFixtureBuilderTests+HasCategories");
+        //     Assert.IsNotNull(fixture);
+        //     Assert.AreEqual(2, fixture.Categories.Count);
+        // }
 
         [Test]
         public void CannotRunFixtureTearDownWithReturnValue()

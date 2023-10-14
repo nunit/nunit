@@ -59,7 +59,8 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var childTest in suite.Tests)
                 {
                     var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
-                    if (childItem is null) continue;
+                    if (childItem is null)
+                        continue;
 
                     work ??= new CompositeWorkItem(suite, filter);
 
@@ -96,9 +97,12 @@ namespace NUnit.Framework.Internal.Execution
             /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
             public int Compare(WorkItem? x, WorkItem? y)
             {
-                if (x is null && y is null) return 0;
-                if (x is null) return -1;
-                if (y is null) return 1;
+                if (x is null && y is null)
+                    return 0;
+                if (x is null)
+                    return -1;
+                if (y is null)
+                    return 1;
 
                 var xKey = x.Test.Properties.TryGet(PropertyNames.Order, int.MaxValue);
                 var yKey = y.Test.Properties.TryGet(PropertyNames.Order, int.MaxValue);

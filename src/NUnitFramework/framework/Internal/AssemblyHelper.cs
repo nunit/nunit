@@ -30,8 +30,8 @@ namespace NUnit.Framework.Internal
         public static string GetAssemblyPath(Assembly assembly)
         {
 #if NETFRAMEWORK
-            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location 
-            // .NET Framework only: 
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location
+            // .NET Framework only:
             // If the loaded file was shadow-copied, the location is that of the file after being shadow-copied.
             // To get the location before the file has been shadow-copied, use the CodeBase property.
             string? codeBase = assembly.CodeBase;
@@ -92,7 +92,8 @@ namespace NUnit.Framework.Internal
 
             public static ReflectionAssemblyLoader? TryGet()
             {
-                if (_isInitialized) return _instance;
+                if (_isInitialized)
+                    return _instance;
                 _instance = TryInitialize();
                 _isInitialized = true;
                 return _instance;
@@ -101,7 +102,8 @@ namespace NUnit.Framework.Internal
             private static ReflectionAssemblyLoader? TryInitialize()
             {
                 var assemblyLoadContextType = Type.GetType("System.Runtime.Loader.AssemblyLoadContext", throwOnError: false);
-                if (assemblyLoadContextType is null) return null;
+                if (assemblyLoadContextType is null)
+                    return null;
 
                 var defaultContext = assemblyLoadContextType.GetRuntimeProperty("Default")!.GetValue(null);
 
@@ -113,10 +115,12 @@ namespace NUnit.Framework.Internal
                     new Func<AssemblyLoadContext, AssemblyName, Assembly?>((context, assemblyName) =>
                     {
                         var dllPath = Path.Combine(AppContext.BaseDirectory, assemblyName.Name + ".dll");
-                        if (File.Exists(dllPath)) return loadFromAssemblyPath.Invoke(dllPath);
+                        if (File.Exists(dllPath))
+                            return loadFromAssemblyPath.Invoke(dllPath);
 
                         var exePath = Path.Combine(AppContext.BaseDirectory, assemblyName.Name + ".exe");
-                        if (File.Exists(exePath)) return loadFromAssemblyPath.Invoke(exePath);
+                        if (File.Exists(exePath))
+                            return loadFromAssemblyPath.Invoke(exePath);
 
                         return null;
                     }));
@@ -135,7 +139,8 @@ namespace NUnit.Framework.Internal
                 || ext.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 var fromLoader = ReflectionAssemblyLoader.TryGet()?.LoadFromAssemblyPath(Path.GetFullPath(name));
-                if (fromLoader is not null) return fromLoader;
+                if (fromLoader is not null)
+                    return fromLoader;
 
                 name = Path.GetFileNameWithoutExtension(name);
             }

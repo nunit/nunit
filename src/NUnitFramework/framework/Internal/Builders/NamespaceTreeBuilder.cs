@@ -84,7 +84,8 @@ namespace NUnit.Framework.Internal.Builders
         {
             string ns = fixture.FullName;
             int index = ns.IndexOfAny(new[] { '[', '(' });
-            if (index >= 0) ns = ns.Substring(0, index);
+            if (index >= 0)
+                ns = ns.Substring(0, index);
             index = ns.LastIndexOf('.');
             ns = index > 0 ? ns.Substring(0, index) : string.Empty;
             return ns;
@@ -94,7 +95,8 @@ namespace NUnit.Framework.Internal.Builders
         {
             Guard.ArgumentNotNull(ns, nameof(ns));
 
-            if (ns == string.Empty) return _globalInsertionPoint;
+            if (ns == string.Empty)
+                return _globalInsertionPoint;
 
             if (_namespaceIndex.TryGetValue(ns, out TestSuite? suiteToReturn))
                 return suiteToReturn;

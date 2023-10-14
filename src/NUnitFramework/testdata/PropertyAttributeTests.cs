@@ -9,26 +9,37 @@ namespace NUnit.TestData.PropertyAttributeTests
     public class FixtureWithProperties
     {
         [Test, Property("user", "Charlie")]
-        public void Test1() { }
+        public void Test1()
+        {
+        }
 
         [Test, Property("X", 10.0), Property("Y", 17.0)]
-        public void Test2() { }
+        public void Test2()
+        {
+        }
 
         [Test, Priority(5)]
-        public void Test3() { }
+        public void Test3()
+        {
+        }
 
         [Test, CustomProperty]
-        public void Test4() { }
+        public void Test4()
+        {
+        }
 
         [Test, Property("A", "A"), Property("B", "B"), Property("C", "C"), Property("D", "D"), Property("E", "E"), Property("F", "F")]
         public void Test5WithManyProperties()
-        { }
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class PriorityAttribute : PropertyAttribute
     {
-        public PriorityAttribute(int level) : base(level) { }
+        public PriorityAttribute(int level) : base(level)
+        {
+        }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]

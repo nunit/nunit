@@ -232,7 +232,8 @@ namespace NUnit.Framework.Api
                 testAssembly.Properties.Set(PropertyNames.ProcessId, process.Id);
             }
             catch (PlatformNotSupportedException)
-            { }
+            {
+            }
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 
             // TODO: Make this an option? Add Option to sort assemblies as well?

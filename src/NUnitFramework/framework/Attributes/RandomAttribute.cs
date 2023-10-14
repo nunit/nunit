@@ -256,7 +256,8 @@ namespace NUnit.Framework
                             next = _inRange
                                 ? GetNext(randomizer, _min!, _max!)
                                 : GetNext(randomizer);
-                        } while (_previousValues.Contains(next));
+                        }
+                        while (_previousValues.Contains(next));
 
                         _previousValues.Add(next);
 
@@ -328,9 +329,13 @@ namespace NUnit.Framework
 
         private class IntDataSource : RandomDataSource<int>
         {
-            public IntDataSource(int count) : base(count) { }
+            public IntDataSource(int count) : base(count)
+            {
+            }
 
-            public IntDataSource(int min, int max, int count) : base(min, max, count) { }
+            public IntDataSource(int min, int max, int count) : base(min, max, count)
+            {
+            }
 
             protected override int GetNext(Randomizer randomizer)
             {
@@ -357,9 +362,13 @@ namespace NUnit.Framework
 
         private class UIntDataSource : RandomDataSource<uint>
         {
-            public UIntDataSource(int count) : base(count) { }
+            public UIntDataSource(int count) : base(count)
+            {
+            }
 
-            public UIntDataSource(uint min, uint max, int count) : base(min, max, count) { }
+            public UIntDataSource(uint min, uint max, int count) : base(min, max, count)
+            {
+            }
 
             protected override uint GetNext(Randomizer randomizer)
             {
@@ -386,9 +395,13 @@ namespace NUnit.Framework
 
         private class LongDataSource : RandomDataSource<long>
         {
-            public LongDataSource(int count) : base(count) { }
+            public LongDataSource(int count) : base(count)
+            {
+            }
 
-            public LongDataSource(long min, long max, int count) : base(min, max, count) { }
+            public LongDataSource(long min, long max, int count) : base(min, max, count)
+            {
+            }
 
             protected override long GetNext(Randomizer randomizer)
             {
@@ -415,9 +428,13 @@ namespace NUnit.Framework
 
         private class ULongDataSource : RandomDataSource<ulong>
         {
-            public ULongDataSource(int count) : base(count) { }
+            public ULongDataSource(int count) : base(count)
+            {
+            }
 
-            public ULongDataSource(ulong min, ulong max, int count) : base(min, max, count) { }
+            public ULongDataSource(ulong min, ulong max, int count) : base(min, max, count)
+            {
+            }
 
             protected override ulong GetNext(Randomizer randomizer)
             {
@@ -444,9 +461,13 @@ namespace NUnit.Framework
 
         private class ShortDataSource : RandomDataSource<short>
         {
-            public ShortDataSource(int count) : base(count) { }
+            public ShortDataSource(int count) : base(count)
+            {
+            }
 
-            public ShortDataSource(short min, short max, int count) : base(min, max, count) { }
+            public ShortDataSource(short min, short max, int count) : base(min, max, count)
+            {
+            }
 
             protected override short GetNext(Randomizer randomizer)
             {
@@ -473,9 +494,13 @@ namespace NUnit.Framework
 
         private class UShortDataSource : RandomDataSource<ushort>
         {
-            public UShortDataSource(int count) : base(count) { }
+            public UShortDataSource(int count) : base(count)
+            {
+            }
 
-            public UShortDataSource(ushort min, ushort max, int count) : base(min, max, count) { }
+            public UShortDataSource(ushort min, ushort max, int count) : base(min, max, count)
+            {
+            }
 
             protected override ushort GetNext(Randomizer randomizer)
             {
@@ -502,9 +527,13 @@ namespace NUnit.Framework
 
         private class DoubleDataSource : RandomDataSource<double>
         {
-            public DoubleDataSource(int count) : base(count) { }
+            public DoubleDataSource(int count) : base(count)
+            {
+            }
 
-            public DoubleDataSource(double min, double max, int count) : base(min, max, count) { }
+            public DoubleDataSource(double min, double max, int count) : base(min, max, count)
+            {
+            }
 
             protected override double GetNext(Randomizer randomizer)
             {
@@ -528,9 +557,13 @@ namespace NUnit.Framework
 
         private class FloatDataSource : RandomDataSource<float>
         {
-            public FloatDataSource(int count) : base(count) { }
+            public FloatDataSource(int count) : base(count)
+            {
+            }
 
-            public FloatDataSource(float min, float max, int count) : base(min, max, count) { }
+            public FloatDataSource(float min, float max, int count) : base(min, max, count)
+            {
+            }
 
             protected override float GetNext(Randomizer randomizer)
             {
@@ -554,9 +587,13 @@ namespace NUnit.Framework
 
         private class ByteDataSource : RandomDataSource<byte>
         {
-            public ByteDataSource(int count) : base(count) { }
+            public ByteDataSource(int count) : base(count)
+            {
+            }
 
-            public ByteDataSource(byte min, byte max, int count) : base(min, max, count) { }
+            public ByteDataSource(byte min, byte max, int count) : base(min, max, count)
+            {
+            }
 
             protected override byte GetNext(Randomizer randomizer)
             {
@@ -583,9 +620,13 @@ namespace NUnit.Framework
 
         private class SByteDataSource : RandomDataSource<sbyte>
         {
-            public SByteDataSource(int count) : base(count) { }
+            public SByteDataSource(int count) : base(count)
+            {
+            }
 
-            public SByteDataSource(sbyte min, sbyte max, int count) : base(min, max, count) { }
+            public SByteDataSource(sbyte min, sbyte max, int count) : base(min, max, count)
+            {
+            }
 
             protected override sbyte GetNext(Randomizer randomizer)
             {
@@ -641,7 +682,8 @@ namespace NUnit.Framework
                         do
                         {
                             next = randomizer.NextEnum(parameter.ParameterType);
-                        } while (_previousValues.Contains(next));
+                        }
+                        while (_previousValues.Contains(next));
 
                         _previousValues.Add(next);
 
@@ -661,7 +703,9 @@ namespace NUnit.Framework
 
         private class DecimalDataSource : RandomDataSource<decimal>
         {
-            public DecimalDataSource(int count) : base(count) { }
+            public DecimalDataSource(int count) : base(count)
+            {
+            }
 
             protected override decimal GetNext(Randomizer randomizer)
             {
@@ -685,7 +729,9 @@ namespace NUnit.Framework
 
         private class GuidDataSource : RandomDataSource<Guid>
         {
-            public GuidDataSource(int count) : base(count) { }
+            public GuidDataSource(int count) : base(count)
+            {
+            }
 
             protected override Guid GetNext(Randomizer randomizer)
             {

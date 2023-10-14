@@ -52,10 +52,14 @@ public class TestWithTestActionAttribute
                                                              .Select(a => new object[] { $"a{a:000}" })
                                                              .ToArray();
 
-    public TestWithTestActionAttribute(string arg) { }
+    public TestWithTestActionAttribute(string arg)
+    {
+    }
 
     [Test]
-    public void Test1([Range(0, 10)] int x) { }
+    public void Test1([Range(0, 10)] int x)
+    {
+    }
 }
 
 [AttributeUsage(AttributeTargets.Class)]
@@ -67,9 +71,13 @@ public class SomeTestAttrAttribute : Attribute, ITestAction
     {
     }
 
-    public void BeforeTest(ITest test) { }
+    public void BeforeTest(ITest test)
+    {
+    }
 
-    public void AfterTest(ITest test) { }
+    public void AfterTest(ITest test)
+    {
+    }
 
     public ActionTargets Targets { get; }
 }

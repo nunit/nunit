@@ -6,6 +6,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;net6.0;net7.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

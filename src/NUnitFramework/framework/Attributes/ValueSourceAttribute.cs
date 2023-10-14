@@ -89,7 +89,8 @@ namespace NUnit.Framework
 
         private static IEnumerable? GetDataSourceValue(MemberInfo[] members)
         {
-            if (members.Length != 1) return null;
+            if (members.Length != 1)
+                return null;
 
             MemberInfo member = members[0];
 
