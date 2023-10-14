@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
                     if (elementType is not null)
                     {
                         bool allParamArgsMatched = true;
-                        for (int j = i; j < ptypes.Length; j++)
+                        for (int j = i; j < ptypes.Length && allParamArgsMatched; j++)
                         {
                             if (!ptypes[j].CanImplicitlyConvertTo(elementType))
                             {
