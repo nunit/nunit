@@ -252,6 +252,32 @@ namespace NUnit.TestData.TestFixtureSourceData
         };
     }
 
+    [TestFixture]
+    [TestFixtureSource(nameof(MyData))]
+    public class TestFixtureSourceMayUseParamsArguments
+    {
+        public TestFixtureSourceMayUseParamsArguments(params int[] parameters)
+        {
+            Parameters = parameters;
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.That(Parameters, Is.Not.Null);
+            for (int i = 0; i < Parameters.Length; i++)
+                Assert.That(Parameters[i], Is.EqualTo(i + 1));
+        }
+        private static IEnumerable MyData()
+        {
+            yield return new object[] { 1, 2, 3 };
+            yield return new object[] { };
+            yield return new object[] { new int[] { 1, 2, 3, 4 } };
+        }
+    }
+
     [TestFixtureSource(nameof(IgnoredData))]
     public class IndividualInstancesMayBeIgnored : TestFixtureSourceTest
     {

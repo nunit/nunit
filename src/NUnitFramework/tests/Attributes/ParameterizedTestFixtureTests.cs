@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -203,6 +204,56 @@ namespace NUnit.Framework.Tests.Attributes
         public void MakeSureTypeIsInSystemNamespace()
         {
             Assert.That(_someType.Namespace, Is.EqualTo("System"));
+        }
+    }
+
+    [TestFixture("Zero")]
+    [TestFixture("One", 1)]
+    [TestFixture("Many", 1, 2, 3, 4)]
+    [TestFixture(1.5, 8.2)]
+    [TestFixtureSource(nameof(SourceData))]
+    public class ParameterizedTestFixtureWithParamsArgument
+    {
+        private static IEnumerable SourceData()
+        {
+            yield return new object[] { "Many", 1, 2, 3, 4 };
+            yield return new object[] { new double[] { 1.5, 8.2 } };
+        }
+
+        public ParameterizedTestFixtureWithParamsArgument(string name, params int[] parameterValues)
+        {
+            Name = name;
+            ParameterValues = parameterValues;
+        }
+
+        public ParameterizedTestFixtureWithParamsArgument(params double[] parameterDoubleValues)
+        {
+            ParameterDoubleValues = parameterDoubleValues;
+        }
+
+        public string? Name { get; }
+        public int[]? ParameterValues { get; }
+        public double[]? ParameterDoubleValues { get; }
+
+        [Test]
+        public void CheckParametersPassedInAsExpected()
+        {
+            if (Name == "Zero")
+            {
+                Assert.That(ParameterValues, Is.Empty);
+            }
+            else if (Name == "One")
+            {
+                Assert.That(ParameterValues, Is.EqualTo(new[] { 1 }));
+            }
+            else if (Name == "Many")
+            {
+                Assert.That(ParameterValues, Is.EqualTo(new[] { 1, 2, 3, 4 }));
+            }
+            else if (Name is null)
+            {
+                Assert.That(ParameterDoubleValues, Is.EqualTo(new object[] { 1.5, 8.2 }));
+            }
         }
     }
 }

@@ -79,6 +79,36 @@ namespace NUnit.Framework.Internal
             ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
+            ParameterInfo[] parameterInfos = ctor.GetParameters();
+
+            if (parameterInfos.Length > 0)
+            {
+                ParameterInfo parameterInfo = parameterInfos.Last();
+                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
+                {
+                    if (arguments.Length == parameterInfos.Length
+                        && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
+                    {
+                        // Don't convert arguments as there was already an array we could use.
+                    }
+                    else
+                    {
+                        Type? elementType = parameterInfo.ParameterType.GetElementType();
+                        if (elementType is null)
+                        {
+                            throw new InvalidTestFixtureException(type.FullName + " params argument did not have an element type");
+                        }
+
+                        int paramsOffset = parameterInfos.Length - 1;
+                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - parameterInfos.Length + 1);
+                        for (int i = 0; i < paramArray.Length; i++)
+                        {
+                            paramArray.SetValue(arguments[i + paramsOffset], i);
+                        }
+                        arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
+                    }
+                }
+            }
 
             return ctor.Invoke(arguments);
         }
@@ -114,11 +144,42 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            if (pinfos.Length != ptypes.Length)
-                return false;
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
+
+            if (hasParamsArgument)
+            {
+                if (ptypes.Length < pinfos.Length - 1)
+                    return false;
+            }
+            else
+            {
+                if (pinfos.Length != ptypes.Length)
+                    return false;
+            }
 
             for (int i = 0; i < pinfos.Length; i++)
             {
+                if (hasParamsArgument && i == pinfos.Length - 1)
+                {
+                    var elementType = pinfos[i].ParameterType.GetElementType();
+                    if (elementType is not null)
+                    {
+                        bool allParamArgsMatched = true;
+                        for (int j = i; j < ptypes.Length && allParamArgsMatched; j++)
+                        {
+                            if (!ptypes[j].CanImplicitlyConvertTo(elementType))
+                            {
+                                allParamArgsMatched = false;
+                                break;
+                            }
+                        }
+                        if (allParamArgsMatched)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
                 if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }
