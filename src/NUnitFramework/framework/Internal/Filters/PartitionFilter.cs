@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Buffers;
+#endif
 using System.Security.Cryptography;
 using System.Text;
 using NUnit.Framework.Interfaces;
@@ -47,7 +50,8 @@ namespace NUnit.Framework.Internal.Filters
             string[] parts = value.Split('/');
 
             // Parts must be exactly 2, and be in the format of "number/count"
-            if (parts.Length == 2 && uint.TryParse(parts[0], out uint number) && uint.TryParse(parts[1], out uint count)) {
+            if (parts.Length == 2 && uint.TryParse(parts[0], out uint number) && uint.TryParse(parts[1], out uint count))
+            {
                 // Number must be between 1 and Count, inclusive
                 // Return a new PartitionFilter with the parsed values
                 if (number >= 1 && number <= count)
@@ -104,12 +108,33 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         private static uint ComputeHashValue(string name)
         {
+            var encoding = Encoding.UTF8;
+
+#if NETFRAMEWORK
             using var hashAlgorithm = SHA256.Create();
 
             // SHA256 ComputeHash will return 32 bytes, we will use the first 4 bytes of that to convert to an unsigned integer
-            var hashValue = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(name));
+            var hashValue = hashAlgorithm.ComputeHash(encoding.GetBytes(name));
 
             return BitConverter.ToUInt32(hashValue, 0);
+#else
+            var bufferLength = encoding.GetMaxByteCount(name.Length);
+            var buffer = ArrayPool<byte>.Shared.Rent(bufferLength);
+
+            try
+            {
+                var bytesWritten = encoding.GetBytes(name, buffer);
+
+                Span<byte> hashValue = stackalloc byte[32];
+                SHA256.HashData(new Span<byte>(buffer, 0, bytesWritten), hashValue);
+
+                return BitConverter.ToUInt32(hashValue[..4]);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+#endif
         }
     }
 }
