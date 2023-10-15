@@ -352,20 +352,6 @@ Task("SignPackages")
     });
 
 //////////////////////////////////////////////////////////////////////
-// UPLOAD ARTIFACTS
-//////////////////////////////////////////////////////////////////////
-
-Task("UploadArtifacts")
-    .Description("Uploads artifacts to AppVeyor")
-    .IsDependentOn("Package")
-    .Does(() =>
-    {
-        UploadArtifacts(PACKAGE_DIR, "*.nupkg");
-        UploadArtifacts(PACKAGE_DIR, "*.snupkg");
-        UploadArtifacts(PACKAGE_DIR, "*.zip");
-    });
-
-//////////////////////////////////////////////////////////////////////
 // SETUP AND TEARDOWN TASKS
 //////////////////////////////////////////////////////////////////////
 
@@ -374,12 +360,6 @@ Teardown(context => CheckForError(ref ErrorDetail));
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
-
-void UploadArtifacts(string packageDir, string searchPattern)
-{
-    foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
-        AppVeyor.UploadArtifact(zip);
-}
 
 void CheckForError(ref List<string> errorDetail)
 {
