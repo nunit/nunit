@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.runsettings = .runsettings
-		appveyor.yml = appveyor.yml
 		build.cake = build.cake
 		build.cmd = build.cmd
 		build.ps1 = build.ps1
@@ -64,6 +63,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy", "src\NUnitFramework\nunit.framework.legacy\nunit.framework.legacy.csproj", "{C09BC425-D524-4F75-9BEF-1724B93789B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy.tests", "src\NUnitFramework\nunit.framework.legacy.tests\nunit.framework.legacy.tests.csproj", "{59DC5039-5FCD-4C0C-AC92-7F06610136D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{AA246190-ECE1-479E-AB8D-12F5FB60BE8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\continuous_integration.yml = .github\workflows\continuous_integration.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +133,8 @@ Global
 		{863DEE19-B23F-4FA6-951A-A6304F91ED67} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
 		{CE68713C-2E19-43E8-9333-6ED817110D52} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
 		{8D43A220-7FE8-4214-BBB4-08568B88C7AA} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
+		{AA246190-ECE1-479E-AB8D-12F5FB60BE8B} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
+		{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E} = {AA246190-ECE1-479E-AB8D-12F5FB60BE8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E644AD96-B769-431B-BF0A-500AC32D2975}
