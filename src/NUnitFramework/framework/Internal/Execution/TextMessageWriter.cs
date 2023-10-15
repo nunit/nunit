@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         public override void DisplayDifferences(object? expected, object? actual)
         {
-            DisplayDifferences(expected, actual, null);
+            DisplayDifferences(expected, actual, Tolerance.Default);
         }
 
         /// <summary>

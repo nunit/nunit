@@ -111,5 +111,16 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(Is.EqualTo(5).Within(2).Minutes.Tolerance.ToString(), Is.EqualTo("00:02:00"));
             });
         }
+
+        [Test]
+        public void EqualityTests()
+        {
+            var tol1 = Tolerance.Default;
+            var tol2 = Tolerance.Default;
+            Assert.That(tol1, Is.EqualTo(tol2));
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
+            Assert.That(tol1 == tol2, Is.True);
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
+        }
     }
 }
