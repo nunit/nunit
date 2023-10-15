@@ -223,7 +223,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected string length 5 but was 3. Strings differ at index 1." + NL +
                 "  Expected: < \"one\", \"three\", \"two\" >" + NL +
                 "  But was:  < \"one\", \"two\", \"three\" >" + NL +
-                "  First non-matching item at index [1]: \"three\"\r\n";
+                "  First non-matching item at index [1]: \"three\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
                 "  Expected: < \"one\", \"two\", \"three\" >" + NL +
                 "  But was:  < \"one\", \"three\", \"two\" >" + NL +
-                "  First non-matching item at index [1]: \"two\"\r\n";
+                "  First non-matching item at index [1]: \"two\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array2, Is.EqualTo(array1)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
