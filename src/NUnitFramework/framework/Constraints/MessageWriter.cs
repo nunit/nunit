@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        public abstract void DisplayDifferences(object? expected, object? actual, Tolerance? tolerance);
+        public abstract void DisplayDifferences(object? expected, object? actual, Tolerance tolerance);
 
         /// <summary>
         /// Display the expected and actual string values on separate lines.

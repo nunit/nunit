@@ -14,14 +14,13 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class NUnitEqualityComparerTests
     {
-        private Tolerance _tolerance;
-        private NUnitEqualityComparer _comparer;
+        private Tolerance _tolerance = new();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         [SetUp]
         public void Setup()
         {
-            _tolerance = Tolerance.Default;
-            _comparer = new NUnitEqualityComparer();
+            _comparer.CompareAsCollection = false;  // This is the only thing changed in a test, if any other is done, ensure you reset it here to default values
         }
 
         [TestCase(4, 4)]

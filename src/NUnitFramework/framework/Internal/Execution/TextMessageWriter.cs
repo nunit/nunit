@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        public override void DisplayDifferences(object? expected, object? actual, Tolerance? tolerance)
+        public override void DisplayDifferences(object? expected, object? actual, Tolerance tolerance)
         {
             if (expected is not null && actual is not null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual))
             {
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Internal
             }
             WriteExpectedLine(expected, tolerance);
             WriteActualLine(actual);
-            if (tolerance is not null && expected is not null && actual is not null)
+            if (expected is not null && actual is not null)
             {
                 WriteDifferenceLine(expected, actual, tolerance);
             }
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        private void WriteExpectedLine(object? expected, Tolerance? tolerance)
+        private void WriteExpectedLine(object? expected, Tolerance tolerance)
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
@@ -261,7 +261,7 @@ namespace NUnit.Framework.Internal
             {
                 Write(_expectedType);
             }
-            if (tolerance is not null && tolerance.HasVariance)
+            if (tolerance.HasVariance)
             {
                 Write(" +/- ");
                 Write(MsgUtils.FormatValue(tolerance.Amount));

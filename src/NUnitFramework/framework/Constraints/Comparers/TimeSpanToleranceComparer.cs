@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (tolerance?.Amount is TimeSpan amount)
+            if (tolerance.Amount is TimeSpan amount)
             {
                 if (x is DateTime xDateTime && y is DateTime yDateTime)
                     return (xDateTime - yDateTime).Duration() <= amount;

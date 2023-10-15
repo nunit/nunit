@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
     /// objects and comparing that difference to a value.
     /// </summary>
     [Serializable]
-    public sealed class Tolerance
+    public sealed record Tolerance
     {
         #region Constants and Static Properties
 
@@ -33,6 +33,15 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Default ctor setting the mode to <see cref="ToleranceMode.Unset"/>
+        /// </summary>
+        public Tolerance()
+        {
+            Amount = 0;
+            Mode = ToleranceMode.Unset;
+        }
 
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
