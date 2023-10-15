@@ -206,9 +206,9 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected and actual are both <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectList> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  String lengths are both 1. Strings differ at index 0." + Environment.NewLine +
-                "  Expected: \"z\"" + Environment.NewLine +
-                "  But was:  \"a\"" + Environment.NewLine +
-                "  -----------^" + Environment.NewLine;
+                "  Expected: < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"a\" >" + Environment.NewLine +
+                "  First non-matching item at index [2]: \"z\"" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));

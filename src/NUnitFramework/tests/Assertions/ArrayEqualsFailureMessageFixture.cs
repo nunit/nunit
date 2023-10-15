@@ -203,9 +203,9 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected and actual are both <System.String[3]>" + NL +
                 "  Values differ at index [2]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
-                "  Expected: \"ten\"" + NL +
-                "  But was:  \"three\"" + NL +
-                "  ------------^" + NL;
+                "  Expected: < \"one\", \"two\", \"ten\" >" + NL +
+                "  But was:  < \"one\", \"two\", \"three\" >" + NL +
+                "  First non-matching item at index [2]: \"ten\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
@@ -221,9 +221,9 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected is <System.Object[3]>, actual is <System.String[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 5 but was 3. Strings differ at index 1." + NL +
-                "  Expected: \"three\"" + NL +
-                "  But was:  \"two\"" + NL +
-                "  ------------^" + NL;
+                "  Expected: < \"one\", \"three\", \"two\" >" + NL +
+                "  But was:  < \"one\", \"two\", \"three\" >" + NL +
+                "  First non-matching item at index [1]: \"three\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
@@ -255,9 +255,9 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected is <System.String[3]>, actual is <System.Object[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
-                "  Expected: \"two\"" + NL +
-                "  But was:  \"three\"" + NL +
-                "  ------------^" + NL;
+                "  Expected: < \"one\", \"two\", \"three\" >" + NL +
+                "  But was:  < \"one\", \"three\", \"two\" >" + NL +
+                "  First non-matching item at index [1]: \"two\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array2, Is.EqualTo(array1)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
