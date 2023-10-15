@@ -118,7 +118,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2,2,2]>" + NL +
                 "  Values differ at index [0,0,0,1,0]" + NL +
-                 TextMessageWriter.Pfx_Expected + "3" + NL +
+                TextMessageWriter.Pfx_Expected + "3" + NL +
                 TextMessageWriter.Pfx_Actual + "4" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
