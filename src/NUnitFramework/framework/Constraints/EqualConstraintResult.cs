@@ -168,7 +168,6 @@ namespace NUnit.Framework.Constraints
                     writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatch);
                 else
                     writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatch);
-               
                 writer.WriteLine($"  Expected: {MsgUtils.FormatCollection(expected)}");
                 writer.WriteLine($"  But was:  {MsgUtils.FormatCollection(actual)}");
                 writer.WriteLine($"  First non-matching item at index [{failurePoint.Position}]: \"{failurePoint.ExpectedValue}\"");
@@ -182,7 +181,6 @@ namespace NUnit.Framework.Constraints
                        failurePoint.ActualValue,
                        ++depth);
             }
-           
         }
 
         /// <summary>
