@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
     /// objects and comparing that difference to a value.
     /// </summary>
     [Serializable]
-    public sealed record Tolerance
+    public sealed class Tolerance
     {
         #region Constants and Static Properties
 

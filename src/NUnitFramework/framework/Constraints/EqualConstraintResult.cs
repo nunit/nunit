@@ -73,10 +73,8 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
             else if (expected is Stream expectedStream && actual is Stream actualStream)
                 DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
-            else if (_tolerance != Tolerance.Default)
-                writer.DisplayDifferences(expected, actual, _tolerance);
             else
-                writer.DisplayDifferences(expected, actual);
+                writer.DisplayDifferences(expected, actual, _tolerance);
         }
 
         #region DisplayStringDifferences

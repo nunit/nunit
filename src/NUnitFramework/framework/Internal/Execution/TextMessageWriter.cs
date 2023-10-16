@@ -130,19 +130,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Display Expected and Actual lines for given values. This
-        /// method may be called by constraints that need more control over
-        /// the display of actual and expected values than is provided
-        /// by the default implementation.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value causing the failure</param>
-        public override void DisplayDifferences(object? expected, object? actual)
-        {
-            DisplayDifferences(expected, actual, Tolerance.Default);
-        }
-
-        /// <summary>
         /// Display Expected and Actual lines for given values, including
         /// a tolerance value on the expected line.
         /// </summary>

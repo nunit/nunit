@@ -56,16 +56,6 @@ namespace NUnit.Framework.Constraints
         public abstract void DisplayDifferences(ConstraintResult result);
 
         /// <summary>
-        /// Display Expected and Actual lines for given values. This
-        /// method may be called by constraints that need more control over
-        /// the display of actual and expected values than is provided
-        /// by the default implementation.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value causing the failure</param>
-        public abstract void DisplayDifferences(object? expected, object? actual);
-
-        /// <summary>
         /// Display Expected and Actual lines for given values, including
         /// a tolerance value on the Expected line.
         /// </summary>
