@@ -92,7 +92,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
             var tests = Enumerable.Range(0, 10).Select(i => FixtureWithMultipleTestsSuite.Tests[i % 2]).ToArray();
             var expected = tests.Select(test => _filter.ComputePartitionNumber(test)).ToArray();
 
-            var tasks = tests.Select(test => Task.Run(() => _filter.ComputePartitionNumber(test))).ToList();
+            var tasks = tests.Select(test => Task.Run(() => _filter.ComputePartitionNumber(test))).ToArray();
             await Task.WhenAll(tasks);
 
             Assert.That(expected, Is.EqualTo(tasks.Select(t => t.Result)));
