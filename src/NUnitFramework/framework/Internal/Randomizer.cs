@@ -502,11 +502,11 @@ namespace NUnit.Framework.Internal
         public string GetString(int outputLength, string allowedChars)
         {
 #if NET6_0_OR_GREATER
-            return string.Create(outputLength, allowedChars, (span, chars) =>
+            return string.Create(outputLength, allowedChars, (data, allowedChars) =>
             {
-                for (var i = 0; i < span.Length; i++)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    span[i] = chars[Next(0, chars.Length)];
+                    data[i] = allowedChars[Next(0, allowedChars.Length)];
                 }
             });
 #else
