@@ -291,7 +291,6 @@ namespace NUnit.Framework.Tests.Constraints
         private const int LARGE_COLLECTION_FAIL_TIME = 500;
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
         public void LargeIntCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, SIZE);
@@ -306,10 +305,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
         public void LargeIntCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, SIZE);
@@ -324,10 +324,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
         public void LargeStringCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
@@ -342,10 +343,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME * 2)]
         public void LargeStringCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
@@ -360,10 +362,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME * 2)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME * 2)]
         public void LargeStringCollection()
         {
             var actual = new StringCollection();
@@ -383,10 +386,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME * 2)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
         public void LargeByteCollectionsNotEquivalent()
         {
             byte[] data = new byte[SIZE];
@@ -403,10 +407,11 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
         public void LargeByteCollectionsNotEquivalentAtEnd()
         {
             byte[] data = new byte[SIZE];
@@ -423,6 +428,8 @@ namespace NUnit.Framework.Tests.Constraints
             watch.Stop();
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_FAIL_TIME)
+                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
         [Test]

@@ -105,35 +105,7 @@ namespace NUnit.Framework.Internal
                 if (i > 0)
                     sb.Append(",");
 
-                object? arg = arglist[i];
-                string display = arg?.ToString() ?? "null";
-
-                if (arg is double || arg is float)
-                {
-                    if (display.IndexOf('.') == -1)
-                        display += ".0";
-                    display += arg is double ? "d" : "f";
-                }
-                else if (arg is decimal)
-                {
-                    display += "m";
-                }
-                else if (arg is long)
-                {
-                    display += "L";
-                }
-                else if (arg is ulong)
-                {
-                    display += "UL";
-                }
-                else if (arg is string)
-                {
-                    if (display.Length > STRING_MAX)
-                        display = display.Substring(0, STRING_LIMIT) + THREE_DOTS;
-                    display = "\"" + display + "\"";
-                }
-
-                sb.Append(display);
+                sb.Append(DisplayName.GetValueString(arglist[i], STRING_MAX));
             }
             sb.Append(")");
 

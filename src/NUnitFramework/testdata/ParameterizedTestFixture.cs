@@ -19,6 +19,29 @@ namespace NUnit.TestData
         }
     }
 
+    [TestFixture(ParameterValue1)]
+    [TestFixture(ParameterValue2)]
+    public sealed class AnotherParameterizedTestFixture
+    {
+        public const string ParameterValue1 = "Hello World";
+        public const string DisplayParameterValue1 = $"\"{ParameterValue1}\"";
+        public const string ParameterValue2 = "X\nY\r\nZ";
+        public const string DisplayParameterValue2 = "\"X\\nY\\r\\nZ\"";
+
+        private readonly string _parameter;
+
+        public AnotherParameterizedTestFixture(string parameter)
+        {
+            _parameter = parameter;
+        }
+
+        [TestCase(ParameterValue2)]
+        public void TestCase(string parameter)
+        {
+            Assert.That(parameter, Is.EqualTo(_parameter));
+        }
+    }
+
     [TestFixture(Category = "XYZ")]
     public class TestFixtureWithSingleCategory
     {

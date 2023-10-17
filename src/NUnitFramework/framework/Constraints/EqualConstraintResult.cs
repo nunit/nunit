@@ -135,11 +135,7 @@ namespace NUnit.Framework.Constraints
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
                 {
-                    DisplayDifferences(
-                        writer,
-                        failurePoint.ExpectedValue,
-                        failurePoint.ActualValue,
-                        ++depth);
+                    DisplayCollectionDifferenceWithFailurePoint(writer, expected, actual, failurePoint, depth);
                 }
                 else if (failurePoint.ActualHasData)
                 {
@@ -151,6 +147,39 @@ namespace NUnit.Framework.Constraints
                     writer.Write("  Missing:  ");
                     writer.WriteCollectionElements(expected.Skip(failurePoint.Position), 0, 3);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Display the failure information for two collections with failure point
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        /// <param name="failurePoint"></param>
+        /// <param name="depth"></param>
+        private void DisplayCollectionDifferenceWithFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, NUnitEqualityComparer.FailurePoint failurePoint, int depth)
+        {
+            if (failurePoint.ExpectedValue is string expectedString && failurePoint.ActualValue is string actualString)
+            {
+                int mismatch = MsgUtils.FindMismatchPosition(expectedString, actualString, 0, _caseInsensitive);
+
+                if (expectedString.Length == actualString.Length)
+                    writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatch);
+                else
+                    writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatch);
+                writer.WriteLine($"  Expected: {MsgUtils.FormatCollection(expected)}");
+                writer.WriteLine($"  But was:  {MsgUtils.FormatCollection(actual)}");
+                writer.WriteLine($"  First non-matching item at index [{failurePoint.Position}]: \"{failurePoint.ExpectedValue}\"");
+                return;
+            }
+            else
+            {
+                DisplayDifferences(
+                       writer,
+                       failurePoint.ExpectedValue,
+                       failurePoint.ActualValue,
+                       ++depth);
             }
         }
 

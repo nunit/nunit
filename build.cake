@@ -72,46 +72,6 @@ var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Sing
 
 Setup(context =>
 {
-    if (BuildSystem.IsRunningOnAppVeyor)
-    {
-        var tag = AppVeyor.Environment.Repository.Tag;
-
-        if (tag.IsTag)
-        {
-            packageVersion = tag.Name;
-        }
-        else
-        {
-            var buildNumber = AppVeyor.Environment.Build.Number.ToString("00000");
-            var branch = AppVeyor.Environment.Repository.Branch;
-            var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
-
-            if (branch == "master" && !isPullRequest)
-            {
-                packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
-            }
-            else
-            {
-                var suffix = "-ci-" + buildNumber + dbgSuffix;
-
-                if (isPullRequest)
-                    suffix += "-pr-" + AppVeyor.Environment.PullRequest.Number;
-                else if (AppVeyor.Environment.Repository.Branch.StartsWith("release", StringComparison.OrdinalIgnoreCase))
-                    suffix += "-pre-" + buildNumber;
-                else
-                    suffix += "-" + System.Text.RegularExpressions.Regex.Replace(branch, "[^0-9A-Za-z-]+", "-");
-
-                // Nuget limits "special version part" to 20 chars. Add one for the hyphen.
-                if (suffix.Length > 21)
-                    suffix = suffix.Substring(0, 21);
-
-                packageVersion = version + suffix;
-            }
-        }
-
-        AppVeyor.UpdateBuildVersion(packageVersion);
-    }
-
     Information("Building {0} version {1} of NUnit.", configuration, packageVersion);
 });
 
@@ -392,20 +352,6 @@ Task("SignPackages")
     });
 
 //////////////////////////////////////////////////////////////////////
-// UPLOAD ARTIFACTS
-//////////////////////////////////////////////////////////////////////
-
-Task("UploadArtifacts")
-    .Description("Uploads artifacts to AppVeyor")
-    .IsDependentOn("Package")
-    .Does(() =>
-    {
-        UploadArtifacts(PACKAGE_DIR, "*.nupkg");
-        UploadArtifacts(PACKAGE_DIR, "*.snupkg");
-        UploadArtifacts(PACKAGE_DIR, "*.zip");
-    });
-
-//////////////////////////////////////////////////////////////////////
 // SETUP AND TEARDOWN TASKS
 //////////////////////////////////////////////////////////////////////
 
@@ -414,12 +360,6 @@ Teardown(context => CheckForError(ref ErrorDetail));
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
-
-void UploadArtifacts(string packageDir, string searchPattern)
-{
-    foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
-        AppVeyor.UploadArtifact(zip);
-}
 
 void CheckForError(ref List<string> errorDetail)
 {
@@ -580,12 +520,7 @@ Task("Package")
     .IsDependentOn("PackageFramework")
     .IsDependentOn("PackageZip");
 
-Task("Appveyor")
-    .Description("Builds, tests and packages on AppVeyor")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test")
-    .IsDependentOn("Package")
-    .IsDependentOn("UploadArtifacts");
+
 
 Task("Default")
     .Description("Builds all versions of the framework")
