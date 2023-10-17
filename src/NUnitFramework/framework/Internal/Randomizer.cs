@@ -501,12 +501,22 @@ namespace NUnit.Framework.Internal
         /// <returns>A random string of arbitrary length</returns>
         public string GetString(int outputLength, string allowedChars)
         {
+#if NET6_0_OR_GREATER
+            return string.Create(outputLength, allowedChars, (span, chars) =>
+            {
+                for (var i = 0; i < span.Length; i++)
+                {
+                    span[i] = chars[Next(0, chars.Length)];
+                }
+            });
+#else
             var data = new char[outputLength];
 
             for (int i = 0; i < data.Length; i++)
                 data[i] = allowedChars[Next(0, allowedChars.Length)];
 
             return new string(data);
+#endif
         }
 
         /// <summary>
