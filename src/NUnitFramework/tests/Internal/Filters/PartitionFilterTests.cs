@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
@@ -82,6 +84,18 @@ namespace NUnit.Framework.Tests.Internal.Filters
         public void ToXml()
         {
             Assert.That(_filter.ToXml(false).OuterXml, Is.EqualTo(@"<partition>6/10</partition>"));
+        }
+
+        [Test]
+        public async Task ComputePartitionNumberThreadSafe()
+        {
+            var tests = Enumerable.Range(0, 10).Select(i => FixtureWithMultipleTestsSuite.Tests[i % 2]).ToArray();
+            var expected = tests.Select(test => _filter.ComputePartitionNumber(test)).ToArray();
+
+            var tasks = tests.Select(test => Task.Run(() => _filter.ComputePartitionNumber(test))).ToArray();
+            await Task.WhenAll(tasks);
+
+            Assert.That(expected, Is.EqualTo(tasks.Select(t => t.Result)));
         }
     }
 }

@@ -3,6 +3,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -23,6 +24,13 @@ namespace NUnit.Framework.Internal.Filters
         /// The number of partitions available to use when assigning a matching partition number for each test this filter should match on
         /// </summary>
         public uint PartitionCount { get; private set; }
+
+#if NETFRAMEWORK
+        private readonly ThreadLocal<SHA256> _sha256 = new(() => SHA256.Create());
+        private readonly ThreadLocal<byte[]> _buffer = new(() => new byte[4096]);
+#else
+        private readonly ThreadLocal<byte[]> _buffer = new(() => GC.AllocateUninitializedArray<byte>(4096));
+#endif
 
         /// <summary>
         /// Construct a PartitionFilter that matches tests that have the assigned partition number from the total partition count
@@ -103,14 +111,24 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Computes an unsigned integer hash value based upon the provided string
         /// </summary>
-        private static uint ComputeHashValue(string name)
+        private uint ComputeHashValue(string name)
         {
-            using var hashAlgorithm = SHA256.Create();
+#if NETFRAMEWORK
+            var buffer = _buffer.Value!;
+            var bytesWritten = Encoding.UTF8.GetBytes(name, 0, name.Length, buffer, 0);
 
-            // SHA256 ComputeHash will return 32 bytes, we will use the first 4 bytes of that to convert to an unsigned integer
-            var hashValue = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(name));
+            var hashValue = _sha256.Value!.ComputeHash(buffer, 0, bytesWritten);
 
             return BitConverter.ToUInt32(hashValue, 0);
+#else
+            Span<byte> buffer = _buffer.Value;
+            var bytesWritten = Encoding.UTF8.GetBytes(name, buffer);
+
+            Span<byte> hashValue = stackalloc byte[32];
+            SHA256.HashData(buffer[..bytesWritten], hashValue);
+
+            return BitConverter.ToUInt32(hashValue[..4]);
+#endif
         }
     }
 }
