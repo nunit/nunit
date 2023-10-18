@@ -9,9 +9,9 @@
     <license type="file">LICENSE.txt</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
-    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <readme>README.md</readme>
     <summary>NUnit is a unit-testing framework for all .NET languages with a strong TDD focus.</summary>
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
 
@@ -19,7 +19,7 @@ This package includes the NUnit 4 framework assembly, which is referenced by you
 
 Supported platforms:
 - .NET Framework 4.6.2+
-- .NET Standard 2.0+</description>
+- .NET 6.0+</description>
     <releaseNotes>This package includes the NUnit 4 framework assembly, which is referenced by your tests. You will need to install version 4 of the nunit-console program or a third-party runner that supports NUnit 4 in order to execute tests. Runners intended for use with NUnit 2.x or 3.x will not run NUnit 4 tests correctly.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>

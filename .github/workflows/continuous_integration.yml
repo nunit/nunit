@@ -23,19 +23,19 @@ jobs:
         dotnet-version: | 
             6.0.x
             7.0.x
-            8.0.100-rc.2.23502.2
+            8.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
 
     - name: 📦 Package
-      run: dotnet cake --target=Package
+      run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: Package
         path: package
@@ -62,7 +62,7 @@ jobs:
         dotnet-version: | 
             6.0.x
             7.0.x
-            8.0.100-rc.2.23502.2
+            8.0.x
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -71,7 +71,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v3
@@ -95,13 +95,13 @@ jobs:
         dotnet-version: | 
             6.0.x
             7.0.x
-            8.0.100-rc.2.23502.2
+            8.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v3
