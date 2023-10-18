@@ -503,10 +503,7 @@ namespace NUnit.Framework.Internal
         public string GetString(int outputLength, string allowedChars)
         {
 #if NET6_0_OR_GREATER
-            return string.Create(outputLength, allowedChars, (data, allowedChars) =>
-            {
-                FillSpan(data, allowedChars);
-            });
+            return string.Create(outputLength, allowedChars, FillSpan);
 #else
             Span<char> data = stackalloc char[outputLength];
             FillSpan(data, allowedChars);
