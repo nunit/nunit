@@ -9,18 +9,24 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class TimeSpanToleranceComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (tolerance?.Amount is TimeSpan amount)
             {
-                if (x is DateTime xDateTime && y is DateTime yDateTime)
-                    return (xDateTime - yDateTime).Duration() <= amount;
+                bool result;
 
-                if (x is TimeSpan xTimeSpan && y is TimeSpan yTimeSpan)
-                    return (xTimeSpan - yTimeSpan).Duration() <= amount;
+                if (x is DateTime xDateTime && y is DateTime yDateTime)
+                    result = (xDateTime - yDateTime).Duration() <= amount;
+                else if (x is TimeSpan xTimeSpan && y is TimeSpan yTimeSpan)
+                    result = (xTimeSpan - yTimeSpan).Duration() <= amount;
+                else
+                    return EqualMethodResult.TypesNotSupported;
+
+                return result ?
+                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
             }
 
-            return null;
+            return EqualMethodResult.TypesNotSupported;
         }
     }
 }

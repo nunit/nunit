@@ -682,7 +682,7 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CompareObjectsWithToleranceAsserts()
             {
-                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+                Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
             }
         }
 

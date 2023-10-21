@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         ///     <see langword="null"/> if the objects cannot be compared using the method.
         ///     Otherwise the result of the comparison is returned.
         /// </returns>
-        private delegate bool? EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
+        private delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
 
         /// <summary>
         /// List of comparers used to compare pairs of objects.
@@ -40,6 +40,7 @@ namespace NUnit.Framework.Constraints
             StringsComparer.Equal,
             StreamsComparer.Equal,
             CharsComparer.Equal,
+            EnumComparer.Equal,
             DirectoriesComparer.Equal,
             NumericsComparer.Equal,
             DateTimeOffsetsComparer.Equal,
@@ -137,43 +138,67 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
-            return AreEqual(x, y, ref tolerance, new ComparisonState(true));
+            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
+
+            switch (result)
+            {
+                case EqualMethodResult.TypesNotSupported:
+                    throw new NotSupportedException($"No comparer found for instances of type '{GetType(x)}' and '{GetType(y)}'");
+                case EqualMethodResult.ToleranceNotSupported:
+                    throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
+                case EqualMethodResult.ComparedEqual:
+                    return true;
+                case EqualMethodResult.ComparedNotEqual:
+                default:
+                    return false;
+            }
+
+            static string GetType(object? x) => x?.GetType().FullName ?? "null";
         }
 
-        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
+        internal EqualMethodResult AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
             _failurePoints = new List<FailurePoint>();
 
             if (x is null && y is null)
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (x is null || y is null)
-                return false;
+                return EqualMethodResult.ComparedNotEqual;
 
             if (object.ReferenceEquals(x, y))
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (state.DidCompare(x, y))
-                return false;
+                return EqualMethodResult.ComparedNotEqual;
 
             EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
             if (externalComparer is not null)
-                return externalComparer.AreEqual(x, y, ref tolerance);
+            {
+                try
+                {
+                    return externalComparer.AreEqual(x, y, ref tolerance) ?
+                        EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                }
+                catch (InvalidOperationException)
+                {
+                    return EqualMethodResult.ToleranceNotSupported;
+                }
+            }
 
             foreach (EqualMethod equalMethod in Comparers)
             {
-                bool? result = equalMethod(x, y, ref tolerance, state, this);
-                if (result.HasValue)
-                    return result.Value;
+                EqualMethodResult result = equalMethod(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return result;
             }
 
             if (tolerance.HasVariance)
-            {
-                throw new InvalidOperationException("Tolerance is not supported for this comparison");
-            }
+                return EqualMethodResult.ToleranceNotSupported;
 
-            return x.Equals(y);
+            return x.Equals(y) ?
+                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
         }
 
         #endregion

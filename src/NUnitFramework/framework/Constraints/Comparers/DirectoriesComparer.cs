@@ -9,21 +9,25 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class DirectoriesComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not DirectoryInfo xDirectoryInfo || y is not DirectoryInfo yDirectoryInfo)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
+
+            if (tolerance.HasVariance)
+                return EqualMethodResult.ToleranceNotSupported;
 
             // Do quick compares first
             if (xDirectoryInfo.Attributes != yDirectoryInfo.Attributes ||
                 xDirectoryInfo.CreationTime != yDirectoryInfo.CreationTime ||
                 xDirectoryInfo.LastAccessTime != yDirectoryInfo.LastAccessTime)
             {
-                return false;
+                return EqualMethodResult.ComparedNotEqual;
             }
 
             // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess;
+            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess ?
+                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
         }
     }
 }
