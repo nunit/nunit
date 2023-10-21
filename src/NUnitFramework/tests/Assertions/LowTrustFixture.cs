@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -176,9 +177,7 @@ namespace NUnit.Framework.Tests.Assertions
             }
             catch (Exception e)
             {
-                throw e is TargetInvocationException
-                    ? e.InnerException!
-                    : e;
+                throw e.Unwrap();
             }
         }
 
@@ -217,9 +216,7 @@ namespace NUnit.Framework.Tests.Assertions
                 }
                 catch (TargetInvocationException e)
                 {
-                    if (e.InnerException is null)
-                        throw;
-                    throw e.InnerException;
+                    throw e.Unwrap();
                 }
             }
         }

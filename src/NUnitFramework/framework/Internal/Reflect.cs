@@ -255,7 +255,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException e)
             {
-                throw new NUnitException("Rethrown", e.InnerException);
+                throw new NUnitException("Rethrown", e.Unwrap());
             }
             catch (Exception e)
 #if THREAD_ABORT

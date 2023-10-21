@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
@@ -249,10 +248,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException || ex is TargetInvocationException)
-                    ex = ex.InnerException!;
-
-                Result.RecordException(ex, FailureSite.SetUp);
+                Result.RecordException(ex.Unwrap(), FailureSite.SetUp);
             }
         }
 

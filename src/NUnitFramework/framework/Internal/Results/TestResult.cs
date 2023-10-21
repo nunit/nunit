@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using NUnit.Compatibility;
@@ -502,10 +501,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is not null)
-                return ex.InnerException;
-
-            return ex;
+            return ex.Unwrap();
         }
 
         private struct ExceptionResult
