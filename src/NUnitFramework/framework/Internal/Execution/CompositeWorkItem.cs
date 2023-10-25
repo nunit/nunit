@@ -7,6 +7,7 @@ using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -232,7 +233,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && Test.TypeInfo is not null && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+            if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;

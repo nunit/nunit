@@ -27,8 +27,7 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    if (context.TestObject is IDisposable disposable)
-                        disposable.Dispose();
+                    DisposeHelper.EnsureDisposed(context.TestObject);
                 }
                 catch (Exception ex)
                 {

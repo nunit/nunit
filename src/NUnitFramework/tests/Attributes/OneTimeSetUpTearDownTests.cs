@@ -372,6 +372,24 @@ namespace NUnit.Framework.Tests.Attributes
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
         }
+
+        [Test]
+        public void AsyncDisposeCalledOnceWhenFixtureImplementsIAsyncDisposable()
+        {
+            var fixture = new AsyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "DisposeAsync" }));
+        }
+
+        [Test]
+        public void AsyncDisposeCalledOnceWhenFixtureImplementsIAsyncDisposableThroughInheritance()
+        {
+            var fixture = new InheritedAsyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "DisposeAsync" }));
+        }
     }
 
     [TestFixture]
