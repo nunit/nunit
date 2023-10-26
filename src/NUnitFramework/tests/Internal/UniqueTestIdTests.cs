@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     public class UniqueTestIdTests
     {
-        private readonly ConcurrentDictionary<string, string> _idHolder = new ConcurrentDictionary<string, string>();
+        private static ConcurrentDictionary<string, string> _idHolder = new ConcurrentDictionary<string, string>();
         private static string ID => TestContext.CurrentContext.Test.ID;
 
         [TestCase(1)]
