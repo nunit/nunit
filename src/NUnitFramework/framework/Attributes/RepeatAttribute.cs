@@ -83,7 +83,6 @@ namespace NUnit.Framework
                         break;
 
                     context.CurrentRepeatCount++;
-                    context.CurrentTest.SetNextId();
                 }
 
                 return context.CurrentResult;
