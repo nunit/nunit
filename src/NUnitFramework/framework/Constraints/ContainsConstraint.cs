@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     // TODO Needs tests
@@ -12,7 +14,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ContainsConstraint : Constraint
     {
-        private readonly object _expected;
+        private readonly object? _expected;
         private Constraint? _realConstraint;
         private bool _ignoreCase;
 
@@ -20,7 +22,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value contained within the string/collection.</param>
-        public ContainsConstraint(object expected)
+        public ContainsConstraint(object? expected)
         {
             _expected = expected;
         }
@@ -68,7 +70,12 @@ namespace NUnit.Framework.Constraints
         {
             if (actual is string)
             {
-                StringConstraint constraint = new SubstringConstraint((string)_expected);
+                if (_expected is not string substring)
+                {
+                    throw new InvalidOperationException("Expected value for substring must be a string. Suggest using Contains.Substring to get a compile time error");
+                }
+
+                StringConstraint constraint = new SubstringConstraint(substring);
                 if (_ignoreCase)
                     constraint = constraint.IgnoreCase;
                 _realConstraint = constraint;

@@ -50,7 +50,7 @@ namespace NUnit.Framework
         /// since any other type implies that we are looking for a
         /// collection member.
         /// </summary>
-        public static ContainsConstraint Contain(string expected) =>
+        public static ContainsConstraint Contain(string? expected) =>
             new(expected);
 
         #endregion
