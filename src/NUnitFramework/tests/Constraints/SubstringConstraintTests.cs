@@ -114,6 +114,23 @@ namespace NUnit.Framework.Tests.Constraints
                 newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
             });
         }
+
+        [Test]
+        public void TestSubstringUsingDoesContains()
+        {
+            Assert.That("Hello NUnit!", Does.Contain("Hello"));
+            Assert.That("Hello NUnit!", Does.Not.Contain("World"));
+
+            Assert.That(() => Assert.That("Hello", Does.Not.Contain(null)),
+                Throws.InvalidOperationException.With.Message.Contains("Substring"));
+        }
+
+        [Test]
+        public void TestSubstringUsingContainsSubstring()
+        {
+            Assert.That("Hello NUnit!", Contains.Substring("Hello"));
+            Assert.That("Hello NUnit!", !Contains.Substring("World"));
+        }
     }
 
     [TestFixture, SetCulture("en-US")]
