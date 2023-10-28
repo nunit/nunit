@@ -24,7 +24,6 @@ namespace NUnit.Framework.Internal
                     disposable.Dispose();
                 else if (TryGetAsyncDispose(value.GetType(), out var method))
                     AsyncToSyncAdapter.Await(() => method.Invoke(value, null));
-
             }
         }
 
@@ -36,19 +35,8 @@ namespace NUnit.Framework.Internal
             if (asyncDisposable is null)
                 return false;
 
-            var interfaceMethod = asyncDisposable.GetMethod("DisposeAsync");
-            if (interfaceMethod is null)
-                return false;
-
-            if (interfaceMethod.ReturnType.FullName == "System.Threading.Tasks.ValueType")
-                return false;
-
-            var map = type.GetInterfaceMap(asyncDisposable);
-            if (map.TargetMethods.Length == 0)
-                return false;
-
-            method = map.TargetMethods[0];
-            return true;
+            method = asyncDisposable.GetMethod("DisposeAsync", Type.EmptyTypes);
+            return method is not null;
         }
     }
 }

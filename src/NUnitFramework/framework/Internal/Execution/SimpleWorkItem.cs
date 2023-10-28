@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Dispose of fixture if necessary
                 var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
-                if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
+                if (isInstancePerTestCase && parentFixture is IDisposableFixture && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,

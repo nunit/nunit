@@ -212,6 +212,17 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(2));
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
+
+        [Test]
+        public void InstancePerTestCaseWithAsyncDispose()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithAsyncDisposeTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(InstancePerTestCaseWithAsyncDisposeTestCase.DisposeCount, Is.EqualTo(2));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
         #endregion
 
         #region Assembly level InstancePerTestCase
