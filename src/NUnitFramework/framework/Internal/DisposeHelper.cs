@@ -11,19 +11,35 @@ namespace NUnit.Framework.Internal
         public static bool IsDisposable(Type type)
         {
             if (typeof(IDisposable).IsAssignableFrom(type))
+            {
                 return true;
-
+            }
+#if NETFRAMEWORK
             return TryGetAsyncDispose(type, out _);
+#else
+            return typeof(IAsyncDisposable).IsAssignableFrom(type);
+#endif
         }
 
         public static void EnsureDisposed(object? value)
         {
             if (value is not null)
             {
+#if NETFRAMEWORK
                 if (TryGetAsyncDispose(value.GetType(), out var method))
+                {
                     AsyncToSyncAdapter.Await(() => method.Invoke(value, null));
+                }
+#else
+                if (value is IAsyncDisposable asyncDisposable)
+                {
+                    AsyncToSyncAdapter.Await(() => asyncDisposable.DisposeAsync());
+                }
+#endif
                 else if (value is IDisposable disposable)
+                {
                     disposable.Dispose();
+                }
             }
         }
 
