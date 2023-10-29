@@ -520,6 +520,43 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     }
 
     [TestFixture]
+    public class AsyncAndSyncDisposableFixture : IAsyncDisposable, IDisposable
+    {
+        public int DisposeCalled = 0;
+        public List<string> Actions = new();
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add(nameof(OneTimeSetUp));
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add(nameof(OneTimeTearDown));
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Actions.Add(nameof(DisposeAsync));
+            DisposeCalled++;
+            return new ValueTask(Task.CompletedTask);
+        }
+
+        public void Dispose()
+        {
+            Actions.Add(nameof(Dispose));
+            DisposeCalled++;
+        }
+    }
+
+    [TestFixture]
     public class DisposableFixtureWithTestCases : IDisposable
     {
         public int DisposeCalled = 0;

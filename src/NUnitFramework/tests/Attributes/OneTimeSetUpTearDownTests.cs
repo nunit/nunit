@@ -390,6 +390,16 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
             Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "DisposeAsync" }));
         }
+
+        [Test]
+        public void AsyncDisposePrioritizedWhenSyncAndAsyncDispose()
+        {
+            var fixture = new AsyncAndSyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Does.Contain("DisposeAsync"));
+            Assert.That(fixture.Actions, Does.Not.Contain("Dispose"));
+        }
     }
 
     [TestFixture]

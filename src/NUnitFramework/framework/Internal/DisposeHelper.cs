@@ -20,10 +20,10 @@ namespace NUnit.Framework.Internal
         {
             if (value is not null)
             {
-                if (value is IDisposable disposable)
-                    disposable.Dispose();
-                else if (TryGetAsyncDispose(value.GetType(), out var method))
+                if (TryGetAsyncDispose(value.GetType(), out var method))
                     AsyncToSyncAdapter.Await(() => method.Invoke(value, null));
+                else if (value is IDisposable disposable)
+                    disposable.Dispose();
             }
         }
 
