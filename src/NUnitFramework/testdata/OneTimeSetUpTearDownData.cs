@@ -483,7 +483,6 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
     }
 
-
     [TestFixture]
     public class AsyncDisposableFixture : IAsyncDisposable
     {

@@ -433,7 +433,6 @@ namespace NUnit.TestData.LifeCycleTests
         public void VerifyDisposed() => Assert.That(DisposeCount, Is.EqualTo(1));
     }
 
-
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class InstancePerTestCaseWithAsyncDisposeTestCase : IAsyncDisposable
