@@ -378,8 +378,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var fixture = new AsyncDisposableFixture();
             TestBuilder.RunTestFixture(fixture);
+
+            var expected = new[] { nameof(AsyncDisposableFixture.OneTimeSetUp), nameof(AsyncDisposableFixture.OneTimeTearDown), nameof(AsyncDisposableFixture.DisposeAsync) };
+
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
-            Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "DisposeAsync" }));
+            Assert.That(fixture.Actions, Is.EqualTo(expected));
         }
 
         [Test]
@@ -387,8 +390,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var fixture = new InheritedAsyncDisposableFixture();
             TestBuilder.RunTestFixture(fixture);
+
+            var expected = new[] { nameof(AsyncDisposableFixture.OneTimeSetUp), nameof(AsyncDisposableFixture.OneTimeTearDown), nameof(AsyncDisposableFixture.DisposeAsync) };
+
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
-            Assert.That(fixture.Actions, Is.EqualTo(new object[] { "OneTimeSetUp", "OneTimeTearDown", "DisposeAsync" }));
+            Assert.That(fixture.Actions, Is.EqualTo(expected));
         }
 
         [Test]
@@ -397,8 +403,8 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = new AsyncAndSyncDisposableFixture();
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
-            Assert.That(fixture.Actions, Does.Contain("DisposeAsync"));
-            Assert.That(fixture.Actions, Does.Not.Contain("Dispose"));
+            Assert.That(fixture.Actions, Does.Contain(nameof(IAsyncDisposable.DisposeAsync)));
+            Assert.That(fixture.Actions, Does.Not.Contain(nameof(IDisposable.Dispose)));
         }
     }
 

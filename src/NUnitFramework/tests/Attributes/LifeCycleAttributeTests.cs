@@ -209,7 +209,7 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithDisposeTestCase));
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(2));
+            Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(fixture.TestCaseCount));
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
 
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithAsyncDisposeTestCase));
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(InstancePerTestCaseWithAsyncDisposeTestCase.DisposeCount, Is.EqualTo(2));
+            Assert.That(InstancePerTestCaseWithAsyncDisposeTestCase.DisposeCount, Is.EqualTo(fixture.TestCaseCount));
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
 
