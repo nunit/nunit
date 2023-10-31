@@ -25,6 +25,12 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void AssertionPasses_BooleanWithNullMessage()
+        {
+            Assert.That(2 + 2 == 4, default(string));
+        }
+
+        [Test]
         public void AssertionPasses_BooleanWithMessageStringFunc()
         {
             string GetExceptionMessage() => $"Not Equal to {4}";
@@ -42,6 +48,12 @@ namespace NUnit.Framework.Tests.Assertions
         public void AssertionPasses_ActualAndConstraintWithMessage()
         {
             Assert.That(2 + 2, Is.EqualTo(4), "Should be 4");
+        }
+
+        [Test]
+        public void AssertionPasses_ActualAndConstraintWithNullMessage()
+        {
+            Assert.That(2 + 2, Is.EqualTo(4), default(string));
         }
 
         [Test]
