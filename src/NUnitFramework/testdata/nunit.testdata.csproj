@@ -11,6 +11,10 @@
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />

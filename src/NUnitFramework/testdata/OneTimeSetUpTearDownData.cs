@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace NUnit.TestData.OneTimeSetUpTearDownData
@@ -478,6 +479,78 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public void Dispose()
         {
             Actions.Add("Dispose");
+            DisposeCalled++;
+        }
+    }
+
+    [TestFixture]
+    public class AsyncDisposableFixture : IAsyncDisposable
+    {
+        public int DisposeCalled = 0;
+        public List<string> Actions = new();
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add(nameof(OneTimeSetUp));
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add(nameof(OneTimeTearDown));
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Actions.Add(nameof(DisposeAsync));
+            DisposeCalled++;
+            return new ValueTask(Task.CompletedTask);
+        }
+    }
+
+    public class InheritedAsyncDisposableFixture : AsyncDisposableFixture
+    {
+    }
+
+    [TestFixture]
+    public class AsyncAndSyncDisposableFixture : IAsyncDisposable, IDisposable
+    {
+        public int DisposeCalled = 0;
+        public List<string> Actions = new();
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add(nameof(OneTimeSetUp));
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add(nameof(OneTimeTearDown));
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Actions.Add(nameof(DisposeAsync));
+            DisposeCalled++;
+            return new ValueTask(Task.CompletedTask);
+        }
+
+        public void Dispose()
+        {
+            Actions.Add(nameof(Dispose));
             DisposeCalled++;
         }
     }
