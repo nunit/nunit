@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -501,12 +502,20 @@ namespace NUnit.Framework.Internal
         /// <returns>A random string of arbitrary length</returns>
         public string GetString(int outputLength, string allowedChars)
         {
-            var data = new char[outputLength];
+#if NET6_0_OR_GREATER
+            return string.Create(outputLength, allowedChars, FillSpan);
+#else
+            Span<char> data = stackalloc char[outputLength];
+            FillSpan(data, allowedChars);
 
-            for (int i = 0; i < data.Length; i++)
-                data[i] = allowedChars[Next(0, allowedChars.Length)];
-
-            return new string(data);
+            return data.ToString()!;
+#endif
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            void FillSpan(Span<char> data, string allowedChars)
+            {
+                for (int i = 0; i < data.Length; i++)
+                    data[i] = allowedChars[Next(0, allowedChars.Length)];
+            }
         }
 
         /// <summary>
