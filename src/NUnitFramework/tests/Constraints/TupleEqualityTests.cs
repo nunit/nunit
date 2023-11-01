@@ -77,5 +77,22 @@ namespace NUnit.Framework.Tests.Constraints
             var b = Tuple.Create(new Dictionary<string, string>());
             Assert.That(a, Is.EqualTo(b));
         }
+
+        [Test]
+        public void CanUseToleranceIfSomeMemberSupportsTolerance()
+        {
+            var tuple1 = Tuple.Create(true, 1);
+            var tuple2 = Tuple.Create(true, 2);
+            Assert.That(tuple1, Is.EqualTo(tuple2).Within(1));
+        }
+
+        [Test]
+        public void WillComplainAboutToleranceIfNoMemberSupportsTolerance()
+        {
+            var tuple1 = Tuple.Create(true, "1");
+            var tuple2 = Tuple.Create(true, "2");
+            Assert.That(() => Assert.That(tuple1, Is.EqualTo(tuple2).Within(1)),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
     }
 }

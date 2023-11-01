@@ -356,26 +356,37 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => false, Is.True)"));
         }
 
-        [Test]
-        public void AssertThatEqualsWithClass()
+        [TestCase("Hello", "World")]
+        [TestCase('A', 'B')]
+        [TestCase(false, true)]
+        [TestCase(SomeEnum.One, SomeEnum.Two)]
+        public void AssertThatWithTypesNotSupportingTolerance(object? x, object? y)
         {
-            var zero = new SomeClass(0, 0.0, string.Empty, null);
-            var instance = new SomeClass(1, 1.1, "1.1", zero);
+            Assert.That(() => Assert.That(x, Is.EqualTo(y).Within(0.1)),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
+
+        [Test]
+        public void AssertThatEqualsWithClassWithSomeToleranceAwareMembers()
+        {
+            var zero = new ClassWithSomeToleranceAwareMembers(0, 0.0, string.Empty, null);
+            var instance = new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero);
 
             Assert.Multiple(() =>
             {
-                Assert.That(new SomeClass(1, 1.1, "1.1", zero), Is.EqualTo(instance));
-                Assert.That(new SomeClass(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1));
-                Assert.That(new SomeClass(1, 1.1, "1.1", null), Is.Not.EqualTo(instance));
-                Assert.That(new SomeClass(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
-                Assert.That(new SomeClass(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
-                Assert.That(new SomeClass(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero), Is.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
             });
         }
 
-        private sealed class SomeClass
+        private sealed class ClassWithSomeToleranceAwareMembers
         {
-            public SomeClass(int valueA, double valueB, string valueC, SomeClass? chained)
+            public ClassWithSomeToleranceAwareMembers(int valueA, double valueB, string valueC, ClassWithSomeToleranceAwareMembers? chained)
             {
                 ValueA = valueA;
                 ValueB = valueB;
@@ -386,7 +397,126 @@ namespace NUnit.Framework.Tests.Assertions
             public int ValueA { get; }
             public double ValueB { get; }
             public string ValueC { get; }
-            public SomeClass? Chained { get; }
+            public ClassWithSomeToleranceAwareMembers? Chained { get; }
+
+            public override string ToString()
+            {
+                return $"{ValueA} {ValueB} '{ValueC}' [{Chained}]";
+            }
+        }
+
+        [Test]
+        public void AssertThatEqualsWithStructWithSomeToleranceAwareMembers()
+        {
+            var instance = new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).Within(0.1));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.Not.EqualTo(instance).Within(0.1));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 2.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
+            });
+        }
+
+        private enum SomeEnum
+        {
+            One = 1,
+            Two = 2,
+        }
+
+        private readonly struct StructWithSomeToleranceAwareMembers
+        {
+            public StructWithSomeToleranceAwareMembers(int valueA, double valueB, string valueC, SomeEnum valueD)
+            {
+                ValueA = valueA;
+                ValueB = valueB;
+                ValueC = valueC;
+                ValueD = valueD;
+            }
+
+            public int ValueA { get; }
+            public double ValueB { get; }
+            public string ValueC { get; }
+            public SomeEnum ValueD { get; }
+
+            public override string ToString()
+            {
+                return $"{ValueA} {ValueB} '{ValueC}' {ValueD}";
+            }
+        }
+
+        [Test]
+        public void AssertThatEqualsWithStructWithNoToleranceAwareMembers()
+        {
+            var instance = new StructWithNoToleranceAwareMembers("1.1", SomeEnum.One);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(new StructWithNoToleranceAwareMembers("1.1", SomeEnum.One), Is.EqualTo(instance));
+                Assert.That(new StructWithNoToleranceAwareMembers("1.2", SomeEnum.One), Is.Not.EqualTo(instance));
+                Assert.That(new StructWithNoToleranceAwareMembers("1.1", SomeEnum.Two), Is.Not.EqualTo(instance));
+                Assert.That(() =>
+                    Assert.That(new StructWithNoToleranceAwareMembers("1.2", SomeEnum.One),
+                                Is.EqualTo(instance).Within(0.1)),
+                    Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+            });
+        }
+
+        private readonly struct StructWithNoToleranceAwareMembers
+        {
+            public StructWithNoToleranceAwareMembers(string valueA, SomeEnum valueB)
+            {
+                ValueA = valueA;
+                ValueB = valueB;
+            }
+
+            public string ValueA { get; }
+            public SomeEnum ValueB { get; }
+
+            public override string ToString()
+            {
+                return $"'{ValueA}' {ValueB}";
+            }
+        }
+
+        [Test]
+        public void AssertThatEqualsWithRecord()
+        {
+            var zero = new SomeRecord(0, 0.0, string.Empty, null);
+            var instance = new SomeRecord(1, 1.1, "1.1", zero);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(new SomeRecord(1, 1.1, "1.1", zero), Is.EqualTo(instance));
+                Assert.That(new SomeRecord(1, 1.2, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new SomeRecord(1, 1.1, "1.1", null), Is.Not.EqualTo(instance));
+                Assert.That(new SomeRecord(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
+                Assert.That(new SomeRecord(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new SomeRecord(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(() =>
+                    Assert.That(new SomeRecord(1, 1.2, "1.1", zero),
+                                Is.EqualTo(instance).Within(0.1)),
+                    Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+            });
+        }
+
+        private sealed record SomeRecord
+        {
+            public SomeRecord(int valueA, double valueB, string valueC, SomeRecord? chained)
+            {
+                ValueA = valueA;
+                ValueB = valueB;
+                ValueC = valueC;
+                Chained = chained;
+            }
+
+            public int ValueA { get; }
+            public double ValueB { get; }
+            public string ValueC { get; }
+            public SomeRecord? Chained { get; }
 
             public override string ToString()
             {

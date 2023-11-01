@@ -9,10 +9,10 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class DateTimeOffsetsComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not DateTimeOffset xOffset || y is not DateTimeOffset yOffset)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
             bool result;
 
@@ -30,7 +30,8 @@ namespace NUnit.Framework.Constraints.Comparers
                 result = xOffset.Offset == yOffset.Offset;
             }
 
-            return result;
+            return result ?
+                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
         }
     }
 }

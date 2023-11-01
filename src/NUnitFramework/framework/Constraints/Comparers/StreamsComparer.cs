@@ -12,13 +12,16 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         private const int BUFFER_SIZE = 4096;
 
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not Stream xStream || y is not Stream yStream)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
+
+            if (tolerance.HasVariance)
+                return EqualMethodResult.ToleranceNotSupported;
 
             if (xStream == yStream)
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (!xStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
@@ -28,7 +31,7 @@ namespace NUnit.Framework.Constraints.Comparers
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
 
             if (bothSeekable && xStream.Length != yStream.Length)
-                return false;
+                return EqualMethodResult.ComparedNotEqual;
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
@@ -70,7 +73,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             fp.ActualHasData = true;
                             fp.ActualValue = bufferActual[count];
                             equalityComparer.FailurePoints.Insert(0, fp);
-                            return false;
+                            return EqualMethodResult.ComparedNotEqual;
                         }
                     }
                     readByte += BUFFER_SIZE;
@@ -88,7 +91,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 }
             }
 
-            return true;
+            return EqualMethodResult.ComparedEqual;
         }
     }
 }
