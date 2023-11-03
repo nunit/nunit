@@ -1,5 +1,9 @@
 # NUnit Release Notes
 
+## NUnit 3.14.0 - November 4, 2023
+
+See [Release Notes](https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-3140---tba)
+
 ## NUnit 3.13.3 - March 20, 2022
 
 This release includes several performance enhancements. [@lahma](https://github.com/lahma) provided a massive speed improvement for large parametrized test suites. In addition, equivalency tests with large unsortable collections run faster by determining if the collections are sortable before attempting to sort them.

@@ -26,5 +26,5 @@ using System.Reflection;
 //
 // Current version for the NUnit Framework
 //
-[assembly: AssemblyVersion("3.13.4.0")]
-[assembly: AssemblyFileVersion("3.13.4.0")]
+[assembly: AssemblyVersion("3.14.0.0")]
+[assembly: AssemblyFileVersion("3.14.0.0")]
