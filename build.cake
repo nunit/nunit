@@ -17,7 +17,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.13.4";
+var version = "3.14.0";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -235,7 +235,8 @@ var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
     "NOTICES.txt",
-    "CHANGES.md"
+    "CHANGES.md",
+    "README.md"
 };
 
 // Not all of these are present in every framework
