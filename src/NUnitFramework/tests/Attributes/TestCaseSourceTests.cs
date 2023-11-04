@@ -36,9 +36,7 @@ namespace NUnit.Framework.Tests.Attributes
                 new object[] { "StaticProperty" }
             };
 
-#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         [Test, TestCaseSource(nameof(AsyncStaticMethod))]
-#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         public void SourceCanBeAsyncStaticMethod(string source)
         {
             Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
