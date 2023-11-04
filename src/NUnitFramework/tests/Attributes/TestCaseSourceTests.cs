@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -36,6 +37,7 @@ namespace NUnit.Framework.Tests.Attributes
                 new object[] { "StaticProperty" }
             };
 
+#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         [Test, TestCaseSource(nameof(AsyncStaticMethod))]
         public void SourceCanBeAsyncStaticMethod(string source)
         {
@@ -46,6 +48,31 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var result = new object[] { new object[] { "AsyncStaticMethod" } };
             return Task.FromResult((IEnumerable?)result);
+        }
+
+        [Test, TestCaseSource(nameof(AsyncEnumerableStaticMethod))]
+        public void SourceCanBeAsyncEnumerableStaticMethod(string source)
+        {
+            Assert.That(source, Is.EqualTo("AsyncEnumerableStaticMethod"));
+        }
+
+        [Test, TestCaseSource(nameof(AsyncEnumerableStaticMethodReturningTask))]
+        public void SourceCanBeAsyncEnumerableStaticMethodReturningTask(string source)
+        {
+            Assert.That(source, Is.EqualTo("AsyncEnumerableStaticMethodReturningTask"));
+        }
+#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
+
+        private static IAsyncEnumerable<object> AsyncEnumerableStaticMethod()
+        {
+            var result = new object[] { new object[] { nameof(AsyncEnumerableStaticMethod) } };
+            return AsyncEnumerableAdapter.FromEnumerable(result);
+        }
+
+        private static Task<IAsyncEnumerable<object>> AsyncEnumerableStaticMethodReturningTask()
+        {
+            var result = new object[] { new object[] { nameof(AsyncEnumerableStaticMethodReturningTask) } };
+            return Task.FromResult(AsyncEnumerableAdapter.FromEnumerable(result));
         }
 
         [Test]

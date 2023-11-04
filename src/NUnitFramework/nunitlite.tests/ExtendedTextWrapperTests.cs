@@ -24,6 +24,12 @@ namespace NUnit.Common.Tests
             _writer = new ExtendedTextWrapper(new StringWriter(_sb));
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _writer?.Dispose();
+        }
+
         [Test]
         public void Write()
         {
