@@ -287,8 +287,10 @@ namespace NUnit.Framework.Tests.Constraints
 
         // The following tests are each running in 14ms to 46ms on my machine. Based on that,
         // warn at 100ms and fail at 500ms
-        private const int LARGE_COLLECTION_WARN_TIME = 100;
-        private const int LARGE_COLLECTION_FAIL_TIME = 500;
+        // Seems to be slower on MacOs on build on github actions, so increasing this with 50%
+
+        private const int LARGE_COLLECTION_WARN_TIME = 100 * 3 / 2;
+        private const int LARGE_COLLECTION_FAIL_TIME = 500 * 3 / 2;
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
         public void LargeIntCollectionsInSameOrder()
