@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Internal
 {
@@ -21,5 +23,7 @@ namespace NUnit.Framework.Internal
                 return (IEnumerable?)enumerable;
             }
         }
+
+        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable<object>? result);
     }
 }

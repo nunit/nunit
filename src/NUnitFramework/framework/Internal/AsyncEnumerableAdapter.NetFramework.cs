@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 #if NETFRAMEWORK
 
-using System.Collections;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading;
 
@@ -12,7 +11,7 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class AsyncEnumerableAdapter
     {
-        public static bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable<object>? result)
+        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, out IEnumerable<object>? result)
         {
             var asyncEnumerable = enumerable.GetType().GetInterface("System.Collections.Generic.IAsyncEnumerable`1");
             if (asyncEnumerable is null)
@@ -30,38 +29,38 @@ namespace NUnit.Framework.Internal
                 GetAsyncEnumerator = getEnumeratorMethod,
                 Current = enumeratorType.GetProperty("Current")!,
                 MoveNextAsync = enumeratorType.GetMethod("MoveNextAsync")!,
-                DisposeAsync = asyncDisposableType.GetMethod("DisposeAsync")!
+                DisposeAsync =  asyncDisposableType.GetMethod("DisposeAsync")!
             };
 
-            result = new AsyncWrapperEnumerable(shape, enumerable);
+            result = new AsyncEnumerableWrapper(shape, enumerable);
             return true;
         }
 
 
-        private class AsyncWrapperEnumerable : IEnumerable<object>
+        private class AsyncEnumerableWrapper : IEnumerable<object>
         {
             private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerable;
 
-            public AsyncWrapperEnumerable(AsyncEnumerableShapeInfo shape, object asyncEnumerable)
+            public AsyncEnumerableWrapper(AsyncEnumerableShapeInfo shape, object asyncEnumerable)
             {
                 _shape = shape;
                 _asyncEnumerable = asyncEnumerable;
             }
 
             public IEnumerator<object> GetEnumerator()
-                => new AsyncWrapperEnumerator(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
+                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
 
             IEnumerator IEnumerable.GetEnumerator()
-                => new AsyncWrapperEnumerator(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
+                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
         }
 
-        private class AsyncWrapperEnumerator : IEnumerator<object>
+        private class AsyncEnumeratorWrapper : IEnumerator<object>
         {
             private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerator;
 
-            public AsyncWrapperEnumerator(AsyncEnumerableShapeInfo shape, object asyncEnumerator)
+            public AsyncEnumeratorWrapper(AsyncEnumerableShapeInfo shape, object asyncEnumerator)
             {
                 _shape = shape;
                 _asyncEnumerator = asyncEnumerator;
