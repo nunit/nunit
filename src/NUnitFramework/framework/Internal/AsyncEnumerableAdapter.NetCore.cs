@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 #if !NETFRAMEWORK
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,7 +10,7 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class AsyncEnumerableAdapter
     {
-        public static bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable? result)
+        public static bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable<object>? result)
         {
             if (enumerable is IAsyncEnumerable<object> asyncEnumerable)
             {
@@ -56,9 +57,7 @@ namespace NUnit.Framework.Internal
                 => (bool)AsyncToSyncAdapter.Await(() => _asyncEnumerator.MoveNextAsync());
 
             public void Reset()
-            {
-                throw new System.NotImplementedException();
-            }
+                => throw new InvalidOperationException("Can not reset an async enumerable.");
         }
     }
 }
