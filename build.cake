@@ -1,5 +1,3 @@
-#tool NUnit.ConsoleRunner&version=3.12.0
-
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -20,7 +18,7 @@ var ErrorDetail = new List<string>();
 var version = "4.0.0";
 var modifier = "-beta.1";
 
-var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
+var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
@@ -97,7 +95,7 @@ Task("NuGetRestore")
     .Description("Restores NuGet Packages")
     .Does(() =>
     {
-        DotNetCoreRestore(SOLUTION_FILE);
+        DotNetRestore(SOLUTION_FILE);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -109,15 +107,15 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
-DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
-    new DotNetCoreBuildSettings
+DotNetBuildSettings CreateDotNetCoreBuildSettings() =>
+    new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetCoreVerbosity.Minimal
+        Verbosity = DotNetVerbosity.Minimal
     };
 
 //////////////////////////////////////////////////////////////////////
@@ -228,10 +226,10 @@ Task("CreateImage")
         CleanDirectory(CurrentImageDir);
         CopyFiles(RootFiles, CurrentImageDir);
 
-        var imageBinDir = CurrentImageDir + "bin/";
+        var imageBinDir = Directory(CurrentImageDir) + Directory("bin");
 
-        CreateDirectory(imageBinDir);
-        Information("Created imagedirectory at:" + imageBinDir);
+        CreateDirectory(imageBinDir.ToString());
+        Information("Created imagedirectory at:" + imageBinDir.ToString());
         var directories = new String[]
         {
             NUNITFRAMEWORKBIN,
@@ -243,27 +241,29 @@ Task("CreateImage")
             foreach (var runtime in LibraryFrameworks)
             {
                 var targetDir = imageBinDir + Directory(runtime);
-                var sourceDir = dir + Directory(runtime);
+                var sourceDir = Directory(dir) + Directory(runtime);
                 CreateDirectory(targetDir);
-                Information("Created directory " + targetDir);
+                Information("Created directory " + targetDir.ToString());
                 foreach (FilePath file in FrameworkFiles)
                 {
-                    var sourcePath = sourceDir + "/" + file;
+                    var sourcePath = sourceDir + File(file.FullPath);
                     if (FileExists(sourcePath))
                         CopyFileToDirectory(sourcePath, targetDir);
                 }
-                Information("Files copied from " + sourceDir + " to " + targetDir);
-                var schemaPath = sourceDir + "/Schemas";
+                Information("Files copied from " + sourceDir.ToString() + " to " + targetDir.ToString());
+                var schemaPath = sourceDir + Directory("Schemas");
                 if (DirectoryExists(schemaPath))
+                {
                     CopyDirectory(sourceDir, targetDir);
+                }
             }
         }    
-        
+        Information("Finished copying framework files");
         foreach (var dir in RuntimeFrameworks)
         {
             var targetDir = imageBinDir + Directory(dir);
             var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
-            Information("Copying " + sourceDir + " to " + targetDir);
+            Information("Copying " + sourceDir.ToString() + " to " + targetDir.ToString());
             CopyDirectory(sourceDir, targetDir);
         }
     });

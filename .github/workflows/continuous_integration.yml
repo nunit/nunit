@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - release
-      - 'v3.13-dev'
+      - 'v3'
   pull_request:
 
 jobs:
