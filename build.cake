@@ -228,7 +228,7 @@ Task("CreateImage")
 
         var imageBinDir = Directory(CurrentImageDir) + Directory("bin");
 
-        CreateDirectory(imageBinDir.ToString());
+        CreateDirectory(imageBinDir);
         Information("Created imagedirectory at:" + imageBinDir.ToString());
         var directories = new String[]
         {
