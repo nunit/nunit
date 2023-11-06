@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
                 => AsyncToSyncAdapter.Await(() => _asyncEnumerator.DisposeAsync());
 
             public bool MoveNext()
-                => (bool)AsyncToSyncAdapter.Await(() => _asyncEnumerator.MoveNextAsync());
+                => AsyncToSyncAdapter.Await<bool>(() => _asyncEnumerator.MoveNextAsync());
 
             public void Reset()
                 => throw new InvalidOperationException("Can not reset an async enumerable.");

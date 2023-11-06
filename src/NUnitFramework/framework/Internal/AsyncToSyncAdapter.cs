@@ -22,6 +22,9 @@ namespace NUnit.Framework.Internal
         }
 
         public static object? Await(Func<object?> invoke)
+            => Await<object?>(invoke);
+
+        public static TResult? Await<TResult>(Func<object?> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
@@ -35,7 +38,7 @@ namespace NUnit.Framework.Internal
                     waitStrategy.WaitForCompletion(awaiter);
                 }
 
-                return awaiter.GetResult();
+                return (TResult?)awaiter.GetResult();
             }
         }
 

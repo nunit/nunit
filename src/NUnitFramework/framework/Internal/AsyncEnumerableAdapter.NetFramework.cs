@@ -26,16 +26,15 @@ namespace NUnit.Framework.Internal
 
             var shape = new AsyncEnumerableShapeInfo
             {
-                GetAsyncEnumerator = getEnumeratorMethod,
-                Current = enumeratorType.GetProperty("Current")!,
-                MoveNextAsync = enumeratorType.GetMethod("MoveNextAsync")!,
-                DisposeAsync =  asyncDisposableType.GetMethod("DisposeAsync")!
+                GetAsyncEnumeratorMethod = getEnumeratorMethod,
+                CurrentProperty = enumeratorType.GetProperty("Current")!,
+                MoveNextAsyncMethod = enumeratorType.GetMethod("MoveNextAsync")!,
+                DisposeAsyncMethod = asyncDisposableType!.GetMethod("DisposeAsync")!
             };
 
             result = new AsyncEnumerableWrapper(shape, enumerable);
             return true;
         }
-
 
         private class AsyncEnumerableWrapper : IEnumerable<object>
         {
@@ -49,10 +48,10 @@ namespace NUnit.Framework.Internal
             }
 
             public IEnumerator<object> GetEnumerator()
-                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
+                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
 
             IEnumerator IEnumerable.GetEnumerator()
-                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumerator.Invoke(_asyncEnumerable, new object[] { CancellationToken.None }));
+                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
         }
 
         private class AsyncEnumeratorWrapper : IEnumerator<object>
@@ -66,13 +65,13 @@ namespace NUnit.Framework.Internal
                 _asyncEnumerator = asyncEnumerator;
             }
 
-            public object Current => _shape.Current.GetValue(_asyncEnumerator);
+            public object Current => _shape.CurrentProperty.GetValue(_asyncEnumerator);
 
             public void Dispose()
-                => AsyncToSyncAdapter.Await(() => _shape.DisposeAsync.Invoke(_asyncEnumerator, null));
+                => AsyncToSyncAdapter.Await(() => _shape.DisposeAsyncMethod.Invoke(_asyncEnumerator, null));
 
             public bool MoveNext()
-                => (bool)AsyncToSyncAdapter.Await(() => _shape.MoveNextAsync.Invoke(_asyncEnumerator, null));
+                => AsyncToSyncAdapter.Await<bool>(() => _shape.MoveNextAsyncMethod.Invoke(_asyncEnumerator, null));
 
             public void Reset()
                 => throw new InvalidOperationException("Can not reset an async enumerable.");
@@ -80,10 +79,10 @@ namespace NUnit.Framework.Internal
 
         private record AsyncEnumerableShapeInfo
         {
-            public MethodInfo GetAsyncEnumerator { get; init; }
-            public PropertyInfo Current { get; init; }
-            public MethodInfo MoveNextAsync { get; init; }
-            public MethodInfo DisposeAsync { get; init; }
+            public MethodInfo GetAsyncEnumeratorMethod { get; init; }
+            public PropertyInfo CurrentProperty { get; init; }
+            public MethodInfo MoveNextAsyncMethod { get; init; }
+            public MethodInfo DisposeAsyncMethod { get; init; }
         }
     }
 }
