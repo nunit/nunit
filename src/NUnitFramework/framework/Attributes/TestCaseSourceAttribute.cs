@@ -254,7 +254,6 @@ namespace NUnit.Framework
                 var m = member as MethodInfo;
                 if (m is not null)
                 {
-                    var name = m.Name;
                     return m.IsStatic
                         ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
                             ? AsyncEnumerableAdapter.CoalesceToEnumerable(m.InvokeMaybeAwait<object>(MethodParams))

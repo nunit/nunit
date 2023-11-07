@@ -117,7 +117,7 @@ namespace NUnit.Framework
             if (m is not null)
             {
                 if (m.IsStatic)
-                    return m.InvokeMaybeAwait<IEnumerable?>();
+                    return AsyncEnumerableAdapter.CoalesceToEnumerable(m.InvokeMaybeAwait<object>());
 
                 throw CreateSourceNameException();
             }
