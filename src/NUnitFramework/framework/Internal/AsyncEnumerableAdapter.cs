@@ -24,6 +24,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable<object>? result);
+        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, [NotNullWhen(true)] out IEnumerable<object?>? result);
     }
 }

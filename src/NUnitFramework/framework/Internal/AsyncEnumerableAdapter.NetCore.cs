@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class AsyncEnumerableAdapter
     {
-        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, out IEnumerable<object>? result)
+        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, out IEnumerable<object?>? result)
         {
             if (enumerable is IAsyncEnumerable<object> asyncEnumerable)
             {
@@ -22,32 +22,32 @@ namespace NUnit.Framework.Internal
             return default;
         }
 
-        private class AsyncEnumerableWrapper : IEnumerable<object>
+        private class AsyncEnumerableWrapper : IEnumerable<object?>
         {
-            private readonly IAsyncEnumerable<object> _asyncEnumerable;
+            private readonly IAsyncEnumerable<object?> _asyncEnumerable;
 
-            public AsyncEnumerableWrapper(IAsyncEnumerable<object> asyncEnumerable)
+            public AsyncEnumerableWrapper(IAsyncEnumerable<object?> asyncEnumerable)
             {
                 _asyncEnumerable = asyncEnumerable;
             }
 
-            public IEnumerator<object> GetEnumerator()
+            public IEnumerator<object?> GetEnumerator()
                 => new AsyncEnumeratorWrapper(_asyncEnumerable.GetAsyncEnumerator());
 
             IEnumerator IEnumerable.GetEnumerator()
                 => new AsyncEnumeratorWrapper(_asyncEnumerable.GetAsyncEnumerator());
         }
 
-        private class AsyncEnumeratorWrapper : IEnumerator<object>
+        private class AsyncEnumeratorWrapper : IEnumerator<object?>
         {
-            private readonly IAsyncEnumerator<object> _asyncEnumerator;
+            private readonly IAsyncEnumerator<object?> _asyncEnumerator;
 
-            public AsyncEnumeratorWrapper(IAsyncEnumerator<object> asyncEnumerator)
+            public AsyncEnumeratorWrapper(IAsyncEnumerator<object?> asyncEnumerator)
             {
                 _asyncEnumerator = asyncEnumerator;
             }
 
-            public object Current => _asyncEnumerator.Current;
+            public object? Current => _asyncEnumerator.Current;
 
             public void Dispose()
                 => AsyncToSyncAdapter.Await(() => _asyncEnumerator.DisposeAsync());

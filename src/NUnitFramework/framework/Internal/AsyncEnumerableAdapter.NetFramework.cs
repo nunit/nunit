@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class AsyncEnumerableAdapter
     {
-        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, out IEnumerable<object>? result)
+        private static partial bool TryGetAsyncBlockingEnumerable(object enumerable, out IEnumerable<object?>? result)
         {
             result = default;
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-        private class AsyncEnumerableWrapper : IEnumerable<object>
+        private class AsyncEnumerableWrapper : IEnumerable<object?>
         {
             private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerable;
@@ -62,14 +62,14 @@ namespace NUnit.Framework.Internal
                 _asyncEnumerable = asyncEnumerable;
             }
 
-            public IEnumerator<object> GetEnumerator()
+            public IEnumerator<object?> GetEnumerator()
                 => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
 
             IEnumerator IEnumerable.GetEnumerator()
                 => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
         }
 
-        private class AsyncEnumeratorWrapper : IEnumerator<object>
+        private class AsyncEnumeratorWrapper : IEnumerator<object?>
         {
             private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerator;
