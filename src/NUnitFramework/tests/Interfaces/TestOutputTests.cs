@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Interfaces
         [TestCase("text", "stream", "testId", "testName")]
         [TestCase("text", "stream", null, "testName")]
         [TestCase("text", "stream", "testId", null)]
-        public void ToXml_IncludeAttributesInProperFormatting(string text, string stream, string testId, string testName)
+        public void ToXml_IncludeAttributesInProperFormatting(string text, string stream, string? testId, string? testName)
         {
             var testOutput = new TestOutput(text, stream, testId, testName);
             var expected = new StringBuilder();

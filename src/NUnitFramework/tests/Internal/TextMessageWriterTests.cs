@@ -19,6 +19,12 @@ namespace NUnit.Framework.Tests.Internal
             _writer = new TextMessageWriter();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _writer.Dispose();
+        }
+
         [Test]
         public void DisplayStringDifferences()
         {
