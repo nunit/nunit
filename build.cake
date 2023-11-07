@@ -116,8 +116,8 @@ DotNetBuildSettings CreateDotNetBuildSettings() =>
         Configuration = configuration,
         NoRestore = true,
         Verbosity = DotNetVerbosity.Minimal,
-        Version = packageVersion
-    };
+        MSBuildSettings = new DotNetMSBuildSettings { Version = packageVersion }
+     };
 
 //////////////////////////////////////////////////////////////////////
 // TEST
