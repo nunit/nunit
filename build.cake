@@ -107,15 +107,16 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetBuildSettings CreateDotNetCoreBuildSettings() =>
+DotNetBuildSettings CreateDotNetBuildSettings() =>
     new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetVerbosity.Minimal
+        Verbosity = DotNetVerbosity.Minimal,
+        Version = packageVersion
     };
 
 //////////////////////////////////////////////////////////////////////
@@ -146,12 +147,12 @@ Task("TestNetFramework")
     });
 
 var testCore = Task("TestNetCore")
-    .Description("Tests the .NET Core (6.0+) version of the framework");
+    .Description("Tests the .NET (6.0+) version of the framework");
 
 foreach (var runtime in NetCoreTestRuntimes)
 {
     var task = Task("TestNetCore on " + runtime)
-        .Description("Tests the .NET Core (6.0+) version of the framework on " + runtime)
+        .Description("Tests the .NET (6.0+) version of the framework on " + runtime)
         .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
