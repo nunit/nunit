@@ -12,10 +12,9 @@ namespace NUnit.Framework;
 [MemoryDiagnoser]
 public class CompositeWorkItemBenchmark
 {
-    private Dictionary<string, object> _loaderOptions;
+    private readonly Dictionary<string, object> _loaderOptions;
 
-    [GlobalSetup]
-    public void GlobalSetup()
+    public CompositeWorkItemBenchmark()
     {
         _loaderOptions = new Dictionary<string, object>
         {
@@ -36,7 +35,7 @@ public class CompositeWorkItemBenchmark
     {
         DefaultTestAssemblyBuilder builder = new DefaultTestAssemblyBuilder();
         var test = builder.Build(typeof(TestWithTestActionAttribute).Assembly, _loaderOptions);
-        WorkItem workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, new DebuggerProxy(), recursive: true);
+        WorkItem workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, new DebuggerProxy(), recursive: true)!;
         var context = new TestExecutionContext();
         context.Dispatcher = new SuperSimpleDispatcher();
         workItem.InitializeContext(context);

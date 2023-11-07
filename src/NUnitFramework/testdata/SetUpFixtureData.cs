@@ -68,7 +68,7 @@ namespace NUnit.Framework.Tests.TestUtilities
             /// </summary>
             public void Verify()
             {
-                EventMatcher eventMatcher = _eventMatchers.Dequeue();
+                EventMatcher? eventMatcher = _eventMatchers.Dequeue();
                 int item = 0;
 
                 foreach (string actualEvent in _actualEvents)
@@ -77,8 +77,7 @@ namespace NUnit.Framework.Tests.TestUtilities
                     {
                         Assert.Fail($"More events than expected were recorded. Current event: {actualEvent} (Item {item})");
                     }
-
-                    if (!eventMatcher.MatchEvent(actualEvent, item++))
+                    else if (!eventMatcher.MatchEvent(actualEvent, item++))
                     {
                         eventMatcher = _eventMatchers.Count > 0 ? _eventMatchers.Dequeue() : null;
                     }
@@ -107,10 +106,10 @@ namespace NUnit.Framework.Tests.TestUtilities
         /// <param name="expectedEvents">The expected events.</param>
         public static void Verify(params string[] expectedEvents)
         {
+            int item = 0;
             foreach (string expected in expectedEvents)
             {
-                int item = 0;
-                string actual = Events.Count > 0 ? Events.Dequeue() : null;
+                string? actual = Events.Count > 0 ? Events.Dequeue() : null;
                 Assert.That(actual, Is.EqualTo(expected), $"Item {++item}");
             }
         }

@@ -245,6 +245,7 @@ namespace NUnit.Framework.Tests
             TestBuilder.RunTestCase(fixture, testName);
             var assertions = fixture.Assertions;
 
+            Assert.That(assertions, Is.Not.Null);
             Assert.That(assertions.Select((o) => o.Status),
                 Is.EqualTo(expectedStatus));
             Assert.That(assertions.Select((o) => o.Message),

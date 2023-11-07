@@ -59,7 +59,8 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         [Test]
         public void AssertThatWithRecursivelyThrowingExceptionAsExpected()
         {
-            Assert.That(null, Is.EqualTo(new RecursivelyThrowingException()));
+            var actual = default(RecursivelyThrowingException);
+            Assert.That(actual, Is.EqualTo(new RecursivelyThrowingException()));
         }
     }
 

@@ -174,15 +174,15 @@ namespace NUnit.TestData
         }
 
         [TestCase(ExpectedResult = null)]
-        public async Task<object> AsyncTaskResultCheckSuccessReturningNull()
+        public async Task<object?> AsyncTaskResultCheckSuccessReturningNull()
         {
-            return await Task.Run(() => (object)null);
+            return await Task.Run(() => (object?)null);
         }
 
         [TestCase(ExpectedResult = null)]
-        public Task<object> TaskResultCheckSuccessReturningNull()
+        public Task<object?> TaskResultCheckSuccessReturningNull()
         {
-            return Task.Run(() => (object)null);
+            return Task.Run(() => (object?)null);
         }
 
         [Test]

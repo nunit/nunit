@@ -49,7 +49,7 @@ namespace NUnit.TestData
         }
 
         [TestCase(ExpectedResult = default)]
-        public T TestWithGeneric_ReturningGenericType_ThatIsUnRunnable<T>()
+        public T? TestWithGeneric_ReturningGenericType_ThatIsUnRunnable<T>()
         {
             return default;
         }

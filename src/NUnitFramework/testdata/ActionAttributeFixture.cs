@@ -113,7 +113,7 @@ namespace NUnit.TestData.ActionAttributeTests
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class TaggedActionAttribute : TestActionAttribute
     {
-        private readonly string _tag = null;
+        private readonly string _tag;
         private readonly ActionTargets _targets = ActionTargets.Default;
 
         public TaggedActionAttribute(string tag)
