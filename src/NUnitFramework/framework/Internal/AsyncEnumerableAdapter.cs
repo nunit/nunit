@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal
 {
     internal static partial class AsyncEnumerableAdapter
     {
-        public static IEnumerable? CoalesceToEnumerable(object enumerable)
+        public static IEnumerable? CoalesceToEnumerable(object? enumerable)
         {
             if (enumerable is null)
             {
