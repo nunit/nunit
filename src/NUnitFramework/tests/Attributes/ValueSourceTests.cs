@@ -65,7 +65,6 @@ namespace NUnit.Framework.Tests.Attributes
             return new object[] { "StaticMethod" };
         }
 
-#pragma warning disable NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
         [Test]
         public void ValueSourceCanBeStaticAsyncMethod(
             [ValueSource(nameof(StaticAsyncMethod))] string source)
@@ -73,6 +72,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
         }
 
+#pragma warning disable NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
         [Test]
         public void SourceCanBeStaticAsyncEnumerableMethod(
             [ValueSource(nameof(StaticAsyncEnumerableMethod))] string source)
