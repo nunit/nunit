@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Interfaces
     {
         [TestCase("destination", "text", "testId")]
         [TestCase("destination", "text", null)]
-        public void ToXml_IncludeAttributesInProperFormatting(string destination, string message, string testId)
+        public void ToXml_IncludeAttributesInProperFormatting(string destination, string message, string? testId)
         {
             var testMessage = new TestMessage(destination, message, testId);
             var expected = new StringBuilder("<test-message");

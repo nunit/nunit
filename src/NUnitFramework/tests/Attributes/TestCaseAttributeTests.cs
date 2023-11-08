@@ -137,7 +137,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase(null)]
-        public void CanPassNullAsFirstArgument(object a)
+        public void CanPassNullAsFirstArgument(object? a)
         {
             Assert.That(a, Is.Null);
         }

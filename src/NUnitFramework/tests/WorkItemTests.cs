@@ -26,6 +26,12 @@ namespace NUnit.Framework.Tests
             _workItem = TestBuilder.CreateWorkItem(test, _context);
         }
 
+        [TearDown]
+        public void DisposeWorkItems()
+        {
+            _workItem.Dispose();
+        }
+
         [Test]
         public void ConstructWorkItem()
         {

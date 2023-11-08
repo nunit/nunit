@@ -22,6 +22,12 @@ namespace NUnit.Framework.Tests.Constraints
             _writer = new TextMessageWriter();
         }
 
+        [TearDown]
+        public void TestTearDown()
+        {
+            _writer.Close();
+        }
+
         [Test]
         public void TestOneMissingValue()
         {

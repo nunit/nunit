@@ -36,6 +36,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             // Restore the original listener
             TestExecutionContext.CurrentContext.Listener = ListenerResult.DefaultListener;
+            ListenerWriter.Dispose();
         }
 
         [Test]

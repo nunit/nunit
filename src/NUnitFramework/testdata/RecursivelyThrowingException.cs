@@ -17,19 +17,19 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
 
         public override string StackTrace => throw this;
 
-        public override string HelpLink
+        public override string? HelpLink
         {
             get => throw this;
             set => throw this;
         }
 
-        public override string Source
+        public override string? Source
         {
             get => throw this;
             set => throw this;
         }
 
-        public override bool Equals(object obj) => throw this;
+        public override bool Equals(object? obj) => throw this;
 
         public override Exception GetBaseException() => throw this;
 

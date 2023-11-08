@@ -3,7 +3,9 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETFRAMEWORK
 using NUnit.Framework.Legacy;
+#endif
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 

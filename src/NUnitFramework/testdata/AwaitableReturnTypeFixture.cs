@@ -25,7 +25,7 @@ namespace NUnit.TestData
             _workload.BeforeReturningAwaitable();
             _workload.BeforeReturningAwaiter();
 
-            var source = new TaskCompletionSource<object>();
+            var source = new TaskCompletionSource<object?>();
 
             var complete = new Action(() =>
             {

@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite.Tests</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +23,7 @@
   </ItemGroup>
 
  <ItemGroup>
-    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+    <PackageReference Include="NUnit.Analyzers" />
   </ItemGroup>
 
 </Project>

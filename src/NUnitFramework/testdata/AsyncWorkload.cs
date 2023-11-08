@@ -6,8 +6,8 @@ namespace NUnit.TestData
 {
     public struct AsyncWorkload
     {
-        private readonly Action _beforeReturningAwaitable;
-        private readonly Action _beforeReturningAwaiter;
+        private readonly Action? _beforeReturningAwaitable;
+        private readonly Action? _beforeReturningAwaiter;
         private readonly Func<bool> _isCompleted;
         private readonly Action<Action> _onCompleted;
         private readonly Func<object> _getResult;
@@ -23,8 +23,8 @@ namespace NUnit.TestData
         }
 
         public AsyncWorkload(
-            Action beforeReturningAwaitable,
-            Action beforeReturningAwaiter,
+            Action? beforeReturningAwaitable,
+            Action? beforeReturningAwaiter,
             Func<bool> isCompleted,
             Action<Action> onCompleted,
             Func<object> getResult)

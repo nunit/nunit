@@ -245,6 +245,7 @@ namespace NUnit.Framework.Tests
             TestBuilder.RunTestCase(fixture, testName);
             var assertions = fixture.Assertions;
 
+            Assert.That(assertions, Is.Not.Null);
             Assert.That(assertions.Select((o) => o.Status),
                 Is.EqualTo(expectedStatus));
             Assert.That(assertions.Select((o) => o.Message),
@@ -371,11 +372,12 @@ namespace NUnit.Framework.Tests
             Assert.That(() => TestContext.AddTestAttachment(_tempFilePath, "Description"), Throws.Nothing);
         }
 
+        // TODO: Update when https://github.com/nunit/nunit.analyzers/issues/631 is fixed and released.
         [TestCase(null)]
         [TestCase("bad|path.png", IncludePlatform = "Win")]
-        public void InvalidFilePathsThrowsArgumentException(string filePath)
+        public void InvalidFilePathsThrowsArgumentException(string? filePath)
         {
-            Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
+            Assert.That(() => TestContext.AddTestAttachment(filePath!), Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
