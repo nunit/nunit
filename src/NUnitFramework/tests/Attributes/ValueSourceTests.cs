@@ -96,13 +96,13 @@ namespace NUnit.Framework.Tests.Attributes
         private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
         {
             var result = new object[] { nameof(StaticAsyncEnumerableMethod) };
-            return TestUtilities.AsyncEnumerableAdapter.FromEnumerable(result);
+            return result.AsAsyncEnumerable();
         }
 
         private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
         {
             var result = new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) };
-            return Task.FromResult(TestUtilities.AsyncEnumerableAdapter.FromEnumerable(result));
+            return Task.FromResult(result.AsAsyncEnumerable());
         }
 
         [Test]

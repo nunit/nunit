@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.TestData.TestUtilities;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -625,16 +626,5 @@ public class TextFixtureSourceWithParallelizableAttribute
     public void Test()
     {
         Thread.Sleep(1000);
-    }
-}
-
-public static class Extensions
-{
-    public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this IEnumerable<T> input)
-    {
-        foreach (var value in input)
-        {
-            yield return await Task.FromResult(value);
-        }
     }
 }
