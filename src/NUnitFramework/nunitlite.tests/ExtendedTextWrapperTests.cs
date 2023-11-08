@@ -27,7 +27,7 @@ namespace NUnit.Common.Tests
         [TearDown]
         public void TearDown()
         {
-            _writer?.Dispose();
+            _writer.Dispose();
         }
 
         [Test]

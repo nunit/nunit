@@ -156,7 +156,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         private class DivideDataProvider
         {
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
-            public static string MyField;
+            public static string? MyField;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)

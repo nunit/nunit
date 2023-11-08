@@ -85,7 +85,7 @@ namespace NUnit.Framework.Tests.Api
         [TestCase(TestStatus.Skipped, null, "Skipped")]
         [TestCase(TestStatus.Passed, "", "Passed")]
         [TestCase(TestStatus.Passed, "testLabel", "Passed:testLabel")]
-        public void ToString_Constructor_ReturnsExpectedString(TestStatus status, string label, string expected)
+        public void ToString_Constructor_ReturnsExpectedString(TestStatus status, string? label, string expected)
         {
             ResultState resultState = new ResultState(status, label);
 

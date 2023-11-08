@@ -26,7 +26,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCase(null)]
         [TestCase("xxx")]
-        public void InvalidDataThrowsArgumentException(object data)
+        public void InvalidDataThrowsArgumentException(object? data)
         {
             Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }

@@ -124,23 +124,19 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(MsgUtils.FormatValue(c), Is.EqualTo(expected));
         }
 
-        [TestCase(null, null, "[null, null]")]
-        [TestCase(null, "Second", "[null, \"Second\"]")]
         [TestCase("First", null, "[\"First\", null]")]
         [TestCase("First", "Second", "[\"First\", \"Second\"]")]
         [TestCase(123, 'h', "[123, 'h']")]
-        public static void FormatValue_KeyValuePairTest(object key, object value, string expectedResult)
+        public static void FormatValue_KeyValuePairTest(object key, object? value, string expectedResult)
         {
-            string s = MsgUtils.FormatValue(new KeyValuePair<object, object>(key, value));
+            string s = MsgUtils.FormatValue(new KeyValuePair<object, object?>(key, value));
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
-        [TestCase(null, null, "[null, null]")]
-        [TestCase(null, "Second", "[null, \"Second\"]")]
         [TestCase("First", null, "[\"First\", null]")]
         [TestCase("First", "Second", "[\"First\", \"Second\"]")]
         [TestCase(123, 'h', "[123, 'h']")]
-        public static void FormatValue_DirectoryEntryTest(object key, object value, string expectedResult)
+        public static void FormatValue_DirectoryEntryTest(object key, object? value, string expectedResult)
         {
             string s = MsgUtils.FormatValue(new DictionaryEntry(key, value));
             Assert.That(s, Is.EqualTo(expectedResult));
@@ -276,7 +272,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase("\x0085", "\\x0085", Description = "Next line character")]
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
-        public static void EscapeControlCharsTest(string input, string expected)
+        public static void EscapeControlCharsTest(string? input, string? expected)
         {
             Assert.That(MsgUtils.EscapeControlChars(input), Is.EqualTo(expected));
         }

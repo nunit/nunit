@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

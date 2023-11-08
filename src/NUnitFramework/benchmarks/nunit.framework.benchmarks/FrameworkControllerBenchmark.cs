@@ -35,12 +35,11 @@ namespace NUnit.Framework;
 [MemoryDiagnoser]
 public class FrameworkControllerBenchmark
 {
-    private FrameworkController _controller;
-    private List<string> _testIds;
-    private string _orFilter;
+    private readonly FrameworkController _controller;
+    private readonly List<string> _testIds;
+    private readonly string _orFilter;
 
-    [GlobalSetup]
-    public void GlobalSetup()
+    public FrameworkControllerBenchmark()
     {
         var settings = new Hashtable
         {

@@ -366,6 +366,9 @@ namespace NUnit.Framework.Tests.Assertions
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
         }
 
+        // TODO: Remove when NUnit.Analyzer 3.10 is released.
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
+
         [Test]
         public void AssertThatEqualsWithClassWithSomeToleranceAwareMembers()
         {

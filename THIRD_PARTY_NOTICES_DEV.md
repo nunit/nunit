@@ -10,8 +10,7 @@
 
 | Reference              | Version | License Type    | License                                                              |
 |---------------------------------------------------------------------------------------------------------------------------|
-| coverlet.collector     | 3.1.2   | MIT             | https://licenses.nuget.org/MIT                                       |
-| Microsoft.NET.Test.Sdk | 17.6.3  | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
+| Microsoft.NET.Test.Sdk | 17.7.2  | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
 
 ## nunit.testdata.csproj
 
@@ -29,6 +28,6 @@
 
 | Reference                                   | Version         | License Type    | License                                                              |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Microsoft.NET.Test.Sdk                      | 17.6.3          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
-| System.Collections.Immutable                | 1.5.0           | MIT             | https://github.com/dotnet/corefx/blob/master/LICENSE.TXT             |
+| Microsoft.NET.Test.Sdk                      | 17.7.2          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
+| System.Collections.Immutable                | 6.0.0           | MIT             | https://github.com/dotnet/corefx/blob/master/LICENSE.TXT             |
 | TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160 | MIT             | https://licenses.nuget.org/MIT                                       |

@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
-    <Nullable>enable</Nullable>
-    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
-    <GenerateNullableAttributes>false</GenerateNullableAttributes>
 
       <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
@@ -14,18 +11,15 @@
   </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="NUnit.Analyzers" Version="3.6.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-    <PackageReference Include="System.ValueTuple" version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="System.Collections.Immutable" />
+    <PackageReference Include="System.ValueTuple" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,11 +48,6 @@
     <EmbeddedResource Include="TestText2.txt" />
     <EmbeddedResource Include="TestListFile.txt" />
     <EmbeddedResource Include="TestListFile2.txt" />
-  </ItemGroup>
-
- <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.CompareTo('net5.0')) &lt; 0">
-    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
-    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
