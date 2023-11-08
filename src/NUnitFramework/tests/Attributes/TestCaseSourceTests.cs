@@ -38,40 +38,40 @@ namespace NUnit.Framework.Tests.Attributes
             };
 
 #pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
-        [Test, TestCaseSource(nameof(AsyncStaticMethod))]
-        public void SourceCanBeAsyncStaticMethod(string source)
+        [Test, TestCaseSource(nameof(StaticAsyncMethod))]
+        public void SourceCanBeStaticAsyncMethod(string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+            Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
         }
 
-        private static Task<IEnumerable?> AsyncStaticMethod()
+        private static Task<IEnumerable?> StaticAsyncMethod()
         {
-            var result = new object[] { new object[] { "AsyncStaticMethod" } };
+            var result = new object[] { new object[] { nameof(StaticAsyncMethod) } };
             return Task.FromResult((IEnumerable?)result);
         }
 
-        [Test, TestCaseSource(nameof(AsyncEnumerableStaticMethod))]
-        public void SourceCanBeAsyncEnumerableStaticMethod(string source)
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
+        public void SourceCanBeStaticAsyncEnumerableMethod(string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncEnumerableStaticMethod"));
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethod"));
         }
 
-        [Test, TestCaseSource(nameof(AsyncEnumerableStaticMethodReturningTask))]
-        public void SourceCanBeAsyncEnumerableStaticMethodReturningTask(string source)
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
+        public void SourceCanBeStaticAsyncEnumerableMethodReturningTask(string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncEnumerableStaticMethodReturningTask"));
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
         }
 #pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
 
-        private static IAsyncEnumerable<object> AsyncEnumerableStaticMethod()
+        private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
         {
-            var result = new object[] { new object[] { nameof(AsyncEnumerableStaticMethod) } };
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethod) } };
             return TestUtilities.AsyncEnumerableAdapter.FromEnumerable(result);
         }
 
-        private static Task<IAsyncEnumerable<object>> AsyncEnumerableStaticMethodReturningTask()
+        private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
         {
-            var result = new object[] { new object[] { nameof(AsyncEnumerableStaticMethodReturningTask) } };
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) } };
             return Task.FromResult(TestUtilities.AsyncEnumerableAdapter.FromEnumerable(result));
         }
 

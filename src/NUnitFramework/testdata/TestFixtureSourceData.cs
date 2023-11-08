@@ -98,16 +98,44 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource("StaticAsyncMethod")]
+    [TestFixtureSource(nameof(StaticAsyncMethod))]
     public class StaticAsyncMethod_SameClass : TestFixtureSourceTest
     {
-        public StaticAsyncMethod_SameClass(string arg) : base(arg, "StaticAsyncMethodInClass")
+        public StaticAsyncMethod_SameClass(string arg) : base(arg, nameof(StaticAsyncMethod))
         {
         }
 
         private static Task<object[]> StaticAsyncMethod()
         {
-            return Task.FromResult(new object[] { new object[] { "StaticAsyncMethodInClass" } });
+            return Task.FromResult(new object[] { new object[] { nameof(StaticAsyncMethod) } });
+        }
+    }
+
+    [TestFixtureSource(nameof(StaticAsyncEnumerableMethod))]
+    public class StaticAsyncEnumerableMethod_SameClass : TestFixtureSourceTest
+    {
+        public StaticAsyncEnumerableMethod_SameClass(string arg) : base(arg, nameof(StaticAsyncEnumerableMethod))
+        {
+        }
+
+        private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethod) } };
+            return result.AsAsyncEnumerable();
+        }
+    }
+
+    [TestFixtureSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
+    public class StaticAsyncEnumerableMethodReturningTask_SameClass : TestFixtureSourceTest
+    {
+        public StaticAsyncEnumerableMethodReturningTask_SameClass(string arg) : base(arg, nameof(StaticAsyncEnumerableMethodReturningTask))
+        {
+        }
+
+        private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) } };
+            return Task.FromResult(result.AsAsyncEnumerable());
         }
     }
 
@@ -597,5 +625,16 @@ public class TextFixtureSourceWithParallelizableAttribute
     public void Test()
     {
         Thread.Sleep(1000);
+    }
+}
+
+public static class Extensions
+{
+    public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this IEnumerable<T> input)
+    {
+        foreach (var value in input)
+        {
+            yield return await Task.FromResult(value);
+        }
     }
 }
