@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
             if (asyncDisposableType is null)
                 return false;
 
-            var asyncDisposeMethod = asyncDisposableType!.GetMethod("DisposeAsync");
+            var asyncDisposeMethod = asyncDisposableType.GetMethod("DisposeAsync");
             if (asyncDisposeMethod is null)
                 return false;
 
