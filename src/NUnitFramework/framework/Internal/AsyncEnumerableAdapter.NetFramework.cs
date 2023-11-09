@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -55,58 +57,54 @@ namespace NUnit.Framework.Internal
         {
             private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerable;
+            private readonly MethodInfo _getAsyncEnumeratorMethod;
+
+            private static readonly object[] EnumeratorArgs = new object[] { CancellationToken.None };
 
             public AsyncEnumerableWrapper(AsyncEnumerableShapeInfo shape, object asyncEnumerable)
             {
                 _shape = shape;
                 _asyncEnumerable = asyncEnumerable;
+                _getAsyncEnumeratorMethod = shape.GetAsyncEnumeratorMethod;
             }
 
             public IEnumerator<object?> GetEnumerator()
-                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
+                => new AsyncEnumeratorWrapper(_shape, _getAsyncEnumeratorMethod.Invoke(_asyncEnumerable, EnumeratorArgs)!);
 
             IEnumerator IEnumerable.GetEnumerator()
-                => new AsyncEnumeratorWrapper(_shape, _shape.GetAsyncEnumeratorMethod.Invoke(_asyncEnumerable, new object[] { CancellationToken.None })!);
+                => new AsyncEnumeratorWrapper(_shape, _getAsyncEnumeratorMethod.Invoke(_asyncEnumerable, EnumeratorArgs)!);
         }
 
         private class AsyncEnumeratorWrapper : IEnumerator<object?>
         {
-            private readonly AsyncEnumerableShapeInfo _shape;
             private readonly object _asyncEnumerator;
+
+            private readonly MethodInfo _disposeAsyncMethod;
+            private readonly Func<ValueTask<bool>> _moveNextAsyncMethod;
+            private readonly Func<object?> _getCurrentMethod;
 
             public AsyncEnumeratorWrapper(AsyncEnumerableShapeInfo shape, object asyncEnumerator)
             {
-                _shape = shape;
                 _asyncEnumerator = asyncEnumerator;
+
+                _disposeAsyncMethod = shape.DisposeAsyncMethod;
+                _moveNextAsyncMethod = shape.MoveNextAsyncMethod.CreateDelegate<Func<ValueTask<bool>>>(asyncEnumerator);
+                _getCurrentMethod = shape.CurrentProperty.GetGetMethod()!.CreateDelegate<Func<object?>>(asyncEnumerator);
             }
 
-            public object? Current => _shape.CurrentProperty.GetValue(_asyncEnumerator);
+            public object? Current => _getCurrentMethod.Invoke();
 
             public void Dispose()
-                => AsyncToSyncAdapter.Await(() => _shape.DisposeAsyncMethod.Invoke(_asyncEnumerator, null));
+                => AsyncToSyncAdapter.Await(() => _disposeAsyncMethod.Invoke(_asyncEnumerator, null));
 
             public bool MoveNext()
-                => AsyncToSyncAdapter.Await<bool>(() => _shape.MoveNextAsyncMethod.Invoke(_asyncEnumerator, null));
+                => AsyncToSyncAdapter.Await<bool>(() => _moveNextAsyncMethod.Invoke());
 
             public void Reset()
                 => throw new InvalidOperationException("Can not reset an async enumerable.");
         }
 
-        private record AsyncEnumerableShapeInfo
-        {
-            public MethodInfo GetAsyncEnumeratorMethod { get; init; }
-            public PropertyInfo CurrentProperty { get; init; }
-            public MethodInfo MoveNextAsyncMethod { get; init; }
-            public MethodInfo DisposeAsyncMethod { get; init; }
-
-            public AsyncEnumerableShapeInfo(MethodInfo getAsyncEnumeratorMethod, PropertyInfo currentProperty, MethodInfo moveNextAsyncMethod, MethodInfo disposeAsyncMethod)
-            {
-                GetAsyncEnumeratorMethod = getAsyncEnumeratorMethod;
-                CurrentProperty = currentProperty;
-                MoveNextAsyncMethod = moveNextAsyncMethod;
-                DisposeAsyncMethod = disposeAsyncMethod;
-            }
-        }
+        private record AsyncEnumerableShapeInfo(MethodInfo GetAsyncEnumeratorMethod, PropertyInfo CurrentProperty, MethodInfo MoveNextAsyncMethod, MethodInfo DisposeAsyncMethod);
     }
 }
 #endif
