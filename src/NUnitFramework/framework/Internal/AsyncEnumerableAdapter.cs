@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -14,13 +15,17 @@ namespace NUnit.Framework.Internal
             {
                 return null;
             }
+            else if (enumerable is IEnumerable ie)
+            {
+                return ie;
+            }
             else if (TryGetAsyncBlockingEnumerable(enumerable, out var result))
             {
                 return result;
             }
             else
             {
-                return (IEnumerable?)enumerable;
+                throw new ArgumentException($"Argument can not be converted to an {nameof(IEnumerable)}.", nameof(enumerable));
             }
         }
 
