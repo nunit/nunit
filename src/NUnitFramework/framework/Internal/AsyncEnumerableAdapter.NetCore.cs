@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
             }
 
             result = default;
-            return default;
+            return false;
         }
 
         private class AsyncEnumerableWrapper : IEnumerable<object?>
