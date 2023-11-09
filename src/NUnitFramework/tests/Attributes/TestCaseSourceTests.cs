@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -36,18 +37,42 @@ namespace NUnit.Framework.Tests.Attributes
                 new object[] { "StaticProperty" }
             };
 
-#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
-        [Test, TestCaseSource(nameof(AsyncStaticMethod))]
-#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
-        public void SourceCanBeAsyncStaticMethod(string source)
+        [Test, TestCaseSource(nameof(StaticAsyncMethod))]
+        public void SourceCanBeStaticAsyncMethod(string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+            Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
         }
 
-        private static Task<IEnumerable?> AsyncStaticMethod()
+        private static Task<IEnumerable?> StaticAsyncMethod()
         {
-            var result = new object[] { new object[] { "AsyncStaticMethod" } };
+            var result = new object[] { new object[] { nameof(StaticAsyncMethod) } };
             return Task.FromResult((IEnumerable?)result);
+        }
+
+#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
+        public void SourceCanBeStaticAsyncEnumerableMethod(string source)
+        {
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethod"));
+        }
+
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
+        public void SourceCanBeStaticAsyncEnumerableMethodReturningTask(string source)
+        {
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
+        }
+#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
+
+        private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethod) } };
+            return result.AsAsyncEnumerable();
+        }
+
+        private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) } };
+            return Task.FromResult(result.AsAsyncEnumerable());
         }
 
         [Test]
