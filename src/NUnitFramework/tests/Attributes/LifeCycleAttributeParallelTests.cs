@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -8,7 +8,8 @@ namespace NUnit.Framework.Tests.Attributes
     [Parallelizable(ParallelScope.All)]
     public class LifeCycleAttributeParallelTests
     {
-        private static readonly ObjectIDGenerator Generator = new ObjectIDGenerator();
+        private static readonly Dictionary<object, long> ObjectIds = new();
+
         private readonly int _constructorCount = 0;
         private int _setupCount = 0;
 
@@ -51,7 +52,10 @@ namespace NUnit.Framework.Tests.Attributes
 
         private void OutputReferenceId(string location)
         {
-            long id = Generator.GetId(this, out bool _);
+            if (!ObjectIds.TryGetValue(this, out long id))
+            {
+                ObjectIds[this] = id = ObjectIds.Count + 1;
+            }
             TestContext.WriteLine($"{location}: {id}>");
         }
     }
