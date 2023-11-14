@@ -40,7 +40,6 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
     bin\
        Debug\
           net8.0
-          net7.0
           net6.0
           net462
 ```
