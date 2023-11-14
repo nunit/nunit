@@ -9,7 +9,6 @@
     <license type="file">LICENSE.txt</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
-    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
@@ -17,8 +16,6 @@
 
 Supported platforms:
 - .NET Framework 4.6.2+
-- .NET Standard 2.0+
-- .NET Core 3.1+
 - .NET 6.0+
 
 How to use this package:
@@ -36,7 +33,7 @@ How to use this package:
       <group targetFramework="net6.0">
         <dependency id="NUnit" version="[$version$]" />
       </group>
-      <group targetFramework="net7.0">
+	  <group targetFramework="net8.0">
         <dependency id="NUnit" version="[$version$]" />
       </group>
     </dependencies>
@@ -53,7 +50,7 @@ How to use this package:
     <file src="bin/net462/nunitlite-runner.pdb" target="tools\net462" />
     <file src="bin/net6.0/nunitlite.dll" target="lib\net6.0" />
     <file src="bin/net6.0/nunitlite.pdb" target="lib\net6.0" />
-    <file src="bin/net7.0/nunitlite.dll" target="lib\net7.0" />
-    <file src="bin/net7.0/nunitlite.pdb" target="lib\net7.0" />
+	<file src="bin/net8.0/nunitlite.dll" target="lib\net8.0" />
+    <file src="bin/net8.0/nunitlite.pdb" target="lib\net8.0" />
   </files>
 </package>

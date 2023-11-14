@@ -15,8 +15,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.6.2 Debug")]
 #elif NET6_0
 [assembly: AssemblyConfiguration(".NET 6.0 Debug")]
-#elif NET7_0
-[assembly: AssemblyConfiguration(".NET 7.0 Debug")]
+#elif NET8_0
+[assembly: AssemblyConfiguration(".NET 8.0 Debug")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
@@ -25,8 +25,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.6.2")]
 #elif NET6_0
 [assembly: AssemblyConfiguration(".NET 6.0")]
-#elif NET7_0
-[assembly: AssemblyConfiguration(".NET 7.0")]
+#elif NET8_0
+[assembly: AssemblyConfiguration(".NET 8.0")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif

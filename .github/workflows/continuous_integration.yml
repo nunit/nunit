@@ -17,32 +17,24 @@ jobs:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET 
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: | 
+            6.0.x
+            8.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
 
     - name: 📦 Package
-      run: dotnet cake --target=Package
+      run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: Package
         path: package
@@ -63,20 +55,12 @@ jobs:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: | 
+            6.0.x
+            8.0.x
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -85,7 +69,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v3
@@ -103,26 +87,18 @@ jobs:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v3
 
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
+    - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        dotnet-version: | 
+            6.0.x
+            8.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v3

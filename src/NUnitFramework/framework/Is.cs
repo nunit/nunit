@@ -126,11 +126,6 @@ namespace NUnit.Framework
         #endregion
 
         /// <summary>
-        /// Returns a constraint that tests whether an object graph is serializable in binary format.
-        /// </summary>
-        public static BinarySerializableConstraint BinarySerializable => new();
-
-        /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
         public static XmlSerializableConstraint XmlSerializable => new();
