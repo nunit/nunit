@@ -34,12 +34,14 @@ namespace NUnit.Framework.Internal
             if (awaitable is null)
                 throw new InvalidOperationException("A null reference cannot be awaited.");
 
-            // TaskAwaitAdapter is more efficient because it can rely on Task’s
+            // (Value)TaskAwaitAdapter is more efficient because it can rely on Task’s
             // special quality of blocking until complete in GetResult.
             // As long as the pattern-based adapters are reflection-based, this
             // is much more efficient as well.
             if (awaitable is System.Threading.Tasks.Task task)
                 return TaskAwaitAdapter.Create(task);
+            if (awaitable is System.Threading.Tasks.ValueTask valueTask)
+                return ValueTaskAwaitAdapter.Create(valueTask);
 
             // Await all the (C# and F#) things
             var adapter =
