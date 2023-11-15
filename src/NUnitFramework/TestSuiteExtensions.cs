@@ -7,6 +7,8 @@ namespace NUnit.Framework.Tests.TestUtilities
 {
     internal static class TestSuiteExtensions
     {
+
+        //TODO: documentation
         public static TestSuite Containing(this TestSuite theSuite, string name)
         {
             return theSuite.Containing(new TestSuite(name));

@@ -11,6 +11,8 @@ namespace NUnit.Framework.Tests.TestUtilities
 {
     internal static class SchemaTestUtils
     {
+
+        //This is a comment
         public static string GetSchemasPath() => Path.Combine(TestContext.CurrentContext.TestDirectory, "Schemas");
 
         public static XmlSchema AssertValidXsd(string schemaFile)
