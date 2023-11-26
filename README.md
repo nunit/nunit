@@ -10,7 +10,7 @@ It is a non-opinionated, broad and deep framework with multiple different ways t
 
 The latest version, version 4, is an upgrade from the groundbreaking NUnit 3 framework. It is a modernized version, aimed at taking advantage of the latest .NET features and C# language constructs.
 
-If you are upgrading from NUnit 3, be aware of the [breaking changes](https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40), please see the [NUnit 4 Migration Guide](https://docs.nunit.org/articles/nunit/release-notes/Nunit4.0-MigrationGuide.html), and take care to prepare your NUnit 3 code before you do the upgrade.
+If you are upgrading from NUnit 3, be aware of the [breaking changes](https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40). Please see the [NUnit 4 Migration Guide](https://docs.nunit.org/articles/nunit/release-notes/Nunit4.0-MigrationGuide.html) and take care to prepare your NUnit 3 code before you do the upgrade.
 
 ## Table of Contents ##
 
