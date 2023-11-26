@@ -1,3 +1,7 @@
+## NUnit 4.0.0 - November 26, 2023
+
+All changes, see [release notes](https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-400)
+
 ## NUnit 4.0.0-beta.1 - October 8, 2023
 
 This release is the first beta release of NUnit 4.0.

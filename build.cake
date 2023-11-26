@@ -16,7 +16,7 @@ var ErrorDetail = new List<string>();
 //////////////////////////////////////////////////////////////////////
 
 var version = "4.0.0";
-var modifier = "-beta.2";
+var modifier = "";
 
 var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
