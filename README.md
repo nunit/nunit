@@ -52,12 +52,12 @@ NUnit is made up of several projects. When reporting issues, please try to repor
 ### Core Projects ###
 
 - [NUnit Test Framework](https://github.com/nunit/nunit) - The test framework used to write NUnit tests (this repository)
-- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio/Dotnet adapter for running NUnit 3 and 4 tests in Dotnet and Visual Studio.
+- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio/Dotnet adapter for running NUnit 3 and 4 tests in Visual Studio or the `dotnet` command line.
 - [NUnit Console and Engine](https://github.com/nunit/nunit-console) - Runs unit tests from the command line and provides the engine that is used by other test runners to run NUnit tests.
 
 ### Visual Studio Extensions ###
 
-- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio adapter for running NUnit 3 and 4 tests in Dotnet and Visual Studio.
+- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio adapter for running NUnit 3 and 4 tests in Visual Studio or the `dotnet` command line.
 - [NUnit Visual Studio Templates](https://github.com/nunit/nunit-vs-templates) - Project templates and snippets for writing unit tests in Visual Studio. This repo is for reference only, as the templates have been donated to the [Dotnet project](https://github.com/dotnet/test-templates) and are maintained there, and also released as part of the dotnet releases.
 - [Visual Studio Test Generator](https://github.com/nunit/nunit-vs-testgenerator) - Generates NUnit tests in Visual Studio
 - [NUnit 2 Visual Studio Adapter](https://github.com/nunit/nunit-vs-adapter) - Visual Studio adapter for running older NUnit 2.x tests in Visual Studio and in VSTS/TFS builds
