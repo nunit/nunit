@@ -476,10 +476,12 @@ namespace NUnit.Framework
             /// <summary>
             /// The expected result if there is one for the test
             /// </summary>
-            public object? ExpectedResult
-            {
-                get { return (_test as TestMethod)?.ExpectedResult; }
-            }
+            public object? ExpectedResult => (_test as TestMethod)?.ExpectedResult;
+
+            /// <summary>
+            /// The parent of this test or suite
+            /// </summary>
+            public ITest? Parent => _test.Parent;
 
             #endregion
         }
