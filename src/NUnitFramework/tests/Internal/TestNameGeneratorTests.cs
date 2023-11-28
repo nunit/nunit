@@ -10,6 +10,7 @@ namespace NUnit.Framework.Tests.Internal
         private TestMethod _simpleTest;
         private TestMethod _simpleTestWithArgs;
         private TestMethod _genericTest;
+        private TestMethod _derivedTest;
 
         [SetUp]
         public void InitializeMethodInfos()
@@ -18,6 +19,7 @@ namespace NUnit.Framework.Tests.Internal
             _simpleTest = new TestMethod(new MethodWrapper(thisType, nameof(TestMethod)));
             _simpleTestWithArgs = new TestMethod(new MethodWrapper(thisType, nameof(TestMethodWithArgs)));
             _genericTest = new TestMethod(new MethodWrapper(thisType, nameof(GenericTest)));
+            _derivedTest = new TestMethod(new MethodWrapper(typeof(Derived), nameof(Base.DerivedMethod)));
             _simpleTest.Id = "THE_ID";
         }
 
@@ -26,6 +28,8 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Tests.Internal")]
         [TestCase("{c}", ExpectedResult = "TestNameGeneratorTests")]
         [TestCase("{C}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
+        [TestCase("{d}", ExpectedResult = "TestNameGeneratorTests")]
+        [TestCase("{D}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
         [TestCase("{M}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.TestMethod")]
         [TestCase("{m}_SpecialCase", ExpectedResult = "TestMethod_SpecialCase")]
         [TestCase("{n}.{c}.{m}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.TestMethod")]
@@ -79,12 +83,22 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Tests.Internal")]
         [TestCase("{c}", ExpectedResult = "TestNameGeneratorTests")]
         [TestCase("{C}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
+        [TestCase("{d}", ExpectedResult = "TestNameGeneratorTests")]
+        [TestCase("{D}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
         [TestCase("{M}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T1,T2,T3>")]
         [TestCase("{m}_SpecialCase", ExpectedResult = "GenericTest<T1,T2,T3>_SpecialCase")]
         [TestCase("{n}.{c}.{m}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.GenericTest<T1,T2,T3>")]
         public string GenericTestNames(string pattern)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_genericTest);
+        }
+
+        [TestCase("{d}", ExpectedResult = "Derived")]
+        [TestCase("{D}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests.Derived")]
+        public string DerivedClassNames(string pattern)
+        {
+            var derivedClassNames = new TestNameGenerator(pattern).GetDisplayName(_derivedTest);
+            return derivedClassNames;
         }
 
         [TestCase("{x}", ExpectedResult = "{x}")]
@@ -143,6 +157,17 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         private void GenericTest<T1, T2, T3>()
+        {
+        }
+
+        public class Base
+        {
+            public void DerivedMethod()
+            {
+            }
+        }
+
+        public sealed class Derived : Base
         {
         }
 
