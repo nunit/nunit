@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Constraints;
@@ -483,10 +485,102 @@ namespace NUnit.Framework
             /// </summary>
             public ITest? Parent => _test.Parent;
 
+            /// <summary>
+            /// Returns all properties in the hierarchy
+            /// </summary>
+            /// <returns></returns>
+            public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
+            {
+                var dict = new Dictionary<PropertyHierachyItem, IList>();
+                ITest? test = _test;
+                do
+                {
+                    foreach (var property in test.Properties.Keys)
+                    {
+                        var values = test.Properties[property];
+                        dict.Add(
+                            new PropertyHierachyItem { Name = property, Level = test.Name ?? string.Empty }, values);
+                    }
+                    test = test.Parent;
+                }
+                while (test is object);
+
+                return dict;
+            }
+
+            /// <summary>
+            /// Returns all values of a given property
+            /// </summary>
+            /// <param name="property">Name of property</param>
+            public IEnumerable<object> PropertyValues(string property)
+            {
+                var list = new List<object>();
+                var props = PropertyHierarchy();
+                foreach (var item in props.Keys.Where(o => o.Name == property))
+                {
+                    var values = props[item];
+                    foreach (var o in values)
+                        list.Add(o);
+                }
+
+                return list.Distinct();
+            }
+
+
+
+            /// <summary>
+            /// Returns all categories in the hierarchy
+            /// </summary>
+            /// <returns></returns>
+            public IDictionary<string, IList<string>> CategoryHierarchy()
+            {
+                var dict = new Dictionary<string, IList<string>>();
+                var all = PropertyHierarchy();
+                foreach (var property in all.Where(o => o.Key.Name == "Category"))
+                {
+                    var values = new List<string>();
+                    foreach (var item in property.Value)
+                    {
+                        string s = item?.ToString() ?? string.Empty;
+                        values.Add(s);
+                    }
+                    dict.Add(property.Key.Level, values);
+                }
+                return dict;
+            }
+            /// <summary>
+            /// Return all categories in the hierarchy flattened
+            /// </summary>
+            public IEnumerable<string> AllCategories()
+            {
+                var cats = new List<string>();
+                var lists = CategoryHierarchy().Values;
+                foreach (var list in lists)
+                {
+                    cats.AddRange(list);
+                }
+
+                return cats.Distinct();
+            }
+
             #endregion
         }
 
         #endregion
+
+        #region PropertyHierachyItem
+        /// <summary>
+        /// Represents properties at different test levels
+        /// </summary>
+        public class PropertyHierachyItem
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Level { get; set; } = string.Empty;
+        }
+
+        #endregion
+
+
 
         #region Nested ResultAdapter Class
 
