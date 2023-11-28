@@ -206,7 +206,7 @@ namespace NUnit.Framework.Internal
 
         private abstract class NameFromMethodInfoFragment : NameFragment
         {
-            public override sealed void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
+            public sealed override void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
             {
                 AppendTextTo(sb, testMethod.Method.MethodInfo, args);
             }
