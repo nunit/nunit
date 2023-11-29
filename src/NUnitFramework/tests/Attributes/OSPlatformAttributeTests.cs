@@ -17,9 +17,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(Path.DirectorySeparatorChar, Is.EqualTo('/'));
         }
 
-        [SupportedOSPlatform("Windows")]
-        [SupportedOSPlatform("Windows10.0")]
-        [SupportedOSPlatform("Windows11.0")]
+        [SupportedOSPlatform("Windows7.0")]
         [Test]
         public void SupportedBackwardSlashDirectorySeparator()
         {

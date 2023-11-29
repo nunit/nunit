@@ -15,6 +15,8 @@ namespace NUnit.Framework
         private static readonly Type? OsPlatformAttributeType = Type.GetType("System.Runtime.Versioning.OSPlatformAttribute, System.Runtime", false);
         private static readonly PropertyInfo? PlatformNameProperty = OsPlatformAttributeType?.GetProperty("PlatformName", typeof(string));
 
+        private static readonly int[] KnownWindowsVersions = { 7, 8, 10, 11 };
+
         /// <summary>
         /// Converts one or more .NET 5+ OSPlatformAttributes into a single NUnit PlatformAttribute
         /// </summary>
@@ -70,17 +72,17 @@ namespace NUnit.Framework
                     continue;
                 }
 
-                string nunitPlatform = Translate(platformName);
+                IEnumerable<string> nunitPlatforms = Translate(platformName);
 
                 Type type = osPlatformAttribute.GetType();
 
                 if (type.FullName == "System.Runtime.Versioning.SupportedOSPlatformAttribute")
                 {
-                    includes.Add(nunitPlatform);
+                    includes.UnionWith(nunitPlatforms);
                 }
                 else if (type.FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute")
                 {
-                    excludes.Add(nunitPlatform);
+                    excludes.UnionWith(nunitPlatforms);
                 }
 
                 // Ignore others, e.g. SupportedOSPlatformGuard
@@ -97,10 +99,10 @@ namespace NUnit.Framework
             }
         }
 
-        internal static string Translate(string platformName)
+        internal static IEnumerable<string> Translate(string platformName)
         {
             ParseOSAndVersion(platformName, out string os, out int majorVersion);
-            string nunit = Translate(os, majorVersion);
+            IEnumerable<string> nunit = Translate(os, majorVersion);
 
             return nunit;
         }
@@ -126,19 +128,34 @@ namespace NUnit.Framework
             }
         }
 
-        private static string Translate(string osName, int majorVersion)
+        private static IEnumerable<string> Translate(string osName, int majorVersion)
         {
             switch (osName.ToUpperInvariant())
             {
                 case "WINDOWS":
-                    return majorVersion < 7 ? "Win" : "Windows" + majorVersion;
+                    if (majorVersion < 7)
+                    {
+                        yield return "Win";
+                    }
+                    else
+                    {
+                        foreach (var version in KnownWindowsVersions)
+                        {
+                            if (version >= majorVersion)
+                                yield return "Windows" + version;
+                        }
+                    }
+                    break;
                 case "OSX":
                 case "MACOS":
-                    return "MacOsX";
+                    yield return "MacOsX";
+                    break;
                 case "LINUX":
-                    return "Linux";
+                    yield return "Linux";
+                    break;
                 default:
-                    return osName;  // It might or more likely is not support by NUnit.
+                    yield return osName;  // It might or more likely is not support by NUnit.
+                    break;
             }
         }
     }
