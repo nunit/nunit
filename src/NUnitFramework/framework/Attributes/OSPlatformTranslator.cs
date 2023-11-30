@@ -144,6 +144,9 @@ namespace NUnit.Framework
                             if (version >= majorVersion)
                                 yield return "Windows" + version;
                         }
+
+                        if (majorVersion <= 10)
+                            yield return "WindowsServer10";
                     }
                     break;
                 case "OSX":
