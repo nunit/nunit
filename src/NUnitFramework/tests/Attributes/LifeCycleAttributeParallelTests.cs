@@ -52,10 +52,16 @@ namespace NUnit.Framework.Tests.Attributes
 
         private void OutputReferenceId(string location)
         {
-            if (!ObjectIds.TryGetValue(this, out long id))
+            long id;
+
+            lock (ObjectIds)
             {
-                ObjectIds[this] = id = ObjectIds.Count + 1;
+                if (!ObjectIds.TryGetValue(this, out id))
+                {
+                    ObjectIds[this] = id = ObjectIds.Count + 1;
+                }
             }
+
             TestContext.WriteLine($"{location}: {id}>");
         }
     }
