@@ -503,7 +503,7 @@ namespace NUnit.Framework
                     }
                     test = test.Parent;
                 }
-                while (test is object);
+                while (test is not null);
 
                 return dict;
             }
