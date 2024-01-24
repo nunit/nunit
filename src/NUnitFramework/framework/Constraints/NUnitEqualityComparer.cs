@@ -148,6 +148,7 @@ namespace NUnit.Framework.Constraints
                     throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
                 case EqualMethodResult.ComparedEqual:
                     return true;
+                case EqualMethodResult.ComparisonPending:
                 case EqualMethodResult.ComparedNotEqual:
                 default:
                     return false;
@@ -170,7 +171,7 @@ namespace NUnit.Framework.Constraints
                 return EqualMethodResult.ComparedEqual;
 
             if (state.DidCompare(x, y))
-                return EqualMethodResult.ComparedNotEqual;
+                return EqualMethodResult.ComparisonPending;
 
             EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 

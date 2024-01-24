@@ -526,5 +526,39 @@ namespace NUnit.Framework.Tests.Assertions
                 return $"{ValueA} {ValueB} '{ValueC}' [{Chained}]";
             }
         }
+
+        [Test]
+        public void AssertWithRecursiveClass()
+        {
+            LinkedList list1 = new(1, new(2, new(3)));
+            LinkedList list2 = new(1, new(2, new(3)));
+
+            Assert.That(list1, Is.EqualTo(list2));
+        }
+
+        [Test]
+        public void AssertWithCyclicRecursiveClass()
+        {
+            LinkedList list1 = new(1);
+            LinkedList list2 = new(1);
+
+            list1.Next = list1;
+            list2.Next = list2;
+
+            Assert.That(list1, Is.EqualTo(list2));
+        }
+
+        private sealed class LinkedList
+        {
+            public LinkedList(int value, LinkedList? next = null)
+            {
+                Value = value;
+                Next = next;
+            }
+
+            public int Value { get; }
+
+            public LinkedList? Next { get; set; }
+        }
     }
 }

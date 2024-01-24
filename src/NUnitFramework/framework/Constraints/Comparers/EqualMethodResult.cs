@@ -23,8 +23,13 @@ namespace NUnit.Framework.Constraints.Comparers
         ComparedEqual,
 
         /// <summary>
-        /// Method is appropriate and the items are consisdered different.
+        /// Method is appropriate and the items are considered different.
         /// </summary>
-        ComparedNotEqual
+        ComparedNotEqual,
+
+        /// <summary>
+        /// Method is appropriate but the class has cyclic references.
+        /// </summary>
+        ComparisonPending
     }
 }
