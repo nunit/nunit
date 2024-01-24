@@ -1008,6 +1008,13 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(ex?.Message, Does.Contain(expectedMsg));
         }
 
+        [Test]
+        public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
+        {
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
+            Assert.That(ex?.Message, Does.Contain("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL));
+        }
+
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
