@@ -377,13 +377,13 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.Multiple(() =>
             {
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero), Is.EqualTo(instance));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.Not.EqualTo(instance));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null), Is.Not.EqualTo(instance));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
-                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
             });
         }
 
@@ -415,12 +415,12 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.Multiple(() =>
             {
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance));
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).Within(0.1));
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.Not.EqualTo(instance).Within(0.1));
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 2.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
-                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.Not.EqualTo(instance));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).Within(0.1).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.Not.EqualTo(instance).Within(0.1).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 2.2, "1.1", SomeEnum.One), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.Not.EqualTo(instance).UsingPropertiesComparer());
             });
         }
 
@@ -533,7 +533,8 @@ namespace NUnit.Framework.Tests.Assertions
             LinkedList list1 = new(1, new(2, new(3)));
             LinkedList list2 = new(1, new(2, new(3)));
 
-            Assert.That(list1, Is.EqualTo(list2));
+            Assert.That(list1, Is.Not.EqualTo(list2));
+            Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
         [Test]
@@ -545,7 +546,8 @@ namespace NUnit.Framework.Tests.Assertions
             list1.Next = list1;
             list2.Next = list2;
 
-            Assert.That(list1, Is.EqualTo(list2));
+            Assert.That(list1, Is.Not.EqualTo(list2));
+            Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
         private sealed class LinkedList

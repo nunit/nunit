@@ -268,7 +268,6 @@ namespace NUnit.Framework.Constraints
                 return this;
             }
         }
-
         /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
@@ -343,6 +342,19 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public EqualConstraint UsingPropertiesComparer()
+        {
+            _comparer.CompareProperties = true;
             return this;
         }
 

@@ -29,14 +29,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void SucceedsWhenValueIsPresentUsingContainKey()
+        public void SucceedsWhenValueIsPresentUsingContainValue()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.ContainValue("Mundo"));
         }
 
         [Test]
-        public void SucceedsWhenValueIsNotPresentUsingContainKey()
+        public void SucceedsWhenValueIsNotPresentUsingContainValue()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainValue("NotValue"));
@@ -76,6 +76,27 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(dictionary,
                 new DictionaryContainsValueConstraint("UNIVERSE").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+        }
+
+        [Test]
+        public void UsingPropertiesComparerIsHonored()
+        {
+            var dictionary = new Dictionary<string, XY> { { "5", new(3, 4) }, { "13", new(5, 12) } };
+            var value = new XY(5, 12);
+            Assert.That(dictionary, Does.Not.ContainValue(value));
+            Assert.That(dictionary, Does.ContainValue(value).UsingPropertiesComparer());
+        }
+
+        private sealed class XY
+        {
+            public XY(double x, double y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public double X { get; }
+            public double Y { get; }
         }
     }
 }
