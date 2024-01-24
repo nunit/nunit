@@ -546,7 +546,7 @@ namespace NUnit.Framework.Tests.Assertions
             list1.Next = list1;
             list2.Next = list2;
 
-            Assert.That(list1, Is.Not.EqualTo(list2));
+            Assert.That(list1, Is.Not.EqualTo(list2)); // Reference comparison
             Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
@@ -561,6 +561,29 @@ namespace NUnit.Framework.Tests.Assertions
             public int Value { get; }
 
             public LinkedList? Next { get; set; }
+        }
+
+        [Test]
+        public void EqualMemberWithIndexer()
+        {
+            var members = new Members("Hello", "World", "NUnit");
+            var copy = new Members("Hello", "World", "NUnit");
+
+            Assert.That(members[1], Is.EqualTo("World"));
+            Assert.That(copy, Is.Not.EqualTo(members));
+            Assert.That(() => Assert.That(copy, Is.EqualTo(members).UsingPropertiesComparer()), Throws.InstanceOf<NotSupportedException>());
+        }
+
+        private sealed class Members
+        {
+            private readonly string[] _members;
+
+            public Members(params string[] members)
+            {
+                _members = members;
+            }
+
+            public string this[int index] => _members[index];
         }
     }
 }

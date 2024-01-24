@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -29,9 +30,10 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            if (properties.Length == 0 || properties.Length >= 32)
+            if (properties.Length == 0 || properties.Length >= 32 || properties.Any(p => p.GetIndexParameters().Length > 0))
             {
                 // We can't compare if there are no (or too many) properties.
+                // We also can't deal with indexer properties as we don't know the range of valid values.
                 return EqualMethodResult.TypesNotSupported;
             }
 
