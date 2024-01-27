@@ -63,5 +63,23 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(42, Is.Not.AnyOf(0, -1, 100));
         }
+
+        [Test]
+        public void ValidMemberUsingPropertiesComparer()
+        {
+            Assert.That(new XY(5, 12), Is.AnyOf(new XY(3, 4), new XY(5, 12)).UsingPropertiesComparer());
+        }
+
+        private sealed class XY
+        {
+            public XY(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public int X { get; }
+            public int Y { get; }
+        }
     }
 }
