@@ -80,6 +80,7 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { 195, 200, 5 }; // lower range bound
             yield return new object[] { 190, 200, 5 };
             yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(1) };
+            yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(2) };
         }
 
         [TestCaseSource(nameof(GetSimpleTolerance_FailureData))]
