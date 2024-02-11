@@ -278,6 +278,11 @@ namespace NUnit.Framework.Constraints
                 return new Range(v - amount, v + amount);
             }
 
+            if (Amount is TimeSpan amountDateTime && value is DateTime timeSpan)
+            {
+                return new Range(timeSpan - amountDateTime, timeSpan + amountDateTime);
+            }
+
             throw new InvalidOperationException("Cannot create range for a non-numeric value");
         }
 
