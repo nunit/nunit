@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -748,5 +749,38 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         #endregion
+
+        [TestCase(TypeArgs = new[] { typeof(int) })]
+        public void ExplicitTypeArgsWithoutParameters<T>()
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(int)));
+        }
+
+        [TestCase(2, TypeArgs = new[] { typeof(int) })]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(int input)
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(int)));
+            Assert.That(input, Is.EqualTo(2));
+        }
+
+        [TestCase(2, TypeArgs = new[] { typeof(int) })]
+        public void ExplicitTypeArgsWithCompatibleParameters<T>(T input)
+        {
+            Assert.Pass();
+        }
+
+        [Test]
+        public void ExplicitTypeArgsWithIncompatibleParametersFailsAtRuntime()
+        {
+            var methodName = nameof(TestCaseAttributeFixture.MethodWithIncompatibleTypeArgs);
+            var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName).Tests[0];
+
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+
+            var exception = Assert.Throws<NUnitException>(() => test.Method!.Invoke(test.Parent, test.Arguments));
+
+            Assert.That(exception.InnerException, Has.Message.EqualTo("Object does not match target type."));
+        }
     }
 }

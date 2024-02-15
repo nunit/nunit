@@ -80,5 +80,7 @@ namespace NUnit.Framework.Internal
         public bool HasExpectedResult { get; set; }
 
         #endregion
+
+        internal Type[]? TypeArgs { get; set; } = null;
     }
 }

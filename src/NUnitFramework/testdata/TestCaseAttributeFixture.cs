@@ -114,5 +114,10 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithArrayArguments(object o)
         {
         }
+
+        [TestCase("doesn't work", TypeArgs = new[] { typeof(int) })]
+        public void MethodWithIncompatibleTypeArgs<T>(T input)
+        {
+        }
     }
 }
