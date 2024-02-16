@@ -3,10 +3,19 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Tests</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,8 @@
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <Optimize>false</Optimize>
     <IsTestProject>false</IsTestProject>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
@@ -18,6 +20,13 @@
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

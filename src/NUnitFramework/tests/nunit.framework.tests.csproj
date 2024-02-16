@@ -4,12 +4,14 @@
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework.Tests</RootNamespace>
 
-      <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
+    <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <IsTestProject>true</IsTestProject>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
-  
+
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
   </ItemGroup>
@@ -17,7 +19,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit3TestAdapter" />
-    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Collections.Immutable" />
     <PackageReference Include="System.ValueTuple" />
   </ItemGroup>
@@ -48,6 +53,13 @@
     <EmbeddedResource Include="TestText2.txt" />
     <EmbeddedResource Include="TestListFile.txt" />
     <EmbeddedResource Include="TestListFile2.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
