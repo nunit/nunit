@@ -6,7 +6,7 @@
     <version>$version$</version>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <license type="file">LICENSE.txt</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <icon>icon.png</icon>
