@@ -116,7 +116,10 @@ DotNetBuildSettings CreateDotNetBuildSettings() =>
         Configuration = configuration,
         NoRestore = true,
         Verbosity = DotNetVerbosity.Minimal,
-        MSBuildSettings = new DotNetMSBuildSettings { Version = packageVersion }
+        MSBuildSettings = new DotNetMSBuildSettings {
+            Version = packageVersion,
+            ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions
+        }
      };
 
 //////////////////////////////////////////////////////////////////////
