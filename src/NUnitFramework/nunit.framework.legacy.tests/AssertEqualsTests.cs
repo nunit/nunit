@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#pragma warning disable NUnit2005
+
 using System;
 using System.IO;
 using System.Text;
