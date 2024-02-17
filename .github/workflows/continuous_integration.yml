@@ -15,10 +15,10 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
         
@@ -35,13 +35,13 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Package
         path: package
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Windows)
         path: test-results
@@ -54,10 +54,10 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
 
@@ -71,7 +71,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Linux)
         path: test-results
@@ -84,10 +84,10 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
 
@@ -98,7 +98,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (macOS)
         path: test-results
