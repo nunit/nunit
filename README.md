@@ -1,7 +1,7 @@
-# NUnit 4 Framework #
+# NUnit 4 Framework
 
 
-[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Slack](https://img.shields.io/badge/chat-on%20Slack-brightgreen)](https://join.slack.com/t/nunit/shared_invite/zt-jz58jw68-Led8y3WH4n2a~Y5WjuOpKA) [![nunit-discuss Google Groups](https://img.shields.io/badge/mailing%20list-nunit--discuss-blue.svg)](https://groups.google.com/forum/#!forum/nunit-discuss) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Slack](https://img.shields.io/badge/chat-on%20Slack-brightgreen)](https://join.slack.com/t/nunit/shared_invite/zt-jz58jw68-Led8y3WH4n2a~Y5WjuOpKA) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
 NUnit is a unit-testing framework for all .NET languages. 
 It can run on macOS, Linux and Windows operating systems. 
