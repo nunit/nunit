@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -525,12 +524,14 @@ namespace NUnit.Framework.Tests.Attributes
                 typeof(TestCaseSourceAttributeFixture),
                 nameof(TestCaseSourceAttributeFixture.MethodWithIncompatibleGenericTypeAndArgument));
 
-            var test = suite.Tests[0];
+            var test = (Test)suite.Tests[0];
 
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
-            var exception = Assert.Throws<NUnitException>(() => test.Method!.Invoke(test.Parent, test.Arguments));
 
-            Assert.That(exception.InnerException, Has.Message.EqualTo("Object does not match target type."));
+            var result = TestBuilder.RunTest(test);
+
+            Assert.That(result.FailCount, Is.EqualTo(1));
+            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
         }
 
         [TestCaseSource(nameof(ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases))]

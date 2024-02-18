@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -773,15 +772,18 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
         {
-            var methodName = nameof(TestCaseAttributeFixture.MethodWithIncompatibleTypeArgs);
-            var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), methodName).Tests[0];
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture),
+                nameof(TestCaseAttributeFixture.MethodWithIncompatibleTypeArgs));
+
+            var test = (Test)suite.Tests[0];
 
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
 
-            var exception = Assert.Throws<NUnitException>(() => test.Method!.Invoke(test.Parent, test.Arguments));
+            var result = TestBuilder.RunTest(test);
 
-            Assert.That(exception.InnerException, Has.Message.EqualTo("Object does not match target type."));
+            Assert.That(result.FailCount, Is.EqualTo(1));
+            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
         }
 
         [TestCase(2, TypeArgs = new[] { typeof(long) })]

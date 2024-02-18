@@ -116,7 +116,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase("doesn't work", TypeArgs = new[] { typeof(int) })]
-        public void MethodWithIncompatibleTypeArgs<T>(T input)
+        public static void MethodWithIncompatibleTypeArgs<T>(T input)
         {
         }
     }

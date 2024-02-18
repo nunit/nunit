@@ -143,7 +143,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
 
         [TestCaseSource(nameof(IncompatibleGenericTypeAndArgumentTestCases))]
-        public void MethodWithIncompatibleGenericTypeAndArgument(object o)
+        public static void MethodWithIncompatibleGenericTypeAndArgument<T>(T o)
         {
         }
 
@@ -199,7 +199,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             yield return new TestCaseData("doesn't work")
             {
-                TypeArgs = new[] { typeof(string) }
+                TypeArgs = new[] { typeof(int) }
             };
         }
 
