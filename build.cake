@@ -4,7 +4,8 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var modifier = Argument("modifier", "alocal");
+var modifier = Argument("modifier", "-alocal");
+var prerelease = Argument("prerelease", "");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
