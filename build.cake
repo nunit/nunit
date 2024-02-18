@@ -23,7 +23,7 @@ var ErrorDetail = new List<string>();
 
 var version = MinVer();
 
-var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
+// var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
 // var packageVersion = version + modifier + dbgSuffix;
 
 var packageVersion = version;
