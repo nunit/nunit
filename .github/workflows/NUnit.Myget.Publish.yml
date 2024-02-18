@@ -1,4 +1,4 @@
-name: Publish to MyGet
+name: NUnit.Myget.Publish
 
 on:
   push:
