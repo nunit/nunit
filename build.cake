@@ -26,7 +26,7 @@ var version = MinVer();
 var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
 // var packageVersion = version + modifier + dbgSuffix;
 
-var packageversion = version
+var packageversion = version;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
