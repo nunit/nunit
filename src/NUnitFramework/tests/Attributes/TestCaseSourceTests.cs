@@ -537,7 +537,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void ExplicitTypeArgsWithGenericConstraintSatisfied<T1, T2>(T1 a, T2 b)
             where T1 : IComparer<T2>
         {
-            Assert.Pass();
+            Assert.That(typeof(T1), Is.EqualTo(typeof(IntConverter)));
+            Assert.That(a, Is.TypeOf<DerivedIntConverter>());
         }
 
         public class IntConverter : IComparer<int>
