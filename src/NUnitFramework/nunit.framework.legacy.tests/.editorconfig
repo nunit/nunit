@@ -1,9 +1,11 @@
 
 [*.cs]
 
+dotnet_diagnostic.NUnit2003.severity = none
 dotnet_diagnostic.NUnit2005.severity = none
 dotnet_diagnostic.NUnit2006.severity = none
 dotnet_diagnostic.NUnit2007.severity = none
+dotnet_diagnostic.NUnit2018.severity = none
 dotnet_diagnostic.NUnit2031.severity = none
 dotnet_diagnostic.NUnit2048.severity = none
 dotnet_diagnostic.NUnit2049.severity = none
