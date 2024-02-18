@@ -756,21 +756,22 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(typeof(T), Is.EqualTo(typeof(int)));
         }
 
-        [TestCase(2, TypeArgs = new[] { typeof(int) })]
-        public void ExplicitTypeArgsWithUnrelatedParameters<T>(int input)
+        [TestCase("2", TypeArgs = new[] { typeof(long) })]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
         {
-            Assert.That(typeof(T), Is.EqualTo(typeof(int)));
-            Assert.That(input, Is.EqualTo(2));
+            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+            Assert.That(input, Is.EqualTo("2"));
         }
 
-        [TestCase(2, TypeArgs = new[] { typeof(int) })]
-        public void ExplicitTypeArgsWithCompatibleParameters<T>(T input)
-        {
-            Assert.Pass();
-        }
+        [TestCase(2, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
+        [TestCase(2L, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
+        [TestCase(2, ExpectedResult = typeof(int))]
+        [TestCase(2L, ExpectedResult = typeof(long))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+            => typeof(T);
 
         [Test]
-        public void ExplicitTypeArgsWithIncompatibleParametersFailsAtRuntime()
+        public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
         {
             var methodName = nameof(TestCaseAttributeFixture.MethodWithIncompatibleTypeArgs);
             var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
@@ -781,6 +782,16 @@ namespace NUnit.Framework.Tests.Attributes
             var exception = Assert.Throws<NUnitException>(() => test.Method!.Invoke(test.Parent, test.Arguments));
 
             Assert.That(exception.InnerException, Has.Message.EqualTo("Object does not match target type."));
+        }
+
+        [TestCase(2, TypeArgs = new[] { typeof(long) })]
+        public void ExplicitTypeArgsWithGenericConstraintSatisfied<T>(int input)
+            where T : IConvertible
+        {
+            var convertedValue = ((IConvertible)input).ToType(typeof(T), null);
+
+            Assert.That(convertedValue, Is.TypeOf<T>());
+            Assert.That(convertedValue, Is.Not.TypeOf(input.GetType()));
         }
     }
 }
