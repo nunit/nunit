@@ -142,6 +142,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        [TestCaseSource(nameof(IncompatibleGenericTypeAndArgumentTestCases))]
+        public void MethodWithIncompatibleGenericTypeAndArgument(object o)
+        {
+        }
+
         private static IEnumerable ExceptionSource
         {
             get
@@ -188,6 +193,14 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             foreach (var argumentValue in ComplexArrayBasedTestInput)
                 yield return new TestCaseData(args: new[] { argumentValue });
+        }
+
+        public static IEnumerable<TestCaseData> IncompatibleGenericTypeAndArgumentTestCases()
+        {
+            yield return new TestCaseData("doesn't work")
+            {
+                TypeArgs = new[] { typeof(string) }
+            };
         }
 
         #region Test name tests

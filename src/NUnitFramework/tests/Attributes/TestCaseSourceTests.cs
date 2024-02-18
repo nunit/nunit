@@ -480,6 +480,83 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
+        [TestCaseSource(nameof(ExplicitTypeArgsWithUnrelatedParametersTestCases))]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+            Assert.That(input, Is.EqualTo("2"));
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
+        {
+            yield return new TestCaseData("2") { TypeArgs = new[] { typeof(long) } };
+        }
+
+        [TestCaseSource(nameof(GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+            => typeof(T);
+
+        private static IEnumerable<TestCaseData> GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases()
+        {
+            yield return new TestCaseData(2)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2L)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2)
+            {
+                ExpectedResult = typeof(int)
+            };
+            yield return new TestCaseData(2L)
+            {
+                ExpectedResult = typeof(long)
+            };
+        }
+
+        [Test]
+        public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture),
+                nameof(TestCaseSourceAttributeFixture.MethodWithIncompatibleGenericTypeAndArgument));
+
+            var test = suite.Tests[0];
+
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+            var exception = Assert.Throws<NUnitException>(() => test.Method!.Invoke(test.Parent, test.Arguments));
+
+            Assert.That(exception.InnerException, Has.Message.EqualTo("Object does not match target type."));
+        }
+
+        [TestCaseSource(nameof(ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases))]
+        public void ExplicitTypeArgsWithGenericConstraintSatisfied<T1, T2>(T1 a, T2 b)
+            where T1 : IComparer<T2>
+        {
+            Assert.Pass();
+        }
+
+        public class IntConverter : IComparer<int>
+        {
+            public int Compare(int x, int y) => x - y;
+        }
+
+        public class DerivedIntConverter : IntConverter
+        {
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases()
+        {
+            yield return new TestCaseData(new DerivedIntConverter(), 2)
+            {
+                TypeArgs = new[] { typeof(IntConverter), typeof(int) }
+            };
+        }
+
         #region Sources used by the tests
         private static readonly object[] MyData = new object[]
         {
