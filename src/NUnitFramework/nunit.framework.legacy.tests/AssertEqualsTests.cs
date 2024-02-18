@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#pragma warning disable NUnit2005
-
 using System;
 using System.IO;
 using System.Text;
@@ -520,9 +518,7 @@ namespace NUnit.Framework.Legacy.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(1));
-#pragma warning disable NUnit2007 // The actual value should not be a constant
                 Assert.That(1, Is.EqualTo(a));
-#pragma warning restore NUnit2007 // The actual value should not be a constant
             });
         }
 

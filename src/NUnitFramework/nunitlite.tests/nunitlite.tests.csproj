@@ -24,18 +24,8 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
- <ItemGroup>
-    <PackageReference Include="NUnit.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+  <ItemGroup>
+    <PackageReference Include="NUnit.Analyzers"/>
   </ItemGroup>
-
- <ItemGroup>
-   <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle">
-     <PrivateAssets>all</PrivateAssets>
-     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-   </PackageReference>
- </ItemGroup>
 
 </Project>

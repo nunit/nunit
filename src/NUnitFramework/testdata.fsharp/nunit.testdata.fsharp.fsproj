@@ -16,10 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" />
-    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.CodeStyle">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Update="System.ValueTuple" />
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>

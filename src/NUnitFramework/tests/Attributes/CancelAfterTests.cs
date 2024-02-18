@@ -293,8 +293,7 @@ namespace NUnit.Framework.Tests.Attributes
 
 #pragma warning restore NUnit1003 // The TestCaseAttribute provided too few arguments
 #pragma warning restore NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
-#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
-#pragma warning disable NUnit1029
+
         [TestCaseSource(nameof(CancellationTokens))]
         [CancelAfter(500)]
         public void TestWithCancelAfterAttributeAndTestCaseSourceHasOwnCancellationToken(CancellationToken cancellationToken)
