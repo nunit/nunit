@@ -136,9 +136,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(collection1, constraint);
         }
 
-// https://github.com/nunit/nunit.analyzers/issues/621
-#pragma warning disable NUnit2025 // Wrong actual type used with ContainsConstraint
-
         [Test]
         public void ContainsNullability()
         {

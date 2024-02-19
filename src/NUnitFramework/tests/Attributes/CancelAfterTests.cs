@@ -271,9 +271,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.EqualTo(CancellationToken.None));
         }
 
-#pragma warning disable NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
-#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
-
         [Test, CancelAfter(500)]
         public void TestWithCancelAfterAttributeHasCancellationToken(CancellationToken cancellationToken)
         {
@@ -281,7 +278,9 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
+#pragma warning disable NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
         [Test]
+#pragma warning restore NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
         public void TestWithoutCancelAfterAttributeHasNoneCancellationToken(CancellationToken cancellationToken)
         {
             Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
@@ -314,10 +313,10 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static readonly int[] Arguments = { 1 };
 
-#pragma warning restore NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
-
-        [TestCaseSource(nameof(CancellationTokens))]
         [CancelAfter(500)]
+#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        [TestCaseSource(nameof(CancellationTokens))]
+#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         public void TestWithCancelAfterAttributeAndTestCaseSourceHasOwnCancellationToken(CancellationToken cancellationToken)
         {
             Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None).And.Not.EqualTo(TestContext.CurrentContext.CancellationToken));
@@ -330,7 +329,7 @@ namespace NUnit.Framework.Tests.Attributes
                 yield return new CancellationTokenSource(10).Token;
             }
         }
-#pragma warning restore NUnit1029
+
         private sealed class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
