@@ -1,5 +1,6 @@
 name: NUnit.Myget.Publish
-
+env:
+  MinVerAutoIncrement: minor
 on:
   push:
     branches:
