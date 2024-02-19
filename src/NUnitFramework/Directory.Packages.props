@@ -3,21 +3,18 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
   </PropertyGroup>
-
   <!-- Packages for used features -->
   <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageVersion Include="System.ValueTuple" version="4.5.0" />
   </ItemGroup>
-
   <!-- General Packages -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageVersion Include="FSharp.Core" Version="7.0.200" />
   </ItemGroup>
-
   <!-- Package to allow Nullability etc. in older SDKS -->
   <ItemGroup>
     <PackageVersion Include="IsExternalInit" Version="1.0.3" />
@@ -26,28 +23,23 @@
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
     <PackageVersion Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" />
   </ItemGroup>
-
   <!-- Analyzers -->
   <ItemGroup>
     <PackageVersion Include="CSharpIsNullAnalyzer" Version="0.1.495" />
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.6.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="3.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.8.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.0.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.507" />
   </ItemGroup>
-
   <!-- Specific dependencies -->
   <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.13.5" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
   </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
-
   <!-- Explictily set the version of indirect referenced nuget packages -->
   <ItemGroup>
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
-
 </Project>

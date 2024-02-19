@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
+
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 #if NETFRAMEWORK
+using System.Reflection;
 #endif
 
 namespace NUnit.Framework.Tests.Internal

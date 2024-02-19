@@ -228,7 +228,9 @@ namespace NUnit.Framework.Tests.Assertions
 
             // Act
 #pragma warning disable NUnit2045 // Use Assert.Multiple
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
             Assert.That(0 + 1 == 1, GetExceptionMessage);
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 #pragma warning restore NUnit2045 // Use Assert.Multiple
 
             // Assert
@@ -248,7 +250,9 @@ namespace NUnit.Framework.Tests.Assertions
             }
 
             // Act
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
             var ex = Assert.Throws<AssertionException>(() => Assert.That(1 + 1 == 1, GetExceptionMessage));
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
             // Assert
             Assert.That(ex?.Message, Does.Contain("Func was called"));
@@ -365,9 +369,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(() => Assert.That(x, Is.EqualTo(y).Within(0.1)),
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
         }
-
-        // TODO: Remove when NUnit.Analyzer 3.10 is released.
-#pragma warning disable NUnit2047 // Incompatible types for Within constraint
 
         [Test]
         public void AssertThatEqualsWithClassWithSomeToleranceAwareMembers()
@@ -499,10 +500,12 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.That(new SomeRecord(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
                 Assert.That(new SomeRecord(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
                 Assert.That(new SomeRecord(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
                 Assert.That(() =>
                     Assert.That(new SomeRecord(1, 1.2, "1.1", zero),
                                 Is.EqualTo(instance).Within(0.1)),
                     Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
             });
         }
 
