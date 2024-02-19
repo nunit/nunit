@@ -38,10 +38,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" >
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" PrivateAssets="all" />
     <PackageReference Include="IsExternalInit" PrivateAssets="all" />
     <PackageReference Include="Nullable" PrivateAssets="all" />
     <PackageReference Include="CSharpIsNullAnalyzer" PrivateAssets="all" />
