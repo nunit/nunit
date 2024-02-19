@@ -80,5 +80,12 @@ namespace NUnit.Framework.Internal
         public bool HasExpectedResult { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Get or set the type arguments for a generic test method.
+        /// If not set explicitly, the generic types will be inferred
+        /// based on the test case parameters.
+        /// </summary>
+        public Type[]? TypeArgs { get; set; } = null;
     }
 }
