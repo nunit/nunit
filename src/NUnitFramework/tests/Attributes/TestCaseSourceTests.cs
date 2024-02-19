@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -49,7 +48,6 @@ namespace NUnit.Framework.Tests.Attributes
             return Task.FromResult((IEnumerable?)result);
         }
 
-#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
         public void SourceCanBeStaticAsyncEnumerableMethod(string source)
         {
