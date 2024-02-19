@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit.Analyzers"/>
+    <PackageReference Include="NUnit.Analyzers" />
   </ItemGroup>
 
 </Project>
