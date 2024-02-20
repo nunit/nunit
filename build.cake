@@ -1,9 +1,13 @@
+#addin "nuget:?package=Cake.MinVer&version=3.0.0"
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var modifier = Argument("modifier", "-alocal");
+var prerelease = Argument("prerelease", "");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -15,11 +19,14 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "4.0.1";
-var modifier = "";
+// var version = "4.1.0";
 
-var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
-var packageVersion = version + modifier + dbgSuffix;
+var version = MinVer();
+
+// var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
+// var packageVersion = version + modifier + dbgSuffix;
+
+var packageVersion = version;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -74,6 +81,21 @@ Setup(context =>
 });
 
 //////////////////////////////////////////////////////////////////////
+// VERSIONING
+//////////////////////////////////////////////////////////////////////
+Task("Version")
+    .Does(context =>
+{
+    context.Information($"Version: {version.Version}");
+    context.Information($"Major: {version.Major}");
+    context.Information($"Minor: {version.Minor}");
+    context.Information($"Patch: {version.Patch}");
+    context.Information($"PreRelease: {version.PreRelease}");
+    context.Information($"BuildMetadata: {version.BuildMetadata}");
+});
+
+
+//////////////////////////////////////////////////////////////////////
 // CLEAN
 //////////////////////////////////////////////////////////////////////
 
@@ -93,6 +115,7 @@ Task("Clean")
 
 Task("NuGetRestore")
     .Description("Restores NuGet Packages")
+    .IsDependentOn("Version")
     .Does(() =>
     {
         DotNetRestore(SOLUTION_FILE);
