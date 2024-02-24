@@ -1,3 +1,8 @@
+
+For further changes, see [release notes](https://docs.nunit.org/articles/nunit/release-notes/framework.html)
+
+-------
+
 ## NUnit 4.0.0 - November 26, 2023
 
 All changes, see [release notes](https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-400)
