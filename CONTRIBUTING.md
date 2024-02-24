@@ -19,7 +19,7 @@ Requests for new features and bug reports keep the project moving forward.
 
 - Give the issue a short, clear title that describes the bug or feature request
 - Include what version of NUnit you are using, which runner you are using
-- Tell us how you are running your tests including command line arguments or runsettings
+- Tell us how you are running your tests including command line arguments or `runsettings`
 - Include steps to reproduce the issue
 - Include a short code example that reproduces the issue
 - Use [markdown formatting](https://guides.github.com/features/mastering-markdown/) as appropriate to make the issue and code more readable.
