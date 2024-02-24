@@ -46,7 +46,7 @@ Great documentation is essential for any open source project and NUnit is no exc
 
 We love pull requests, but would prefer that new contributors start with smaller issues and let us know before you contribute to prevent duplication of work.
 
-Ensure you do have an issue to connect your pull request to. If there isn't one, please open a new issue first, and state you have a fix before embarking on the pull request. 
+Ensure you have an issue to connect your pull request to. If there isn't one, please open a new issue first, and state you have a fix before embarking on the pull request. 
 
 To help new contributors get their feet wet, we have marked a number of issues with the `good first issue` label. These are great places to start.
 
