@@ -6,8 +6,6 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var modifier = Argument("modifier", "-alocal");
-var prerelease = Argument("prerelease", "");
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -19,12 +17,9 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-// var version = "4.1.0";
-
-var version = MinVer();
-
-// var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
-// var packageVersion = version + modifier + dbgSuffix;
+var version = MinVer(settings=> settings
+    .WithAutoIncrement(MinVerAutoIncrement.Minor)
+);
 
 var packageVersion = version;
 
