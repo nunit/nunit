@@ -3,6 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
+      - main
       - master
       - release
       - 'v3'
