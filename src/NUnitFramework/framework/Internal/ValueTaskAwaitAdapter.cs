@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -11,21 +10,21 @@ namespace NUnit.Framework.Internal
     {
         public static AwaitAdapter Create(ValueTask task)
         {
-            var genericValueTaskType = task
-                .GetType()
-                .TypeAndBaseTypes()
-                .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ValueTask<>));
+            return new NonGenericAdapter(task);
+        }
 
-            if (genericValueTaskType is not null)
+        public static AwaitAdapter? TryCreate(object task)
+        {
+            Type taskType = task.GetType();
+            if (taskType.GetGenericTypeDefinition() == typeof(ValueTask<>))
             {
-                var typeArgument = genericValueTaskType.GetGenericArguments()[0];
                 return (AwaitAdapter)typeof(GenericAdapter<>)
-                     .MakeGenericType(typeArgument)
-                     .GetConstructor(new[] { typeof(ValueTask<>).MakeGenericType(typeArgument) })!
-                     .Invoke(new object[] { task });
+                    .MakeGenericType(taskType.GetGenericArguments()[0])
+                    .GetConstructor(new[] { taskType })!
+                    .Invoke(new object[] { task });
             }
 
-            return new NonGenericAdapter(task);
+            return null;
         }
 
         private sealed class NonGenericAdapter : AwaitAdapter
