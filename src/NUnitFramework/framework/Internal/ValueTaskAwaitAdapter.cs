@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         public static AwaitAdapter? TryCreate(object task)
         {
             Type taskType = task.GetType();
-            if (taskType.GetGenericTypeDefinition() == typeof(ValueTask<>))
+            if (taskType.IsGenericType && taskType.GetGenericTypeDefinition() == typeof(ValueTask<>))
             {
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                     .MakeGenericType(taskType.GetGenericArguments()[0])
