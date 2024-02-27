@@ -148,6 +148,22 @@ namespace NUnitLite
                 : null;
         }
 
+        void ITestListener.OneTimeSetUpStarted()
+        {
+        }
+
+        void ITestListener.OneTimeSetUpFinished()
+        {
+        }
+
+        void ITestListener.OneTimeTearDownStarted()
+        {
+        }
+
+        void ITestListener.OneTimeTearDownFinished()
+        {
+        }
+
         #endregion
     }
 }

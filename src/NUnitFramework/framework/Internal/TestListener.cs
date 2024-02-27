@@ -26,6 +26,21 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        public void OneTimeSetUpStarted()
+        {
+        }
+
+        public void OneTimeSetUpFinished()
+        {
+        }
+
+        public void OneTimeTearDownStarted()
+        {
+        }
+        public void OneTimeTearDownFinished()
+        {
+        }
+
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>

@@ -241,10 +241,15 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                _setupCommand?.Execute(Context);
-
+                if (_setupCommand is not null)
+                {
+                    Context.Listener.OneTimeSetUpStarted();
+                    _setupCommand.Execute(Context);
+                    Context.Listener.OneTimeSetUpFinished();
+                }
                 // SetUp may have changed some things in the environment
                 Context.UpdateContextFromEnvironment();
+
             }
             catch (Exception ex)
             {
@@ -329,7 +334,12 @@ namespace NUnit.Framework.Internal.Execution
             // the proper execution environment
             Context.EstablishExecutionEnvironment();
 
-            _teardownCommand?.Execute(Context);
+            if (_teardownCommand is not null)
+            {
+                Context.Listener.OneTimeTearDownStarted();
+                _teardownCommand.Execute(Context);
+                Context.Listener.OneTimeTearDownFinished();
+            }
         }
 
         private string GetSkipReason()

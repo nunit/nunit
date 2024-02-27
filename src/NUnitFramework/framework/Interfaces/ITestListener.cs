@@ -22,6 +22,12 @@ namespace NUnit.Framework.Interfaces
         /// <param name="result">The result of the test</param>
         void TestFinished(ITestResult result);
 
+        void OneTimeSetUpStarted();
+        void OneTimeSetUpFinished();
+
+        void OneTimeTearDownStarted();
+        void OneTimeTearDownFinished();
+
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>

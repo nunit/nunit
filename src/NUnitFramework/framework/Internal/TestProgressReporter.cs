@@ -116,6 +116,86 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        public void OneTimeSetUpStarted()
+        {
+            var node = TNode.FromXml("<OneTimeSetUpStarted/>");
+
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                node.WriteTo(xmlWriter);
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        public void OneTimeSetUpFinished()
+        {
+            var node = TNode.FromXml("<OneTimeSetUpFinished/>");
+
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                node.WriteTo(xmlWriter);
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        public void OneTimeTearDownStarted()
+        {
+            var node = TNode.FromXml("<OneTimeTearDownStarted/>");
+
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                node.WriteTo(xmlWriter);
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        public void OneTimeTearDownFinished()
+        {
+            var node = TNode.FromXml("<OneTimeTearDownFinished/>");
+
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                node.WriteTo(xmlWriter);
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>

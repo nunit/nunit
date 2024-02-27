@@ -76,6 +76,39 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
+
+    public class OneTimeSetUpStartedEvent : Event
+    {
+        public override void Send(ITestListener listener)
+        {
+            listener.OneTimeSetUpStarted();
+        }
+    }
+
+    public class OneTimeSetUpFinishedEvent : Event
+    {
+        public override void Send(ITestListener listener)
+        {
+            listener.OneTimeSetUpFinished();
+        }
+    }
+
+    public class OneTimeTearDownStartedEvent : Event
+    {
+        public override void Send(ITestListener listener)
+        {
+            listener.OneTimeTearDownStarted();
+        }
+    }
+
+    public class OneTimeTearDownFinishedEvent : Event
+    {
+        public override void Send(ITestListener listener)
+        {
+            listener.OneTimeTearDownFinished();
+        }
+    }
+
     /// <summary>
     /// TestOutputEvent holds information needed to call the TestOutput method.
     /// </summary>
