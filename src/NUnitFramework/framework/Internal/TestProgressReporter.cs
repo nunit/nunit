@@ -116,6 +116,110 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <inheritdoc/>
+        public void OneTimeSetUpStarted(ITest test)
+        {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                var parent = GetParent(test);
+                xmlWriter.WriteStartElement("OneTimeSetUpStarted");
+                xmlWriter.WriteAttributeString("id", test.Id);
+                xmlWriter.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
+                xmlWriter.WriteAttributeStringSafe("name", test.Name);
+                xmlWriter.WriteAttributeStringSafe("fullname", test.FullName);
+                xmlWriter.WriteAttributeStringSafe("type", test.TestType);
+                xmlWriter.WriteEndElement();
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        /// <inheritdoc/>
+        public void OneTimeSetUpFinished(ITest test)
+        {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                var parent = GetParent(test);
+                xmlWriter.WriteStartElement("OneTimeSetUpFinished");
+                xmlWriter.WriteAttributeString("id", test.Id);
+                xmlWriter.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
+                xmlWriter.WriteAttributeStringSafe("name", test.Name);
+                xmlWriter.WriteAttributeStringSafe("fullname", test.FullName);
+                xmlWriter.WriteAttributeStringSafe("type", test.TestType);
+                xmlWriter.WriteEndElement();
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        /// <inheritdoc/>
+        public void OneTimeTearDownStarted(ITest test)
+        {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                var parent = GetParent(test);
+                xmlWriter.WriteStartElement("OneTimeTearDownStarted");
+                xmlWriter.WriteAttributeString("id", test.Id);
+                xmlWriter.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
+                xmlWriter.WriteAttributeStringSafe("name", test.Name);
+                xmlWriter.WriteAttributeStringSafe("fullname", test.FullName);
+                xmlWriter.WriteAttributeStringSafe("type", test.TestType);
+                xmlWriter.WriteEndElement();
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
+        /// <inheritdoc/>
+        public void OneTimeTearDownFinished(ITest test)
+        {
+            using var stringWriter = new StringWriter(GetStringBuilder());
+            using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                var parent = GetParent(test);
+                xmlWriter.WriteStartElement("OneTimeTearDownFinished");
+                xmlWriter.WriteAttributeString("id", test.Id);
+                xmlWriter.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
+                xmlWriter.WriteAttributeStringSafe("name", test.Name);
+                xmlWriter.WriteAttributeStringSafe("fullname", test.FullName);
+                xmlWriter.WriteAttributeStringSafe("type", test.TestType);
+                xmlWriter.WriteEndElement();
+            }
+
+            try
+            {
+                _handler.RaiseCallbackEvent(stringWriter.ToString());
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Exception processing {ex}");
+            }
+        }
+
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>

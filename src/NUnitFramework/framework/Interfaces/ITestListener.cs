@@ -23,6 +23,30 @@ namespace NUnit.Framework.Interfaces
         void TestFinished(ITestResult result);
 
         /// <summary>
+        /// Called when a OneTimeSetUp has just started.
+        /// </summary>
+        /// <param name="test">The test to which this OneTimeSetUp belongs.</param>
+        void OneTimeSetUpStarted(ITest test);
+
+        /// <summary>
+        /// Called when a OneTimeSetUp has just finished.
+        /// </summary>
+        /// <param name="test">The test to which this OneTimeSetUp belongs.</param>
+        void OneTimeSetUpFinished(ITest test);
+
+        /// <summary>
+        /// Called when a OneTimeTearDown has just started.
+        /// </summary>
+        /// <param name="test">The test to which this OneTimeTearDown belongs.</param>
+        void OneTimeTearDownStarted(ITest test);
+
+        /// <summary>
+        /// Called when a OneTimeTearDown has just finished.
+        /// </summary>
+        /// <param name="test">The test to which this OneTimeTearDown belongs.</param>
+        void OneTimeTearDownFinished(ITest test);
+
+        /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>
         /// <param name="output">A TestOutput object containing the text to display</param>

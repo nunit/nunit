@@ -88,20 +88,42 @@ namespace NUnit.Framework.Internal.Commands
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
         {
+            // Here in the end, the OneTimeSetUp and OneTimeTearDown is executed,
+            // so its also a potential place where to raise the events.
+            // However it is difficult to see which kind of method is currently about to be executed.
+            // In the commented lines you that I had to check for the attribute type that
+            // is attached to the method, in order to identify OneTimeSetUp / OneTimeTearDown
+            // which is kind of ugly.
+
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
 
             var methodInfo = MethodInfoCache.Get(method);
 
+            //if (HasOneTimeSetUpAttribute(method))
+            //{
+            //    context.Listener.OneTimeSetUpStarted(context.CurrentTest);
+            //}
+
             if (methodInfo.IsAsyncOperation)
                 AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
                 InvokeMethod(method, context);
+
+            //if (HasOneTimeSetUpAttribute(method))
+            //{
+            //    context.Listener.OneTimeSetUpFinished(context.CurrentTest);
+            //}
         }
 
         private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
         {
             return method.Invoke(method.IsStatic ? null : context.TestObject, null)!;
         }
+
+        //private bool HasOneTimeSetUpAttribute(IMethodInfo method)
+        //{
+        //    return Attribute.IsDefined(method.MethodInfo, typeof(OneTimeSetUpAttribute));
+        //}
     }
 }

@@ -490,6 +490,7 @@ namespace NUnit.Framework.Internal.Execution
 
             State = WorkItemState.Running;
 
+            
             PerformWork();
         }
 

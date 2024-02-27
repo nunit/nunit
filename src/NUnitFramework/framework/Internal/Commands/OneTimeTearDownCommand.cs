@@ -28,7 +28,11 @@ namespace NUnit.Framework.Internal.Commands
 
                 try
                 {
+                    context.Listener.OneTimeTearDownStarted(Test);
+
                     setUpTearDownItem.RunTearDown(context);
+
+                    context.Listener.OneTimeTearDownFinished(Test);
                 }
                 catch (Exception ex)
                 {

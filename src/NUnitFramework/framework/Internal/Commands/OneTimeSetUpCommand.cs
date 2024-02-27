@@ -21,7 +21,11 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = context =>
             {
+                context.Listener.OneTimeSetUpStarted(Test);
+
                 setUpTearDown.RunSetUp(context);
+
+                context.Listener.OneTimeSetUpFinished(Test);
             };
         }
     }

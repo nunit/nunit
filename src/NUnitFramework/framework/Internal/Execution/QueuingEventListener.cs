@@ -42,6 +42,25 @@ namespace NUnit.Framework.Internal.Execution
             Events.Enqueue(new TestFinishedEvent(result));
         }
 
+        public void OneTimeSetUpStarted(ITest test)
+        {
+            Events.Enqueue(new OneTimeSetUpStartedEvent(test));
+        }
+
+        public void OneTimeSetUpFinished(ITest test)
+        {
+            Events.Enqueue(new OneTimeSetUpFinishedEvent(test));
+        }
+
+        public void OneTimeTearDownStarted(ITest test)
+        {
+            Events.Enqueue(new OneTimeTearDownStartedEvent(test));
+        }
+        public void OneTimeTearDownFinished(ITest test)
+        {
+            Events.Enqueue(new OneTimeTearDownFinishedEvent(test));
+        }
+
         /// <summary>
         /// Called when a test produces output for immediate display
         /// </summary>

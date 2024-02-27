@@ -226,6 +226,12 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new AfterTestActionCommand(command, actions[index]);
 
+            // The following loop iterates over *both* setup and teardown items,
+            // creating however OneTimeTearDownCommand objects.
+            // Did not investigate further, but this could be the reason why I observed
+            // additional unexpected OneTimeTearDown events when addion a
+            // OneTimeSetUp in a base class.
+
             // Create the OneTimeTearDown commands
             foreach (SetUpTearDownItem item in setUpTearDownItems)
                 command = new OneTimeTearDownCommand(command, item);
@@ -330,6 +336,7 @@ namespace NUnit.Framework.Internal.Execution
             Context.EstablishExecutionEnvironment();
 
             _teardownCommand?.Execute(Context);
+
         }
 
         private string GetSkipReason()
