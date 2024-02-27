@@ -241,11 +241,22 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
+                //System.Diagnostics.Debugger.Launch();
+
+                // this is called twice, once for SetUpFixture and once for TestFixture. But only for TestFixture we search the event
                 if (_setupCommand is not null)
                 {
-                    Context.Listener.OneTimeSetUpStarted();
+                    if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
+                    {
+                        Context.Listener.OneTimeSetUpStarted();
+                    }
+                    
                     _setupCommand.Execute(Context);
-                    Context.Listener.OneTimeSetUpFinished();
+
+                    if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
+                    {
+                        Context.Listener.OneTimeSetUpFinished();
+                    }
                 }
                 // SetUp may have changed some things in the environment
                 Context.UpdateContextFromEnvironment();
@@ -336,9 +347,17 @@ namespace NUnit.Framework.Internal.Execution
 
             if (_teardownCommand is not null)
             {
-                Context.Listener.OneTimeTearDownStarted();
+                if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
+                {
+                    Context.Listener.OneTimeTearDownStarted();
+                }
+                
                 _teardownCommand.Execute(Context);
-                Context.Listener.OneTimeTearDownFinished();
+
+                if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
+                {
+                    Context.Listener.OneTimeTearDownFinished();
+                }
             }
         }
 
