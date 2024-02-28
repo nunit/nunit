@@ -244,19 +244,16 @@ namespace NUnit.Framework.Internal.Execution
                 //System.Diagnostics.Debugger.Launch();
 
                 // this is called twice, once for SetUpFixture and once for TestFixture. But only for TestFixture we search the event
-                if (_setupCommand is not null)
+                if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
                 {
-                    if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
-                    {
-                        Context.Listener.OneTimeSetUpStarted();
-                    }
+                    Context.Listener.OneTimeSetUpStarted();
+                }
                     
-                    _setupCommand.Execute(Context);
+                _setupCommand?.Execute(Context);
 
-                    if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
-                    {
-                        Context.Listener.OneTimeSetUpFinished();
-                    }
+                if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
+                {
+                    Context.Listener.OneTimeSetUpFinished();
                 }
                 // SetUp may have changed some things in the environment
                 Context.UpdateContextFromEnvironment();
@@ -345,19 +342,16 @@ namespace NUnit.Framework.Internal.Execution
             // the proper execution environment
             Context.EstablishExecutionEnvironment();
 
-            if (_teardownCommand is not null)
+            if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
             {
-                if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
-                {
-                    Context.Listener.OneTimeTearDownStarted();
-                }
+                Context.Listener.OneTimeTearDownStarted();
+            }
                 
-                _teardownCommand.Execute(Context);
+            _teardownCommand?.Execute(Context);
 
-                if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
-                {
-                    Context.Listener.OneTimeTearDownFinished();
-                }
+            if (Test is TestFixture && _teardownCommand is OneTimeTearDownCommand)
+            {
+                Context.Listener.OneTimeTearDownFinished();
             }
         }
 
