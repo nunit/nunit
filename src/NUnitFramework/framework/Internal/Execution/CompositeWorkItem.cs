@@ -241,23 +241,23 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                //System.Diagnostics.Debugger.Launch();
+                System.Diagnostics.Debugger.Launch();
 
                 // this is called twice, once for SetUpFixture and once for TestFixture. But only for TestFixture we search the event
-                if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
+                if (Test is TestFixture /*&& _setupCommand is OneTimeSetUpCommand*/)
                 {
                     Context.Listener.OneTimeSetUpStarted();
                 }
-                    
+
                 _setupCommand?.Execute(Context);
 
-                if (Test is TestFixture && _setupCommand is OneTimeSetUpCommand)
+                if (Test is TestFixture /*&& _setupCommand is OneTimeSetUpCommand*/)
                 {
                     Context.Listener.OneTimeSetUpFinished();
                 }
+
                 // SetUp may have changed some things in the environment
                 Context.UpdateContextFromEnvironment();
-
             }
             catch (Exception ex)
             {
