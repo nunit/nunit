@@ -8,6 +8,10 @@ on:
       - release
       - 'v3'
   pull_request:
+  
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry  
 
 jobs:
   build-windows:
@@ -81,7 +85,7 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
     - name: ⤵️ Checkout Source
@@ -91,6 +95,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
+        dotnet-version: 6.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
