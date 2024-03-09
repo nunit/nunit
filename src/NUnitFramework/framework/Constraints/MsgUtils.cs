@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+            AddFormatter(next => val => val is Array valArray ? FormatArray(valArray) : next(val));
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 

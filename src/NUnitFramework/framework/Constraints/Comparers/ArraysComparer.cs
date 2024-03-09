@@ -11,11 +11,8 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!x.GetType().IsArray || !y.GetType().IsArray || equalityComparer.CompareAsCollection)
+            if (x is not Array xArray || y is not Array yArray || equalityComparer.CompareAsCollection)
                 return EqualMethodResult.TypesNotSupported;
-
-            Array xArray = (Array)x;
-            Array yArray = (Array)y;
 
             int rank = xArray.Rank;
 
