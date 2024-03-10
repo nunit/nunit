@@ -9,6 +9,7 @@ using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
 using System.Linq;
 using NUnit.TestData;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -157,6 +158,7 @@ namespace NUnit.Framework.Tests.Attributes
             TestMethod? testMethod = (TestMethod?)TestFinder.Find(nameof(TimeoutFixture.VeryLongTestWith50msTimeout), suite, false);
             Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
@@ -172,6 +174,15 @@ namespace NUnit.Framework.Tests.Attributes
 #if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
 #endif
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTest()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithTeardownAndOutputFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Is.EqualTo($"line1{Environment.NewLine}"));
         }
 
         [Test]
@@ -304,28 +315,6 @@ namespace NUnit.Framework.Tests.Attributes
         private class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
-        }
-
-        [TestFixture]
-        public class Context
-        {
-            [Test, Timeout(60_000)]
-            public void Test2()
-            {
-                TestContext.WriteLine("line1");
-                Assert.That(1, Is.EqualTo(0));
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTeardown()
-            {
-                var v = TestExecutionContext.CurrentContext.CurrentTest;
-            }
         }
     }
 }

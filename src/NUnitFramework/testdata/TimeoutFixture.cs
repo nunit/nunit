@@ -108,4 +108,20 @@ namespace NUnit.TestData
             Thread.Sleep(delay);
         }
     }
+
+    [TestFixture]
+    public class TimeoutWithTeardownAndOutputFixture
+    {
+        [Test, Timeout(60_000)]
+        public void Test2()
+        {
+            TestContext.WriteLine("line1");
+            Assert.That(1, Is.EqualTo(0));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+    }
 }

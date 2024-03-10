@@ -119,9 +119,12 @@ namespace NUnit.Framework.Internal.Commands
 
         private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)
         {
-            var separateContext = new TestExecutionContext(context);
+            var separateContext = new TestExecutionContext(context)
+            {
+                CurrentResult = context.CurrentTest.MakeTestResult()
+            };
 
-            return Task.Run(() => innerCommand.Execute(context));
+            return Task.Run(() => innerCommand.Execute(separateContext));
         }
 #endif
     }
