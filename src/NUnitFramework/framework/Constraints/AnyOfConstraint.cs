@@ -71,6 +71,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore white space and return self.
+        /// </summary>
+        public AnyOfConstraint IgnoreWhiteSpace
+        {
+            get
+            {
+                _comparer.IgnoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>

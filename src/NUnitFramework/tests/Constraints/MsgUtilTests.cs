@@ -277,6 +277,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(MsgUtils.EscapeControlChars(input), Is.EqualTo(expected));
         }
 
+        [TestCase("Hello\r\nWorld", 4, "Hello\\r\\nWorld", 4)]
+        [TestCase("Hello\r\nWorld", 7, "Hello\\r\\nWorld", 9)]
+        public static void EscapeControlCharsWithIndexTest(string? input, int index, string? expected, int expectedIndex)
+        {
+            Assert.That(MsgUtils.EscapeControlChars(input, ref index), Is.EqualTo(expected));
+            Assert.That(index, Is.EqualTo(expectedIndex));
+        }
+
         [Test]
         public static void EscapeNullCharInString()
         {
@@ -307,9 +315,9 @@ namespace NUnit.Framework.Tests.Constraints
         private const string S52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         [TestCase(S52, 52, 0, S52, TestName = "NoClippingNeeded")]
-        [TestCase(S52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName = "ClipAtEnd")]
-        [TestCase(S52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName = "ClipAtStart")]
-        [TestCase(S52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName = "ClipAtStartAndEnd")]
+        [TestCase(S52, 26, 0, "abcdefghijklmnopqrstuvwxyz...", TestName = "ClipAtEnd")]
+        [TestCase(S52, 26, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName = "ClipAtStart")]
+        [TestCase(S52, 22, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName = "ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
             System.Console.WriteLine("input=  \"{0}\"", input);
@@ -318,7 +326,45 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         #endregion
+        #region ClipWhenNeeded
 
+        [Test]
+        public static void ClipWhenNeeded_StringFitsInLine()
+        {
+            int mismatchedLocation = 5;
+            string clipped = MsgUtils.ClipWhenNeeded(S52, S52.Length, 52, ref mismatchedLocation);
+            Assert.That(clipped, Is.EqualTo(S52));
+            Assert.That(mismatchedLocation, Is.EqualTo(5));
+        }
+
+        [Test]
+        public static void ClipWhenNeeded_StringDoesNotFitInLineMismatchLocationEarly()
+        {
+            int mismatchedLocation = 10;
+            string clipped = MsgUtils.ClipWhenNeeded(S52, S52.Length, 29, ref mismatchedLocation);
+            Assert.That(clipped, Is.EqualTo("abcdefghijklmnopqrstuvwxyz..."));
+            Assert.That(mismatchedLocation, Is.EqualTo(10));
+        }
+
+        [Test]
+        public static void ClipWhenNeeded_StringDoesNotFitInLineMismatchLocationInTheMiddle()
+        {
+            int mismatchedLocation = 26;
+            string clipped = MsgUtils.ClipWhenNeeded(S52, S52.Length, 29, ref mismatchedLocation);
+            Assert.That(clipped, Is.EqualTo("...pqrstuvwxyzABCDEFGHIJKL..."));
+            Assert.That(mismatchedLocation, Is.EqualTo(26 - (26 - 23 / 2) + 3));
+        }
+
+        [Test]
+        public static void ClipWhenNeeded_StringDoesNotFitInLineMismatchLocationAlmostAtEnd()
+        {
+            int mismatchedLocation = 50;
+            string clipped = MsgUtils.ClipWhenNeeded(S52, S52.Length, 29, ref mismatchedLocation);
+            Assert.That(clipped, Is.EqualTo("...ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            Assert.That(mismatchedLocation, Is.EqualTo(50 - (29 - 3) + 3));
+        }
+
+        #endregion
         #region ClipExpectedAndActual
 
         [Test]
@@ -326,15 +372,22 @@ namespace NUnit.Framework.Tests.Constraints
         {
             string eClip = S52;
             string aClip = "abcde";
-            MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 5);
+            int mismatchExpected = 5;
+            int mismatchActual = 5;
+            MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, ref mismatchExpected, ref mismatchActual);
             Assert.That(eClip, Is.EqualTo(S52));
             Assert.That(aClip, Is.EqualTo("abcde"));
+            Assert.That(mismatchExpected, Is.EqualTo(5));
+            Assert.That(mismatchActual, Is.EqualTo(5));
 
             eClip = S52;
             aClip = "abcdefghijklmno?qrstuvwxyz";
-            MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 15);
+            mismatchExpected = mismatchActual = 15;
+            MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, ref mismatchExpected, ref mismatchActual);
             Assert.That(eClip, Is.EqualTo(S52));
             Assert.That(aClip, Is.EqualTo("abcdefghijklmno?qrstuvwxyz"));
+            Assert.That(mismatchExpected, Is.EqualTo(15));
+            Assert.That(mismatchActual, Is.EqualTo(15));
         }
 
         [Test]
@@ -342,24 +395,40 @@ namespace NUnit.Framework.Tests.Constraints
         {
             string s1 = S52;
             string s2 = S52.Replace('Z', '?');
-            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 51);
+            int mismatchExpected = 51;
+            int mismatchActual = 51;
+            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, ref mismatchExpected, ref mismatchActual);
             Assert.That(s1, Is.EqualTo("...ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            Assert.That(mismatchExpected, Is.EqualTo(51 - 26 + 3));
+            Assert.That(mismatchActual, Is.EqualTo(51 - 26 + 3));
+        }
+
+        [Test]
+        public static void ClipExpectedAndActual_StringsHeadFitsInLine()
+        {
+            string s1 = S52;
+            string s2 = "abcdefghij";
+            int mismatchExpected = 10;
+            int mismatchActual = 10;
+            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, ref mismatchExpected, ref mismatchActual);
+            Assert.That(s1, Is.EqualTo("abcdefghijklmnopqrstuvwxyz..."));
+            Assert.That(s2, Is.EqualTo("abcdefghij"));
+            Assert.That(mismatchExpected, Is.EqualTo(10));
+            Assert.That(mismatchActual, Is.EqualTo(10));
         }
 
         [Test]
         public static void ClipExpectedAndActual_StringsDoNotFitInLine()
         {
             string s1 = S52;
-            string s2 = "abcdefghij";
-            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 10);
-            Assert.That(s1, Is.EqualTo("abcdefghijklmnopqrstuvwxyz..."));
-            Assert.That(s2, Is.EqualTo("abcdefghij"));
-
-            s1 = S52;
-            s2 = "abcdefghijklmno?qrstuvwxyz";
-            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 25, 15);
-            Assert.That(s1, Is.EqualTo("...efghijklmnopqrstuvw..."));
-            Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
+            string s2 = "abcdefghijklmno?qrstuvwxyz";
+            int mismatchExpected = 15;
+            int mismatchActual = 15;
+            MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 17, ref mismatchExpected, ref mismatchActual);
+            Assert.That(s1, Is.EqualTo("...klmnopqrstu..."));
+            Assert.That(s2, Is.EqualTo("...klmno?qrstu..."));
+            Assert.That(mismatchExpected, Is.EqualTo(8));
+            Assert.That(mismatchActual, Is.EqualTo(8));
         }
 
         #endregion

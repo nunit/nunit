@@ -31,6 +31,20 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ItemIsPresent_IgnoreWhiteSpace()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace;
+            Assert.That(anyOf.ApplyTo("ab").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ItemIsPresent_IgnoreCaseWhiteSpace()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "ab" }).IgnoreCase.IgnoreWhiteSpace;
+            Assert.That(anyOf.ApplyTo("A B").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
         public void ItemIsPresent_WithEqualityComparer()
         {
             Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);

@@ -59,6 +59,11 @@ namespace NUnit.Framework.Constraints
         private bool _caseInsensitive;
 
         /// <summary>
+        /// If true, all string comparisons will ignore white space differences
+        /// </summary>
+        private bool _ignoreWhiteSpace;
+
+        /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
@@ -99,6 +104,16 @@ namespace NUnit.Framework.Constraints
         {
             get => _caseInsensitive;
             set => _caseInsensitive = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether white space should
+        /// be ignored in determining equality.
+        /// </summary>
+        public bool IgnoreWhiteSpace
+        {
+            get => _ignoreWhiteSpace;
+            set => _ignoreWhiteSpace = value;
         }
 
         /// <summary>

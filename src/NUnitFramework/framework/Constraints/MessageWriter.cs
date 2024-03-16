@@ -81,10 +81,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected string value</param>
         /// <param name="actual">The actual string value</param>
-        /// <param name="mismatch">The point at which the strings don't match or -1</param>
+        /// <param name="mismatchExpected">The point in <paramref name="expected"/> at which the strings don't match or -1</param>
+        /// <param name="mismatchActual">The point in <paramref name="actual"/> at which the strings don't match or -1</param>
         /// <param name="ignoreCase">If true, case is ignored in locating the point where the strings differ</param>
+        /// <param name="ignoreWhiteSpace">If true, white space is ignored in locating the point where the strings differ</param>
         /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
-        public abstract void DisplayStringDifferences(string expected, string actual, int mismatch, bool ignoreCase, bool clipping);
+        public abstract void DisplayStringDifferences(string expected, string actual, int mismatchExpected, int mismatchActual, bool ignoreCase, bool ignoreWhiteSpace, bool clipping);
 
         /// <summary>
         /// Writes the text for an actual value.

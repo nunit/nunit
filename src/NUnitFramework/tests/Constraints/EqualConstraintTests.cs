@@ -66,6 +66,59 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void IgnoreWhiteSpace()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo("Hello\tWorld");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void ExtendedIgnoreWhiteSpaceExample()
+        {
+            const string prettyJson = """
+                "persons":[
+                  {
+                    "name": "John",
+                    "surname": "Smith"
+                  },
+                  {
+                    "name": "Jane",
+                    "surname": Doe"
+                  }
+                ]
+                """;
+            const string condensedJson = """
+                "persons":[{"name":"John","surname":"Smith"},{"name": "Jane","surname": Doe"}]
+                """;
+
+            Assert.That(condensedJson, Is.Not.EqualTo(prettyJson));
+            Assert.That(condensedJson, Is.EqualTo(prettyJson).IgnoreWhiteSpace);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpaceFail()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo("Hello Universe");
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpaceAndIgnoreCase()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
+
+            var result = constraint.ApplyTo("hello\r\nworld\r\n");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
         public void Bug524CharIntWithoutOverload()
         {
             char c = '\u0000';
