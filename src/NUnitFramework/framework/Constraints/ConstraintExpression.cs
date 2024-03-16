@@ -393,6 +393,15 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region WhiteSpace
+
+        /// <summary>
+        /// Returns a constraint that tests for white-space
+        /// </summary>
+        public WhiteSpaceConstraint WhiteSpace => Append(new WhiteSpaceConstraint());
+
+        #endregion
+
         #region Unique
 
         /// <summary>
