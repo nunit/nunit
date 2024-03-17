@@ -23,20 +23,29 @@ namespace NUnit.Framework.Tests
         private readonly string _workDirectory = TestContext.CurrentContext.WorkDirectory;
 
         private string _tempFilePath;
+        private string _tempLongFilePath;
+
+        private readonly string _longPathPrefix = @"\\?\";
 
         private const string TempFileName = "TestContextTests.tmp";
 
         [OneTimeSetUp]
-        public void CreateTempFile()
+        public void CreateTempFiles()
         {
-            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
+            _tempFilePath = Path.Combine(_workDirectory, TempFileName);
             File.Create(_tempFilePath).Dispose();
+
+            /* Absolute file path length greater than 260 are considered long paths for .NET Framework
+             * Creating 261 length file path */
+            _tempLongFilePath = Path.Combine(_workDirectory, new string('A', (260 - _workDirectory.Length) - 4) + ".tmp");
+            File.Create($"{_longPathPrefix}{_tempLongFilePath}").Dispose();
         }
 
         [OneTimeTearDown]
-        public void RemoveTempFile()
+        public void RemoveTempFiles()
         {
             File.Delete(_tempFilePath);
+            File.Delete($"{_longPathPrefix}{_tempLongFilePath}");
         }
 
         [SetUp]
@@ -384,6 +393,12 @@ namespace NUnit.Framework.Tests
         public void NoneExistentFileThrowsFileNotFoundException()
         {
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
+        }
+
+        [TestCase(IncludePlatform = "Net")]
+        public void LogFilePathDoesNotThrow()
+        {
+            Assert.That(() => TestContext.AddTestAttachment(_tempLongFilePath), Throws.Nothing);
         }
 
         #endregion
