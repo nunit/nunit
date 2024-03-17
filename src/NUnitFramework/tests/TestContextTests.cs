@@ -25,13 +25,17 @@ namespace NUnit.Framework.Tests
         private string _tempFilePath;
         private string _tempLongFilePath;
 
-        private readonly string _longPathPrefix = @"\\?\";
+        private string _longPathPrefix;
 
         private const string TempFileName = "TestContextTests.tmp";
 
         [OneTimeSetUp]
         public void CreateTempFiles()
         {
+            _longPathPrefix = string.Empty;
+#if NETFRAMEWORK
+            _longPathPrefix = $@"\\?\";
+#endif
             _tempFilePath = Path.Combine(_workDirectory, TempFileName);
             File.Create(_tempFilePath).Dispose();
 
