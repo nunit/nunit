@@ -23,33 +23,20 @@ namespace NUnit.Framework.Tests
         private readonly string _workDirectory = TestContext.CurrentContext.WorkDirectory;
 
         private string _tempFilePath;
-        private string _tempLongFilePath;
-
-        private string _longPathPrefix;
 
         private const string TempFileName = "TestContextTests.tmp";
 
         [OneTimeSetUp]
-        public void CreateTempFiles()
+        public void CreateTempFile()
         {
-            _longPathPrefix = string.Empty;
-#if NETFRAMEWORK
-            _longPathPrefix = $@"\\?\";
-#endif
             _tempFilePath = Path.Combine(_workDirectory, TempFileName);
             File.Create(_tempFilePath).Dispose();
-
-            /* Absolute file path length greater than 260 are considered long paths for .NET Framework
-             * Creating 261 length file path */
-            _tempLongFilePath = Path.Combine(_workDirectory, new string('A', (260 - _workDirectory.Length) - 4) + ".tmp");
-            File.Create($"{_longPathPrefix}{_tempLongFilePath}").Dispose();
         }
 
         [OneTimeTearDown]
-        public void RemoveTempFiles()
+        public void RemoveTempFile()
         {
             File.Delete(_tempFilePath);
-            File.Delete($"{_longPathPrefix}{_tempLongFilePath}");
         }
 
         [SetUp]
@@ -402,7 +389,24 @@ namespace NUnit.Framework.Tests
         [TestCase(IncludePlatform = "Net")]
         public void LogFilePathDoesNotThrow()
         {
-            Assert.That(() => TestContext.AddTestAttachment(_tempLongFilePath), Throws.Nothing);
+            string longPathPrefix = string.Empty;
+
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                longPathPrefix = $@"\\?\";
+
+            /* Absolute file path length greater than 260 are considered long paths for .NET Framework
+             * Creating 261 length file path */
+            string tempLongFilePath = Path.Combine(_workDirectory, new string('A', (260 - _workDirectory.Length) - 4) + ".tmp");
+            try
+            {
+                File.Create($"{longPathPrefix}{tempLongFilePath}").Dispose();
+
+                Assert.That(() => TestContext.AddTestAttachment(tempLongFilePath), Throws.Nothing);
+            }
+            finally
+            {
+                File.Delete($"{longPathPrefix}{tempLongFilePath}");
+            }
         }
 
         #endregion

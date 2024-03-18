@@ -371,7 +371,7 @@ namespace NUnit.Framework
 
             string prefix = string.Empty;
 #if NETFRAMEWORK
-            if (filePath.Length > 260)
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT & filePath.Length > 260)
                 prefix = @"\\?\";
 #endif
 
