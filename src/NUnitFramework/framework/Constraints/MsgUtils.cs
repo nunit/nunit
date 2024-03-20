@@ -485,7 +485,7 @@ namespace NUnit.Framework.Constraints
         {
             if (s is not null)
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder(s.Length + 32);
 
                 foreach (char c in s)
                 {
@@ -560,7 +560,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>The clipped string</returns>
         public static string ClipString(string s, int clipLength, int clipStart)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(s.Length + 2 * ELLIPSIS.Length);
 
             if (clipStart > 0)
                 sb.Append(ELLIPSIS);

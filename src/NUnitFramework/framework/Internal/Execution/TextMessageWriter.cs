@@ -165,6 +165,12 @@ namespace NUnit.Framework.Internal
         }
 
         /// <inheritdoc/>
+        public override void DisplayStringDifferences(string expected, string actual, int mismatch, bool ignoreCase, bool clipping)
+        {
+            DisplayStringDifferences(expected, actual, mismatch, mismatch, ignoreCase, false, clipping);
+        }
+
+        /// <inheritdoc/>
         public override void DisplayStringDifferences(string expected, string actual, int mismatchExpected, int mismatchActual, bool ignoreCase, bool ignoreWhiteSpace, bool clipping)
         {
             // Maximum string we can display without truncating
@@ -198,7 +204,6 @@ namespace NUnit.Framework.Internal
             if (mismatchExpected >= 0 && mismatchExpected != mismatchActual)
                 WriteCaretLine(mismatchExpected);
             WriteActualLine(actual);
-            //DisplayDifferences(expected, actual);
             if (mismatchActual >= 0)
                 WriteCaretLine(mismatchActual);
         }

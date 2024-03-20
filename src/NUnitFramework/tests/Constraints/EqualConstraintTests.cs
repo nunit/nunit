@@ -86,12 +86,12 @@ namespace NUnit.Framework.Tests.Constraints
                   },
                   {
                     "name": "Jane",
-                    "surname": Doe"
+                    "surname": "Doe"
                   }
                 ]
                 """;
             const string condensedJson = """
-                "persons":[{"name":"John","surname":"Smith"},{"name": "Jane","surname": Doe"}]
+                "persons":[{"name":"John","surname":"Smith"},{"name": "Jane","surname": "Doe"}]
                 """;
 
             Assert.That(condensedJson, Is.Not.EqualTo(prettyJson));
