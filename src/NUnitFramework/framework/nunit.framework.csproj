@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
   </ItemGroup>
 

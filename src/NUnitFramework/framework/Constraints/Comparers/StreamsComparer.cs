@@ -62,6 +62,12 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    {
+                        readByte += BUFFER_SIZE;
+                        continue;
+                    }
+
                     for (int count = 0; count < BUFFER_SIZE; ++count)
                     {
                         if (bufferExpected[count] != bufferActual[count])
