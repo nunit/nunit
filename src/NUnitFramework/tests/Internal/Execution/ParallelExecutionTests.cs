@@ -454,7 +454,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
         {
         }
 
-
         #endregion
 
         #region Helper Methods

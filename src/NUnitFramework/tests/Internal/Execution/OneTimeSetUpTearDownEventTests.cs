@@ -48,22 +48,22 @@ namespace NUnit.Framework.Tests.Internal.Execution
         {
             List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
             {
-                new TestEvent() { Action = TestAction.TestStarting },           // TestStarting fake-assembly.dll
-                new TestEvent() { Action = TestAction.TestStarting },           // TestStarting NUnit
-                new TestEvent() { Action = TestAction.TestStarting },           // TestStarting Tests
-                new TestEvent() { Action = TestAction.TestStarting },           // TestStarting TestFixtureWithOneTimeSetUpTearDown
-                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },    // From OneTimeSetUp in Baseclass
+                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting fake-assembly.dll
+                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting NUnit
+                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting Tests
+                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting TestFixtureWithOneTimeSetUpTearDown
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // From OneTimeSetUp in Baseclass
                 new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
-                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },    // From OneTimeSetUp in Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // From OneTimeSetUp in Fixture
                 new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
-                new TestEvent() { Action = TestAction.TestStarting },           // MyTest1
+                new TestEvent() { Action = TestAction.TestStarting },               // MyTest1
                 new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.TestStarting },           // MyTest2
+                new TestEvent() { Action = TestAction.TestStarting },               // MyTest2
                 new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.OneTimeTearDownStarted }, // From OneTimeTearDown in Fixture
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // From OneTimeTearDown in Fixture
                 new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
-                new TestEvent() { Action = TestAction.OneTimeTearDownStarted }, // <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
-                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },// <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },    // <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
                 new TestEvent() { Action = TestAction.TestFinished },
                 new TestEvent() { Action = TestAction.TestFinished },
                 new TestEvent() { Action = TestAction.TestFinished },
@@ -148,7 +148,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 Action = TestAction.OneTimeTearDownFinished,
             });
         }
-
 
         #endregion
 

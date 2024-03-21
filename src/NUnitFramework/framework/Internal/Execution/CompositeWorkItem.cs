@@ -336,7 +336,6 @@ namespace NUnit.Framework.Internal.Execution
             Context.EstablishExecutionEnvironment();
 
             _teardownCommand?.Execute(Context);
-
         }
 
         private string GetSkipReason()

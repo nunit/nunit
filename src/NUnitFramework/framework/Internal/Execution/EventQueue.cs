@@ -76,61 +76,104 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-
+    /// <summary>
+    /// OneTimeSetUpStartedEvent holds information needed to call the OneTimeSetUpStarted method.
+    /// </summary>
     public class OneTimeSetUpStartedEvent : Event
     {
         private readonly ITest _test;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OneTimeSetUpStartedEvent"/> class.
+        /// </summary>
+        /// <param name="test">Object that holds information about the event. Placeholder as of now, needs to be changed for productization.</param>
         public OneTimeSetUpStartedEvent(ITest test)
         {
             _test = test;
         }
 
+        /// <summary>
+        /// Calls OneTimeSetUpStarted on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
             listener.OneTimeSetUpStarted(_test);
         }
     }
 
+    /// <summary>
+    /// OneTimeSetUpFinishedEvent holds information needed to call the OneTimeSetUpFinished method.
+    /// </summary>
     public class OneTimeSetUpFinishedEvent : Event
     {
         private readonly ITest _test;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OneTimeSetUpFinishedEvent"/> class.
+        /// </summary>
+        /// <param name="test">Object that holds information about the event. Placeholder as of now, needs to be changed for productization.</param>
         public OneTimeSetUpFinishedEvent(ITest test)
         {
             _test = test;
         }
 
+        /// <summary>
+        /// Calls OneTimeSetUpFinished on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
             listener.OneTimeSetUpFinished(_test);
         }
     }
 
+    /// <summary>
+    /// OneTimeTearDownStartedEvent holds information needed to call the OneTimeTearDownStarted method.
+    /// </summary>
     public class OneTimeTearDownStartedEvent : Event
     {
         private readonly ITest _test;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OneTimeTearDownStartedEvent"/> class.
+        /// </summary>
+        /// <param name="test">Object that holds information about the event. Placeholder as of now, needs to be changed for productization.</param>
         public OneTimeTearDownStartedEvent(ITest test)
         {
             _test = test;
         }
 
+        /// <summary>
+        /// Calls OneTimeTearDownStarted on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
             listener.OneTimeTearDownStarted(_test);
         }
     }
 
+    /// <summary>
+    /// OneTimeTearDownFinishedEvent holds information needed to call the OneTimeTearDownFinished method.
+    /// </summary>
     public class OneTimeTearDownFinishedEvent : Event
     {
         private readonly ITest _test;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OneTimeTearDownFinishedEvent"/> class.
+        /// </summary>
+        /// <param name="test">Object that holds information about the event. Placeholder as of now, needs to be changed for productization.</param>
         public OneTimeTearDownFinishedEvent(ITest test)
         {
             _test = test;
         }
 
+        /// <summary>
+        /// Calls OneTimeTearDownFinished on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
             listener.OneTimeTearDownFinished(_test);
