@@ -413,7 +413,8 @@ namespace NUnit.Framework.Constraints
                 return null;
 
             int originalIndex = index;
-            StringBuilder sb = new(s.Length + 32);
+            const int headRoom = 42;
+            StringBuilder sb = new(s.Length + headRoom);
 
             for (int i = 0; i < s.Length; i++)
             {
@@ -485,7 +486,8 @@ namespace NUnit.Framework.Constraints
         {
             if (s is not null)
             {
-                StringBuilder sb = new StringBuilder(s.Length + 32);
+                const int headRoom = 42;
+                StringBuilder sb = new(s.Length + headRoom);
 
                 foreach (char c in s)
                 {
