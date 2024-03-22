@@ -62,8 +62,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },
                 new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // From OneTimeTearDown in Fixture
                 new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
-                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
-                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },    // <-- WHY ? There is no second OneTimeTearDown. This should not come, right?
                 new TestEvent() { Action = TestAction.TestFinished },
                 new TestEvent() { Action = TestAction.TestFinished },
                 new TestEvent() { Action = TestAction.TestFinished },

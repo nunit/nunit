@@ -36,10 +36,25 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
+        /// Returns true if a setUp method was already run.
+        /// </summary>
+        public bool SetUpWasRun => _setUpWasRun;
+
+        /// <summary>
         ///  Returns true if this level has any methods at all.
         ///  This flag is used to discard levels that do nothing.
         /// </summary>
-        public bool HasMethods => _setUpMethods.Count > 0 || _tearDownMethods.Count > 0;
+        public bool HasMethods => HasSetUpMethods || HasTearDownMethods;
+
+        /// <summary>
+        ///  Returns true if this level has any setUp methods.
+        /// </summary>
+        public bool HasSetUpMethods => _setUpMethods.Count > 0;
+
+        /// <summary>
+        ///  Returns true if this level has any tearDown methods.
+        /// </summary>
+        public bool HasTearDownMethods => _tearDownMethods.Count > 0;
 
         /// <summary>
         /// Run SetUp on this level.
