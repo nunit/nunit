@@ -26,14 +26,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected IgnoreException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context)
-        {
-        }
-
-        /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
         public override ResultState ResultState => ResultState.Ignored;

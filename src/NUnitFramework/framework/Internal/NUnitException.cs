@@ -3,7 +3,6 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
@@ -37,14 +36,6 @@ namespace NUnit.Framework.Internal
         /// current exception</param>
         public NUnitException(string message, Exception? inner)
             : base(message, inner)
-        {
-        }
-
-        /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected NUnitException(SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }
