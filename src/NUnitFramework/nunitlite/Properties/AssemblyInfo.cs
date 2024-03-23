@@ -15,6 +15,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.6.2)")]
 #elif NET6_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET 6.0)")]
+#elif NET8_0
+[assembly: AssemblyTitle("NUnitLite Runner (.NET 8.0)")]
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif

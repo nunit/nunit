@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Runtime.Serialization;
 
 namespace NUnit.Framework.Internal
 {
@@ -33,14 +32,6 @@ namespace NUnit.Framework.Internal
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
         public InvalidPlatformException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        /// <summary>
-        /// Serialization constructor for the <see cref="InvalidPlatformException"/> class
-        /// </summary>
-        protected InvalidPlatformException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }
