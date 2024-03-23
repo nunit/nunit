@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Compression;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework.Constraints;
@@ -155,6 +156,38 @@ namespace NUnit.Framework.Tests.Constraints
                 using Stream actualStream = actualEntry.Open();
 
                 Assert.That(expectedStream, Is.Not.EqualTo(actualStream));
+            }
+
+            [Test]
+            public void UnSeekableLargeActualStreamEqual()
+            {
+                // This creates a string that exceeds 4096 bytes for the StreamsComparer loop.
+                string streamValue = string.Concat(Enumerable.Repeat("Greetings from a stream that is from the other side!", 100));
+
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(streamValue));
+
+                using var actualArchive = CreateZipArchive(streamValue);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open();
+                Assert.That(entryStream, Is.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableLargeActualStreamUnequal()
+            {
+                // This creates a string that exceeds 4096 bytes for the StreamsComparer loop.
+                string streamValue = string.Concat(Enumerable.Repeat("Greetings from a stream that is from the other side!", 100));
+
+                string unequalStream = string.Concat(streamValue, "Some extra difference at the end.");
+
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(streamValue));
+
+                using var actualArchive = CreateZipArchive(unequalStream);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open();
+                Assert.That(entryStream, Is.Not.EqualTo(expectedStream));
             }
 
             private static ZipArchive CreateZipArchive(string content)
