@@ -30,8 +30,14 @@ namespace NUnit.Framework.Constraints.Comparers
 
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
 
-            if (bothSeekable && xStream.Length != yStream.Length)
-                return EqualMethodResult.ComparedNotEqual;
+            if (bothSeekable)
+            {
+                if (xStream.Length != yStream.Length)
+                    return EqualMethodResult.ComparedNotEqual;
+
+                if (xStream.Length == 0)
+                    return EqualMethodResult.ComparedEqual;
+            }
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
