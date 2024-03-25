@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if THREAD_ABORT
+
 using System;
 using System.Globalization;
 using System.Threading;
@@ -15,10 +17,6 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-#if !NETFRAMEWORK
-#pragma warning disable CS0618 // Type or member is obsolete
-#endif
-
         private sealed class SampleTests
         {
             private const int TimeExceedingTimeout = 500;
@@ -135,7 +133,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
         }
 
-#if THREAD_ABORT
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
         {
@@ -147,7 +144,6 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
-#endif
 
         [Test]
         public void TestTimesOutAndTearDownIsRun()
@@ -167,11 +163,7 @@ namespace NUnit.Framework.Tests.Attributes
             Thread.Sleep(2000);
             Assert.That(result.Message, Does.Contain("50ms"), "After another 2s");
 
-            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
-            // Otherwise it will be run eventually ... or not at all if the test is really hanging
-#if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
-#endif
         }
 
         [Test]
@@ -186,15 +178,11 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
 
-            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
-            // Otherwise it will be run eventually ... or not at all if the test is really hanging
-#if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
-#endif
         }
 
         [Test]
-        public void TearDownTimesOutAndNoFurtherTearDownIsRun()
+        public void TearDownTimesOutAndFurtherTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
@@ -205,11 +193,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
 
-            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
-            // Otherwise it will be run eventually ... or not at all if the test is really hanging
-#if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "Base TearDown should have been run but was not");
-#endif
         }
 
         [Test]
@@ -307,3 +291,4 @@ namespace NUnit.Framework.Tests.Attributes
         }
     }
 }
+#endif

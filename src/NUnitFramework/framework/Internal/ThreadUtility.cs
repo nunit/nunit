@@ -1,12 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Threading;
-
-#if THREAD_ABORT
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-#endif
+using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
@@ -14,14 +11,13 @@ namespace NUnit.Framework.Internal
     /// ThreadUtility provides a set of static methods convenient
     /// for working with threads.
     /// </summary>
-    public static class ThreadUtility
+    public static partial class ThreadUtility
     {
         internal static void BlockingDelay(int milliseconds)
         {
             Thread.Sleep(milliseconds);
         }
 
-#if THREAD_ABORT
         private const int ThreadAbortedCheckDelay = 100;
 
         /// <summary>
@@ -61,12 +57,12 @@ namespace NUnit.Framework.Internal
         /// <param name="nativeId">The native thread id (if known), otherwise 0.
         /// If provided, allows the thread to be killed if it's in a message pump native blocking wait.
         /// This must have previously been captured by calling <see cref="GetCurrentThreadNativeId"/> from the running thread itself.</param>
-        public static void Abort(Thread thread, int nativeId = 0)
+        public static void Abort(Thread thread, int nativeId)
         {
             if (nativeId != 0)
                 DislodgeThreadInNativeMessageWait(thread, nativeId);
 
-            thread.Abort();
+            ThreadUtility.Abort(thread, null);
         }
 
         /// <summary>
@@ -94,21 +90,7 @@ namespace NUnit.Framework.Internal
             if (nativeId != 0)
                 DislodgeThreadInNativeMessageWait(thread, nativeId);
 
-            try
-            {
-                if (stateInfo is null)
-                    thread.Abort();
-                else
-                    thread.Abort(stateInfo);
-            }
-            catch (ThreadStateException)
-            {
-                // Although obsolete, this use of Resume() takes care of
-                // the odd case where a ThreadStateException is received.
-#pragma warning disable 0618,0612    // Thread.Resume has been deprecated
-                thread.Resume();
-#pragma warning restore 0618,0612   // Thread.Resume has been deprecated
-            }
+            ThreadUtility.Abort(thread, stateInfo);
 
             if ((thread.ThreadState & ThreadState.WaitSleepJoin) != 0)
                 thread.Interrupt();
@@ -154,22 +136,20 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static bool _isNotOnWindows;
-
         /// <summary>
-        /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
+        /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,object?,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
         /// </summary>
         public static int GetCurrentThreadNativeId()
         {
-            if (_isNotOnWindows)
+            if (!OSPlatform.CurrentPlatform.IsWindows)
                 return 0;
+
             try
             {
                 return GetCurrentThreadId();
             }
-            catch (EntryPointNotFoundException)
+            catch
             {
-                _isNotOnWindows = true;
                 return 0;
             }
         }
@@ -204,7 +184,6 @@ namespace NUnit.Framework.Internal
             // P/invoke doesn’t need to follow naming convention
             CLOSE = 0x0010
         }
-#endif
 
         /// <summary>Gets <see cref="Thread.CurrentPrincipal"/> or <see langword="null" /> if the current platform does not support it.</summary>
         public static System.Security.Principal.IPrincipal? GetCurrentThreadPrincipal()

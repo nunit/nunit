@@ -31,10 +31,9 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-        [Test]
 #if THREAD_ABORT
+        [Test]
         [Timeout(10_000)]
-#endif
 #if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
@@ -45,9 +44,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestFixture]
-#if THREAD_ABORT
         [Timeout(10_000)]
-#endif
 #if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
@@ -60,6 +57,7 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             }
         }
+#endif
 
 #if NETCOREAPP
         [Platform(Include = "Win, Mono")]

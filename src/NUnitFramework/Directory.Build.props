@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition="$(TargetFramework.StartsWith('net4'))">$(DefineConstants);THREAD_ABORT</DefineConstants>
+    <DefineConstants Condition="!$(TargetFramework.StartsWith('net6'))">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
   <!-- We always want a good debugging experience in tests -->
