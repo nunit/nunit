@@ -17,7 +17,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
         [Test, Timeout(100)]
         public void TestWithTimeoutIsValid()
         {

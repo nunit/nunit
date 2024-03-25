@@ -29,7 +29,10 @@ namespace NUnit.Framework.Internal.Commands
                 context.CurrentResult = innerCommand.Execute(context);
             });
 
-            AfterTest(context);
+            RunTestMethodInThreadAbortSafeZone(context, () =>
+            {
+                AfterTest(context);
+            });
 
             return context.CurrentResult;
         }

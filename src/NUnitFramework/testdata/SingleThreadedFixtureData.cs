@@ -32,7 +32,7 @@ namespace NUnit.TestData
         }
     }
 
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
     [SingleThreaded]
     public class SingleThreadedFixture_TestWithTimeout
     {

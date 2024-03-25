@@ -3,9 +3,12 @@
 using System;
 using System.Threading;
 
-#if THREAD_ABORT
+#if NETFRAMEWORK
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+#endif
+#if NET7_0_OR_GREATER
+using System.Reflection;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -21,7 +24,37 @@ namespace NUnit.Framework.Internal
             Thread.Sleep(milliseconds);
         }
 
-#if THREAD_ABORT
+#if NETFRAMEWORK
+        /// <summary>
+        /// Cancels an "Thread.Abort" requested for the current thread.
+        /// </summary>
+        public static void ResetAbort()
+        {
+            Thread.ResetAbort();
+        }
+#elif NET7_0_OR_GREATER
+
+        private static readonly MethodInfo? ResetAbortThreadMethod =
+            typeof(System.Runtime.ControlledExecution).GetMethod("ResetAbortThread", BindingFlags.NonPublic | BindingFlags.Static);
+
+        /// <summary>
+        /// Cancels an "Thread.Abort" requested for the current thread.
+        /// </summary>
+        public static void ResetAbort()
+        {
+            ResetAbortThreadMethod?.Invoke(null, null);
+        }
+#else
+        /// <summary>
+        /// Cancels an "Thread.Abort" requested for the current thread.
+        /// </summary>
+        public static void ResetAbort()
+        {
+            // TODO:
+        }
+#endif
+
+#if NETFRAMEWORK
         private const int ThreadAbortedCheckDelay = 100;
 
         /// <summary>
@@ -105,9 +138,9 @@ namespace NUnit.Framework.Internal
             {
                 // Although obsolete, this use of Resume() takes care of
                 // the odd case where a ThreadStateException is received.
-#pragma warning disable 0618,0612    // Thread.Resume has been deprecated
+#pragma warning disable 0618, 0612    // Thread.Resume has been deprecated
                 thread.Resume();
-#pragma warning restore 0618,0612   // Thread.Resume has been deprecated
+#pragma warning restore 0618, 0612   // Thread.Resume has been deprecated
             }
 
             if ((thread.ThreadState & ThreadState.WaitSleepJoin) != 0)
