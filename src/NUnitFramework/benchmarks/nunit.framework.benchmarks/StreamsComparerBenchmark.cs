@@ -153,7 +153,7 @@ namespace NUnit.Framework
 
                     if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
                     {
-                        readByte += BUFFER_SIZE;
+                        readByte += readActual;
                         continue;
                     }
 
