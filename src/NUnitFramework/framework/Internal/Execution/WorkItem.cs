@@ -242,10 +242,8 @@ namespace NUnit.Framework.Internal.Execution
             WorkItemComplete();
         }
 
-#if THREAD_ABORT
         private readonly object _threadLock = new();
         private int _nativeThreadId;
-#endif
 
         /// <summary>
         /// Cancel (abort or stop) a WorkItem
@@ -256,7 +254,6 @@ namespace NUnit.Framework.Internal.Execution
             if (Context is not null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
-#if THREAD_ABORT
             if (force)
             {
                 Thread tThread;
@@ -285,7 +282,6 @@ namespace NUnit.Framework.Internal.Execution
                     WorkItemComplete();
                 }
             }
-#endif
         }
 
         #endregion
@@ -438,10 +434,10 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
                 Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
-#if THREAD_ABORT
+
                 lock (_threadLock)
                     _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
-#endif
+
                 RunOnCurrentThread();
             });
 
