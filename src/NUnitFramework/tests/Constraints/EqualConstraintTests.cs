@@ -243,6 +243,16 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(entryStream, Is.Not.EqualTo(expectedStream));
             }
 
+            [Test]
+            public void SeekableEmptyStreamEqual()
+            {
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Empty));
+
+                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Empty));
+
+                Assert.That(actualStream, Is.EqualTo(expectedStream));
+            }
+
             private static ZipArchive CreateZipArchive(string content)
             {
                 var archiveContents = new MemoryStream();
