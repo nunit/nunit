@@ -53,6 +53,48 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByAnd()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola").WithValue("Mundo").And.ContainKey("Hello").WithValue("World"));
+        }
+
+        [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByOrBothTrue()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola").WithValue("Mundo").Or.ContainKey("Hello").WithValue("World"));
+        }
+
+        [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByOrLeftKeyWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("NotKey").WithValue("Mundo").Or.ContainKey("Hello").WithValue("World"));
+        }
+
+        [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByOrLeftValueWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola").WithValue("NotValue").Or.ContainKey("Hello").WithValue("World"));
+        }
+
+        [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByOrRightKeyWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola").WithValue("Mundo").Or.ContainKey("NotKey").WithValue("World"));
+        }
+
+        [Test]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValueJoinedByOrRightValueWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("Hola").WithValue("Mundo").Or.ContainKey("Hello").WithValue("NotValue"));
+        }
+
+        [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
             List<KeyValuePair<string, string>> keyValuePairs = new List<KeyValuePair<string, string>>(
@@ -61,6 +103,66 @@ namespace NUnit.Framework.Tests.Constraints
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
+        }
+
+        [Test]
+        public void FailsWhenPairIsPresentUsingContainKeyWithValueJoinedByAndBothFalse()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            var expression = (IResolveConstraint)Does.ContainKey("NotKeyLeft").WithValue("NotValueLeft").And.ContainKey("NotKeyRight").WithValue("NotValueRight");
+            var constraint = expression.Resolve();
+            var result = constraint.ApplyTo(dictionary);
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void FailsWhenPairIsPresentUsingContainKeyWithValueJoinedByAndLeftKeyWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            var expression = (IResolveConstraint)Does.ContainKey("NotKey").WithValue("Mundo").And.ContainKey("Hello").WithValue("World");
+            var constraint = expression.Resolve();
+            var result = constraint.ApplyTo(dictionary);
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void FailsWhenPairIsPresentUsingContainKeyWithValueJoinedByAndLeftValueWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            var expression = (IResolveConstraint)Does.ContainKey("Hola").WithValue("NotValue").And.ContainKey("Hello").WithValue("World");
+            var constraint = expression.Resolve();
+            var result = constraint.ApplyTo(dictionary);
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void FailsWhenPairIsPresentUsingContainKeyWithValueJoinedByAndRightKeyWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            var expression = (IResolveConstraint)Does.ContainKey("Hola").WithValue("Mundo").And.ContainKey("NotKey").WithValue("World");
+            var constraint = expression.Resolve();
+            var result = constraint.ApplyTo(dictionary);
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void FailsWhenPairIsPresentUsingContainKeyWithValueJoinedByAndRightValueWrong()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            var expression = (IResolveConstraint)Does.ContainKey("Hola").WithValue("Mundo").And.ContainKey("Hello").WithValue("NotValue");
+            var constraint = expression.Resolve();
+            var result = constraint.ApplyTo(dictionary);
+
+            Assert.That(result.IsSuccess, Is.False);
         }
 
         [Test]
@@ -77,6 +179,14 @@ namespace NUnit.Framework.Tests.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
 
             Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").IgnoreCase);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpaceIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi ", "Universe" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi", " U n i v e r s e").IgnoreWhiteSpace);
         }
 
         [Test, SetCulture("en-US")]

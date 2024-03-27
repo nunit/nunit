@@ -100,6 +100,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The string to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        protected abstract bool Matches(string actual);
+        protected abstract bool Matches(string? actual);
     }
 }

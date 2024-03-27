@@ -17,9 +17,22 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            var stringComparison = equalityComparer.IgnoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
-            return xString.Equals(yString, stringComparison) ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace) ?
+                EqualMethodResult.ComparedEqual :
+                EqualMethodResult.ComparedNotEqual;
+        }
+
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace)
+        {
+            if (ignoreWhiteSpace)
+            {
+                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, true);
+                return mismatchExpected == -1 && mismatchActual == -1;
+            }
+            else
+            {
+                return x.Equals(y, ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal);
+            }
         }
     }
 }

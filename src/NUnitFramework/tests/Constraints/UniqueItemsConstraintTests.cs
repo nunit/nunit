@@ -45,11 +45,26 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique ignoring case");
         }
 
+        [TestCaseSource(nameof(IgnoreWhiteSpaceData))]
+        public void HonorsIgnoreWhiteSpace(IEnumerable actual)
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreWhiteSpace;
+            var result = constraint.ApplyTo(actual);
+
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique ignoring white-space");
+        }
+
         private static readonly object[] IgnoreCaseData =
         {
             new object[] { new SimpleObjectCollection("x", "y", "z", "Z") },
             new object[] { new[] { 'A', 'B', 'C', 'c' } },
             new object[] { new[] { "a", "b", "c", "C" } }
+        };
+
+        private static readonly object[] IgnoreWhiteSpaceData =
+        {
+            new object[] { new SimpleObjectCollection("x", "y", "z", " z ") },
+            new object[] { new[] { "a", "b", "c", " c " } }
         };
 
         private static readonly object[] DuplicateItemsData =

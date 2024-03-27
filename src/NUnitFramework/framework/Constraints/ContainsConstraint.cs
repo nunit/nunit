@@ -17,6 +17,7 @@ namespace NUnit.Framework.Constraints
         private readonly object? _expected;
         private Constraint? _realConstraint;
         private bool _ignoreCase;
+        private bool _ignoreWhiteSpace;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
@@ -62,6 +63,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore white-space and return self.
+        /// </summary>
+        public ContainsConstraint IgnoreWhiteSpace
+        {
+            get
+            {
+                _ignoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
@@ -78,6 +91,8 @@ namespace NUnit.Framework.Constraints
                 StringConstraint constraint = new SubstringConstraint(substring);
                 if (_ignoreCase)
                     constraint = constraint.IgnoreCase;
+                if (_ignoreWhiteSpace)
+                    throw new InvalidOperationException("IgnoreWhiteSpace not supported on SubStringConstraint");
                 _realConstraint = constraint;
             }
             else
@@ -85,6 +100,8 @@ namespace NUnit.Framework.Constraints
                 var itemConstraint = new EqualConstraint(_expected);
                 if (_ignoreCase)
                     itemConstraint = itemConstraint.IgnoreCase;
+                if (_ignoreWhiteSpace)
+                    itemConstraint = itemConstraint.IgnoreWhiteSpace;
                 _realConstraint = new SomeItemsConstraint(itemConstraint);
             }
 

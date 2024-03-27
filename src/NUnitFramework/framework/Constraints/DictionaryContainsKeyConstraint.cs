@@ -53,16 +53,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
         {
-            var builder = Builder;
-            if (builder is null)
-            {
-                builder = new ConstraintBuilder();
-                builder.Append(this);
-            }
-
-            var constraint = new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue);
-            builder.Append(constraint);
-            return constraint;
+            return (DictionaryContainsKeyValuePairConstraint)Instead.Append(new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue));
         }
 
         private bool Matches(object? actual)

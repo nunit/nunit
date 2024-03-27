@@ -21,6 +21,26 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess);
         }
 
+        [Test]
+        public void HonorsIgnoreWhiteSpaceForStringCollection()
+        {
+            var actualItems = new[] { "ABC", "d e f" };
+            var constraint = new ContainsConstraint("def").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo(actualItems);
+            Assert.That(result.IsSuccess);
+        }
+
+        [Test]
+        public void HonorsIgnoreWhiteSpaceForStringCollectionSearchItem()
+        {
+            var actualItems = new[] { "ABC", "d e f" };
+            var constraint = new ContainsConstraint("A B C").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo(actualItems);
+            Assert.That(result.IsSuccess);
+        }
+
         [Test, SetCulture("en-US")]
         public void HonorsIgnoreCaseForString()
         {

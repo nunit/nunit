@@ -69,6 +69,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("UNIVERSE").IgnoreCase);
         }
 
+        [Test]
+        public void IgnoreWhiteSpaceIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsValueConstraint("U n i v e r s e").IgnoreWhiteSpace);
+        }
+
         [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {

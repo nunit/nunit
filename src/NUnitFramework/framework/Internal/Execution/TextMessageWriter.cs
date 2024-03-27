@@ -164,17 +164,14 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        /// <summary>
-        /// Display the expected and actual string values on separate lines.
-        /// If the mismatch parameter is >=0, an additional line is displayed
-        /// line containing a caret that points to the mismatch point.
-        /// </summary>
-        /// <param name="expected">The expected string value</param>
-        /// <param name="actual">The actual string value</param>
-        /// <param name="mismatch">The point at which the strings don't match or -1</param>
-        /// <param name="ignoreCase">If true, case is ignored in string comparisons</param>
-        /// <param name="clipping">If true, clip the strings to fit the max line length</param>
+        /// <inheritdoc/>
         public override void DisplayStringDifferences(string expected, string actual, int mismatch, bool ignoreCase, bool clipping)
+        {
+            DisplayStringDifferences(expected, actual, mismatch, mismatch, ignoreCase, false, clipping);
+        }
+
+        /// <inheritdoc/>
+        public override void DisplayStringDifferences(string expected, string actual, int mismatchExpected, int mismatchActual, bool ignoreCase, bool ignoreWhiteSpace, bool clipping)
         {
             // Maximum string we can display without truncating
             int maxDisplayLength = MaxLineLength
@@ -182,23 +179,33 @@ namespace NUnit.Framework.Internal
                 - 2;           // 2 quotation marks
 
             if (clipping)
-                MsgUtils.ClipExpectedAndActual(ref expected, ref actual, maxDisplayLength, mismatch);
+            {
+                if (ignoreWhiteSpace)
+                {
+                    expected = MsgUtils.ClipWhenNeeded(expected, expected.Length, maxDisplayLength, ref mismatchExpected);
+                    actual = MsgUtils.ClipWhenNeeded(actual, actual.Length, maxDisplayLength, ref mismatchActual);
+                }
+                else
+                {
+                    MsgUtils.ClipExpectedAndActual(ref expected, ref actual, maxDisplayLength, ref mismatchExpected, ref mismatchActual);
+                }
+            }
 
-            expected = MsgUtils.EscapeControlChars(expected);
-            actual = MsgUtils.EscapeControlChars(actual);
-
-            // The mismatch position may have changed due to clipping or white space conversion
-            mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, ignoreCase);
+            expected = MsgUtils.EscapeControlChars(expected, ref mismatchExpected);
+            actual = MsgUtils.EscapeControlChars(actual, ref mismatchActual);
 
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
             if (ignoreCase)
                 Write(", ignoring case");
+            if (ignoreWhiteSpace)
+                Write(", ignoring white-space");
             WriteLine();
+            if (mismatchExpected >= 0 && mismatchExpected != mismatchActual)
+                WriteCaretLine(mismatchExpected);
             WriteActualLine(actual);
-            //DisplayDifferences(expected, actual);
-            if (mismatch >= 0)
-                WriteCaretLine(mismatch);
+            if (mismatchActual >= 0)
+                WriteCaretLine(mismatchActual);
         }
         #endregion
 
