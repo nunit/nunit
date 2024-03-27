@@ -487,6 +487,22 @@ namespace NUnitLite
         {
         }
 
+        public void OneTimeSetUpStarted(ITest test)
+        {
+        }
+
+        public void OneTimeSetUpFinished(ITest test)
+        {
+        }
+
+        public void OneTimeTearDownStarted(ITest test)
+        {
+        }
+
+        public void OneTimeTearDownFinished(ITest test)
+        {
+        }
+
         #endregion
     }
 }

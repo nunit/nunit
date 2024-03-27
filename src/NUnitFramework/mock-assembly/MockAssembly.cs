@@ -38,7 +38,8 @@ namespace NUnit.Tests
                         + BadFixture.Tests
                         + FixtureWithTestCases.Tests
                         + ParameterizedFixture.Tests
-                        + GenericFixtureConstants.Tests;
+                        + GenericFixtureConstants.Tests
+                        + TestFixtureWithOneTimeSetUpTearDown.Tests;
 
             public const int Suites = MockTestFixture.Suites
                         + Singletons.OneTestCase.Suites
@@ -49,10 +50,15 @@ namespace NUnit.Tests
                         + FixtureWithTestCases.Suites
                         + ParameterizedFixture.Suites
                         + GenericFixtureConstants.Suites
-                        + NamespaceSuites;
+                        + NamespaceSuites
+                        + TestFixtureWithOneTimeSetUpTearDown.Suites;
 
             public const int TestStartedEvents = Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests;
             public const int TestFinishedEvents = Tests;
+            public const int OneTimeSetUpStartedEvents = TestFixtureWithOneTimeSetUpTearDown.OneTimeSetUps;
+            public const int OneTimeSetUpFinishedEvents = TestFixtureWithOneTimeSetUpTearDown.OneTimeSetUps;
+            public const int OneTimeTearDownStartedEvents = TestFixtureWithOneTimeSetUpTearDown.OneTimeTearDowns;
+            public const int OneTimeTearDownFinishedEvents = TestFixtureWithOneTimeSetUpTearDown.OneTimeTearDowns;
             public const int TestOutputEvents = 1;
 
             public const int Nodes = Tests + Suites;
@@ -65,7 +71,8 @@ namespace NUnit.Tests
                         + TestAssembly.MockTestFixture.Tests
                         + FixtureWithTestCases.Tests
                         + ParameterizedFixture.Tests
-                        + GenericFixtureConstants.Tests;
+                        + GenericFixtureConstants.Tests
+                        + TestFixtureWithOneTimeSetUpTearDown.Tests;
 
             public const int Skipped_Ignored = MockTestFixture.Skipped_Ignored + IgnoredFixture.Tests;
             public const int Skipped_Explicit = MockTestFixture.Skipped_Explicit + ExplicitFixture.Tests;
@@ -329,6 +336,53 @@ namespace NUnit.Tests
     public class GenericFixture<T>
     {
         public GenericFixture(T num)
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+        }
+
+        [Test]
+        public void Test2()
+        {
+        }
+    }
+
+    public class BaseClassWithOneTimeSetUp
+    {
+        [OneTimeSetUp]
+        public void BaseOneTimeSetUp()
+        {
+        }
+    }
+
+    [TestFixture]
+    public class TestFixtureWithOneTimeSetUpTearDown : BaseClassWithOneTimeSetUp
+    {
+        public const int Tests = 2;
+        public const int Suites = 1;
+        public const int OneTimeSetUps = 2;
+        public const int OneTimeTearDowns = 1;
+
+        [OneTimeSetUp]
+        public void MyOneTimeSetUp()
+        {
+        }
+
+        [OneTimeTearDown]
+        public void MyOneTimeTearDown()
+        {
+        }
+
+        [SetUp]
+        public void MySetUp()
+        {
+        }
+
+        [TearDown]
+        public void MyTearDown()
         {
         }
 

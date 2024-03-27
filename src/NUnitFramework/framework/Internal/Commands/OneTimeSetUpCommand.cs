@@ -21,7 +21,16 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = context =>
             {
+                // The event should only be fired if there are actual setUp methods to be executed.
+                bool eventShouldBeFired = setUpTearDown.HasSetUpMethods;
+
+                if (eventShouldBeFired)
+                    context.Listener.OneTimeSetUpStarted(Test);
+
                 setUpTearDown.RunSetUp(context);
+
+                if (eventShouldBeFired)
+                    context.Listener.OneTimeSetUpFinished(Test);
             };
         }
     }
