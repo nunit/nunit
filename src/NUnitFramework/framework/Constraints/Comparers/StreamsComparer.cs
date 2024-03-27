@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -68,9 +69,9 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
-                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    if (bufferExpected.SequenceEqual(bufferActual))
                     {
-                        readByte += BUFFER_SIZE;
+                        readByte += readActual;
                         continue;
                     }
 
@@ -88,7 +89,6 @@ namespace NUnit.Framework.Constraints.Comparers
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
-                    readByte += BUFFER_SIZE;
                 }
             }
             finally
