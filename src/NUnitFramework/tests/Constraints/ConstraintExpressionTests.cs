@@ -89,6 +89,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ConstraintExpressionAnyOfTypeIgnoreWhiteSpace()
+        {
+            var constraintExpression = new ConstraintExpression();
+            var constraint = constraintExpression.AnyOf(new string[] { "RED", "GREEN" }).IgnoreWhiteSpace;
+            Assert.That(" R E D ", constraint);
+        }
+
+        [Test]
         public void ConstraintExpressionAnyOfList()
         {
             var constraintExpression = new ConstraintExpression();

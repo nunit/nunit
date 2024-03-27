@@ -3,15 +3,17 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EmptyStringConstraint tests whether a string is empty.
+    /// WhiteSpaceConstraint tests whether a string contains white space.
     /// </summary>
-    public class EmptyStringConstraint : StringConstraint
+    public class WhiteSpaceConstraint : StringConstraint
     {
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description => "<empty>";
+        private const string WhiteSpace = "white-space";
+
+        /// <inheritdoc/>
+        public override string Description => WhiteSpace;
+
+        /// <inheritdoc/>
+        public override string DisplayName => WhiteSpace;
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -20,7 +22,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual)
         {
-            return actual == string.Empty;
+            return string.IsNullOrWhiteSpace(actual);
         }
     }
 }

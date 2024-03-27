@@ -115,6 +115,15 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region WhiteSpace
+
+        /// <summary>
+        /// Returns a constraint that tests for white-space
+        /// </summary>
+        public static WhiteSpaceConstraint WhiteSpace => new();
+
+        #endregion
+
         #region Unique
 
         /// <summary>
