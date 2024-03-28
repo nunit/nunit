@@ -16,7 +16,7 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)

@@ -522,18 +522,21 @@ namespace NUnit.Framework.Internal
                     Message = ex.GetMessageWithoutThrowing();
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
                 }
-#if THREAD_ABORT
                 else if (ex is ThreadAbortException)
                 {
-                    ResultState = ResultState.Cancelled.WithSite(site);
-                    Message = "Test cancelled by user";
-                    StackTrace = ex.GetStackTraceWithoutThrowing();
+                    ThreadUtility.ResetAbort();
+                    ResultState = ResultState.Failure.WithSite(site);
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                    if (TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
+                        Message = $"Test exceeded Timeout value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    else
+                        Message = "Test cancelled by user";
                 }
-#endif
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
                     ResultState = ResultState.Failure.WithSite(site);
-                    Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    string command = TestExecutionContext.CurrentContext.UseCancellation ? "CancelAfter" : "Timeout";
+                    Message = $"Test exceeded {command} value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
                     StackTrace = ExceptionHelper.BuildStackTrace(ex);
                 }
                 else

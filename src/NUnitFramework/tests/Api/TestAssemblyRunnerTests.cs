@@ -11,9 +11,6 @@ using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
-#if THREAD_ABORT
-using System.Text;
-#endif
 
 namespace NUnit.Framework.Tests.Api
 {
@@ -501,7 +498,7 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
+#if TRUE // Can't stop run on platforms without ability to abort thread
 
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
@@ -544,7 +541,7 @@ namespace NUnit.Framework.Tests.Api
 
                 if (_activeTests.Count > 0)
                 {
-                    var sb = new StringBuilder("The following tests never terminated:" + Environment.NewLine);
+                    var sb = new System.Text.StringBuilder("The following tests never terminated:" + Environment.NewLine);
                     foreach (var name in _activeTests.Keys)
                         sb.AppendLine($" * {name}");
                     Assert.Fail(sb.ToString());

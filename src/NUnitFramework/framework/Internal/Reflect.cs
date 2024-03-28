@@ -255,10 +255,12 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException e)
             {
-                throw new NUnitException("Rethrown", e.Unwrap());
+                if (e.InnerException is System.Threading.ThreadAbortException)
+                    throw e.InnerException;
+                else
+                    throw new NUnitException("Rethrown", e.Unwrap());
             }
             catch (Exception e)
-#if THREAD_ABORT
                 // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
                 // will not rethrow at the end of the catch block. Instead, it will resurrect
                 // the ThreadAbortException at the end of the next unrelated catch block that
@@ -268,7 +270,6 @@ namespace NUnit.Framework.Internal
 
                 // This is just cleaner than catching and rethrowing:
                 when (e is not System.Threading.ThreadAbortException)
-#endif
             {
                 throw new NUnitException("Rethrown", e);
             }

@@ -1,9 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-#if THREAD_ABORT
-using System.Threading;
-#endif
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -42,10 +39,6 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception ex)
             {
-#if THREAD_ABORT
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
                 context.CurrentResult.RecordException(ex);
             }
         }

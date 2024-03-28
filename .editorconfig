@@ -161,6 +161,11 @@ dotnet_diagnostic.IDE0044.severity = warning
 # IDE0055: Fix formatting  (Skipping this as it doesnt say WHAT is wrong. Rely on StyleCop instead)
 dotnet_diagnostic.IDE0055.severity = none
 
+# IDE0079: Remove unnecessary suppression
+# This rule implementation is flaky. It claims it can be removed,
+# but when the file is actually opened. The violation goes away.
+dotnet_diagnostic.IDE0079.severity = none
+
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = warning
 
@@ -177,3 +182,10 @@ dotnet_diagnostic.CSIsNull001.severity = warning
 
 # CSIsNull002: Use `is object` for non-null checks
 dotnet_diagnostic.CSIsNull002.severity = warning
+
+##################################################################################
+# NET8 (or later) Analyzers
+
+# SYSLIB1045: Convert to 'GeneratedRegexAttribute'.
+
+dotnet_diagnostic.SYSLIB1045.severity = silent

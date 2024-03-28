@@ -1,9 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-#if THREAD_ABORT
-using System.Threading;
-#endif
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Builders;
@@ -55,12 +52,6 @@ namespace NUnit.Framework.Internal.Execution
                 // exception from the test here. In addition, since
                 // users may create their own command wrappers, etc.
                 // we have to protect against unhandled exceptions.
-
-#if THREAD_ABORT
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-
                 Context.CurrentResult.RecordException(ex);
                 Result = Context.CurrentResult;
             }

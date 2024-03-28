@@ -21,6 +21,7 @@ namespace NUnitLite
         /// <param name="result">The result to be written</param>
         /// <param name="outputPath">Path to the file to which the result is written</param>
         /// <param name="runSettings">A dictionary of settings used for this test run</param>
+        /// <param name="filter">The filter to apply</param>
         public void WriteResultFile(ITestResult result, string outputPath, IDictionary<string, object> runSettings, TestFilter filter)
         {
             using (var stream = new FileStream(outputPath, FileMode.Create))

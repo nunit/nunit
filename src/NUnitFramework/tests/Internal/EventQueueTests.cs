@@ -106,7 +106,7 @@ namespace NUnit.Framework.Tests.Internal
             private volatile int _receivedEvents;
 
             [Test]
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
             [Timeout(1000)]
 #endif
             public void DequeueBlocking_Stop()
@@ -173,7 +173,7 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
         [Timeout(3000)]
 #endif
         public void PumpEvents()
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
-#if THREAD_ABORT
+#if SUPPORTS_TIMEOUT
         [Timeout(3000)]
 #endif
         public void PumpSynchronousAndAsynchronousEvents()
@@ -260,12 +260,10 @@ namespace NUnit.Framework.Tests.Internal
                 {
                     Consumer(parameter);
                 }
-#if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
                 {
-                    Thread.ResetAbort();
+                    ThreadUtility.ResetAbort();
                 }
-#endif
                 catch (Exception ex)
                 {
                     _myConsumerException = ex;

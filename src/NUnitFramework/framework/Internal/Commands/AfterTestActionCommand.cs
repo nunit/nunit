@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal.Commands
         public AfterTestActionCommand(TestCommand innerCommand, TestActionItem action)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", nameof(innerCommand));
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "AfterTestActionCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
             AfterTest = context =>

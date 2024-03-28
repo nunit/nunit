@@ -28,15 +28,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected SuccessException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
         public override ResultState ResultState => ResultState.Success;

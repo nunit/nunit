@@ -6,7 +6,7 @@ namespace NUnit.Tests
 {
     public class SlowTests
     {
-        public const int SINGLE_TEST_DELAY = 1000;
+        public const int SINGLE_TEST_DELAY = 10_000;
 
         public class AAA
         {

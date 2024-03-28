@@ -112,7 +112,8 @@ This brings clarity to the code and makes it easy to change the mapping between 
 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
-- `THREAD_ABORT` enables timeouts and forcible cancellation
+- `SUPPORT_TIMEOUT` enables timeouts
+- `THREAD_ABORT` enables forcible cancellation
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
 For example, `NET462`, `NETSTANDARD2_0`, `NET6_0`, and so on.
