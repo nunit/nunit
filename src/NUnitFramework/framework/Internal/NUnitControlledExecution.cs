@@ -4,17 +4,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#if NETFRAMEWORK
+#if THREAD_ABORT
 
+using System;
 using System.Threading;
-using NUnit.Framework.Internal;
 
-namespace System.Runtime
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Allows to run code and abort it asynchronously.
     /// </summary>
-    internal static class ControlledExecution
+    internal static class NUnitControlledExecution
     {
         [ThreadStatic]
         private static bool _executingOnCurrentThread;
@@ -99,11 +99,10 @@ namespace System.Runtime
                 // Unmark this thread for recursion detection.
                 _executingOnCurrentThread = false;
 
-                if (cancellationToken.IsCancellationRequested &&
-                    Thread.CurrentThread.ThreadState == ThreadState.AbortRequested)
+                if (cancellationToken.IsCancellationRequested)
                 {
                     // Reset an abort request that may still be pending on this thread.
-                    Thread.ResetAbort();
+                    ThreadUtility.ResetAbort();
                 }
             }
         }

@@ -216,9 +216,11 @@ namespace NUnit.Framework.Internal
             return exception;
         }
 
+#if THREAD_ABORT
 #if NETFRAMEWORK
         private static readonly FieldInfo? RemoteStackTraceField =
             typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.NonPublic | BindingFlags.Instance);
+#endif
 
         /// <summary>
         /// Stores the provided stack trace into the specified <see cref="Exception"/> instance.
@@ -247,10 +249,14 @@ namespace NUnit.Framework.Internal
                 throw new ArgumentNullException(nameof(stackTrace));
             }
 
+#if NETFRAMEWORK
             RemoteStackTraceField?.SetValue(source, stackTrace);
+#else
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.SetRemoteStackTrace(source, stackTrace);
+#endif
 
             return source;
         }
 #endif
-    }
+        }
 }

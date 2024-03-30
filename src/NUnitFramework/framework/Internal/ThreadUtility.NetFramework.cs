@@ -13,7 +13,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static void ResetAbort()
         {
-            Thread.ResetAbort();
+            if (Thread.CurrentThread.ThreadState == ThreadState.AbortRequested)
+                Thread.ResetAbort();
         }
 
         /// <summary>

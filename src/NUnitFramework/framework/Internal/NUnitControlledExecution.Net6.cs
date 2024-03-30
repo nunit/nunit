@@ -6,14 +6,15 @@
 
 #if NET6_0
 
+using System;
 using System.Threading;
 
-namespace System.Runtime
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Allows to run code and abort it asynchronously.
     /// </summary>
-    internal static class ControlledExecution
+    internal static class NUnitControlledExecution
     {
         /// <summary>
         /// Runs code that may be aborted asynchronously.

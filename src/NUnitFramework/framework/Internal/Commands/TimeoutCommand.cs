@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Runtime;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands
@@ -24,9 +23,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <inheritdoc/>
         protected override void ExecuteInnerCommand(TestExecutionContext context)
         {
-#pragma warning disable SYSLIB0046 // Type or member is obsolete
-            ControlledExecution.Run(() => base.ExecuteInnerCommand(context), context.CancellationToken);
-#pragma warning restore SYSLIB0046 // Type or member is obsolete
+            NUnitControlledExecution.Run(() => base.ExecuteInnerCommand(context), context.CancellationToken);
         }
     }
 }

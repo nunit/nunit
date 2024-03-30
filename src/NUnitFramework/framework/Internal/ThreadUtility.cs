@@ -59,10 +59,10 @@ namespace NUnit.Framework.Internal
         /// This must have previously been captured by calling <see cref="GetCurrentThreadNativeId"/> from the running thread itself.</param>
         public static void Abort(Thread thread, int nativeId)
         {
+            ThreadUtility.Abort(thread, null);
+
             if (nativeId != 0)
                 DislodgeThreadInNativeMessageWait(thread, nativeId);
-
-            ThreadUtility.Abort(thread, null);
         }
 
         /// <summary>
@@ -87,10 +87,10 @@ namespace NUnit.Framework.Internal
         /// This must have previously been captured by calling <see cref="GetCurrentThreadNativeId"/> from the running thread itself.</param>
         public static void Kill(Thread thread, object? stateInfo, int nativeId = 0)
         {
+            ThreadUtility.Abort(thread, stateInfo);
+
             if (nativeId != 0)
                 DislodgeThreadInNativeMessageWait(thread, nativeId);
-
-            ThreadUtility.Abort(thread, stateInfo);
 
             if ((thread.ThreadState & ThreadState.WaitSleepJoin) != 0)
                 thread.Interrupt();
@@ -112,16 +112,12 @@ namespace NUnit.Framework.Internal
         {
             var context = (CheckOnAbortingThreadState)state!;
 
-            switch (context.Thread.ThreadState)
+            if (context.Thread.ThreadState == ThreadState.AbortRequested)
             {
-                case ThreadState.Aborted:
-                    return;
-                case ThreadState.AbortRequested:
-                    PostThreadCloseMessage(context.NativeId);
-                    break;
+                // Send message to thread and check again later.
+                PostThreadCloseMessage(context.NativeId);
+                Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, state);
             }
-
-            Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, state);
         }
 
         private sealed class CheckOnAbortingThreadState
