@@ -36,13 +36,15 @@ namespace NUnit.Framework.Internal.Commands
                         context.Listener.OneTimeTearDownStarted(Test);
 
                     setUpTearDownItem.RunTearDown(context);
-
-                    if (eventShouldBeFired)
-                        context.Listener.OneTimeTearDownFinished(Test);
                 }
                 catch (Exception ex)
                 {
                     suiteResult.RecordTearDownException(ex);
+                }
+                finally
+                {
+                    if (eventShouldBeFired)
+                        context.Listener.OneTimeTearDownFinished(Test);
                 }
             };
         }

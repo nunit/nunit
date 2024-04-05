@@ -27,10 +27,15 @@ namespace NUnit.Framework.Internal.Commands
                 if (eventShouldBeFired)
                     context.Listener.OneTimeSetUpStarted(Test);
 
-                setUpTearDown.RunSetUp(context);
-
-                if (eventShouldBeFired)
-                    context.Listener.OneTimeSetUpFinished(Test);
+                try
+                {
+                    setUpTearDown.RunSetUp(context);
+                }
+                finally
+                {
+                    if (eventShouldBeFired)
+                        context.Listener.OneTimeSetUpFinished(Test);
+                }
             };
         }
     }
