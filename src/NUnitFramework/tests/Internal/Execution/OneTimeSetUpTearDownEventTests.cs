@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,81 +7,168 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.TestFixtureTests;
+using NUnit.TestData.OneTimeSetUpTearDownData;
 
 namespace NUnit.Framework.Tests.Internal.Execution
 {
-    [TestFixtureSource(nameof(GetOneTimeSetUpTearDownSuites))]
+    [TestFixture]
     [NonParallelizable]
     public class OneTimeSetUpTearDownEventTests : ITestListener
     {
-        private readonly TestSuite _testSuite;
-
-        private ConcurrentQueue<TestEvent> _events;
+        private ConcurrentQueue<TestEvent> _events = new();
 
         private IEnumerable<TestEvent> AllEvents => _events.AsEnumerable();
 
-        public OneTimeSetUpTearDownEventTests(TestSuite testSuite)
-        {
-            _testSuite = testSuite;
-        }
-
-        [OneTimeSetUp]
-        public void RunTestSuite()
+        private void RunTestSuite(TestSuite testSuite)
         {
             _events = new ConcurrentQueue<TestEvent>();
 
-            var dispatcher = new ParallelWorkItemDispatcher(4);
+            var dispatcher = new ParallelWorkItemDispatcher(1);
             var context = new TestExecutionContext();
             context.Dispatcher = dispatcher;
             context.Listener = this;
 
-            var workItem = TestBuilder.CreateWorkItem(_testSuite, context);
+            var workItem = TestBuilder.CreateWorkItem(testSuite, context);
 
             dispatcher.Start(workItem);
             workItem.WaitForCompletion();
         }
 
-        [Test]
-        public void TestEventsCompleteAndInRightOrder()
+        private void RunTestFixture(object testFixture)
         {
+            TestSuite suite = TestBuilder.MakeFixture(testFixture);
+            suite.Fixture = testFixture;
+            RunTestSuite(suite);
+        }
+
+        [Test]
+        public void RegularTestFixture_AllPassing()
+        {
+            var fixture = new SetUpAndTearDownFixture();
+            RunTestFixture(fixture);
+
             List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
             {
-                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting fake-assembly.dll
-                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting NUnit
-                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting Tests
-                new TestEvent() { Action = TestAction.TestStarting },               // TestStarting TestFixtureWithOneTimeSetUpTearDown
-                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // From OneTimeSetUp in Baseclass
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp in Fixture
                 new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
-                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // From OneTimeSetUp in Fixture
-                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
-                new TestEvent() { Action = TestAction.TestStarting },               // MyTest1
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1
                 new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.TestStarting },               // MyTest2
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2
                 new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // From OneTimeTearDown in Fixture
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown in Fixture
                 new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
-                new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.TestFinished },
-                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
             CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
         }
 
-        #region Test Data
-
-        private static IEnumerable<TestFixtureData> GetOneTimeSetUpTearDownSuites()
+        [Test]
+        public void RegularTestFixture_FailingOneTimeSetUp()
         {
-            yield return new TestFixtureData(
-                Suite("fake-assembly.dll")
-                    .Containing(Suite("NUnit")
-                        .Containing(Suite("Tests")
-                            .Containing(Fixture(typeof(TestFixtureWithOneTimeSetUpTearDown))))));
+            var fixture = new SetUpAndTearDownFixture
+            {
+                ThrowInBaseSetUp = true
+            };
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp in Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Tests are not started since OTS failed
+                new TestEvent() { Action = TestAction.TestFinished },               // Tests are not started since OTS failed
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown in Fixture
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
         }
 
-        #endregion
+        [Test]
+        public void OverriddenOneTimeSetUpOneTimeTearDown_AllPassing()
+        {
+            var fixture = new OverrideSetUpAndTearDown();
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // Overridden OneTimeSetUp
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // Overridden OneTimeTearDown
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+        }
+
+        [Test]
+        public void OverriddenOneTimeSetUpOneTimeTearDown_FailingBaseOneTimeSetUp()
+        {
+            var fixture = new OverrideSetUpAndTearDown()
+            {
+                // Base OneTimeSetUp would fail, but since derived class overrides, the failure never occurs
+                ThrowInBaseSetUp = true
+            };
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // Overridden OneTimeSetUp
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // Overridden OneTimeTearDown
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+        }
+
+        [Test]
+        public void RegularTestFixture_FailingOneTimeTearDown()
+        {
+            var fixture = new MisbehavingFixture()
+            {
+                BlowUpInTearDown = true,
+            };
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown, both events should come although OTT fails
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+        }
 
         #region ITestListener implementation
 
@@ -145,20 +231,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
             {
                 Action = TestAction.OneTimeTearDownFinished,
             });
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private static TestSuite Suite(string name)
-        {
-            return TestBuilder.MakeSuite(name);
-        }
-
-        private static TestSuite Fixture(Type type)
-        {
-            return TestBuilder.MakeFixture(type);
         }
 
         #endregion
