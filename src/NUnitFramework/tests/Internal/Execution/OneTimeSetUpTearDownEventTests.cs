@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -198,6 +199,31 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+        }
+
+        [Test]
+        public void TestFixtureWithMultipleSetUpTearDown_EventsForEachOneTimeSetUpOneTimeTearDown()
+        {
+            var fixture = new FixtureWithMultipleSetUpTearDown();
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp1
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp2
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown1
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown2
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+            //Debugger.Launch();
             CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
         }
 
