@@ -170,6 +170,37 @@ namespace NUnit.Framework.Tests.Internal.Execution
             CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
         }
 
+        [Test]
+        public void DerivedTestFixture_EventsForEachOneTimeSetUpOneTimeTearDown()
+        {
+            var fixture = new DerivedSetUpAndTearDownFixture();
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp from base class
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp from derived class
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from base class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test1 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test2 from derived class
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown from derived class
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown from base class
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+        }
+
         #region ITestListener implementation
 
         void ITestListener.TestStarted(ITest test)
