@@ -573,4 +573,33 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
             DisposeCalled++;
         }
     }
+
+    [TestFixture]
+    public class FixtureWithMultipleSetUpTearDown
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp1()
+        {
+        }
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp2()
+        {
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown1()
+        {
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown2()
+        {
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
 }
