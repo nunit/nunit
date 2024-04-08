@@ -16,6 +16,7 @@ namespace NUnit.Framework.Constraints
         private readonly object? _expectedValue;
         private readonly Tolerance _tolerance;
         private readonly bool _caseInsensitive;
+        private readonly bool _ignoringWhiteSpace;
         private readonly bool _clipStrings;
         private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
@@ -49,6 +50,7 @@ namespace NUnit.Framework.Constraints
             _expectedValue = constraint.Arguments[0];
             _tolerance = constraint.Tolerance;
             _caseInsensitive = constraint.CaseInsensitive;
+            _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
             _clipStrings = constraint.ClipStrings;
             _failurePoints = constraint.FailurePoints;
         }
@@ -82,14 +84,14 @@ namespace NUnit.Framework.Constraints
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, _caseInsensitive);
+            (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(expected, actual, _caseInsensitive, _ignoringWhiteSpace);
 
             if (expected.Length == actual.Length)
-                writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
+                writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatchExpected);
             else
-                writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
+                writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatchExpected);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, _caseInsensitive, _clipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatchExpected, mismatchActual, _caseInsensitive, _ignoringWhiteSpace, _clipStrings);
         }
         #endregion
 
@@ -162,12 +164,12 @@ namespace NUnit.Framework.Constraints
         {
             if (failurePoint.ExpectedValue is string expectedString && failurePoint.ActualValue is string actualString)
             {
-                int mismatch = MsgUtils.FindMismatchPosition(expectedString, actualString, 0, _caseInsensitive);
+                (int mismatchExpected, int _) = MsgUtils.FindMismatchPosition(expectedString, actualString, _caseInsensitive, _ignoringWhiteSpace);
 
                 if (expectedString.Length == actualString.Length)
-                    writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatch);
+                    writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatchExpected);
                 else
-                    writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatch);
+                    writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatchExpected);
                 writer.WriteLine($"  Expected: {MsgUtils.FormatCollection(expected)}");
                 writer.WriteLine($"  But was:  {MsgUtils.FormatCollection(actual)}");
                 writer.WriteLine($"  First non-matching item at index [{failurePoint.Position}]: \"{failurePoint.ExpectedValue}\"");
