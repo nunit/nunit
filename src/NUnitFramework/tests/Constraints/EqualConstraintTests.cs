@@ -244,6 +244,20 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
+            public void ShortReadingMemoryStream_AssertErrorMessageFailurePointIsCorrect()
+            {
+                var unequalStream = HelloString.Remove(HelloString.Length - 1, 1) + ".";
+
+                using var expectedStream = new ShortReadingMemoryStream(Encoding.UTF8.GetBytes(HelloString));
+
+                using var entryStream = new ShortReadingMemoryStream(Encoding.UTF8.GetBytes(unequalStream));
+
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(entryStream, Is.EqualTo(expectedStream)));
+
+                Assert.That(ex?.Message, Does.Contain("Stream lengths are both 9. Streams differ at offset 8."));
+            }
+
+            [Test]
             public void SeekableEmptyStreamEqual()
             {
                 using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Empty));
@@ -268,6 +282,18 @@ namespace NUnit.Framework.Tests.Constraints
                 }
 
                 return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
+            }
+
+            private class ShortReadingMemoryStream : MemoryStream
+            {
+                public ShortReadingMemoryStream(byte[] bytes) : base(bytes)
+                {
+                }
+
+                public override int Read(byte[] buffer, int offset, int count)
+                {
+                    return base.Read(buffer, offset, 2);
+                }
             }
         }
 

@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
                     if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
                     {
-                        readByte += BUFFER_SIZE;
+                        readByte += readActual;
                         continue;
                     }
 
@@ -88,7 +88,6 @@ namespace NUnit.Framework.Constraints.Comparers
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
-                    readByte += BUFFER_SIZE;
                 }
             }
             finally
