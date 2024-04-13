@@ -734,7 +734,7 @@ namespace NUnit.Framework.Constraints
         /// presence of a particular value in the Dictionary value collection.
         /// </summary>
         /// <param name="expected">The value to be matched in the Dictionary value collection</param>
-        public DictionaryContainsValueConstraint ContainValue(object expected)
+        public DictionaryContainsValueConstraint ContainValue(object? expected)
         {
             return Append(new DictionaryContainsValueConstraint(expected));
         }
