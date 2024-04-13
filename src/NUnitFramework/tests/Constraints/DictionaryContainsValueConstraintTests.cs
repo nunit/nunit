@@ -28,11 +28,12 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
 
-        [Test]
-        public void SucceedsWhenValueIsPresentUsingContainValue()
+        [Theory]
+        public void SucceedsWhenValueIsPresentUsingContainValue(bool valueIsNull)
         {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-            Assert.That(dictionary, Does.ContainValue("Mundo"));
+            var expectedValue = valueIsNull ? null : "Mundo";
+            var dictionary = new Dictionary<string, string?> { { "Hello", "World" }, { "Hola", expectedValue } };
+            Assert.That(dictionary, Does.ContainValue(expectedValue));
         }
 
         [Test]
