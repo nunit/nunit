@@ -1,7 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Xml;
@@ -77,6 +79,17 @@ namespace NUnit.Framework.Internal
                     {
                         writer.WriteAttributeString("framework-version", typeof(TestProgressReporter).Assembly.GetName().Version?.ToString());
                     }
+                    if (test is TestSuite suite)
+                    {
+                        if (suite.OneTimeSetUpMethods.Any())
+                        {
+                            WriteOneTimeSetupTearDownElement(writer, suite.OneTimeSetUpMethods, "OneTimeSetup");
+                        }
+                        if (suite.OneTimeTearDownMethods.Any())
+                        {
+                            WriteOneTimeSetupTearDownElement(writer, suite.OneTimeTearDownMethods, "OneTimeTearDown");
+                        }
+                    }
                 }
                 else
                 {
@@ -88,6 +101,18 @@ namespace NUnit.Framework.Internal
             }
 
             return stringWriter.ToString();
+        }
+
+        private static void WriteOneTimeSetupTearDownElement(XmlWriter writer, IEnumerable<IMethodInfo> methods, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            foreach (var method in methods)
+            {
+                writer.WriteStartElement("method");
+                writer.WriteAttributeStringSafe("name", $"{method.TypeInfo.Name}.{method.Name}");
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
         }
 
         /// <summary>
