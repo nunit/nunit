@@ -10,10 +10,10 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class DictionaryContainsKeyValuePairConstraintTests
     {
-        [Theory]
-        public void SucceedsWhenKeyValuePairIsPresent(bool valueIsNull)
+        [TestCase("Universe")]
+        [TestCase(null)]
+        public void SucceedsWhenKeyValuePairIsPresent(string? expectedValue)
         {
-            var expectedValue = valueIsNull ? null : "Universe";
             var dictionary = new Dictionary<string, string?> { { "Hello", "World" }, { "Hi", expectedValue }, { "Hola", "Mundo" } };
 
             Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi", expectedValue));
@@ -39,10 +39,10 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
 
-        [Theory]
-        public void SucceedsWhenPairIsPresentUsingContainKeyWithValue(bool valueIsNull)
+        [TestCase("Mundo")]
+        [TestCase(null)]
+        public void SucceedsWhenPairIsPresentUsingContainKeyWithValue(string? expectedValue)
         {
-            var expectedValue = valueIsNull ? null : "Mundo";
             var dictionary = new Dictionary<string, string?> { { "Hello", "World" }, { "Hola", expectedValue } };
             Assert.That(dictionary, Does.ContainKey("Hola").WithValue(expectedValue));
         }
