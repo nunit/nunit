@@ -153,6 +153,18 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Apply a test result from a timed out test
+        /// </summary>
+        /// <param name="result">The TestResult from the test which timed out</param>
+        internal void ApplyTimeoutResult(TestResult result)
+        {
+            OutWriter.Write(result.Output);
+            //result.OutWriter.Close();
+            //result.Output = ""
+            // Apply things but in a way further writes to the output writer are not applied
+        }
+
+        /// <summary>
         /// Gets the collection of files attached to the test
         /// </summary>
         public ICollection<TestAttachment> TestAttachments => new ReadOnlyCollection<TestAttachment>(_testAttachments);

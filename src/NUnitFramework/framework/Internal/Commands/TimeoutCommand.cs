@@ -102,11 +102,10 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 else
                 {
-                    string message = $"Test exceeded Timeout value of {_timeout}ms";
-
+                    context.CurrentResult.ApplyTimeoutResult(testExecution.Result);
                     context.CurrentResult.SetResult(
                         ResultState.Failure,
-                        message);
+                        $"Test exceeded Timeout value of {_timeout}ms");
                 }
             }
             catch (Exception exception)

@@ -2,14 +2,13 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
-using System.Linq;
 using NUnit.TestData;
-using System.Diagnostics;
 
 namespace NUnit.Framework.Tests.Attributes
 {
