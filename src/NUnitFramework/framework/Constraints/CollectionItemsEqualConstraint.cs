@@ -41,6 +41,11 @@ namespace NUnit.Framework.Constraints
         protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
+        /// Get a flag indicating whether the user requested us to ignore white space.
+        /// </summary>
+        protected bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
+
+        /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
         /// </summary>
         protected bool UsingExternalComparer => _comparer.ExternalComparers.Count > 0;
@@ -57,6 +62,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreCase = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Flag the constraint to ignore white space and return self.
+        /// </summary>
+        public CollectionItemsEqualConstraint IgnoreWhiteSpace
+        {
+            get
+            {
+                _comparer.IgnoreWhiteSpace = true;
                 return this;
             }
         }

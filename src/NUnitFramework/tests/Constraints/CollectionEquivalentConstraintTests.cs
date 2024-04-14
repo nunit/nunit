@@ -102,6 +102,15 @@ public class CollectionEquivalentConstraintTests
     }
 
     [Test]
+    public void EquivalentHonorsIgnoreWhiteSpace()
+    {
+        ICollection set1 = new SimpleObjectCollection("abc", "def", "ghi");
+        ICollection set2 = new SimpleObjectCollection("g h i", "d e f", "a b c");
+
+        Assert.That(new CollectionEquivalentConstraint(set1).IgnoreWhiteSpace.ApplyTo(set2).IsSuccess);
+    }
+
+    [Test]
     [TestCaseSource(typeof(IgnoreCaseDataProvider), nameof(IgnoreCaseDataProvider.TestCases))]
     public void HonorsIgnoreCase(IEnumerable expected, IEnumerable actual)
     {

@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual"></param>
         /// <returns></returns>
-        protected override bool Matches(string actual)
+        protected override bool Matches(string? actual)
         {
             var stringComparison = caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
             return actual is not null && actual.EndsWith(expected, stringComparison);
