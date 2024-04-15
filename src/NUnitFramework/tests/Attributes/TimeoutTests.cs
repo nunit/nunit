@@ -178,10 +178,22 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void OutputIsCapturedOnTimedoutTest()
         {
-            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithTeardownAndOutputFixture));
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputFixture));
             var testMethod = suiteResult.Children.First();
 
-            Assert.That(testMethod.Output, Is.EqualTo($"line1{Environment.NewLine}"));
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output"));
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTestAfterTimeout()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputAfterTimeoutFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output before pause"));
+            Assert.That(testMethod.Output, Does.Not.Contain("method output after pause"));
         }
 
         [Test]

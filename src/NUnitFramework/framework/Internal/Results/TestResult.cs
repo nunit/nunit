@@ -153,15 +153,13 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Apply a test result from a timed out test
+        /// Apply the output from the provided TestResult to this one
         /// </summary>
-        /// <param name="result">The TestResult from the test which timed out</param>
-        internal void ApplyTimeoutResult(TestResult result)
+        /// <param name="result">The TestResult to apply output from</param>
+        internal void ApplyOutput(TestResult result)
         {
+            result.OutWriter.Flush();
             OutWriter.Write(result.Output);
-            //result.OutWriter.Close();
-            //result.Output = ""
-            // Apply things but in a way further writes to the output writer are not applied
         }
 
         /// <summary>
