@@ -27,6 +27,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
             var context = new TestExecutionContext();
             context.Dispatcher = dispatcher;
             context.Listener = this;
+            context.ListenerExt = this;
 
             var workItem = TestBuilder.CreateWorkItem(testSuite, context);
 
@@ -222,7 +223,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
-            //Debugger.Launch();
+
             CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
         }
 
