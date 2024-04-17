@@ -26,25 +26,13 @@ namespace NUnit.Framework.Internal.Commands
             {
                 TestResult suiteResult = context.CurrentResult;
 
-                // TearDown is only executed if there was a corresponding setUp on the same level.
-                // Also the event should only be fired if there are actual tearDown methods to be executed.
-                bool eventShouldBeFired = (setUpTearDownItem.SetUpWasRun && setUpTearDownItem.HasTearDownMethods);
-
                 try
                 {
-                    if (eventShouldBeFired)
-                        context.ListenerExt.OneTimeTearDownStarted(Test);
-
                     setUpTearDownItem.RunTearDown(context);
                 }
                 catch (Exception ex)
                 {
                     suiteResult.RecordTearDownException(ex);
-                }
-                finally
-                {
-                    if (eventShouldBeFired)
-                        context.ListenerExt.OneTimeTearDownFinished(Test);
                 }
             };
         }
