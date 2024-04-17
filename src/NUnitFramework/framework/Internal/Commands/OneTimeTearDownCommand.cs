@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Commands
                 try
                 {
                     if (eventShouldBeFired)
-                        context.Listener.OneTimeTearDownStarted(Test);
+                        context.ListenerExt.OneTimeTearDownStarted(Test);
 
                     setUpTearDownItem.RunTearDown(context);
                 }
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Commands
                 finally
                 {
                     if (eventShouldBeFired)
-                        context.Listener.OneTimeTearDownFinished(Test);
+                        context.ListenerExt.OneTimeTearDownFinished(Test);
                 }
             };
         }

@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Commands
                 bool eventShouldBeFired = setUpTearDown.HasSetUpMethods;
 
                 if (eventShouldBeFired)
-                    context.Listener.OneTimeSetUpStarted(Test);
+                    context.ListenerExt.OneTimeSetUpStarted(Test);
 
                 try
                 {
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Commands
                 finally
                 {
                     if (eventShouldBeFired)
-                        context.Listener.OneTimeSetUpFinished(Test);
+                        context.ListenerExt.OneTimeSetUpFinished(Test);
                 }
             };
         }

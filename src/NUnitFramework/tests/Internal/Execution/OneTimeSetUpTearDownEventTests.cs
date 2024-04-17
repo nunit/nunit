@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -14,7 +13,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
 {
     [TestFixture]
     [NonParallelizable]
-    public class OneTimeSetUpTearDownEventTests : ITestListener
+    public class OneTimeSetUpTearDownEventTests : ITestListener, ITestListenerExt
     {
         private ConcurrentQueue<TestEvent> _events = new();
 
@@ -258,7 +257,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
         {
         }
 
-        void ITestListener.OneTimeSetUpStarted(ITest test)
+        void ITestListenerExt.OneTimeSetUpStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -266,7 +265,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
             });
         }
 
-        void ITestListener.OneTimeSetUpFinished(ITest test)
+        void ITestListenerExt.OneTimeSetUpFinished(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -274,7 +273,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
             });
         }
 
-        void ITestListener.OneTimeTearDownStarted(ITest test)
+        void ITestListenerExt.OneTimeTearDownStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -282,7 +281,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
             });
         }
 
-        void ITestListener.OneTimeTearDownFinished(ITest test)
+        void ITestListenerExt.OneTimeTearDownFinished(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {

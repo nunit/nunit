@@ -25,6 +25,30 @@ namespace NUnit.Framework.Internal.Execution
     }
 
     /// <summary>
+    /// NUnit.Core.ExtendedEvent is the abstract base for
+    /// extended events (e.g. for OneTimeSetUp started).
+    /// An Event is the stored representation of a call to the
+    /// <see cref="ITestListenerExt"/> interface and is used to record such calls
+    /// or to queue them for forwarding on another thread or at
+    /// a later time.
+    /// </summary>
+    /// <remarks>
+    /// !!! This is only an WIP solution.
+    /// ExtendedEvent should not be forced to implement Send(ITestListener) inherited
+    /// from Event. But if ExtendedEvent is not derived from Event, all subsequent
+    /// actions, like queueing must be refactored as well.
+    /// Still searching for a better solution. !!!
+    /// </remarks>
+    public abstract class ExtendedEvent : Event
+    {
+        /// <summary>
+        /// The Send method is implemented by derived classes to send the event to the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public abstract void Send(ITestListenerExt listener);
+    }
+
+    /// <summary>
     /// TestStartedEvent holds information needed to call the TestStarted method.
     /// </summary>
     public class TestStartedEvent : Event
@@ -79,7 +103,7 @@ namespace NUnit.Framework.Internal.Execution
     /// <summary>
     /// OneTimeSetUpStartedEvent holds information needed to call the OneTimeSetUpStarted method.
     /// </summary>
-    public class OneTimeSetUpStartedEvent : Event
+    public class OneTimeSetUpStartedEvent : ExtendedEvent
     {
         private readonly ITest _test;
 
@@ -96,16 +120,26 @@ namespace NUnit.Framework.Internal.Execution
         /// Calls OneTimeSetUpStarted on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
+        public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeSetUpStarted(_test);
+        }
+
+        /// <summary>
+        /// Not intended to be called.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            // !!! Only WIP solution. We are forced to implement this interface.
+            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 
     /// <summary>
     /// OneTimeSetUpFinishedEvent holds information needed to call the OneTimeSetUpFinished method.
     /// </summary>
-    public class OneTimeSetUpFinishedEvent : Event
+    public class OneTimeSetUpFinishedEvent : ExtendedEvent
     {
         private readonly ITest _test;
 
@@ -122,16 +156,26 @@ namespace NUnit.Framework.Internal.Execution
         /// Calls OneTimeSetUpFinished on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
+        public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeSetUpFinished(_test);
+        }
+
+        /// <summary>
+        /// Not intended to be called.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            // !!! Only WIP solution. We are forced to implement this interface.
+            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 
     /// <summary>
     /// OneTimeTearDownStartedEvent holds information needed to call the OneTimeTearDownStarted method.
     /// </summary>
-    public class OneTimeTearDownStartedEvent : Event
+    public class OneTimeTearDownStartedEvent : ExtendedEvent
     {
         private readonly ITest _test;
 
@@ -148,16 +192,26 @@ namespace NUnit.Framework.Internal.Execution
         /// Calls OneTimeTearDownStarted on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
+        public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeTearDownStarted(_test);
+        }
+
+        /// <summary>
+        /// Not intended to be called.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            // !!! Only WIP solution. We are forced to implement this interface.
+            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 
     /// <summary>
     /// OneTimeTearDownFinishedEvent holds information needed to call the OneTimeTearDownFinished method.
     /// </summary>
-    public class OneTimeTearDownFinishedEvent : Event
+    public class OneTimeTearDownFinishedEvent : ExtendedEvent
     {
         private readonly ITest _test;
 
@@ -174,9 +228,19 @@ namespace NUnit.Framework.Internal.Execution
         /// Calls OneTimeTearDownFinished on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
+        public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeTearDownFinished(_test);
+        }
+
+        /// <summary>
+        /// Not intended to be called.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            // !!! Only WIP solution. We are forced to implement this interface.
+            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 

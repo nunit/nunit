@@ -37,10 +37,6 @@ namespace NUnit.Framework.Tests.Api
         private int _suiteFinishedCount;
         private int _testStartedCount;
         private int _testFinishedCount;
-        private int _oneTimeSetUpStartedCount;
-        private int _oneTimeSetUpFinishedCount;
-        private int _oneTimeTearDownStartedCount;
-        private int _oneTimeTearDownFinishedCount;
         private int _testOutputCount;
         private int _successCount;
         private int _failCount;
@@ -58,10 +54,6 @@ namespace NUnit.Framework.Tests.Api
             _suiteFinishedCount = 0;
             _testStartedCount = 0;
             _testFinishedCount = 0;
-            _oneTimeSetUpStartedCount = 0;
-            _oneTimeSetUpFinishedCount = 0;
-            _oneTimeTearDownStartedCount = 0;
-            _oneTimeTearDownFinishedCount = 0;
             _testOutputCount = 0;
             _successCount = 0;
             _failCount = 0;
@@ -328,10 +320,6 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_suiteFinishedCount, Is.EqualTo(MockAssembly.Suites));
                 Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
                 Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-                Assert.That(_oneTimeSetUpStartedCount, Is.EqualTo(MockAssembly.OneTimeSetUpStartedEvents));
-                Assert.That(_oneTimeSetUpFinishedCount, Is.EqualTo(MockAssembly.OneTimeSetUpFinishedEvents));
-                Assert.That(_oneTimeTearDownStartedCount, Is.EqualTo(MockAssembly.OneTimeTearDownStartedEvents));
-                Assert.That(_oneTimeTearDownFinishedCount, Is.EqualTo(MockAssembly.OneTimeTearDownFinishedEvents));
                 Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
 
                 Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
@@ -636,26 +624,6 @@ namespace NUnit.Framework.Tests.Api
         /// <param name="message">A TestMessage object containing the text to send</param>
         void ITestListener.SendMessage(TestMessage message)
         {
-        }
-
-        void ITestListener.OneTimeSetUpStarted(ITest test)
-        {
-            _oneTimeSetUpStartedCount++;
-        }
-
-        void ITestListener.OneTimeSetUpFinished(ITest test)
-        {
-            _oneTimeSetUpFinishedCount++;
-        }
-
-        void ITestListener.OneTimeTearDownStarted(ITest test)
-        {
-            _oneTimeTearDownStartedCount++;
-        }
-
-        void ITestListener.OneTimeTearDownFinished(ITest test)
-        {
-            _oneTimeTearDownFinishedCount++;
         }
 
         #endregion

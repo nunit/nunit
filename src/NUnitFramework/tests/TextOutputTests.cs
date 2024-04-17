@@ -171,22 +171,6 @@ namespace NUnit.Framework.Tests
         {
         }
 
-        void ITestListener.OneTimeSetUpStarted(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeSetUpFinished(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeTearDownStarted(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeTearDownFinished(ITest test)
-        {
-        }
-
         #endregion
     }
 }

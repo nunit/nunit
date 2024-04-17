@@ -11,7 +11,6 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.ParallelExecutionData;
 using NUnit.Framework.Tests.TestUtilities;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace NUnit.Framework.Tests.Internal.Execution
 {
@@ -435,22 +434,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
         }
 
         void ITestListener.SendMessage(TestMessage message)
-        {
-        }
-
-        void ITestListener.OneTimeSetUpStarted(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeSetUpFinished(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeTearDownStarted(ITest test)
-        {
-        }
-
-        void ITestListener.OneTimeTearDownFinished(ITest test)
         {
         }
 

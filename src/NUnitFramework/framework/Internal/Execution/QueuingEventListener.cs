@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal.Execution
     /// QueuingEventListener uses an EventQueue to store any
     /// events received on its EventListener interface.
     /// </summary>
-    public class QueuingEventListener : ITestListener
+    public class QueuingEventListener : ITestListener, ITestListenerExt
     {
         /// <summary>
         /// The EventQueue created and filled by this listener

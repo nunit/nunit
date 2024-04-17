@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
     /// the async callbacks that are used to inform the client
     /// software about the progress of a test run.
     /// </summary>
-    public sealed class TestProgressReporter : ITestListener
+    public sealed class TestProgressReporter : ITestListener, ITestListenerExt
     {
         private static readonly Logger Log = InternalTrace.GetLogger("TestProgressReporter");
 
