@@ -51,9 +51,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a new DictionaryContainsKeyValuePairConstraint checking for the
         /// presence of a particular key-value-pair in the dictionary.
         /// </summary>
-        public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
+        public DictionaryContainsKeyValuePairConstraint WithValue(object? expectedValue)
         {
-            return (DictionaryContainsKeyValuePairConstraint)Instead.Append(new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue));
+            return Instead.Append(new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue));
         }
 
         private bool Matches(object? actual)
