@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly IDebugger _debugger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
+        /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
@@ -32,11 +32,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotNull(debugger, nameof(debugger));
         }
 
-        /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
-        /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
+        /// <inheritdoc/>
         public override TestResult Execute(TestExecutionContext context)
         {
             // Because of the debugger possibly attaching after the test method is started
@@ -54,7 +50,7 @@ namespace NUnit.Framework.Internal.Commands
 
             try
             {
-                innerCommand.Execute(context);
+                ExecuteInnerCommand(context);
             }
             catch (OperationCanceledException ex)
             {
@@ -66,6 +62,15 @@ namespace NUnit.Framework.Internal.Commands
             }
 
             return context.CurrentResult;
+        }
+
+        /// <summary>
+        /// Execute the 'inner command' using the <paramref name="context"/>.
+        /// </summary>
+        /// <param name="context">The TestExecutionContext to be used for running the test.</param>
+        protected virtual void ExecuteInnerCommand(TestExecutionContext context)
+        {
+            innerCommand.Execute(context);
         }
     }
 }

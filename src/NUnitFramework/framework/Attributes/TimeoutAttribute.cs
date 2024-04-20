@@ -12,8 +12,8 @@ namespace NUnit.Framework
     /// When applied to a class or assembly, the default timeout is set for all contained test methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
-#if !NETFRAMEWORK
-    [Obsolete(".NET No longer supports aborting threads as it is not a safe thing to do. Update your tests to use CancelAfterAttribute instead")]
+#if !THREAD_ABORT
+    [Obsolete("Current SDK does not supports aborting threads as it is not a safe thing to do. Update your tests to use CancelAfterAttribute instead")]
 #endif
     public class TimeoutAttribute : PropertyAttribute, IApplyToContext
     {

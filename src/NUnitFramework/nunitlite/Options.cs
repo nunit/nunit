@@ -134,8 +134,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -548,7 +546,6 @@ namespace NUnit.Options
         }
     }
 
-    [Serializable]
     public class OptionException : Exception
     {
         private readonly string _option;
@@ -569,22 +566,7 @@ namespace NUnit.Options
             _option = optionName;
         }
 
-        protected OptionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            _option = info.GetString("OptionName");
-        }
-
         public string OptionName => _option;
-
-#if !NET6_0_OR_GREATER
-        [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
-#endif
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("OptionName", _option);
-        }
     }
 
     public delegate void OptionAction<TKey, TValue>(TKey key, TValue value);

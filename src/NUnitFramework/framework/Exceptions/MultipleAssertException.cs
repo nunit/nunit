@@ -28,16 +28,6 @@ namespace NUnit.Framework
             TestResult = testResult;
         }
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-        /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context)
-        {
-        }
-#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
-
         /// <summary>
         /// Gets the <see cref="ResultState"/> provided by this exception.
         /// </summary>

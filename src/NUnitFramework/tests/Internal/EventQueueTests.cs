@@ -240,7 +240,7 @@ namespace NUnit.Framework.Tests.Internal
                     bool consumerStopped = consumerThread.Join(1000);
                     Assert.That(consumerStopped, Is.True);
                 }
-                finally
+                catch
                 {
 #if THREAD_ABORT
                     ThreadUtility.Kill(consumerThread);
@@ -260,12 +260,10 @@ namespace NUnit.Framework.Tests.Internal
                 {
                     Consumer(parameter);
                 }
-#if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
                 {
-                    Thread.ResetAbort();
+                    ThreadUtility.ResetAbort();
                 }
-#endif
                 catch (Exception ex)
                 {
                     _myConsumerException = ex;

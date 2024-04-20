@@ -1,15 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if THREAD_ABORT
+
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData
 {
-#if !NETFRAMEWORK
-#pragma warning disable CS0618 // Type or member is obsolete
-#endif
-
     [TestFixture]
     public class TimeoutFixture
     {
@@ -109,3 +107,5 @@ namespace NUnit.TestData
         }
     }
 }
+
+#endif

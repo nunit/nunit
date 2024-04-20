@@ -1,17 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if !THREAD_ABORT
-#pragma warning disable format // Temporary until release of https://github.com/dotnet/roslyn/issues/62612
-#endif
-
-#if THREAD_ABORT
-
 using System;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
+
+#if THREAD_ABORT
+using System.Reflection;
+using NUnit.Framework.Internal.Execution;
+#endif
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -28,6 +25,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(_retryOnlyCount, Is.GreaterThanOrEqualTo(2));
         }
 
+#if THREAD_ABORT
         public class HelperMethodForTimeoutsClass
         {
             [Test]
@@ -107,6 +105,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(innerCommand, Is.Not.Null);
             return (TestCommand)innerCommand.GetValue(command)!;
         }
+#endif
 
         [Test]
         public void ShouldFailOnMultipleRepeatableAttributes()
@@ -196,5 +195,3 @@ namespace NUnit.Framework.Tests.Attributes
         }
     }
 }
-
-#endif

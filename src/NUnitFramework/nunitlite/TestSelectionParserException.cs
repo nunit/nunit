@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Runtime.Serialization;
 
 namespace NUnit.Common
 {
@@ -25,13 +24,6 @@ namespace NUnit.Common
         /// <param name="message"></param>
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        /// <summary>
-        /// Serialization constructor
-        /// </summary>
-        public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

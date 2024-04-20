@@ -3,7 +3,6 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test
@@ -33,14 +32,6 @@ namespace NUnit.Framework.Internal
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
         public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        /// <summary>
-        /// Serialization Constructor
-        /// </summary>
-        protected InvalidDataSourceException(SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }
