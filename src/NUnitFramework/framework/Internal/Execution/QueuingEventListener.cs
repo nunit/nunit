@@ -13,14 +13,14 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The EventQueue created and filled by this listener
         /// </summary>
-        public EventQueue<Event> Events { get; }
+        public EventQueue Events { get; }
 
         /// <summary>
         /// Construct a QueuingEventListener
         /// </summary>
         public QueuingEventListener()
         {
-            Events = new EventQueue<Event>();
+            Events = new EventQueue();
         }
 
         #region EventListener Methods

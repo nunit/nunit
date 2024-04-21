@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Interfaces;
 using System;
 using System.Threading;
 
@@ -29,11 +30,30 @@ namespace NUnit.Framework.Internal.Execution
 
     /// <summary>
     /// EventPump pulls events out of an EventQueue and sends
-    /// them to a listener. It is used to send events back to
+    /// them to a ITestListener. It is used to send events back to
     /// the client without using the CallContext of the test
     /// runner thread.
     /// </summary>
-    public class EventPump<TEvent, TListener>
+    public class EventPump : EventPumpTemplate<Event, ITestListener>, IDisposable
+    {
+        /// <summary>
+        /// Constructor for standard EventPump
+        /// </summary>
+        /// <param name="eventListener">The EventListener to receive events</param>
+        /// <param name="events">The event queue to pull events from</param>
+        public EventPump(ITestListener eventListener, EventQueueTemplate<Event> events)
+            : base(eventListener, events, "Standard")
+        {
+        }
+    }
+
+    /// <summary>
+    /// EventPump template pulls events of any type out of an EventQueue and sends
+    /// them to any listener. It is used to send events back to
+    /// the client without using the CallContext of the test
+    /// runner thread.
+    /// </summary>
+    public class EventPumpTemplate<TEvent, TListener>
         where TEvent : IEvent<TListener>,
         IDisposable
     {
@@ -49,7 +69,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The queue that holds our events
         /// </summary>
-        private readonly EventQueue<TEvent> _events;
+        private readonly EventQueueTemplate<TEvent> _events;
 
         /// <summary>
         /// Thread to do the pumping
@@ -71,7 +91,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="eventListener">The EventListener to receive events</param>
         /// <param name="events">The event queue to pull events from</param>
         /// <param name="name">Name of the thread and pump</param>
-        public EventPump(TListener eventListener, EventQueue<TEvent> events, string name = "Standard")
+        public EventPumpTemplate(TListener eventListener, EventQueueTemplate<TEvent> events, string name = "Standard")
         {
             _eventListener = eventListener;
             _events = events;

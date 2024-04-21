@@ -7,6 +7,10 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    /// <summary>
+    /// Interface for ALL event types that can be queued for processing.
+    /// </summary>
+    /// <typeparam name="TListener"></typeparam>
     public interface IEvent<in TListener>
     {
         /// <summary>
@@ -33,6 +37,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="listener">The listener.</param>
         public abstract void Send(ITestListener listener);
 
+        /// <summary>
+        /// Not quite sure why this is needed, but the compiler complained.
+        /// </summary>
         public void Dispose()
         {
         }
@@ -148,10 +155,19 @@ namespace NUnit.Framework.Internal.Execution
     #endregion
 
     /// <summary>
-    /// Implements a queue of work items each of which
+    /// Implements a queue of work items for the Event type each of which
     /// is queued as a WaitCallback.
     /// </summary>
-    public class EventQueue<T>
+    public class EventQueue : EventQueueTemplate<Event>
+    {
+    }
+
+    /// <summary>
+    /// Implements a template for a queue of work items each of which
+    /// is queued as a WaitCallback.
+    /// It can handle any event types.
+    /// </summary>
+    public class EventQueueTemplate<T>
     {
         private const int SpinCount = 5;
 
