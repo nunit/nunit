@@ -35,7 +35,7 @@ namespace NUnit.Framework.Api
         private TextWriter? _savedErr;
 
         // Event Pump
-        private EventPump? _pump;
+        private EventPump<Event, ITestListener>? _pump;
 
         #region Constructors
 
@@ -263,7 +263,7 @@ namespace NUnit.Framework.Api
                 QueuingEventListener queue = new QueuingEventListener();
                 context.Listener = queue;
 
-                _pump = new EventPump(listener, queue.Events);
+                _pump = new EventPump<Event, ITestListener>(listener, queue.Events);
                 _pump.Start();
             }
 

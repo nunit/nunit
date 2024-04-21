@@ -1,11 +1,21 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    public interface IEvent<in TListener>
+    {
+        /// <summary>
+        /// The Send method is implemented by derived classes to send the event to the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        void Send(TListener listener);
+    }
+
     #region Individual Event Classes
 
     /// <summary>
@@ -15,13 +25,17 @@ namespace NUnit.Framework.Internal.Execution
     /// or to queue them for forwarding on another thread or at
     /// a later time.
     /// </summary>
-    public abstract class Event
+    public abstract class Event : IEvent<ITestListener>, IDisposable
     {
         /// <summary>
         /// The Send method is implemented by derived classes to send the event to the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
         public abstract void Send(ITestListener listener);
+
+        public void Dispose()
+        {
+        }
     }
 
     /// <summary>
@@ -137,13 +151,13 @@ namespace NUnit.Framework.Internal.Execution
     /// Implements a queue of work items each of which
     /// is queued as a WaitCallback.
     /// </summary>
-    public class EventQueue
+    public class EventQueue<T>
     {
         private const int SpinCount = 5;
 
         //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
-        private readonly ConcurrentQueue<Event> _queue = new();
+        private readonly ConcurrentQueue<T> _queue = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -171,7 +185,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Enqueues the specified event
         /// </summary>
         /// <param name="e">The event to enqueue.</param>
-        public void Enqueue(Event e)
+        public void Enqueue(T e)
         {
             do
             {
@@ -216,7 +230,7 @@ namespace NUnit.Framework.Internal.Execution
         ///   </item>
         /// </list>
         /// </returns>
-        public Event? Dequeue(bool blockWhenEmpty)
+        public T? Dequeue(bool blockWhenEmpty)
         {
             SpinWait sw = new SpinWait();
 
@@ -229,7 +243,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (cachedRemoveId == cachedAddId)
                 {
                     if (!blockWhenEmpty || _stopped != 0)
-                        return null;
+                        return default(T);
 
                     // Spin a few times to see if something changes
                     if (sw.Count <= SpinCount)
@@ -261,11 +275,11 @@ namespace NUnit.Framework.Internal.Execution
                     continue;
 
                 // Dequeue our work item
-                Event? e;
+                T? e;
                 while (!_queue.TryDequeue(out e))
                 {
                     if (!blockWhenEmpty || _stopped != 0)
-                        return null;
+                        return default(T);
                 }
 
                 return e;

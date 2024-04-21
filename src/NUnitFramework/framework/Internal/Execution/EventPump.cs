@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -34,7 +33,9 @@ namespace NUnit.Framework.Internal.Execution
     /// the client without using the CallContext of the test
     /// runner thread.
     /// </summary>
-    public class EventPump : IDisposable
+    public class EventPump<TEvent, TListener>
+        where TEvent : IEvent<TListener>,
+        IDisposable
     {
         private static readonly Logger Log = InternalTrace.GetLogger("EventPump");
 
@@ -43,12 +44,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The downstream listener to which we send events
         /// </summary>
-        private readonly ITestListener _eventListener;
+        private readonly TListener _eventListener;
 
         /// <summary>
         /// The queue that holds our events
         /// </summary>
-        private readonly EventQueue _events;
+        private readonly EventQueue<TEvent> _events;
 
         /// <summary>
         /// Thread to do the pumping
@@ -63,15 +64,18 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
 
         #region Constructor
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="eventListener">The EventListener to receive events</param>
         /// <param name="events">The event queue to pull events from</param>
-        public EventPump(ITestListener eventListener, EventQueue events)
+        /// <param name="name">Name of the thread and pump</param>
+        public EventPump(TListener eventListener, EventQueue<TEvent> events, string name = "Standard")
         {
             _eventListener = eventListener;
             _events = events;
+            Name = name;
         }
 
         #endregion
@@ -111,7 +115,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 _pumpThread = new Thread(PumpThreadProc)
                 {
-                    Name = "EventPumpThread" + Name,
+                    Name = $"{Name}EventPumpThread",
                     Priority = ThreadPriority.Highest
                 };
 
@@ -142,14 +146,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void PumpThreadProc()
         {
-            Log.Debug("Starting EventPump");
+            Log.Debug($"Starting EventPump {Name}");
 
             //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
             {
                 while (true)
                 {
-                    Event? e = _events.Dequeue(PumpState == EventPumpState.Pumping);
+                    var e = _events.Dequeue(PumpState == EventPumpState.Pumping);
                     if (e is null)
                         break;
                     try
