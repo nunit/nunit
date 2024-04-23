@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Execution
     /// or to queue them for forwarding on another thread or at
     /// a later time.
     /// </summary>
-    public abstract class Event : IEvent<ITestListener> , IDisposable
+    public abstract class Event : IEvent<ITestListener>, IDisposable
     {
         /// <summary>
         /// The Send method is implemented by derived classes to send the event to the specified listener.
