@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal.Execution
     #region Individual Event Classes
 
     /// <summary>
-    /// NUnit.Core.Event is the abstract base for all stored events.
+    /// NUnit.Core.Event is the abstract base for all stored standard events.
     /// An Event is the stored representation of a call to the
     /// ITestListener interface and is used to record such calls
     /// or to queue them for forwarding on another thread or at
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal.Execution
     /// Implements a queue of work items for the Event type each of which
     /// is queued as a WaitCallback.
     /// </summary>
-    public class EventQueue : EventQueueTemplate<Event>
+    public sealed class EventQueue : EventQueue<Event>
     {
     }
 
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal.Execution
     /// is queued as a WaitCallback.
     /// It can handle any event types.
     /// </summary>
-    public class EventQueueTemplate<T>
+    public abstract class EventQueue<T>
     {
         private const int SpinCount = 5;
 
