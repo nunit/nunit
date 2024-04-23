@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Execution
         public abstract void Send(ITestListener listener);
 
         /// <summary>
-        /// Not quite sure why this is needed, but the compiler complained.
+        /// Not quite sure why this is needed, but the compiler complained in the EventPump code if IDisposable was not added here.
         /// </summary>
         public virtual void Dispose()
         {
