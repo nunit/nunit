@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void PumpThreadProc()
         {
-            Log.Debug($"Starting EventPump {Name}");
+            Log.Debug($"Starting {Name}");
 
             //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
