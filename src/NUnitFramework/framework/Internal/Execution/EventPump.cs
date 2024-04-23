@@ -53,9 +53,8 @@ namespace NUnit.Framework.Internal.Execution
     /// the client without using the CallContext of the test
     /// runner thread.
     /// </summary>
-    public class EventPumpTemplate<TEvent, TListener>
-        where TEvent : IEvent<TListener>,
-        IDisposable
+    public class EventPumpTemplate<TEvent, TListener> : IDisposable
+        where TEvent : IEvent<TListener>
     {
         private static readonly Logger Log = InternalTrace.GetLogger("EventPump");
 
