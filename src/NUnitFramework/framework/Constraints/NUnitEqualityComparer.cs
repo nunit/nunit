@@ -51,7 +51,6 @@ namespace NUnit.Framework.Constraints
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,
             EqualsComparer.Equal,
-            PropertiesComparer.Equal,
         };
 
         /// <summary>
@@ -60,10 +59,21 @@ namespace NUnit.Framework.Constraints
         private bool _caseInsensitive;
 
         /// <summary>
+        /// If true, all string comparisons will ignore white space differences
+        /// </summary>
+        private bool _ignoreWhiteSpace;
+
+        /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
         private bool _compareAsCollection;
+
+        /// <summary>
+        /// If true, when a class does not implement <see cref="IEquatable{T}"/>
+        /// it will be compared property by property.
+        /// </summary>
+        private bool _compareProperties;
 
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
@@ -94,6 +104,26 @@ namespace NUnit.Framework.Constraints
         {
             get => _caseInsensitive;
             set => _caseInsensitive = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether white space should
+        /// be ignored in determining equality.
+        /// </summary>
+        public bool IgnoreWhiteSpace
+        {
+            get => _ignoreWhiteSpace;
+            set => _ignoreWhiteSpace = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether an instance properties
+        /// should be compared when determining equality.
+        /// </summary>
+        public bool CompareProperties
+        {
+            get => _compareProperties;
+            set => _compareProperties = value;
         }
 
         /// <summary>
@@ -133,6 +163,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
@@ -148,6 +179,7 @@ namespace NUnit.Framework.Constraints
                     throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
                 case EqualMethodResult.ComparedEqual:
                     return true;
+                case EqualMethodResult.ComparisonPending:
                 case EqualMethodResult.ComparedNotEqual:
                 default:
                     return false;
@@ -170,7 +202,7 @@ namespace NUnit.Framework.Constraints
                 return EqualMethodResult.ComparedEqual;
 
             if (state.DidCompare(x, y))
-                return EqualMethodResult.ComparedNotEqual;
+                return EqualMethodResult.ComparisonPending;
 
             EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
@@ -192,6 +224,11 @@ namespace NUnit.Framework.Constraints
                 EqualMethodResult result = equalMethod(x, y, ref tolerance, state, this);
                 if (result != EqualMethodResult.TypesNotSupported)
                     return result;
+            }
+
+            if (_compareProperties)
+            {
+                return PropertiesComparer.Equal(x, y, ref tolerance, state, this);
             }
 
             if (tolerance.HasVariance)

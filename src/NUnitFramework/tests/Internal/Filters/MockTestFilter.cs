@@ -8,7 +8,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 {
     /// <summary>
     /// Mocks a <see cref="TestFilter"/>. Checks that only one specific match-function
-    /// (<see cref=MatchFunction"/> is called and only for a specific <see cref="ITest"/>.
+    /// (<see cref="MatchFunction"/> is called and only for a specific <see cref="ITest"/>.
     ///
     /// For the specific test and match-function one could set the return value of the function.
     /// Furthermore one could read out the number of valid calls to the match-function through

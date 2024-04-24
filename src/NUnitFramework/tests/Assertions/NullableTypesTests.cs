@@ -1,5 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#pragma warning disable NUnit2005
+#pragma warning disable NUnit2017
+#pragma warning disable NUnit2019
+#pragma warning disable NUnit2045
+
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture, Category("Generics")]
@@ -201,8 +206,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void CanCompareNullableStructs()
         {
-            MyStruct struct1 = new MyStruct(5, "Hello");
-            MyStruct struct2 = new MyStruct(5, "Hello");
+            var struct1 = new MyStruct(5, "Hello");
+            var struct2 = new MyStruct(5, "Hello");
             MyStruct? one = new MyStruct(5, "Hello");
             MyStruct? two = new MyStruct(5, "Hello");
 

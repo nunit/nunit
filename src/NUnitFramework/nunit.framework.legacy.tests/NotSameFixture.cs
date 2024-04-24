@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Tests.Assertions;
 
-namespace NUnit.Framework.Tests.ClassicAssertions
+namespace NUnit.Framework.Legacy.Tests
 {
     [TestFixture]
     public class NotSameFixture

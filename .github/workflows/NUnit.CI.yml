@@ -3,10 +3,15 @@ name: Continuous Integration
 on:
   push:
     branches:
+      - main
       - master
       - release
       - 'v3'
   pull_request:
+  
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry  
 
 jobs:
   build-windows:
@@ -15,15 +20,13 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    - name: 🛠️ Setup .NET 
-      uses: actions/setup-dotnet@v3
+    - name: 🛠️ Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: | 
-            6.0.x
-            8.0.x
-
+        global-json-file: global.json
+        
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
@@ -37,13 +40,13 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Package
         path: package
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Windows)
         path: test-results
@@ -56,14 +59,12 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: | 
-            6.0.x
-            8.0.x
+        global-json-file: global.json
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -75,7 +76,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Linux)
         path: test-results
@@ -84,18 +85,17 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: | 
-            6.0.x
-            8.0.x
+        global-json-file: global.json
+        dotnet-version: 6.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
@@ -104,7 +104,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (macOS)
         path: test-results

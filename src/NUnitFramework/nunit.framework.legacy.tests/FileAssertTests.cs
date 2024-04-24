@@ -2,10 +2,9 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Legacy.Tests
 {
     /// <summary>
     /// Summary description for FileAssertTests.

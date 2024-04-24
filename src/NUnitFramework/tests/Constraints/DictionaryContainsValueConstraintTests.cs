@@ -28,15 +28,16 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
 
-        [Test]
-        public void SucceedsWhenValueIsPresentUsingContainKey()
+        [TestCase("Mundo")]
+        [TestCase(null)]
+        public void SucceedsWhenValueIsPresentUsingContainValue(string? expectedValue)
         {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-            Assert.That(dictionary, Does.ContainValue("Mundo"));
+            var dictionary = new Dictionary<string, string?> { { "Hello", "World" }, { "Hola", expectedValue } };
+            Assert.That(dictionary, Does.ContainValue(expectedValue));
         }
 
         [Test]
-        public void SucceedsWhenValueIsNotPresentUsingContainKey()
+        public void SucceedsWhenValueIsNotPresentUsingContainValue()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainValue("NotValue"));
@@ -69,6 +70,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("UNIVERSE").IgnoreCase);
         }
 
+        [Test]
+        public void IgnoreWhiteSpaceIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsValueConstraint("U n i v e r s e").IgnoreWhiteSpace);
+        }
+
         [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {
@@ -76,6 +85,27 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(dictionary,
                 new DictionaryContainsValueConstraint("UNIVERSE").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+        }
+
+        [Test]
+        public void UsingPropertiesComparerIsHonored()
+        {
+            var dictionary = new Dictionary<string, XY> { { "5", new(3, 4) }, { "13", new(5, 12) } };
+            var value = new XY(5, 12);
+            Assert.That(dictionary, Does.Not.ContainValue(value));
+            Assert.That(dictionary, Does.ContainValue(value).UsingPropertiesComparer());
+        }
+
+        private sealed class XY
+        {
+            public XY(double x, double y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public double X { get; }
+            public double Y { get; }
         }
     }
 }

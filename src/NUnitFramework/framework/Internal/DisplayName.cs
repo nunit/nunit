@@ -215,8 +215,31 @@ namespace NUnit.Framework.Internal
                 else if (sb.Equals(sbyte.MinValue))
                     display = "sbyte.MinValue";
             }
+            else if (arg is Exception e)
+            {
+                display = FormatException(e);
+            }
 
             return display;
+        }
+
+        private static string FormatException(Exception ex)
+        {
+            var builder = new StringBuilder();
+
+            for (Exception? e = ex; e is not null; e = e.InnerException)
+            {
+                builder.Append(e.GetType().Name);
+                builder.Append(": ");
+                builder.Append(e.Message);
+
+                if (e.InnerException is not null)
+                {
+                    builder.Append(", ");
+                }
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>

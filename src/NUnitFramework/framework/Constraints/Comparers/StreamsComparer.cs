@@ -30,8 +30,14 @@ namespace NUnit.Framework.Constraints.Comparers
 
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
 
-            if (bothSeekable && xStream.Length != yStream.Length)
-                return EqualMethodResult.ComparedNotEqual;
+            if (bothSeekable)
+            {
+                if (xStream.Length != yStream.Length)
+                    return EqualMethodResult.ComparedNotEqual;
+
+                if (xStream.Length == 0)
+                    return EqualMethodResult.ComparedEqual;
+            }
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
@@ -62,6 +68,12 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    {
+                        readByte += readActual;
+                        continue;
+                    }
+
                     for (int count = 0; count < BUFFER_SIZE; ++count)
                     {
                         if (bufferExpected[count] != bufferActual[count])
@@ -76,7 +88,6 @@ namespace NUnit.Framework.Constraints.Comparers
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
-                    readByte += BUFFER_SIZE;
                 }
             }
             finally

@@ -95,6 +95,17 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new List<string> { "a", "b", "c" }, new List<string> { "A", "B", "C" } },
         };
 
+        [TestCaseSource(nameof(IgnoreWhiteSpaceData))]
+        public void HonorsIgnoreWhiteSpace(IEnumerable expected, IEnumerable actual)
+        {
+            Assert.That(expected, Is.EqualTo(actual).IgnoreWhiteSpace);
+        }
+
+        private static readonly object[] IgnoreWhiteSpaceData =
+        {
+            new object[] { new SimpleObjectCollection(" x", "y ", " z "), new SimpleObjectCollection("x ", " y", "z") },
+        };
+
         [Test]
         [DefaultFloatingPointTolerance(0.5)]
         public void StructuralComparerOnSameCollection_RespectsAndSetsToleranceByRef()

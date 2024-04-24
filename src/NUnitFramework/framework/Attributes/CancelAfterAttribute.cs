@@ -8,7 +8,7 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// Applies a timeout in milliseconds to a test.
-    /// When applied to a method, the test's canvellation token is cancelled if the timeout is exceeded.
+    /// When applied to a method, the test's cancellation token is cancelled if the timeout is exceeded.
     /// </summary>
     /// <remarks>
     /// The user has to monitor this cancellation token.

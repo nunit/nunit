@@ -6,7 +6,7 @@
     <version>$version$</version>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <license type="file">LICENSE.txt</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <icon>icon.png</icon>
@@ -16,7 +16,7 @@
     <description>
         NUnit is a unit-testing framework for all .NET languages.
         It can run on macOS, Linux and Windows operating systems.
-        NUnit can be used for a wide range of testing, from unit testing with TDD to full fledged system and integration testing.
+        NUnit can be used for a wide range of testing, from unit testing with TDD to full-fledged system and integration testing.
         It is a non-opinionated, broad and deep framework with multiple different ways to assert that your code behaves as expected. Many aspects of NUnit can be extended to suit your specific purposes.
 
         The latest version, version 4, is an upgrade from the groundbreaking NUnit 3 framework. It is a modernized version, aimed at taking advantage of the latest .NET features and C# language constructs.
@@ -31,7 +31,10 @@
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License.</copyright>
     <dependencies>
-      <group targetFramework="net462" />
+      <group targetFramework="net462">
+        <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
+        <dependency id="System.ValueTuple" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
       <group targetFramework="net6.0" />
     </dependencies>
   </metadata>

@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct a DictionaryContainsKeyValuePairConstraint
         /// </summary>
-        public DictionaryContainsKeyValuePairConstraint(object key, object value)
+        public DictionaryContainsKeyValuePairConstraint(object key, object? value)
         {
             _expected = new DictionaryEntry(key, value);
         }

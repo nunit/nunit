@@ -69,7 +69,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{AA24
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\continuous_integration.yml = .github\workflows\continuous_integration.yml
+		.github\workflows\NUnit.Myget.Publish.yml = .github\workflows\NUnit.Myget.Publish.yml
+		.github\workflows\NUnit.CI.yml = .github\workflows\NUnit.CI.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{08744334-2350-4885-B57E-347010A27ABB}"
