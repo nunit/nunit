@@ -5,7 +5,6 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 
@@ -62,7 +61,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -86,7 +85,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -113,7 +112,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -144,7 +143,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -168,7 +167,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -199,7 +198,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         [Test]
@@ -224,7 +223,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                 new TestEvent() { Action = TestAction.TestFinished },               // Fixture
             };
 
-            CollectionAssert.AreEqual(expectedEventsInTheRightOrder, AllEvents, new TestEventActionComparer());
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
         #region ITestListener implementation
