@@ -45,14 +45,7 @@ namespace NUnit.Framework.Internal.Execution
     /// or to queue them for forwarding on another thread or at
     /// a later time.
     /// </summary>
-    /// <remarks>
-    /// !!! This is only an WIP solution.
-    /// ExtendedEvent should not be forced to implement Send(ITestListener) inherited
-    /// from Event. But if ExtendedEvent is not derived from Event, all subsequent
-    /// actions, like queueing must be refactored as well.
-    /// Still searching for a better solution. !!!
-    /// </remarks>
-    public abstract class ExtendedEvent : Event
+    public abstract class ExtendedEvent : IEvent<ITestListenerExt>
     {
         /// <summary>
         /// The Send method is implemented by derived classes to send the event to the specified listener.
@@ -137,16 +130,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             listener.OneTimeSetUpStarted(_test);
         }
-
-        /// <summary>
-        /// Not intended to be called.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            // !!! Only WIP solution. We are forced to implement this interface.
-            // Needs to be redesigned. Has to be discussed how. !!!
-        }
     }
 
     /// <summary>
@@ -172,16 +155,6 @@ namespace NUnit.Framework.Internal.Execution
         public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeSetUpFinished(_test);
-        }
-
-        /// <summary>
-        /// Not intended to be called.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            // !!! Only WIP solution. We are forced to implement this interface.
-            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 
@@ -209,16 +182,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             listener.OneTimeTearDownStarted(_test);
         }
-
-        /// <summary>
-        /// Not intended to be called.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            // !!! Only WIP solution. We are forced to implement this interface.
-            // Needs to be redesigned. Has to be discussed how. !!!
-        }
     }
 
     /// <summary>
@@ -244,16 +207,6 @@ namespace NUnit.Framework.Internal.Execution
         public override void Send(ITestListenerExt listener)
         {
             listener.OneTimeTearDownFinished(_test);
-        }
-
-        /// <summary>
-        /// Not intended to be called.
-        /// </summary>
-        /// <param name="listener">The listener.</param>
-        public override void Send(ITestListener listener)
-        {
-            // !!! Only WIP solution. We are forced to implement this interface.
-            // Needs to be redesigned. Has to be discussed how. !!!
         }
     }
 
@@ -319,6 +272,14 @@ namespace NUnit.Framework.Internal.Execution
     /// is queued as a WaitCallback.
     /// </summary>
     public sealed class EventQueue : EventQueue<Event>
+    {
+    }
+
+    /// <summary>
+    /// Implements a queue of work items for extended Event types each of which
+    /// is queued as a WaitCallback.
+    /// </summary>
+    public sealed class EventQueueExt : EventQueue<ExtendedEvent>
     {
     }
 
