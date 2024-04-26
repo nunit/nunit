@@ -602,4 +602,33 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         {
         }
     }
+
+    [TestFixture]
+    public class FixtureWitTestSetUpTestTearDown
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+    }
 }

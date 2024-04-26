@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
 
@@ -34,9 +33,6 @@ namespace NUnit.Framework.Internal.Builders
                 IsAsyncOperation = AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo);
                 IsVoidOrUnit = Reflect.IsVoidOrUnit(method.ReturnType.Type);
 
-                HasOneTimeSetUpAttribute = Attribute.IsDefined(method.MethodInfo, typeof(OneTimeSetUpAttribute));
-                HasOneTimeTearDownAttribute = Attribute.IsDefined(method.MethodInfo, typeof(OneTimeTearDownAttribute));
-
                 // TODO could probably go trough inherited and non inherited in two passes instead of multiple
 
                 // inherited
@@ -53,9 +49,6 @@ namespace NUnit.Framework.Internal.Builders
             public IParameterInfo[] Parameters { get; }
             public bool IsAsyncOperation { get; }
             public bool IsVoidOrUnit { get; }
-
-            public bool HasOneTimeSetUpAttribute { get; }
-            public bool HasOneTimeTearDownAttribute { get; }
 
             public IRepeatTest[] RepeatTestAttributes { get; }
             public ITestBuilder[] TestBuilderAttributes { get; }

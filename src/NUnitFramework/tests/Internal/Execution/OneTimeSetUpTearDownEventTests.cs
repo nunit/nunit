@@ -226,6 +226,27 @@ namespace NUnit.Framework.Tests.Internal.Execution
             Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
         }
 
+        [Test]
+        public void TestFixturTestSetUpTearDown_NoOneTimeEventsForTestSetUpTearDown()
+        {
+            var fixture = new FixtureWitTestSetUpTestTearDown();
+            RunTestFixture(fixture);
+
+            List<TestEvent> expectedEventsInTheRightOrder = new List<TestEvent>()
+            {
+                new TestEvent() { Action = TestAction.TestStarting },               // Fixture
+                new TestEvent() { Action = TestAction.OneTimeSetUpStarted },        // OneTimeSetUp
+                new TestEvent() { Action = TestAction.OneTimeSetUpFinished },
+                new TestEvent() { Action = TestAction.TestStarting },               // Test, we should not get event for [SetUp] or [TearDown]
+                new TestEvent() { Action = TestAction.TestFinished },
+                new TestEvent() { Action = TestAction.OneTimeTearDownStarted },     // OneTimeTearDown
+                new TestEvent() { Action = TestAction.OneTimeTearDownFinished },
+                new TestEvent() { Action = TestAction.TestFinished },               // Fixture
+            };
+
+            Assert.That(AllEvents, Is.EqualTo(expectedEventsInTheRightOrder).Using(new TestEventActionComparer()));
+        }
+
         #region ITestListener implementation
 
         void ITestListener.TestStarted(ITest test)

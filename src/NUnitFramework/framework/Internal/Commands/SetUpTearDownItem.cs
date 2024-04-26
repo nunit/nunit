@@ -50,7 +50,29 @@ namespace NUnit.Framework.Internal.Commands
             _setUpWasRun = true;
 
             foreach (IMethodInfo setUpMethod in _setUpMethods)
-                RunSetUpOrTearDownMethod(context, setUpMethod);
+            {
+                RaiseOneTimeSetUpStarted(context);
+                try
+                {
+                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                }
+                finally
+                {
+                    RaiseOneTimeSetUpFinished(context);
+                }
+            }
+        }
+
+        private void RaiseOneTimeSetUpStarted(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeSetUpStarted(context.CurrentTest);
+        }
+
+        private void RaiseOneTimeSetUpFinished(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeSetUpFinished(context.CurrentTest);
         }
 
         /// <summary>
@@ -72,7 +94,17 @@ namespace NUnit.Framework.Internal.Commands
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
                     while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                    {
+                        RaiseOneTimeTearDownStarted(context);
+                        try
+                        {
+                            RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                        }
+                        finally
+                        {
+                            RaiseOneTimeTearDownFinished(context);
+                        }
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
@@ -86,41 +118,29 @@ namespace NUnit.Framework.Internal.Commands
             }
         }
 
+        private void RaiseOneTimeTearDownStarted(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeTearDownStarted(context.CurrentTest);
+        }
+
+        private void RaiseOneTimeTearDownFinished(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeTearDownFinished(context.CurrentTest);
+        }
+
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
         {
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
 
             var methodInfo = MethodInfoCache.Get(method);
-            RaiseStartedEvent(context, methodInfo);
 
-            try
-            {
-                if (methodInfo.IsAsyncOperation)
-                    AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
-                else
-                    InvokeMethod(method, context);
-            }
-            finally
-            {
-                RaiseFinishedEvent(context, methodInfo);
-            }
-        }
-
-        private static void RaiseStartedEvent(TestExecutionContext context, MethodInfoCache.TestMethodMetadata methodInfo)
-        {
-            if (methodInfo.HasOneTimeSetUpAttribute)
-                context.ListenerExt.OneTimeSetUpStarted(context.CurrentTest);
-            else if (methodInfo.HasOneTimeTearDownAttribute)
-                context.ListenerExt.OneTimeTearDownStarted(context.CurrentTest);
-        }
-
-        private static void RaiseFinishedEvent(TestExecutionContext context, MethodInfoCache.TestMethodMetadata methodInfo)
-        {
-            if (methodInfo.HasOneTimeSetUpAttribute)
-                context.ListenerExt.OneTimeSetUpFinished(context.CurrentTest);
-            else if (methodInfo.HasOneTimeTearDownAttribute)
-                context.ListenerExt.OneTimeTearDownFinished(context.CurrentTest);
+            if (methodInfo.IsAsyncOperation)
+                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
+            else
+                InvokeMethod(method, context);
         }
 
         private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
