@@ -42,11 +42,11 @@ namespace NUnit.Framework.Constraints
         {
             if (_itemList is null || _itemList.Count == 0)
             {
-                writer.Write("no items");
+                writer.Write("no matching items");
                 return;
             }
 
-            writer.Write(_matchCount != 1 ? "{0} items " : "{0} item ", _matchCount);
+            writer.Write(_matchCount != 1 ? "{0} matching items " : "{0} matching item ", _matchCount);
             writer.Write(MsgUtils.FormatCollection(_itemList));
         }
     }
