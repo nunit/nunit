@@ -18,6 +18,16 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ZeroItemsMatchWithEmptyCollectionFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "no matching items" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<string>(), Has.Exactly(1).EqualTo("Charlie")));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
         public void ZeroItemsMatchFails()
         {
             var expectedMessage =
