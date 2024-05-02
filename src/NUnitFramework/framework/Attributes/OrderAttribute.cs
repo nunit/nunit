@@ -13,14 +13,14 @@ namespace NUnit.Framework
     public class OrderAttribute : NUnitAttribute, IApplyToTest, IApplyToTestSuite
     {
         /// <summary>
-        /// Defines the order that the test will run in
+        /// The order that the test will run in
         /// </summary>
         public readonly int Order;
 
         /// <summary>
         /// Defines the order that the test will run in
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order">The order that the test will run in</param>
         public OrderAttribute(int order)
         {
             Order = order;
