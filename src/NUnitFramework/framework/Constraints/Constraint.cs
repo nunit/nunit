@@ -304,7 +304,7 @@ namespace NUnit.Framework.Constraints
         /// and polling interval.
         /// </summary>
         /// <param name="delayInMilliseconds">The delay in milliseconds.</param>
-        /// <param name="pollingInterval">The interval at which to test the constraint.</param>
+        /// <param name="pollingInterval">The interval at which to test the constraint, in milliseconds.</param>
         /// <returns></returns>
         public DelayedConstraint After(int delayInMilliseconds, int pollingInterval)
         {
