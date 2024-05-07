@@ -14,6 +14,10 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.g.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\framework\Schemas\*.xsd" LinkBase="Schemas" CopyToOutputDirectory="Always" />

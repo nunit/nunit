@@ -6,6 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
+  
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <PackageReference Include="System.Threading.Tasks.Extensions" />
@@ -20,6 +21,10 @@
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.g.cs" />
   </ItemGroup>
 
   <ItemGroup>
