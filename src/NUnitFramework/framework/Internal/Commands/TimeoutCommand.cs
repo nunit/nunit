@@ -101,7 +101,7 @@ namespace NUnit.Framework.Internal.Commands
                 var testExecution = Task.Run(() => innerCommand.Execute(separateContext));
                 var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
 
-                separateContext.CurrentResult.ApplyOutput(context.CurrentResult);
+                context.CurrentResult.CopyOutputTo(separateContext.CurrentResult);
 
                 if (timedOut && !_debugger.IsAttached)
                 {

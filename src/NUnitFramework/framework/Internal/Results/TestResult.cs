@@ -156,10 +156,10 @@ namespace NUnit.Framework.Internal
         /// Apply the output from the provided TestResult to this one
         /// </summary>
         /// <param name="result">The TestResult to apply output from</param>
-        internal void ApplyOutput(TestResult result)
+        internal void CopyOutputTo(TestResult result)
         {
-            result.OutWriter.Flush();
-            OutWriter.Write(result.Output);
+            OutWriter.Flush();
+            result.OutWriter.Write(Output);
         }
 
         /// <summary>
