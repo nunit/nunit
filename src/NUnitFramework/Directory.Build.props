@@ -9,13 +9,17 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;net6.0;net8.0</NUnitRuntimeFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <Nullable>enable</Nullable>
     <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Company>NUnit Software</Company>
+    <Product>NUnit 4</Product>
+    <Copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt</Copyright>
+    <Trademark>NUnit is a trademark of NUnit Software</Trademark>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
@@ -34,6 +38,41 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+    <!-- .NET Core 3.1 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+      <AssemblyConfiguration>.NET Core 3.1 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET Framework 4.6.2 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+      <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET 5.0 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
+      <AssemblyConfiguration>.NET 5.0 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET 6.0 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+      <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET 7.0 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
+      <AssemblyConfiguration>.NET 7.0 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET 8.0 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+      <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
+
+    <!-- .NET 9.0 -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+      <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
+    </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />

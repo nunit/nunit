@@ -5,6 +5,7 @@
     <RootNamespace>NUnit.Tests</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
+    <Title>slow-nunit-tests</Title>
   </PropertyGroup>
 
   <ItemGroup>

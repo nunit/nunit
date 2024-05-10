@@ -7,16 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.g.cs" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+    <Title>NUnit Framework Classic (.NET Framework 4.6.2)</Title>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <Title>NUnit Framework Classic (.NET 6.0)</Title>
+  </PropertyGroup>
 
+ 
 </Project>
 

@@ -7,6 +7,7 @@
     <Nullable>disable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
+    <Title>NUnitLite Runner Tests</Title>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@
     <IsTestProject>false</IsTestProject>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
+    <Title>mock-assembly</Title>
   </PropertyGroup>
 
   <ItemGroup>
