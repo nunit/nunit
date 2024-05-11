@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Diagnostics
 {
-    public abstract class ProgressTraceListenerTestsBase// : ITestListener
+    public abstract class ProgressTraceListenerTestsBase
     {
         protected const string SOME_TEXT = "Should go to the output";
         protected static readonly string NL = Environment.NewLine;
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests.Diagnostics
         #endregion
     }
 
-    [TestFixture]
+    [TestFixture, NonParallelizable] // Adding the "ProgressTraceListener" may lead to side-effects in other tests.
     public class ProgressTraceListenerTests : ProgressTraceListenerTestsBase
     {
         private ProgressTraceListener _progressTraceListener;
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Tests.Diagnostics
         }
     }
 
-    [TestFixture]
+    [TestFixture, NonParallelizable] // Tests may be affected by adding the "ProgressTraceListener" in "ProgressTraceListenerTests".
     public class NoProgressTraceListenerTests : ProgressTraceListenerTestsBase
     {
         [Test]
@@ -138,16 +138,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(0));
 
             Trace.WriteLine(SOME_TEXT);
-            // For some yet not understood reason, behavior of this test differs from what is
-            // being seeing in https://github.com/nunit/nunit3-vs-adapter/issues/718 as well as
-            // https://github.com/TestCentric/testcentric-gui/issues/1043 and also documented at
-            // https://docs.nunit.org/articles/vs-test-adapter/Trace-and-Debug.html:
-            // "Trace and Debug output is by default not sent to the console output, or anywhere else."
-            // Thus, no output is expected here:
-        ////Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(0));
-            // But actually there is:
-            Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(1));
-            Assert.That(TestResultListener.Outputs[0], Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(0));
         }
     }
 }
