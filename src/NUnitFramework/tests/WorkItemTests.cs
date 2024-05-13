@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests
     public class WorkItemTests
     {
         private WorkItem? _workItem;
-        private TestExecutionContext? _context;
+        private TestExecutionContext _context = new();
 
         [SetUp]
         public void CreateWorkItems()
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests
         [TearDown]
         public void DisposeWorkItems()
         {
-            _workItem.Dispose();
+            _workItem?.Dispose();
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ExecuteWorkItem()
         {
-            _workItem.Execute();
+            _workItem?.Execute();
 
             Assert.Multiple(() =>
             {
@@ -59,12 +59,13 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanStopRun()
         {
+
             _context.ExecutionStatus = TestExecutionStatus.StopRequested;
-            _workItem.Execute();
+            _workItem?.Execute();
 
             Assert.Multiple(() =>
             {
-                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_workItem?.State, Is.EqualTo(WorkItemState.Complete));
                 Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
                 Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
             });
