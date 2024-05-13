@@ -13,7 +13,7 @@ namespace NUnit.Framework
     /// <remarks>
     /// The user has to monitor this cancellation token.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class CancelAfterAttribute : PropertyAttribute, IApplyToContext
     {
         private readonly int _timeout;

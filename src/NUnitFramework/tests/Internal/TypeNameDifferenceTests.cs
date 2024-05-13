@@ -156,7 +156,7 @@ namespace NUnit.Framework.Tests.Internal
 
         #endregion
 
-        private TypeNameDifferenceResolver _differenceGetter;
+        private TypeNameDifferenceResolver? _differenceGetter;
 
         [SetUp]
         public void TestSetup()

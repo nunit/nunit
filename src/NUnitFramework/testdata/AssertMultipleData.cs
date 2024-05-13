@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework;
 using System.Threading.Tasks;
+using NUnit.Framework;
 #pragma warning disable IDE0053 // Use expression body for lambda expression
 
 namespace NUnit.TestData.AssertMultipleData

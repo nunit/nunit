@@ -9,8 +9,8 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestData.ParallelExecutionData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ParallelExecutionData;
 
 namespace NUnit.Framework.Tests.Internal.Execution
 {

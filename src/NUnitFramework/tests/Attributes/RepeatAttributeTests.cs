@@ -14,8 +14,8 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
-using NUnit.TestData.RepeatingTests;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.RepeatingTests;
 
 namespace NUnit.Framework.Tests.Attributes
 {

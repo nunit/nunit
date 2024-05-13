@@ -4,8 +4,8 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.AssertMultipleData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.AssertMultipleData;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
 
 namespace NUnit.Framework.Tests.Assertions

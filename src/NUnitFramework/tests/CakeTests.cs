@@ -1,16 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Tests;
 
 public class CakeTests
 {
-    [TestCase("1.2.3-beta.1")]
-    [TestCase("1.2.3")]
-    public void ThatWeCanParseVersionStrings(string versionString)
+    [TestCase("1.2.3-beta.1", "1.2.3.0")]
+    [TestCase("1.2.3", "1.2.3.0")]
+    public void ThatWeCanParseVersionStrings(string versionString, string expected)
     {
-        Assert.That(Version.TryParse(versionString, out _), Is.True);
+        var cake = new CakeCode();
+        var parsedVersion = cake.ParseVersion(versionString);
+        Assert.That(parsedVersion, Is.EqualTo(expected));
     }
 }
 

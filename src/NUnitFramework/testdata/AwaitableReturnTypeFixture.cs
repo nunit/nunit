@@ -2,8 +2,8 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using NUnit.Framework;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace NUnit.TestData
 {

@@ -12,8 +12,8 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class AsyncSetupTeardownTests
     {
-        private AsyncSetupTearDownFixture _testObject;
-        private TestExecutionContext _context;
+        private AsyncSetupTearDownFixture? _testObject;
+        private TestExecutionContext? _context;
         private static readonly IList<IMethodInfo> Empty = Array.Empty<IMethodInfo>();
 
         [SetUp]

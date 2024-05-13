@@ -3,8 +3,8 @@
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.CultureAttributeData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.CultureAttributeData;
 
 namespace NUnit.Framework.Tests.Internal
 {

@@ -8,7 +8,7 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class NUnitComparerTests
     {
-        private NUnitComparer _comparer;
+        private NUnitComparer? _comparer;
 
         [SetUp]
         public void SetUp()

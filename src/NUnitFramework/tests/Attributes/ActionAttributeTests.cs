@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Attributes
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).Assembly);
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
-        private ITestResult _result;
+        private ITestResult? _result;
         private int _numEvents = -1;
 
         [OneTimeSetUp]

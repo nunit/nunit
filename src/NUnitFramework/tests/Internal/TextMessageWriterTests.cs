@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Internal
     {
         private static readonly string NL = Environment.NewLine;
 
-        private TextMessageWriter _writer;
+        private TextMessageWriter? _writer;
 
         [SetUp]
         public void SetUp()

@@ -90,7 +90,7 @@ namespace NUnit.Framework.Tests.Attributes
 
     public class ParameterizedTestFixtureNamingTests
     {
-        private TestSuite _fixture;
+        private TestSuite? _fixture;
 
         [SetUp]
         public void MakeFixture()
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Tests.Attributes
 
     public class AnotherParameterizedTestFixtureNamingTests
     {
-        private TestSuite _fixture;
+        private TestSuite? _fixture;
 
         [OneTimeSetUp]
         public void MakeFixture()

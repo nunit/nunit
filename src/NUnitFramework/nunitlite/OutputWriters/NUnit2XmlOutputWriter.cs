@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Xml;
 using System.IO;
+using System.Xml;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 

@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Internal
     {
         private readonly List<string> _testStrings = new List<string> { "one", "two", "three" };
 
-        private CollectionTally _collectionTally;
+        private CollectionTally? _collectionTally;
 
         [SetUp]
         public void TestSetup()

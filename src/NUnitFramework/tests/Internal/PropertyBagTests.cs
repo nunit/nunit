@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     public class PropertyBagTests
     {
-        private PropertyBag _bag;
+        private PropertyBag? _bag;
 
         [SetUp]
         public void SetUp()

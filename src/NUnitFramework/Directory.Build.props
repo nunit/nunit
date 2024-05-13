@@ -38,42 +38,37 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
-
-    <!-- .NET Core 3.1 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-      <AssemblyConfiguration>.NET Core 3.1 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-
-    <!-- .NET Framework 4.6.2 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
+<Choose>
+  <When Condition="'$(TargetFramework)' == 'net462'">
+    <PropertyGroup>
       <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
     </PropertyGroup>
-
-    <!-- .NET 5.0 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net5.0'">
-      <AssemblyConfiguration>.NET 5.0 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-
-    <!-- .NET 6.0 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  </When>
+  <When Condition="'$(TargetFramework)' == 'net6.0'">
+    <PropertyGroup>
       <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
     </PropertyGroup>
-
-    <!-- .NET 7.0 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
+  </When>
+  <When Condition="'$(TargetFramework)' == 'net7.0'">
+    <PropertyGroup>
       <AssemblyConfiguration>.NET 7.0 $(Configuration)</AssemblyConfiguration>
     </PropertyGroup>
-
-    <!-- .NET 8.0 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+  </When>
+  <When Condition="'$(TargetFramework)' == 'net8.0'">
+    <PropertyGroup>
       <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
     </PropertyGroup>
-
-    <!-- .NET 9.0 -->
-    <PropertyGroup Condition="'$(TargetFramework)' == 'net9.0'">
+  </When>
+  <When Condition="'$(TargetFramework)' == 'net9.0'">
+    <PropertyGroup>
       <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
     </PropertyGroup>
-
+  </When>
+  <Otherwise>
+   <Error Text="MissingAssemblyConfiguration for $(TargetFramework)" />
+  </Otherwise>
+</Choose>
+   
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />

@@ -5,8 +5,8 @@ using System;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using System.Threading;
-using NUnit.TestData.TestFixtureTests;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Tests.Internal
 {

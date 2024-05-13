@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Internal.Abstractions;
 
 #nullable enable
 

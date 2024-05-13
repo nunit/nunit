@@ -7,22 +7,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.TestContextData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TestContextData;
 
 namespace NUnit.Framework.Tests
 {
     [TestFixture]
     public class TestContextTests
     {
-        private TestContext _setupContext;
+        private TestContext? _setupContext;
 
         private readonly string _name = TestContext.CurrentContext.Test.Name;
 
         private readonly string _testDirectory = TestContext.CurrentContext.TestDirectory;
         private readonly string _workDirectory = TestContext.CurrentContext.WorkDirectory;
 
-        private string _tempFilePath;
+        private string? _tempFilePath;
 
         private const string TempFileName = "TestContextTests.tmp";
 
@@ -79,7 +79,8 @@ namespace NUnit.Framework.Tests
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.That(workDirectory, Is.Not.Null);
-            Assert.That(Directory.Exists(workDirectory), $"Directory {workDirectory} does not exist");
+            var dirExists = Directory.Exists(workDirectory);
+            Assert.That(dirExists, $"Directory {workDirectory} does not exist");
         }
 
         [TestCaseSource(nameof(WorkDirectorySource))]
@@ -425,12 +426,12 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTearDownTests
     {
-        private const int THE_MEANING_OF_LIFE = 42;
+        private const int TheMeaningOfLife = 42;
 
         [Test]
         public void TestTheMeaningOfLife()
         {
-            Assert.That(THE_MEANING_OF_LIFE, Is.EqualTo(42));
+            Assert.That(TheMeaningOfLife, Is.EqualTo(42));
         }
 
         [TearDown]

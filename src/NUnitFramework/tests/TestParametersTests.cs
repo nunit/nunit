@@ -6,7 +6,7 @@ namespace NUnit.Framework.Tests
 {
     public class TestParametersTests
     {
-        private TestParameters _parameters;
+        private TestParameters? _parameters;
 
         [SetUp]
         public void CreateTestParameters()

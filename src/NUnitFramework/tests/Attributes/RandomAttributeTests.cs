@@ -4,8 +4,8 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using NUnit.Framework.Interfaces;
-using NUnit.TestData.RandomAttributeTests;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.RandomAttributeTests;
 
 namespace NUnit.Framework.Tests.Attributes
 {
