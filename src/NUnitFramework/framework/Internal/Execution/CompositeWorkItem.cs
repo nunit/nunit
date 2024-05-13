@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution

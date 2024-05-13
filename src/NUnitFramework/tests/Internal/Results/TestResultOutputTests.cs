@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests.Internal.Results
     {
         private const string SOME_TEXT = "This text should be part of the result.";
         private static readonly string NL = Environment.NewLine;
-        private TestResult? _result;
+        private TestResult _result;
 
         [SetUp]
         public void SetUp()

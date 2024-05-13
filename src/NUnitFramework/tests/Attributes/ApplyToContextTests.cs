@@ -8,7 +8,7 @@ namespace NUnit.Framework.Tests.Attributes
 {
     public class ApplyToContextTests
     {
-        private TestExecutionContext? _context;
+        private TestExecutionContext _context;
 
         [SetUp]
         public void SetUp()

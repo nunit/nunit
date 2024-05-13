@@ -8,9 +8,9 @@ namespace NUnit.Framework.Tests.Internal.Execution
 {
     public class ParallelExecutionStrategyTests
     {
-        private TestExecutionContext? _context;
-        private TestMethod? _testMethod;
-        private TestFixture? _testFixture;
+        private TestExecutionContext _context;
+        private TestMethod _testMethod;
+        private TestFixture _testFixture;
 
         [SetUp]
         public void SetUp()

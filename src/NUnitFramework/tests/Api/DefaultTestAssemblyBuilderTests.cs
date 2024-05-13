@@ -14,8 +14,8 @@ namespace NUnit.Framework.Tests.Api
     {
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
 
-        private string? _mockAssemblyPath;
-        private DefaultTestAssemblyBuilder? _builder;
+        private string _mockAssemblyPath;
+        private DefaultTestAssemblyBuilder _builder;
 
         [SetUp]
         public void SetUp()

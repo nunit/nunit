@@ -3,8 +3,8 @@
 using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

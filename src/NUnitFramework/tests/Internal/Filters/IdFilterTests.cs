@@ -7,7 +7,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class IdFilterTests : TestFilterTests
     {
-        private TestFilter? _filter;
+        private TestFilter _filter;
 
         [SetUp]
         public void CreateFilter()

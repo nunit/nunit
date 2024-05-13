@@ -3,8 +3,8 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Assertions
 {

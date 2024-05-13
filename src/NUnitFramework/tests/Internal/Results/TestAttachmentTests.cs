@@ -2,15 +2,15 @@
 
 using System.IO;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal.Results
 {
     [TestFixture]
     public class TestAttachmentTests
     {
-        private string? _tempFilePath;
+        private string _tempFilePath;
 
         [OneTimeSetUp]
         public void CreateTempFile()

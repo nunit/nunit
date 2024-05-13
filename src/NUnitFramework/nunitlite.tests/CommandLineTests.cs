@@ -3,9 +3,9 @@
 using System;
 using System.Reflection;
 using NUnit.Common;
+using NUnit.Options;
 using NUnit.Framework;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.Options;
 
 namespace NUnitLite.Tests
 {

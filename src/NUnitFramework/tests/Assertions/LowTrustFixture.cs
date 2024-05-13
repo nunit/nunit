@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Assertions
     [Platform(Exclude = "Mono,MonoTouch", Reason = "Mono does not implement Code Access Security")]
     public class LowTrustFixture
     {
-        private TestSandBox? _sandBox;
+        private TestSandBox _sandBox;
 
         [OneTimeSetUp]
         public void CreateSandBox()

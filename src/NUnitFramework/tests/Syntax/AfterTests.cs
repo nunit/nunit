@@ -80,8 +80,8 @@ namespace NUnit.Framework.Tests.Syntax
         protected bool Flag;
         protected int Num;
         protected object? Ob1, Ob2, Ob3;
-        protected List<object>? List;
-        protected string? Greeting;
+        protected List<object> List;
+        protected string Greeting;
 
         [SetUp]
         public void InitializeValues()

@@ -6,8 +6,8 @@ namespace NUnit.Framework.Tests.Attributes
 {
     public class ThreadingTests
     {
-        protected Thread? ParentThread { get; private set; }
-        protected Thread? SetupThread { get; private set; }
+        protected Thread ParentThread { get; private set; }
+        protected Thread SetupThread { get; private set; }
         protected ApartmentState ParentThreadApartment { get; private set; }
 
         [OneTimeSetUp]

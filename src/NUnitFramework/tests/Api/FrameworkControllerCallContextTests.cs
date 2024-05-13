@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Api
     // https://github.com/nunit/nunit/issues/2614
     internal class FrameworkControllerCallContextTests
     {
-        private object? _origExecutionContext;
+        private object _origExecutionContext;
         private const string MockAssemblyFile = "mock-assembly.dll";
 
         [SetUp]

@@ -10,9 +10,9 @@ namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class PartitionFilterTests : TestFilterTests
     {
-        private PartitionFilter? _filter;
-        private ITest? _testMatchingPartition;
-        private ITest? _testNotMatchingPartition;
+        private PartitionFilter _filter;
+        private ITest _testMatchingPartition;
+        private ITest _testNotMatchingPartition;
 
         [SetUp]
         public void CreateFilter()

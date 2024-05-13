@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         private const string FilepathXName = "filePath";
         private const string DescriptionXName = "description";
 
-        private TestResult? _result;
+        private TestResult _result;
 
         [SetUp]
         public void SetUp()

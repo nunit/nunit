@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.Api
 
         private static readonly IDictionary<string, object> EmptySettings = new Dictionary<string, object>();
 
-        private ITestAssemblyRunner? _runner;
+        private ITestAssemblyRunner _runner;
 
         private int _suiteStartedCount;
         private int _suiteFinishedCount;
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Api
         private int _skipCount;
         private int _inconclusiveCount;
 
-        private Dictionary<string, bool>? _activeTests;
+        private Dictionary<string, bool> _activeTests;
 
         [SetUp]
         public void CreateRunner()

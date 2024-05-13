@@ -3,9 +3,9 @@
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 using NUnit.TestData.MultipleTestFixturesOrderAttribute;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

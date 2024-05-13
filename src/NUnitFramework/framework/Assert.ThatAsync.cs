@@ -1,10 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using System;
 using NUnit.Framework.Constraints;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework
 {

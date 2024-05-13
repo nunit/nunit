@@ -10,8 +10,8 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class FileOrDirectoryExistsConstraintTests
     {
-        private FileOrDirectoryExistsConstraint? _constraint;
-        private TestDirectory? _goodDir;
+        private FileOrDirectoryExistsConstraint _constraint;
+        private TestDirectory _goodDir;
         private static readonly string BAD_DIRECTORY = Path.Combine(Path.GetTempPath(), @"\I\hope\this\is\garbage");
         private static readonly string BAD_FILE = Path.Combine(Path.GetTempPath(), "garbage.txt");
         private const string RESOURCE_FILE = "TestText1.txt";

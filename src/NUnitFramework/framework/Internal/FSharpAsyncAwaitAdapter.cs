@@ -66,17 +66,17 @@ namespace NUnit.Framework.Internal
                    .Single(method =>
                    {
                        if (method.Name != "StartImmediateAsTask")
-                           return false;
+                            return false;
                        var typeArguments = method.GetGenericArguments();
                        if (typeArguments.Length != 1)
-                           return false;
+                            return false;
 
                        var parameters = method.GetParameters();
                        if (parameters.Length != 2)
-                           return false;
+                            return false;
 
                        if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0]))
-                           return false;
+                            return false;
 
                        return parameters[1].ParameterType.IsFSharpOption(out Type? someType)
                            && someType.FullName == "System.Threading.CancellationToken";

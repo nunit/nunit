@@ -6,8 +6,8 @@ using System.Security.Principal;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.OneTimeSetUpTearDownData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

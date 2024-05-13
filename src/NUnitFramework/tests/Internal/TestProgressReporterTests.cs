@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal
 {
     public class TestProgressReporterTests
     {
-        private ReportCollector? _listener;
-        private TestProgressReporter? _reporter;
+        private ReportCollector _listener;
+        private TestProgressReporter _reporter;
 
         [OneTimeSetUp]
         public void SetupFixture()

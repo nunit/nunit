@@ -2,8 +2,8 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.CategoryAttributeData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public class CategoryAttributeTests
     {
-        private TestSuite? _fixture;
+        private TestSuite _fixture;
 
         [SetUp]
         public void CreateFixture()

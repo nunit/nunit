@@ -367,11 +367,11 @@ namespace NUnit.Framework.Internal
                    .SingleOrDefault(candidate =>
                    {
                        if (candidate.Name != name || candidate.GetGenericArguments().Length != 0)
-                           return false;
+                            return false;
 
                        var parameters = candidate.GetParameters();
                        if (parameters.Length != parameterTypes.Length)
-                           return false;
+                            return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
                        {
@@ -402,12 +402,12 @@ namespace NUnit.Framework.Internal
 
                          var indexParameters = candidate.GetIndexParameters();
                          if (indexParameters.Length != indexParameterTypes.Length)
-                             return false;
+                            return false;
 
                          for (var i = 0; i < indexParameterTypes.Length; i++)
                          {
                              if (indexParameters[i].ParameterType != indexParameterTypes[i])
-                                 return false;
+                                return false;
                          }
 
                          return true;

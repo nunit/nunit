@@ -4,8 +4,8 @@ using System.Collections;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal
 {
@@ -14,8 +14,8 @@ namespace NUnit.Framework.Tests.Internal
     {
         private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;
 
-        private DefaultTestCaseBuilder? _builder;
-        private object? _testObject;
+        private DefaultTestCaseBuilder _builder;
+        private object _testObject;
 
         [SetUp]
         public void Setup()

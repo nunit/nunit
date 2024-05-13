@@ -7,9 +7,9 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class TestNameGeneratorTests
     {
-        private TestMethod? _simpleTest;
-        private TestMethod? _simpleTestWithArgs;
-        private TestMethod? _genericTest;
+        private TestMethod _simpleTest;
+        private TestMethod _simpleTestWithArgs;
+        private TestMethod _genericTest;
 
         [SetUp]
         public void InitializeMethodInfos()

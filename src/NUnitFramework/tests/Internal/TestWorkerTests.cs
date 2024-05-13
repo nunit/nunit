@@ -9,8 +9,8 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class TestWorkerTests
     {
-        private WorkItemQueue? _queue;
-        private TestWorker? _worker;
+        private WorkItemQueue _queue;
+        private TestWorker _worker;
 
         [SetUp]
         public void SetUp()

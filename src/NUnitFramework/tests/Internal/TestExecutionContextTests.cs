@@ -25,12 +25,12 @@ namespace NUnit.Framework.Tests.Internal
     [Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
-        private TestExecutionContext? _fixtureContext;
-        private TestExecutionContext? _setupContext;
-        private ResultState? _fixtureResult;
-        private string? _originalDirectory;
-        private CultureInfo? _originalCulture;
-        private CultureInfo? _originalUICulture;
+        private TestExecutionContext _fixtureContext;
+        private TestExecutionContext _setupContext;
+        private ResultState _fixtureResult;
+        private string _originalDirectory;
+        private CultureInfo _originalCulture;
+        private CultureInfo _originalUICulture;
         private IPrincipal? _originalPrincipal;
         private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
         private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
@@ -947,7 +947,7 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {
-        private RunsInAppDomain? _runsInAppDomain;
+        private RunsInAppDomain _runsInAppDomain;
 
         [SetUp]
         public void SetUp()

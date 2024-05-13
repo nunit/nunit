@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
     public class ParallelWorkItemDispatcherTests
     {
         private const int LEVEL_OF_PARALLELISM = 4;
-        private ParallelWorkItemDispatcher? _dispatcher;
+        private ParallelWorkItemDispatcher _dispatcher;
 
         [SetUp]
         public void CreateDispatcher()
