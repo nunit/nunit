@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ExecuteWorkItem()
         {
-            _workItem?.Execute();
+            _workItem.Execute();
 
             Assert.Multiple(() =>
             {
@@ -59,9 +59,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void CanStopRun()
         {
-
             _context.ExecutionStatus = TestExecutionStatus.StopRequested;
-            _workItem?.Execute();
+            _workItem.Execute();
 
             Assert.Multiple(() =>
             {
@@ -74,7 +73,7 @@ namespace NUnit.Framework.Tests
         // Use static for simplicity
         private static class DummyFixture
         {
-            public static readonly int Delay = 0;
+            private static readonly int Delay = 0;
 
             public static void DummyTest()
             {

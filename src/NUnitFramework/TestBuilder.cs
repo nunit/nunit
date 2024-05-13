@@ -9,6 +9,8 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Abstractions;
 
+#nullable enable
+
 namespace NUnit.Framework.Tests.TestUtilities;
 
 /// <summary>
