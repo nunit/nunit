@@ -7,11 +7,8 @@
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Title>NUnit Framework (.NET Framework 4.6.2)</Title>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <Title>NUnit Framework (.NET 6.0)</Title>
+  <PropertyGroup>
+    <Title>NUnit Framework $(AssemblyConfiguration)</Title>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
