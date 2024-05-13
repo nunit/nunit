@@ -134,10 +134,13 @@ DotNetBuildSettings CreateDotNetBuildSettings()
     var assemblyVersion = version.Substring(0, version.LastIndexOf('-')) + ".0";
     var msBuildSettings = new DotNetMSBuildSettings {
         ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
-        AssemblyVersion = assemblyVersion,
-        FileVersion = packageVersion.FileVersion,
+        AssemblyVersion = ParseAssemblyVersion(version),
+        FileVersion = ParseFileVersion(version),
         InformationalVersion = version
     };
+    Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
+    Information("FileVersion: {0}", msBuildSettings.FileVersion);
+    Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
 
     var settings =  new DotNetBuildSettings
     {
@@ -148,6 +151,28 @@ DotNetBuildSettings CreateDotNetBuildSettings()
      };
     return settings;
 }
+
+    public string ParseFileVersion(string version)
+    {
+        var dash = version.LastIndexOf('-');
+        if (dash > 0)
+        {
+            var fourthDigitValue = version.Substring(version.LastIndexOf('.') + 1);
+            var fourthDigit = int.Parse(fourthDigitValue);
+            return string.Concat(version.Substring(0, dash), $".{fourthDigit}");
+        }
+        return version + ".0";
+    }
+
+    public string ParseAssemblyVersion(string version)
+    {
+        var dash = version.LastIndexOf('-');
+        if (dash > 0)
+        {
+            return string.Concat(version.Substring(0, dash), ".0");
+        }
+        return version + ".0";
+    }
 
 //////////////////////////////////////////////////////////////////////
 // TEST
