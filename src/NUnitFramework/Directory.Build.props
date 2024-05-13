@@ -38,37 +38,37 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
-<Choose>
-  <When Condition="'$(TargetFramework)' == 'net462'">
-    <PropertyGroup>
-      <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-  </When>
-  <When Condition="'$(TargetFramework)' == 'net6.0'">
-    <PropertyGroup>
-      <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-  </When>
-  <When Condition="'$(TargetFramework)' == 'net7.0'">
-    <PropertyGroup>
-      <AssemblyConfiguration>.NET 7.0 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-  </When>
-  <When Condition="'$(TargetFramework)' == 'net8.0'">
-    <PropertyGroup>
-      <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-  </When>
-  <When Condition="'$(TargetFramework)' == 'net9.0'">
-    <PropertyGroup>
-      <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
-    </PropertyGroup>
-  </When>
-  <Otherwise>
-   <Error Text="MissingAssemblyConfiguration for $(TargetFramework)" />
-  </Otherwise>
-</Choose>
-   
+  <!--<Choose>
+    <When Condition="'$(TargetFramework)' == 'net462'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(TargetFramework)' == 'net6.0'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(TargetFramework)' == 'net7.0'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 7.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(TargetFramework)' == 'net8.0'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(TargetFramework)' == 'net9.0'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <Error Text="MissingAssemblyConfiguration for $(TargetFramework)" />
+    </Otherwise>
+  </Choose>-->
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />
