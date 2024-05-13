@@ -6,13 +6,9 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Title>NUnitLite Runner (.NET Framework 4.6.2)</Title>
+  <PropertyGroup>
+    <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <Title>NUnitLite Runner (.NET 6.0)</Title>
-  </PropertyGroup>
-  
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />

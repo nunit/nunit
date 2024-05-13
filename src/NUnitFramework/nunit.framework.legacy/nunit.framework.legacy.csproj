@@ -9,11 +9,8 @@
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Title>NUnit Framework Classic (.NET Framework 4.6.2)</Title>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <Title>NUnit Framework Classic (.NET 6.0)</Title>
+  <PropertyGroup>
+    <Title>NUnit Framework Classic $(AssemblyConfiguration)</Title>
   </PropertyGroup>
 
  
