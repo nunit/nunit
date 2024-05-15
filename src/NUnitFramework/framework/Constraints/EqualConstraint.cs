@@ -74,12 +74,25 @@ namespace NUnit.Framework.Constraints
         public bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
 
         /// <summary>
+        /// Gets a value indicating whether to compare separate properties.
+        /// </summary>
+        /// <value>
+        ///   <see langword="true"/> if comparing separate properties; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool ComparingProperties => _comparer.CompareProperties;
+
+        /// <summary>
         /// Gets a value indicating whether or not to clip strings.
         /// </summary>
         /// <value>
         ///   <see langword="true"/> if set to clip strings otherwise, <see langword="false"/>.
         /// </value>
         public bool ClipStrings { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether there is any additional Failure Information.
+        /// </summary>
+        public bool HasFailurePoints => _comparer.HasFailurePoints;
 
         /// <summary>
         /// Gets the failure points.
