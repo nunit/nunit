@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests
         [TearDown]
         public void DisposeWorkItems()
         {
-            _workItem?.Dispose();
+            _workItem.Dispose();
         }
 
         [Test]

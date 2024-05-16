@@ -41,7 +41,7 @@ internal static class TestBuilder
     {
         var suite = MakeTestFromMethod(type, methodName) as TestSuite;
         Assert.That(suite, Is.Not.Null, "Unable to create parameterized suite - most likely there is no data provided");
-        return suite!;
+        return suite;
     }
 
     public static TestMethod MakeTestCase(Type type, string methodName)
@@ -98,7 +98,7 @@ internal static class TestBuilder
     {
         var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, debugger ?? new DebuggerProxy(), true);
         Assert.That(work, Is.Not.Null);
-        work!.InitializeContext(context);
+        work.InitializeContext(context);
 
         return work;
     }
@@ -151,7 +151,7 @@ internal static class TestBuilder
         var method = action.GetMethodInfo();
         Assert.That(method, Is.Not.Null);
         Assert.That(method.DeclaringType, Is.Not.Null);
-        var testMethod = MakeTestCase(method.DeclaringType!, method.Name);
+        var testMethod = MakeTestCase(method.DeclaringType, method.Name);
         return RunTest(testMethod);
     }
 
