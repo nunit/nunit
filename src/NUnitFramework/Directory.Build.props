@@ -38,36 +38,38 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
-  <!--<Choose>
+
+  <Choose>
     <When Condition="'$(TargetFramework)' == 'net462'">
       <PropertyGroup>
         <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
-    <When Condition="'$(TargetFramework)' == 'net6.0'">
+    <When Condition="$(TargetFramework.StartsWith('net6.0'))">
       <PropertyGroup>
         <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
-    <When Condition="'$(TargetFramework)' == 'net7.0'">
-      <PropertyGroup>
-        <AssemblyConfiguration>.NET 7.0 $(Configuration)</AssemblyConfiguration>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(TargetFramework)' == 'net8.0'">
+    <When Condition="$(TargetFramework.StartsWith('net8.0'))">
       <PropertyGroup>
         <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
-    <When Condition="'$(TargetFramework)' == 'net9.0'">
+    <When Condition="$(TargetFramework.StartsWith('net9.0'))">
       <PropertyGroup>
         <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
     <Otherwise>
-      <Error Text="MissingAssemblyConfiguration for $(TargetFramework)" />
+      <PropertyGroup>
+        <AssemblyConfiguration />
+      </PropertyGroup>
     </Otherwise>
-  </Choose>-->
+  </Choose>
+
+  <Target Name="CheckConfiguration" BeforeTargets="Compile">
+    <Error Condition="'$(AssemblyConfiguration)' == ''" Text="Missing AssemblyConfiguration for $(TargetFramework)" />
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
