@@ -375,6 +375,10 @@ namespace NUnit.Framework.Constraints
             {
                 _innerResult = innerResult;
             }
+            public override void WriteMessageTo(MessageWriter writer)
+            {
+                _innerResult.WriteMessageTo(writer); 
+            }
 
             public override void WriteActualValueTo(MessageWriter writer) => _innerResult.WriteActualValueTo(writer);
 
