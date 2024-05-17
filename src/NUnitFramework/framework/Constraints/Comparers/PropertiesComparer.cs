@@ -55,7 +55,8 @@ namespace NUnit.Framework.Constraints.Comparers
                     {
                         return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
                     }
-                    else if (result == EqualMethodResult.ToleranceNotSupported)
+
+                    if (result == EqualMethodResult.ToleranceNotSupported)
                     {
                         redoWithoutTolerance |= 1U << i;
                     }

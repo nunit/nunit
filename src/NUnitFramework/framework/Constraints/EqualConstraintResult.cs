@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         private readonly bool _ignoringWhiteSpace;
         private readonly bool _comparingProperties;
         private readonly bool _clipStrings;
-        private readonly IList<NUnitEqualityComparer.FailurePoint>? _failurePoints;
+        private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
             _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
             _comparingProperties = constraint.ComparingProperties;
             _clipStrings = constraint.ClipStrings;
-            _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : null;
+            _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Constraints
         #region DisplayStreamDifferences
         private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
         {
-            long offset = _failurePoints is not null && _failurePoints.Count > depth ? _failurePoints[depth].Position : 0;
+            long offset = _failurePoints.Count > depth ? _failurePoints[depth].Position : 0;
 
             if (expected.CanSeek && actual.CanSeek)
             {
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (_failurePoints is not null && _failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
                 NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
@@ -272,7 +272,7 @@ namespace NUnit.Framework.Constraints
         {
             DisplayTypesAndSizes(writer, expected, actual, depth);
 
-            if (_failurePoints is not null && _failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
                 NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
@@ -303,7 +303,7 @@ namespace NUnit.Framework.Constraints
 
         private void DisplayPropertyDifferences(MessageWriter writer, int depth)
         {
-            if (_failurePoints is not null && _failurePoints.Count > depth)
+            if (_failurePoints.Count > depth)
             {
                 NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
@@ -314,8 +314,7 @@ namespace NUnit.Framework.Constraints
 
         private bool IsPropertyFailurePoint(int depth)
         {
-            return _failurePoints is not null &&
-                   _failurePoints.Count > depth &&
+            return _failurePoints.Count > depth &&
                    _failurePoints[depth].PropertyName is not null;
         }
 
