@@ -425,6 +425,42 @@ namespace NUnit.Framework.Tests.Assertions
             });
         }
 
+        [Test]
+        public void AssertThatEqualsWithStructMemberDifferences()
+        {
+            var instance = new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One);
+
+            Assert.That(() =>
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueA")
+                                                       .And.Message.Contains("Expected: 1"));
+            Assert.That(() =>
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueB")
+                                                       .And.Message.Contains("Expected: 1.1"));
+            Assert.That(() =>
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueC")
+                                                       .And.Message.Contains("Expected: \"1.1\""));
+            Assert.That(() =>
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer()),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueD")
+                                                       .And.Message.Contains("Expected: One"));
+
+            /*
+             * Uncomment this block to see the actual exception messages. Test will fail.
+             *
+            Assert.Multiple(() =>
+            {
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer());
+            });
+            */
+        }
+
         private enum SomeEnum
         {
             One = 1,
@@ -587,6 +623,53 @@ namespace NUnit.Framework.Tests.Assertions
             }
 
             public string this[int index] => _members[index];
+        }
+
+        [Test]
+        public void TestPropertyFailureSecondLevel()
+        {
+            var one = new ParentClass(new ChildClass(new GrandChildClass(1)), new ChildClass(new GrandChildClass(2), new GrandChildClass(3)));
+            var two = new ParentClass(new ChildClass(new GrandChildClass(1)), new ChildClass(new GrandChildClass(2), new GrandChildClass(4)));
+
+            Assert.That(() => Assert.That(two, Is.EqualTo(one).UsingPropertiesComparer()),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("at property ParentClass.Two")
+                                                               .And.Message.Contains("at property ChildClass.Values")
+                                                               .And.Message.Contains("at index [1]")
+                                                               .And.Message.Contains("at property GrandChildClass.Value")
+                                                               .And.Message.Contains("Expected: 3"));
+
+            /*
+             * Uncomment this block to see the actual exception messages. Test will fail.
+             *
+            Assert.That(two, Is.EqualTo(one).UsingPropertiesComparer());
+             */
+        }
+
+        private sealed class ParentClass
+        {
+            public ParentClass(ChildClass one, ChildClass two)
+            {
+                One = one;
+                Two = two;
+            }
+
+            public ChildClass One { get; }
+
+            public ChildClass Two { get; }
+        }
+
+        private sealed class ChildClass
+        {
+            public ChildClass(params GrandChildClass[] values) => Values = values;
+
+            public GrandChildClass[] Values { get; }
+        }
+
+        private sealed class GrandChildClass
+        {
+            public GrandChildClass(int value) => Value = value;
+
+            public int Value { get; }
         }
     }
 }

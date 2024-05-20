@@ -144,6 +144,11 @@ namespace NUnit.Framework.Constraints
         public IList<EqualityAdapter> ExternalComparers => _externalComparers ??= new();
 
         /// <summary>
+        /// Gets a value indicating whether there is any additional Failure Information.
+        /// </summary>
+        public bool HasFailurePoints => _failurePoints is not null && _failurePoints.Count > 0;
+
+        /// <summary>
         /// Gets the list of failure points for the last Match performed.
         /// The list consists of objects to be interpreted by the caller.
         /// This generally means that the caller may only make use of
@@ -190,8 +195,6 @@ namespace NUnit.Framework.Constraints
 
         internal EqualMethodResult AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            _failurePoints = new List<FailurePoint>();
-
             if (x is null && y is null)
                 return EqualMethodResult.ComparedEqual;
 
@@ -270,6 +273,11 @@ namespace NUnit.Framework.Constraints
             /// The location of the failure
             /// </summary>
             public long Position;
+
+            /// <summary>
+            /// The name of the property.
+            /// </summary>
+            public string? PropertyName;
 
             /// <summary>
             /// The expected value
