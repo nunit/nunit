@@ -33,7 +33,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             TNode? reason = testNode.SelectSingleNode("reason");
             Assert.That(reason, Is.Not.Null);
             Assert.That(reason.SelectSingleNode("message"), Is.Not.Null);
-            Assert.That(reason.SelectSingleNode("message")!.Value, Is.EqualTo(reasonMessage));
+            Assert.That(reason.SelectSingleNode("message").Value, Is.EqualTo(reasonMessage));
             Assert.That(reason.SelectSingleNode("stack-trace"), Is.Null);
         }
 

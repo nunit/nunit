@@ -64,7 +64,7 @@ namespace NUnit.Framework.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.That(_workItem?.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
                 Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
                 Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
             });

@@ -18,6 +18,7 @@ namespace NUnit.Framework.Tests.TestUtilities;
 /// </summary>
 internal static class TestBuilder
 {
+
     #region Build Tests
 
     public static TestSuite MakeSuite(string name)
