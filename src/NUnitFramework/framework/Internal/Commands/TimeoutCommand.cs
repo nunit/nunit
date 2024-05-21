@@ -101,8 +101,6 @@ namespace NUnit.Framework.Internal.Commands
                 var testExecution = Task.Run(() => innerCommand.Execute(separateContext));
                 var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
 
-                context.CurrentResult.CopyOutputTo(separateContext.CurrentResult);
-
                 if (timedOut && !_debugger.IsAttached)
                 {
                     context.CurrentResult.SetResult(
@@ -111,6 +109,7 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 else
                 {
+                    context.CurrentResult.CopyOutputTo(separateContext.CurrentResult);
                     context.CurrentResult = testExecution.GetAwaiter().GetResult();
                 }
             }
