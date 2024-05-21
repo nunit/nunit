@@ -18,7 +18,6 @@ namespace NUnit.Framework.Tests.TestUtilities;
 /// </summary>
 internal static class TestBuilder
 {
-
     #region Build Tests
 
     public static TestSuite MakeSuite(string name)
@@ -49,7 +48,6 @@ internal static class TestBuilder
     {
         var test = MakeTestFromMethod(type, methodName) as TestMethod;
         Assert.That(test, Is.Not.Null, $"Unable to create TestMethod from {methodName}");
-
         return test;
     }
 
