@@ -49,7 +49,7 @@ internal static class TestBuilder
         var test = MakeTestFromMethod(type, methodName) as TestMethod;
         Assert.That(test, Is.Not.Null, $"Unable to create TestMethod from {methodName}");
 
-        return test!;
+        return test;
     }
 
     // Will return either a ParameterizedMethodSuite or an NUnitTestMethod
