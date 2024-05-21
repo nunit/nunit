@@ -154,4 +154,27 @@ namespace NUnit.TestData
         {
         }
     }
+
+    [TestFixture]
+    public class TimeoutWithSetupTestAndTeardownOutputFixture
+    {
+        [SetUp]
+        public void Setup()
+        {
+            TestContext.WriteLine("setup");
+        }
+
+        [Test, Timeout(2_000)]
+        public void Test2()
+        {
+            TestContext.WriteLine("method output");
+            Assert.That(1, Is.EqualTo(0));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestContext.WriteLine("teardown");
+        }
+    }
 }
