@@ -136,7 +136,7 @@ DotNetBuildSettings CreateDotNetBuildSettings()
     var msBuildSettings = new DotNetMSBuildSettings {
         ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
         AssemblyVersion = VersionParsers.ParseAssemblyVersion(version),
-        FileVersion = VersionParsers.ParseFileVersion(version),
+        FileVersion = VersionParsers.ParseAssemblyVersion(version),
         InformationalVersion = version
     };
     Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
