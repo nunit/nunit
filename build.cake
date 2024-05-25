@@ -132,11 +132,11 @@ Task("Build")
 DotNetBuildSettings CreateDotNetBuildSettings() 
 {
     var version = packageVersion.ToString(); 
-    var assemblyVersion = version.Substring(0, version.LastIndexOf('-')) + ".0";
+    var assemblyVersion = VersionParsers.ParseAssemblyVersion(version);
     var msBuildSettings = new DotNetMSBuildSettings {
         ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
-        AssemblyVersion = VersionParsers.ParseAssemblyVersion(version),
-        FileVersion = VersionParsers.ParseAssemblyVersion(version),
+        AssemblyVersion = assemblyVersion,
+        FileVersion = assemblyVersion,
         InformationalVersion = version
     };
     Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
