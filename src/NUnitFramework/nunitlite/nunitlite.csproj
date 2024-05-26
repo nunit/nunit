@@ -6,13 +6,12 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\framework\nunit.framework.csproj" />
-  </ItemGroup>
+  <PropertyGroup>
+    <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
+  </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+    <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
   <ItemGroup>

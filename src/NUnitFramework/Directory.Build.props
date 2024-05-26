@@ -9,13 +9,17 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;net6.0;net8.0</NUnitRuntimeFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <Nullable>enable</Nullable>
     <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Company>NUnit Software</Company>
+    <Product>NUnit 4</Product>
+    <Copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt</Copyright>
+    <Trademark>NUnit is a trademark of NUnit Software</Trademark>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
@@ -34,6 +38,38 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <Choose>
+    <When Condition="'$(TargetFramework)' == 'net462'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net6.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net8.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net9.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <AssemblyConfiguration />
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="CheckConfiguration" BeforeTargets="Compile">
+    <Error Condition="'$(AssemblyConfiguration)' == ''" Text="Missing AssemblyConfiguration for $(TargetFramework)" />
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />

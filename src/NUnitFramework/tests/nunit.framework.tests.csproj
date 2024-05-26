@@ -10,6 +10,7 @@
     <IsTestProject>true</IsTestProject>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591,NU1029</NoWarn>
+    <Title>NUnit Framework Tests</Title>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
