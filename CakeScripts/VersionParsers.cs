@@ -7,7 +7,7 @@ public static class VersionParsers
         var dash = version.LastIndexOf('-');
         if (dash > 0)
         {
-            return string.Concat(version.Substring(0, dash), ".0");
+            return string.Concat(version.AsSpan(0, dash), ".0");
         }
         return version + ".0";
     }
