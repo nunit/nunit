@@ -94,19 +94,23 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                var testExecution = RunTestOnSeparateThread(context);
-                if (Task.WaitAny(new Task[] { testExecution }, _timeout) != -1
-                    || _debugger.IsAttached)
+                var separateContext = new TestExecutionContext(context)
                 {
-                    context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    CurrentResult = context.CurrentTest.MakeTestResult()
+                };
+                var testExecution = Task.Run(() => innerCommand.Execute(separateContext));
+                var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
+
+                if (timedOut && !_debugger.IsAttached)
+                {
+                    context.CurrentResult.SetResult(
+                        ResultState.Failure,
+                        $"Test exceeded Timeout value of {_timeout}ms");
                 }
                 else
                 {
-                    string message = $"Test exceeded Timeout value of {_timeout}ms";
-
-                    context.CurrentResult.SetResult(
-                        ResultState.Failure,
-                        message);
+                    context.CurrentResult.CopyOutputTo(separateContext.CurrentResult);
+                    context.CurrentResult = testExecution.GetAwaiter().GetResult();
                 }
             }
             catch (Exception exception)
@@ -115,15 +119,6 @@ namespace NUnit.Framework.Internal.Commands
             }
 
             return context.CurrentResult;
-        }
-
-        private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)
-        {
-            var separateContext = new TestExecutionContext(context)
-            {
-                CurrentResult = context.CurrentTest.MakeTestResult()
-            };
-            return Task.Run(() => innerCommand.Execute(separateContext));
         }
 #endif
     }
