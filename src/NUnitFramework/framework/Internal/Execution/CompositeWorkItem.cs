@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
@@ -232,7 +231,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && Test.TypeInfo is not null && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+            if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -249,10 +248,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException || ex is TargetInvocationException)
-                    ex = ex.InnerException!;
-
-                Result.RecordException(ex, FailureSite.SetUp);
+                Result.RecordException(ex.Unwrap(), FailureSite.SetUp);
             }
         }
 

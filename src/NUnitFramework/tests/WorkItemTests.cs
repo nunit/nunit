@@ -26,6 +26,12 @@ namespace NUnit.Framework.Tests
             _workItem = TestBuilder.CreateWorkItem(test, _context);
         }
 
+        [TearDown]
+        public void DisposeWorkItems()
+        {
+            _workItem.Dispose();
+        }
+
         [Test]
         public void ConstructWorkItem()
         {
@@ -67,7 +73,7 @@ namespace NUnit.Framework.Tests
         // Use static for simplicity
         private static class DummyFixture
         {
-            public static readonly int Delay = 0;
+            private static readonly int Delay = 0;
 
             public static void DummyTest()
             {

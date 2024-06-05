@@ -108,10 +108,15 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase((object)new object[] { })]
-        [TestCase((object)new object[] { 1, "text", null })]
+        [TestCase((object)new object?[] { 1, "text", null })]
         [TestCase((object)new object[] { 1, new[] { 2, 3 }, 4 })]
         [TestCase((object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })]
         public void MethodWithArrayArguments(object o)
+        {
+        }
+
+        [TestCase("doesn't work", TypeArgs = new[] { typeof(int) })]
+        public static void MethodWithIncompatibleTypeArgs<T>(T input)
         {
         }
     }

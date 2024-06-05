@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 
@@ -17,6 +18,7 @@ namespace NUnit.Framework.Internal
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
         /// <param name="exception">The exception to rethrow</param>
+        [DoesNotReturn]
         public static void Rethrow(Exception exception)
         {
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
@@ -190,6 +192,28 @@ namespace NUnit.Framework.Internal
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Unwraps the exception of type <see cref="TargetInvocationException"/> to its InnerException.
+        /// </summary>
+        /// <param name="exception">The exception to unwrap.</param>
+        /// <returns>The InnerException is available, otherwise the <paramref name="exception"/>.</returns>
+        public static Exception Unwrap(this Exception exception)
+        {
+            if (exception is NUnitException nUnitException &&
+                nUnitException.InnerException is not null)
+            {
+                exception = nUnitException.InnerException;
+            }
+
+            while (exception is TargetInvocationException targetInvocationException &&
+                targetInvocationException.InnerException is not null)
+            {
+                exception = targetInvocationException.InnerException;
+            }
+
+            return exception;
         }
     }
 }

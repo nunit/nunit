@@ -137,7 +137,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase(null)]
-        public void CanPassNullAsFirstArgument(object a)
+        public void CanPassNullAsFirstArgument(object? a)
         {
             Assert.That(a, Is.Null);
         }
@@ -748,5 +748,52 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         #endregion
+
+        [TestCase(TypeArgs = new[] { typeof(int) })]
+        public void ExplicitTypeArgsWithoutParameters<T>()
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(int)));
+        }
+
+        [TestCase("2", TypeArgs = new[] { typeof(long) })]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+            Assert.That(input, Is.EqualTo("2"));
+        }
+
+        [TestCase(2, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
+        [TestCase(2L, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
+        [TestCase(2, ExpectedResult = typeof(int))]
+        [TestCase(2L, ExpectedResult = typeof(long))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+            => typeof(T);
+
+        [Test]
+        public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture),
+                nameof(TestCaseAttributeFixture.MethodWithIncompatibleTypeArgs));
+
+            var test = (Test)suite.Tests[0];
+
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(test);
+
+            Assert.That(result.FailCount, Is.EqualTo(1));
+            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+        }
+
+        [TestCase(2, TypeArgs = new[] { typeof(long) })]
+        public void ExplicitTypeArgsWithGenericConstraintSatisfied<T>(int input)
+            where T : IConvertible
+        {
+            var convertedValue = ((IConvertible)input).ToType(typeof(T), null);
+
+            Assert.That(convertedValue, Is.TypeOf<T>());
+            Assert.That(convertedValue, Is.Not.TypeOf(input.GetType()));
+        }
     }
 }

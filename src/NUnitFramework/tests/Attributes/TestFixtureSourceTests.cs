@@ -15,6 +15,8 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(StaticProperty_SameClass))]
         [TestCase(typeof(StaticMethod_SameClass))]
         [TestCase(typeof(StaticAsyncMethod_SameClass))]
+        [TestCase(typeof(StaticAsyncEnumerableMethod_SameClass))]
+        [TestCase(typeof(StaticAsyncEnumerableMethodReturningTask_SameClass))]
         [TestCase(typeof(StaticField_DifferentClass))]
         [TestCase(typeof(StaticProperty_DifferentClass))]
         [TestCase(typeof(StaticMethod_DifferentClass))]

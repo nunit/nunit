@@ -66,18 +66,41 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void ValueSourceCanBeAsyncStaticMethod(
-#pragma warning disable NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
-            [ValueSource(nameof(AsyncStaticMethod))] string source)
-#pragma warning restore NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
+        public void ValueSourceCanBeStaticAsyncMethod(
+            [ValueSource(nameof(StaticAsyncMethod))] string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+            Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
         }
 
-        private static Task<IEnumerable?> AsyncStaticMethod()
+        [Test]
+        public void SourceCanBeStaticAsyncEnumerableMethod(
+            [ValueSource(nameof(StaticAsyncEnumerableMethod))] string source)
         {
-            var result = new object[] { "AsyncStaticMethod" };
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethod"));
+        }
+
+        [Test]
+        public void SourceCanBeStaticAsyncEnumerableMethodReturningTask(
+            [ValueSource(nameof(StaticAsyncEnumerableMethodReturningTask))] string source)
+        {
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
+        }
+
+        private static Task<IEnumerable?> StaticAsyncMethod()
+        {
+            var result = new object[] { nameof(StaticAsyncMethod) };
             return Task.FromResult((IEnumerable?)result);
+        }
+        private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
+        {
+            var result = new object[] { nameof(StaticAsyncEnumerableMethod) };
+            return result.AsAsyncEnumerable();
+        }
+
+        private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
+        {
+            var result = new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) };
+            return Task.FromResult(result.AsAsyncEnumerable());
         }
 
         [Test]

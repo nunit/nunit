@@ -8,10 +8,18 @@
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;net6.0;net7.0</NUnitRuntimeFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <NUnitRuntimeFrameworks>net462;net6.0;net8.0</NUnitRuntimeFrameworks>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <Nullable>enable</Nullable>
+    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <Company>NUnit Software</Company>
+    <Product>NUnit 4</Product>
+    <Copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt</Copyright>
+    <Trademark>NUnit is a trademark of NUnit Software</Trademark>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
@@ -31,16 +39,55 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
+  <Choose>
+    <When Condition="'$(TargetFramework)' == 'net462'">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net6.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net8.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <When Condition="$(TargetFramework.StartsWith('net9.0'))">
+      <PropertyGroup>
+        <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <AssemblyConfiguration />
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="CheckConfiguration" BeforeTargets="Compile">
+    <Error Condition="'$(AssemblyConfiguration)' == ''" Text="Missing AssemblyConfiguration for $(TargetFramework)" />
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.6.0" />
-    <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.495" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" PrivateAssets="all" />
+    <PackageReference Include="IsExternalInit" PrivateAssets="all" />
+    <PackageReference Include="Nullable" PrivateAssets="all" />
+    <PackageReference Include="CSharpIsNullAnalyzer" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" />
     <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)/StyleCop.Analyzers.globalconfig" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

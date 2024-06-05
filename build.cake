@@ -1,4 +1,5 @@
-#tool NUnit.ConsoleRunner&version=3.12.0
+#addin "nuget:?package=Cake.MinVer&version=3.0.0"
+#load "CakeScripts/VersionParsers.cs"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -17,11 +18,11 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "4.0.0";
-var modifier = "-beta.1";
+var version = MinVer(settings=> settings
+    .WithAutoIncrement(MinVerAutoIncrement.Minor)
+);
 
-var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
-var packageVersion = version + modifier + dbgSuffix;
+var packageVersion = version;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -76,6 +77,21 @@ Setup(context =>
 });
 
 //////////////////////////////////////////////////////////////////////
+// VERSIONING
+//////////////////////////////////////////////////////////////////////
+Task("Version")
+    .Does(context =>
+{
+    context.Information($"Version: {version.Version}");
+    context.Information($"Major: {version.Major}");
+    context.Information($"Minor: {version.Minor}");
+    context.Information($"Patch: {version.Patch}");
+    context.Information($"PreRelease: {version.PreRelease}");
+    context.Information($"BuildMetadata: {version.BuildMetadata}");
+});
+
+
+//////////////////////////////////////////////////////////////////////
 // CLEAN
 //////////////////////////////////////////////////////////////////////
 
@@ -95,9 +111,10 @@ Task("Clean")
 
 Task("NuGetRestore")
     .Description("Restores NuGet Packages")
+    .IsDependentOn("Version")
     .Does(() =>
     {
-        DotNetCoreRestore(SOLUTION_FILE);
+        DotNetRestore(SOLUTION_FILE);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -109,16 +126,32 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
-    new DotNetCoreBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() 
+{
+    var version = packageVersion.ToString(); 
+    var assemblyVersion = VersionParsers.ParseAssemblyVersion(version);
+    var msBuildSettings = new DotNetMSBuildSettings {
+        ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
+        AssemblyVersion = assemblyVersion,
+        FileVersion = assemblyVersion,
+        InformationalVersion = version
+    };
+    Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
+    Information("FileVersion: {0}", msBuildSettings.FileVersion);
+    Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
+
+    var settings =  new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetCoreVerbosity.Minimal
-    };
+        Verbosity = DotNetVerbosity.Minimal,
+        MSBuildSettings = msBuildSettings
+     };
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -148,12 +181,12 @@ Task("TestNetFramework")
     });
 
 var testCore = Task("TestNetCore")
-    .Description("Tests the .NET Core (6.0+) version of the framework");
+    .Description("Tests the .NET (6.0+) version of the framework");
 
 foreach (var runtime in NetCoreTestRuntimes)
 {
     var task = Task("TestNetCore on " + runtime)
-        .Description("Tests the .NET Core (6.0+) version of the framework on " + runtime)
+        .Description("Tests the .NET (6.0+) version of the framework on " + runtime)
         .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
@@ -228,10 +261,10 @@ Task("CreateImage")
         CleanDirectory(CurrentImageDir);
         CopyFiles(RootFiles, CurrentImageDir);
 
-        var imageBinDir = CurrentImageDir + "bin/";
+        var imageBinDir = Directory(CurrentImageDir) + Directory("bin");
 
         CreateDirectory(imageBinDir);
-        Information("Created imagedirectory at:" + imageBinDir);
+        Information("Created imagedirectory at:" + imageBinDir.ToString());
         var directories = new String[]
         {
             NUNITFRAMEWORKBIN,
@@ -243,27 +276,29 @@ Task("CreateImage")
             foreach (var runtime in LibraryFrameworks)
             {
                 var targetDir = imageBinDir + Directory(runtime);
-                var sourceDir = dir + Directory(runtime);
+                var sourceDir = Directory(dir) + Directory(runtime);
                 CreateDirectory(targetDir);
-                Information("Created directory " + targetDir);
+                Information("Created directory " + targetDir.ToString());
                 foreach (FilePath file in FrameworkFiles)
                 {
-                    var sourcePath = sourceDir + "/" + file;
+                    var sourcePath = sourceDir + File(file.FullPath);
                     if (FileExists(sourcePath))
                         CopyFileToDirectory(sourcePath, targetDir);
                 }
-                Information("Files copied from " + sourceDir + " to " + targetDir);
-                var schemaPath = sourceDir + "/Schemas";
+                Information("Files copied from " + sourceDir.ToString() + " to " + targetDir.ToString());
+                var schemaPath = sourceDir + Directory("Schemas");
                 if (DirectoryExists(schemaPath))
+                {
                     CopyDirectory(sourceDir, targetDir);
+                }
             }
         }    
-        
+        Information("Finished copying framework files");
         foreach (var dir in RuntimeFrameworks)
         {
             var targetDir = imageBinDir + Directory(dir);
             var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
-            Information("Copying " + sourceDir + " to " + targetDir);
+            Information("Copying " + sourceDir.ToString() + " to " + targetDir.ToString());
             CopyDirectory(sourceDir, targetDir);
         }
     });

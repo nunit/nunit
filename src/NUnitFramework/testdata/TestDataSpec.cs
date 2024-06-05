@@ -15,14 +15,14 @@ namespace NUnit.TestData
             new TestDataSpec(new object[] { }, null, "()"),
             new TestDataSpec(new object[] { }, Array.Empty<string>(), "()"),
             new TestDataSpec(new object[] { }, new[] { "display1" }, "(display1)"),
-            new TestDataSpec(new object[] { }, new[] { ",", " ", string.Empty, null, "\r\n" }, "(,,  , , , \r\n)"),
+            new TestDataSpec(new object[] { }, new[] { ",", " ", string.Empty, null!, "\r\n" }, "(,,  , , , \r\n)"),
         };
 
         public object[] Arguments { get; }
-        public string[] ArgDisplayNames { get; }
+        public string[]? ArgDisplayNames { get; }
         private readonly string _expectedArgumentListDisplay;
 
-        public TestDataSpec(object[] arguments, string[] argDisplayNames, string expectedArgumentListDisplay)
+        public TestDataSpec(object[] arguments, string[]? argDisplayNames, string expectedArgumentListDisplay)
         {
             Arguments = arguments;
             ArgDisplayNames = argDisplayNames;

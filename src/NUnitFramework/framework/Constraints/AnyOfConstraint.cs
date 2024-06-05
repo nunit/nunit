@@ -71,6 +71,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore white space and return self.
+        /// </summary>
+        public AnyOfConstraint IgnoreWhiteSpace
+        {
+            get
+            {
+                _comparer.IgnoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
@@ -127,6 +139,19 @@ namespace NUnit.Framework.Constraints
         public AnyOfConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public AnyOfConstraint UsingPropertiesComparer()
+        {
+            _comparer.CompareProperties = true;
             return this;
         }
 

@@ -15,7 +15,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [TestCase(null)]
         [TestCase("")]
         [TestCase("<filter/>")]
-        public void BuildFromXml(string xml)
+        public void BuildFromXml(string? xml)
         {
             TestFilter filter = TestFilter.FromXml(xml);
 

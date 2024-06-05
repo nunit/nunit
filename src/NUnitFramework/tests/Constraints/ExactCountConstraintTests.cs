@@ -18,11 +18,21 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ZeroItemsMatchWithEmptyCollectionFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "no matching items" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<string>(), Has.Exactly(1).EqualTo("Charlie")));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
         public void ZeroItemsMatchFails()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "no item equal to \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "2 matching items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(0, Is.EqualTo("Charlie"))));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
@@ -39,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "2 matching items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(1, Is.EqualTo("Charlie"))));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
@@ -76,7 +86,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly 2 items equal to \"Fred\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "1 item < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "1 matching item < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
@@ -98,7 +108,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "4 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "4 matching items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(1)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
@@ -132,7 +142,7 @@ namespace NUnit.Framework.Tests.Constraints
                 + "exactly 5 items"
                 + Environment.NewLine
                 + TextMessageWriter.Pfx_Actual
-                + "10 items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\" >"
+                + "10 matching items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\" >"
                 + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(longElementList, Has.Exactly(5).Items));
@@ -155,7 +165,7 @@ namespace NUnit.Framework.Tests.Constraints
                 + "exactly 10 items"
                 + Environment.NewLine
                 + TextMessageWriter.Pfx_Actual
-                + "15 items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\"... >"
+                + "15 matching items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\"... >"
                 + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(longElementList, Has.Exactly(10).Items));

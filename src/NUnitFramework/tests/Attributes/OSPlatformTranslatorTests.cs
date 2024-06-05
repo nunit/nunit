@@ -15,8 +15,8 @@ namespace NUnit.Framework.Tests.Attributes
     public class OSPlatformTranslatorTests
     {
         [TestCase("Windows", ExpectedResult = "Win")]
-        [TestCase("Windows7.0", ExpectedResult = "Windows7")]
-        [TestCase("Windows10.0", ExpectedResult = "Windows10")]
+        [TestCase("Windows7.0", ExpectedResult = "Windows7,Windows8,Windows10,Windows11,WindowsServer10")]
+        [TestCase("Windows10.0", ExpectedResult = "Windows10,Windows11,WindowsServer10")]
         [TestCase("Windows11.0", ExpectedResult = "Windows11")]
         [TestCase("Linux", ExpectedResult = "Linux")]
         [TestCase("OSX", ExpectedResult = "MacOsX")]
@@ -24,17 +24,33 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase("Android", ExpectedResult = "Android")]
         public string TranslatePlatform(string platformName)
         {
-            return OSPlatformTranslator.Translate(platformName);
+            return string.Join(",", OSPlatformTranslator.Translate(platformName));
         }
 
 #if NET5_0_OR_GREATER
         [Test]
-        public void TranslateSupportedOSPlatformAttribute()
+        public void TranslateSupportedOSPlatformAttributeWindows7()
         {
             var supported = new SupportedOSPlatformAttribute("Windows7.0");
 
             PlatformAttribute platform = TranslateIntoSinglePlatform(supported);
-            Assert.That(platform.Include, Is.EqualTo("Windows7"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows7"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows8"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows11"), nameof(platform.Include));
+            Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
+        }
+
+        [Test]
+        public void TranslateSupportedOSPlatformAttributeWindows10()
+        {
+            var supported = new SupportedOSPlatformAttribute("Windows10.0");
+
+            PlatformAttribute platform = TranslateIntoSinglePlatform(supported);
+            Assert.That(platform.Include, Does.Not.Contain("Windows7"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Not.Contain("Windows8"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows11"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
 
@@ -56,7 +72,9 @@ namespace NUnit.Framework.Tests.Attributes
             var osPlatforms = new OSPlatformAttribute[] { supported1, supported2 };
 
             PlatformAttribute platform = TranslateIntoSinglePlatform(osPlatforms);
-            Assert.That(platform.Include, Is.EqualTo("Windows7,Linux"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows7"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Linux"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
 
@@ -68,7 +86,10 @@ namespace NUnit.Framework.Tests.Attributes
             var unsupported = new UnsupportedOSPlatformAttribute("Android");
 
             PlatformAttribute platform = TranslateIntoSinglePlatform(supported1, unsupported, supported2);
-            Assert.That(platform.Include, Is.EqualTo("Windows7,Linux"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows7"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("WindowsServer10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Linux"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.EqualTo("Android"), nameof(platform.Exclude));
         }
 
@@ -80,7 +101,9 @@ namespace NUnit.Framework.Tests.Attributes
             var sourcePlatform = new PlatformAttribute("Win");
 
             PlatformAttribute platform = TranslateIntoSinglePlatform(sourcePlatform, supported1, supported2);
-            Assert.That(platform.Include, Is.EqualTo("Win,Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Win"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("Windows10"), nameof(platform.Include));
+            Assert.That(platform.Include, Does.Contain("WindowsServer10"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
 

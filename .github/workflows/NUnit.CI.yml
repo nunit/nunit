@@ -3,10 +3,15 @@ name: Continuous Integration
 on:
   push:
     branches:
+      - main
       - master
       - release
-      - 'v3.13-dev'
+      - 'v3'
   pull_request:
+  
+env:
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry  
 
 jobs:
   build-windows:
@@ -15,40 +20,35 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
-
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v3
+      uses: actions/checkout@v4
       with:
-        dotnet-version: '3.1.x'
+        fetch-depth: 0
 
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
+    - name: 🛠️ Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
-
+        global-json-file: global.json
+        
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
+
+    - name: 🔨 Windows Specific Tests
+      run: dotnet test --no-build --configuration=Release src/NUnitFramework/windows-tests/windows-tests.csproj
 
     - name: 📦 Package
-      run: dotnet cake --target=Package
+      run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Package
         path: package
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Windows)
         path: test-results
@@ -61,22 +61,14 @@ jobs:
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
-
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v3
+      uses: actions/checkout@v4
       with:
-        dotnet-version: '3.1.x'
+        fetch-depth: 0
 
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
+    - name: 🛠️ Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        global-json-file: global.json
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -85,10 +77,10 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (Linux)
         path: test-results
@@ -97,35 +89,28 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
     - name: ⤵️ Checkout Source
-      uses: actions/checkout@v3
-
-    - name: 🛠️ Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v3
+      uses: actions/checkout@v4
       with:
-        dotnet-version: '3.1.x'
+        fetch-depth: 0
 
-    - name: 🛠️ Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v3
+    - name: 🛠️ Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'
-
-    - name: 🛠️ Setup .NET Core SDK 7.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '7.0.x'
+        global-json-file: global.json
+        dotnet-version: 6.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Test results (macOS)
         path: test-results

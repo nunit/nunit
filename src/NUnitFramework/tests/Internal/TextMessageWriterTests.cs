@@ -19,13 +19,19 @@ namespace NUnit.Framework.Tests.Internal
             _writer = new TextMessageWriter();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _writer.Dispose();
+        }
+
         [Test]
         public void DisplayStringDifferences()
         {
             string s72 = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             string exp = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXY...";
 
-            _writer.DisplayStringDifferences(s72, "abcde", 5, false, true);
+            _writer.DisplayStringDifferences(s72, "abcde", 5, 5, false, false, true);
             string message = _writer.ToString();
             Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(exp) + NL +
@@ -38,12 +44,28 @@ namespace NUnit.Framework.Tests.Internal
         {
             string s72 = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-            _writer.DisplayStringDifferences(s72, "abcde", 5, false, false);
+            _writer.DisplayStringDifferences(s72, "abcde", 5, 5, false, false, false);
             string message = _writer.ToString();
             Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(s72) + NL +
                 TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
                 "  ----------------^" + NL));
+        }
+
+        [Test]
+        public void DisplayStringDifferences_IgnoreWhiteSpace()
+        {
+            string expected = "abc def";
+            string actual = "a b c d e g";
+
+            _writer.DisplayStringDifferences(expected, actual, 6, 10, false, true, false);
+            string message = _writer.ToString();
+            string expectedMessage =
+                TextMessageWriter.Pfx_Expected + Q(expected) + ", ignoring white-space" + NL +
+                "  -----------------^" + NL +
+                TextMessageWriter.Pfx_Actual + Q(actual) + NL +
+                "  ---------------------^" + NL;
+            Assert.That(message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

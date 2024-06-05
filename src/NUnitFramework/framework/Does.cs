@@ -50,7 +50,7 @@ namespace NUnit.Framework
         /// since any other type implies that we are looking for a
         /// collection member.
         /// </summary>
-        public static ContainsConstraint Contain(string expected) =>
+        public static ContainsConstraint Contain(string? expected) =>
             new(expected);
 
         #endregion
@@ -71,7 +71,7 @@ namespace NUnit.Framework
         /// presence of a particular value in the Dictionary value collection.
         /// </summary>
         /// <param name="expected">The value to be matched in the Dictionary value collection</param>
-        public static DictionaryContainsValueConstraint ContainValue(object expected)
+        public static DictionaryContainsValueConstraint ContainValue(object? expected)
         {
             return Contains.Value(expected);
         }

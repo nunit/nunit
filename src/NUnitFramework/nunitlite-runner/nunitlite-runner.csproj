@@ -4,15 +4,13 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>NUnit Test Runner</Title>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
   </ItemGroup>
+
 </Project>

@@ -166,8 +166,8 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class SetupAndTearDownExceptionFixture
     {
-        public Exception SetupException;
-        public Exception TearDownException;
+        public Exception? SetupException;
+        public Exception? TearDownException;
 
         [SetUp]
         public void SetUp()

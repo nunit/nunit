@@ -135,5 +135,71 @@ namespace NUnit.Framework.Tests.Assertions
             var constraint = Contains.Item(7).Using(myIntComparer);
             Assert.That(collection1, constraint);
         }
+
+        [Test]
+        public void ContainsNullability()
+        {
+            object nonNullObject = new object();
+            object? nullObject = default(object);
+            string nonNullString = "Hello World";
+            string? nullString = default(string);
+            object?[] collection = new object?[] { nonNullObject, nullObject, nonNullString, nullString };
+
+            Assert.That(collection, Contains.Item(nonNullObject));
+            Assert.That(collection, Contains.Item(nullObject));
+            Assert.That(collection, Contains.Item(nonNullString));
+            Assert.That(collection, Contains.Item(nullString));
+            Assert.That(collection, Contains.Item(nonNullObject).And
+                                            .Contains(nullObject).And
+                                            .Contains(nonNullString).And
+                                            .Contains(nullString));
+
+            Assert.That(collection, Has.Member(nonNullObject));
+            Assert.That(collection, Has.Member(nullObject));
+            Assert.That(collection, Has.Member(nonNullString));
+            Assert.That(collection, Has.Member(nullString));
+            Assert.That(collection, Has.Member(nonNullObject).And
+                                       .Member(nullObject).And
+                                       .Member(nonNullString).And
+                                       .Member(nullString));
+
+            Assert.That(collection, Does.Contain(nonNullObject));
+            Assert.That(collection, Does.Contain(nullObject));
+            Assert.That(collection, Does.Contain(nonNullString));
+            Assert.That(collection, Does.Contain(nullString));
+            Assert.That(collection, Does.Contain(nonNullObject).And
+                                        .Contain(nullObject).And
+                                        .Contain(nonNullString).And
+                                        .Contain(nullString));
+        }
+
+        [Test]
+        public void NotContainsNullability()
+        {
+            object nonNullObject = new object();
+            object? nullObject = default(object);
+            string nonNullString = "Hello World";
+            string? nullString = default(string);
+            object[] collection = Array.Empty<object>();
+
+            Assert.That(collection, Has.No.Member(nonNullObject));
+            Assert.That(collection, Has.No.Member(nullObject));
+            Assert.That(collection, Has.No.Member(nonNullString));
+            Assert.That(collection, Has.No.Member(nullString));
+            Assert.That(collection, Has.No.Member(nonNullObject).And
+                                       .No.Member(nullObject).And
+                                       .No.Member(nonNullString).And
+                                       .No.Member(nullString));
+
+            Assert.That(collection, Does.Not.Contain(nonNullObject));
+            Assert.That(collection, Does.Not.Contain(nullObject));
+            Assert.That(collection, Does.Not.Contain(nonNullString));
+            Assert.That(collection, Does.Not.Contain(nullString));
+            Assert.That(collection, Does.Not.Contain(nonNullObject).And
+                                        .Not.Contain(nullObject).And
+                                        .Not.Contain(nonNullString).And
+                                        .Not.Contain(nullString));
+        }
+#pragma warning restore NUnit2025 // Wrong actual type used with ContainsConstraint
     }
 }

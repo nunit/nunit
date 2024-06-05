@@ -87,5 +87,31 @@ namespace NUnit.Framework.Tests.Constraints
             var constraint = constraintExpression.AnyOf(new string[] { "RED", "GREEN" }).IgnoreCase;
             Assert.That("red", constraint);
         }
+
+        [Test]
+        public void ConstraintExpressionAnyOfTypeIgnoreWhiteSpace()
+        {
+            var constraintExpression = new ConstraintExpression();
+            var constraint = constraintExpression.AnyOf(new string[] { "RED", "GREEN" }).IgnoreWhiteSpace;
+            Assert.That(" R E D ", constraint);
+        }
+
+        [Test]
+        public void ConstraintExpressionAnyOfList()
+        {
+            var constraintExpression = new ConstraintExpression();
+            var expected = new List<string>() { "RED", "GREEN" };
+            var constraint = constraintExpression.AnyOf(expected);
+            Assert.That("RED", constraint);
+        }
+
+        [Test]
+        public void ConstraintExpressionAnyOfListMissingItem()
+        {
+            var constraintExpression = new ConstraintExpression();
+            var expected = new List<string>() { "RED", "GREEN" };
+            var constraint = constraintExpression.Not.AnyOf(expected);
+            Assert.That("BLUE", constraint);
+        }
     }
 }

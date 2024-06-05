@@ -280,6 +280,11 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
 
+        [OneTimeTearDown] public void OneTimeTearDown()
+        {
+            WaitEvent.Dispose();
+        }
+
         private static void Delay(int delay)
         {
             WaitEvent.WaitOne(delay);

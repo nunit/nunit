@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
   </ItemGroup>
 
   <ItemGroup>

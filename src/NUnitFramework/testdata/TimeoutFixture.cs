@@ -108,4 +108,73 @@ namespace NUnit.TestData
             Thread.Sleep(delay);
         }
     }
+
+    [TestFixture]
+    public class TimeoutWithSetupAndOutputAfterTimeoutFixture
+    {
+        [SetUp]
+        public void Setup()
+        {
+            TestContext.WriteLine("setup");
+        }
+
+        [Test, Timeout(600)]
+        public void Test2()
+        {
+            TestContext.WriteLine("method output before pause");
+            Thread.Sleep(1_000);
+            TestContext.WriteLine("method output after pause");
+            Assert.That(1, Is.EqualTo(0));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+    }
+
+    [TestFixture]
+    public class TimeoutWithSetupAndOutputFixture
+    {
+        [SetUp]
+        public void Setup()
+        {
+            TestContext.WriteLine("setup");
+        }
+
+        [Test, Timeout(2_000)]
+        public void Test2()
+        {
+            TestContext.WriteLine("method output");
+            Assert.That(1, Is.EqualTo(0));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+        }
+    }
+
+    [TestFixture]
+    public class TimeoutWithSetupTestAndTeardownOutputFixture
+    {
+        [SetUp]
+        public void Setup()
+        {
+            TestContext.WriteLine("setup");
+        }
+
+        [Test, Timeout(2_000)]
+        public void Test2()
+        {
+            TestContext.WriteLine("method output");
+            Assert.That(1, Is.EqualTo(0));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestContext.WriteLine("teardown");
+        }
+    }
 }

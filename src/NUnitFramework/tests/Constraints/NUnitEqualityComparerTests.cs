@@ -37,7 +37,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((char)4, (char)4)]
         [TestCase((char)4, 4)]
         [TestCase(4, (char)4)]
-        public void EqualItems(object x, object y)
+        public void EqualItems(object? x, object? y)
         {
             Assert.That(_comparer.AreEqual(x, y, ref _tolerance));
         }
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((char)4, (char)2)]
         [TestCase((char)4, 2)]
         [TestCase(4, (char)2)]
-        public void UnequalItems(object greater, object lesser)
+        public void UnequalItems(object greater, object? lesser)
         {
             Assert.That(_comparer.AreEqual(greater, lesser, ref _tolerance), Is.False);
             Assert.That(_comparer.AreEqual(lesser, greater, ref _tolerance), Is.False);

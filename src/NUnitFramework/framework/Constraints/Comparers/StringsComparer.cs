@@ -9,13 +9,30 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class StringsComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not string xString || y is not string yString)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
-            var stringComparison = equalityComparer.IgnoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
-            return xString.Equals(yString, stringComparison);
+            if (tolerance.HasVariance)
+                return EqualMethodResult.ToleranceNotSupported;
+
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace) ?
+                EqualMethodResult.ComparedEqual :
+                EqualMethodResult.ComparedNotEqual;
+        }
+
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace)
+        {
+            if (ignoreWhiteSpace)
+            {
+                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, true);
+                return mismatchExpected == -1 && mismatchActual == -1;
+            }
+            else
+            {
+                return x.Equals(y, ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal);
+            }
         }
     }
 }

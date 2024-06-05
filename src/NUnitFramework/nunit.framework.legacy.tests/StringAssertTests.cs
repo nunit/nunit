@@ -2,9 +2,8 @@
 
 using System;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Legacy;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Legacy.Tests
 {
     [TestFixture]
     public class StringAssertTests

@@ -32,9 +32,7 @@ namespace NUnit.Framework.Tests.Assertions
             }
             catch (Exception ex)
             {
-                testException = ex is TargetInvocationException
-                    ? ex.InnerException
-                    : ex;
+                testException = ex.Unwrap();
             }
             finally
             {

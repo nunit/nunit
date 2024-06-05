@@ -142,6 +142,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        [TestCaseSource(nameof(IncompatibleGenericTypeAndArgumentTestCases))]
+        public static void MethodWithIncompatibleGenericTypeAndArgument<T>(T o)
+        {
+        }
+
         private static IEnumerable ExceptionSource
         {
             get
@@ -156,7 +161,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         private class DivideDataProvider
         {
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
-            public static string MyField;
+            public static string? MyField;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
@@ -188,6 +193,14 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             foreach (var argumentValue in ComplexArrayBasedTestInput)
                 yield return new TestCaseData(args: new[] { argumentValue });
+        }
+
+        public static IEnumerable<TestCaseData> IncompatibleGenericTypeAndArgumentTestCases()
+        {
+            yield return new TestCaseData("doesn't work")
+            {
+                TypeArgs = new[] { typeof(int) }
+            };
         }
 
         #region Test name tests

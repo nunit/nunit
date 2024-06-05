@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO.Compression;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using NUnit.Framework.Constraints;
@@ -63,6 +64,59 @@ namespace NUnit.Framework.Tests.Constraints
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
             Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpace()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo("Hello\tWorld");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void ExtendedIgnoreWhiteSpaceExample()
+        {
+            const string prettyJson = """
+                "persons":[
+                  {
+                    "name": "John",
+                    "surname": "Smith"
+                  },
+                  {
+                    "name": "Jane",
+                    "surname": "Doe"
+                  }
+                ]
+                """;
+            const string condensedJson = """
+                "persons":[{"name":"John","surname":"Smith"},{"name": "Jane","surname": "Doe"}]
+                """;
+
+            Assert.That(condensedJson, Is.Not.EqualTo(prettyJson));
+            Assert.That(condensedJson, Is.EqualTo(prettyJson).IgnoreWhiteSpace);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpaceFail()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo("Hello Universe");
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void IgnoreWhiteSpaceAndIgnoreCase()
+        {
+            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
+
+            var result = constraint.ApplyTo("hello\r\nworld\r\n");
+
+            Assert.That(result.IsSuccess, Is.True);
         }
 
         [Test]
@@ -157,6 +211,62 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(expectedStream, Is.Not.EqualTo(actualStream));
             }
 
+            [Test]
+            public void UnSeekableLargeActualStreamEqual()
+            {
+                // This creates a string that exceeds 4096 bytes for the StreamsComparer loop.
+                string streamValue = string.Concat(Enumerable.Repeat("Greetings from a stream that is from the other side!", 100));
+
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(streamValue));
+
+                using var actualArchive = CreateZipArchive(streamValue);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open();
+                Assert.That(entryStream, Is.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void UnSeekableLargeActualStreamUnequal()
+            {
+                // This creates a string that exceeds 4096 bytes for the StreamsComparer loop.
+                string streamValue = string.Concat(Enumerable.Repeat("Greetings from a stream that is from the other side!", 100));
+
+                string unequalStream = string.Concat(streamValue, "Some extra difference at the end.");
+
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(streamValue));
+
+                using var actualArchive = CreateZipArchive(unequalStream);
+                ZipArchiveEntry entry = actualArchive.Entries[0];
+
+                using Stream entryStream = entry.Open();
+                Assert.That(entryStream, Is.Not.EqualTo(expectedStream));
+            }
+
+            [Test]
+            public void ShortReadingMemoryStream_AssertErrorMessageFailurePointIsCorrect()
+            {
+                var unequalStream = HelloString.Remove(HelloString.Length - 1, 1) + ".";
+
+                using var expectedStream = new ShortReadingMemoryStream(Encoding.UTF8.GetBytes(HelloString));
+
+                using var entryStream = new ShortReadingMemoryStream(Encoding.UTF8.GetBytes(unequalStream));
+
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(entryStream, Is.EqualTo(expectedStream)));
+
+                Assert.That(ex?.Message, Does.Contain("Stream lengths are both 9. Streams differ at offset 8."));
+            }
+
+            [Test]
+            public void SeekableEmptyStreamEqual()
+            {
+                using var expectedStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Empty));
+
+                using var actualStream = new MemoryStream(Encoding.UTF8.GetBytes(string.Empty));
+
+                Assert.That(actualStream, Is.EqualTo(expectedStream));
+            }
+
             private static ZipArchive CreateZipArchive(string content)
             {
                 var archiveContents = new MemoryStream();
@@ -172,6 +282,18 @@ namespace NUnit.Framework.Tests.Constraints
                 }
 
                 return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
+            }
+
+            private class ShortReadingMemoryStream : MemoryStream
+            {
+                public ShortReadingMemoryStream(byte[] bytes) : base(bytes)
+                {
+                }
+
+                public override int Read(byte[] buffer, int offset, int count)
+                {
+                    return base.Read(buffer, offset, 2);
+                }
             }
         }
 
@@ -682,7 +804,7 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CompareObjectsWithToleranceAsserts()
             {
-                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+                Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
             }
         }
 

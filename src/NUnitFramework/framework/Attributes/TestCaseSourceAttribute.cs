@@ -256,7 +256,7 @@ namespace NUnit.Framework
                 {
                     return m.IsStatic
                         ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
-                            ? m.InvokeMaybeAwait<IEnumerable?>(MethodParams)
+                            ? AsyncEnumerableAdapter.CoalesceToEnumerable(m.InvokeMaybeAwait<object>(MethodParams))
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
                 }

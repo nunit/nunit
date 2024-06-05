@@ -21,6 +21,12 @@ namespace NUnit.Framework.Tests.Constraints
             _messageWriter = new TextMessageWriter();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _messageWriter.Dispose();
+        }
+
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 42 };
         private static readonly object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };

@@ -12,13 +12,16 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         private const int BUFFER_SIZE = 4096;
 
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not Stream xStream || y is not Stream yStream)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
+
+            if (tolerance.HasVariance)
+                return EqualMethodResult.ToleranceNotSupported;
 
             if (xStream == yStream)
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (!xStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
@@ -27,8 +30,14 @@ namespace NUnit.Framework.Constraints.Comparers
 
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
 
-            if (bothSeekable && xStream.Length != yStream.Length)
-                return false;
+            if (bothSeekable)
+            {
+                if (xStream.Length != yStream.Length)
+                    return EqualMethodResult.ComparedNotEqual;
+
+                if (xStream.Length == 0)
+                    return EqualMethodResult.ComparedEqual;
+            }
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
@@ -59,6 +68,12 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    {
+                        readByte += readActual;
+                        continue;
+                    }
+
                     for (int count = 0; count < BUFFER_SIZE; ++count)
                     {
                         if (bufferExpected[count] != bufferActual[count])
@@ -70,10 +85,9 @@ namespace NUnit.Framework.Constraints.Comparers
                             fp.ActualHasData = true;
                             fp.ActualValue = bufferActual[count];
                             equalityComparer.FailurePoints.Insert(0, fp);
-                            return false;
+                            return EqualMethodResult.ComparedNotEqual;
                         }
                     }
-                    readByte += BUFFER_SIZE;
                 }
             }
             finally
@@ -88,7 +102,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 }
             }
 
-            return true;
+            return EqualMethodResult.ComparedEqual;
         }
     }
 }

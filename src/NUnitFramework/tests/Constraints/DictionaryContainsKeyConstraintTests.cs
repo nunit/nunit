@@ -136,6 +136,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FailsWhenKeyIsNull()
+        {
+            Assert.That(() => Assert.That(new Dictionary<string, string>(), Does.ContainKey(null!)),
+                        Throws.TargetInvocationException.With.InnerException.InstanceOf<ArgumentNullException>());
+        }
+
+        [Test]
         public void ShouldCallContainsKeysMethodOnDictionary()
         {
             var dictionary = new TestDictionary(20);
