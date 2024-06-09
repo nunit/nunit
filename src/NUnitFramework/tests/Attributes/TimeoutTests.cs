@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
@@ -337,6 +338,45 @@ namespace NUnit.Framework.Tests.Attributes
         private class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
+        }
+
+        [TestFixture]
+        internal sealed class Issue4723
+        {
+            [Test]
+#if NETFRAMEWORK
+            [Timeout(2_000)] // Ok status will be Passed
+#else
+#pragma warning disable CS0618
+            [Timeout(2_000)] // Ok status will be Passed
+#pragma warning restore CS0618
+#endif
+            public async Task Test_Timeout()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [Test]
+            [CancelAfter(2_000)] // Ok status will be Passed
+            public async Task Test_CancelAfter(CancellationToken ct)
+            {
+                await Task.Delay(1_000, ct);
+                Assert.Pass();
+            }
+
+            [Test] // Ok status will be Passed
+            public async Task Test()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [TearDown]
+            public void Cleanup()
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome.Status, Is.EqualTo(TestStatus.Passed));
+            }
         }
     }
 }
