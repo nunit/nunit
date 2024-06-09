@@ -94,23 +94,21 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                var separateContext = new TestExecutionContext(context)
+                using (new TestExecutionContext.IsolatedContext())
                 {
-                    CurrentResult = context.CurrentTest.MakeTestResult()
-                };
-                var testExecution = Task.Run(() => innerCommand.Execute(separateContext));
-                var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
+                    var testExecution = Task.Run(() => innerCommand.Execute(TestExecutionContext.CurrentContext));
+                    var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
 
-                if (timedOut && !_debugger.IsAttached)
-                {
-                    context.CurrentResult.SetResult(
-                        ResultState.Failure,
-                        $"Test exceeded Timeout value of {_timeout}ms");
-                }
-                else
-                {
-                    context.CurrentResult.CopyOutputTo(separateContext.CurrentResult);
-                    context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    if (timedOut && !_debugger.IsAttached)
+                    {
+                        context.CurrentResult.SetResult(
+                            ResultState.Failure,
+                            $"Test exceeded Timeout value of {_timeout}ms");
+                    }
+                    else
+                    {
+                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    }
                 }
             }
             catch (Exception exception)

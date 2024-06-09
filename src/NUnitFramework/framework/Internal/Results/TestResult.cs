@@ -153,16 +153,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Apply the output from the provided TestResult to this one
-        /// </summary>
-        /// <param name="result">The TestResult to apply output from</param>
-        internal void CopyOutputTo(TestResult result)
-        {
-            OutWriter.Flush();
-            result.OutWriter.Write(Output);
-        }
-
-        /// <summary>
         /// Gets the collection of files attached to the test
         /// </summary>
         public ICollection<TestAttachment> TestAttachments => new ReadOnlyCollection<TestAttachment>(_testAttachments);
