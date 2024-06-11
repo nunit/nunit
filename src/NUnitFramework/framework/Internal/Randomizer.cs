@@ -493,6 +493,7 @@ namespace NUnit.Framework.Internal
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
+        private const int MaxStackAllocSize = 256;
 
         /// <summary>
         /// Generate a random string based on the characters from the input string.
@@ -502,13 +503,15 @@ namespace NUnit.Framework.Internal
         /// <returns>A random string of arbitrary length</returns>
         public string GetString(int outputLength, string allowedChars)
         {
+            if (outputLength < 0)
+                throw new ArgumentOutOfRangeException(nameof(outputLength));
 #if NET6_0_OR_GREATER
             return string.Create(outputLength, allowedChars, FillSpan);
 #else
-            Span<char> data = stackalloc char[outputLength];
+            Span<char> data = outputLength <= MaxStackAllocSize ? stackalloc char[outputLength] : new char[outputLength];
             FillSpan(data, allowedChars);
 
-            return data.ToString()!;
+            return data.ToString();
 #endif
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void FillSpan(Span<char> data, string allowedChars)
