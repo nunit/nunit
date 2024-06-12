@@ -1038,6 +1038,12 @@ namespace NUnit.Framework.Tests.Constraints
 
                 Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
             }
+
+            [Test]
+            public void UsesProvidedPredicateForDirectComparisonDifferentTypes()
+            {
+                Assert.That("1", Is.EqualTo(1).Using<string, int>((s, i) => i.ToString() == s));
+            }
         }
 
         #endregion

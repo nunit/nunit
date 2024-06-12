@@ -56,11 +56,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to use the supplied <see cref="Func{TCollectionType, TMemberType, Boolean}"/> object.
         /// </summary>
-        /// <typeparam name="TCollectionType">The type of the elements in the collection.</typeparam>
-        /// <typeparam name="TMemberType">The type of the member.</typeparam>
+        /// <typeparam name="TActualCollectionElement">The type of the elements in the collection.</typeparam>
+        /// <typeparam name="TExpectedElement">The type of the expected element.</typeparam>
         /// <param name="comparison">The comparison function to use.</param>
         /// <returns>Self.</returns>
-        public SomeItemsConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        public SomeItemsConstraint Using<TActualCollectionElement, TExpectedElement>(Func<TActualCollectionElement, TExpectedElement, bool> comparison)
         {
             CheckPrecondition(nameof(comparison));
             _equalConstraint.Using(comparison);
