@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -57,10 +58,10 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied <see cref="Func{TCollectionType, TMemberType, Boolean}"/> object.
         /// </summary>
         /// <typeparam name="TActualCollectionElement">The type of the elements in the collection.</typeparam>
-        /// <typeparam name="TExpectedElement">The type of the expected element.</typeparam>
+        /// <typeparam name="TExpected">The type of the expected value.</typeparam>
         /// <param name="comparison">The comparison function to use.</param>
         /// <returns>Self.</returns>
-        public SomeItemsConstraint Using<TActualCollectionElement, TExpectedElement>(Func<TActualCollectionElement, TExpectedElement, bool> comparison)
+        public SomeItemsConstraint Using<TActualCollectionElement, TExpected>(Func<TActualCollectionElement, TExpected, bool> comparison)
         {
             CheckPrecondition(nameof(comparison));
             _equalConstraint.Using(comparison);

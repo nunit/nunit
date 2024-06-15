@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -72,7 +73,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
-        /// <typeparam name="TSupersetElement">THe type of the elements in the actual superset.</typeparam>
+        /// <typeparam name="TSupersetElement">The type of the elements in the actual superset.</typeparam>
         /// <typeparam name="TSubsetElement">The type of the elements in the expected subset.</typeparam>
         /// <returns>Self.</returns>
         public CollectionSupersetConstraint Using<TSupersetElement, TSubsetElement>(Func<TSupersetElement, TSubsetElement, bool> comparison)
