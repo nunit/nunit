@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var dictionary = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
 
-            Assert.That(dictionary, new DictionaryContainsValueConstraint("1").Using<int, string>((left, right) => left.ToString() == right));
+            Assert.That(dictionary, new DictionaryContainsValueConstraint("1").Using<int, string>((actual, expected) => actual.ToString() == expected));
         }
 
         private sealed class XY
