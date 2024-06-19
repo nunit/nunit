@@ -371,8 +371,10 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
+        /// <typeparam name="TActual">The type of the actual value. Note for collection comparisons this is the element type.</typeparam>
+        /// <typeparam name="TExpected">The type of the expected value. Note for collection comparisons this is the element type.</typeparam>
         /// <returns>Self.</returns>
-        public EqualConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        public EqualConstraint Using<TActual, TExpected>(Func<TActual, TExpected, bool> comparison)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;

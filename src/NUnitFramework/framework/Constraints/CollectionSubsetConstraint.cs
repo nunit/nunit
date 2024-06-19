@@ -69,8 +69,10 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
+        /// <typeparam name="TSubsetElement">The type of the elements in the actual subset.</typeparam>
+        /// <typeparam name="TSupersetElement">The type of the elements in the expected superset.</typeparam>
         /// <returns>Self.</returns>
-        public CollectionSubsetConstraint Using<TSubsetType, TSupersetType>(Func<TSubsetType, TSupersetType, bool> comparison)
+        public CollectionSubsetConstraint Using<TSubsetElement, TSupersetElement>(Func<TSubsetElement, TSupersetElement, bool> comparison)
         {
             base.Using(EqualityAdapter.For(comparison));
             return this;
