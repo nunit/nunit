@@ -1,4 +1,5 @@
 #addin "nuget:?package=Cake.MinVer&version=3.0.0"
+#addin "nuget:?package=Cake.Coverlet&version=4.0.1"
 #load "CakeScripts/VersionParsers.cs"
 
 //////////////////////////////////////////////////////////////////////
