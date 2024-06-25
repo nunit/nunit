@@ -39,8 +39,13 @@ namespace NUnit.Framework.Constraints.Comparers
                     return EqualMethodResult.ComparedEqual;
             }
 
+#if NETFRAMEWORK
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
+#else
+            Span<byte> bufferExpected = stackalloc byte[BUFFER_SIZE];
+            Span<byte> bufferActual = stackalloc byte[BUFFER_SIZE];
+#endif
 
             BinaryReader binaryReaderExpected = new BinaryReader(xStream);
             BinaryReader binaryReaderActual = new BinaryReader(yStream);
@@ -65,8 +70,13 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 while (readExpected > 0 && readActual > 0)
                 {
+#if NETFRAMEWORK
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
+#else
+                    readExpected = binaryReaderExpected.Read(bufferExpected);
+                    readActual = binaryReaderActual.Read(bufferActual);
+#endif
 
                     if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
                     {
