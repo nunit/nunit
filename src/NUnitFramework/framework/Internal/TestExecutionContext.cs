@@ -56,6 +56,11 @@ namespace NUnit.Framework.Internal
         private ITestListener _listener = TestListener.NULL;
 
         /// <summary>
+        /// The event listener for extended events currently receiving notifications
+        /// </summary>
+        private ITestListenerExt _listenerExt = TestListenerExt.NULL;
+
+        /// <summary>
         /// The number of assertions for the current test
         /// </summary>
         private int _assertCount;
@@ -106,6 +111,7 @@ namespace NUnit.Framework.Internal
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
+            _listenerExt = other._listenerExt;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
             UseCancellation = other.UseCancellation;
@@ -263,6 +269,15 @@ namespace NUnit.Framework.Internal
         {
             get => _listener;
             set => _listener = value;
+        }
+
+        /// <summary>
+        /// The current test event listener for extended events
+        /// </summary>
+        internal ITestListenerExt ListenerExt
+        {
+            get => _listenerExt;
+            set => _listenerExt = value;
         }
 
         /// <summary>

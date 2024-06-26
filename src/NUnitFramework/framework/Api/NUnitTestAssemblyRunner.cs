@@ -323,6 +323,10 @@ namespace NUnit.Framework.Api
             // Set the listener - overriding runners may replace this
             context.Listener = listener;
 
+            // Set the listener for extended test events like OneTimeSetUp / OneTimeTearDown
+            if (listener is ITestListenerExt testListenerExt)
+                context.ListenerExt = testListenerExt;
+
             int levelOfParallelism = GetLevelOfParallelism(loadedTest);
 
             if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&

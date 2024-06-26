@@ -50,7 +50,29 @@ namespace NUnit.Framework.Internal.Commands
             _setUpWasRun = true;
 
             foreach (IMethodInfo setUpMethod in _setUpMethods)
-                RunSetUpOrTearDownMethod(context, setUpMethod);
+            {
+                RaiseOneTimeSetUpStarted(context);
+                try
+                {
+                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                }
+                finally
+                {
+                    RaiseOneTimeSetUpFinished(context);
+                }
+            }
+        }
+
+        private void RaiseOneTimeSetUpStarted(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeSetUpStarted(context.CurrentTest);
+        }
+
+        private void RaiseOneTimeSetUpFinished(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeSetUpFinished(context.CurrentTest);
         }
 
         /// <summary>
@@ -72,7 +94,17 @@ namespace NUnit.Framework.Internal.Commands
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
                     while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                    {
+                        RaiseOneTimeTearDownStarted(context);
+                        try
+                        {
+                            RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                        }
+                        finally
+                        {
+                            RaiseOneTimeTearDownFinished(context);
+                        }
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
@@ -84,6 +116,18 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.RecordTearDownException(ex);
                 }
             }
+        }
+
+        private void RaiseOneTimeTearDownStarted(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeTearDownStarted(context.CurrentTest);
+        }
+
+        private void RaiseOneTimeTearDownFinished(TestExecutionContext context)
+        {
+            if (context.CurrentTest is not null && context.CurrentTest.IsSuite)
+                context.ListenerExt?.OneTimeTearDownFinished(context.CurrentTest);
         }
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
