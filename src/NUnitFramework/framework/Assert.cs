@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
@@ -318,8 +319,8 @@ namespace NUnit.Framework
             result.RecordAssertion(AssertionStatus.Failed, message, GetStackTrace());
             result.RecordTestCompletion();
 
-            // If we are outside any multiple assert block, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+            // If we are outside any multiple assert block or multiple asserts disabled, then throw
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0 || (TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger && Debugger.IsAttached))
                 throw new AssertionException(result.Message);
         }
 

@@ -317,6 +317,8 @@ namespace NUnit.Framework.Api
                 context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
                 context.StopOnError = (bool)stopOnError;
+            if (Settings.TryGetValue(FrameworkPackageSettings.DisableMultipleAssertsUnderDebugger, out var disableMultiple))
+                context.DisableMultipleAssertsUnderDebugger = (bool)disableMultiple;
 
             // Apply attributes to the context
 
