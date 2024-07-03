@@ -82,7 +82,38 @@ namespace NUnit.Framework.Internal.Commands
                 arguments[_arguments.Length] = context.CancellationToken;
             }
 
-            return _testMethod.Method.Invoke(context.TestObject, arguments);
+            object? resultObject;
+            try
+            {
+                CallBeforeTestHook(context);
+                resultObject = _testMethod.Method.Invoke(context.TestObject, arguments);
+            }
+            finally
+            {
+                CallAfterTestHook(context);
+            }
+            return resultObject;
+        }
+
+        private void CallBeforeTestHook(TestExecutionContext context)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+
+            context.HookExtension.BeforeTest(_testMethod.MethodName);
+        }
+
+        private void CallAfterTestHook(TestExecutionContext context)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+
+            // H-TODO if (context.CurrentTest.IsSuite) Do we need that for TestCaseSource, ...?
+            context.HookExtension.AfterTest(_testMethod.MethodName);
         }
     }
 }
