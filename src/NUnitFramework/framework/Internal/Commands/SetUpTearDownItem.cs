@@ -50,7 +50,17 @@ namespace NUnit.Framework.Internal.Commands
             _setUpWasRun = true;
 
             foreach (IMethodInfo setUpMethod in _setUpMethods)
-                RunSetUpOrTearDownMethod(context, setUpMethod);
+            {
+                try
+                {
+                    context.HookExtension?.BeforeAnySetUps(context, setUpMethod);
+                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                }
+                finally
+                {
+                    context.HookExtension?.AfterAnySetUps(context, setUpMethod);
+                }
+            }
         }
 
         /// <summary>
@@ -72,7 +82,17 @@ namespace NUnit.Framework.Internal.Commands
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
                     while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                    {
+                        try
+                        {
+                            context.HookExtension?.BeforeAnyTearDowns(context, _tearDownMethods[index]);
+                            RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                        }
+                        finally
+                        {
+                            context.HookExtension?.AfterAnyTearDowns(context, _tearDownMethods[index]);
+                        }
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
