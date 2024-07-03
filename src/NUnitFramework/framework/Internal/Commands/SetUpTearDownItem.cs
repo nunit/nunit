@@ -95,7 +95,6 @@ namespace NUnit.Framework.Internal.Commands
             {
                 context.HookExtension.AfterSetUp(setUpMethod.Name);
             }
-
         }
 
         /// <summary>
@@ -173,7 +172,6 @@ namespace NUnit.Framework.Internal.Commands
             {
                 context.HookExtension.BeforeTearDown(tearDownMethod.Name);
             }
-
         }
 
         private void CallAfterTearDownsHooks(TestExecutionContext context, IMethodInfo tearDownMethod)
