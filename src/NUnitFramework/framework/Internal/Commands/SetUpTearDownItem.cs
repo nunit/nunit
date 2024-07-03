@@ -50,7 +50,52 @@ namespace NUnit.Framework.Internal.Commands
             _setUpWasRun = true;
 
             foreach (IMethodInfo setUpMethod in _setUpMethods)
-                RunSetUpOrTearDownMethod(context, setUpMethod);
+            {
+                try
+                {
+                    CallBeforeSetUpsHook(context, setUpMethod);
+                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                }
+                finally
+                {
+                    CallAfterSetUpsHook(context, setUpMethod);
+                }
+            }
+        }
+
+        private void CallBeforeSetUpsHook(TestExecutionContext context, IMethodInfo setUpMethod)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+
+            if (context.CurrentTest.IsSuite)
+            {
+                context.HookExtension.BeforeOneTimeSetUp(setUpMethod.Name);
+            }
+            else
+            {
+                context.HookExtension.BeforeSetUp(setUpMethod.Name);
+            }
+        }
+
+        private void CallAfterSetUpsHook(TestExecutionContext context, IMethodInfo setUpMethod)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+
+            if (context.CurrentTest.IsSuite)
+            {
+                context.HookExtension.AfterOneTimeSetUp(setUpMethod.Name);
+            }
+            else
+            {
+                context.HookExtension.AfterSetUp(setUpMethod.Name);
+            }
+
         }
 
         /// <summary>
@@ -72,7 +117,17 @@ namespace NUnit.Framework.Internal.Commands
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
                     while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                    {
+                        try
+                        {
+                            CallBeforeTearDownsHooks(context, _tearDownMethods[index]);
+                            RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                        }
+                        finally
+                        {
+                            CallAfterTearDownsHooks(context, _tearDownMethods[index]);
+                        }
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
@@ -102,6 +157,40 @@ namespace NUnit.Framework.Internal.Commands
         private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
         {
             return method.Invoke(method.IsStatic ? null : context.TestObject, null)!;
+        }
+
+        private void CallBeforeTearDownsHooks(TestExecutionContext context, IMethodInfo tearDownMethod)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+            if (context.CurrentTest.IsSuite)
+            {
+                context.HookExtension.BeforeOneTimeTearDown(tearDownMethod.Name);
+            }
+            else
+            {
+                context.HookExtension.BeforeTearDown(tearDownMethod.Name);
+            }
+
+        }
+
+        private void CallAfterTearDownsHooks(TestExecutionContext context, IMethodInfo tearDownMethod)
+        {
+            if (context.HookExtension is null || context.CurrentTest is null)
+            {
+                return;
+            }
+
+            if (context.CurrentTest.IsSuite)
+            {
+                context.HookExtension.AfterOneTimeTearDown(tearDownMethod.Name);
+            }
+            else
+            {
+                context.HookExtension.AfterTearDown(tearDownMethod.Name);
+            }
         }
     }
 }
