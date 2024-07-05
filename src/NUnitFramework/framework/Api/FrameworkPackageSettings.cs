@@ -88,6 +88,11 @@ namespace NUnit
         public const string StopOnError = "StopOnError";
 
         /// <summary>
+        /// If true, asserts in multiple asserts block will throw immediately.
+        /// </summary>
+        public const string DisableMultipleAssertsUnderDebugger = "DisableMultipleAssertsUnderDebugger";
+
+        /// <summary>
         /// If true, use of the event queue is suppressed and test events are synchronous.
         /// </summary>
         public const string SynchronousEvents = "SynchronousEvents";
