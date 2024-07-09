@@ -321,8 +321,18 @@ namespace NUnit.Framework
             result.RecordTestCompletion();
 
             // If we are outside any multiple assert block or multiple asserts disabled, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0 || (TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger && Debugger.IsAttached))
-                throw new AssertionException(result.Message);
+            var debugMultiple = TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger && Debugger.IsAttached;
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0 || debugMultiple)
+            {
+                try
+                {
+                    throw new AssertionException(result.Message);
+                }
+                catch (AssertionException) when (debugMultiple && TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                {
+                    // we catch exception for multiple assert block to not change observed behavior but still allow user to break into debugger
+                }
+            }
         }
 
         private static void IssueWarning(string message)

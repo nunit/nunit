@@ -314,9 +314,9 @@ namespace NUnit.Framework.Internal
         internal int MultipleAssertLevel { get; set; }
 
         /// <summary>
-        /// Gets or sets wether asserts in multiple assert block should throw immediately under debugger.
+        /// Gets or sets wether asserts in multiple assert block should throw first-change exceptions under debugger.
         /// </summary>
-        internal bool DisableMultipleAssertsUnderDebugger { get; set; }
+        internal bool ThrowOnEachFailureUnderDebugger { get; set; }
 
         /// <summary>
         /// Gets or sets the test case timeout value
