@@ -29,5 +29,5 @@
 | Reference                                   | Version         | License Type    | License                                                              |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Microsoft.NET.Test.Sdk                      | 17.7.2          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
-| System.Collections.Immutable                | 6.0.0           | MIT             | https://github.com/dotnet/corefx/blob/master/LICENSE.TXT             |
+| System.Collections.Immutable                | 6.0.0           | MIT             | https://github.com/dotnet/runtime/blob/main/LICENSE.TXT             |
 | TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160 | MIT             | https://licenses.nuget.org/MIT                                       |
