@@ -35,7 +35,7 @@ Documentation for all NUnit projects can be found at the [documentation site](ht
 
 ## Contributing ##
 
-For more information on contributing to the NUnit project, please see [CONTRIBUTING.md](https://github.com/nunit/nunit/blob/master/CONTRIBUTING.md) and the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html#technical-practices).
+For more information on contributing to the NUnit project, please see [CONTRIBUTING.md](https://github.com/nunit/nunit/blob/main/CONTRIBUTING.md) and the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html#technical-practices).
 
 NUnit 3.0 was created by [Charlie Poole](https://github.com/CharliePoole), [Rob Prouse](https://github.com/rprouse), [Simone Busoli](https://github.com/simoneb), [Neil Colvin](https://github.com/oznetmaster) and numerous community contributors. A complete list of contributors since NUnit migrated to GitHub can be [found on GitHub](https://github.com/nunit/nunit/graphs/contributors).
 
@@ -43,7 +43,7 @@ Earlier versions of NUnit were developed by Charlie Poole, James W. Newkirk, Ale
 
 ## License ##
 
-NUnit is Open Source software and NUnit 4 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt). Earlier releases used the [NUnit license](https://nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
+NUnit is Open Source software and NUnit 4 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/main/LICENSE.txt). Earlier releases used the [NUnit license](https://nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
 
 ## NUnit Projects ##
 
