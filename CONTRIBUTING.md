@@ -2,7 +2,7 @@
 
 So you're thinking about contributing to NUnit? Great! Maintaining and enhancing NUnit is a big job, so **the community's help is really appreciated.**
 
-Helping out isn't just writing code, it also includes submitting issues, helping confirm issues, working on the website, helping people on the [mailing lists](https://groups.google.com/forum/m/#!forum/nunit-discuss) and improving the documentation. 
+Helping out isn't just writing code, it also includes submitting issues, helping confirm issues, working on the website, helping people in [nunit slack](https://nunit.slack.com) and improving the documentation. 
 
 ## Submitting Issues
 
