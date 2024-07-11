@@ -1039,10 +1039,13 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
             }
 
+            /// <summary>
+            /// Forcing this to use the old EqualConstraint, as the new one will not compile.
+            /// </summary>
             [Test]
             public void UsesProvidedPredicateForDirectComparisonDifferentTypes()
             {
-                Assert.That("1", Is.EqualTo(1).Using<string, int>((s, i) => i.ToString() == s));
+                Assert.That("1", Is.EqualTo((object)1).Using<string, int>((s, i) => i.ToString() == s));
             }
         }
 
