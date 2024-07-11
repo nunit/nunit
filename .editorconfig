@@ -55,7 +55,7 @@ csharp_indent_block_contents = true
 csharp_indent_case_contents = true
 csharp_indent_switch_labels = true
 
-csharp_prefer_braces = when_multiline
+csharp_prefer_braces = when_multiline:silent
 
 # https://github.com/nunit/docs/wiki/Coding-Standards#naming
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
@@ -177,3 +177,21 @@ dotnet_diagnostic.CSIsNull001.severity = warning
 
 # CSIsNull002: Use `is object` for non-null checks
 dotnet_diagnostic.CSIsNull002.severity = warning
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+indent_size = 4
+end_of_line = crlf
+csharp_indent_labels = one_less_than_current
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+csharp_using_directive_placement = outside_namespace:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent

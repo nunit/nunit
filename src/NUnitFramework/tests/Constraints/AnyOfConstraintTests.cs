@@ -31,6 +31,20 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ItemIsPresent_IgnoreWhiteSpace()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace;
+            Assert.That(anyOf.ApplyTo("ab").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ItemIsPresent_IgnoreCaseWhiteSpace()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "ab" }).IgnoreCase.IgnoreWhiteSpace;
+            Assert.That(anyOf.ApplyTo("A B").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
         public void ItemIsPresent_WithEqualityComparer()
         {
             Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);
@@ -62,6 +76,24 @@ namespace NUnit.Framework.Tests.Constraints
         public void MissingMember()
         {
             Assert.That(42, Is.Not.AnyOf(0, -1, 100));
+        }
+
+        [Test]
+        public void ValidMemberUsingPropertiesComparer()
+        {
+            Assert.That(new XY(5, 12), Is.AnyOf(new XY(3, 4), new XY(5, 12)).UsingPropertiesComparer());
+        }
+
+        private sealed class XY
+        {
+            public XY(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public int X { get; }
+            public int Y { get; }
         }
     }
 }

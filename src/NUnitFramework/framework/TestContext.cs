@@ -371,7 +371,13 @@ namespace NUnit.Framework
             if (!Path.IsPathRooted(filePath))
                 filePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filePath);
 
-            if (!File.Exists(filePath))
+            string prefix = string.Empty;
+#if NETFRAMEWORK
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT & filePath.Length > 260)
+                prefix = @"\\?\";
+#endif
+
+            if (!File.Exists($"{prefix}{filePath}"))
                 throw new FileNotFoundException("Test attachment file path could not be found.", filePath);
 
             var result = TestExecutionContext.CurrentContext.CurrentResult;

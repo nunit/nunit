@@ -14,6 +14,7 @@ namespace NUnit.Framework.Tests
     [TestFixture(nameof(F.ReturnsCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitUnsafeOnCompleted))]
+    [TestFixture(nameof(F.ReturnsValueTask))]
     public class AwaitableReturnTypeTests
     {
         private readonly string _methodName;

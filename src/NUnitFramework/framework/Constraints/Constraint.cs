@@ -262,6 +262,27 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+        /// <summary>
+        /// Returns a ConstraintExpression by appending Instead
+        /// to the current constraint.
+        /// </summary>
+        internal ConstraintExpression Instead
+        {
+            get
+            {
+                ConstraintBuilder? builder = Builder;
+                if (builder is null)
+                {
+                    builder = new ConstraintBuilder();
+                    builder.Append(this);
+                }
+
+                builder.Append(new InsteadOperator());
+
+                return new ConstraintExpression(builder);
+            }
+        }
+
         #endregion
 
         #region After Modifier
@@ -283,7 +304,7 @@ namespace NUnit.Framework.Constraints
         /// and polling interval.
         /// </summary>
         /// <param name="delayInMilliseconds">The delay in milliseconds.</param>
-        /// <param name="pollingInterval">The interval at which to test the constraint.</param>
+        /// <param name="pollingInterval">The interval at which to test the constraint, in milliseconds.</param>
         /// <returns></returns>
         public DelayedConstraint After(int delayInMilliseconds, int pollingInterval)
         {

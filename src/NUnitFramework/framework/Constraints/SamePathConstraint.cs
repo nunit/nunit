@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        protected override bool Matches(string actual)
+        protected override bool Matches(string? actual)
         {
             return actual is not null && StringUtil.StringsEqual(Canonicalize(expected), Canonicalize(actual), caseInsensitive);
         }

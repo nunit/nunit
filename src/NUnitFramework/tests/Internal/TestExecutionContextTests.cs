@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
+
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +13,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 #if NETFRAMEWORK
+using System.Reflection;
 #endif
 
 namespace NUnit.Framework.Tests.Internal
@@ -650,6 +651,27 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(timeout, Is.EqualTo(_setupContext.TestCaseTimeout));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
+        }
+
+        #endregion
+
+        #region DisableMultipleAssertsUnderDebugger
+
+        [Test]
+        public void CanAccessDisableMultipleAssertsUnderDebugger()
+        {
+            var value = _fixtureContext.DisableMultipleAssertsUnderDebugger;
+            Assert.That(_setupContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
+            Assert.That(TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
+        }
+
+        [Test]
+        public async Task CanAccessDisableMultipleAssertsUnderDebugger_Async()
+        {
+            var value = TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger;
+            Assert.That(value, Is.EqualTo(_setupContext.DisableMultipleAssertsUnderDebugger));
+            await YieldAsync();
+            Assert.That(TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
         }
 
         #endregion

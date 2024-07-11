@@ -110,13 +110,18 @@ namespace NUnit.Framework.Internal
         {
             private static WpfMessagePumpStrategy? _instance;
 
-            private readonly Action _dispatcherRun;
-            private readonly Action _dispatcherExitAllFrames;
+            private readonly MethodInfo _dispatcherPushFrame;
+            private readonly MethodInfo _dispatcherFrameSetContinueProperty;
+            private readonly Type _dispatcherFrameType;
 
-            private WpfMessagePumpStrategy(Action dispatcherRun, Action dispatcherExitAllFrames)
+            private WpfMessagePumpStrategy(
+                MethodInfo dispatcherPushFrame,
+                MethodInfo dispatcherFrameSetContinueProperty,
+                Type dispatcherFrameType)
             {
-                _dispatcherRun = dispatcherRun;
-                _dispatcherExitAllFrames = dispatcherExitAllFrames;
+                _dispatcherPushFrame = dispatcherPushFrame;
+                _dispatcherFrameSetContinueProperty = dispatcherFrameSetContinueProperty;
+                _dispatcherFrameType = dispatcherFrameType;
             }
 
             public static MessagePumpStrategy? GetIfApplicable()
@@ -128,17 +133,21 @@ namespace NUnit.Framework.Internal
 
                 if (_instance is null)
                 {
-                    var dispatcherType = context.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
+                    var assemblyType = context.GetType().Assembly;
+                    var dispatcherType = assemblyType.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
+                    var dispatcherFrameType = assemblyType.GetType("System.Windows.Threading.DispatcherFrame", throwOnError: true)!;
 
-                    var dispatcherRun = (Action)dispatcherType
-                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                        .CreateDelegate(typeof(Action));
+                    var dispatcherPushFrame = dispatcherType
+                        .GetMethod("PushFrame", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, new[] { dispatcherFrameType }, null)!;
 
-                    var dispatcherExitAllFrames = (Action)dispatcherType
-                        .GetMethod("ExitAllFrames", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                        .CreateDelegate(typeof(Action));
+                    var dispatcherSetFrameContinue = dispatcherFrameType
+                        .GetProperty("Continue")?
+                        .GetSetMethod()!;
 
-                    _instance = new WpfMessagePumpStrategy(dispatcherRun, dispatcherExitAllFrames);
+                    _instance = new WpfMessagePumpStrategy(
+                        dispatcherPushFrame,
+                        dispatcherSetFrameContinue,
+                        dispatcherFrameType);
                 }
 
                 return _instance;
@@ -159,15 +168,20 @@ namespace NUnit.Framework.Internal
                 if (awaiter.IsCompleted)
                     return;
 
-                // Wait for a post rather than scheduling the continuation now. If there has been a race condition
-                // and it completed after the IsCompleted check, it will wait until the application runs *before*
-                // shutting it down. Otherwise Dispatcher.ExitAllFrames is a no-op and we would then proceed to do
-                // Dispatcher.Run and never return.
+                // We are going to start a new frame which ensures the dispatcher is running our continuation.
+                // As soon as the continuation is finished we set the frame to not continue - this will force the call
+                // to PushFrame to return
+                // If there was already a frame running before it will still run after we return
+                // If the continuation was run and finished by the previous frame our call to PushFrame is more or less a no-op
+                var frame = Activator.CreateInstance(_dispatcherFrameType, true);
+
                 context.Post(
-                    _ => ContinueOnSameSynchronizationContext(awaiter, _dispatcherExitAllFrames),
+                    _ => ContinueOnSameSynchronizationContext(
+                        awaiter,
+                        () => _dispatcherFrameSetContinueProperty.Invoke(frame, new object[] { false })),
                     state: awaiter);
 
-                _dispatcherRun.Invoke();
+                _dispatcherPushFrame.Invoke(null, new[] { frame });
             }
         }
 

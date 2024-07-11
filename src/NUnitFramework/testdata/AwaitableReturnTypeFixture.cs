@@ -194,6 +194,34 @@ namespace NUnit.TestData
             }
         }
 
+        public ValueTask ReturnsValueTask()
+        {
+            _workload.BeforeReturningAwaitable();
+            _workload.BeforeReturningAwaiter();
+
+            var source = new TaskCompletionSource<object?>();
+
+            var complete = new Action(() =>
+            {
+                try
+                {
+                    _workload.GetResult();
+                    source.SetResult(null);
+                }
+                catch (Exception ex)
+                {
+                    source.SetException(ex);
+                }
+            });
+
+            if (_workload.IsCompleted)
+                complete.Invoke();
+            else
+                _workload.OnCompleted(complete);
+
+            return new ValueTask(source.Task);
+        }
+
         #endregion
 
         #region Non-void result
@@ -226,6 +254,34 @@ namespace NUnit.TestData
                 _workload.OnCompleted(complete);
 
             return source.Task;
+        }
+
+        [Test(ExpectedResult = 42)]
+        public ValueTask<object> ReturnsNonVoidResultValueTask()
+        {
+            _workload.BeforeReturningAwaitable();
+            _workload.BeforeReturningAwaiter();
+
+            var source = new TaskCompletionSource<object>();
+
+            var complete = new Action(() =>
+            {
+                try
+                {
+                    source.SetResult(_workload.GetResult());
+                }
+                catch (Exception ex)
+                {
+                    source.SetException(ex);
+                }
+            });
+
+            if (_workload.IsCompleted)
+                complete.Invoke();
+            else
+                _workload.OnCompleted(complete);
+
+            return new ValueTask<object>(source.Task);
         }
 
         [Test(ExpectedResult = 42)]

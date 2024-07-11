@@ -2,12 +2,13 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
-using System.Linq;
 using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Attributes
@@ -157,6 +158,7 @@ namespace NUnit.Framework.Tests.Attributes
             TestMethod? testMethod = (TestMethod?)TestFinder.Find(nameof(TimeoutFixture.VeryLongTestWith50msTimeout), suite, false);
             Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.Message, Does.Contain("50ms"));
@@ -172,6 +174,38 @@ namespace NUnit.Framework.Tests.Attributes
 #if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
 #endif
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTest()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output"));
+        }
+
+        [Test]
+        public void OutputIsCapturedOnNonTimedoutTest()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupTestAndTeardownOutputFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output"));
+            Assert.That(testMethod.Output, Does.Contain("teardown"));
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTestAfterTimeout()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputAfterTimeoutFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output before pause"));
+            Assert.That(testMethod.Output, Does.Not.Contain("method output after pause"));
         }
 
         [Test]
@@ -304,6 +338,45 @@ namespace NUnit.Framework.Tests.Attributes
         private class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
+        }
+
+        [TestFixture]
+        internal sealed class Issue4723
+        {
+            [Test]
+#if NETFRAMEWORK
+            [Timeout(2_000)] // Ok status will be Passed
+#else
+#pragma warning disable CS0618
+            [Timeout(2_000)] // Ok status will be Passed
+#pragma warning restore CS0618
+#endif
+            public async Task Test_Timeout()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [Test]
+            [CancelAfter(2_000)] // Ok status will be Passed
+            public async Task Test_CancelAfter(CancellationToken ct)
+            {
+                await Task.Delay(1_000, ct);
+                Assert.Pass();
+            }
+
+            [Test] // Ok status will be Passed
+            public async Task Test()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [TearDown]
+            public void Cleanup()
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome.Status, Is.EqualTo(TestStatus.Passed));
+            }
         }
     }
 }

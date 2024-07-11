@@ -248,6 +248,13 @@ namespace NUnit.Framework
         public string? ExcludePlatform { get; set; }
 
         /// <summary>
+        /// Get or set the type arguments for a generic test method.
+        /// If not set explicitly, the generic types will be inferred
+        /// based on the test case parameters.
+        /// </summary>
+        public Type[]? TypeArgs { get; set; } = null;
+
+        /// <summary>
         /// Gets and sets the category for this test case.
         /// May be a comma-separated list of categories.
         /// </summary>
@@ -300,7 +307,10 @@ namespace NUnit.Framework
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
 
-                parms = new TestCaseParameters(this);
+                parms = new TestCaseParameters(this)
+                {
+                    TypeArgs = TypeArgs
+                };
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
                 if (parms.HasExpectedResult

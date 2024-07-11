@@ -1,3 +1,6 @@
+#addin "nuget:?package=Cake.MinVer&version=3.0.0"
+#load "CakeScripts/VersionParsers.cs"
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -15,11 +18,11 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "4.0.1";
-var modifier = "";
+var version = MinVer(settings=> settings
+    .WithAutoIncrement(MinVerAutoIncrement.Minor)
+);
 
-var dbgSuffix = configuration.ToLower() == "debug" ? "-dbg" : "";
-var packageVersion = version + modifier + dbgSuffix;
+var packageVersion = version;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
@@ -74,6 +77,21 @@ Setup(context =>
 });
 
 //////////////////////////////////////////////////////////////////////
+// VERSIONING
+//////////////////////////////////////////////////////////////////////
+Task("Version")
+    .Does(context =>
+{
+    context.Information($"Version: {version.Version}");
+    context.Information($"Major: {version.Major}");
+    context.Information($"Minor: {version.Minor}");
+    context.Information($"Patch: {version.Patch}");
+    context.Information($"PreRelease: {version.PreRelease}");
+    context.Information($"BuildMetadata: {version.BuildMetadata}");
+});
+
+
+//////////////////////////////////////////////////////////////////////
 // CLEAN
 //////////////////////////////////////////////////////////////////////
 
@@ -93,6 +111,7 @@ Task("Clean")
 
 Task("NuGetRestore")
     .Description("Restores NuGet Packages")
+    .IsDependentOn("Version")
     .Does(() =>
     {
         DotNetRestore(SOLUTION_FILE);
@@ -110,14 +129,29 @@ Task("Build")
         DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetBuildSettings CreateDotNetBuildSettings() =>
-    new DotNetBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() 
+{
+    var version = packageVersion.ToString(); 
+    var assemblyVersion = VersionParsers.ParseAssemblyVersion(version);
+    var msBuildSettings = new DotNetMSBuildSettings {
+        ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
+        AssemblyVersion = assemblyVersion,
+        FileVersion = assemblyVersion,
+        InformationalVersion = version
+    };
+    Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
+    Information("FileVersion: {0}", msBuildSettings.FileVersion);
+    Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
+
+    var settings =  new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
         Verbosity = DotNetVerbosity.Minimal,
-        MSBuildSettings = new DotNetMSBuildSettings { Version = packageVersion }
+        MSBuildSettings = msBuildSettings
      };
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST

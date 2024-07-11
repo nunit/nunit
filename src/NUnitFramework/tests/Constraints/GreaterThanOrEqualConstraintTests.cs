@@ -1,5 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Collections.Generic;
+
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -45,18 +48,27 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actual, Is.GreaterThanOrEqualTo(expected));
         }
 
-        [TestCase(6.0, 5.0, 0.05)]
-        [TestCase(5.05, 5.0, 0.05)] // upper range bound
-        [TestCase(5.0001, 5.0, 0.05)]
-        [TestCase(4.9999, 5.0, 0.05)]
-        [TestCase(4.9501, 5.0, 0.05)] // lower range bound + .01
-        [TestCase(4.95, 5.0, 0.05)] // lower range bound
-        [TestCase(210, 200, 5)]
-        [TestCase(205, 200, 5)] // upper range bound
-        [TestCase(202, 200, 5)]
-        [TestCase(198, 200, 5)]
-        [TestCase(196, 200, 5)] // lower range bound + 1
-        [TestCase(195, 200, 5)] // lower range bound
+        private static readonly DateTime ConstantDateTime = new(2024, 1, 1, 1, 1, 1);
+
+        private static IEnumerable<object[]> GetSimpleToleranceData()
+        {
+            yield return new object[] { 6.0, 5.0, 0.05 };
+            yield return new object[] { 5.05, 5.0, 0.05 }; // upper range bound
+            yield return new object[] { 5.0001, 5.0, 0.05 };
+            yield return new object[] { 4.9999, 5.0, 0.05 };
+            yield return new object[] { 4.9501, 5.0, 0.05 }; // lower range bound + .01
+            yield return new object[] { 4.95, 5.0, 0.05 }; // lower range bound
+            yield return new object[] { 210, 200, 5 };
+            yield return new object[] { 205, 200, 5 }; // upper range bound
+            yield return new object[] { 202, 200, 5 };
+            yield return new object[] { 198, 200, 5 };
+            yield return new object[] { 196, 200, 5 }; // lower range bound + 1
+            yield return new object[] { 195, 200, 5 }; // lower range bound
+            yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(1), TimeSpan.FromSeconds(2) };
+            yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(2) };
+        }
+
+        [TestCaseSource(nameof(GetSimpleToleranceData))]
         public void SimpleTolerance(object actual, object expected, object tolerance)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
@@ -64,8 +76,14 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
-        [TestCase(4.9, 5.0, 0.05)]
-        [TestCase(190, 200, 5)]
+        private static IEnumerable<object[]> GetSimpleTolerance_FailureData()
+        {
+            yield return new object[] { 4.9, 5.0, 0.05 };
+            yield return new object[] { 190, 200, 5 };
+            yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(1) };
+        }
+
+        [TestCaseSource(nameof(GetSimpleTolerance_FailureData))]
         public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
@@ -74,7 +92,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "Assertion should have failed");
 #pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + expected));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected)));
         }
 
         [TestCase(6.0, 5.0, 1)]

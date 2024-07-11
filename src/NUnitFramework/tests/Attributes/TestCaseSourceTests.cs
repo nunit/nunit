@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -49,7 +48,6 @@ namespace NUnit.Framework.Tests.Attributes
             return Task.FromResult((IEnumerable?)result);
         }
 
-#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
         public void SourceCanBeStaticAsyncEnumerableMethod(string source)
         {
@@ -478,6 +476,86 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
                 Assert.That(suite.Tests[4].Name, Is.EqualTo(@"MethodWithArrayArguments([System.Byte[,]])"));
             });
+        }
+
+        [TestCaseSource(nameof(ExplicitTypeArgsWithUnrelatedParametersTestCases))]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+            Assert.That(input, Is.EqualTo("2"));
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
+        {
+            yield return new TestCaseData("2") { TypeArgs = new[] { typeof(long) } };
+        }
+
+        [TestCaseSource(nameof(GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+            => typeof(T);
+
+        private static IEnumerable<TestCaseData> GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases()
+        {
+            yield return new TestCaseData(2)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2L)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2)
+            {
+                ExpectedResult = typeof(int)
+            };
+            yield return new TestCaseData(2L)
+            {
+                ExpectedResult = typeof(long)
+            };
+        }
+
+        [Test]
+        public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture),
+                nameof(TestCaseSourceAttributeFixture.MethodWithIncompatibleGenericTypeAndArgument));
+
+            var test = (Test)suite.Tests[0];
+
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(test);
+
+            Assert.That(result.FailCount, Is.EqualTo(1));
+            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+        }
+
+        [TestCaseSource(nameof(ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases))]
+        public void ExplicitTypeArgsWithGenericConstraintSatisfied<T1, T2>(T1 a, T2 b)
+            where T1 : IComparer<T2>
+        {
+            Assert.That(typeof(T1), Is.EqualTo(typeof(IntConverter)));
+            Assert.That(a, Is.TypeOf<DerivedIntConverter>());
+        }
+
+        public class IntConverter : IComparer<int>
+        {
+            public int Compare(int x, int y) => x - y;
+        }
+
+        public class DerivedIntConverter : IntConverter
+        {
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases()
+        {
+            yield return new TestCaseData(new DerivedIntConverter(), 2)
+            {
+                TypeArgs = new[] { typeof(IntConverter), typeof(int) }
+            };
         }
 
         #region Sources used by the tests

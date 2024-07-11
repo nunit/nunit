@@ -73,7 +73,7 @@ namespace NUnit.Framework.Tests
         // Use static for simplicity
         private static class DummyFixture
         {
-            public static readonly int Delay = 0;
+            private static readonly int Delay = 0;
 
             public static void DummyTest()
             {

@@ -27,10 +27,7 @@ namespace NUnit.Framework.Tests.Internal
             });
         }
 
-        // TODO: NUnit.Analyzers doesn't handle generics
-#pragma warning disable NUnit1001 // The individual arguments provided by a TestCaseAttribute must match the type of the corresponding parameter of the method
         [TestCase(5, 7)]
-#pragma warning restore NUnit1001 // The individual arguments provided by a TestCaseAttribute must match the type of the corresponding parameter of the method
         public void TestMyArgTypes(T1 t1, T2 t2)
         {
             Assert.Multiple(() =>

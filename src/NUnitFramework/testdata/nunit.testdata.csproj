@@ -5,6 +5,8 @@
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <Optimize>false</Optimize>
     <IsTestProject>false</IsTestProject>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">

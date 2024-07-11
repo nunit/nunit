@@ -5,6 +5,9 @@
     <RootNamespace>NUnitLite.Tests</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <Title>NUnitLite Runner Tests</Title>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +25,7 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
- <ItemGroup>
+  <ItemGroup>
     <PackageReference Include="NUnit.Analyzers" />
   </ItemGroup>
 

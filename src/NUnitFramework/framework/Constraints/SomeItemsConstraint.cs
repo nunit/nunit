@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -56,11 +57,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to use the supplied <see cref="Func{TCollectionType, TMemberType, Boolean}"/> object.
         /// </summary>
-        /// <typeparam name="TCollectionType">The type of the elements in the collection.</typeparam>
-        /// <typeparam name="TMemberType">The type of the member.</typeparam>
+        /// <typeparam name="TActualCollectionElement">The type of the elements in the collection.</typeparam>
+        /// <typeparam name="TExpected">The type of the expected value.</typeparam>
         /// <param name="comparison">The comparison function to use.</param>
         /// <returns>Self.</returns>
-        public SomeItemsConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        public SomeItemsConstraint Using<TActualCollectionElement, TExpected>(Func<TActualCollectionElement, TExpected, bool> comparison)
         {
             CheckPrecondition(nameof(comparison));
             _equalConstraint.Using(comparison);
@@ -124,6 +125,20 @@ namespace NUnit.Framework.Constraints
         {
             CheckPrecondition(nameof(comparer));
             _equalConstraint.Using(comparer);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public SomeItemsConstraint UsingPropertiesComparer()
+        {
+            CheckPrecondition(nameof(UsingPropertiesComparer));
+            _equalConstraint.UsingPropertiesComparer();
             return this;
         }
 
