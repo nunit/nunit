@@ -495,7 +495,7 @@ namespace NUnit.Framework
             /// Returns all properties in the hierarchy
             /// </summary>
             /// <returns></returns>
-            private IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
+            public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
             {
                 var dict = new Dictionary<PropertyHierachyItem, IList>();
                 ITest? test = _test;
