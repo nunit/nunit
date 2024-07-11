@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
-            AddFormatter(next => val => val.GetType().IsArray ? FormatArray((Array)val) : next(val));
+            AddFormatter(next => val => val is Array valArray ? FormatArray(valArray) : next(val));
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 
@@ -202,7 +202,8 @@ namespace NUnit.Framework.Constraints
                 for (int r = 0; r < rank; r++)
                 {
                     startSegment = startSegment || count % products[r] == 0;
-                    if (startSegment) sb.Append("< ");
+                    if (startSegment)
+                        sb.Append("< ");
                 }
 
                 sb.Append(FormatValue(obj));
@@ -213,7 +214,8 @@ namespace NUnit.Framework.Constraints
                 for (int r = 0; r < rank; r++)
                 {
                     nextSegment = nextSegment || count % products[r] == 0;
-                    if (nextSegment) sb.Append(" >");
+                    if (nextSegment)
+                        sb.Append(" >");
                 }
             }
 
@@ -277,7 +279,8 @@ namespace NUnit.Framework.Constraints
 
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
-                if (i > 0) sb.Append(", ");
+                if (i > 0)
+                    sb.Append(", ");
 
                 bool notLastElement = i < 7;
                 string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
@@ -371,7 +374,8 @@ namespace NUnit.Framework.Constraints
             sb.Append('[');
             for (int r = 0; r < array.Rank; r++)
             {
-                if (r > 0) sb.Append(',');
+                if (r > 0)
+                    sb.Append(',');
                 sb.Append(array.GetLength(r));
             }
             sb.Append(']');
@@ -391,64 +395,84 @@ namespace NUnit.Framework.Constraints
         [return: NotNullIfNotNull("s")]
         public static string? EscapeControlChars(string? s)
         {
-            if (s is not null)
+            int index = 0;
+            return EscapeControlChars(s, ref index);
+        }
+
+        /// <summary>
+        /// Converts any control characters in a string
+        /// to their escaped representation.
+        /// </summary>
+        /// <param name="s">The string to be converted</param>
+        /// <param name="index">The index in the array of a specific spot, which needs to be updated when expanding.</param>
+        /// <returns>The converted string</returns>
+        [return: NotNullIfNotNull("s")]
+        public static string? EscapeControlChars(string? s, ref int index)
+        {
+            if (s is null)
+                return null;
+
+            int originalIndex = index;
+            const int headRoom = 42;
+            StringBuilder sb = new(s.Length + headRoom);
+
+            for (int i = 0; i < s.Length; i++)
             {
-                StringBuilder sb = new StringBuilder();
-
-                foreach (char c in s)
+                char c = s[i];
+                string? escaped = EscapeControlChars(c);
+                if (escaped is null)
                 {
-                    switch (c)
+                    sb.Append(c);
+                }
+                else
+                {
+                    sb.Append(escaped);
+                    if (originalIndex > i)
                     {
-                        //case '\'':
-                        //    sb.Append("\\\'");
-                        //    break;
-                        //case '\"':
-                        //    sb.Append("\\\"");
-                        //    break;
-                        case '\\':
-                            sb.Append("\\\\");
-                            break;
-                        case '\0':
-                            sb.Append("\\0");
-                            break;
-                        case '\a':
-                            sb.Append("\\a");
-                            break;
-                        case '\b':
-                            sb.Append("\\b");
-                            break;
-                        case '\f':
-                            sb.Append("\\f");
-                            break;
-                        case '\n':
-                            sb.Append("\\n");
-                            break;
-                        case '\r':
-                            sb.Append("\\r");
-                            break;
-                        case '\t':
-                            sb.Append("\\t");
-                            break;
-                        case '\v':
-                            sb.Append("\\v");
-                            break;
-
-                        case '\x0085':
-                        case '\x2028':
-                        case '\x2029':
-                            sb.Append($"\\x{(int)c:X4}");
-                            break;
-
-                        default:
-                            sb.Append(c);
-                            break;
+                        index += escaped.Length - 1;
                     }
                 }
-
-                s = sb.ToString();
             }
 
-            return s;
+            return sb.ToString();
+        }
+
+        private static string? EscapeControlChars(char c)
+        {
+            switch (c)
+            {
+                //case '\'':
+                //    return "\\\'";
+                //case '\"':
+                //    return ("\\\"");
+                //    break;
+                case '\\':
+                    return "\\\\";
+                case '\0':
+                    return "\\0";
+                case '\a':
+                    return "\\a";
+                case '\b':
+                    return "\\b";
+                case '\f':
+                    return "\\f";
+                case '\n':
+                    return "\\n";
+                case '\r':
+                    return "\\r";
+                case '\t':
+                    return "\\t";
+                case '\v':
+                    return "\\v";
+
+                case '\x0085':
+                case '\x2028':
+                case '\x2029':
+                    return $"\\x{(int)c:X4}";
+
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -462,7 +486,8 @@ namespace NUnit.Framework.Constraints
         {
             if (s is not null)
             {
-                StringBuilder sb = new StringBuilder();
+                const int headRoom = 42;
+                StringBuilder sb = new(s.Length + headRoom);
 
                 foreach (char c in s)
                 {
@@ -494,7 +519,8 @@ namespace NUnit.Framework.Constraints
             sb.Append('[');
             for (int r = 0; r < indices.Length; r++)
             {
-                if (r > 0) sb.Append(',');
+                if (r > 0)
+                    sb.Append(',');
                 sb.Append(indices[r].ToString());
             }
             sb.Append(']');
@@ -531,85 +557,147 @@ namespace NUnit.Framework.Constraints
         /// string with ellipses representing the removed parts
         /// </summary>
         /// <param name="s">The string to be clipped</param>
-        /// <param name="maxStringLength">The maximum permitted length of the result string</param>
+        /// <param name="clipLength">The length of the clipped string</param>
         /// <param name="clipStart">The point at which to start clipping</param>
         /// <returns>The clipped string</returns>
-        public static string ClipString(string s, int maxStringLength, int clipStart)
+        public static string ClipString(string s, int clipLength, int clipStart)
         {
-            int clipLength = maxStringLength;
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(s.Length + 2 * ELLIPSIS.Length);
 
             if (clipStart > 0)
-            {
-                clipLength -= ELLIPSIS.Length;
                 sb.Append(ELLIPSIS);
+
+            int remainingLength = s.Length - clipStart;
+            int count = Math.Min(remainingLength, clipLength);
+            sb.Append(s, clipStart, count);
+
+            if (remainingLength > clipLength)
+                sb.Append(ELLIPSIS);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Clips the <paramref name="s"/> string if it exceeds <paramref name="maxDisplayLength"/>.
+        /// </summary>
+        /// <remarks>
+        /// The string ensures that the content around <paramref name="mismatchLocation"/> stays visible
+        /// by either clipping from the front or the back or both. The clipped part is replaced with "...".
+        /// </remarks>
+        /// <param name="s">The string to clip</param>
+        /// <param name="length">The assumed length of the string (needed if called for a pair)</param>
+        /// <param name="maxDisplayLength">The maximum length of the display message.</param>
+        /// <param name="mismatchLocation">The location in <paramref name="s"/> that needs to stay visible.</param>
+        /// <returns>Clip string with a maximum length of <paramref name="maxDisplayLength"/>.</returns>
+        public static string ClipWhenNeeded(string s, int length, int maxDisplayLength, ref int mismatchLocation)
+        {
+            if (length <= maxDisplayLength)
+            {
+                // No need to clip
+                return s;
             }
 
-            if (s.Length - clipStart > clipLength)
+            // We need to clip at least one side.
+            maxDisplayLength -= ELLIPSIS.Length;
+
+            const int minimumJoiningMatchingCharacters = 5;
+
+            int clipStart;
+
+            if (mismatchLocation + minimumJoiningMatchingCharacters < maxDisplayLength)
             {
-                clipLength -= ELLIPSIS.Length;
-                sb.Append(s.Substring(clipStart, clipLength));
-                sb.Append(ELLIPSIS);
+                // Clip the tail
+                clipStart = 0;
             }
-            else if (clipStart > 0)
+            else if (length - mismatchLocation + minimumJoiningMatchingCharacters < maxDisplayLength)
             {
-                sb.Append(s.Substring(clipStart));
+                // Show the tail
+                clipStart = length - maxDisplayLength;
             }
             else
             {
-                sb.Append(s);
+                // We need to clip both sides.
+                maxDisplayLength -= ELLIPSIS.Length;
+
+                // Centre the clip around the mismatchLocation
+                clipStart = mismatchLocation - maxDisplayLength / 2;
             }
 
-            return sb.ToString();
+            if (clipStart > 0)
+            {
+                // If clipping off the front, adjust the location
+                // and correct for the ... added to the front.
+                mismatchLocation -= clipStart - ELLIPSIS.Length;
+            }
+
+            return ClipString(s, maxDisplayLength, clipStart);
         }
 
         /// <summary>
         /// Clip the expected and actual strings in a coordinated fashion,
         /// so that they may be displayed together.
         /// </summary>
-        /// <param name="expected"></param>
-        /// <param name="actual"></param>
-        /// <param name="maxDisplayLength"></param>
-        /// <param name="mismatch"></param>
-        public static void ClipExpectedAndActual(ref string expected, ref string actual, int maxDisplayLength, int mismatch)
+        /// <remarks>
+        /// The values of <paramref name="mismatchExpected"/> and <paramref name="mismatchActual"/>
+        /// are assumed to be the same. If <paramref name="expected"/> and <paramref name="actual"/>
+        /// are not linked, then call <see cref="ClipWhenNeeded"/> individually.
+        /// </remarks>
+        /// <param name="expected">The expected string to clip</param>
+        /// <param name="actual">The actual string to clip</param>
+        /// <param name="maxDisplayLength">The maximum length of the display message.</param>
+        /// <param name="mismatchExpected">The location in <paramref name="expected"/> that needs to stay visible.</param>
+        /// <param name="mismatchActual">The location in <paramref name="actual"/> that needs to stay visible.</param>
+        public static void ClipExpectedAndActual(ref string expected, ref string actual, int maxDisplayLength, ref int mismatchExpected, ref int mismatchActual)
         {
-            // Case 1: Both strings fit on line
-            int maxStringLength = Math.Max(expected.Length, actual.Length);
-            if (maxStringLength <= maxDisplayLength)
+            if (mismatchExpected != mismatchActual)
+            {
+                throw new ArgumentException($"The values for {nameof(mismatchExpected)} and {nameof(mismatchActual)} should be the same.");
+            }
+
+            // Clip based upon longest length
+            int longestLength = Math.Max(expected.Length, actual.Length);
+            if (longestLength <= maxDisplayLength)
                 return;
 
-            // Case 2: Assume that the tail of each string fits on line
-            int clipLength = maxDisplayLength - ELLIPSIS.Length;
-            int clipStart = maxStringLength - clipLength;
-
-            // Case 3: If it doesn't, center the mismatch position
-            if (clipStart > mismatch)
-                clipStart = Math.Max(0, mismatch - clipLength / 2);
-
-            expected = ClipString(expected, maxDisplayLength, clipStart);
-            actual = ClipString(actual, maxDisplayLength, clipStart);
+            expected = ClipWhenNeeded(expected, longestLength, maxDisplayLength, ref mismatchExpected);
+            actual = ClipWhenNeeded(actual, longestLength, maxDisplayLength, ref mismatchActual);
         }
 
         /// <summary>
-        /// Shows the position two strings start to differ.  Comparison
-        /// starts at the start index.
+        /// Finds the position two strings start to differ.
         /// </summary>
         /// <param name="expected">The expected string</param>
         /// <param name="actual">The actual string</param>
-        /// <param name="istart">The index in the strings at which comparison should start</param>
         /// <param name="ignoreCase">Boolean indicating whether case should be ignored</param>
-        /// <returns>-1 if no mismatch found, or the index where mismatch found</returns>
-        public static int FindMismatchPosition(string expected, string actual, int istart, bool ignoreCase)
+        /// <param name="ignoreWhiteSpace">Boolean indicating whether white space should be ignored</param>
+        /// <returns>(-1,-1) if no mismatch found, or the indices (expected, actual) where mismatches found.</returns>
+        public static (int, int) FindMismatchPosition(string expected, string actual, bool ignoreCase, bool ignoreWhiteSpace)
         {
-            int length = Math.Min(expected.Length, actual.Length);
-
             string s1 = ignoreCase ? expected.ToLower() : expected;
             string s2 = ignoreCase ? actual.ToLower() : actual;
+            int i1 = 0;
+            int i2 = 0;
 
-            for (int i = istart; i < length; i++)
+            while (true)
             {
-                if (s1[i] != s2[i])
-                    return i;
+                if (ignoreWhiteSpace)
+                {
+                    // Find next non-white space character in both s1 and s2.
+                    i1 = FindNonWhiteSpace(s1, i1);
+                    i2 = FindNonWhiteSpace(s2, i2);
+                }
+
+                if (i1 < s1.Length && i2 < s2.Length)
+                {
+                    if (s1[i1] != s2[i2])
+                        return (i1, i2);
+                    i1++;
+                    i2++;
+                }
+                else
+                {
+                    break;
+                }
             }
 
             //
@@ -617,13 +705,21 @@ namespace NUnit.Framework.Constraints
             // Mismatch occurs because string lengths are different, so show
             // that they start differing where the shortest string ends
             //
-            if (expected.Length != actual.Length)
-                return length;
+            if (i1 < s1.Length || i2 < s2.Length)
+                return (i1, i2);
 
             //
             // Same strings : We shouldn't get here
             //
-            return -1;
+            return (-1, -1);
+        }
+
+        private static int FindNonWhiteSpace(string s, int i)
+        {
+            while (i < s.Length && char.IsWhiteSpace(s[i]))
+                i++;
+
+            return i;
         }
     }
 }

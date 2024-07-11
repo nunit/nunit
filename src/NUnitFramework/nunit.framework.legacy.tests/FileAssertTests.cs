@@ -2,10 +2,9 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Legacy.Tests
 {
     /// <summary>
     /// Summary description for FileAssertTests.
@@ -54,16 +53,6 @@ namespace NUnit.Framework.Tests.Assertions
             using FileStream actual = tf2.File.OpenWrite();
             var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
             Assert.That(ex?.Message, Does.Contain("not readable"));
-        }
-
-        [Test]
-        public void NonSeekableStreamGivesException()
-        {
-            using var tf1 = new TestFile("TestImage1.jpg");
-            using FileStream expected = tf1.File.OpenRead();
-            using var actual = new FakeStream();
-            var ex = Assert.Throws<ArgumentException>(() => FileAssert.AreEqual(expected, actual));
-            Assert.That(ex?.Message, Does.Contain("not seekable"));
         }
 
         private class FakeStream : MemoryStream

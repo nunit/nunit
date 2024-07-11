@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints
         /// Gets the left precedence of the operator
         /// </summary>
         public override int LeftPrecedence =>
-            RightContext is CollectionOperator || RightContext is ExactCountOperator
+            RightContext is CollectionOperator || RightContext is ExactCountOperator || RightContext is IndexerOperator
                 ? base.LeftPrecedence + 10
                 : base.LeftPrecedence;
 

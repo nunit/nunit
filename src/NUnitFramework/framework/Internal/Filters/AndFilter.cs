@@ -13,13 +13,17 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Constructs an empty AndFilter
         /// </summary>
-        public AndFilter() { }
+        public AndFilter()
+        {
+        }
 
         /// <summary>
         /// Constructs an AndFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
-        public AndFilter(params TestFilter[] filters) : base(filters) { }
+        public AndFilter(params TestFilter[] filters) : base(filters)
+        {
+        }
 
         /// <summary>
         /// Checks whether the AndFilter is matched by a test

@@ -23,9 +23,9 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { Obj1 };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( Obj2, "<System.Object>" ),
-            new TestCaseData( 3, "3" ),
-            new TestCaseData( "Hello", "\"Hello\"" )
+            new TestCaseData(Obj2, "<System.Object>"),
+            new TestCaseData(3, "3"),
+            new TestCaseData("Hello", "\"Hello\"")
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }

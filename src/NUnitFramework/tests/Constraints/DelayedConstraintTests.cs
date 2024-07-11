@@ -45,9 +45,9 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { true };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( false, "False" ),
-            new TestCaseData( 0, "0" ),
-            new TestCaseData( null, "null" )
+            new TestCaseData(false, "False"),
+            new TestCaseData(0, "0"),
+            new TestCaseData(null, "null")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -232,6 +232,20 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
+        private int _pollCount;
+
+        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        public void ThatPollingCallsDelegateCorrectNumberOfTimes()
+        {
+            _pollCount = 0;
+            Assert.That(PollCount, Is.EqualTo(4).After(110, 25));
+        }
+
+        private int PollCount()
+        {
+            return _pollCount++;
+        }
+
         [Test]
         public void PreservesOriginalResultAdditionalLines()
         {
@@ -249,13 +263,27 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static int _setValuesDelay;
 
-        private static object MethodReturningValue() { return _boolValue; }
+        private static object MethodReturningValue()
+        {
+            return _boolValue;
+        }
 
-        private static object MethodReturningFalse() { return false; }
+        private static object MethodReturningFalse()
+        {
+            return false;
+        }
 
-        private static object MethodReturningZero() { return 0; }
+        private static object MethodReturningZero()
+        {
+            return 0;
+        }
 
         private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
+
+        [OneTimeTearDown] public void OneTimeTearDown()
+        {
+            WaitEvent.Dispose();
+        }
 
         private static void Delay(int delay)
         {

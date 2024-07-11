@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Builders
             for (int i = 0; i < sources.Length; i++)
                 enumerators[i] = sources[i].GetEnumerator();
 
-            for (; ; )
+            for (; ;)
             {
                 bool gotData = false;
                 object?[] testdata = new object?[sources.Length];

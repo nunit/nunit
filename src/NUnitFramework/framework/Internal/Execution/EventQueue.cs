@@ -6,16 +6,29 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    /// <summary>
+    /// Interface for ALL event types that can be queued for processing.
+    /// </summary>
+    /// <typeparam name="TListener"></typeparam>
+    public interface IEvent<in TListener>
+    {
+        /// <summary>
+        /// The Send method is implemented by derived classes to send the event to the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        void Send(TListener listener);
+    }
+
     #region Individual Event Classes
 
     /// <summary>
-    /// NUnit.Core.Event is the abstract base for all stored events.
+    /// NUnit.Core.Event is the abstract base for all stored standard events.
     /// An Event is the stored representation of a call to the
     /// ITestListener interface and is used to record such calls
     /// or to queue them for forwarding on another thread or at
     /// a later time.
     /// </summary>
-    public abstract class Event
+    public abstract class Event : IEvent<ITestListener>
     {
         /// <summary>
         /// The Send method is implemented by derived classes to send the event to the specified listener.
@@ -134,16 +147,25 @@ namespace NUnit.Framework.Internal.Execution
     #endregion
 
     /// <summary>
-    /// Implements a queue of work items each of which
+    /// Implements a queue of work items for the Event type each of which
     /// is queued as a WaitCallback.
     /// </summary>
-    public class EventQueue
+    public sealed class EventQueue : EventQueue<Event>
+    {
+    }
+
+    /// <summary>
+    /// Implements a template for a queue of work items each of which
+    /// is queued as a WaitCallback.
+    /// It can handle any event types.
+    /// </summary>
+    public abstract class EventQueue<T>
     {
         private const int SpinCount = 5;
 
         //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
-        private readonly ConcurrentQueue<Event> _queue = new();
+        private readonly ConcurrentQueue<T> _queue = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -171,7 +193,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Enqueues the specified event
         /// </summary>
         /// <param name="e">The event to enqueue.</param>
-        public void Enqueue(Event e)
+        public void Enqueue(T e)
         {
             do
             {
@@ -188,7 +210,8 @@ namespace NUnit.Framework.Internal.Execution
                 _mreAdd.Set();
 
                 break;
-            } while (true);
+            }
+            while (true);
 
             // Setting this to anything other than 0 causes NUnit to be sensitive
             // to the windows timer resolution - see issue #2217
@@ -215,7 +238,7 @@ namespace NUnit.Framework.Internal.Execution
         ///   </item>
         /// </list>
         /// </returns>
-        public Event? Dequeue(bool blockWhenEmpty)
+        public T? Dequeue(bool blockWhenEmpty)
         {
             SpinWait sw = new SpinWait();
 
@@ -228,7 +251,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (cachedRemoveId == cachedAddId)
                 {
                     if (!blockWhenEmpty || _stopped != 0)
-                        return null;
+                        return default(T);
 
                     // Spin a few times to see if something changes
                     if (sw.Count <= SpinCount)
@@ -260,15 +283,16 @@ namespace NUnit.Framework.Internal.Execution
                     continue;
 
                 // Dequeue our work item
-                Event? e;
+                T? e;
                 while (!_queue.TryDequeue(out e))
                 {
                     if (!blockWhenEmpty || _stopped != 0)
-                        return null;
+                        return default(T);
                 }
 
                 return e;
-            } while (true);
+            }
+            while (true);
         }
 
         /// <summary>

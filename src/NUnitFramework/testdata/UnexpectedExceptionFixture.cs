@@ -59,7 +59,8 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         [Test]
         public void AssertThatWithRecursivelyThrowingExceptionAsExpected()
         {
-            Assert.That(null, Is.EqualTo(new RecursivelyThrowingException()));
+            var actual = default(RecursivelyThrowingException);
+            Assert.That(actual, Is.EqualTo(new RecursivelyThrowingException()));
         }
     }
 
@@ -83,7 +84,9 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
     public class ExceptionWithBadStackTrace : Exception
     {
         public ExceptionWithBadStackTrace(string message)
-            : base(message) { }
+            : base(message)
+        {
+        }
 
         public override string StackTrace => throw new InvalidOperationException("Simulated failure getting stack trace");
     }

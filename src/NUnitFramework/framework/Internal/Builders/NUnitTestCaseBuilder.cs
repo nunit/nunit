@@ -2,6 +2,7 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -197,6 +198,13 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
             }
 
+            if (parameters.LastParameterAcceptsCancellationToken() &&
+               (arglist is null || !arglist.LastArgumentIsCancellationToken()))
+            {
+                // Implict CancellationToken argument
+                argsProvided++;
+            }
+
             if (argsProvided > 0 && maxArgsNeeded == 0)
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
 
@@ -211,8 +219,13 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition)
             {
-                if (arglist is null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
+                var typeArguments = parms?.TypeArgs;
+
+                if (typeArguments is null && (
+                    arglist is null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out typeArguments)))
+                {
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
+                }
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();

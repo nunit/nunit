@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace NUnit.TestData.OneTimeSetUpTearDownData
@@ -28,10 +29,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
 
         [Test]
-        public void EvenMoreSuccess() { }
+        public void EvenMoreSuccess()
+        {
+        }
     }
 
     [TestFixture]
@@ -120,20 +125,28 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
 
         [Test]
-        public void EvenMoreSuccess() { }
+        public void EvenMoreSuccess()
+        {
+        }
     }
 
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
         [Test]
-        public void AnotherTest() { }
+        public void AnotherTest()
+        {
+        }
 
         [Test]
-        public void YetAnotherTest() { }
+        public void YetAnotherTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -155,10 +168,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void AnotherTest() { }
+        public void AnotherTest()
+        {
+        }
 
         [Test]
-        public void YetAnotherTest() { }
+        public void YetAnotherTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -185,10 +202,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void AnotherTest() { }
+        public void AnotherTest()
+        {
+        }
 
         [Test]
-        public void YetAnotherTest() { }
+        public void YetAnotherTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -210,7 +231,9 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public static void MyTest() { }
+        public static void MyTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -237,7 +260,9 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public static void SomeTest() { }
+        public static void SomeTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -259,7 +284,9 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public static void MyTest() { }
+        public static void MyTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -267,10 +294,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         [OneTimeSetUp]
         [Parallelizable]
-        public void BadOneTimeSetup() { }
+        public void BadOneTimeSetup()
+        {
+        }
 
         [Test]
-        public void Test() { }
+        public void Test()
+        {
+        }
     }
 
     [TestFixture]
@@ -364,10 +395,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
 
         [Test]
-        public void EvenMoreSuccess() { }
+        public void EvenMoreSuccess()
+        {
+        }
     }
 
     [TestFixture, Ignore("Do Not Run This")]
@@ -389,10 +424,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
 
         [Test]
-        public void EvenMoreSuccess() { }
+        public void EvenMoreSuccess()
+        {
+        }
     }
 
     [TestFixture]
@@ -433,11 +472,85 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void OneTest() { }
+        public void OneTest()
+        {
+        }
 
         public void Dispose()
         {
             Actions.Add("Dispose");
+            DisposeCalled++;
+        }
+    }
+
+    [TestFixture]
+    public class AsyncDisposableFixture : IAsyncDisposable
+    {
+        public int DisposeCalled = 0;
+        public List<string> Actions = new();
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add(nameof(OneTimeSetUp));
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add(nameof(OneTimeTearDown));
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Actions.Add(nameof(DisposeAsync));
+            DisposeCalled++;
+            return new ValueTask(Task.CompletedTask);
+        }
+    }
+
+    public class InheritedAsyncDisposableFixture : AsyncDisposableFixture
+    {
+    }
+
+    [TestFixture]
+    public class AsyncAndSyncDisposableFixture : IAsyncDisposable, IDisposable
+    {
+        public int DisposeCalled = 0;
+        public List<string> Actions = new();
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Actions.Add(nameof(OneTimeSetUp));
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Actions.Add(nameof(OneTimeTearDown));
+        }
+
+        [Test]
+        public void OneTest()
+        {
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            Actions.Add(nameof(DisposeAsync));
+            DisposeCalled++;
+            return new ValueTask(Task.CompletedTask);
+        }
+
+        public void Dispose()
+        {
+            Actions.Add(nameof(Dispose));
             DisposeCalled++;
         }
     }
@@ -451,7 +564,9 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(2)]
         [TestCase(3)]
         [TestCase(4)]
-        public void TestCaseTest(int data) { }
+        public void TestCaseTest(int data)
+        {
+        }
 
         public void Dispose()
         {

@@ -27,8 +27,7 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    if (context.TestObject is IDisposable disposable)
-                        disposable.Dispose();
+                    DisposeHelper.EnsureDisposed(context.TestObject);
                 }
                 catch (Exception ex)
                 {
@@ -46,7 +45,8 @@ namespace NUnit.Framework.Internal.Commands
                     return true;
 
                 current = current.Parent;
-            } while (current is not null);
+            }
+            while (current is not null);
 
             return false;
         }

@@ -10,19 +10,23 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class EqualsComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
-                return null;
-            if (tolerance is not null && tolerance.HasVariance)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
             Type xType = x.GetType();
 
             if (OverridesEqualsObject(xType))
-                return x.Equals(y);
+            {
+                if (tolerance.HasVariance)
+                    return EqualMethodResult.ToleranceNotSupported;
 
-            return null;
+                return x.Equals(y) ?
+                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            }
+
+            return EqualMethodResult.TypesNotSupported;
         }
 
         private static readonly Type[] EqualsObjectParameterTypes = { typeof(object) };
@@ -32,7 +36,7 @@ namespace NUnit.Framework.Constraints.Comparers
             // Check for Equals(object) override
             var equalsObject = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
                                   null, EqualsObjectParameterTypes, null);
-            return equalsObject is not null && equalsObject.DeclaringType != typeof(object);
+            return equalsObject is not null && equalsObject.DeclaringType != (type.IsValueType ? typeof(ValueType) : typeof(object));
         }
     }
 }

@@ -35,7 +35,8 @@ namespace NUnit.Framework.Tests.TestUtilities
 
             RunValidation(xml, schemaFileName, (sender, e) => isInvalid = true);
 
-            if (!isInvalid) Assert.Fail("Validation did not fail.");
+            if (!isInvalid)
+                Assert.Fail("Validation did not fail.");
         }
 
         private static void RunValidation(string xml, string schemaFileName, ValidationEventHandler validationHandler)
@@ -53,7 +54,9 @@ namespace NUnit.Framework.Tests.TestUtilities
 
             using (var reader = XmlReader.Create(new StringReader(xml), settings))
             {
-                while (reader.Read()) { }
+                while (reader.Read())
+                {
+                }
             }
         }
 

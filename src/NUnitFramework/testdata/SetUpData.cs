@@ -27,7 +27,9 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
     }
 
     [TestFixture]
@@ -49,20 +51,28 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void TestOne() { }
+        public void TestOne()
+        {
+        }
 
         [Test]
-        public void TestTwo() { }
+        public void TestTwo()
+        {
+        }
 
         [Test]
-        public void TestThree() { }
+        public void TestThree()
+        {
+        }
     }
 
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
         [Test]
-        public void AnotherTest() { }
+        public void AnotherTest()
+        {
+        }
     }
 
     [TestFixture]
@@ -84,7 +94,9 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void AnotherTest() { }
+        public void AnotherTest()
+        {
+        }
     }
 
     public class MultipleSetUpTearDownFixture
@@ -123,7 +135,9 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void Success() { }
+        public void Success()
+        {
+        }
     }
 
     [TestFixture]
@@ -152,22 +166,26 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class SetupAndTearDownExceptionFixture
     {
-        public Exception SetupException;
-        public Exception TearDownException;
+        public Exception? SetupException;
+        public Exception? TearDownException;
 
         [SetUp]
         public void SetUp()
         {
-            if (SetupException is not null) throw SetupException;
+            if (SetupException is not null)
+                throw SetupException;
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (TearDownException is not null) throw TearDownException;
+            if (TearDownException is not null)
+                throw TearDownException;
         }
 
         [Test]
-        public void TestOne() { }
+        public void TestOne()
+        {
+        }
     }
 }

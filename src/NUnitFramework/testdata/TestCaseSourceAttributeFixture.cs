@@ -19,8 +19,10 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.Ignore("Ignore this");
         }
 
-        private static readonly object[] Source = new object[] {
-            new TestCaseData( 2, 3, 4 ) };
+        private static readonly object[] Source = new object[]
+        {
+            new TestCaseData(2, 3, 4)
+        };
 
         #endregion
 
@@ -33,7 +35,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
 
         private static IEnumerable IgnoredSource =>
-            new object[] {
+            new object[]
+            {
                 new TestCaseData(1),
                 new TestCaseData(2).Ignore("Don't Run Me!"),
             };
@@ -44,7 +47,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             {
                 DateTimeOffset utcTime = DateTimeOffset.UtcNow;
                 TimeSpan timeZoneOffset = utcTime - utcTime.ToLocalTime();
-                return new object[] {
+                return new object[]
+                {
                     new TestCaseData(3).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 0, 0, 0, timeZoneOffset)),
                     new TestCaseData(4).Ignore("I Was Ignored in the Past").Until(new DateTimeOffset(1492, 01, 01, 0, 0, 0, timeZoneOffset)),
                     new TestCaseData(5).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 12, 42, 33, timeZoneOffset)),
@@ -62,7 +66,8 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
 
         private static IEnumerable ExplicitSource =>
-            new object[] {
+            new object[]
+            {
                 new TestCaseData(1),
                 new TestCaseData(2).Explicit(),
                 new TestCaseData(3).Explicit("Connection failing")
@@ -137,6 +142,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        [TestCaseSource(nameof(IncompatibleGenericTypeAndArgumentTestCases))]
+        public static void MethodWithIncompatibleGenericTypeAndArgument<T>(T o)
+        {
+        }
+
         private static IEnumerable ExceptionSource
         {
             get
@@ -151,7 +161,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         private class DivideDataProvider
         {
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
-            public static string MyField;
+            public static string? MyField;
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
@@ -170,11 +180,13 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         private static readonly object[] ComplexArrayBasedTestInput = new[]
         {
+#pragma warning disable SA1500 // Braces for multi-line statements should not share line
             new[] { 1, "text", new object() },
             Array.Empty<object>(),
             new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
+#pragma warning restore SA1500 // Braces for multi-line statements should not share line
         };
 
         private static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
@@ -183,10 +195,20 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 yield return new TestCaseData(args: new[] { argumentValue });
         }
 
+        public static IEnumerable<TestCaseData> IncompatibleGenericTypeAndArgumentTestCases()
+        {
+            yield return new TestCaseData("doesn't work")
+            {
+                TypeArgs = new[] { typeof(int) }
+            };
+        }
+
         #region Test name tests
 
         [TestCaseSource(nameof(TestCaseNameTestDataSource))]
-        public static void TestCaseNameTestDataMethod(params object[] args) { }
+        public static void TestCaseNameTestDataMethod(params object[] args)
+        {
+        }
 
         public static IEnumerable<TestCaseData> TestCaseNameTestDataSource() =>
             from spec in TestDataSpec.Specs

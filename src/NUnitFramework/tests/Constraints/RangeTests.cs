@@ -78,7 +78,9 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase(5, 10.0, 7)]
         [TestCase(5.0, 10, 7.0)]
         public void MixedRangeTests<TMin, TMax, TVal>(TMin min, TMax max, TVal val)
-            where TMin : IComparable where TMax : IComparable where TVal : IComparable
+            where TMin : IComparable
+            where TMax : IComparable
+            where TVal : IComparable
         {
             Assert.That(val, Is.InRange(min, max));
         }

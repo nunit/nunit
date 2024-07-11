@@ -20,7 +20,8 @@ namespace NUnit.Framework.Tests.Attributes
                 _extraAttributes = extraAttributes;
             }
 
-            public T[] GetCustomAttributes<T>(bool inherit) where T : class
+            public T[] GetCustomAttributes<T>(bool inherit)
+                where T : class
             {
                 return _baseInfo.GetCustomAttributes<T>(inherit)
                     .Concat(_extraAttributes.OfType<T>())
@@ -62,7 +63,8 @@ namespace NUnit.Framework.Tests.Attributes
                 return _baseInfo.Invoke(fixture, args);
             }
 
-            public bool IsDefined<T>(bool inherit) where T : class
+            public bool IsDefined<T>(bool inherit)
+                where T : class
             {
                 return _baseInfo.IsDefined<T>(inherit);
             }

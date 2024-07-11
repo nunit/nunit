@@ -16,6 +16,8 @@ namespace NUnit.Framework.Constraints
         private readonly object? _expectedValue;
         private readonly Tolerance _tolerance;
         private readonly bool _caseInsensitive;
+        private readonly bool _ignoringWhiteSpace;
+        private readonly bool _comparingProperties;
         private readonly bool _clipStrings;
         private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
@@ -27,7 +29,9 @@ namespace NUnit.Framework.Constraints
         private static readonly string StreamsDiffer_1 =
             "Stream lengths are both {0}. Streams differ at offset {1}.";
         private static readonly string StreamsDiffer_2 =
-            "Expected Stream length {0} but was {1}.";// Streams differ at offset {2}.";
+            "Expected Stream length {0} but was {1}."; // Streams differ at offset {2}.";
+        private static readonly string UnSeekableStreamsDiffer =
+            "Streams differ at offset {0}.";
         private static readonly string CollectionType_1 =
             "Expected and actual are both {0}";
         private static readonly string CollectionType_2 =
@@ -47,8 +51,10 @@ namespace NUnit.Framework.Constraints
             _expectedValue = constraint.Arguments[0];
             _tolerance = constraint.Tolerance;
             _caseInsensitive = constraint.CaseInsensitive;
+            _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
+            _comparingProperties = constraint.ComparingProperties;
             _clipStrings = constraint.ClipStrings;
-            _failurePoints = constraint.FailurePoints;
+            _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
 
         /// <summary>
@@ -71,6 +77,8 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
             else if (expected is Stream expectedStream && actual is Stream actualStream)
                 DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
+            else if (_comparingProperties && IsPropertyFailurePoint(depth))
+                DisplayPropertyDifferences(writer, depth);
             else if (_tolerance is not null)
                 writer.DisplayDifferences(expected, actual, _tolerance);
             else
@@ -80,28 +88,36 @@ namespace NUnit.Framework.Constraints
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            int mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, _caseInsensitive);
+            (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(expected, actual, _caseInsensitive, _ignoringWhiteSpace);
 
             if (expected.Length == actual.Length)
-                writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatch);
+                writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatchExpected);
             else
-                writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatch);
+                writer.WriteMessageLine(StringsDiffer_2, expected.Length, actual.Length, mismatchExpected);
 
-            writer.DisplayStringDifferences(expected, actual, mismatch, _caseInsensitive, _clipStrings);
+            writer.DisplayStringDifferences(expected, actual, mismatchExpected, mismatchActual, _caseInsensitive, _ignoringWhiteSpace, _clipStrings);
         }
         #endregion
 
         #region DisplayStreamDifferences
         private void DisplayStreamDifferences(MessageWriter writer, Stream expected, Stream actual, int depth)
         {
-            if (expected.Length == actual.Length)
+            long offset = _failurePoints.Count > depth ? _failurePoints[depth].Position : 0;
+
+            if (expected.CanSeek && actual.CanSeek)
             {
-                long offset = _failurePoints[depth].Position;
-                writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
+                if (expected.Length == actual.Length)
+                {
+                    writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
+                }
+                else
+                {
+                    writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+                }
             }
             else
             {
-                writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+                writer.WriteMessageLine(UnSeekableStreamsDiffer, offset);
             }
         }
         #endregion
@@ -126,11 +142,7 @@ namespace NUnit.Framework.Constraints
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
                 {
-                    DisplayDifferences(
-                        writer,
-                        failurePoint.ExpectedValue,
-                        failurePoint.ActualValue,
-                        ++depth);
+                    DisplayCollectionDifferenceWithFailurePoint(writer, expected, actual, failurePoint, depth);
                 }
                 else if (failurePoint.ActualHasData)
                 {
@@ -142,6 +154,39 @@ namespace NUnit.Framework.Constraints
                     writer.Write("  Missing:  ");
                     writer.WriteCollectionElements(expected.Skip(failurePoint.Position), 0, 3);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Display the failure information for two collections with failure point
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        /// <param name="failurePoint"></param>
+        /// <param name="depth"></param>
+        private void DisplayCollectionDifferenceWithFailurePoint(MessageWriter writer, ICollection expected, ICollection actual, NUnitEqualityComparer.FailurePoint failurePoint, int depth)
+        {
+            if (failurePoint.ExpectedValue is string expectedString && failurePoint.ActualValue is string actualString)
+            {
+                (int mismatchExpected, int _) = MsgUtils.FindMismatchPosition(expectedString, actualString, _caseInsensitive, _ignoringWhiteSpace);
+
+                if (expectedString.Length == actualString.Length)
+                    writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatchExpected);
+                else
+                    writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatchExpected);
+                writer.WriteLine($"  Expected: {MsgUtils.FormatCollection(expected)}");
+                writer.WriteLine($"  But was:  {MsgUtils.FormatCollection(actual)}");
+                writer.WriteLine($"  First non-matching item at index [{failurePoint.Position}]: \"{failurePoint.ExpectedValue}\"");
+                return;
+            }
+            else
+            {
+                DisplayDifferences(
+                       writer,
+                       failurePoint.ExpectedValue,
+                       failurePoint.ActualValue,
+                       ++depth);
             }
         }
 
@@ -250,6 +295,27 @@ namespace NUnit.Framework.Constraints
                     writer.Write($"  Missing:  < {MsgUtils.FormatValue(failurePoint.ExpectedValue)}, ... >");
                 }
             }
+        }
+
+        #endregion
+
+        #region DisplayPropertyDifferences
+
+        private void DisplayPropertyDifferences(MessageWriter writer, int depth)
+        {
+            if (_failurePoints.Count > depth)
+            {
+                NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
+
+                writer.WriteMessageLine($"Values differ at property {failurePoint.PropertyName}");
+                DisplayDifferences(writer, failurePoint.ExpectedValue, failurePoint.ActualValue, ++depth);
+            }
+        }
+
+        private bool IsPropertyFailurePoint(int depth)
+        {
+            return _failurePoints.Count > depth &&
+                   _failurePoints[depth].PropertyName is not null;
         }
 
         #endregion

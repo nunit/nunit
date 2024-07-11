@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -132,112 +133,216 @@ namespace NUnit.Framework
         /// </summary>
         public int CurrentRepeatCount => _testExecutionContext.CurrentRepeatCount;
 
+        /// <summary>
+        /// Gets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken => _testExecutionContext.CancellationToken;
+
         #endregion
 
         #region Static Methods
 
         /// <summary>Write the string representation of a boolean value to the current result</summary>
-        public static void Write(bool value) { Out.Write(value); }
+        public static void Write(bool value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write a char to the current result</summary>
-        public static void Write(char value) { Out.Write(value); }
+        public static void Write(char value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write a char array to the current result</summary>
-        public static void Write(char[]? value) { Out.Write(value); }
+        public static void Write(char[]? value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of a double to the current result</summary>
-        public static void Write(double value) { Out.Write(value); }
+        public static void Write(double value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of an Int32 value to the current result</summary>
-        public static void Write(int value) { Out.Write(value); }
+        public static void Write(int value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of an Int64 value to the current result</summary>
-        public static void Write(long value) { Out.Write(value); }
+        public static void Write(long value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of a decimal value to the current result</summary>
-        public static void Write(decimal value) { Out.Write(value); }
+        public static void Write(decimal value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of an object to the current result</summary>
-        public static void Write(object? value) { Out.Write(value); }
+        public static void Write(object? value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of a Single value to the current result</summary>
-        public static void Write(float value) { Out.Write(value); }
+        public static void Write(float value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write a string to the current result</summary>
-        public static void Write(string? value) { Out.Write(value); }
+        public static void Write(string? value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of a UInt32 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(uint value) { Out.Write(value); }
+        public static void Write(uint value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write the string representation of a UInt64 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(ulong value) { Out.Write(value); }
+        public static void Write(ulong value)
+        {
+            Out.Write(value);
+        }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object? arg1) { Out.Write(format, arg1); }
+        public static void Write(string format, object? arg1)
+        {
+            Out.Write(format, arg1);
+        }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object? arg1, object? arg2) { Out.Write(format, arg1, arg2); }
+        public static void Write(string format, object? arg1, object? arg2)
+        {
+            Out.Write(format, arg1, arg2);
+        }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object? arg1, object? arg2, object? arg3) { Out.Write(format, arg1, arg2, arg3); }
+        public static void Write(string format, object? arg1, object? arg2, object? arg3)
+        {
+            Out.Write(format, arg1, arg2, arg3);
+        }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, params object?[] args) { Out.Write(format, args); }
+        public static void Write(string format, params object?[] args)
+        {
+            Out.Write(format, args);
+        }
 
         /// <summary>Write a line terminator to the current result</summary>
-        public static void WriteLine() { Out.WriteLine(); }
+        public static void WriteLine()
+        {
+            Out.WriteLine();
+        }
 
         /// <summary>Write the string representation of a boolean value to the current result followed by a line terminator</summary>
-        public static void WriteLine(bool value) { Out.WriteLine(value); }
+        public static void WriteLine(bool value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write a char to the current result followed by a line terminator</summary>
-        public static void WriteLine(char value) { Out.WriteLine(value); }
+        public static void WriteLine(char value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write a char array to the current result followed by a line terminator</summary>
-        public static void WriteLine(char[]? value) { Out.WriteLine(value); }
+        public static void WriteLine(char[]? value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of a double to the current result followed by a line terminator</summary>
-        public static void WriteLine(double value) { Out.WriteLine(value); }
+        public static void WriteLine(double value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of an Int32 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(int value) { Out.WriteLine(value); }
+        public static void WriteLine(int value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of an Int64 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(long value) { Out.WriteLine(value); }
+        public static void WriteLine(long value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of a decimal value to the current result followed by a line terminator</summary>
-        public static void WriteLine(decimal value) { Out.WriteLine(value); }
+        public static void WriteLine(decimal value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of an object to the current result followed by a line terminator</summary>
-        public static void WriteLine(object? value) { Out.WriteLine(value); }
+        public static void WriteLine(object? value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of a Single value to the current result followed by a line terminator</summary>
-        public static void WriteLine(float value) { Out.WriteLine(value); }
+        public static void WriteLine(float value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write a string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string? value) { Out.WriteLine(value); }
+        public static void WriteLine(string? value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of a UInt32 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(uint value) { Out.WriteLine(value); }
+        public static void WriteLine(uint value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write the string representation of a UInt64 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(ulong value) { Out.WriteLine(value); }
+        public static void WriteLine(ulong value)
+        {
+            Out.WriteLine(value);
+        }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object? arg1) { Out.WriteLine(format, arg1); }
+        public static void WriteLine(string format, object? arg1)
+        {
+            Out.WriteLine(format, arg1);
+        }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object? arg1, object? arg2) { Out.WriteLine(format, arg1, arg2); }
+        public static void WriteLine(string format, object? arg1, object? arg2)
+        {
+            Out.WriteLine(format, arg1, arg2);
+        }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object? arg1, object? arg2, object? arg3) { Out.WriteLine(format, arg1, arg2, arg3); }
+        public static void WriteLine(string format, object? arg1, object? arg2, object? arg3)
+        {
+            Out.WriteLine(format, arg1, arg2, arg3);
+        }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, params object?[] args) { Out.WriteLine(format, args); }
+        public static void WriteLine(string format, params object?[] args)
+        {
+            Out.WriteLine(format, args);
+        }
 
         /// <summary>
         /// This method adds the a new ValueFormatterFactory to the
@@ -264,7 +369,13 @@ namespace NUnit.Framework
             if (!Path.IsPathRooted(filePath))
                 filePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, filePath);
 
-            if (!File.Exists(filePath))
+            string prefix = string.Empty;
+#if NETFRAMEWORK
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT & filePath.Length > 260)
+                prefix = @"\\?\";
+#endif
+
+            if (!File.Exists($"{prefix}{filePath}"))
                 throw new FileNotFoundException("Test attachment file path could not be found.", filePath);
 
             var result = TestExecutionContext.CurrentContext.CurrentResult;

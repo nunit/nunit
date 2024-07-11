@@ -14,7 +14,7 @@ namespace NUnit.Framework
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
     /// under a given namespace.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
@@ -60,7 +60,8 @@ namespace NUnit.Framework
                 }
             }
 
-            var invalidAttributes = new[] {
+            var invalidAttributes = new[]
+            {
                 typeof(SetUpAttribute),
                 typeof(TearDownAttribute)
             };

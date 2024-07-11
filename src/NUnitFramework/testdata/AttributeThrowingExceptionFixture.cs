@@ -59,7 +59,7 @@ namespace NUnit.TestData.AttributeThrowingExceptionFixture
 
     public class ExceptionThrowingAttribute : Attribute
     {
-        public ExceptionThrowingAttribute(string message)
+        public ExceptionThrowingAttribute(string? message)
         {
             if (string.IsNullOrEmpty(message))
             {

@@ -32,7 +32,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public PathConstraint RespectCase
         {
-            get { caseInsensitive = false; return this; }
+            get
+            {
+                caseInsensitive = false;
+                return this;
+            }
         }
 
         /// <summary>

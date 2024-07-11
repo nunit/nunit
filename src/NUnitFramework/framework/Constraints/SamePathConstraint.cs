@@ -13,7 +13,9 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="SamePathConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
-        public SamePathConstraint(string expected) : base(expected) { }
+        public SamePathConstraint(string expected) : base(expected)
+        {
+        }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -26,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        protected override bool Matches(string actual)
+        protected override bool Matches(string? actual)
         {
             return actual is not null && StringUtil.StringsEqual(Canonicalize(expected), Canonicalize(actual), caseInsensitive);
         }

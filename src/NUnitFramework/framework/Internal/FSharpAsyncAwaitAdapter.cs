@@ -22,11 +22,14 @@ namespace NUnit.Framework.Internal
 
         private static AsyncInfo? GetAsyncInfo(Type asyncType)
         {
-            if (asyncType is null) return null;
+            if (asyncType is null)
+                return null;
 
-            if (!asyncType.IsGenericType) return null;
+            if (!asyncType.IsGenericType)
+                return null;
             var genericDefinition = asyncType.GetGenericTypeDefinition();
-            if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1") return null;
+            if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1")
+                return null;
 
             return new AsyncInfo(genericDefinition, asyncType.GetGenericArguments()[0]);
         }
@@ -45,10 +48,12 @@ namespace NUnit.Framework.Internal
 
         public static AwaitAdapter? TryCreate(object awaitable)
         {
-            if (awaitable is null) return null;
+            if (awaitable is null)
+                return null;
 
             var info = GetAsyncInfo(awaitable.GetType());
-            if (info is null) return null;
+            if (info is null)
+                return null;
 
             if (_startImmediateAsTaskMethod is null)
             {
@@ -60,14 +65,18 @@ namespace NUnit.Framework.Internal
                    .GetMethods(BindingFlags.Public | BindingFlags.Static)
                    .Single(method =>
                    {
-                       if (method.Name != "StartImmediateAsTask") return false;
+                       if (method.Name != "StartImmediateAsTask")
+                            return false;
                        var typeArguments = method.GetGenericArguments();
-                       if (typeArguments.Length != 1) return false;
+                       if (typeArguments.Length != 1)
+                            return false;
 
                        var parameters = method.GetParameters();
-                       if (parameters.Length != 2) return false;
+                       if (parameters.Length != 2)
+                            return false;
 
-                       if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0])) return false;
+                       if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0]))
+                            return false;
 
                        return parameters[1].ParameterType.IsFSharpOption(out Type? someType)
                            && someType.FullName == "System.Threading.CancellationToken";

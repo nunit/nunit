@@ -36,18 +36,41 @@ namespace NUnit.Framework.Tests.Attributes
                 new object[] { "StaticProperty" }
             };
 
-#pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
-        [Test, TestCaseSource(nameof(AsyncStaticMethod))]
-#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
-        public void SourceCanBeAsyncStaticMethod(string source)
+        [Test, TestCaseSource(nameof(StaticAsyncMethod))]
+        public void SourceCanBeStaticAsyncMethod(string source)
         {
-            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+            Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
         }
 
-        private static Task<IEnumerable?> AsyncStaticMethod()
+        private static Task<IEnumerable?> StaticAsyncMethod()
         {
-            var result = new object[] { new object[] { "AsyncStaticMethod" } };
+            var result = new object[] { new object[] { nameof(StaticAsyncMethod) } };
             return Task.FromResult((IEnumerable?)result);
+        }
+
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
+        public void SourceCanBeStaticAsyncEnumerableMethod(string source)
+        {
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethod"));
+        }
+
+        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
+        public void SourceCanBeStaticAsyncEnumerableMethodReturningTask(string source)
+        {
+            Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
+        }
+#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
+
+        private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethod) } };
+            return result.AsAsyncEnumerable();
+        }
+
+        private static Task<IAsyncEnumerable<object>> StaticAsyncEnumerableMethodReturningTask()
+        {
+            var result = new object[] { new object[] { nameof(StaticAsyncEnumerableMethodReturningTask) } };
+            return Task.FromResult(result.AsAsyncEnumerable());
         }
 
         [Test]
@@ -87,7 +110,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly object[] StaticField =
-            { new object[] { "StaticField" } };
+            {
+                new object[] { "StaticField" }
+            };
 
         [Test]
         public void SourceUsingInstanceFieldIsNotRunnable()
@@ -453,15 +478,99 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
+        [TestCaseSource(nameof(ExplicitTypeArgsWithUnrelatedParametersTestCases))]
+        public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
+        {
+            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+            Assert.That(input, Is.EqualTo("2"));
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
+        {
+            yield return new TestCaseData("2") { TypeArgs = new[] { typeof(long) } };
+        }
+
+        [TestCaseSource(nameof(GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+            => typeof(T);
+
+        private static IEnumerable<TestCaseData> GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases()
+        {
+            yield return new TestCaseData(2)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2L)
+            {
+                TypeArgs = new[] { typeof(long) },
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData(2)
+            {
+                ExpectedResult = typeof(int)
+            };
+            yield return new TestCaseData(2L)
+            {
+                ExpectedResult = typeof(long)
+            };
+        }
+
+        [Test]
+        public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture),
+                nameof(TestCaseSourceAttributeFixture.MethodWithIncompatibleGenericTypeAndArgument));
+
+            var test = (Test)suite.Tests[0];
+
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(test);
+
+            Assert.That(result.FailCount, Is.EqualTo(1));
+            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+        }
+
+        [TestCaseSource(nameof(ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases))]
+        public void ExplicitTypeArgsWithGenericConstraintSatisfied<T1, T2>(T1 a, T2 b)
+            where T1 : IComparer<T2>
+        {
+            Assert.That(typeof(T1), Is.EqualTo(typeof(IntConverter)));
+            Assert.That(a, Is.TypeOf<DerivedIntConverter>());
+        }
+
+        public class IntConverter : IComparer<int>
+        {
+            public int Compare(int x, int y) => x - y;
+        }
+
+        public class DerivedIntConverter : IntConverter
+        {
+        }
+
+        private static IEnumerable<TestCaseData> ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases()
+        {
+            yield return new TestCaseData(new DerivedIntConverter(), 2)
+            {
+                TypeArgs = new[] { typeof(IntConverter), typeof(int) }
+            };
+        }
+
         #region Sources used by the tests
-        private static readonly object[] MyData = new object[] {
+        private static readonly object[] MyData = new object[]
+        {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
-            new object[] { 12, 6, 2 } };
-        private static readonly object[] MyIntData = new object[] {
+            new object[] { 12, 6, 2 }
+        };
+        private static readonly object[] MyIntData = new object[]
+        {
             new[] { 12, 3, 4 },
             new[] { 12, 4, 3 },
-            new[] { 12, 6, 2 } };
+            new[] { 12, 6, 2 }
+        };
         private static readonly object[] MyArrayData = new object[]
         {
             new[] { 12 },
@@ -474,17 +583,23 @@ namespace NUnit.Framework.Tests.Attributes
             yield return new object[] { inject1, inject2, inject3 };
         }
 
-        private static readonly object[] FourArgs = new object[] {
-            new TestCaseData( 12, 3, 4, 0 ),
-            new TestCaseData( 12, 4, 3, 0 ),
-            new TestCaseData( 12, 5, 2, 2 ) };
+        private static readonly object[] FourArgs = new object[]
+        {
+            new TestCaseData(12, 3, 4, 0),
+            new TestCaseData(12, 4, 3, 0),
+            new TestCaseData(12, 5, 2, 2)
+        };
         private static readonly int[] EvenNumbers = new[] { 2, 4, 6, 8 };
-        private static readonly object[] MoreData = new object[] {
+        private static readonly object[] MoreData = new object[]
+        {
             new object[] { 12, 1, 12 },
-            new object[] { 12, 2, 6 } };
-        private static readonly object[] Params = new object[] {
+            new object[] { 12, 2, 6 }
+        };
+        private static readonly object[] Params = new object[]
+        {
             new TestCaseData(24, 3).Returns(8),
-            new TestCaseData(24, 2).Returns(12) };
+            new TestCaseData(24, 2).Returns(12)
+        };
 
         private class DivideDataProvider
         {
@@ -505,7 +620,8 @@ namespace NUnit.Framework.Tests.Attributes
         public class DivideDataProviderWithReturnValue
         {
             public static IEnumerable TestCases =>
-                new object[] {
+                new object[]
+                {
                     new TestCaseData(12, 3).Returns(4).SetName("TC1"),
                     new TestCaseData(12, 2).Returns(6).SetName("TC2"),
                     new TestCaseData(12, 4).Returns(3).SetName("TC3")

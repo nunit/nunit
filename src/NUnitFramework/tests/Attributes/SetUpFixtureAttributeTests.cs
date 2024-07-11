@@ -67,34 +67,44 @@ namespace NUnit.Framework.Tests.Attributes
             var usageAttrib = Attribute.GetCustomAttribute(typeof(SetUpFixtureAttribute), typeof(AttributeUsageAttribute)) as AttributeUsageAttribute;
 
             Assert.That(usageAttrib, Is.Not.Null);
-            Assert.That(usageAttrib.Inherited, Is.False);
+            Assert.That(usageAttrib.Inherited, Is.True);
         }
 
         private static class StaticSetupClass
         {
             [OneTimeSetUp]
-            public static void SomeSetUpMethod() { }
+            public static void SomeSetUpMethod()
+            {
+            }
 
             [OneTimeTearDown]
-            public static void SomeTearDownMethod() { }
+            public static void SomeTearDownMethod()
+            {
+            }
         }
 
         private abstract class AbstractSetupClass
         {
             [OneTimeSetUp]
-            public void SomeSetUpMethod() { }
+            public void SomeSetUpMethod()
+            {
+            }
         }
 
         private class TestSetupClass
         {
             [SetUp]
-            public void SomeMethod() { }
+            public void SomeMethod()
+            {
+            }
         }
 
         private class TestTearDownClass
         {
             [TearDown]
-            public void SomeMethod() { }
+            public void SomeMethod()
+            {
+            }
         }
     }
 }

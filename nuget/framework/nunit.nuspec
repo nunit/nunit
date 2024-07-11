@@ -6,34 +6,44 @@
     <version>$version$</version>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <license type="file">LICENSE.txt</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
-    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <readme>README.md</readme>
     <summary>NUnit is a unit-testing framework for all .NET languages with a strong TDD focus.</summary>
-    <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
+    <description>
+        NUnit is a unit-testing framework for all .NET languages.
+        It can run on macOS, Linux and Windows operating systems.
+        NUnit can be used for a wide range of testing, from unit testing with TDD to full-fledged system and integration testing.
+        It is a non-opinionated, broad and deep framework with multiple different ways to assert that your code behaves as expected. Many aspects of NUnit can be extended to suit your specific purposes.
 
-This package includes the NUnit 4 framework assembly, which is referenced by your tests. You will need to install version 4 of the nunit-console program or a third-party runner that supports NUnit 4 in order to execute tests. Runners intended for use with NUnit 2.x or 3.x will not run NUnit 4 tests correctly.
+        The latest version, version 4, is an upgrade from the groundbreaking NUnit 3 framework. It is a modernized version, aimed at taking advantage of the latest .NET features and C# language constructs.
 
-Supported platforms:
-- .NET Framework 4.6.2+
-- .NET Standard 2.0+</description>
-    <releaseNotes>This package includes the NUnit 4 framework assembly, which is referenced by your tests. You will need to install version 4 of the nunit-console program or a third-party runner that supports NUnit 4 in order to execute tests. Runners intended for use with NUnit 2.x or 3.x will not run NUnit 4 tests correctly.</releaseNotes>
+        If you are upgrading from NUnit 3, be aware of the breaking changes (https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40). Please see the NUnit 4 Migration Guide (https://docs.nunit.org/articles/nunit/release-notes/Nunit4.0-MigrationGuide.html) and take care to prepare your NUnit 3 code before you do the upgrade.
+
+      Supported platforms:
+      - .NET Framework 4.6.2+
+      - .NET 6.0+</description>
+    <releaseNotes>See release notes at https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-400---november-26-2023</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License.</copyright>
     <dependencies>
-      <group targetFramework="net462" />
+      <group targetFramework="net462">
+        <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
+        <dependency id="System.ValueTuple" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
       <group targetFramework="net6.0" />
     </dependencies>
   </metadata>
   <files>
     <file src="LICENSE.txt" />
-    <file src="NOTICES.txt" />
+    <file src="NOTICES.md" />
     <file src="CHANGES.md" />
     <file src="README.md" />
+    <file src="THIRD_PARTY_NOTICES.md" />
     <file src="..\..\nuget\icon.png" />
     <file src="bin/net462/nunit.framework.dll" target="lib\net462" />
     <file src="bin/net462/nunit.framework.xml" target="lib\net462" />

@@ -34,5 +34,13 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(attr, Is.Not.Null, $"{attrType.Name} is not a PropertyAttribute");
             Assert.That(attr!.Properties.Get(propName), Is.EqualTo(propValue));
         }
+
+        [Test]
+        public void ConstructCancelAfter()
+        {
+            var attr = new CancelAfterAttribute(100);
+            Assert.That(attr.Properties.Get(PropertyNames.Timeout), Is.EqualTo(100));
+            Assert.That(attr.Properties.Get(PropertyNames.UseCancellation), Is.True);
+        }
     }
 }

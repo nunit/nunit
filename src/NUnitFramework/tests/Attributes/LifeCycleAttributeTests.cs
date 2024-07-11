@@ -3,7 +3,9 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+#if NETFRAMEWORK
 using NUnit.Framework.Legacy;
+#endif
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 
@@ -209,9 +211,20 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithDisposeTestCase));
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(2));
+            Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(fixture.TestCaseCount));
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
+
+        [Test]
+        public void InstancePerTestCaseWithAsyncDispose()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithAsyncDisposeTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(InstancePerTestCaseWithAsyncDisposeTestCase.DisposeCount, Is.EqualTo(fixture.TestCaseCount));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
         #endregion
 
         #region Assembly level InstancePerTestCase

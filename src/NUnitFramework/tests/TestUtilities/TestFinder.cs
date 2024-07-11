@@ -51,6 +51,8 @@ namespace NUnit.Framework.Tests.TestUtilities
             return null;
         }
 
-        private TestFinder() { }
+        private TestFinder()
+        {
+        }
     }
 }

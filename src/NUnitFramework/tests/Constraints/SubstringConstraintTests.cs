@@ -19,12 +19,14 @@ namespace NUnit.Framework.Tests.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
-        private static readonly object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ),
-            new TestCaseData( "HELLO", "\"HELLO\"" ),
-            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null, "null" ) };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData("goodbye", "\"goodbye\""),
+            new TestCaseData("HELLO", "\"HELLO\""),
+            new TestCaseData("What the hell?", "\"What the hell?\""),
+            new TestCaseData(string.Empty, "<string.Empty>"),
+            new TestCaseData(null, "null")
+        };
 #pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(" ss ", "ß", StringComparison.CurrentCulture)]
@@ -112,6 +114,23 @@ namespace NUnit.Framework.Tests.Constraints
                 newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
             });
         }
+
+        [Test]
+        public void TestSubstringUsingDoesContains()
+        {
+            Assert.That("Hello NUnit!", Does.Contain("Hello"));
+            Assert.That("Hello NUnit!", Does.Not.Contain("World"));
+
+            Assert.That(() => Assert.That("Hello", Does.Not.Contain(null)),
+                Throws.InvalidOperationException.With.Message.Contains("Substring"));
+        }
+
+        [Test]
+        public void TestSubstringUsingContainsSubstring()
+        {
+            Assert.That("Hello NUnit!", Contains.Substring("Hello"));
+            Assert.That("Hello NUnit!", !Contains.Substring("World"));
+        }
     }
 
     [TestFixture, SetCulture("en-US")]
@@ -128,11 +147,13 @@ namespace NUnit.Framework.Tests.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
-        private static readonly object[] FailureData = new object[] {
-            new TestCaseData( "goodbye", "\"goodbye\"" ),
-            new TestCaseData( "What the hell?", "\"What the hell?\"" ),
-            new TestCaseData( string.Empty, "<string.Empty>" ),
-            new TestCaseData( null, "null" ) };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData("goodbye", "\"goodbye\""),
+            new TestCaseData("What the hell?", "\"What the hell?\""),
+            new TestCaseData(string.Empty, "<string.Empty>"),
+            new TestCaseData(null, "null")
+        };
 #pragma warning restore IDE0052 // Remove unread private members
     }
 }

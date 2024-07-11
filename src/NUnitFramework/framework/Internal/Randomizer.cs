@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -107,13 +108,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default constructor
         /// </summary>
-        public Randomizer() { }
+        public Randomizer()
+        {
+        }
 
         /// <summary>
         /// Construct based on seed value
         /// </summary>
         /// <param name="seed"></param>
-        public Randomizer(int seed) : base(seed) { }
+        public Randomizer(int seed) : base(seed)
+        {
+        }
 
         #endregion
 
@@ -488,6 +493,7 @@ namespace NUnit.Framework.Internal
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
+        private const int MaxStackAllocSize = 256;
 
         /// <summary>
         /// Generate a random string based on the characters from the input string.
@@ -497,12 +503,22 @@ namespace NUnit.Framework.Internal
         /// <returns>A random string of arbitrary length</returns>
         public string GetString(int outputLength, string allowedChars)
         {
-            var data = new char[outputLength];
+            if (outputLength < 0)
+                throw new ArgumentOutOfRangeException(nameof(outputLength));
+#if NET6_0_OR_GREATER
+            return string.Create(outputLength, allowedChars, FillSpan);
+#else
+            Span<char> data = outputLength <= MaxStackAllocSize ? stackalloc char[outputLength] : new char[outputLength];
+            FillSpan(data, allowedChars);
 
-            for (int i = 0; i < data.Length; i++)
-                data[i] = allowedChars[Next(0, allowedChars.Length)];
-
-            return new string(data);
+            return data.ToString();
+#endif
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            void FillSpan(Span<char> data, string allowedChars)
+            {
+                for (int i = 0; i < data.Length; i++)
+                    data[i] = allowedChars[Next(0, allowedChars.Length)];
+            }
         }
 
         /// <summary>
@@ -607,7 +623,8 @@ namespace NUnit.Framework.Internal
                     // twice is < 25%. Three times, 12.5%. And so on.
                     // For the average scenario of 25% chance per iteration, the total chance of having to iterate twice
                     // is < 6.25%. Three times, 1.5625%. And so on.
-                    if (result < max) return result;
+                    if (result < max)
+                        return result;
                 }
             }
         }

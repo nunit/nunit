@@ -9,5 +9,6 @@ namespace NUnit.Framework
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class SetUpAttribute : NUnitAttribute
-    { }
+    {
+    }
 }

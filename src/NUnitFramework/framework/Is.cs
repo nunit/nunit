@@ -115,6 +115,15 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region WhiteSpace
+
+        /// <summary>
+        /// Returns a constraint that tests for white-space
+        /// </summary>
+        public static WhiteSpaceConstraint WhiteSpace => new();
+
+        #endregion
+
         #region Unique
 
         /// <summary>
@@ -124,11 +133,6 @@ namespace NUnit.Framework
         public static UniqueItemsConstraint Unique => new();
 
         #endregion
-
-        /// <summary>
-        /// Returns a constraint that tests whether an object graph is serializable in binary format.
-        /// </summary>
-        public static BinarySerializableConstraint BinarySerializable => new();
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.

@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.runsettings = .runsettings
-		appveyor.yml = appveyor.yml
 		build.cake = build.cake
 		build.cmd = build.cmd
 		build.ps1 = build.ps1
@@ -19,12 +18,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CHANGES.md = CHANGES.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		src\NUnitFramework\Directory.Build.props = src\NUnitFramework\Directory.Build.props
+		src\NUnitFramework\Directory.Packages.props = src\NUnitFramework\Directory.Packages.props
 		global.json = global.json
 		LICENSE.txt = LICENSE.txt
-		NOTICES.txt = NOTICES.txt
+		NOTICES.md = NOTICES.md
 		NuGet.config = NuGet.config
 		NUnit.sln.DotSettings = NUnit.sln.DotSettings
 		README.md = README.md
+		src\NUnitFramework\StyleCop.Analyzers.globalconfig = src\NUnitFramework\StyleCop.Analyzers.globalconfig
+		THIRD_PARTY_NOTICES.md = THIRD_PARTY_NOTICES.md
+		THIRD_PARTY_NOTICES_DEV.md = THIRD_PARTY_NOTICES_DEV.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunitlite", "src\NUnitFramework\nunitlite\nunitlite.csproj", "{A77D9156-0C6E-47EE-A03C-C458BFF4F5BE}"
@@ -61,6 +64,25 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy", "src\NUnitFramework\nunit.framework.legacy\nunit.framework.legacy.csproj", "{C09BC425-D524-4F75-9BEF-1724B93789B6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy.tests", "src\NUnitFramework\nunit.framework.legacy.tests\nunit.framework.legacy.tests.csproj", "{59DC5039-5FCD-4C0C-AC92-7F06610136D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{AA246190-ECE1-479E-AB8D-12F5FB60BE8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\NUnit.CI.yml = .github\workflows\NUnit.CI.yml
+		.github\workflows\NUnit.Myget.Publish.yml = .github\workflows\NUnit.Myget.Publish.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{08744334-2350-4885-B57E-347010A27ABB}"
+	ProjectSection(SolutionItems) = preProject
+		.config\dotnet-tools.json = .config\dotnet-tools.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "windows-tests", "src\NUnitFramework\windows-tests\windows-tests.csproj", "{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeScripts", "CakeScripts\CakeScripts.csproj", "{8A7B6926-0FDF-4AC7-9E78-BBAC01187414}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeScripts.Tests", "CakeScripts.Tests\CakeScripts.Tests.csproj", "{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +138,18 @@ Global
 		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A7B6926-0FDF-4AC7-9E78-BBAC01187414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A7B6926-0FDF-4AC7-9E78-BBAC01187414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A7B6926-0FDF-4AC7-9E78-BBAC01187414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A7B6926-0FDF-4AC7-9E78-BBAC01187414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +158,8 @@ Global
 		{863DEE19-B23F-4FA6-951A-A6304F91ED67} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
 		{CE68713C-2E19-43E8-9333-6ED817110D52} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
 		{8D43A220-7FE8-4214-BBB4-08568B88C7AA} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
+		{AA246190-ECE1-479E-AB8D-12F5FB60BE8B} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
+		{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E} = {AA246190-ECE1-479E-AB8D-12F5FB60BE8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E644AD96-B769-431B-BF0A-500AC32D2975}

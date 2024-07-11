@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         ///     <see langword="null"/> if the objects cannot be compared using the method.
         ///     Otherwise the result of the comparison is returned.
         /// </returns>
-        private delegate bool? EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
+        private delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
 
         /// <summary>
         /// List of comparers used to compare pairs of objects.
@@ -40,6 +40,7 @@ namespace NUnit.Framework.Constraints
             StringsComparer.Equal,
             StreamsComparer.Equal,
             CharsComparer.Equal,
+            EnumComparer.Equal,
             DirectoriesComparer.Equal,
             NumericsComparer.Equal,
             DateTimeOffsetsComparer.Equal,
@@ -50,7 +51,6 @@ namespace NUnit.Framework.Constraints
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,
             EqualsComparer.Equal,
-            PropertiesComparer.Equal,
         };
 
         /// <summary>
@@ -59,10 +59,21 @@ namespace NUnit.Framework.Constraints
         private bool _caseInsensitive;
 
         /// <summary>
+        /// If true, all string comparisons will ignore white space differences
+        /// </summary>
+        private bool _ignoreWhiteSpace;
+
+        /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
         private bool _compareAsCollection;
+
+        /// <summary>
+        /// If true, when a class does not implement <see cref="IEquatable{T}"/>
+        /// it will be compared property by property.
+        /// </summary>
+        private bool _compareProperties;
 
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
@@ -96,6 +107,26 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Gets and sets a flag indicating whether white space should
+        /// be ignored in determining equality.
+        /// </summary>
+        public bool IgnoreWhiteSpace
+        {
+            get => _ignoreWhiteSpace;
+            set => _ignoreWhiteSpace = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether an instance properties
+        /// should be compared when determining equality.
+        /// </summary>
+        public bool CompareProperties
+        {
+            get => _compareProperties;
+            set => _compareProperties = value;
+        }
+
+        /// <summary>
         /// Gets and sets a flag indicating that arrays should be
         /// compared as collections, without regard to their shape.
         /// </summary>
@@ -111,6 +142,11 @@ namespace NUnit.Framework.Constraints
         /// collections, in place of NUnit's own logic.
         /// </summary>
         public IList<EqualityAdapter> ExternalComparers => _externalComparers ??= new();
+
+        /// <summary>
+        /// Gets a value indicating whether there is any additional Failure Information.
+        /// </summary>
+        public bool HasFailurePoints => _failurePoints is not null && _failurePoints.Count > 0;
 
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
@@ -132,48 +168,77 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
         public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
-            return AreEqual(x, y, ref tolerance, new ComparisonState(true));
+            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
+
+            switch (result)
+            {
+                case EqualMethodResult.TypesNotSupported:
+                    throw new NotSupportedException($"No comparer found for instances of type '{GetType(x)}' and '{GetType(y)}'");
+                case EqualMethodResult.ToleranceNotSupported:
+                    throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
+                case EqualMethodResult.ComparedEqual:
+                    return true;
+                case EqualMethodResult.ComparisonPending:
+                case EqualMethodResult.ComparedNotEqual:
+                default:
+                    return false;
+            }
+
+            static string GetType(object? x) => x?.GetType().FullName ?? "null";
         }
 
-        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
+        internal EqualMethodResult AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            _failurePoints = new List<FailurePoint>();
-
             if (x is null && y is null)
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (x is null || y is null)
-                return false;
+                return EqualMethodResult.ComparedNotEqual;
 
             if (object.ReferenceEquals(x, y))
-                return true;
+                return EqualMethodResult.ComparedEqual;
 
             if (state.DidCompare(x, y))
-                return false;
+                return EqualMethodResult.ComparisonPending;
 
             EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
             if (externalComparer is not null)
-                return externalComparer.AreEqual(x, y, ref tolerance);
+            {
+                try
+                {
+                    return externalComparer.AreEqual(x, y, ref tolerance) ?
+                        EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                }
+                catch (InvalidOperationException)
+                {
+                    return EqualMethodResult.ToleranceNotSupported;
+                }
+            }
 
             foreach (EqualMethod equalMethod in Comparers)
             {
-                bool? result = equalMethod(x, y, ref tolerance, state, this);
-                if (result.HasValue)
-                    return result.Value;
+                EqualMethodResult result = equalMethod(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return result;
+            }
+
+            if (_compareProperties)
+            {
+                return PropertiesComparer.Equal(x, y, ref tolerance, state, this);
             }
 
             if (tolerance.HasVariance)
-            {
-                throw new InvalidOperationException("Tolerance is not supported for this comparison");
-            }
+                return EqualMethodResult.ToleranceNotSupported;
 
-            return x.Equals(y);
+            return x.Equals(y) ?
+                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
         }
 
         #endregion
@@ -208,6 +273,11 @@ namespace NUnit.Framework.Constraints
             /// The location of the failure
             /// </summary>
             public long Position;
+
+            /// <summary>
+            /// The name of the property.
+            /// </summary>
+            public string? PropertyName;
 
             /// <summary>
             /// The expected value

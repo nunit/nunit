@@ -19,7 +19,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
         public ThrowsConstraint(IConstraint baseConstraint)
-            : base(baseConstraint, string.Empty) { }
+            : base(baseConstraint, string.Empty)
+        {
+        }
 
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.

@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -18,13 +19,19 @@ namespace NUnit.Framework.Tests.Internal
             _writer = new TextMessageWriter();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _writer.Dispose();
+        }
+
         [Test]
         public void DisplayStringDifferences()
         {
             string s72 = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             string exp = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXY...";
 
-            _writer.DisplayStringDifferences(s72, "abcde", 5, false, true);
+            _writer.DisplayStringDifferences(s72, "abcde", 5, 5, false, false, true);
             string message = _writer.ToString();
             Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(exp) + NL +
@@ -37,12 +44,28 @@ namespace NUnit.Framework.Tests.Internal
         {
             string s72 = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-            _writer.DisplayStringDifferences(s72, "abcde", 5, false, false);
+            _writer.DisplayStringDifferences(s72, "abcde", 5, 5, false, false, false);
             string message = _writer.ToString();
             Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + Q(s72) + NL +
                 TextMessageWriter.Pfx_Actual + Q("abcde") + NL +
                 "  ----------------^" + NL));
+        }
+
+        [Test]
+        public void DisplayStringDifferences_IgnoreWhiteSpace()
+        {
+            string expected = "abc def";
+            string actual = "a b c d e g";
+
+            _writer.DisplayStringDifferences(expected, actual, 6, 10, false, true, false);
+            string message = _writer.ToString();
+            string expectedMessage =
+                TextMessageWriter.Pfx_Expected + Q(expected) + ", ignoring white-space" + NL +
+                "  -----------------^" + NL +
+                TextMessageWriter.Pfx_Actual + Q(actual) + NL +
+                "  ---------------------^" + NL;
+            Assert.That(message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -86,6 +109,42 @@ namespace NUnit.Framework.Tests.Internal
             expected = "  " + expected.Replace("\0", "\\0") + NL;
 
             Assert.That(message, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", null, mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenExpected_IsNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences(null, "2023-01-01 13:00:00", mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
+        }
+
+        [Test]
+        public void WriteMessageLine_DisplayDifference_WhenActual_IsNotNull()
+        {
+            string message;
+            var mockTolerance = new Tolerance("00:00:10");
+
+            _writer.DisplayDifferences("2023-01-01 13:00:00", "2023-01-01 13:00:12", mockTolerance);
+            message = _writer.ToString();
+
+            Assert.That(message, Does.Not.Contain("Off by"));
         }
 
         private string Q(string s)

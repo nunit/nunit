@@ -20,14 +20,20 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { new D1(), new B() };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )
+            new TestCaseData(new D2(), "<" + typeof(D2).FullName + ">")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
-        private class B { }
+        private class B
+        {
+        }
 
-        private class D1 : B { }
+        private class D1 : B
+        {
+        }
 
-        private class D2 : D1 { }
+        private class D2 : D1
+        {
+        }
     }
 }

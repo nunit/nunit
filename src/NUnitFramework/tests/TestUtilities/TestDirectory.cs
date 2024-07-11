@@ -36,7 +36,9 @@ namespace NUnit.Framework.Tests.TestUtilities
                     _testDir.Delete(true);
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>

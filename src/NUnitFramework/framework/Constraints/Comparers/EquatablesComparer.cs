@@ -10,25 +10,35 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class EquatablesComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
-                return null;
-            if (tolerance is not null && tolerance.HasVariance)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
             Type xType = x.GetType();
             Type yType = y.GetType();
 
             MethodInfo? equals = FirstImplementsIEquatableOfSecond(xType, yType);
             if (equals is not null)
-                return InvokeFirstIEquatableEqualsSecond(x, y, equals);
+            {
+                if (tolerance.HasVariance)
+                    return EqualMethodResult.ToleranceNotSupported;
+
+                return InvokeFirstIEquatableEqualsSecond(x, y, equals) ?
+                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            }
 
             equals = FirstImplementsIEquatableOfSecond(yType, xType);
             if (xType != yType && equals is not null)
-                return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+            {
+                if (tolerance.HasVariance)
+                    return EqualMethodResult.ToleranceNotSupported;
 
-            return null;
+                return InvokeFirstIEquatableEqualsSecond(y, x, equals) ?
+                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            }
+
+            return EqualMethodResult.TypesNotSupported;
         }
 
         private static MethodInfo? FirstImplementsIEquatableOfSecond(Type first, Type second)

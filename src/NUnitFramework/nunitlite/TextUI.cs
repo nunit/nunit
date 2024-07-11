@@ -451,7 +451,8 @@ namespace NUnitLite
                     var site = result.ResultState.Site;
                     if (suite.TestType == "Theory" || site == FailureSite.SetUp || site == FailureSite.TearDown)
                         DisplayTestResult(result);
-                    if (site == FailureSite.SetUp) return;
+                    if (site == FailureSite.SetUp)
+                        return;
                 }
 
                 foreach (ITestResult childResult in result.Children)

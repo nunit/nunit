@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Dispose of fixture if necessary
                 var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
-                if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
+                if (isInstancePerTestCase && parentFixture is IDisposableFixture && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,
@@ -144,12 +144,18 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     command = new FixturePerTestCaseCommand(command);
                 }
-                // If a timeout is specified, create a TimeoutCommand
+
+                // If a timeout is specified, create a TimeoutCommand or CancelAfterCommand
                 // Get Timeout set on this test or set at a higher level
                 int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
+                bool useCancellation = Test.Properties.TryGet(PropertyNames.UseCancellation, Context.UseCancellation);
 
                 if (timeout > 0)
-                    command = new TimeoutCommand(command, timeout, _debugger);
+                {
+                    command = useCancellation ?
+                        new CancelAfterCommand(command, timeout, _debugger) :
+                        new TimeoutCommand(command, timeout, _debugger);
+                }
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
                 foreach (var repeatableAttribute in method.RepeatTestAttributes)

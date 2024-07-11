@@ -358,7 +358,7 @@ namespace NUnit.Framework.Legacy.Tests
                 "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(MyEnum.C, actual));
-            Assert.That(ex?.Message,Does.Contain(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -518,9 +518,7 @@ namespace NUnit.Framework.Legacy.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(1));
-#pragma warning disable NUnit2007 // The actual value should not be a constant
                 Assert.That(1, Is.EqualTo(a));
-#pragma warning restore NUnit2007 // The actual value should not be a constant
             });
         }
 

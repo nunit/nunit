@@ -25,17 +25,17 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly object[] SuccessData = new object[]
         {
-            new[] { 1, 2, 3, 4, 5, 6 }
-            , new[] { 1, 2, 3, 4, 5 }
-            , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
-            , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
+            new[] { 1, 2, 3, 4, 5, 6 },
+            new[] { 1, 2, 3, 4, 5 },
+            new[] { 1, 2, 2, 2, 3, 4, 5, 3 },
+            new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
         private static readonly object[] FailureData = new object[]
         {
-            new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
-            , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
-            , new object[] { new[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
-            , new object[] { new[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
+            new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" },
+            new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" },
+            new object[] { new[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" },
+            new object[] { new[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
         };
 
         [Test, TestCaseSource(nameof(SuccessData))]

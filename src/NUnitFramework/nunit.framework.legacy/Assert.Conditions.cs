@@ -726,7 +726,7 @@ namespace NUnit.Framework.Legacy
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a decimal is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(decimal actual)
@@ -735,7 +735,7 @@ namespace NUnit.Framework.Legacy
         }
 
         /// <summary>
-        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a decimal is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -750,7 +750,7 @@ namespace NUnit.Framework.Legacy
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a double is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(double actual)
@@ -759,7 +759,7 @@ namespace NUnit.Framework.Legacy
         }
 
         /// <summary>
-        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a double is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
@@ -774,7 +774,7 @@ namespace NUnit.Framework.Legacy
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a float is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(float actual)
@@ -783,7 +783,7 @@ namespace NUnit.Framework.Legacy
         }
 
         /// <summary>
-        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
+        /// Asserts that a float is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>

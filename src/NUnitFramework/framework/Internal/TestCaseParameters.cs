@@ -26,19 +26,25 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
-        public TestCaseParameters() { }
+        public TestCaseParameters()
+        {
+        }
 
         /// <summary>
         /// Construct a non-runnable ParameterSet, specifying
         /// the provider exception that made it invalid.
         /// </summary>
-        public TestCaseParameters(Exception exception) : base(exception) { }
+        public TestCaseParameters(Exception exception) : base(exception)
+        {
+        }
 
         /// <summary>
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestCaseParameters(object?[] args) : base(args) { }
+        public TestCaseParameters(object?[] args) : base(args)
+        {
+        }
 
         /// <summary>
         /// Construct a ParameterSet from an object implementing ITestCaseData
@@ -74,5 +80,12 @@ namespace NUnit.Framework.Internal
         public bool HasExpectedResult { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Get or set the type arguments for a generic test method.
+        /// If not set explicitly, the generic types will be inferred
+        /// based on the test case parameters.
+        /// </summary>
+        public Type[]? TypeArgs { get; set; } = null;
     }
 }

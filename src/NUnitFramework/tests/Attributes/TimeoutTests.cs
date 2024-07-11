@@ -1,109 +1,24 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
-#if THREAD_ABORT
-#endif
-#if THREAD_ABORT
-#endif
 
 namespace NUnit.Framework.Tests.Attributes
 {
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        private const string FailureMessage = "The test has failed";
-        private const string IgnoreMessage = "The test was ignored";
-        private const string InconclusiveMessage = "The test was inconclusive";
-
-        public class TestAction
-        {
-            public string Name { get; }
-            public Action Action { get; }
-            public Action<ITestResult> Assertion { get; }
-
-            public TestAction(Action action, Action<ITestResult> assertion, string name)
-            {
-                Action = action;
-                Assertion = assertion;
-                Name = name;
-            }
-
-            public override string ToString()
-            {
-                return Name;
-            }
-        }
-
-        private static IEnumerable<TestAction> PossibleTestOutcomes
-        {
-            get
-            {
-                yield return new TestAction(Assert.Pass, AssertPassedResult, "Pass");
-                yield return new TestAction(() => throw new Exception(), AssertExceptionResult, "Exception");
-                yield return new TestAction(() => Assert.Fail(FailureMessage), AssertFailResult, "Fail");
-                yield return new TestAction(() => Assert.Ignore(IgnoreMessage), AssertIgnoreResult, "Ignore");
-                yield return new TestAction(() => Assert.Inconclusive(InconclusiveMessage), AssertInconclusiveResult, "Inconclusive");
-                yield return new TestAction(MultipleFail, AssertFailResult, "Multiple > Fail");
-                yield return new TestAction(AsynchronousMultipleFail, AssertFailResult, "Multiple > Async Fail");
-            }
-        }
-
-        private static void MultipleFail()
-        {
-            Assert.Multiple(() => Assert.Fail(FailureMessage));
-        }
-
-        private static void AsynchronousMultipleFail()
-        {
-            Assert.Multiple(async () =>
-            {
-                await System.Threading.Tasks.Task.Yield();
-                Assert.Fail(FailureMessage);
-            });
-        }
-
-        private static void AssertPassedResult(ITestResult result)
-        {
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-        }
-
-        private static void AssertExceptionResult(ITestResult result)
-        {
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(ResultState.Error.Label));
-        }
-
-        private static void AssertFailResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Failed, FailureMessage);
-        }
-
-        private static void AssertIgnoreResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Skipped, IgnoreMessage);
-        }
-
-        private static void AssertInconclusiveResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Inconclusive, InconclusiveMessage);
-        }
-
-        private static void AssertOutcome(ITestResult result, TestStatus status, string message)
-        {
-            Assert.That(result.ResultState.Status, Is.EqualTo(status));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.Message, Is.EqualTo(message));
-        }
+#if !NETFRAMEWORK
+#pragma warning disable CS0618 // Type or member is obsolete
+#endif
 
         private sealed class SampleTests
         {
@@ -167,7 +82,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [Test]
         public void TestThatCompletesWithinTimeoutPeriodHasItsOriginalResultPropagated(
-            [ValueSource(nameof(PossibleTestOutcomes))] TestAction test,
+            [ValueSource(typeof(TestAction), nameof(TestAction.PossibleTestOutcomes))] TestAction test,
             [Values] bool isDebuggerAttached)
         {
             // given
@@ -185,7 +100,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        [TestCaseSource(nameof(PossibleTestOutcomes))]
+        [TestCaseSource(typeof(TestAction), nameof(TestAction.PossibleTestOutcomes))]
         public void TestThatTimesOutIsRanToCompletionAndItsResultIsPropagatedWhenDebuggerIsAttached(TestAction test)
         {
             // given
@@ -233,20 +148,64 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
+#endif
 
         [Test]
         public void TestTimesOutAndTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixture();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod? testMethod = (TestMethod?)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find(nameof(TimeoutFixture.VeryLongTestWith50msTimeout), suite, false);
             Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
+
+            Thread.Sleep(1000);
+            Assert.That(result.Message, Does.Contain("50ms"), "After 1s");
+
+            Thread.Sleep(2000);
+            Assert.That(result.Message, Does.Contain("50ms"), "After another 2s");
+
+            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
+            // Otherwise it will be run eventually ... or not at all if the test is really hanging
+#if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
+#endif
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTest()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output"));
+        }
+
+        [Test]
+        public void OutputIsCapturedOnNonTimedoutTest()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupTestAndTeardownOutputFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output"));
+            Assert.That(testMethod.Output, Does.Contain("teardown"));
+        }
+
+        [Test]
+        public void OutputIsCapturedOnTimedoutTestAfterTimeout()
+        {
+            var suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutWithSetupAndOutputAfterTimeoutFixture));
+            var testMethod = suiteResult.Children.First();
+
+            Assert.That(testMethod.Output, Does.Contain("setup"));
+            Assert.That(testMethod.Output, Does.Contain("method output before pause"));
+            Assert.That(testMethod.Output, Does.Not.Contain("method output after pause"));
         }
 
         [Test]
@@ -254,14 +213,18 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInSetUp();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod? testMethod = (TestMethod?)TestFinder.Find("Test1", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find(nameof(TimeoutFixtureWithTimeoutInSetUp.Test1), suite, false);
             Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
+
+            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
+            // Otherwise it will be run eventually ... or not at all if the test is really hanging
+#if THREAD_ABORT
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
+#endif
         }
 
         [Test]
@@ -269,14 +232,18 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod? testMethod = (TestMethod?)TestFinder.Find("Test1", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find(nameof(TimeoutFixtureWithTimeoutInTearDown.Test1), suite, false);
             Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
-            Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
+
+            // Only if we can abort the Test, we can ensure the Teardown is run immediately,
+            // Otherwise it will be run eventually ... or not at all if the test is really hanging
+#if THREAD_ABORT
+            Assert.That(fixture.TearDownWasRun, "Base TearDown should have been run but was not");
+#endif
         }
 
         [Test]
@@ -287,35 +254,11 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            ITestResult? result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
+            ITestResult? result = TestFinder.Find(nameof(TimeoutFixtureWithTimeoutOnFixture.Test2WithLongDuration), suiteResult, false);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
-        }
-
-        [Test]
-        public void TimeoutCausesOtherwisePassingTestToFailWithoutDebuggerAttached()
-        {
-            // given
-            var testThatTimesOutButOtherwisePasses =
-                TestBuilder.MakeTestCase(typeof(SampleTests), nameof(SampleTests.TestThatTimesOut));
-
-            var detachedDebugger = new StubDebugger { IsAttached = false };
-
-            var sampleTests = new SampleTests(() => { }, detachedDebugger);
-
-            // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, sampleTests, detachedDebugger);
-
-            // then
-            Assert.That(sampleTests.TestRanToCompletion, Is.False, "Test ran to completion");
-
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
-            Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
         }
 
         [Explicit("Tests that demonstrate Timeout failure")]
@@ -324,19 +267,22 @@ namespace NUnit.Framework.Tests.Attributes
             [Test, Timeout(50)]
             public void TestTimesOut()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             [Test, Timeout(50), RequiresThread]
             public void TestTimesOutUsingRequiresThread()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             [Test, Timeout(50), Apartment(ApartmentState.STA)]
             public void TestTimesOutInSTA()
             {
-                while (true) ;
+                while (true)
+                    ;
             }
 
             // TODO: The test in TimeoutTestCaseFixture work as expected when run
@@ -347,7 +293,7 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
                 TestSuite suite = TestBuilder.MakeFixture(fixture);
-                ParameterizedMethodSuite? methodSuite = (ParameterizedMethodSuite?)TestFinder.Find("TestTimeOutTestCase", suite, false);
+                ParameterizedMethodSuite? methodSuite = (ParameterizedMethodSuite?)TestFinder.Find(nameof(TimeoutTestCaseFixture.TestTimeOutTestCase), suite, false);
                 Assert.That(methodSuite, Is.Not.Null);
                 ITestResult result = TestBuilder.RunTest(methodSuite, fixture);
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), "Suite result");
@@ -365,12 +311,9 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Is.EqualTo("Test exceeded Timeout value of 500ms"));
         }
-#endif
 
-#if !THREAD_ABORT
         [Test]
         public void TimeoutCausesOtherwisePassingTestToFailWithoutDebuggerAttached()
         {
@@ -389,14 +332,51 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
         }
-#endif
 
         private class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
+        }
+
+        [TestFixture]
+        internal sealed class Issue4723
+        {
+            [Test]
+#if NETFRAMEWORK
+            [Timeout(2_000)] // Ok status will be Passed
+#else
+#pragma warning disable CS0618
+            [Timeout(2_000)] // Ok status will be Passed
+#pragma warning restore CS0618
+#endif
+            public async Task Test_Timeout()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [Test]
+            [CancelAfter(2_000)] // Ok status will be Passed
+            public async Task Test_CancelAfter(CancellationToken ct)
+            {
+                await Task.Delay(1_000, ct);
+                Assert.Pass();
+            }
+
+            [Test] // Ok status will be Passed
+            public async Task Test()
+            {
+                await Task.Delay(1_000);
+                Assert.Pass();
+            }
+
+            [TearDown]
+            public void Cleanup()
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome.Status, Is.EqualTo(TestStatus.Passed));
+            }
         }
     }
 }

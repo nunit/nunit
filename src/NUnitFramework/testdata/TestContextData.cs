@@ -9,7 +9,10 @@ namespace NUnit.TestData.TestContextData
     [TestFixture]
     public class TestStateRecordingFixture
     {
+        // TODO: Remove suppression when NUnit.Analyzers are enabled.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public string StateList;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public bool TestFailure;
         public bool TestInconclusive;
@@ -47,7 +50,7 @@ namespace NUnit.TestData.TestContextData
 
     public class AssertionResultFixture
     {
-        public IEnumerable<AssertionResult> Assertions;
+        public IEnumerable<AssertionResult>? Assertions;
 
         public void ThreeAsserts_TwoFailed()
         {
@@ -78,8 +81,8 @@ namespace NUnit.TestData.TestContextData
     public class TestTestContextInTearDown
     {
         public int FailCount { get; private set; }
-        public string Message { get; private set; }
-        public string StackTrace { get; private set; }
+        public string? Message { get; private set; }
+        public string? StackTrace { get; private set; }
 
         [Test]
         public void FailingTest()
@@ -104,8 +107,8 @@ namespace NUnit.TestData.TestContextData
         public int WarningCount { get; private set; }
         public int SkipCount { get; private set; }
         public int InconclusiveCount { get; private set; }
-        public string Message { get; private set; }
-        public string StackTrace { get; private set; }
+        public string? Message { get; private set; }
+        public string? StackTrace { get; private set; }
 
         [Test]
         public void FailingTest()

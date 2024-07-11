@@ -11,7 +11,9 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="SubPathConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected path</param>
-        public SubPathConstraint(string expected) : base(expected) { }
+        public SubPathConstraint(string expected) : base(expected)
+        {
+        }
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -24,7 +26,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        protected override bool Matches(string actual)
+        protected override bool Matches(string? actual)
         {
             return actual is not null && IsSubPath(Canonicalize(expected), Canonicalize(actual));
         }

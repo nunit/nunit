@@ -7,7 +7,7 @@ namespace NUnit.Framework.Constraints
     /// constraint being constructed at a point where the last operator
     /// may either terminate the expression or may have additional
     /// qualifying constraints added to it.
-    /// 
+    ///
     /// It is used, for example, for a Property element or for
     /// an Exception element, either of which may be optionally
     /// followed by constraints that apply to the property or
@@ -18,14 +18,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Create a new instance of ResolvableConstraintExpression
         /// </summary>
-        public ResolvableConstraintExpression() { }
+        public ResolvableConstraintExpression()
+        {
+        }
 
         /// <summary>
         /// Create a new instance of ResolvableConstraintExpression,
         /// passing in a pre-populated ConstraintBuilder.
         /// </summary>
         public ResolvableConstraintExpression(ConstraintBuilder builder)
-            : base(builder) { }
+            : base(builder)
+        {
+        }
 
         /// <summary>
         /// Appends an And Operator to the expression

@@ -26,7 +26,9 @@ namespace NUnit.Framework.Internal
         private sealed class NoMessagePumpStrategy : MessagePumpStrategy
         {
             public static readonly NoMessagePumpStrategy Instance = new();
-            private NoMessagePumpStrategy() { }
+            private NoMessagePumpStrategy()
+            {
+            }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
@@ -49,7 +51,8 @@ namespace NUnit.Framework.Internal
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
-                if (!IsApplicable(SynchronizationContext.Current)) return null;
+                if (!IsApplicable(SynchronizationContext.Current))
+                    return null;
 
                 if (_instance is null)
                 {
@@ -81,7 +84,8 @@ namespace NUnit.Framework.Internal
                 if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a WindowsFormsSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
@@ -106,34 +110,44 @@ namespace NUnit.Framework.Internal
         {
             private static WpfMessagePumpStrategy? _instance;
 
-            private readonly Action _dispatcherRun;
-            private readonly Action _dispatcherExitAllFrames;
+            private readonly MethodInfo _dispatcherPushFrame;
+            private readonly MethodInfo _dispatcherFrameSetContinueProperty;
+            private readonly Type _dispatcherFrameType;
 
-            private WpfMessagePumpStrategy(Action dispatcherRun, Action dispatcherExitAllFrames)
+            private WpfMessagePumpStrategy(
+                MethodInfo dispatcherPushFrame,
+                MethodInfo dispatcherFrameSetContinueProperty,
+                Type dispatcherFrameType)
             {
-                _dispatcherRun = dispatcherRun;
-                _dispatcherExitAllFrames = dispatcherExitAllFrames;
+                _dispatcherPushFrame = dispatcherPushFrame;
+                _dispatcherFrameSetContinueProperty = dispatcherFrameSetContinueProperty;
+                _dispatcherFrameType = dispatcherFrameType;
             }
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
                 SynchronizationContext? context = SynchronizationContext.Current;
 
-                if (!IsApplicable(context)) return null;
+                if (!IsApplicable(context))
+                    return null;
 
                 if (_instance is null)
                 {
-                    var dispatcherType = context.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
+                    var assemblyType = context.GetType().Assembly;
+                    var dispatcherType = assemblyType.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
+                    var dispatcherFrameType = assemblyType.GetType("System.Windows.Threading.DispatcherFrame", throwOnError: true)!;
 
-                    var dispatcherRun = (Action)dispatcherType
-                        .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                        .CreateDelegate(typeof(Action));
+                    var dispatcherPushFrame = dispatcherType
+                        .GetMethod("PushFrame", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, new[] { dispatcherFrameType }, null)!;
 
-                    var dispatcherExitAllFrames = (Action)dispatcherType
-                        .GetMethod("ExitAllFrames", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
-                        .CreateDelegate(typeof(Action));
+                    var dispatcherSetFrameContinue = dispatcherFrameType
+                        .GetProperty("Continue")?
+                        .GetSetMethod()!;
 
-                    _instance = new WpfMessagePumpStrategy(dispatcherRun, dispatcherExitAllFrames);
+                    _instance = new WpfMessagePumpStrategy(
+                        dispatcherPushFrame,
+                        dispatcherSetFrameContinue,
+                        dispatcherFrameType);
                 }
 
                 return _instance;
@@ -151,31 +165,40 @@ namespace NUnit.Framework.Internal
                 if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a DispatcherSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
-                // Wait for a post rather than scheduling the continuation now. If there has been a race condition
-                // and it completed after the IsCompleted check, it will wait until the application runs *before*
-                // shutting it down. Otherwise Dispatcher.ExitAllFrames is a no-op and we would then proceed to do
-                // Dispatcher.Run and never return.
+                // We are going to start a new frame which ensures the dispatcher is running our continuation.
+                // As soon as the continuation is finished we set the frame to not continue - this will force the call
+                // to PushFrame to return
+                // If there was already a frame running before it will still run after we return
+                // If the continuation was run and finished by the previous frame our call to PushFrame is more or less a no-op
+                var frame = Activator.CreateInstance(_dispatcherFrameType, true);
+
                 context.Post(
-                    _ => ContinueOnSameSynchronizationContext(awaiter, _dispatcherExitAllFrames),
+                    _ => ContinueOnSameSynchronizationContext(
+                        awaiter,
+                        () => _dispatcherFrameSetContinueProperty.Invoke(frame, new object[] { false })),
                     state: awaiter);
 
-                _dispatcherRun.Invoke();
+                _dispatcherPushFrame.Invoke(null, new[] { frame });
             }
         }
 
         private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
         {
             public static readonly SingleThreadedTestMessagePumpStrategy Instance = new();
-            private SingleThreadedTestMessagePumpStrategy() { }
+            private SingleThreadedTestMessagePumpStrategy()
+            {
+            }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext
                     ?? throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
-                if (awaiter.IsCompleted) return;
+                if (awaiter.IsCompleted)
+                    return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
@@ -190,8 +213,10 @@ namespace NUnit.Framework.Internal
 
         private static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
         {
-            if (awaiter is null) throw new ArgumentNullException(nameof(awaiter));
-            if (continuation is null) throw new ArgumentNullException(nameof(continuation));
+            if (awaiter is null)
+                throw new ArgumentNullException(nameof(awaiter));
+            if (continuation is null)
+                throw new ArgumentNullException(nameof(continuation));
 
             var context = SynchronizationContext.Current;
 

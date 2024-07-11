@@ -78,7 +78,8 @@ namespace NUnit.Framework
                     // and we want to look at restructuring the API in the future.
                     catch (Exception ex)
                     {
-                        if (context.CurrentResult is null) context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        if (context.CurrentResult is null)
+                            context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
                     }
 

@@ -15,22 +15,24 @@ namespace NUnit.Framework
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         protected ResultStateException(string message) : base(message)
-        { }
+        {
+        }
 
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public ResultStateException(string message, Exception? inner) :
-            base(message, inner)
-        { }
+        public ResultStateException(string message, Exception? inner) : base(message, inner)
+        {
+        }
 
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected ResultStateException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the ResultState provided by this exception

@@ -23,13 +23,13 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         {
-            new TestDelegate( TestDelegates.ThrowsArgumentException )
+            new TestDelegate(TestDelegates.ThrowsArgumentException)
         };
         private static readonly object[] FailureData =
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Environment.NewLine )
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNullReferenceException), "<System.NullReferenceException: my message" + Environment.NewLine),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNothing), "no exception thrown"),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsSystemException), "<System.Exception: my message" + Environment.NewLine)
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }
@@ -50,14 +50,14 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
         {
-            new TestDelegate( TestDelegates.ThrowsBaseException ),
-            new TestDelegate( TestDelegates.ThrowsDerivedException )
+            new TestDelegate(TestDelegates.ThrowsBaseException),
+            new TestDelegate(TestDelegates.ThrowsDerivedException)
         };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), "<System.ArgumentException: myMessage" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" )
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsArgumentException), "<System.ArgumentException: myMessage"),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNothing), "no exception thrown"),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNullReferenceException), "<System.NullReferenceException: my message")
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }
@@ -79,13 +79,13 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         {
-            new TestDelegate( TestDelegates.ThrowsArgumentException )
+            new TestDelegate(TestDelegates.ThrowsArgumentException)
         };
         private static readonly object[] FailureData =
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsSystemException ), "<System.Exception: my message" + Environment.NewLine )
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNullReferenceException), "<System.NullReferenceException: my message" + Environment.NewLine),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNothing), "no exception thrown"),
+            new TestCaseData(new TestDelegate(TestDelegates.ThrowsSystemException), "<System.Exception: my message" + Environment.NewLine)
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }

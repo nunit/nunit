@@ -15,5 +15,11 @@ namespace NUnit.Framework.Internal.Extensions
                 return (TReturn?)AsyncToSyncAdapter.Await(() => m.Invoke(null, methodArgs));
             return (TReturn?)m.Invoke(null, methodArgs);
         }
+
+#if NETFRAMEWORK
+        public static T CreateDelegate<T>(this MethodInfo m, object target)
+            where T : System.Delegate
+            => (T)m.CreateDelegate(typeof(T), target);
+#endif
     }
 }

@@ -24,9 +24,11 @@ namespace NUnit.Framework.Internal
     /// singleton settings in the environment that affect tests
     /// or which might be changed by the user tests.
     /// </summary>
-    public class TestExecutionContext : LongLivedMarshalByRefObject
+    public class TestExecutionContext
 #if NETFRAMEWORK
-        , ILogicalThreadAffinative
+        : LongLivedMarshalByRefObject, ILogicalThreadAffinative
+#else
+        : LongLivedMarshalByRefObject
 #endif
     {
         // NOTE: Be very careful when modifying this class. It uses
@@ -106,6 +108,8 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
+            UseCancellation = other.UseCancellation;
+            CancellationToken = other.CancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
             _sandboxedThreadState = other._sandboxedThreadState;
@@ -310,9 +314,24 @@ namespace NUnit.Framework.Internal
         internal int MultipleAssertLevel { get; set; }
 
         /// <summary>
+        /// Gets or sets wether asserts in multiple assert block should throw immediately under debugger.
+        /// </summary>
+        internal bool DisableMultipleAssertsUnderDebugger { get; set; }
+
+        /// <summary>
         /// Gets or sets the test case timeout value
         /// </summary>
         public int TestCaseTimeout { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the test case should use a <see cref="CancellationToken"/>.
+        /// </summary>
+        public bool UseCancellation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken { get; internal set; } = CancellationToken.None;
 
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
@@ -516,7 +535,9 @@ namespace NUnit.Framework.Internal
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 
-            private void AdhocTestMethod() { }
+            private void AdhocTestMethod()
+            {
+            }
         }
 
         #endregion

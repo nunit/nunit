@@ -15,6 +15,8 @@ namespace NUnit.Framework
         /// Construct a LevelOfParallelismAttribute.
         /// </summary>
         /// <param name="level">The number of worker threads to be created by the framework.</param>
-        public LevelOfParallelismAttribute(int level) : base(level) { }
+        public LevelOfParallelismAttribute(int level) : base(level)
+        {
+        }
     }
 }

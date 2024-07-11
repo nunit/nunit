@@ -90,11 +90,6 @@ namespace NUnit.Framework.Internal
             TearDownMethods = Array.Empty<IMethodInfo>();
         }
 
-        internal void SetNextId()
-        {
-            Id = GetNextId();
-        }
-
         private static string GetNextId()
         {
             return IdPrefix + unchecked(_nextID++);
@@ -364,7 +359,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get custom attributes applied to a test
         /// </summary>
-        public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
+        public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit)
+            where TAttr : class
         {
             if (Method is not null)
                 return Method.GetCustomAttributes<TAttr>(inherit);

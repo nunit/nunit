@@ -106,6 +106,11 @@ namespace NUnit.Framework.Internal
         public const string Timeout = "Timeout";
 
         /// <summary>
+        /// The timeout value for the test
+        /// </summary>
+        public const string UseCancellation = "UseCancellation";
+
+        /// <summary>
         /// The test will be ignored until the given date
         /// </summary>
         public const string IgnoreUntilDate = "IgnoreUntilDate";

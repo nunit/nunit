@@ -22,7 +22,9 @@ namespace NUnitLite
         /// This constructor must be called before Console.Out is
         /// redirected in order to work correctly under TeamCity.
         /// </remarks>
-        public TeamCityEventListener() : this(Console.Out) { }
+        public TeamCityEventListener() : this(Console.Out)
+        {
+        }
 
         /// <summary>
         /// Construct a TeamCityEventListener specifying a TextWriter. Used for testing.
@@ -85,13 +87,17 @@ namespace NUnitLite
         /// Called when a test produces output for immediate display
         /// </summary>
         /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output) { }
+        public void TestOutput(TestOutput output)
+        {
+        }
 
         /// <summary>
         /// Called when a test produces a message to be sent to listeners
         /// </summary>
         /// <param name="message">A TestMessage object containing the text to send</param>
-        public void SendMessage(TestMessage message) { }
+        public void SendMessage(TestMessage message)
+        {
+        }
 
         #region Helper Methods
 

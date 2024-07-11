@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests
         [OneTimeSetUp]
         public void CreateTempFile()
         {
-            _tempFilePath = Path.Combine(TestContext.CurrentContext.WorkDirectory, TempFileName);
+            _tempFilePath = Path.Combine(_workDirectory, TempFileName);
             File.Create(_tempFilePath).Dispose();
         }
 
@@ -245,6 +245,7 @@ namespace NUnit.Framework.Tests
             TestBuilder.RunTestCase(fixture, testName);
             var assertions = fixture.Assertions;
 
+            Assert.That(assertions, Is.Not.Null);
             Assert.That(assertions.Select((o) => o.Status),
                 Is.EqualTo(expectedStatus));
             Assert.That(assertions.Select((o) => o.Message),
@@ -371,17 +372,41 @@ namespace NUnit.Framework.Tests
             Assert.That(() => TestContext.AddTestAttachment(_tempFilePath, "Description"), Throws.Nothing);
         }
 
+        // TODO: Update when https://github.com/nunit/nunit.analyzers/issues/631 is fixed and released.
         [TestCase(null)]
         [TestCase("bad|path.png", IncludePlatform = "Win")]
-        public void InvalidFilePathsThrowsArgumentException(string filePath)
+        public void InvalidFilePathsThrowsArgumentException(string? filePath)
         {
-            Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
+            Assert.That(() => TestContext.AddTestAttachment(filePath!), Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
         public void NoneExistentFileThrowsFileNotFoundException()
         {
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
+        }
+
+        [TestCase(IncludePlatform = "Net")]
+        public void LogFilePathDoesNotThrow()
+        {
+            string longPathPrefix = string.Empty;
+
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                longPathPrefix = $@"\\?\";
+
+            /* Absolute file path length greater than 260 are considered long paths for .NET Framework
+             * Creating 261 length file path */
+            string tempLongFilePath = Path.Combine(_workDirectory, new string('A', (260 - _workDirectory.Length) - 4) + ".tmp");
+            try
+            {
+                File.Create($"{longPathPrefix}{tempLongFilePath}").Dispose();
+
+                Assert.That(() => TestContext.AddTestAttachment(tempLongFilePath), Throws.Nothing);
+            }
+            finally
+            {
+                File.Delete($"{longPathPrefix}{tempLongFilePath}");
+            }
         }
 
         #endregion

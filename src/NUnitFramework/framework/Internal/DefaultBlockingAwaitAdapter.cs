@@ -15,7 +15,8 @@ namespace NUnit.Framework.Internal
 
         public sealed override void BlockUntilCompleted()
         {
-            if (IsCompleted) return;
+            if (IsCompleted)
+                return;
 
             var completedEvent = _completedEvent; // Volatile read (would be Volatile.Read if not for net40 support)
             if (completedEvent is null)

@@ -127,6 +127,28 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void FailedSetUpStacktracePropogatesToTestResult()
+        {
+            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+            fixture.ThrowInBaseSetUp = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+            Assert.That(result.StackTrace, Is.Not.Null);
+            Assert.That(result.StackTrace, Does.Contain($"{nameof(SetUpAndTearDownFixture)}.{nameof(SetUpAndTearDownFixture.Init)}"));
+
+            Assert.That(result.HasChildren, Is.True);
+            foreach (var childResult in result.Children)
+            {
+                Assert.That(childResult.ResultState.Site, Is.EqualTo(FailureSite.Parent));
+                Assert.That(childResult.StackTrace, Is.EqualTo(result.StackTrace));
+            }
+
+            Assert.That(fixture.SetUpCount, Is.EqualTo(1));
+            Assert.That(fixture.TearDownCount, Is.EqualTo(1));
+        }
+
+        [Test]
         public void StaticBaseSetUpCalledFirstAndTearDownCalledLast()
         {
             StaticSetUpAndTearDownFixture.SetUpCount = 0;
@@ -349,6 +371,40 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = new DisposableFixtureWithTestCases();
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AsyncDisposeCalledOnceWhenFixtureImplementsIAsyncDisposable()
+        {
+            var fixture = new AsyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+
+            var expected = new[] { nameof(AsyncDisposableFixture.OneTimeSetUp), nameof(AsyncDisposableFixture.OneTimeTearDown), nameof(AsyncDisposableFixture.DisposeAsync) };
+
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void AsyncDisposeCalledOnceWhenFixtureImplementsIAsyncDisposableThroughInheritance()
+        {
+            var fixture = new InheritedAsyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+
+            var expected = new[] { nameof(AsyncDisposableFixture.OneTimeSetUp), nameof(AsyncDisposableFixture.OneTimeTearDown), nameof(AsyncDisposableFixture.DisposeAsync) };
+
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void AsyncDisposePrioritizedWhenSyncAndAsyncDispose()
+        {
+            var fixture = new AsyncAndSyncDisposableFixture();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.That(fixture.DisposeCalled, Is.EqualTo(1));
+            Assert.That(fixture.Actions, Does.Contain(nameof(IAsyncDisposable.DisposeAsync)));
+            Assert.That(fixture.Actions, Does.Not.Contain(nameof(IDisposable.Dispose)));
         }
     }
 

@@ -9,10 +9,10 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class StructuralComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
             if (x is IStructuralEquatable xEquatable && y is IStructuralEquatable yEquatable)
             {
@@ -28,10 +28,11 @@ namespace NUnit.Framework.Constraints.Comparers
                 // Keep all the refs up to date
                 tolerance = equalityComparison.Tolerance;
 
-                return xResult || yResult;
+                return xResult || yResult ?
+                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
             }
 
-            return null;
+            return EqualMethodResult.TypesNotSupported;
         }
 
         private sealed class NUnitEqualityComparison : IEqualityComparer

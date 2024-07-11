@@ -143,23 +143,43 @@ namespace NUnit.Framework.Tests.Internal
 
         private class A
         {
-            public void InstanceMethod() { }
+            public void InstanceMethod()
+            {
+            }
 
-            public void HasGenericOverloads() { }
-            public void HasGenericOverloads<T>() { }
-            public void HasGenericOverloads<T1, T2>() { }
+            public void HasGenericOverloads()
+            {
+            }
+            public void HasGenericOverloads<T>()
+            {
+            }
+            public void HasGenericOverloads<T1, T2>()
+            {
+            }
 
-            public void GenericMethod<T>() { }
+            public void GenericMethod<T>()
+            {
+            }
 
-            public static void StaticMethod() { }
+            public static void StaticMethod()
+            {
+            }
 
-            internal void InternalMethod() { }
+            internal void InternalMethod()
+            {
+            }
 
-            public void OverloadedMethod(object arg) { }
+            public void OverloadedMethod(object arg)
+            {
+            }
 
-            public void OverloadedMethod(int arg) { }
+            public void OverloadedMethod(int arg)
+            {
+            }
 
-            public void HasOptionalParameter(int a, int b = 42) { }
+            public void HasOptionalParameter(int a, int b = 42)
+            {
+            }
 
             public int InstanceProperty { get; set; }
 

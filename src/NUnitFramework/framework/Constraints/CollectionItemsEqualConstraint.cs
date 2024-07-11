@@ -21,13 +21,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an empty CollectionConstraint
         /// </summary>
-        protected CollectionItemsEqualConstraint() { }
+        protected CollectionItemsEqualConstraint()
+        {
+        }
 
         /// <summary>
         /// Construct a CollectionConstraint
         /// </summary>
         /// <param name="arg"></param>
-        protected CollectionItemsEqualConstraint(object? arg) : base(arg) { }
+        protected CollectionItemsEqualConstraint(object? arg) : base(arg)
+        {
+        }
 
         #region Protected Properties
 
@@ -35,6 +39,11 @@ namespace NUnit.Framework.Constraints
         /// Get a flag indicating whether the user requested us to ignore case.
         /// </summary>
         protected bool IgnoringCase => _comparer.IgnoreCase;
+
+        /// <summary>
+        /// Get a flag indicating whether the user requested us to ignore white space.
+        /// </summary>
+        protected bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
@@ -53,6 +62,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreCase = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Flag the constraint to ignore white space and return self.
+        /// </summary>
+        public CollectionItemsEqualConstraint IgnoreWhiteSpace
+        {
+            get
+            {
+                _comparer.IgnoreWhiteSpace = true;
                 return this;
             }
         }
@@ -120,6 +141,19 @@ namespace NUnit.Framework.Constraints
         internal CollectionItemsEqualConstraint Using(EqualityAdapter adapter)
         {
             _comparer.ExternalComparers.Add(adapter);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public CollectionItemsEqualConstraint UsingPropertiesComparer()
+        {
+            _comparer.CompareProperties = true;
             return this;
         }
 

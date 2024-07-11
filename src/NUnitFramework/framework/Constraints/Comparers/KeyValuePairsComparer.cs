@@ -10,7 +10,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class KeyValuePairsComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             // IDictionary<,> will eventually try to compare its key value pairs when using CollectionTally
             Type xType = x.GetType();
@@ -22,22 +22,24 @@ namespace NUnit.Framework.Constraints.Comparers
             if (xGenericTypeDefinition != typeof(KeyValuePair<,>) ||
                 yGenericTypeDefinition != typeof(KeyValuePair<,>))
             {
-                return null;
+                return EqualMethodResult.TypesNotSupported;
             }
+
+            ComparisonState comparisonState = state.PushComparison(x, y);
 
             var keyTolerance = Tolerance.Exact;
             object? xKey = xType.GetProperty("Key")!.GetValue(x, null);
             object? yKey = yType.GetProperty("Key")!.GetValue(y, null);
-
-            if (!equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.PushComparison(x, y)))
+            EqualMethodResult result = equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, comparisonState);
+            if (result == EqualMethodResult.ComparedEqual)
             {
-                return false;
+                object? xValue = xType.GetProperty("Value")!.GetValue(x, null);
+                object? yValue = yType.GetProperty("Value")!.GetValue(y, null);
+
+                result = equalityComparer.AreEqual(xValue, yValue, ref tolerance, comparisonState);
             }
 
-            object? xValue = xType.GetProperty("Value")!.GetValue(x, null);
-            object? yValue = yType.GetProperty("Value")!.GetValue(y, null);
-
-            return equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.PushComparison(x, y));
+            return result;
         }
     }
 }

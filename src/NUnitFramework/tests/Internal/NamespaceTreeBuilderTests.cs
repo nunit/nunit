@@ -179,15 +179,21 @@ namespace NUnit.Framework.Tests.Internal
 
 namespace One
 {
-    public class Fixture1 { }
+    public class Fixture1
+    {
+    }
 }
 
 namespace Two
 {
-    public class Fixture2 { }
+    public class Fixture2
+    {
+    }
 }
 
 namespace Three
 {
-    public class Fixture3 { }
+    public class Fixture3
+    {
+    }
 }

@@ -91,9 +91,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             catch (Exception ex)
             {
-                if (ex is System.Reflection.TargetInvocationException)
-                    ex = ex.InnerException!;
-                var fixture = new TestFixture(typeInfo, ex);
+                var fixture = new TestFixture(typeInfo, ex.Unwrap());
 
                 return fixture;
             }

@@ -73,6 +73,11 @@ namespace NUnit.Framework
         /// Sets the name of the test case
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames"/>for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
         public TestCaseData SetName(string? name)
         {
             TestName = name;
@@ -82,6 +87,13 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
         public TestCaseData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;

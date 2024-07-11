@@ -206,9 +206,9 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected and actual are both <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectList> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  String lengths are both 1. Strings differ at index 0." + Environment.NewLine +
-                "  Expected: \"z\"" + Environment.NewLine +
-                "  But was:  \"a\"" + Environment.NewLine +
-                "  -----------^" + Environment.NewLine;
+                "  Expected: < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"a\" >" + Environment.NewLine +
+                "  First non-matching item at index [2]: \"z\"" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Legacy.Tests
         {
             int[] array = new int[] { 1, 2, 3 };
 
-            CollectionAssert.AreEqual(array, CountToThree());
+            CollectionAssert.AreEqual(array, CollectionAssertTest.CountToThree());
         }
 
         [Test]
@@ -277,7 +277,7 @@ namespace NUnit.Framework.Legacy.Tests
             CollectionAssert.AreEqual(set1, set2);
         }
 
-        private IEnumerable CountToThree()
+        private static IEnumerable CountToThree()
         {
             yield return 1;
             yield return 2;
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Legacy.Tests
             int[] array = new int[] { 1, 3, 5 };
 
             AssertionException? ex = Assert.Throws<AssertionException>(
-                delegate { CollectionAssert.AreEqual(array, CountToThree()); });
+                delegate { CollectionAssert.AreEqual(array, CollectionAssertTest.CountToThree()); });
 
             Assert.That(ex?.Message, Does.Contain("Values differ at index [1]").And.
                                                    Contains("Expected: 3").And.
@@ -782,12 +782,12 @@ namespace NUnit.Framework.Legacy.Tests
         {
             var a = new Dictionary<string, (string, Dictionary<string, string>)>()
             {
-                { "key", ("name", new Dictionary<string, string>())}
+                { "key", ("name", new Dictionary<string, string>()) }
             };
 
             var b = new Dictionary<string, (string, Dictionary<string, string>)>()
             {
-                { "key", ("name", new Dictionary<string, string>())}
+                { "key", ("name", new Dictionary<string, string>()) }
             };
 
             CollectionAssert.AreEquivalent(a, b);

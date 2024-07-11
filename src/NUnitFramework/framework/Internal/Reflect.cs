@@ -72,12 +72,43 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type, object?[]? arguments)
         {
-            if (arguments is null) return Construct(type);
+            if (arguments is null)
+                return Construct(type);
 
             Type?[] argTypes = GetTypeArray(arguments);
             ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
+            ParameterInfo[] parameterInfos = ctor.GetParameters();
+
+            if (parameterInfos.Length > 0)
+            {
+                ParameterInfo parameterInfo = parameterInfos.Last();
+                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
+                {
+                    if (arguments.Length == parameterInfos.Length
+                        && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
+                    {
+                        // Don't convert arguments as there was already an array we could use.
+                    }
+                    else
+                    {
+                        Type? elementType = parameterInfo.ParameterType.GetElementType();
+                        if (elementType is null)
+                        {
+                            throw new InvalidTestFixtureException(type.FullName + " params argument did not have an element type");
+                        }
+
+                        int paramsOffset = parameterInfos.Length - 1;
+                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - parameterInfos.Length + 1);
+                        for (int i = 0; i < paramArray.Length; i++)
+                        {
+                            paramArray.SetValue(arguments[i + paramsOffset], i);
+                        }
+                        arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
+                    }
+                }
+            }
 
             return ctor.Invoke(arguments);
         }
@@ -113,11 +144,42 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            if (pinfos.Length != ptypes.Length)
-                return false;
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
+
+            if (hasParamsArgument)
+            {
+                if (ptypes.Length < pinfos.Length - 1)
+                    return false;
+            }
+            else
+            {
+                if (pinfos.Length != ptypes.Length)
+                    return false;
+            }
 
             for (int i = 0; i < pinfos.Length; i++)
             {
+                if (hasParamsArgument && i == pinfos.Length - 1)
+                {
+                    var elementType = pinfos[i].ParameterType.GetElementType();
+                    if (elementType is not null)
+                    {
+                        bool allParamArgsMatched = true;
+                        for (int j = i; j < ptypes.Length && allParamArgsMatched; j++)
+                        {
+                            if (!ptypes[j].CanImplicitlyConvertTo(elementType))
+                            {
+                                allParamArgsMatched = false;
+                                break;
+                            }
+                        }
+                        if (allParamArgsMatched)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
                 if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }
@@ -125,7 +187,8 @@ namespace NUnit.Framework.Internal
         }
 
         // §6.1.2 (Implicit numeric conversions) of the specification
-        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new() {
+        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new()
+        {
             { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
             { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
             { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
@@ -192,7 +255,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException e)
             {
-                throw new NUnitException("Rethrown", e.InnerException);
+                throw new NUnitException("Rethrown", e.Unwrap());
             }
             catch (Exception e)
 #if THREAD_ABORT
@@ -249,7 +312,8 @@ namespace NUnit.Framework.Internal
                 for (var publicSearchType = type; publicSearchType is not null; publicSearchType = publicSearchType.BaseType)
                 {
                     var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
-                    if (property is not null) return property;
+                    if (property is not null)
+                        return property;
                 }
 
                 // There is no public property, so may as well not ask to include them during the second search.
@@ -259,7 +323,8 @@ namespace NUnit.Framework.Internal
             for (var searchType = type; searchType is not null; searchType = searchType.BaseType)
             {
                 var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
-                if (property is not null) return property;
+                if (property is not null)
+                    return property;
             }
 
             return null;
@@ -301,10 +366,12 @@ namespace NUnit.Framework.Internal
                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                    .SingleOrDefault(candidate =>
                    {
-                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0) return false;
+                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0)
+                            return false;
 
                        var parameters = candidate.GetParameters();
-                       if (parameters.Length != parameterTypes.Length) return false;
+                       if (parameters.Length != parameterTypes.Length)
+                            return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
                        {
@@ -315,7 +382,8 @@ namespace NUnit.Framework.Internal
                        return true;
                    });
 
-                if (method is not null) return method;
+                if (method is not null)
+                    return method;
             }
 
             return null;
@@ -333,15 +401,20 @@ namespace NUnit.Framework.Internal
                              return false;
 
                          var indexParameters = candidate.GetIndexParameters();
-                         if (indexParameters.Length != indexParameterTypes.Length) return false;
+                         if (indexParameters.Length != indexParameterTypes.Length)
+                            return false;
 
                          for (var i = 0; i < indexParameterTypes.Length; i++)
-                             if (indexParameters[i].ParameterType != indexParameterTypes[i]) return false;
+                         {
+                             if (indexParameters[i].ParameterType != indexParameterTypes[i])
+                                return false;
+                         }
 
                          return true;
                      });
 
-                if (property is not null) return property;
+                if (property is not null)
+                    return property;
             }
 
             return null;

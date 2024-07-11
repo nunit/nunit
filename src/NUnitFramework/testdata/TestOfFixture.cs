@@ -11,31 +11,37 @@ namespace NUnit.TestData
     {
         [Test(TestOf = typeof(TestOfAttribute))]
         public void Method()
-        { }
+        {
+        }
 
         [Test]
         public void NoTestOfMethod()
-        { }
+        {
+        }
 
         [Test]
         [TestOf(typeof(TestOfAttribute))]
         public void SeparateTestOfTypeMethod()
-        { }
+        {
+        }
 
         [Test]
         [TestOf("NUnit.Framework.TestOfAttribute")]
         public void SeparateTestOfStringMethod()
-        { }
+        {
+        }
 
         [Test, TestOf(typeof(TestAttribute))]
         [TestCase(5, TestOf = typeof(TestCaseAttribute))]
         public void TestCaseWithTestOf(int x)
-        { }
+        {
+        }
 
         [Test]
         [TestOf(typeof(TestOfAttribute))]
         [TestOf(typeof(TestAttribute))]
         public void TestOfMultipleAttributesMethod()
-        { }
+        {
+        }
     }
 }

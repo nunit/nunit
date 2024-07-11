@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
@@ -93,7 +92,7 @@ namespace NUnit.Framework.Internal.Execution
                                         case TestStatus.Skipped:
                                         case TestStatus.Inconclusive:
                                         case TestStatus.Failed:
-                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message);
+                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
                                             break;
                                     }
                                 }
@@ -232,7 +231,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && Test.TypeInfo is not null && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+            if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -249,10 +248,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException || ex is TargetInvocationException)
-                    ex = ex.InnerException!;
-
-                Result.RecordException(ex, FailureSite.SetUp);
+                Result.RecordException(ex.Unwrap(), FailureSite.SetUp);
             }
         }
 
@@ -298,14 +294,14 @@ namespace NUnit.Framework.Internal.Execution
         private void SkipFixture(ResultState resultState, string message, string? stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
-            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
+            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message, stackTrace);
         }
 
-        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message)
+        private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message, string? stackTrace)
         {
             foreach (WorkItem child in workItem.Children)
             {
-                SetChildWorkItemSkippedResult(child.Result, resultState, message);
+                SetChildWorkItemSkippedResult(child.Result, resultState, message, stackTrace);
                 _suiteResult.AddResult(child.Result);
 
                 // Some runners may depend on getting the TestFinished event
@@ -313,13 +309,13 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Listener.TestFinished(child.Result);
 
                 if (child is CompositeWorkItem item)
-                    SkipChildren(item, resultState, message);
+                    SkipChildren(item, resultState, message, stackTrace);
             }
         }
 
-        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message)
+        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message, string? stackTrace)
         {
-            result.SetResult(resultState, message);
+            result.SetResult(resultState, message, stackTrace);
             result.StartTime = Context.StartTime;
             result.EndTime = DateTime.UtcNow;
             result.Duration = Context.Duration;
@@ -469,7 +465,9 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             /// PerformWork is not used in CompositeWorkItem
             /// </summary>
-            protected override void PerformWork() { }
+            protected override void PerformWork()
+            {
+            }
 
             /// <summary>
             /// WorkItemCancelled is called directly by the parallel dispatcher

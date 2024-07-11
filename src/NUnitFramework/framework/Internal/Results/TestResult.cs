@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using NUnit.Compatibility;
@@ -358,10 +357,12 @@ namespace NUnit.Framework.Internal
                     break;
             }
 
-            if (Output.Length > 0)
-                AddOutputElement(thisNode);
+            // allocate output result only once
+            var output = Output;
+            if (output.Length > 0)
+                AddOutputElement(thisNode, output);
 
-            if (AssertionResults.Count > 0)
+            if (_assertionResults.Count > 0)
                 AddAssertionsElement(thisNode);
 
             if (_testAttachments.Count > 0)
@@ -383,12 +384,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a count of pending failures (from Multiple Assert)
         /// </summary>
-        public int PendingFailures => AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed);
+        public int PendingFailures => _assertionResults.Count(static ar => ar.Status == AssertionStatus.Failed);
 
         /// <summary>
         /// Gets the worst assertion status (highest enum) in all the assertion results
         /// </summary>
-        public AssertionStatus WorstAssertionStatus => AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
+        public AssertionStatus WorstAssertionStatus => _assertionResults.Aggregate(static (ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
 
         #endregion
 
@@ -444,13 +445,13 @@ namespace NUnit.Framework.Internal
 
             SetResult(result.ResultState, result.Message, result.StackTrace);
 
-            if (AssertionResults.Count > 0 && result.ResultState == ResultState.Error)
+            if (_assertionResults.Count > 0 && result.ResultState == ResultState.Error)
             {
                 // Add pending failures to the legacy result message
                 Message += Environment.NewLine + Environment.NewLine + CreateLegacyFailureMessage();
 
                 // Add to the list of assertion errors, so that newer runners will see it
-                AssertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
+                _assertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
             }
         }
 
@@ -479,7 +480,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The Exception to be recorded</param>
         public void RecordTearDownException(Exception ex)
         {
-            ex = ValidateAndUnwrap(ex);
+            var result = new ExceptionResult(ex, FailureSite.TearDown);
 
             ResultState resultState = ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
@@ -487,11 +488,11 @@ namespace NUnit.Framework.Internal
             if (Test.IsSuite)
                 resultState = resultState.WithSite(FailureSite.TearDown);
 
-            string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
+            string message = "TearDown : " + result.Message;
             if (!string.IsNullOrEmpty(Message))
                 message = Message + Environment.NewLine + message;
 
-            string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
+            string stackTrace = "--TearDown" + Environment.NewLine + result.StackTrace;
             if (StackTrace is not null)
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
@@ -502,10 +503,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is not null)
-                return ex.InnerException;
-
-            return ex;
+            return ex.Unwrap();
         }
 
         private struct ExceptionResult
@@ -532,6 +530,12 @@ namespace NUnit.Framework.Internal
                     StackTrace = ex.GetStackTraceWithoutThrowing();
                 }
 #endif
+                else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
+                {
+                    ResultState = ResultState.Failure.WithSite(site);
+                    Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
                 else
                 {
                     ResultState = ResultState.Error.WithSite(site);
@@ -547,16 +551,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void RecordTestCompletion()
         {
-            switch (AssertionResults.Count)
+            switch (_assertionResults.Count)
             {
                 case 0:
                     SetResult(ResultState.Success);
                     break;
                 case 1:
                     SetResult(
-                        AssertionStatusToResultState(AssertionResults[0].Status),
-                        AssertionResults[0].Message,
-                        AssertionResults[0].StackTrace);
+                        AssertionStatusToResultState(_assertionResults[0].Status),
+                        _assertionResults[0].Message,
+                        _assertionResults[0].StackTrace);
                     break;
                 default:
                     SetResult(
@@ -600,11 +604,11 @@ namespace NUnit.Framework.Internal
         {
             var writer = new StringWriter();
 
-            if (AssertionResults.Count > 1)
+            if (_assertionResults.Count > 1)
                 writer.WriteLine("Multiple failures or warnings in test:");
 
             int counter = 0;
-            foreach (var assertion in AssertionResults)
+            foreach (var assertion in _assertionResults)
                 writer.WriteLine($"  {++counter}) {assertion.Message}");
 
             return writer.ToString();
@@ -632,16 +636,16 @@ namespace NUnit.Framework.Internal
             return failureNode;
         }
 
-        private TNode AddOutputElement(TNode targetNode)
+        private TNode AddOutputElement(TNode targetNode, string output)
         {
-            return targetNode.AddElementWithCDATA("output", Output);
+            return targetNode.AddElementWithCDATA("output", output);
         }
 
         private TNode AddAssertionsElement(TNode targetNode)
         {
             var assertionsNode = targetNode.AddElement("assertions");
 
-            foreach (var assertion in AssertionResults)
+            foreach (var assertion in _assertionResults)
             {
                 TNode assertionNode = assertionsNode.AddElement("assertion");
                 assertionNode.AddAttribute("result", assertion.Status.ToString());

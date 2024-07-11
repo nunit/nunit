@@ -13,7 +13,9 @@ namespace NUnit.Common
         /// <summary>
         /// Construct a ColorConsoleWriter.
         /// </summary>
-        public ColorConsoleWriter() : this(true) { }
+        public ColorConsoleWriter() : this(true)
+        {
+        }
 
         /// <summary>
         /// Construct a ColorConsoleWriter.

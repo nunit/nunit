@@ -24,6 +24,18 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void IndexerOperatorOnRightSideOfAndOperator()
+        {
+            var items = new ClassWithName[]
+            {
+                new("Name 1"),
+            };
+
+            Assert.That(items, Has.Exactly(1).Items
+                                  .And.ItemAt(0).Property(nameof(ClassWithName.Name)).EqualTo("Name 1"));
+        }
+
+        [Test]
         public void CanMatchArrayEquality()
         {
             var tester = new[] { 1, 2, 3 };
@@ -35,9 +47,32 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void CanMatchArrayWithMultiDimensionsEquality()
         {
-            var tester = new[, , ,] {
-                { { {1}, {2}, {3} }, { {4}, {5}, {6} } },
-                { { {7}, {8}, {9} }, { {10}, {11}, {12} } }
+            var tester = new[,,,]
+            {
+                {
+                    {
+                        { 1 },
+                        { 2 },
+                        { 3 }
+                    },
+                    {
+                        { 4 },
+                        { 5 },
+                        { 6 }
+                    }
+                },
+                {
+                    {
+                        { 7 },
+                        { 8 },
+                        { 9 }
+                    },
+                    {
+                        { 10 },
+                        { 11 },
+                        { 12 }
+                    }
+                }
             };
 
             Assert.That(tester, Has.ItemAt(0, 0, 0, 0).EqualTo(1));
@@ -166,6 +201,15 @@ namespace NUnit.Framework.Tests.Constraints
 
         private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer
         {
+        }
+
+        private class ClassWithName
+        {
+            public ClassWithName(string name)
+            {
+                Name = name;
+            }
+            public string Name { get; }
         }
     }
 }

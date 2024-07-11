@@ -88,6 +88,8 @@ namespace NUnit.Framework.Tests.Internal.Results
             Assert.That(attachmentNode.ChildNodes, Has.Exactly(0).Property(nameof(TNode.Name)).EqualTo(DescriptionXName));
         }
 
-        private void FakeMethod() { }
+        private void FakeMethod()
+        {
+        }
     }
 }

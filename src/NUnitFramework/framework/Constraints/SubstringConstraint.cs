@@ -29,7 +29,11 @@ namespace NUnit.Framework.Constraints
         /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
         public override StringConstraint IgnoreCase
         {
-            get { Using(StringComparison.CurrentCultureIgnoreCase); return base.IgnoreCase; }
+            get
+            {
+                Using(StringComparison.CurrentCultureIgnoreCase);
+                return base.IgnoreCase;
+            }
         }
 
         /// <summary>
@@ -37,9 +41,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        protected override bool Matches(string actual)
+        protected override bool Matches(string? actual)
         {
-            if (actual is null) return false;
+            if (actual is null)
+                return false;
 
             var actualComparison = _comparisonType ?? StringComparison.CurrentCulture;
             return actual.IndexOf(expected, actualComparison) >= 0;

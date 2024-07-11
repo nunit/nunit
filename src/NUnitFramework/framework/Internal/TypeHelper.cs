@@ -32,10 +32,12 @@ namespace NUnit.Framework.Internal
             {
                 string name = type.FullName();
                 int index = name.IndexOf('[');
-                if (index >= 0) name = name.Substring(0, index);
+                if (index >= 0)
+                    name = name.Substring(0, index);
 
                 index = name.LastIndexOf('.');
-                if (index >= 0) name = name.Substring(index + 1);
+                if (index >= 0)
+                    name = name.Substring(index + 1);
 
                 var genericArguments = type.GetGenericArguments();
                 var currentArgument = 0;
@@ -100,37 +102,10 @@ namespace NUnit.Framework.Internal
             sb.Append("(");
             for (int i = 0; i < arglist.Length; i++)
             {
-                if (i > 0) sb.Append(",");
+                if (i > 0)
+                    sb.Append(",");
 
-                object? arg = arglist[i];
-                string display = arg?.ToString() ?? "null";
-
-                if (arg is double || arg is float)
-                {
-                    if (display.IndexOf('.') == -1)
-                        display += ".0";
-                    display += arg is double ? "d" : "f";
-                }
-                else if (arg is decimal)
-                {
-                    display += "m";
-                }
-                else if (arg is long)
-                {
-                    display += "L";
-                }
-                else if (arg is ulong)
-                {
-                    display += "UL";
-                }
-                else if (arg is string)
-                {
-                    if (display.Length > STRING_MAX)
-                        display = display.Substring(0, STRING_LIMIT) + THREE_DOTS;
-                    display = "\"" + display + "\"";
-                }
-
-                sb.Append(display);
+                sb.Append(DisplayName.GetValueString(arglist[i], STRING_MAX));
             }
             sb.Append(")");
 
@@ -143,6 +118,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool TryGetBestCommonType(Type? type1, Type? type2, [NotNullIfNotNull("type1"), NotNullIfNotNull("type2")] out Type? bestCommonType)
         {
+#pragma warning disable SA1107 // Code should not contain multiple statements on one line
+#pragma warning disable SA1501 // Statement should not be on a single line
             if (type1 == type2) { bestCommonType = type1; return true; }
             if (type1 is null) { bestCommonType = type2; return true; }
             if (type2 is null) { bestCommonType = type1; return true; }
@@ -188,6 +165,8 @@ namespace NUnit.Framework.Internal
 
             bestCommonType = typeof(object);
             return false;
+#pragma warning restore SA1501 // Statement should not be on a single line
+#pragma warning restore SA1107 // Code should not contain multiple statements on one line
         }
 
         /// <summary>
@@ -195,7 +174,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="type">The type to be examined.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified type is numeric; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the specified type is numeric; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool IsNumeric(Type type)
         {
@@ -260,7 +239,7 @@ namespace NUnit.Framework.Internal
         /// <param name="arglist">The arglist.</param>
         /// <param name="typeArgsOut">The type args to be used.</param>
         /// <returns>
-        /// 	<see langword="true"/> if this the provided args give sufficient information to determine the type args to be used; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if this the provided args give sufficient information to determine the type args to be used; otherwise, <see langword="false"/>.
         /// </returns>
         public static bool CanDeduceTypeArgsFromArgs(Type type, object?[] arglist, [NotNullWhen(true)] ref Type[]? typeArgsOut)
         {

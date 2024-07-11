@@ -136,6 +136,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FailsWhenKeyIsNull()
+        {
+            Assert.That(() => Assert.That(new Dictionary<string, string>(), Does.ContainKey(null!)),
+                        Throws.TargetInvocationException.With.InnerException.InstanceOf<ArgumentNullException>());
+        }
+
+        [Test]
         public void ShouldCallContainsKeysMethodOnDictionary()
         {
             var dictionary = new TestDictionary(20);
@@ -253,9 +260,13 @@ namespace NUnit.Framework.Tests.Constraints
 
         public class TestKeyedCollection : KeyedCollection<string, string>
         {
-            public TestKeyedCollection() { }
+            public TestKeyedCollection()
+            {
+            }
 
-            public TestKeyedCollection(IEqualityComparer<string> comparer) : base(comparer) { }
+            public TestKeyedCollection(IEqualityComparer<string> comparer) : base(comparer)
+            {
+            }
 
             protected override string GetKeyForItem(string item)
             {

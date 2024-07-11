@@ -8,7 +8,8 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture(typeof(List<int>))]
     [TestFixture(TypeArgs = new[] { typeof(List<object>) })]
     [TestFixture(TypeArgs = new[] { typeof(ArrayList) })]
-    public class GenericTestFixture_IList<T> where T : IList, new()
+    public class GenericTestFixture_IList<T>
+        where T : IList, new()
     {
         [Test]
         public void TestCollectionCount()

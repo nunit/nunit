@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// PropertyExistsConstraint tests that a named property
     /// exists on the object provided through Match.
-    /// 
+    ///
     /// Originally, PropertyConstraint provided this feature
     /// in addition to making optional tests on the value
     /// of the property. The two constraints are now separate.
@@ -53,7 +53,8 @@ namespace NUnit.Framework.Constraints
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
                     property = Reflect.GetUltimateShadowingProperty(@interface, _name, bindingFlags);
-                    if (property is not null) break;
+                    if (property is not null)
+                        break;
                 }
             }
 

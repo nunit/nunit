@@ -15,6 +15,8 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(StaticProperty_SameClass))]
         [TestCase(typeof(StaticMethod_SameClass))]
         [TestCase(typeof(StaticAsyncMethod_SameClass))]
+        [TestCase(typeof(StaticAsyncEnumerableMethod_SameClass))]
+        [TestCase(typeof(StaticAsyncEnumerableMethodReturningTask_SameClass))]
         [TestCase(typeof(StaticField_DifferentClass))]
         [TestCase(typeof(StaticProperty_DifferentClass))]
         [TestCase(typeof(StaticMethod_DifferentClass))]
@@ -64,6 +66,20 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Ignored));
                 Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("There must be a reason"));
+                Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Runnable));
+            });
+        }
+
+        [Test]
+        public void CanSpecifyParametrizedTestFixturesWithParamsArgs()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(TestFixtureSourceMayUseParamsArguments));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Runnable));
             });
         }

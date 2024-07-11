@@ -10,10 +10,10 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class EnumerablesComparer
     {
-        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (x is not IEnumerable xIEnumerable || y is not IEnumerable yIEnumerable)
-                return null;
+                return EqualMethodResult.TypesNotSupported;
 
             var expectedEnum = xIEnumerable.GetEnumerator();
             using (expectedEnum as IDisposable)
@@ -21,16 +21,27 @@ namespace NUnit.Framework.Constraints.Comparers
                 var actualEnum = yIEnumerable.GetEnumerator();
                 using (actualEnum as IDisposable)
                 {
+                    ComparisonState comparisonState = state.PushComparison(x, y);
                     for (int count = 0; ; count++)
                     {
                         bool expectedHasData = expectedEnum.MoveNext();
                         bool actualHasData = actualEnum.MoveNext();
 
                         if (!expectedHasData && !actualHasData)
-                            return true;
+                            return EqualMethodResult.ComparedEqual;
 
-                        if (expectedHasData != actualHasData ||
-                            !equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, state.PushComparison(x, y)))
+                        EqualMethodResult result;
+
+                        if (expectedHasData != actualHasData)
+                        {
+                            result = EqualMethodResult.ComparedNotEqual;
+                        }
+                        else
+                        {
+                            result = equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, comparisonState);
+                        }
+
+                        if (result != EqualMethodResult.ComparedEqual)
                         {
                             NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                             fp.Position = count;
@@ -41,7 +52,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             if (actualHasData)
                                 fp.ActualValue = actualEnum.Current;
                             equalityComparer.FailurePoints.Insert(0, fp);
-                            return false;
+                            return result;
                         }
                     }
                 }
