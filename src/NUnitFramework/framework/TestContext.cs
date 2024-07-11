@@ -347,7 +347,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// This method adds the a new ValueFormatterFactory to the
+        /// This method adds a new ValueFormatterFactory to the
         /// chain of responsibility used for formatting values in messages.
         /// The scope of the change is the current TestContext.
         /// </summary>
@@ -495,7 +495,7 @@ namespace NUnit.Framework
             /// Returns all properties in the hierarchy
             /// </summary>
             /// <returns></returns>
-            public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
+            private IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
             {
                 var dict = new Dictionary<PropertyHierachyItem, IList>();
                 ITest? test = _test;
@@ -504,8 +504,7 @@ namespace NUnit.Framework
                     foreach (var property in test.Properties.Keys)
                     {
                         var values = test.Properties[property];
-                        dict.Add(
-                            new PropertyHierachyItem { Name = property, Level = test.Name ?? string.Empty }, values);
+                        dict.Add(new PropertyHierachyItem(property, test.Name ?? string.Empty), values);
                     }
                     test = test.Parent;
                 }
@@ -518,7 +517,7 @@ namespace NUnit.Framework
             /// Returns all values of a given property
             /// </summary>
             /// <param name="property">Name of property</param>
-            public IEnumerable<object> PropertyValues(string property)
+            public IEnumerable<object> AllPropertyValues(string property)
             {
                 var list = new List<object>();
                 var props = PropertyHierarchy();
@@ -531,8 +530,6 @@ namespace NUnit.Framework
 
                 return list.Distinct();
             }
-
-
 
             /// <summary>
             /// Returns all categories in the hierarchy
@@ -580,13 +577,35 @@ namespace NUnit.Framework
         /// </summary>
         public class PropertyHierachyItem
         {
-            public string Name { get; set; } = string.Empty;
-            public string Level { get; set; } = string.Empty;
+            /// <summary>
+            /// Property with empty name and level.
+            /// </summary>
+            public PropertyHierachyItem()
+            {
+            }
+
+            /// <summary>
+            /// Property with given name and level.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="level"></param>
+            public PropertyHierachyItem(string name, string level)
+            {
+                Name = name;
+                Level = level;
+            }
+            /// <summary>
+            /// Name of propertyHierarchyItem
+            /// </summary>
+            public string Name { get; } = string.Empty;
+
+            /// <summary>
+            /// Name of test level, from ITest
+            /// </summary>
+            public string Level { get; } = string.Empty;
         }
 
         #endregion
-
-
 
         #region Nested ResultAdapter Class
 
