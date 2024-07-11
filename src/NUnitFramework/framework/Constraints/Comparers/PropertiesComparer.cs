@@ -42,33 +42,26 @@ namespace NUnit.Framework.Constraints.Comparers
             string declaringTypeName = xType.Name;
 
             uint redoWithoutTolerance = 0x0;
-            if (tolerance.HasVariance)
+            for (int i = 0; i < properties.Length; i++)
             {
-                for (int i = 0; i < properties.Length; i++)
+                PropertyInfo property = properties[i];
+                object? xPropertyValue = property.GetValue(x, null);
+                object? yPropertyValue = property.GetValue(y, null);
+
+                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
+                if (result == EqualMethodResult.ComparedNotEqual)
                 {
-                    PropertyInfo property = properties[i];
-                    object? xPropertyValue = property.GetValue(x, null);
-                    object? yPropertyValue = property.GetValue(y, null);
-
-                    EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
-                    if (result == EqualMethodResult.ComparedNotEqual)
-                    {
-                        return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
-                    }
-
-                    if (result == EqualMethodResult.ToleranceNotSupported)
-                    {
-                        redoWithoutTolerance |= 1U << i;
-                    }
+                    return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
                 }
 
-                if (redoWithoutTolerance == (1U << properties.Length) - 1)
-                    return EqualMethodResult.ToleranceNotSupported;
+                if (result == EqualMethodResult.ToleranceNotSupported)
+                {
+                    redoWithoutTolerance |= 1U << i;
+                }
             }
-            else
-            {
-                redoWithoutTolerance = (1U << properties.Length) - 1;
-            }
+
+            if (redoWithoutTolerance == (1U << properties.Length) - 1)
+                return EqualMethodResult.ToleranceNotSupported;
 
             if (redoWithoutTolerance != 0)
             {

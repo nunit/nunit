@@ -388,6 +388,16 @@ namespace NUnit.Framework.Tests.Assertions
             });
         }
 
+        [Test]
+        [DefaultFloatingPointTolerance(0.1)]
+        public void AssertThatEqualsWithClassWithSomeToleranceAwareMembersUsesDefaultFloatingPointTolerance()
+        {
+            var zero = new ClassWithSomeToleranceAwareMembers(0, 0.0, string.Empty, null);
+            var instance = new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero);
+
+            Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.EqualTo(instance).UsingPropertiesComparer());
+        }
+
         private sealed class ClassWithSomeToleranceAwareMembers
         {
             public ClassWithSomeToleranceAwareMembers(int valueA, double valueB, string valueC, ClassWithSomeToleranceAwareMembers? chained)
