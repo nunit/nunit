@@ -2,6 +2,9 @@
 
 using System;
 using System.IO;
+#if !NETFRAMEWORK
+using System.Buffers;
+#endif
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -43,8 +46,10 @@ namespace NUnit.Framework.Constraints.Comparers
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
 #else
-            Span<byte> bufferExpected = stackalloc byte[BUFFER_SIZE];
-            Span<byte> bufferActual = stackalloc byte[BUFFER_SIZE];
+            ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
+
+            byte[] bufferExpected = arrayPool.Rent(BUFFER_SIZE);
+            byte[] bufferActual = arrayPool.Rent(BUFFER_SIZE);
 #endif
 
             BinaryReader binaryReaderExpected = new BinaryReader(xStream);
@@ -70,13 +75,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 while (readExpected > 0 && readActual > 0)
                 {
-#if NETFRAMEWORK
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
-#else
-                    readExpected = binaryReaderExpected.Read(bufferExpected);
-                    readActual = binaryReaderActual.Read(bufferActual);
-#endif
 
                     if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
                     {
@@ -110,6 +110,11 @@ namespace NUnit.Framework.Constraints.Comparers
                 {
                     yStream.Position = actualPosition;
                 }
+
+#if !NETFRAMEWORK
+                arrayPool.Return(bufferExpected);
+                arrayPool.Return(bufferActual);
+#endif
             }
 
             return EqualMethodResult.ComparedEqual;

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Buffers;
 using BenchmarkDotNet.Attributes;
 
 namespace NUnit.Framework
@@ -48,7 +49,14 @@ namespace NUnit.Framework
         [Benchmark]
         public bool StackAlloc()
         {
-            var equal = Equal_Enhanced(XStream!, YStream!, out _);
+            var equal = Equal_Stackalloc(XStream!, YStream!, out _);
+            return equal == EqualMethodResult.ComparedEqual;
+        }
+
+        [Benchmark]
+        public bool ArrayPool()
+        {
+            var equal = Equal_ArrayPool(XStream!, YStream!, out _);
             return equal == EqualMethodResult.ComparedEqual;
         }
 
@@ -121,7 +129,7 @@ namespace NUnit.Framework
             return EqualMethodResult.ComparedEqual;
         }
 
-        public static EqualMethodResult Equal_Enhanced(Stream xStream, Stream yStream, out long? failurePoint)
+        public static EqualMethodResult Equal_Stackalloc(Stream xStream, Stream yStream, out long? failurePoint)
         {
             failurePoint = null;
             bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
@@ -185,6 +193,80 @@ namespace NUnit.Framework
                 {
                     yStream.Position = actualPosition;
                 }
+            }
+
+            return EqualMethodResult.ComparedEqual;
+        }
+
+        public static EqualMethodResult Equal_ArrayPool(Stream xStream, Stream yStream, out long? failurePoint)
+        {
+            failurePoint = null;
+            bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
+
+            if (bothSeekable && xStream.Length != yStream.Length)
+                return EqualMethodResult.ComparedNotEqual;
+
+            var arrayPool = ArrayPool<byte>.Shared;
+
+            byte[] bufferExpected = arrayPool.Rent(BUFFER_SIZE);
+            byte[] bufferActual = arrayPool.Rent(BUFFER_SIZE);
+
+            BinaryReader binaryReaderExpected = new BinaryReader(xStream);
+            BinaryReader binaryReaderActual = new BinaryReader(yStream);
+
+            long expectedPosition = bothSeekable ? xStream.Position : default;
+            long actualPosition = bothSeekable ? yStream.Position : default;
+
+            try
+            {
+                if (xStream.CanSeek)
+                {
+                    binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
+                }
+                if (yStream.CanSeek)
+                {
+                    binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
+                }
+
+                int readExpected = 1;
+                int readActual = 1;
+                long readByte = 0;
+
+                while (readExpected > 0 && readActual > 0)
+                {
+                    readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
+                    readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
+
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    {
+                        readByte += BUFFER_SIZE;
+                        continue;
+                    }
+
+                    for (int count = 0; count < BUFFER_SIZE; ++count)
+                    {
+                        if (bufferExpected[count] != bufferActual[count])
+                        {
+                            failurePoint = readByte + count;
+                            return EqualMethodResult.ComparedNotEqual;
+                        }
+                    }
+                    readByte += BUFFER_SIZE;
+                }
+            }
+            finally
+            {
+                if (xStream.CanSeek)
+                {
+                    xStream.Position = expectedPosition;
+                }
+                if (yStream.CanSeek)
+                {
+                    yStream.Position = actualPosition;
+                }
+
+                arrayPool.Return(bufferExpected);
+                arrayPool.Return(bufferActual);
             }
 
             return EqualMethodResult.ComparedEqual;
