@@ -116,7 +116,16 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase("doesn't work", TypeArgs = new[] { typeof(int) })]
-        public static void MethodWithIncompatibleTypeArgs<T>(T input)
+        public static void MethodWithIncompatibleTypeArgs<T>(T _)
+        {
+        }
+
+        [TestCase(2.0)]
+#if NET6_0_OR_GREATER
+        [TestCase<double>(2)]
+        [TestCase<double>(2.0)]
+#endif
+        public static void MethodWithoutTypeArgsWithIncompatibleParameters(string _)
         {
         }
     }
