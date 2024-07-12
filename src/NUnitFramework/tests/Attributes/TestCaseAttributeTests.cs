@@ -766,8 +766,65 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(2L, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
         [TestCase(2, ExpectedResult = typeof(int))]
         [TestCase(2L, ExpectedResult = typeof(long))]
-        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T input)
+        [TestCase(2, TypeArgs = new[] { typeof(double) }, ExpectedResult = typeof(double))]
+        public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T _)
             => typeof(T);
+
+#if NET6_0_OR_GREATER
+        [TestCase<double>(2)]
+        [TestCase<double>(2.0)]
+        public void ExplicitGenericTypeArgsWithCompatibleParameters<T>(T input)
+        {
+            Assert.That(input, Is.InstanceOf<T>());
+        }
+
+        [TestCase<int, double>(2, 2.0)]
+        public void ExplicitGenericTypeArgsWithCompatibleParameters<T1, T2>(T1 input1, T2 input2)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+            });
+        }
+
+        [TestCase<string, int, double>("2", 2, 2.0)]
+        public void ExplicitGenericTypeArgsWithCompatibleParameters<T1, T2, T3>(T1 input1, T2 input2, T3 input3)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+            });
+        }
+
+        [TestCase<bool, string, int, double>(true, "2", 2, 2.0)]
+        public void ExplicitGenericTypeArgsWithCompatibleParameters<T1, T2, T3, T4>(T1 input1, T2 input2, T3 input3, T4 input4)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+                Assert.That(input4, Is.InstanceOf<T4>());
+            });
+        }
+
+        [TestCase<bool, char, string, int, double>(true, 'N', "2", 2, 2.0)]
+        public void ExplicitGenericTypeArgsWithCompatibleParameters<T1, T2, T3, T4, T5>(T1 input1, T2 input2, T3 input3, T4 input4, T5 input5)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+                Assert.That(input4, Is.InstanceOf<T4>());
+                Assert.That(input5, Is.InstanceOf<T5>());
+            });
+        }
+
+#endif
 
         [Test]
         public void ExplicitTypeArgsWithUnassignableParametersFailsAtRuntime()
@@ -784,6 +841,29 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.FailCount, Is.EqualTo(1));
             Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+        }
+
+        [Test]
+        public void MethodWithoutTypeArgsWithIncompatibleParametersFailsAtRuntime()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture),
+                nameof(TestCaseAttributeFixture.MethodWithoutTypeArgsWithIncompatibleParameters));
+
+            Assert.Multiple(() =>
+            {
+                for (int i = 0; i < suite.TestCaseCount; i++)
+                {
+                    var test = (Test)suite.Tests[i];
+
+                    Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
+
+                    var result = TestBuilder.RunTest(test);
+
+                    Assert.That(result.FailCount, Is.EqualTo(1));
+                    Assert.That(result.Message, Does.Contain("Object of type 'System.Double' cannot be converted to type 'System.String'."));
+                }
+            });
         }
 
         [TestCase(2, TypeArgs = new[] { typeof(long) })]
