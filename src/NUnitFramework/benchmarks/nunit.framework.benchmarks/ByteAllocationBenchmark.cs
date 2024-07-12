@@ -206,10 +206,8 @@ namespace NUnit.Framework
             if (bothSeekable && xStream.Length != yStream.Length)
                 return EqualMethodResult.ComparedNotEqual;
 
-            var arrayPool = ArrayPool<byte>.Shared;
-
-            byte[] bufferExpected = arrayPool.Rent(BUFFER_SIZE);
-            byte[] bufferActual = arrayPool.Rent(BUFFER_SIZE);
+            byte[]? bufferExpected = null;
+            byte[]? bufferActual = null;
 
             BinaryReader binaryReaderExpected = new BinaryReader(xStream);
             BinaryReader binaryReaderActual = new BinaryReader(yStream);
@@ -219,6 +217,9 @@ namespace NUnit.Framework
 
             try
             {
+                bufferExpected = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+                bufferActual = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+
                 if (xStream.CanSeek)
                 {
                     binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -237,7 +238,7 @@ namespace NUnit.Framework
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
-                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected.AsSpan(0, readExpected), bufferActual.AsSpan(0, readActual)))
                     {
                         readByte += BUFFER_SIZE;
                         continue;
@@ -265,8 +266,11 @@ namespace NUnit.Framework
                     yStream.Position = actualPosition;
                 }
 
-                arrayPool.Return(bufferExpected);
-                arrayPool.Return(bufferActual);
+                if (bufferExpected is not null)
+                    ArrayPool<byte>.Shared.Return(bufferExpected);
+
+                if (bufferActual is not null)
+                    ArrayPool<byte>.Shared.Return(bufferActual);
             }
 
             return EqualMethodResult.ComparedEqual;
