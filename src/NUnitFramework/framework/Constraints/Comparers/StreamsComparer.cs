@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Buffers;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -39,17 +40,20 @@ namespace NUnit.Framework.Constraints.Comparers
                     return EqualMethodResult.ComparedEqual;
             }
 
-            byte[] bufferExpected = new byte[BUFFER_SIZE];
-            byte[] bufferActual = new byte[BUFFER_SIZE];
-
             BinaryReader binaryReaderExpected = new BinaryReader(xStream);
             BinaryReader binaryReaderActual = new BinaryReader(yStream);
 
             long expectedPosition = bothSeekable ? xStream.Position : default;
             long actualPosition = bothSeekable ? yStream.Position : default;
 
+            byte[]? bufferExpected = null;
+            byte[]? bufferActual = null;
+
             try
             {
+                bufferExpected = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+                bufferActual = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+
                 if (xStream.CanSeek)
                 {
                     binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -68,7 +72,7 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
-                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected, bufferActual))
+                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected.AsSpan(0, readExpected), bufferActual.AsSpan(0, readActual)))
                     {
                         readByte += readActual;
                         continue;
@@ -100,6 +104,12 @@ namespace NUnit.Framework.Constraints.Comparers
                 {
                     yStream.Position = actualPosition;
                 }
+
+                if (bufferExpected is not null)
+                    ArrayPool<byte>.Shared.Return(bufferExpected);
+
+                if (bufferActual is not null)
+                    ArrayPool<byte>.Shared.Return(bufferActual);
             }
 
             return EqualMethodResult.ComparedEqual;
