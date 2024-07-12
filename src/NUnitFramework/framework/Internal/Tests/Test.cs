@@ -310,7 +310,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            ApplyAttributesToTest(OSPlatformTranslator.RetrieveAndTranslate(provider));
+#if NET6_0_OR_GREATER
+            ApplyAttributesToTest(OSPlatformConverter.RetrieveAndConvert(provider));
+#else
+            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
+#endif
         }
 
         /// <summary>
