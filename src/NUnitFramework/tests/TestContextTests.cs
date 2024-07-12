@@ -492,11 +492,11 @@ namespace NUnit.Framework.Tests
     }
 
     [TestFixture]
-    [Category("A")]
+    [Category("CatA")]
     [Property("Whatever", "Hi")]
     public class TestContextHierarchies
     {
-        [Test, Category("B")]
+        [Test, Category("CatB")]
         public void TestAb()
         {
             var test = TestContext.CurrentContext.Test;
@@ -505,14 +505,14 @@ namespace NUnit.Framework.Tests
             Assert.That(test.AllPropertyValues("Whatever").First(), Is.EqualTo("Hi"));
         }
 
-        [Test, Category("C")]
+        [Test, Category("CatC")]
         public void TestAc()
         {
             var test = TestContext.CurrentContext.Test;
             Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(2));
         }
 
-        [Test, Category("A")]
+        [Test, Category("CatA")]
         public void TestAa()
         {
             var test = TestContext.CurrentContext.Test;
@@ -524,6 +524,7 @@ namespace NUnit.Framework.Tests
         {
             var test = TestContext.CurrentContext.Test;
             Assert.That(test.AllPropertyValues("Whatever").ToList(), Has.Count.EqualTo(2));
+            Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
         }
     }
 }
