@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
                     if (MemoryExtensions.SequenceEqual<byte>(bufferExpected.AsSpan(0, readExpected), bufferActual.AsSpan(0, readActual)))
                     {
-                        readByte += readExpected;
+                        readByte += readActual;
                         continue;
                     }
 
