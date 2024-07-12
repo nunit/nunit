@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Constraints;
@@ -345,7 +347,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// This method adds the a new ValueFormatterFactory to the
+        /// This method adds a new ValueFormatterFactory to the
         /// chain of responsibility used for formatting values in messages.
         /// The scope of the change is the current TestContext.
         /// </summary>
@@ -482,12 +484,125 @@ namespace NUnit.Framework
             /// <summary>
             /// The expected result if there is one for the test
             /// </summary>
-            public object? ExpectedResult
+            public object? ExpectedResult => (_test as TestMethod)?.ExpectedResult;
+
+            /// <summary>
+            /// The parent of this test or suite
+            /// </summary>
+            public ITest? Parent => _test.Parent;
+
+            /// <summary>
+            /// Returns all properties in the hierarchy
+            /// </summary>
+            /// <returns></returns>
+            public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
             {
-                get { return (_test as TestMethod)?.ExpectedResult; }
+                var dict = new Dictionary<PropertyHierachyItem, IList>();
+                ITest? test = _test;
+                do
+                {
+                    foreach (var property in test.Properties.Keys)
+                    {
+                        var values = test.Properties[property];
+                        dict.Add(new PropertyHierachyItem(property, test.Name ?? string.Empty), values);
+                    }
+                    test = test.Parent;
+                }
+                while (test is not null);
+
+                return dict;
+            }
+
+            /// <summary>
+            /// Returns all values of a given property
+            /// </summary>
+            /// <param name="property">Name of property</param>
+            public IEnumerable<object> AllPropertyValues(string property)
+            {
+                var list = new List<object>();
+                var props = PropertyHierarchy();
+                foreach (var item in props.Keys.Where(o => o.Name == property))
+                {
+                    var values = props[item];
+                    foreach (var o in values)
+                        list.Add(o);
+                }
+
+                return list.Distinct();
+            }
+
+            /// <summary>
+            /// Returns all categories in the hierarchy
+            /// </summary>
+            /// <returns></returns>
+            public IDictionary<string, IList<string>> CategoryHierarchy()
+            {
+                var dict = new Dictionary<string, IList<string>>();
+                var all = PropertyHierarchy();
+                foreach (var property in all.Where(o => o.Key.Name == "Category"))
+                {
+                    var values = new List<string>();
+                    foreach (var item in property.Value)
+                    {
+                        string s = item?.ToString() ?? string.Empty;
+                        values.Add(s);
+                    }
+                    dict.Add(property.Key.Level, values);
+                }
+                return dict;
+            }
+            /// <summary>
+            /// Return all categories in the hierarchy flattened
+            /// </summary>
+            public IEnumerable<string> AllCategories()
+            {
+                var cats = new List<string>();
+                var lists = CategoryHierarchy().Values;
+                foreach (var list in lists)
+                {
+                    cats.AddRange(list);
+                }
+
+                return cats.Distinct();
             }
 
             #endregion
+        }
+
+        #endregion
+
+        #region PropertyHierachyItem
+        /// <summary>
+        /// Represents properties at different test levels
+        /// </summary>
+        public class PropertyHierachyItem
+        {
+            /// <summary>
+            /// Property with empty name and level.
+            /// </summary>
+            public PropertyHierachyItem()
+            {
+            }
+
+            /// <summary>
+            /// Property with given name and level.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="level"></param>
+            public PropertyHierachyItem(string name, string level)
+            {
+                Name = name;
+                Level = level;
+            }
+            /// <summary>
+            /// Name of propertyHierarchyItem
+            /// </summary>
+            public string Name { get; } = string.Empty;
+
+            /// <summary>
+            /// Name of test level, from ITest
+            /// </summary>
+            public string Level { get; } = string.Empty;
         }
 
         #endregion

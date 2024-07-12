@@ -243,7 +243,7 @@ namespace NUnit.Framework.Tests
         {
             AssertionResultFixture fixture = new AssertionResultFixture();
             TestBuilder.RunTestCase(fixture, testName);
-            var assertions = fixture.Assertions;
+            var assertions = fixture.Assertions?.ToList();
 
             Assert.That(assertions, Is.Not.Null);
             Assert.That(assertions.Select((o) => o.Status),
@@ -265,8 +265,10 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessTestState_FailureInSetUp()
         {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.SetUpFailure = true;
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture
+            {
+                SetUpFailure = true
+            };
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Failed"));
         }
@@ -274,8 +276,10 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessTestState_FailingTest()
         {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.TestFailure = true;
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture
+            {
+                TestFailure = true
+            };
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
         }
@@ -283,8 +287,10 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessTestState_IgnoredInSetUp()
         {
-            TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.SetUpIgnore = true;
+            TestStateRecordingFixture fixture = new TestStateRecordingFixture
+            {
+                SetUpIgnore = true
+            };
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
         }
@@ -425,12 +431,12 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public class TestContextTearDownTests
     {
-        private const int THE_MEANING_OF_LIFE = 42;
+        private const int TheMeaningOfLife = 42;
 
         [Test]
         public void TestTheMeaningOfLife()
         {
-            Assert.That(THE_MEANING_OF_LIFE, Is.EqualTo(42));
+            Assert.That(TheMeaningOfLife, Is.EqualTo(42));
         }
 
         [TearDown]
@@ -482,6 +488,43 @@ namespace NUnit.Framework.Tests
             Assert.That(context.Result.PassCount, Is.EqualTo(2));
             Assert.That(context.Result.FailCount, Is.EqualTo(0));
             Assert.That(context.Result.SkipCount, Is.EqualTo(1));
+        }
+    }
+
+    [TestFixture]
+    [Category("CatA")]
+    [Property("Whatever", "Hi")]
+    public class TestContextHierarchies
+    {
+        [Test, Category("CatB")]
+        public void TestAb()
+        {
+            var test = TestContext.CurrentContext.Test;
+            Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(2));
+            Assert.That(test.AllPropertyValues("Whatever").ToList(), Has.Count.EqualTo(1));
+            Assert.That(test.AllPropertyValues("Whatever").First(), Is.EqualTo("Hi"));
+        }
+
+        [Test, Category("CatC")]
+        public void TestAc()
+        {
+            var test = TestContext.CurrentContext.Test;
+            Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(2));
+        }
+
+        [Test, Category("CatA")]
+        public void TestAa()
+        {
+            var test = TestContext.CurrentContext.Test;
+            Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
+        }
+
+        [Test, Property("Whatever", "Ok")]
+        public void TestProps()
+        {
+            var test = TestContext.CurrentContext.Test;
+            Assert.That(test.AllPropertyValues("Whatever").ToList(), Has.Count.EqualTo(2));
+            Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
         }
     }
 }
