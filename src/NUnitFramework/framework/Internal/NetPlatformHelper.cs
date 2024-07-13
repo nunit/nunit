@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
 
             if (version is not null && os.Equals("Windows", StringComparison.OrdinalIgnoreCase))
             {
-                // Atual versions don't match public known names
+                // Actual versions don't match public known names
                 // https://github.com/dotnet/sdk/issues/37220
                 if (version.Major == 7)
                 {

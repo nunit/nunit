@@ -11,7 +11,7 @@ namespace NUnit.Framework
     /// </summary>
     /// <remarks>
     /// This class is a replacement for the <see cref="PlatformAttribute"/> class,
-    /// the platform names are based on the values in the TargetFramrwork.
+    /// the platform names are based on the values in the TargetFramework.
     /// See: https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1416
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
