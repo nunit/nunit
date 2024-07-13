@@ -519,12 +519,18 @@ namespace NUnit.Framework.Tests
             Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
         }
 
+        /// <summary>
+        /// Check that properties are inherited from the class
+        /// Check that we get all properties out, that includes the ones from the class and the method (3), but also the one defined in the assembly (ParallelScope) and the two defined by default, _PID and _APPDOMAIN.
+        /// </summary>
         [Test, Property("Whatever", "Ok")]
         public void TestProps()
         {
             var test = TestContext.CurrentContext.Test;
             Assert.That(test.AllPropertyValues("Whatever").ToList(), Has.Count.EqualTo(2));
             Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
+            var itemList = test.PropertyHierarchy();
+            Assert.That(itemList, Has.Count.EqualTo(3 + 1 + 2));
         }
     }
 }

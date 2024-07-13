@@ -493,6 +493,7 @@ namespace NUnit.Framework
 
             /// <summary>
             /// Returns all properties in the hierarchy
+            /// Utility method for getting all properties in the hierarchy, with their included name, level and values.
             /// </summary>
             /// <returns></returns>
             public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
@@ -504,67 +505,54 @@ namespace NUnit.Framework
                     foreach (var property in test.Properties.Keys)
                     {
                         var values = test.Properties[property];
-                        dict.Add(new PropertyHierachyItem(property, test.Name ?? string.Empty), values);
+                        if (values.Count > 0)
+                            dict.Add(new PropertyHierachyItem(property, test.Name ?? string.Empty), values);
                     }
                     test = test.Parent;
                 }
                 while (test is not null);
-
                 return dict;
             }
 
             /// <summary>
-            /// Returns all values of a given property
+            /// Returns all property values in the hierarchy of a given name
+            /// The returned values include the name of the level they are found at.
+            /// </summary>
+            /// <returns></returns>
+            public IList<PropertyValueHierarchyItem> PropertyValues(string property)
+            {
+                var values = new List<PropertyValueHierarchyItem>();
+                ITest? test = _test;
+                do
+                {
+                    var propValues = test.Properties[property];
+                    values.Add(new PropertyValueHierarchyItem(test.Name, propValues));
+                    test = test.Parent;
+                }
+                while (test is not null);
+                return values;
+            }
+
+            /// <summary>
+            /// Returns all values of a given property, with no duplicates
             /// </summary>
             /// <param name="property">Name of property</param>
             public IEnumerable<object> AllPropertyValues(string property)
             {
                 var list = new List<object>();
-                var props = PropertyHierarchy();
-                foreach (var item in props.Keys.Where(o => o.Name == property))
+                var props = PropertyValues(property);
+                foreach (var item in props)
                 {
-                    var values = props[item];
-                    foreach (var o in values)
-                        list.Add(o);
+                    list.AddRange((IEnumerable<object>)item.Values);
                 }
 
                 return list.Distinct();
             }
 
             /// <summary>
-            /// Returns all categories in the hierarchy
-            /// </summary>
-            /// <returns></returns>
-            public IDictionary<string, IList<string>> CategoryHierarchy()
-            {
-                var dict = new Dictionary<string, IList<string>>();
-                var all = PropertyHierarchy();
-                foreach (var property in all.Where(o => o.Key.Name == "Category"))
-                {
-                    var values = new List<string>();
-                    foreach (var item in property.Value)
-                    {
-                        string s = item?.ToString() ?? string.Empty;
-                        values.Add(s);
-                    }
-                    dict.Add(property.Key.Level, values);
-                }
-                return dict;
-            }
-            /// <summary>
             /// Return all categories in the hierarchy flattened
             /// </summary>
-            public IEnumerable<string> AllCategories()
-            {
-                var cats = new List<string>();
-                var lists = CategoryHierarchy().Values;
-                foreach (var list in lists)
-                {
-                    cats.AddRange(list);
-                }
-
-                return cats.Distinct();
-            }
+            public IEnumerable<string> AllCategories() => AllPropertyValues("Category").Select(o => (string)o).ToList();
 
             #endregion
         }
@@ -603,6 +591,33 @@ namespace NUnit.Framework
             /// Name of test level, from ITest
             /// </summary>
             public string Level { get; } = string.Empty;
+        }
+
+        /// <summary>
+        /// Represents property value at different test levels
+        /// </summary>
+        public class PropertyValueHierarchyItem
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PropertyValueHierarchyItem"/> class.
+            /// </summary>
+            /// <param name="testName">Level</param>
+            /// <param name="propValues">List of values</param>
+            public PropertyValueHierarchyItem(string testName, IList propValues)
+            {
+                Level = testName;
+                Values = propValues;
+            }
+
+            /// <summary>
+            /// List of values for the given level
+            /// </summary>
+            public IList Values { get; set; }
+
+            /// <summary>
+            /// Level of the test (aka test name)
+            /// </summary>
+            public string Level { get; set; }
         }
 
         #endregion
