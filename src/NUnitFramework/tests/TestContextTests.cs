@@ -335,10 +335,18 @@ namespace NUnit.Framework.Tests
         [Test]
         public async Task TestContextWriteLine_ShouldNotThrow_WhenExecutedFromAsyncMethod()
         {
-            Assert.DoesNotThrow(TestContext.WriteLine);
+            Assert.DoesNotThrow(() => TestContext.WriteLine(string.Empty));
             await YieldAsync();
-            Assert.DoesNotThrow(TestContext.WriteLine);
+            Assert.DoesNotThrow(() => TestContext.WriteLine(string.Empty));
         }
+
+        [Test]
+        public void ThatWeCanWriteToOutput()
+        {
+            Assert.DoesNotThrow(() => TestContext.WriteLine(42));
+        }
+
+
 
         [Test]
         public void TestContextOut_ShouldBeAvailableFromOtherThreads()
