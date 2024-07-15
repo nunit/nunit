@@ -102,7 +102,10 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-
+            if (other.HookExtension is object)
+            {
+                HookExtension = new HookExtension(other.HookExtension);
+            }
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -397,6 +400,11 @@ namespace NUnit.Framework.Internal
         /// Currently only being executed in a test using the <see cref="RetryAttribute"/>
         /// </summary>
         public int CurrentRepeatCount { get; set; }
+
+        /// <summary>
+        /// Hook Extension to support high level test extensions.
+        /// </summary>
+        public HookExtension? HookExtension { get; } = new();
 
         #endregion
 
