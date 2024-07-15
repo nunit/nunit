@@ -133,6 +133,40 @@ namespace NUnit.Framework.Tests.Internal.Filters
         private class ExplicitFixture
         {
         }
+
+        public class CompoundCategoryFilterFixture
+        {
+            [TestFixture, Category("TestsA")]
+            public class TestsA
+            {
+                [Test]
+                public void TestInA()
+                {
+                    Assert.Pass();
+                }
+            }
+
+            [TestFixture, Category("TestsB")]
+            public class TestsB
+            {
+                [Test]
+                public void TestInB()
+                {
+                    Assert.Fail();
+                }
+            }
+
+            [TestFixture, Category("TestsC")]
+            public class TestsC
+            {
+                [Test]
+                public void TestInC()
+                {
+                    Assert.Pass();
+                }
+            }
+        }
+
         #endregion
     }
 }
