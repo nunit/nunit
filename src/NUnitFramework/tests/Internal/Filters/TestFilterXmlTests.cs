@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
@@ -307,6 +308,65 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<id>ID-123</id>"));
         }
 
+        #endregion
+
+        #region CompoundFilters
+
+        [Test(Description = "https://github.com/nunit/nunit/issues/4651")]
+        public void CompoundCategoryFilter_FromXml()
+        {
+            var filter = TestFilter.FromXml(
+                @"<filter>
+                    <or>
+                        <and>
+                            <cat>TestsA</cat>
+                            <not>
+                                <cat>TestsB</cat>
+                            </not>
+                        </and>
+                        <cat>TestsC</cat>
+                    </or>
+                </filter>") as OrFilter;
+
+            Assert.That(filter, Is.Not.Null, "Filter is not an OrFilter");
+
+            Assert.That(filter.Filters.Length, Is.EqualTo(2));
+            Assert.That(filter.Filters[0], Is.TypeOf<AndFilter>());
+            Assert.That(filter.Filters[1], Is.TypeOf<CategoryFilter>());
+
+            var fixtureA = TestBuilder.MakeFixture(typeof(CompoundCategoryFilterFixture.TestsA));
+            var fixtureB = TestBuilder.MakeFixture(typeof(CompoundCategoryFilterFixture.TestsB));
+            var fixtureC = TestBuilder.MakeFixture(typeof(CompoundCategoryFilterFixture.TestsC));
+
+            Assert.That(filter.Match(fixtureA));
+            Assert.That(filter.Match(fixtureC));
+            Assert.That(filter.Match(fixtureB), Is.False);
+        }
+
+        [Test(Description = "https://github.com/nunit/nunit/issues/4589")]
+        public void CompoundFilterWithSiblingConditions_FromXml()
+        {
+            var filter = TestFilter.FromXml(
+                @"<filter>
+                    <and>
+                        <not>
+                            <cat>Sample</cat>
+                        </not>
+                        <not>
+                            <cat>Stress</cat>
+                        </not>
+                    </and>
+                    <not>
+                        <prop name='Explicit'>true</prop>
+                    </not>
+                </filter>") as AndFilter;
+
+            Assert.That(filter, Is.Not.Null, "Filter is not an AndFilter");
+
+            Assert.That(filter.Filters.Length, Is.EqualTo(2));
+            Assert.That(filter.Filters[0], Is.TypeOf<AndFilter>());
+            Assert.That(filter.Filters[1], Is.TypeOf<NotFilter>());
+        }
         #endregion
     }
 }
