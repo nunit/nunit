@@ -150,11 +150,6 @@ namespace NUnit.Framework.Interfaces
                             parents.Push(previous!);
                         }
 
-                        if (reader.Depth < parents.Count)
-                        {
-                            parents.Pop();
-                        }
-
                         var parent = parents.Peek();
                         parent.AddChildNode(current);
                     }
