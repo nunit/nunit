@@ -142,7 +142,6 @@ namespace NUnit.Framework.Tests.Internal.Filters
                 [Test]
                 public void TestInA()
                 {
-                    Assert.Pass();
                 }
             }
 
@@ -152,7 +151,6 @@ namespace NUnit.Framework.Tests.Internal.Filters
                 [Test]
                 public void TestInB()
                 {
-                    Assert.Fail();
                 }
             }
 
@@ -162,7 +160,6 @@ namespace NUnit.Framework.Tests.Internal.Filters
                 [Test]
                 public void TestInC()
                 {
-                    Assert.Pass();
                 }
             }
         }

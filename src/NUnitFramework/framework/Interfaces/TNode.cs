@@ -169,6 +169,13 @@ namespace NUnit.Framework.Interfaces
                         }
                     }
                 }
+                else if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    if (reader.Depth < parents.Count)
+                    {
+                        parents.Pop();
+                    }
+                }
                 else if (reader.NodeType == XmlNodeType.Text)
                 {
                     current!.Value = reader.Value;
@@ -464,7 +471,7 @@ namespace NUnit.Framework.Interfaces
             [MethodImpl(MethodImplOptions.NoInlining)]
             private static void ThrowArgumentOutOfRangeException(int index)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valid values");
             }
 
             /// <summary>
