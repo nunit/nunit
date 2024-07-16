@@ -3,7 +3,6 @@
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
-//using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
