@@ -492,6 +492,39 @@ namespace NUnit.TestData.AssertMultipleData
                 }
             }
         }
+
+        [Test]
+        public void NonReleasedScope()
+        {
+            Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+        }
+
+        [Test]
+        public void NonReleasedScopes()
+        {
+            Assert.EnterMultipleScope();
+            Assert.That(2 + 2, Is.EqualTo(4));
+
+            Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+        }
+
+        [Test]
+        public void ScopeReleasedOutOfOrder()
+        {
+            IDisposable outerScope = Assert.EnterMultipleScope();
+            Assert.That(2 + 2, Is.EqualTo(4));
+
+            IDisposable innerScope = Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+
+            outerScope.Dispose();
+            innerScope.Dispose();
+        }
     }
 
     internal class ComplexNumber

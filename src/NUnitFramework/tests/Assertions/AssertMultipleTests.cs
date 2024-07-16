@@ -80,6 +80,15 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(result.Message, Contains.Substring($"{invalidAssert} may not be used in a multiple assertion block."));
         }
 
+        [TestCase(nameof(AM.NonReleasedScope), 2, "Test completed with 1 active assertion scopes")]
+        [TestCase(nameof(AM.NonReleasedScopes), 3, "Test completed with 2 active assertion scopes")]
+        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3, "The assertion scope was disposed out of order")]
+        public void NonOrOutOfOrderReleaseScope(string methodName, int asserts, string errorMessage)
+        {
+            ITestResult result = CheckResult(methodName, ResultState.Error, asserts);
+            Assert.That(result.Message, Contains.Substring(errorMessage));
+        }
+
         [Test]
         public async Task AssertMultipleAsyncSucceeds()
         {
@@ -104,8 +113,8 @@ namespace NUnit.Framework.Tests.Assertions
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                if (result.ResultState.Status == TestStatus.Failed)
-                    Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+                if (result.ResultState.Status == TestStatus.Failed && result.StackTrace is not null)
+                    Assert.That(result.StackTrace, Does.Contain(methodName), "StackTrace");
             });
 
             if (result.AssertionResults.Count > 0)

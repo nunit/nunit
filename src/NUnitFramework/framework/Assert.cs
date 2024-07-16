@@ -263,6 +263,7 @@ namespace NUnit.Framework
         {
             private readonly TestExecutionContext _context;
             private readonly int _assertionCountWhenEnteringScope;
+            private readonly int _multipleAssertLevelInScope;
 
             public AssertionScope()
             {
@@ -270,11 +271,17 @@ namespace NUnit.Framework
                 Guard.OperationValid(_context is not null, "There is no current test execution context.");
 
                 _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResults.Count;
-                _context.MultipleAssertLevel++;
+                _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
             }
 
             public void Dispose()
             {
+                if (TestExecutionContext.CurrentContext != _context ||
+                    _context.MultipleAssertLevel != _multipleAssertLevelInScope)
+                {
+                    throw new InvalidOperationException("The assertion scope was disposed out of order.");
+                }
+
                 _context.MultipleAssertLevel--;
 
                 if (_context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
