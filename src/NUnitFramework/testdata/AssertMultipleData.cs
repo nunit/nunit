@@ -525,6 +525,15 @@ namespace NUnit.TestData.AssertMultipleData
             outerScope.Dispose();
             innerScope.Dispose();
         }
+
+        [Test]
+        public void ScopeReleasedTwice()
+        {
+            using IDisposable scope = Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+            scope.Dispose();
+        }
     }
 
     internal class ComplexNumber

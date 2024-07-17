@@ -28,6 +28,7 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.NestedBlock_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async_EnterScope), 3)]
+        [TestCase(nameof(AM.ScopeReleasedTwice), 2)]
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             CheckResult(methodName, ResultState.Success, asserts);

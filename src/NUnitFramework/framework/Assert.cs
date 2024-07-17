@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -265,6 +266,8 @@ namespace NUnit.Framework
             private readonly int _assertionCountWhenEnteringScope;
             private readonly int _multipleAssertLevelInScope;
 
+            private int _isDisposed;
+
             public AssertionScope()
             {
                 _context = TestExecutionContext.CurrentContext;
@@ -276,6 +279,9 @@ namespace NUnit.Framework
 
             public void Dispose()
             {
+                if (Interlocked.Exchange(ref _isDisposed, 1) == 1)
+                    return; // Already disposed.
+
                 if (TestExecutionContext.CurrentContext != _context ||
                     _context.MultipleAssertLevel != _multipleAssertLevelInScope)
                 {
