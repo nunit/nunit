@@ -305,6 +305,17 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
+        public void ExceptionThrownAfterTwoFailures_EnterScope()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(2 + 2, Is.EqualTo(5), "Failure 1");
+                Assert.That(1, Is.EqualTo(0), "Failure 2");
+                throw new Exception("Simulated Error");
+            }
+        }
+
+        [Test]
         public void ExceptionThrownAfterWarning()
         {
             Assert.Multiple(() =>
@@ -363,6 +374,18 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
+        public async Task ThreeAssertsSucceed_Async_EnterScope()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                await Task.Delay(100);
+                Assert.That(2 + 2, Is.EqualTo(4));
+                Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+            }
+        }
+
+        [Test]
         public void NestedBlock_ThreeAssertsSucceed_Async()
         {
             Assert.Multiple(async () =>
@@ -400,6 +423,26 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
+        public async Task TwoNestedBlocks_ThreeAssertsSucceed_Async_EnterScope()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                using (Assert.EnterMultipleScope())
+                {
+                    await Task.Delay(100);
+                    Assert.That(2 + 2, Is.EqualTo(4));
+                }
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                    await Task.Delay(100);
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+                }
+            }
+        }
+
+        [Test]
         public void TwoAsserts_BothAssertsFail_Async()
         {
             Assert.Multiple(async () =>
@@ -428,6 +471,68 @@ namespace NUnit.TestData.AssertMultipleData
                     Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 });
             });
+        }
+
+        [Test]
+        public async Task TwoNestedBlocks_TwoAssertsFail_Async_EnterScope()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                using (Assert.EnterMultipleScope())
+                {
+                    await Task.Delay(100);
+                    Assert.That(2 + 2, Is.EqualTo(5));
+                }
+
+                using (Assert.EnterMultipleScope())
+                {
+                    await Task.Delay(100);
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                }
+            }
+        }
+
+        [Test]
+        public void NonReleasedScope()
+        {
+            Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+        }
+
+        [Test]
+        public void NonReleasedScopes()
+        {
+            Assert.EnterMultipleScope();
+            Assert.That(2 + 2, Is.EqualTo(4));
+
+            Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+        }
+
+        [Test]
+        public void ScopeReleasedOutOfOrder()
+        {
+            IDisposable outerScope = Assert.EnterMultipleScope();
+            Assert.That(2 + 2, Is.EqualTo(4));
+
+            IDisposable innerScope = Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+
+            outerScope.Dispose();
+            innerScope.Dispose();
+        }
+
+        [Test]
+        public void ScopeReleasedTwice()
+        {
+            using IDisposable scope = Assert.EnterMultipleScope();
+            Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+            Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
+            scope.Dispose();
         }
     }
 
