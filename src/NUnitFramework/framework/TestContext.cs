@@ -149,7 +149,6 @@ namespace NUnit.Framework
         /// <typeparam name="T"></typeparam>
         public static void Write<T>(T val) => Out.Write(val);
 
-        
         /// <summary>Write a formatted string to the current result</summary>
         public static void Write(string format, object? arg1)
         {
@@ -180,7 +179,7 @@ namespace NUnit.Framework
         /// <param name="val"></param>
         /// <typeparam name="T"></typeparam>
         public static void WriteLine<T>(T val) => Out.WriteLine(val);
-        
+
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
         public static void WriteLine(string format, object? arg1)
         {

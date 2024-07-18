@@ -346,8 +346,6 @@ namespace NUnit.Framework.Tests
             Assert.DoesNotThrow(() => TestContext.WriteLine(42));
         }
 
-
-
         [Test]
         public void TestContextOut_ShouldBeAvailableFromOtherThreads()
         {
