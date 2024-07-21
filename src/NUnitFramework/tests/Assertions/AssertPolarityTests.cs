@@ -73,7 +73,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => Assert.That(1, Is.Negative, "MESSAGE"),
-                Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
+                Throws.TypeOf<SingleAssertException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => Assert.That(-1, Is.Positive, "MESSAGE"),
-                Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
+                Throws.TypeOf<SingleAssertException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]

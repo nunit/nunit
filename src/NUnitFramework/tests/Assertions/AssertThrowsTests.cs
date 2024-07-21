@@ -182,7 +182,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ThrowsConstraintWrappingAssertFail()
         {
             Assert.That(() => Assert.Fail(),
-                Throws.Exception.TypeOf<AssertionException>());
+                Throws.Exception.TypeOf<SingleAssertException>());
 
             CheckForSpuriousAssertionResults();
         }
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Tests.Assertions
             var ex = CatchException(() =>
                 Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException));
 
-            Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
+            Assert.That(ex, Is.Not.Null.With.TypeOf<SingleAssertException>());
 
             CheckForSpuriousAssertionResults();
         }

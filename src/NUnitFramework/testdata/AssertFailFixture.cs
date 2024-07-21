@@ -20,7 +20,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public void HandleAssertionException()
+        public void HandleAnyException()
         {
             try
             {

@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsValueConstraint("Community"));
 
-            Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
+            Assert.That(act, Throws.Exception.TypeOf<SingleAssertException>());
         }
 
         [TestCase("Mundo")]

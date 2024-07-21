@@ -75,7 +75,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Assert.That(
                 () => Assert.That(1, Is.Zero, "MESSAGE"),
-                Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
+                Throws.TypeOf<SingleAssertException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]

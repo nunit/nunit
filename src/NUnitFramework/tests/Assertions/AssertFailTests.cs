@@ -11,21 +11,21 @@ namespace NUnit.Framework.Tests.Assertions
     public class AssertFailTests
     {
         [Test]
-        public void ThrowsAssertionException()
+        public void ThrowsSingleAssertException()
         {
-            Assert.That(Assert.Fail, Throws.TypeOf<AssertionException>());
+            Assert.That(Assert.Fail, Throws.TypeOf<SingleAssertException>());
         }
 
         [Test]
-        public void ThrowsAssertionException_MessageSpecified()
+        public void ThrowsSingleAssertException_MessageSpecified()
         {
-            Assert.That(Assert.Fail, Throws.TypeOf<AssertionException>(), "My Message");
+            Assert.That(Assert.Fail, Throws.TypeOf<SingleAssertException>(), "My Message");
         }
 
         [Test]
-        public void ThrowsAssertionExceptionWithMessage()
+        public void ThrowsSingleAssertExceptionWithMessage()
         {
-            Assert.That(() => Assert.Fail("MESSAGE"), Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE"));
+            Assert.That(() => Assert.Fail("MESSAGE"), Throws.TypeOf<SingleAssertException>().With.Message.EqualTo("MESSAGE"));
         }
 
         [Test]
@@ -60,11 +60,11 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void TestStillFailsIfAssertionExceptionIsHandled()
+        public void TestStillFailsIfSingleAssertExceptionIsHandled()
         {
             var result = TestBuilder.RunTestCase(
                 typeof(AssertFailFixture),
-                nameof(AssertFailFixture.HandleAssertionException));
+                nameof(AssertFailFixture.HandleAnyException));
 
             Assert.Multiple(() =>
             {
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertThrowsMakesTestPass()
         {
-            Assert.Throws<AssertionException>(() => Assert.Fail("This should not be seen"));
+            Assert.Throws<SingleAssertException>(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);

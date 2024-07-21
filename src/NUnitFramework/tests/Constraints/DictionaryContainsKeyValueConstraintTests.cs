@@ -26,7 +26,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Bye", "Universe"));
 
-            Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
+            Assert.That(act, Throws.Exception.TypeOf<SingleAssertException>());
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hello", "Universe"));
 
-            Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
+            Assert.That(act, Throws.Exception.TypeOf<SingleAssertException>());
         }
 
         [TestCase("Mundo")]

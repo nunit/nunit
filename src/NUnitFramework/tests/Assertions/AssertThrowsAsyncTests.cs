@@ -225,7 +225,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void DoesNotThrowFails()
         {
             var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentException));
-            Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
+            Assert.That(ex, Is.Not.Null.With.TypeOf<SingleAssertException>());
 
             CheckForSpuriousAssertionResults();
         }
@@ -234,7 +234,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void DoesNotThrowFailsAsync()
         {
             var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
-            Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
+            Assert.That(ex, Is.Not.Null.With.TypeOf<SingleAssertException>());
 
             CheckForSpuriousAssertionResults();
         }

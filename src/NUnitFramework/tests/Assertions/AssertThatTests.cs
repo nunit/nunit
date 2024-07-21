@@ -106,94 +106,94 @@ namespace NUnit.Framework.Tests.Assertions
 #pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
-        public void FailureThrowsAssertionException_Boolean()
+        public void FailureThrowsSingleAssertException_Boolean()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5));
+            Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2 == 5));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_BooleanWithMessage()
+        public void FailureThrowsSingleAssertException_BooleanWithMessage()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "message"));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2 == 5, "message"));
             Assert.That(ex?.Message, Does.Contain("message"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2 == 5, Is.True)"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_BooleanWithMessageStringFunc()
+        public void FailureThrowsSingleAssertException_BooleanWithMessageStringFunc()
         {
             string GetExceptionMessage() => "Not Equal to 4";
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, GetExceptionMessage));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2 == 5, GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Not Equal to 4"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2 == 5, Is.True)"));
         }
 #pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
-        public void FailureThrowsAssertionException_ActualAndConstraint()
+        public void FailureThrowsSingleAssertException_ActualAndConstraint()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5)));
+            Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2, Is.EqualTo(5)));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualAndConstraintWithMessage()
+        public void FailureThrowsSingleAssertException_ActualAndConstraintWithMessage()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Error"));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualAndConstraintWithMessageStringFunc()
+        public void FailureThrowsSingleAssertException_ActualAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => "error";
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), GetExceptionMessage));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualLambdaAndConstraint()
+        public void FailureThrowsSingleAssertException_ActualLambdaAndConstraint()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5)));
+            Assert.Throws<SingleAssertException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5)));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualLambdaAndConstraintWithMessage()
+        public void FailureThrowsSingleAssertException_ActualLambdaAndConstraintWithMessage()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), "Error"));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_ActualLambdaAndConstraintWithMessageStringFunc()
+        public void FailureThrowsSingleAssertException_ActualLambdaAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => "error";
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), GetExceptionMessage));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_DelegateAndConstraint()
+        public void FailureThrowsSingleAssertException_DelegateAndConstraint()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4)));
+            Assert.Throws<SingleAssertException>(() => Assert.That(ReturnsFive, Is.EqualTo(4)));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_DelegateAndConstraintWithMessage()
+        public void FailureThrowsSingleAssertException_DelegateAndConstraintWithMessage()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), "Error"));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(ReturnsFive, Is.EqualTo(4))"));
         }
 
         [Test]
-        public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageStringFunc()
+        public void FailureThrowsSingleAssertException_DelegateAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => "error";
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), GetExceptionMessage));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(ReturnsFive, Is.EqualTo(4))"));
         }
@@ -251,7 +251,7 @@ namespace NUnit.Framework.Tests.Assertions
 
             // Act
 #pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(1 + 1 == 1, GetExceptionMessage));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(1 + 1 == 1, GetExceptionMessage));
 #pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
             // Assert
@@ -270,7 +270,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(formatCounter.NumberOfToStringCalls, Is.EqualTo(0), "The interpolated string should not have been evaluated");
 
             Assert.That(() => Assert.That(1 + 1, Is.Not.EqualTo(2), $"{text} {formatCounter}"),
-                Throws.InstanceOf<AssertionException>()
+                Throws.InstanceOf<SingleAssertException>()
                     .With.Message.Contains(text).
                     And
                     .With.Message.Contains("Assert.That(1 + 1, Is.Not.EqualTo(2)"));
@@ -303,7 +303,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertThatFailure()
         {
-            Assert.Throws<AssertionException>(() =>
+            Assert.Throws<SingleAssertException>(() =>
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
@@ -355,7 +355,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertThatWithFalseLambda()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(() => false, "Error"));
+            var ex = Assert.Throws<SingleAssertException>(() => Assert.That(() => false, "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => false, Is.True)"));
         }
@@ -442,19 +442,19 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.That(() =>
                 Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueA")
+                Throws.InstanceOf<SingleAssertException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueA")
                                                        .And.Message.Contains("Expected: 1"));
             Assert.That(() =>
                 Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueB")
+                Throws.InstanceOf<SingleAssertException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueB")
                                                        .And.Message.Contains("Expected: 1.1"));
             Assert.That(() =>
                 Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueC")
+                Throws.InstanceOf<SingleAssertException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueC")
                                                        .And.Message.Contains("Expected: \"1.1\""));
             Assert.That(() =>
                 Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueD")
+                Throws.InstanceOf<SingleAssertException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueD")
                                                        .And.Message.Contains("Expected: One"));
 
             /*
@@ -642,7 +642,7 @@ namespace NUnit.Framework.Tests.Assertions
             var two = new ParentClass(new ChildClass(new GrandChildClass(1)), new ChildClass(new GrandChildClass(2), new GrandChildClass(4)));
 
             Assert.That(() => Assert.That(two, Is.EqualTo(one).UsingPropertiesComparer()),
-                        Throws.InstanceOf<AssertionException>().With.Message.Contains("at property ParentClass.Two")
+                        Throws.InstanceOf<SingleAssertException>().With.Message.Contains("at property ParentClass.Two")
                                                                .And.Message.Contains("at property ChildClass.Values")
                                                                .And.Message.Contains("at index [1]")
                                                                .And.Message.Contains("at property GrandChildClass.Value")

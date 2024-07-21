@@ -110,7 +110,7 @@ namespace NUnit.Framework.Tests.Assertions
 
             public static void TestFailingAssertion()
             {
-                Assert.That(() => Assert.That(true, Is.False), Throws.TypeOf<AssertionException>());
+                Assert.That(() => Assert.That(true, Is.False), Throws.TypeOf<SingleAssertException>());
             }
 
             public static void TestFailingAssumption()
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Tests.Assertions
 
             public static void TestAssertFail()
             {
-                Assert.That(() => Assert.Fail(), Throws.TypeOf<AssertionException>());
+                Assert.That(() => Assert.Fail(), Throws.TypeOf<SingleAssertException>());
             }
 
             public static void TestAssertMultiple_AllAssertsPassing()

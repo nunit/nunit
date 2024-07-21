@@ -42,7 +42,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(
                 () => Assert.Fail("Intentional Failure"),
-                Throws.TypeOf<AssertionException>().With.Message.EqualTo("Intentional Failure"));
+                Throws.TypeOf<SingleAssertException>().With.Message.EqualTo("Intentional Failure"));
         }
 
         [Test]
