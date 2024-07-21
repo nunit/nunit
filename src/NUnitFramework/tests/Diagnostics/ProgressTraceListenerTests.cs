@@ -99,6 +99,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             _progressTraceListener.Dispose();
         }
 
+#if DEBUG
         [Test]
         public void TestDebugIsDirectedToOutput()
         {
@@ -108,6 +109,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(1));
             Assert.That(TestResultListener.Outputs[0], Is.EqualTo(SOME_TEXT + NL));
         }
+#endif
 
         [Test]
         public void TestTraceIsDirectedToOutput()
@@ -123,6 +125,7 @@ namespace NUnit.Framework.Tests.Diagnostics
     [TestFixture, NonParallelizable] // Tests may be affected by adding the "ProgressTraceListener" in "ProgressTraceListenerTests".
     public class NoProgressTraceListenerTests : ProgressTraceListenerTestsBase
     {
+#if DEBUG
         [Test]
         public void TestDebugIsNotDirectedToOutput()
         {
@@ -131,6 +134,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             Debug.WriteLine(SOME_TEXT);
             Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(0));
         }
+#endif
 
         [Test]
         public void TestTraceIsNotDirectedToOutput()
