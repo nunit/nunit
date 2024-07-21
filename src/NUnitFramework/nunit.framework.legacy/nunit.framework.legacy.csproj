@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
+  <PropertyGroup>
+    <Title>NUnit Framework Classic $(AssemblyConfiguration)</Title>
+  </PropertyGroup>
 
+ 
 </Project>
 

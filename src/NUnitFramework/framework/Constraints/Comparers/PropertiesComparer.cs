@@ -39,29 +39,29 @@ namespace NUnit.Framework.Constraints.Comparers
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
-            uint redoWithoutTolerance = 0x0;
-            if (tolerance.HasVariance)
-            {
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    PropertyInfo property = properties[i];
-                    object? xPropertyValue = property.GetValue(x, null);
-                    object? yPropertyValue = property.GetValue(y, null);
+            string declaringTypeName = xType.Name;
 
-                    EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
-                    if (result == EqualMethodResult.ComparedNotEqual)
-                        return result;
-                    if (result == EqualMethodResult.ToleranceNotSupported)
-                        redoWithoutTolerance |= 1U << i;
+            uint redoWithoutTolerance = 0x0;
+            for (int i = 0; i < properties.Length; i++)
+            {
+                PropertyInfo property = properties[i];
+                object? xPropertyValue = property.GetValue(x, null);
+                object? yPropertyValue = property.GetValue(y, null);
+
+                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
+                if (result == EqualMethodResult.ComparedNotEqual)
+                {
+                    return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
                 }
 
-                if (redoWithoutTolerance == (1U << properties.Length) - 1)
-                    return EqualMethodResult.ToleranceNotSupported;
+                if (result == EqualMethodResult.ToleranceNotSupported)
+                {
+                    redoWithoutTolerance |= 1U << i;
+                }
             }
-            else
-            {
-                redoWithoutTolerance = (1U << properties.Length) - 1;
-            }
+
+            if (redoWithoutTolerance == (1U << properties.Length) - 1)
+                return EqualMethodResult.ToleranceNotSupported;
 
             if (redoWithoutTolerance != 0)
             {
@@ -76,12 +76,29 @@ namespace NUnit.Framework.Constraints.Comparers
 
                         EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref noTolerance, comparisonState);
                         if (result == EqualMethodResult.ComparedNotEqual)
-                            return result;
+                        {
+                            return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
+                        }
                     }
                 }
             }
 
             return EqualMethodResult.ComparedEqual;
+        }
+
+        private static EqualMethodResult PropertyNotEqualResult(NUnitEqualityComparer equalityComparer, int i, string declaringTypeName, string propertyName, object? xPropertyValue, object? yPropertyValue)
+        {
+            var fp = new NUnitEqualityComparer.FailurePoint
+            {
+                Position = i,
+                PropertyName = $"{declaringTypeName}.{propertyName}",
+                ExpectedHasData = true,
+                ExpectedValue = xPropertyValue,
+                ActualHasData = true,
+                ActualValue = yPropertyValue
+            };
+            equalityComparer.FailurePoints.Insert(0, fp);
+            return EqualMethodResult.ComparedNotEqual;
         }
     }
 }

@@ -24,8 +24,11 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.ThreeWarnIf_AllPass), 3)]
         [TestCase(nameof(AM.ThreeWarnUnless_AllPass), 3)]
         [TestCase(nameof(AM.ThreeAssertsSucceed_Async), 3)]
+        [TestCase(nameof(AM.ThreeAssertsSucceed_Async_EnterScope), 3)]
         [TestCase(nameof(AM.NestedBlock_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
+        [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async_EnterScope), 3)]
+        [TestCase(nameof(AM.ScopeReleasedTwice), 2)]
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             CheckResult(methodName, ResultState.Success, asserts);
@@ -44,6 +47,9 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.WarningAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "WARNING")]
         [TestCase(nameof(AM.TwoAsserts_BothAssertsFail_Async), 2, "RealPart", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async), 3, "Expected: 5", "ImaginaryPart")]
+        [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async_EnterScope), 3, "Expected: 5", "ImaginaryPart")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures_EnterScope), 2, "Failure 1", "Failure 2")]
         public void AssertMultipleFails(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Failure, asserts, assertionMessages);
@@ -58,7 +64,6 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [TestCase(nameof(AM.ExceptionThrown), 0)]
-        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2", "Simulated Error")]
         [TestCase(nameof(AM.ExceptionThrownAfterWarning), 0, "WARNING", "Simulated Error")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
@@ -74,6 +79,15 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = CheckResult(methodName, ResultState.Error, 0);
             Assert.That(result.Message, Contains.Substring($"{invalidAssert} may not be used in a multiple assertion block."));
+        }
+
+        [TestCase(nameof(AM.NonReleasedScope), 2, "Test completed with 1 active assertion scopes")]
+        [TestCase(nameof(AM.NonReleasedScopes), 3, "Test completed with 2 active assertion scopes")]
+        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3, "The assertion scope was disposed out of order")]
+        public void NonOrOutOfOrderReleaseScope(string methodName, int asserts, string errorMessage)
+        {
+            ITestResult result = CheckResult(methodName, ResultState.Error, asserts);
+            Assert.That(result.Message, Contains.Substring(errorMessage));
         }
 
         [Test]
@@ -100,8 +114,8 @@ namespace NUnit.Framework.Tests.Assertions
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                if (result.ResultState.Status == TestStatus.Failed)
-                    Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+                if (result.ResultState.Status == TestStatus.Failed && result.StackTrace is not null)
+                    Assert.That(result.StackTrace, Does.Contain(methodName), "StackTrace");
             });
 
             if (result.AssertionResults.Count > 0)

@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("nunit.framework.tests, PublicKey=002400000480000094" +
@@ -36,14 +35,4 @@ using System.Runtime.CompilerServices;
                               "bee5e972a004ddd692dec8fa404ba4591e847a8cf35de21c2d3" +
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
-#if NET462
-[assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.6.2)")]
-#elif NET6_0
-[assembly: AssemblyTitle("NUnit Framework (.NET 6.0)")]
-#else
-#error Missing AssemblyTitle attribute for this target.
-#endif
-
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

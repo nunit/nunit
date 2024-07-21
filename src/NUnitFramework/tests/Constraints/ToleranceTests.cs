@@ -14,10 +14,28 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(2.05d, Is.EqualTo(2.0d));
         }
 
+        [Test, DefaultFloatingPointTolerance(0.1)]
+        public void DefaultToleranceOnTuple_Success()
+        {
+            Assert.That((2.05d, 0.95d), Is.EqualTo((2.0d, 1.0d)));
+        }
+
+        [Test, DefaultFloatingPointTolerance(0.1)]
+        public void DefaultToleranceOnMixedTuple_Success()
+        {
+            Assert.That((1, 2.05d, true), Is.EqualTo((1, 2.0d, true)));
+        }
+
         [Test, DefaultFloatingPointTolerance(0.01)]
         public void DefaultTolerance_Failure()
         {
             Assert.That(2.05d, Is.Not.EqualTo(2.0d));
+        }
+
+        [Test, DefaultFloatingPointTolerance(0.01)]
+        public void DefaultToleranceOnTuple_Failure()
+        {
+            Assert.That((2.05d, 0.95d), Is.Not.EqualTo((2.0d, 1.0d)));
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]

@@ -73,6 +73,11 @@ namespace NUnit.Framework
         /// Sets the name of the test case
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames"/>for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
         public TestCaseData SetName(string? name)
         {
             TestName = name;
@@ -82,6 +87,13 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
         public TestCaseData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
@@ -182,4 +194,82 @@ namespace NUnit.Framework
 
         #endregion
     }
+
+#if NET6_0_OR_GREATER // Although this compiles for .NET Framework, it fails at runtime with a NotSupportedException : Generic types are not valid.
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    public class TestCaseData<T> : TestCaseData
+    {
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments.
+        /// </summary>
+        public TestCaseData(T argument)
+            : base(new object?[] { argument })
+        {
+            TypeArgs = new[] { typeof(T) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    public class TestCaseData<T1, T2> : TestCaseData
+    {
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments.
+        /// </summary>
+        public TestCaseData(T1 argument1, T2 argument2)
+            : base(new object?[] { argument1, argument2 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    public class TestCaseData<T1, T2, T3> : TestCaseData
+    {
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments.
+        /// </summary>
+        public TestCaseData(T1 argument1, T2 argument2, T3 argument3)
+            : base(new object?[] { argument1, argument2, argument3 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    public class TestCaseData<T1, T2, T3, T4> : TestCaseData
+    {
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments.
+        /// </summary>
+        public TestCaseData(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
+            : base(new object?[] { argument1, argument2, argument3, argument4 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    public class TestCaseData<T1, T2, T3, T4, T5> : TestCaseData
+    {
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments.
+        /// </summary>
+        public TestCaseData(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
+            : base(new object?[] { argument1, argument2, argument3, argument4, argument5 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+        }
+    }
+#endif
 }

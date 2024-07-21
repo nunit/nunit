@@ -1,4 +1,5 @@
 #addin "nuget:?package=Cake.MinVer&version=3.0.0"
+#load "CakeScripts/VersionParsers.cs"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -128,17 +129,29 @@ Task("Build")
         DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetBuildSettings CreateDotNetBuildSettings() =>
-    new DotNetBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() 
+{
+    var version = packageVersion.ToString(); 
+    var assemblyVersion = VersionParsers.ParseAssemblyVersion(version);
+    var msBuildSettings = new DotNetMSBuildSettings {
+        ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
+        AssemblyVersion = assemblyVersion,
+        FileVersion = assemblyVersion,
+        InformationalVersion = version
+    };
+    Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
+    Information("FileVersion: {0}", msBuildSettings.FileVersion);
+    Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
+
+    var settings =  new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
         Verbosity = DotNetVerbosity.Minimal,
-        MSBuildSettings = new DotNetMSBuildSettings {
-            Version = packageVersion,
-            ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions
-        }
+        MSBuildSettings = msBuildSettings
      };
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST

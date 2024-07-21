@@ -74,12 +74,25 @@ namespace NUnit.Framework.Constraints
         public bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
 
         /// <summary>
+        /// Gets a value indicating whether to compare separate properties.
+        /// </summary>
+        /// <value>
+        ///   <see langword="true"/> if comparing separate properties; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool ComparingProperties => _comparer.CompareProperties;
+
+        /// <summary>
         /// Gets a value indicating whether or not to clip strings.
         /// </summary>
         /// <value>
         ///   <see langword="true"/> if set to clip strings otherwise, <see langword="false"/>.
         /// </value>
         public bool ClipStrings { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether there is any additional Failure Information.
+        /// </summary>
+        public bool HasFailurePoints => _comparer.HasFailurePoints;
 
         /// <summary>
         /// Gets the failure points.
@@ -358,8 +371,10 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
+        /// <typeparam name="TActual">The type of the actual value. Note for collection comparisons this is the element type.</typeparam>
+        /// <typeparam name="TExpected">The type of the expected value. Note for collection comparisons this is the element type.</typeparam>
         /// <returns>Self.</returns>
-        public EqualConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        public EqualConstraint Using<TActual, TExpected>(Func<TActual, TExpected, bool> comparison)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;

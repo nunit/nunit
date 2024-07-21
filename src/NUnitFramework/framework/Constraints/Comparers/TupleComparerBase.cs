@@ -26,28 +26,21 @@ namespace NUnit.Framework.Constraints.Comparers
             ComparisonState comparisonState = state.PushComparison(x, y);
 
             uint redoWithoutTolerance = 0x0;
-            if (tolerance.HasVariance)
+            for (int i = 0; i < numberOfGenericArgs; i++)
             {
-                for (int i = 0; i < numberOfGenericArgs; i++)
-                {
-                    string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                    object? xItem = getValue(xType, propertyName, x);
-                    object? yItem = getValue(yType, propertyName, y);
+                string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
+                object? xItem = getValue(xType, propertyName, x);
+                object? yItem = getValue(yType, propertyName, y);
 
-                    EqualMethodResult result = equalityComparer.AreEqual(xItem, yItem, ref tolerance, comparisonState);
-                    if (result == EqualMethodResult.ComparedNotEqual)
-                        return result;
-                    if (result == EqualMethodResult.ToleranceNotSupported)
-                        redoWithoutTolerance |= 1U << i;
-                }
+                EqualMethodResult result = equalityComparer.AreEqual(xItem, yItem, ref tolerance, comparisonState);
+                if (result == EqualMethodResult.ComparedNotEqual)
+                    return result;
+                if (result == EqualMethodResult.ToleranceNotSupported)
+                    redoWithoutTolerance |= 1U << i;
+            }
 
-                if (redoWithoutTolerance == (1U << numberOfGenericArgs) - 1)
-                    return EqualMethodResult.ToleranceNotSupported;
-            }
-            else
-            {
-                redoWithoutTolerance = (1U << numberOfGenericArgs) - 1;
-            }
+            if (redoWithoutTolerance == (1U << numberOfGenericArgs) - 1)
+                return EqualMethodResult.ToleranceNotSupported;
 
             if (redoWithoutTolerance != 0)
             {

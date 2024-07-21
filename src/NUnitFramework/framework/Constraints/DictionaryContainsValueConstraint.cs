@@ -61,11 +61,13 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
+        /// <typeparam name="TActualValueElement">The type of the dictionary's <c>TValue</c>.</typeparam>
+        /// <typeparam name="TExpected">The type of the expected value.</typeparam>
         /// <returns>Self.</returns>
-        public DictionaryContainsValueConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
+        public DictionaryContainsValueConstraint Using<TActualValueElement, TExpected>(Func<TActualValueElement, TExpected, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
-            Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
+            Func<TExpected, TActualValueElement, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
 
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;

@@ -96,6 +96,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(dictionary, Does.ContainValue(value).UsingPropertiesComparer());
         }
 
+        [Test]
+        public void UsingCustomComparerIsHonored()
+        {
+            var dictionary = new Dictionary<string, int> { { "a", 1 }, { "b", 2 }, { "c", 3 } };
+
+            Assert.That(dictionary, new DictionaryContainsValueConstraint("1").Using<int, string>((actual, expected) => actual.ToString() == expected));
+        }
+
         private sealed class XY
         {
             public XY(double x, double y)

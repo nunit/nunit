@@ -47,7 +47,10 @@ namespace NUnit.Framework.Internal.Commands
             if (_testMethod.HasExpectedResult)
                 Assert.That(result, Is.EqualTo(_testMethod.ExpectedResult));
 
-            context.CurrentResult.SetResult(ResultState.Success);
+            if (context.MultipleAssertLevel > 0)
+                context.CurrentResult.SetResult(ResultState.Error, $"Test completed with {context.MultipleAssertLevel} active assertion scopes.");
+            else
+                context.CurrentResult.SetResult(ResultState.Success);
 
             if (context.CurrentResult.AssertionResults.Count > 0)
                 context.CurrentResult.RecordTestCompletion();
