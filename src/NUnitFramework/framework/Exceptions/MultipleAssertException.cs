@@ -10,7 +10,7 @@ namespace NUnit.Framework
     /// Thrown when an assertion failed.
     /// </summary>
     [Serializable]
-    public class MultipleAssertException : ResultStateException
+    public class MultipleAssertException : AssertionException
     {
         /// <summary>
         /// Construct based on the TestResult so far. This is the constructor
