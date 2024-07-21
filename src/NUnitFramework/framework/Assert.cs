@@ -322,7 +322,7 @@ namespace NUnit.Framework
 
             // If we are outside any multiple assert block or multiple asserts disabled, then throw
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0 || (TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger && Debugger.IsAttached))
-                throw new AssertionException(result.Message);
+                throw new SingleAssertException(result.Message);
         }
 
         private static void IssueWarning(string message)
