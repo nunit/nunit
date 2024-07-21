@@ -10,7 +10,7 @@ namespace NUnit.Framework
     /// Thrown when an assertion failed.
     /// </summary>
     [Serializable]
-    public class MultipleAssertException : AssertionException
+    public class MultipleAssertException : AssertionException // WIP: Adding some comment attempting to trigger the GitHub workflow on the fork.
     {
         /// <summary>
         /// Construct based on the TestResult so far. This is the constructor
