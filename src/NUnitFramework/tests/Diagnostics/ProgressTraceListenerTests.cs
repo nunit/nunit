@@ -80,6 +80,7 @@ namespace NUnit.Framework.Tests.Diagnostics
         #endregion
     }
 
+#if (TRACE || DEBUG)
     [TestFixture, NonParallelizable] // Adding the "ProgressTraceListener" may lead to side-effects in other tests.
     public class ProgressTraceListenerTests : ProgressTraceListenerTestsBase
     {
@@ -111,6 +112,7 @@ namespace NUnit.Framework.Tests.Diagnostics
         }
 #endif
 
+#if TRACE
         [Test]
         public void TestTraceIsDirectedToOutput()
         {
@@ -120,6 +122,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(1));
             Assert.That(TestResultListener.Outputs[0], Is.EqualTo(SOME_TEXT + NL));
         }
+#endif
     }
 
     [TestFixture, NonParallelizable] // Tests may be affected by adding the "ProgressTraceListener" in "ProgressTraceListenerTests".
@@ -136,6 +139,7 @@ namespace NUnit.Framework.Tests.Diagnostics
         }
 #endif
 
+#if TRACE
         [Test]
         public void TestTraceIsNotDirectedToOutput()
         {
@@ -144,5 +148,7 @@ namespace NUnit.Framework.Tests.Diagnostics
             Trace.WriteLine(SOME_TEXT);
             Assert.That(TestResultListener.Outputs, Has.Count.EqualTo(0));
         }
+#endif
     }
+#endif
 }
