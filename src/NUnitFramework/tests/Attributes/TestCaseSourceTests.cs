@@ -514,6 +514,20 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 ExpectedResult = typeof(long)
             };
+#if NET6_0_OR_GREATER
+            yield return new TestCaseData<long>(2)
+            {
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData<long>(2L)
+            {
+                ExpectedResult = typeof(long)
+            };
+            yield return new TestCaseData<int>(2)
+            {
+                ExpectedResult = typeof(int)
+            };
+#endif
         }
 
         [Test]
@@ -556,7 +570,95 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 TypeArgs = new[] { typeof(IntConverter), typeof(int) }
             };
+#if NET6_0_OR_GREATER
+            yield return new TestCaseData<IntConverter, int>(new DerivedIntConverter(), 2);
+#endif
         }
+
+#if NET6_0_OR_GREATER
+        [TestCaseSource(nameof(GenericDataWithGenericConstraint1))]
+        public void ExplicitGenericDataWithCompatibleParameters<T>(T input)
+        {
+            Assert.That(input, Is.InstanceOf<T>());
+        }
+
+        private static IEnumerable<TestCaseData> GenericDataWithGenericConstraint1()
+        {
+            yield return new TestCaseData<int>(2);
+            yield return new TestCaseData<double>(2);
+        }
+
+        [TestCaseSource(nameof(GenericDataWithGenericConstraint2))]
+        public void ExplicitGenericDataWithCompatibleParameters<T1, T2>(T1 input1, T2 input2)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+            });
+        }
+
+        private static IEnumerable<TestCaseData> GenericDataWithGenericConstraint2()
+        {
+            yield return new TestCaseData<int, double>(2, 2.0);
+            yield return new TestCaseData<double, int>(2.0, 2);
+        }
+
+        [TestCaseSource(nameof(GenericDataWithGenericConstraint3))]
+        public void ExplicitGenericDataWithCompatibleParameters<T1, T2, T3>(T1 input1, T2 input2, T3 input3)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+            });
+        }
+
+        private static IEnumerable<TestCaseData> GenericDataWithGenericConstraint3()
+        {
+            yield return new TestCaseData<string, int, double>("2", 2, 2.0);
+            yield return new TestCaseData<double, int, string>(2.0, 2, "2");
+        }
+
+        [TestCaseSource(nameof(GenericDataWithGenericConstraint4))]
+        public void ExplicitGenericDataWithCompatibleParameters<T1, T2, T3, T4>(T1 input1, T2 input2, T3 input3, T4 input4)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+                Assert.That(input4, Is.InstanceOf<T4>());
+            });
+        }
+
+        private static IEnumerable<TestCaseData> GenericDataWithGenericConstraint4()
+        {
+            yield return new TestCaseData<bool, string, int, double>(true, "2", 2, 2.0);
+            yield return new TestCaseData<double, int, string, bool>(2.0, 2, "2", true);
+        }
+
+        [TestCaseSource(nameof(GenericDataWithGenericConstraint5))]
+        public void ExplicitGenericDataWithCompatibleParameters<T1, T2, T3, T4, T5>(T1 input1, T2 input2, T3 input3, T4 input4, T5 input5)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(input1, Is.InstanceOf<T1>());
+                Assert.That(input2, Is.InstanceOf<T2>());
+                Assert.That(input3, Is.InstanceOf<T3>());
+                Assert.That(input4, Is.InstanceOf<T4>());
+                Assert.That(input5, Is.InstanceOf<T5>());
+            });
+        }
+
+        private static IEnumerable<TestCaseData> GenericDataWithGenericConstraint5()
+        {
+            yield return new TestCaseData<bool, char, string, int, double>(true, 'N', "2", 2, 2.0);
+            yield return new TestCaseData<double, int, string, char, bool>(2.0, 2, "2", 'N', true);
+        }
+
+#endif
 
         #region Sources used by the tests
         private static readonly object[] MyData = new object[]
