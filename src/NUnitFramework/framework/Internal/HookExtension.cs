@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -9,6 +10,36 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class HookExtension
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HookExtension"/> class.
+        /// </summary>
+        public HookExtension() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HookExtension"/> class by copying hooks from another instance.
+        /// </summary>
+        /// <param name="other">The instance of <see cref="HookExtension"/> to copy hooks from.</param>
+        public HookExtension(HookExtension other)
+        {
+            // Proposal of copilot:
+            //
+            //BeforeAnySetUps += other.BeforeAnySetUps;
+            //AfterAnySetUps += other.AfterAnySetUps;
+            //BeforeTest += other.BeforeTest;
+            //AfterTest += other.AfterTest;
+            //BeforeAnyTearDowns += other.BeforeAnyTearDowns;
+            //AfterAnyTearDowns += other.AfterAnyTearDowns;
+            //
+            // But this does not work, because the event are not deregistered!
+            // So we need to do a deep copy by reflection:
+            other.BeforeAnySetUps?.GetInvocationList()?.ToList().ForEach(d => BeforeAnySetUps += d as SetUpTearDownHookHandler);
+            other.AfterAnySetUps?.GetInvocationList()?.ToList().ForEach(d => AfterAnySetUps += d as SetUpTearDownHookHandler);
+            other.BeforeTest?.GetInvocationList()?.ToList().ForEach(d => BeforeTest += d as TestHookHandler);
+            other.AfterTest?.GetInvocationList()?.ToList().ForEach(d => AfterTest += d as TestHookHandler);
+            other.BeforeAnyTearDowns?.GetInvocationList()?.ToList().ForEach(d => BeforeAnyTearDowns += d as SetUpTearDownHookHandler);
+            other.AfterAnyTearDowns?.GetInvocationList()?.ToList().ForEach(d => AfterAnyTearDowns += d as SetUpTearDownHookHandler);
+        }
+
         /// <summary/>
         public event SetUpTearDownHookHandler BeforeAnySetUps;
         /// <summary/>

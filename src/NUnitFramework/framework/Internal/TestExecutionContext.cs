@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-            HookExtension = other.HookExtension;
+            HookExtension = new HookExtension(other.HookExtension);
 
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
@@ -401,7 +401,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Hook Extension to support high level test extensions.
         /// </summary>
-        public HookExtension HookExtension { get; } = new();
+        public HookExtension? HookExtension { get; } = new();
 
         #endregion
 
