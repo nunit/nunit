@@ -519,7 +519,7 @@ namespace NUnit.Framework
             /// The returned values include the name of the level they are found at.
             /// </summary>
             /// <returns></returns>
-            public IList<PropertyValueHierarchyItem> PropertyValues(string property)
+            private IList<PropertyValueHierarchyItem> PropertyValues(string property)
             {
                 var values = new List<PropertyValueHierarchyItem>();
                 ITest? test = _test;
