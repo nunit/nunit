@@ -84,14 +84,13 @@ namespace NUnit.Framework.Internal.Commands
 
             try
             {
-                context.HookExtension.OnBeforeTest(context, _testMethod);
+                context.HookExtension?.OnBeforeTest(context, _testMethod);
                 return _testMethod.Method.Invoke(context.TestObject, arguments);
             }
             finally
             {
-                context.HookExtension.OnAfterTest(context, _testMethod);
+                context.HookExtension?.OnAfterTest(context, _testMethod);
             }
-
         }
     }
 }

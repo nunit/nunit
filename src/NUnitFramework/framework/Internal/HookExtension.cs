@@ -13,13 +13,21 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="HookExtension"/> class.
         /// </summary>
-        public HookExtension() { }
+        public HookExtension()
+        {
+            BeforeAnySetUps = (context, method) => { };
+            AfterAnySetUps = (context, method) => { };
+            BeforeTest = (context, testMethod) => { };
+            AfterTest = (context, testMethod) => { };
+            BeforeAnyTearDowns = (context, method) => { };
+            AfterAnyTearDowns = (context, method) => { };
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HookExtension"/> class by copying hooks from another instance.
         /// </summary>
         /// <param name="other">The instance of <see cref="HookExtension"/> to copy hooks from.</param>
-        public HookExtension(HookExtension other)
+        public HookExtension(HookExtension other) : this()
         {
             // Proposal of copilot:
             //
@@ -45,7 +53,6 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public event SetUpTearDownHookHandler AfterAnySetUps;
 
-
         /// <summary/>
         public event TestHookHandler BeforeTest;
         /// <summary/>
@@ -65,7 +72,6 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterAnySetUps(TestExecutionContext context, IMethodInfo method)
         {
-            //AfterAnySetUps?.Invoke(context, method);
             AfterAnySetUps?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as SetUpTearDownHookHandler)?.Invoke(context, method));
         }
 
@@ -78,7 +84,6 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterTest(TestExecutionContext context, TestMethod testMethod)
         {
-            //AfterTest?.Invoke(context, testMethod);
             AfterTest?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as TestHookHandler)?.Invoke(context, testMethod));
         }
 
@@ -91,7 +96,6 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterAnyTearDowns(TestExecutionContext context, IMethodInfo method)
         {
-            //AfterAnyTearDowns?.Invoke(context, method);
             AfterAnyTearDowns?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as SetUpTearDownHookHandler)?.Invoke(context, method));
         }
     }

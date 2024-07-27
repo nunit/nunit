@@ -53,15 +53,14 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    context.HookExtension.OnBeforeAnySetUps(context, setUpMethod);
+                    context.HookExtension?.OnBeforeAnySetUps(context, setUpMethod);
                     RunSetUpOrTearDownMethod(context, setUpMethod);
                 }
                 finally
                 {
-                    context.HookExtension.OnAfterAnySetUps(context, setUpMethod);
+                    context.HookExtension?.OnAfterAnySetUps(context, setUpMethod);
                 }
             }
-
         }
 
         /// <summary>
@@ -86,12 +85,12 @@ namespace NUnit.Framework.Internal.Commands
                     {
                         try
                         {
-                            context.HookExtension.OnBeforeAnyTearDowns(context, _tearDownMethods[index]);
+                            context.HookExtension?.OnBeforeAnyTearDowns(context, _tearDownMethods[index]);
                             RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
                         }
                         finally
                         {
-                            context.HookExtension.OnAfterAnyTearDowns(context, _tearDownMethods[index]);
+                            context.HookExtension?.OnAfterAnyTearDowns(context, _tearDownMethods[index]);
                         }
                     }
 
