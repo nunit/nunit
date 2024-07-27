@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -213,28 +214,9 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(TestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context is not null, "There is no current test execution context.");
-
-            var oldCount = context.CurrentResult.AssertionResults.Count;
-            context.MultipleAssertLevel++;
-
-            try
+            using (EnterMultipleScope())
             {
                 testDelegate();
-            }
-            finally
-            {
-                context.MultipleAssertLevel--;
-            }
-
-            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
-            {
-                context.CurrentResult.RecordTestCompletion();
-                if (context.CurrentResult.AssertionResults.Count > oldCount)
-                {
-                    throw new MultipleAssertException(context.CurrentResult);
-                }
             }
         }
 
@@ -246,28 +228,9 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context is not null, "There is no current test execution context.");
-
-            var oldCount = context.CurrentResult.AssertionResults.Count;
-            context.MultipleAssertLevel++;
-
-            try
+            using (EnterMultipleScope())
             {
                 AsyncToSyncAdapter.Await(testDelegate.Invoke);
-            }
-            finally
-            {
-                context.MultipleAssertLevel--;
-            }
-
-            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
-            {
-                context.CurrentResult.RecordTestCompletion();
-                if (context.CurrentResult.AssertionResults.Count > oldCount)
-                {
-                    throw new MultipleAssertException(context.CurrentResult);
-                }
             }
         }
 
@@ -279,24 +242,62 @@ namespace NUnit.Framework
         /// <param name="testDelegate">An AsyncTestDelegate to be executed in Multiple Assertion mode.</param>
         public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context is not null, "There is no current test execution context.");
-
-            context.MultipleAssertLevel++;
-
-            try
+            using (EnterMultipleScope())
             {
                 await testDelegate();
             }
-            finally
+        }
+
+        /// <summary>
+        /// Enters a multiple assert scope.
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported when the returned IDisposable is disposed.
+        /// </summary>
+        /// <returns>An <see cref="IDisposable"/> which when disposed leaves the multiple assertion scope.</returns>
+        public static IDisposable EnterMultipleScope()
+        {
+            return new AssertionScope();
+        }
+
+        private sealed class AssertionScope : IDisposable
+        {
+            private readonly TestExecutionContext _context;
+            private readonly int _assertionCountWhenEnteringScope;
+            private readonly int _multipleAssertLevelInScope;
+
+            private int _isDisposed;
+
+            public AssertionScope()
             {
-                context.MultipleAssertLevel--;
+                _context = TestExecutionContext.CurrentContext;
+                Guard.OperationValid(_context is not null, "There is no current test execution context.");
+
+                _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResults.Count;
+                _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
             }
 
-            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
+            public void Dispose()
             {
-                context.CurrentResult.RecordTestCompletion();
-                throw new MultipleAssertException(context.CurrentResult);
+                if (Interlocked.Exchange(ref _isDisposed, 1) == 1)
+                    return; // Already disposed.
+
+                if (TestExecutionContext.CurrentContext != _context ||
+                    _context.MultipleAssertLevel != _multipleAssertLevelInScope)
+                {
+                    throw new InvalidOperationException("The assertion scope was disposed out of order.");
+                }
+
+                _context.MultipleAssertLevel--;
+
+                if (_context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
+                {
+                    _context.CurrentResult.RecordTestCompletion();
+                    if (_context.CurrentResult.AssertionResults.Count > _assertionCountWhenEnteringScope)
+                    {
+                        throw new MultipleAssertException(_context.CurrentResult);
+                    }
+                }
             }
         }
 
