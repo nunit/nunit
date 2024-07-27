@@ -65,7 +65,8 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterAnySetUps(TestExecutionContext context, IMethodInfo method)
         {
-            AfterAnySetUps?.Invoke(context, method);
+            //AfterAnySetUps?.Invoke(context, method);
+            AfterAnySetUps?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as SetUpTearDownHookHandler)?.Invoke(context, method));
         }
 
         /// <summary/>
@@ -77,7 +78,8 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterTest(TestExecutionContext context, TestMethod testMethod)
         {
-            AfterTest?.Invoke(context, testMethod);
+            //AfterTest?.Invoke(context, testMethod);
+            AfterTest?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as TestHookHandler)?.Invoke(context, testMethod));
         }
 
         /// <summary/>
@@ -89,7 +91,8 @@ namespace NUnit.Framework.Internal
         /// <summary/>
         public void OnAfterAnyTearDowns(TestExecutionContext context, IMethodInfo method)
         {
-            AfterAnyTearDowns?.Invoke(context, method);
+            //AfterAnyTearDowns?.Invoke(context, method);
+            AfterAnyTearDowns?.GetInvocationList()?.Reverse().ToList().ForEach(d => (d as SetUpTearDownHookHandler)?.Invoke(context, method));
         }
     }
 
