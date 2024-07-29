@@ -108,6 +108,7 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
+            ThrowOnEachFailureUnderDebugger = other.ThrowOnEachFailureUnderDebugger;
             UseCancellation = other.UseCancellation;
             CancellationToken = other.CancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
