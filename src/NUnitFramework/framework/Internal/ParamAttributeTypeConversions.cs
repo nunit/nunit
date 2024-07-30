@@ -118,7 +118,65 @@ namespace NUnit.Framework.Internal
                 return convertedValue is not null;
             }
 
+            if (TryGetTupleType(underlyingTargetType, out var tupleTypes))
+            {
+                if (value is object?[] array && array.Length == tupleTypes.Length)
+                {
+                    var success = true;
+                    var ctorArgs = new object?[array.Length];
+                    for (int i = 0; i < ctorArgs.Length; i++)
+                    {
+                        if (!TryConvert(array[i], tupleTypes[i], out ctorArgs[i]))
+                        {
+                            success = false;
+                            break;
+                        }
+                    }
+                    if (success)
+                    {
+                        var ctor = underlyingTargetType.GetConstructor(tupleTypes)!;
+                        convertedValue = ctor.Invoke(ctorArgs);
+                        return true;
+                    }
+                }
+                else if (tupleTypes.Length == 1 && TryConvert(value, tupleTypes[0], out var tupleArg))
+                {
+                    var ctor = underlyingTargetType.GetConstructor(tupleTypes)!;
+                    convertedValue = ctor.Invoke(new[] { tupleArg });
+                    return true;
+                }
+            }
+
             convertedValue = null;
+            return false;
+        }
+
+        private static bool TryGetTupleType(Type type, [MaybeNullWhen(false)] out Type[] typeArgs)
+        {
+            if (!type.IsGenericType)
+            {
+                typeArgs = null;
+                return false;
+            }
+
+            Type genericType = type.GetGenericTypeDefinition();
+            if (genericType.Assembly == typeof(Tuple).Assembly &&
+                genericType.Namespace == typeof(Tuple).Namespace &&
+                genericType.Name.StartsWith("Tuple`", StringComparison.Ordinal))
+            {
+                typeArgs = type.GetGenericArguments();
+                return true;
+            }
+
+            if (genericType.Assembly == typeof(ValueTuple).Assembly &&
+                genericType.Namespace == typeof(ValueTuple).Namespace &&
+                genericType.Name.StartsWith("ValueTuple`", StringComparison.Ordinal))
+            {
+                typeArgs = type.GetGenericArguments();
+                return true;
+            }
+
+            typeArgs = null;
             return false;
         }
     }
