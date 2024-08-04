@@ -223,22 +223,6 @@ namespace NUnit.Framework.Internal
             return display;
         }
 
-        public static string EscapeControlChars(string s)
-        {
-            if (MayNeedEscape(s))
-            {
-                // cleanup
-                var sb = new StringBuilder();
-                foreach (char c in s)
-                {
-                    sb.Append(EscapeControlChar(c));
-                }
-                s = sb.ToString();
-            }
-
-            return s;
-        }
-
         private static string FormatException(Exception ex)
         {
             var builder = new StringBuilder();

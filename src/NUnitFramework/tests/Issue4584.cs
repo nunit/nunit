@@ -19,8 +19,6 @@ namespace NUnit.Framework.Tests
 
             foreach (var test in fixture.Tests)
             {
-                TestContext.Out.WriteLine($"Test: {DisplayName.EscapeControlChars(test.Name)}");
-
                 var filter = TestFilter.FromXml(
                     $"<filter><name>{test.Name}</name></filter>");
                 WorkItem? workItem = WorkItemBuilder.CreateWorkItem(fixture, filter, recursive: true);
