@@ -120,7 +120,10 @@ namespace NUnit.Framework.Interfaces
         public static TNode FromXml(string xmlText)
         {
             using var stringReader = new StringReader(xmlText);
-            using var reader = XmlReader.Create(stringReader);
+            using var reader = new XmlTextReader(stringReader)
+            {
+                Normalization = false
+            };
 
             // go to starting point
             reader.MoveToContent();

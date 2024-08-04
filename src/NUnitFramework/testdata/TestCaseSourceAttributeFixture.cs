@@ -217,5 +217,28 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 .SetProperty("ExpectedTestName", spec.GetTestCaseName(nameof(TestCaseNameTestDataMethod)));
 
         #endregion
+
+        #region Multiline selection failure
+        [TestFixture(Description = "https://github.com/nunit/nunit/issues/4584")]
+        public class SelectionFail
+        {
+            [TestCaseSource(nameof(Data))]
+            public static void Test(int actual, int expected)
+            {
+                Assert.That(actual, Is.EqualTo(expected));
+            }
+
+            public static IEnumerable<TestCaseData> Data
+            {
+                get
+                {
+                    yield return new TestCaseData(42, 42);
+                    yield return new TestCaseData(42, 42).SetName("42 == 42");
+                    yield return new TestCaseData(42, 42).SetName("42\r\n42");
+                    yield return new TestCaseData(42, 42).SetArgDisplayNames("42\n", "42\r\n");
+                }
+            }
+        }
+        #endregion
     }
 }
