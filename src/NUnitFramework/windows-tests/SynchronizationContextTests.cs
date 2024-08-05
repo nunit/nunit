@@ -145,10 +145,10 @@ namespace NUnit.Windows.Tests
                 apiAdapter.Execute(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
                     await Task.Yield();
+                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
                 });
-
-                Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
             }
         }
     }
