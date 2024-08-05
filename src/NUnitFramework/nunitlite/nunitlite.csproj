@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

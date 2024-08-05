@@ -22,7 +22,7 @@ var version = MinVer(settings=> settings
     .WithAutoIncrement(MinVerAutoIncrement.Minor)
 );
 
-var packageVersion = version;
+var packageVersion = "4.1.9999";//version;
 
 //////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
