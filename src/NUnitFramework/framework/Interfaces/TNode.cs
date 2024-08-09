@@ -120,7 +120,10 @@ namespace NUnit.Framework.Interfaces
         public static TNode FromXml(string xmlText)
         {
             using var stringReader = new StringReader(xmlText);
-            using var reader = XmlReader.Create(stringReader);
+            using var reader = new XmlTextReader(stringReader)
+            {
+                Normalization = false
+            };
 
             // go to starting point
             reader.MoveToContent();
@@ -150,11 +153,6 @@ namespace NUnit.Framework.Interfaces
                             parents.Push(previous!);
                         }
 
-                        if (reader.Depth < parents.Count)
-                        {
-                            parents.Pop();
-                        }
-
                         var parent = parents.Peek();
                         parent.AddChildNode(current);
                     }
@@ -167,6 +165,13 @@ namespace NUnit.Framework.Interfaces
                             reader.MoveToNextAttribute();
                             current.AddAttribute(reader.Name, reader.Value);
                         }
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.EndElement)
+                {
+                    if (reader.Depth < parents.Count)
+                    {
+                        parents.Pop();
                     }
                 }
                 else if (reader.NodeType == XmlNodeType.Text)
@@ -464,7 +469,7 @@ namespace NUnit.Framework.Interfaces
             [MethodImpl(MethodImplOptions.NoInlining)]
             private static void ThrowArgumentOutOfRangeException(int index)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valid values");
             }
 
             /// <summary>

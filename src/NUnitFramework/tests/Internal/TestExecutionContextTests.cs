@@ -660,18 +660,18 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void CanAccessDisableMultipleAssertsUnderDebugger()
         {
-            var value = _fixtureContext.DisableMultipleAssertsUnderDebugger;
-            Assert.That(_setupContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
-            Assert.That(TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
+            var value = _fixtureContext.ThrowOnEachFailureUnderDebugger;
+            Assert.That(_setupContext.ThrowOnEachFailureUnderDebugger, Is.EqualTo(value));
+            Assert.That(TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger, Is.EqualTo(value));
         }
 
         [Test]
         public async Task CanAccessDisableMultipleAssertsUnderDebugger_Async()
         {
-            var value = TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger;
-            Assert.That(value, Is.EqualTo(_setupContext.DisableMultipleAssertsUnderDebugger));
+            var value = TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger;
+            Assert.That(value, Is.EqualTo(_setupContext.ThrowOnEachFailureUnderDebugger));
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.DisableMultipleAssertsUnderDebugger, Is.EqualTo(value));
+            Assert.That(TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger, Is.EqualTo(value));
         }
 
         #endregion

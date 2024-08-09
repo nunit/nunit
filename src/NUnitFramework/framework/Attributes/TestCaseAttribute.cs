@@ -476,4 +476,91 @@ namespace NUnit.Framework
 
         #endregion
     }
+
+#if NET6_0_OR_GREATER // Although this compiles for .NET Framework, it fails at runtime with a NotSupportedException : Generic types are not valid.
+
+#pragma warning disable CS3015 // Type has no accessible constructors which use only CLS-compliant types
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class TestCaseAttribute<T> : TestCaseAttribute
+    {
+        /// <summary>
+        /// Construct a TestCaseAttribute with a list of arguments.
+        /// </summary>
+        public TestCaseAttribute(T argument)
+            : base(new object?[] { argument })
+        {
+            TypeArgs = new[] { typeof(T) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class TestCaseAttribute<T1, T2> : TestCaseAttribute
+    {
+        /// <summary>
+        /// Construct a TestCaseAttribute with a list of arguments.
+        /// </summary>
+        public TestCaseAttribute(T1 argument1, T2 argument2)
+            : base(new object?[] { argument1, argument2 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class TestCaseAttribute<T1, T2, T3> : TestCaseAttribute
+    {
+        /// <summary>
+        /// Construct a TestCaseAttribute with a list of arguments.
+        /// </summary>
+        public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3)
+            : base(new object?[] { argument1, argument2, argument3 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class TestCaseAttribute<T1, T2, T3, T4> : TestCaseAttribute
+    {
+        /// <summary>
+        /// Construct a TestCaseAttribute with a list of arguments.
+        /// </summary>
+        public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
+            : base(new object?[] { argument1, argument2, argument3, argument4 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+        }
+    }
+
+    /// <summary>
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
+    public class TestCaseAttribute<T1, T2, T3, T4, T5> : TestCaseAttribute
+    {
+        /// <summary>
+        /// Construct a TestCaseAttribute with a list of arguments.
+        /// </summary>
+        public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
+            : base(new object?[] { argument1, argument2, argument3, argument4, argument5 })
+        {
+            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+        }
+    }
+
+#pragma warning restore CS3015 // Type has no accessible constructors which use only CLS-compliant types
+#endif
 }
