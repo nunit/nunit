@@ -929,7 +929,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var comparer = new GenericEqualityComparison<int>();
                 Assert.Multiple(() =>
                 {
-                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
                 });
             }
@@ -937,13 +937,13 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void UsesBooleanReturningDelegate()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.Equals(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.Equals(y)));
             }
 
             [Test]
             public void UsesProvidedLambda_IntArgs()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.CompareTo(y)));
             }
 
             [Test, SetCulture("en-US")]
@@ -1039,10 +1039,13 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
             }
 
+            /// <summary>
+            /// Forcing this to use the old EqualConstraint, as the new one will not compile.
+            /// </summary>
             [Test]
             public void UsesProvidedPredicateForDirectComparisonDifferentTypes()
             {
-                Assert.That("1", Is.EqualTo(1).Using<string, int>((s, i) => i.ToString() == s));
+                Assert.That("1", Is.EqualTo((object)1).Using<string, int>((s, i) => i.ToString() == s));
             }
         }
 
