@@ -46,15 +46,20 @@ namespace NUnit.Framework.Constraints
         /// Construct an EqualConstraintResult
         /// </summary>
         public EqualConstraintResult(EqualConstraint constraint, object? actual, bool hasSucceeded)
+            : this(constraint, constraint.GetConstraintResultData(), actual, hasSucceeded)
+        {
+        }
+
+        internal EqualConstraintResult(IConstraint constraint, ResultData data, object? actual, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded)
         {
-            _expectedValue = constraint.Arguments[0];
-            _tolerance = constraint.Tolerance;
-            _caseInsensitive = constraint.CaseInsensitive;
-            _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
-            _comparingProperties = constraint.ComparingProperties;
-            _clipStrings = constraint.ClipStrings;
-            _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>();
+            _expectedValue = data.ExpectedValue;
+            _tolerance = data.Tolerance;
+            _caseInsensitive = data.CaseInsensitive;
+            _ignoringWhiteSpace = data.IgnoringWhiteSpace;
+            _comparingProperties = data.ComparingProperties;
+            _clipStrings = data.ClipStrings;
+            _failurePoints = data.FailurePoints;
         }
 
         /// <summary>
@@ -319,5 +324,16 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        internal readonly ref struct ResultData
+        {
+            public readonly object? ExpectedValue { get; init; }
+            public readonly Tolerance Tolerance { get; init; }
+            public readonly bool CaseInsensitive { get; init; }
+            public readonly bool IgnoringWhiteSpace { get; init; }
+            public readonly bool ComparingProperties { get; init; }
+            public readonly bool ClipStrings { get; init; }
+            public readonly IList<NUnitEqualityComparer.FailurePoint> FailurePoints { get; init; }
+        }
     }
 }

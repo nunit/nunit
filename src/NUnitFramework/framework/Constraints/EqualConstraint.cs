@@ -464,5 +464,16 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        internal EqualConstraintResult.ResultData GetConstraintResultData() => new()
+        {
+            ExpectedValue = Arguments[0],
+            Tolerance = Tolerance,
+            CaseInsensitive = CaseInsensitive,
+            IgnoringWhiteSpace = IgnoringWhiteSpace,
+            ComparingProperties = ComparingProperties,
+            ClipStrings = ClipStrings,
+            FailurePoints = HasFailurePoints ? FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>()
+        };
     }
 }

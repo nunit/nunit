@@ -305,15 +305,27 @@ namespace NUnit.Framework.Constraints
                     isSuccess = _comparer(_expected, a);
                 }
 
-                return new ConstraintResult(this, actual, isSuccess);
+                return new EqualConstraintResult(this, GetConstraintResultData(), actual, isSuccess);
             }
             else
             {
                 var value = _fallbackComparer.AreEqual(_expected, actual, ref _tolerance);
-                return new ConstraintResult(this, actual, value);
+                return new EqualConstraintResult(this, GetConstraintResultData(), actual, value);
             }
 
             throw new ArgumentException("Wrong type", nameof(actual));
+
+            EqualConstraintResult.ResultData GetConstraintResultData() => new()
+            {
+                // TODO: Handle string-specific cases separately?
+                ExpectedValue = Arguments[0],
+                Tolerance = Tolerance,
+                CaseInsensitive = false,
+                IgnoringWhiteSpace = false,
+                ComparingProperties = false,
+                ClipStrings = false,
+                FailurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>()
+            };
         }
 
         private static void GetTolerance(ref Tolerance tolerance)
