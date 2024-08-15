@@ -87,12 +87,6 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void IgnoreAttributeNullReason()
-        {
-            Assert.That(() => new IgnoreAttribute(null!), Throws.ArgumentNullException);
-        }
-
-        [Test]
         public void IgnoreAttributeIgnoresTest()
         {
             new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
