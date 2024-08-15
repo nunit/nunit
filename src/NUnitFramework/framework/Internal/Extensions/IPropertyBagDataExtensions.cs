@@ -19,8 +19,8 @@ namespace NUnit.Framework.Internal.Extensions
         internal static void AddIgnoreUntilReason(this IPropertyBag properties, DateTimeOffset untilDate, string? reason)
         {
             var skipReason = reason is null ?
-               $"Ignoring until {untilDate:u}." :
-               $"Ignoring until {untilDate:u}. {reason}";
+                $"Ignoring until {untilDate:u}." :
+                $"Ignoring until {untilDate:u}. {reason}";
             properties.Set(PropertyNames.SkipReason, skipReason);
         }
 
