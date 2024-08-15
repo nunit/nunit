@@ -25,7 +25,6 @@ namespace NUnit.Framework
         /// <exception cref="ArgumentNullException">If <paramref name="reason"/> is null.</exception>
         public IgnoreAttribute(string reason)
         {
-            Guard.ArgumentNotNull(reason, "reason");
             Reason = reason;
         }
 
