@@ -15,18 +15,23 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
-        private readonly string _reason;
         private DateTime? _untilDate;
         private string? _until;
 
         /// <summary>
-        /// Constructs the attribute giving a reason for ignoring the test
+        /// Constructs the attribute giving a reason for ignoring the test.
         /// </summary>
-        /// <param name="reason">The reason for ignoring the test</param>
+        /// <param name="reason">The reason for ignoring the test.</param>
+        /// <exception cref="ArgumentNullException">If <paramref name="reason"/> is null.</exception>
         public IgnoreAttribute(string reason)
         {
-            _reason = reason;
+            Reason = reason;
         }
+
+        /// <summary>
+        /// Gets the reason for ignoring the test.
+        /// </summary>
+        public string Reason { get; }
 
         /// <summary>
         /// The date in the future to stop ignoring the test as a string in UTC time.
@@ -66,14 +71,14 @@ namespace NUnit.Framework
                     if (_untilDate.Value > DateTime.Now)
                     {
                         test.RunState = RunState.Ignored;
-                        test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
+                        test.Properties.AddIgnoreUntilReason(_untilDate.Value, Reason);
                     }
                     test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
 
                     return;
                 }
                 test.RunState = RunState.Ignored;
-                test.Properties.Set(PropertyNames.SkipReason, _reason);
+                test.Properties.Set(PropertyNames.SkipReason, Reason);
             }
         }
 
