@@ -56,6 +56,7 @@ namespace NUnit.Framework
                 {
                     RunState = RunState.Ignored;
                     string? reason = (string?)Properties.Get(PropertyNames.SkipReason);
+                    System.Diagnostics.Debug.Assert(reason is not null, "TestCaseData.Ignore() should have set SkipReason");
                     Properties.AddIgnoreUntilReason(datetime, reason);
                 }
                 else

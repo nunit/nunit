@@ -16,11 +16,9 @@ namespace NUnit.Framework.Internal.Extensions
         /// <param name="properties">The test properties to add the skip reason to</param>
         /// <param name="untilDate">The date that the test is being ignored until</param>
         /// <param name="reason">The reason the test is being ignored until that date</param>
-        internal static void AddIgnoreUntilReason(this IPropertyBag properties, DateTimeOffset untilDate, string? reason)
+        internal static void AddIgnoreUntilReason(this IPropertyBag properties, DateTimeOffset untilDate, string reason)
         {
-            var skipReason = reason is null ?
-                $"Ignoring until {untilDate:u}." :
-                $"Ignoring until {untilDate:u}. {reason}";
+            var skipReason = $"Ignoring until {untilDate:u}. {reason}";
             properties.Set(PropertyNames.SkipReason, skipReason);
         }
 
