@@ -80,6 +80,19 @@ namespace NUnit.Framework.Tests.Attributes
         #region IgnoreAttribute
 
         [Test]
+        public void IgnoreAttributeReason()
+        {
+            var ignore = new IgnoreAttribute("BECAUSE");
+            Assert.That(ignore.Reason, Is.EqualTo("BECAUSE"));
+        }
+
+        [Test]
+        public void IgnoreAttributeNullReason()
+        {
+            Assert.That(() => new IgnoreAttribute(null!), Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void IgnoreAttributeIgnoresTest()
         {
             new IgnoreAttribute("BECAUSE").ApplyToTest(_test);
