@@ -62,7 +62,7 @@ namespace NUnit.Framework.Tests.Attributes
                 }
             }
 
-            TestContext.WriteLine($"{location}: {id}>");
+            TestContext.Out.WriteLine($"{location}: {id}>");
         }
     }
 }

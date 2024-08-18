@@ -1004,7 +1004,7 @@ namespace NUnit.Framework.Tests.Internal
 
         public void WriteToTestContext()
         {
-            TestContext.WriteLine("RunsInAppDomain.WriteToTestContext");
+            TestContext.Out.WriteLine("RunsInAppDomain.WriteToTestContext");
         }
     }
 #endif
