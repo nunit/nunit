@@ -139,14 +139,18 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestContextWrite_WritesToResult()
         {
+#pragma warning disable NUnit1033 // The Write methods on TestContext will be marked as Obsolete and eventually removed
             TestContext.Write(SOME_TEXT);
+#pragma warning restore NUnit1033 // The Write methods on TestContext will be marked as Obsolete and eventually removed
             Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
         }
 
         [Test]
         public void TestContextWriteLine_WritesToResult()
         {
+#pragma warning disable NUnit1033 // The Write methods on TestContext will be marked as Obsolete and eventually removed
             TestContext.WriteLine(SOME_TEXT);
+#pragma warning restore NUnit1033 // The Write methods on TestContext will be marked as Obsolete and eventually removed
             Assert.That(Framework.Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
