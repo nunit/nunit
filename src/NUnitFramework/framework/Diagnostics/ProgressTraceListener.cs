@@ -25,9 +25,15 @@ namespace NUnit.Framework.Diagnostics
     ///     System.Trace.Listeners.Add(new ProgressTraceListener());
     /// </c>
     /// </para><para>
-    /// Or again remove in the one-time tear-down, e.g.:
+    /// Alternatively, add it in the one-time set-up and again remove
+    /// it in the one-time tear-down, e.g.:
+    /// <c>
+    /// _progressTraceListener = new ProgressTraceListener();
+    /// System.Trace.Listeners.Add(_progressTraceListener);
+    /// </c>
     /// <c>
     /// System.Trace.Listeners.Remove(_progressTraceListener);
+    /// _progressTraceListener.Close();
     /// </c>
     /// </para></summary>
     /// <remarks><para>
