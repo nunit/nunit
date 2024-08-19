@@ -45,10 +45,6 @@ namespace NUnit.Framework.Diagnostics
     /// <see cref="ConsoleTraceListener"/> is provided by .NET
     /// (the origin of <see cref="Console"/>).
     /// </para></remarks>
-    // Implemented following the ConsoleTraceListener implementation.
-#if !NET6_0_OR_GREATER
-    [HostProtection(Synchronization = true)]
-#endif
     public class ProgressTraceListener : TextWriterTraceListener
     {
         #region Constructors
