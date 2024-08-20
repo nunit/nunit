@@ -65,7 +65,13 @@ namespace NUnit.Framework.Constraints
             // Initialize formatter to default for values of indeterminate type.
             DefaultValueFormatter = FormatValueWithoutThrowing;
 
+            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsTuple, GetValueFromTuple) ?? next(val));
+
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
+
+            AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
+
+            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
 
             AddFormatter(next => val => val is DateTime value ? FormatDateTime(value) : next(val));
 
@@ -86,12 +92,6 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
             AddFormatter(next => val => val is Array valArray ? FormatArray(valArray) : next(val));
-
-            AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
-
-            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsTuple, GetValueFromTuple) ?? next(val));
-
-            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
         }
 
 #if NETFRAMEWORK
