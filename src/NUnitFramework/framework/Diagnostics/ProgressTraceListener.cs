@@ -2,9 +2,6 @@
 
 using System;
 using System.Diagnostics;
-#if !NET6_0_OR_GREATER
-using System.Security.Permissions;
-#endif
 
 namespace NUnit.Framework.Diagnostics
 {
