@@ -80,8 +80,8 @@ namespace NUnit.Framework.Tests.Internal.Results
         [Test]
         public void WriteToTestContextOutput()
         {
-            TestContext.WriteLine("This is a test!");
-            TestContext.WriteLine("The characters &, ', \", < and > must be escaped.");
+            TestContext.Out.WriteLine("This is a test!");
+            TestContext.Out.WriteLine("The characters &, ', \", < and > must be escaped.");
         }
 
         [Test]
