@@ -176,6 +176,18 @@ namespace NUnit.Framework.Constraints
         {
             EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
 
+            return ProcessEqualResult(x, y, result);
+        }
+
+        internal bool AreEqual<T>(T? x, T? y, ref Tolerance tolerance)
+        {
+            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
+
+            return ProcessEqualResult(x, y, result);
+        }
+
+        internal static bool ProcessEqualResult<T1, T2>(T1? x, T2? y, EqualMethodResult result)
+        {
             switch (result)
             {
                 case EqualMethodResult.TypesNotSupported:
@@ -193,7 +205,7 @@ namespace NUnit.Framework.Constraints
             static string GetType(object? x) => x?.GetType().FullName ?? "null";
         }
 
-        internal EqualMethodResult AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
+        internal EqualMethodResult AreEqual<T>(T? x, T? y, ref Tolerance tolerance, ComparisonState state)
         {
             if (x is null && y is null)
                 return EqualMethodResult.ComparedEqual;
