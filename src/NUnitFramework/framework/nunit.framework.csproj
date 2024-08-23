@@ -14,14 +14,13 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <PackageReference Include="System.Threading.Tasks.Extensions" />
     <PackageReference Include="System.ValueTuple" />
+    <PackageReference Include="System.Memory" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Memory" />
+
   </ItemGroup>
 
   <ItemGroup>
