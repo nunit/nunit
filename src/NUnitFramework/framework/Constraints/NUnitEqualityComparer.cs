@@ -186,7 +186,7 @@ namespace NUnit.Framework.Constraints
             return ProcessEqualResult(x, y, result);
         }
 
-        internal static bool ProcessEqualResult<T1, T2>(T1? x, T2? y, EqualMethodResult result)
+        private static bool ProcessEqualResult<T1, T2>(T1? x, T2? y, EqualMethodResult result)
         {
             switch (result)
             {
