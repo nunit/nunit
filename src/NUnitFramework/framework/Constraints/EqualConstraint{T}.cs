@@ -290,15 +290,7 @@ namespace NUnit.Framework.Constraints
                 if (_comparer is null)
                 {
                     GetTolerance(ref _tolerance);
-
-                    if (_tolerance.IsUnsetOrDefault)
-                    {
-                        isSuccess = a.Equals(_expected);
-                    }
-                    else
-                    {
-                        isSuccess = Numerics.AreEqual(_expected, a, ref _tolerance);
-                    }
+                    isSuccess = _fallbackComparer.AreEqual(_expected, a, ref _tolerance);
                 }
                 else
                 {
