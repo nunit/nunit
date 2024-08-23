@@ -1,0 +1,171 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
+
+namespace NUnit.Framework.Tests.SolutionTests
+{
+    /// <summary>
+    /// Checks that the csproj of the framework projects are reflected correctly in the nuspec files.
+    /// </summary>
+    internal class NuspecDependenciesTests
+    {
+        [Test]
+        public void NUnitFrameworkNuspecContainsCorrectDependencies()
+        {
+            var nuspec = new NuspecReader(@"framework\NUnit.nuspec");
+            var csproj = new CsprojReader(@"framework\NUnit.Framework.csproj");
+            var nuspecPackages = nuspec.ExtractNuspecPackages();
+            var csprojPackages = csproj.ExtractCsprojPackages();
+            VerifyDependencies.ComparePackages(csprojPackages, nuspecPackages);
+        }
+    }
+
+    internal class CsprojReader
+    {
+        public const string NotSpecified = nameof(NotSpecified);
+        public string CsProjPath { get; }
+        private const string Root = "../../../../../../";
+        private string Xml { get; }
+
+        private const string PathToFrameworkFolder = $"{Root}/src/nunitframework/";
+        public CsprojReader(string nunitFrameworkCsproj)
+        {
+            CsProjPath = Path.GetFullPath(Path.Combine(PathToFrameworkFolder, nunitFrameworkCsproj));
+            Assert.That(File.Exists(CsProjPath), $"Csproj file at {CsProjPath} not found.");
+            Xml = File.ReadAllText(CsProjPath);
+        }
+
+        // Function to extract packages from the .csproj file
+        public Dictionary<string, List<string>> ExtractCsprojPackages()
+        {
+            var doc = XDocument.Parse(Xml);
+            var groupedPackages = new Dictionary<string, List<string>>();
+
+            foreach (var itemGroup in doc.Descendants("ItemGroup"))
+            {
+                var condition = itemGroup.Attribute("Condition")?.Value;
+                string framework = NotSpecified;
+
+                if (!string.IsNullOrEmpty(condition) && condition.Contains("TargetFrameworkIdentifier"))
+                {
+                    var split = condition.Split(new[] { "==" }, StringSplitOptions.RemoveEmptyEntries);
+                    framework = split[1].Trim().Replace("'", string.Empty);
+                }
+
+                var packageReferences = itemGroup.Descendants("PackageReference")
+                                                 .Select(pr => pr.Attribute("Include")?.Value)
+                                                 .Where(include => !string.IsNullOrEmpty(include)) // Ensure it's non-null and non-empty
+                                                 .Select(include => include!) // Use non-null assertion to ensure the result is a List<string>
+                                                 .ToList();
+
+                if (!groupedPackages.ContainsKey(framework))
+                {
+                    groupedPackages[framework] = new List<string>();
+                }
+
+                groupedPackages[framework].AddRange(packageReferences);
+            }
+
+            return groupedPackages;
+        }
+    }
+
+    public class NuspecReader
+    {
+        private const string Root = "../../../../../../";
+
+        private const string PathToNuspecFolder = $"{Root}/nuget/";
+        private string Xml { get; }
+        public NuspecReader(string nuspecPath)
+        {
+            var path = Path.GetFullPath(Path.Combine(PathToNuspecFolder, nuspecPath));
+            Assert.That(File.Exists(path), $"Nuspec file at {path} not found.");
+            Xml = File.ReadAllText(path);
+        }
+
+        public Dictionary<string, List<string>> ExtractNuspecPackages()
+        {
+            var doc = XDocument.Parse(Xml);
+            XNamespace ns = "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd";
+
+            // Dictionary to hold dependencies grouped by targetFramework
+            var groupedDependencies = new Dictionary<string, List<string>>();
+
+            // Find the dependencies section
+            var dependenciesSection = doc.Descendants(ns + "dependencies").FirstOrDefault();
+            if (dependenciesSection != null)
+            {
+                // Iterate over all group elements within the dependencies block
+                foreach (var group in dependenciesSection.Elements(ns + "group"))
+                {
+                    // Get the targetFramework attribute
+                    var framework = group.Attribute("targetFramework")?.Value ?? "Both";
+
+                    // Find all dependency elements in the current group
+                    var dependencies = group.Elements(ns + "dependency")
+                                            .Select(dep => dep.Attribute("id")?.Value)
+                                            .Where(dep => !string.IsNullOrEmpty(dep))
+                                            .Select(dep => dep!) // Ensure non-null values
+                                            .ToList();
+
+
+                    // Add dependencies to the respective framework group
+                    if (!groupedDependencies.ContainsKey(framework))
+                    {
+                        groupedDependencies[framework] = new List<string>();
+                    }
+
+                    groupedDependencies[framework].AddRange(dependencies);
+                }
+            }
+
+            return groupedDependencies;
+        }
+    }
+
+    public class VerifyDependencies
+    {
+        public static void ComparePackages(Dictionary<string, List<string>> csprojPackages, Dictionary<string, List<string>> nuspecPackages)
+        {
+            // Iterate through the frameworks in the csprojPackages dictionary
+            foreach (var csprojFramework in csprojPackages.Keys)
+            {
+                if (csprojFramework == CsprojReader.NotSpecified)
+                {
+                    TestContext.Out.WriteLine("Checking for packages that should be in all frameworks in the .nuspec file");
+                    // Check if the packages from the csproj are present in all nuspec framework
+                    foreach (var framework in nuspecPackages.Keys)
+                    {
+                        var missingPackages = csprojPackages[csprojFramework].Except(nuspecPackages[framework]).ToList();
+
+                        // Assert that there are no missing packages in any nuspec framework
+                        Assert.That(missingPackages, Is.Empty,
+                            $"Missing packages for framework '{framework}' in .nuspec for 'Both' csproj framework: {string.Join(", ", missingPackages)}");
+                    }
+                }
+                else
+                {
+                    TestContext.Out.WriteLine($"Checking for packages that should be in corresponding '{csprojFramework}' in the .nuspec file");
+                    // Handle specific framework case
+                    var matchingNuspecFramework = nuspecPackages.Keys.FirstOrDefault(nuspecFramework =>
+                        (csprojFramework == ".NETFramework" && nuspecFramework.StartsWith("net") &&
+                         int.TryParse(nuspecFramework.Substring(3), out var version) && version >= 462) ||
+                        (csprojFramework != ".NETFramework" && nuspecFramework == csprojFramework));
+
+                    // Assert that the matching framework was found
+                    Assert.That(matchingNuspecFramework, Is.Not.Null, $"Framework '{csprojFramework}' is in .csproj but not in .nuspec.");
+
+                    // Find packages in csproj that are missing in nuspec
+                    var missingPackages = csprojPackages[csprojFramework].Except(nuspecPackages[matchingNuspecFramework]).ToList();
+
+                    // Assert that no packages are missing
+                    Assert.That(missingPackages, Is.Empty, $"Missing packages for framework '{csprojFramework}' in .nuspec: {string.Join(", ", missingPackages)}");
+                }
+            }
+        }
+    }
+}
