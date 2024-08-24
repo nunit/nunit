@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Throws<Exception>(() =>
             {
                 Console.WriteLine(2);
-                TestContext.WriteLine(3);
+                TestContext.Out.WriteLine(3);
                 throw new Exception("test");
             });
             Console.WriteLine(4);
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(() =>
                 {
                     Console.WriteLine(2);
-                    TestContext.WriteLine(3);
+                    TestContext.Out.WriteLine(3);
                     throw new Exception("test");
                 },
                 Throws.Exception);

@@ -108,6 +108,7 @@ namespace NUnit.Framework.Internal
             _listener = other._listener;
             StopOnError = other.StopOnError;
             TestCaseTimeout = other.TestCaseTimeout;
+            ThrowOnEachFailureUnderDebugger = other.ThrowOnEachFailureUnderDebugger;
             UseCancellation = other.UseCancellation;
             CancellationToken = other.CancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
@@ -314,9 +315,9 @@ namespace NUnit.Framework.Internal
         internal int MultipleAssertLevel { get; set; }
 
         /// <summary>
-        /// Gets or sets wether asserts in multiple assert block should throw immediately under debugger.
+        /// Gets or sets wether asserts in multiple assert block should throw first-change exceptions under debugger.
         /// </summary>
-        internal bool DisableMultipleAssertsUnderDebugger { get; set; }
+        internal bool ThrowOnEachFailureUnderDebugger { get; set; }
 
         /// <summary>
         /// Gets or sets the test case timeout value

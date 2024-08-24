@@ -311,6 +311,71 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
+        [Test]
+        [CancelAfter(500)]
+        public void TestWithCancelAfterAttributeAndValueAttributeHasCancellationToken([Values] bool value, CancellationToken cancellationToken)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(value, Is.True.Or.False);
+                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            });
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+        [Test]
+        [CancelAfter(500)]
+        [Sequential]
+        public void TestWithCancelAfterAttributeAndMultipleValueAttributesSequentialHasCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(a, Is.EqualTo(b));
+                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            });
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+        [Test]
+        [CancelAfter(500)]
+        [Pairwise]
+        public void TestWithCancelAfterAttributeAndMultipleValueAttributesPairwiseHasCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(a, Is.EqualTo(b).Or.Not.EqualTo(b));
+                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            });
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+        private static readonly bool[] Parameters = { true, false };
+
+        [Test]
+        [CancelAfter(500)]
+        public void TestWithCancelAfterAttributeAndValueSourceAttributeHasCancellationToken([ValueSource(nameof(Parameters))] bool value, CancellationToken cancellationToken)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(value, Is.True.Or.False);
+                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            });
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+        [Test]
+        [CancelAfter(500)]
+        [Pairwise]
+        public void TestWithCancelAfterAttributeAndMultipleValueSourceAttributesPairwiseHasCancellationToken([ValueSource(nameof(Parameters))] bool a, [ValueSource(nameof(Parameters))] bool b, CancellationToken cancellationToken)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(a, Is.EqualTo(b).Or.Not.EqualTo(b));
+                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            });
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
         private static readonly int[] Arguments = { 1 };
 
         [CancelAfter(500)]

@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// than <paramref name="comparisonType"/> was already set.</exception>
         public SubstringConstraint Using(StringComparison comparisonType)
         {
-            if (_comparisonType == null)
+            if (_comparisonType is null)
                 _comparisonType = comparisonType;
             else if (_comparisonType != comparisonType)
                 throw new InvalidOperationException("A different comparison type was already set.");
