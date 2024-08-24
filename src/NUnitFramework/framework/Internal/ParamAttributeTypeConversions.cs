@@ -120,7 +120,26 @@ namespace NUnit.Framework.Internal
 
             if (TryGetTupleType(underlyingTargetType, out var tupleTypes))
             {
-                if (value is object?[] array && array.Length == tupleTypes.Length)
+                object inflatedValue;
+                if (value is object?[] longArray &&
+                    longArray.Length > tupleTypes.Length &&
+                    tupleTypes.Length > 0 &&
+                    TryGetTupleType(tupleTypes[tupleTypes.Length - 1], out _))
+                {
+                    var inflatedArray = new object[tupleTypes.Length];
+                    Array.Copy(longArray, inflatedArray, tupleTypes.Length - 1);
+                    var restArray = new object[longArray.Length - tupleTypes.Length + 1];
+                    Array.Copy(longArray, tupleTypes.Length - 1, restArray, 0, restArray.Length);
+                    inflatedArray[tupleTypes.Length - 1] = restArray;
+
+                    inflatedValue = inflatedArray;
+                }
+                else
+                {
+                    inflatedValue = value;
+                }
+
+                if (inflatedValue is object?[] array && array.Length == tupleTypes.Length)
                 {
                     var success = true;
                     var ctorArgs = new object?[array.Length];
@@ -139,7 +158,8 @@ namespace NUnit.Framework.Internal
                         return true;
                     }
                 }
-                else if (tupleTypes.Length == 1 && TryConvert(value, tupleTypes[0], out var tupleArg))
+                else if (tupleTypes.Length == 1 &&
+                         TryConvert(inflatedValue, tupleTypes[0], out var tupleArg))
                 {
                     var ctor = underlyingTargetType.GetConstructor(tupleTypes)!;
                     convertedValue = ctor.Invoke(new[] { tupleArg });

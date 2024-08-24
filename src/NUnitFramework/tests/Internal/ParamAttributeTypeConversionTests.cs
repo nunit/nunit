@@ -92,5 +92,29 @@ namespace NUnit.Framework.Tests.Internal
 
             Assert.That(result, Is.All.InstanceOf(targetType));
         }
+
+        [Test]
+        [TestCase(typeof(Tuple<int, int, int, int, long, long, long, Tuple<string>>))]
+        [TestCase(typeof((int, int, int, int, long, long, long, string)))]
+        public void TestArrayOfObjectsToEightTuple(Type targetType)
+        {
+            var data = new object[] { new object[] { 1, 2, 3, 4, 5, 6, 7, "8" } };
+
+            var result = ParamAttributeTypeConversions.ConvertData(data, targetType);
+
+            Assert.That(result, Is.All.InstanceOf(targetType));
+        }
+
+        [Test]
+        [TestCase(typeof(Tuple<int, int, int, int, long, long, long, Tuple<long, int, int, int, int, long, long, Tuple<long, long>>>))]
+        [TestCase(typeof((int, int, int, int, long, long, long, long, int, int, int, int, long, long, long, long)))]
+        public void TestArrayOfObjectsToTupleWithRestArgument(Type targetType)
+        {
+            var data = new object[] { new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8 } };
+
+            var result = ParamAttributeTypeConversions.ConvertData(data, targetType);
+
+            Assert.That(result, Is.All.InstanceOf(targetType));
+        }
     }
 }
