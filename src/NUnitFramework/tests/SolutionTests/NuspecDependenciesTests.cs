@@ -38,7 +38,6 @@ namespace NUnit.Framework.Tests.SolutionTests
             VerifyDependencies.CheckNuspecPackages(_nuspecPackages, _csprojPackages);
         }
 
-
         internal sealed class CsprojReader
         {
             private const string PathToFrameworkFolder = $"{Root}/src/NUnitFramework/";
