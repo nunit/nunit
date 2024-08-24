@@ -13,17 +13,31 @@ namespace NUnit.Framework.Tests.SolutionTests
     /// </summary>
     internal class NuspecDependenciesTests
     {
+        private Dictionary<string, List<string>> _nuspecPackages;
+        private Dictionary<string, List<string>> _csprojPackages;
         private const string Root = "../../../../../../";
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            var nuspec = new NuspecReader("framework/nunit.nuspec");
+            var csproj = new CsprojReader("framework/nunit.framework.csproj");
+            _nuspecPackages = nuspec.ExtractNuspecPackages();
+            _csprojPackages = csproj.ExtractCsprojPackages();
+        }
 
         [Test]
         public void NUnitFrameworkNuspecContainsCorrectDependencies()
         {
-            var nuspec = new NuspecReader("framework/nunit.nuspec");
-            var csproj = new CsprojReader("framework/nunit.framework.csproj");
-            var nuspecPackages = nuspec.ExtractNuspecPackages();
-            var csprojPackages = csproj.ExtractCsprojPackages();
-            VerifyDependencies.ComparePackages(csprojPackages, nuspecPackages);
+            VerifyDependencies.ComparePackages(_csprojPackages, _nuspecPackages);
         }
+
+        [Test]
+        public void AllPackagesInNuspecIsInCsproj()
+        {
+            VerifyDependencies.CheckNuspecPackages(_nuspecPackages, _csprojPackages);
+        }
+
 
         internal sealed class CsprojReader
         {
@@ -105,7 +119,7 @@ namespace NUnit.Framework.Tests.SolutionTests
                     foreach (var group in dependenciesSection.Elements(ns + "group"))
                     {
                         // Get the targetFramework attribute
-                        var framework = group.Attribute("targetFramework")?.Value ?? "Both";
+                        var framework = group.Attribute("targetFramework")?.Value ?? CsprojReader.NotSpecified;
 
                         // Find all dependency elements in the current group
                         var dependencies = group.Elements(ns + "dependency")
@@ -140,14 +154,17 @@ namespace NUnit.Framework.Tests.SolutionTests
                     {
                         TestContext.Out.WriteLine("Checking for packages that should be in all frameworks in the .nuspec file");
                         // Check if the packages from the csproj are present in all nuspec framework
-                        foreach (var framework in nuspecPackages.Keys)
+                        Assert.Multiple(() =>
                         {
-                            var missingPackages = csprojPackages[csprojFramework].Except(nuspecPackages[framework]).ToList();
+                            foreach (var framework in nuspecPackages.Keys)
+                            {
+                                var missingPackages = csprojPackages[csprojFramework].Except(nuspecPackages[framework]).ToList();
 
-                            // Assert that there are no missing packages in any nuspec framework
-                            Assert.That(missingPackages, Is.Empty,
-                                $"Missing packages for framework '{framework}' in .nuspec for 'Both' csproj framework: {string.Join(", ", missingPackages)}");
-                        }
+                                // Assert that there are no missing packages in any nuspec framework
+                                Assert.That(missingPackages, Is.Empty,
+                                    $"Missing packages in framework '{framework}' in .nuspec: {string.Join(", ", missingPackages)}");
+                            }
+                        });
                     }
                     else
                     {
@@ -168,6 +185,19 @@ namespace NUnit.Framework.Tests.SolutionTests
                         Assert.That(missingPackages, Is.Empty, $"Missing packages for framework '{csprojFramework}' in .nuspec: {string.Join(", ", missingPackages)}");
                     }
                 }
+            }
+
+            public static void CheckNuspecPackages(Dictionary<string, List<string>> nuspecPackages, Dictionary<string, List<string>> csprojPackages)
+            {
+                // Extract all packages from csproj
+                var allCsprojPackages = csprojPackages.Values.SelectMany(x => x);
+
+                // Extract all packages from nuspec
+                var allNuspecPackages = nuspecPackages.Values.SelectMany(x => x).ToList();
+
+                // Find packages in nuspec that are missing in csproj
+                var missingPackages = allNuspecPackages.Except(allCsprojPackages).ToList();
+                Assert.That(missingPackages, Is.Empty, $"Packages in .nuspec that are not in .csproj and should be deleted from nuspec: {string.Join(", ", missingPackages)}");
             }
         }
     }
