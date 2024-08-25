@@ -15,7 +15,9 @@ namespace NUnit.Framework.Tests.SolutionTests
     {
         private Dictionary<string, List<string>> _nuspecPackages;
         private Dictionary<string, List<string>> _csprojPackages;
+
         private const string Root = "../../../../../../";
+        private const string NotSpecified = nameof(NotSpecified);
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -41,8 +43,6 @@ namespace NUnit.Framework.Tests.SolutionTests
         internal sealed class CsprojReader
         {
             private const string PathToFrameworkFolder = $"{Root}/src/NUnitFramework/";
-
-            public const string NotSpecified = nameof(NotSpecified);
 
             private string Xml { get; }
 
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Tests.SolutionTests
                     foreach (var group in dependenciesSection.Elements(ns + "group"))
                     {
                         // Get the targetFramework attribute
-                        var framework = group.Attribute("targetFramework")?.Value ?? CsprojReader.NotSpecified;
+                        var framework = group.Attribute("targetFramework")?.Value ?? NotSpecified;
 
                         // Find all dependency elements in the current group
                         var dependencies = group.Elements(ns + "dependency")
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Tests.SolutionTests
                 // Iterate through the frameworks in the csprojPackages dictionary
                 foreach (var csprojFramework in csprojPackages.Keys)
                 {
-                    if (csprojFramework == CsprojReader.NotSpecified)
+                    if (csprojFramework == NotSpecified)
                     {
                         TestContext.Out.WriteLine("Checking for packages that should be in all frameworks in the .nuspec file");
                         // Check if the packages from the csproj are present in all nuspec framework
