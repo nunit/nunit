@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests.SolutionTests
             VerifyDependencies.CheckNuspecPackages(_nuspecPackages, _csprojPackages);
         }
 
-        internal sealed class CsprojReader
+        private sealed class CsprojReader
         {
             private const string PathToFrameworkFolder = $"{Root}/src/NUnitFramework/";
 
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Tests.SolutionTests
             }
         }
 
-        internal sealed class NuspecReader
+        private sealed class NuspecReader
         {
             private const string PathToNuspecFolder = $"{Root}/nuget/";
 
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Tests.SolutionTests
             }
         }
 
-        public class VerifyDependencies
+        private sealed class VerifyDependencies
         {
             public static void ComparePackages(Dictionary<string, List<string>> csprojPackages, Dictionary<string, List<string>> nuspecPackages)
             {
