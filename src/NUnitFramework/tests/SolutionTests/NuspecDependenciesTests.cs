@@ -11,21 +11,30 @@ namespace NUnit.Framework.Tests.SolutionTests
     /// <summary>
     /// Checks that the csproj of the framework projects are reflected correctly in the nuspec files.
     /// </summary>
-    internal class NuspecDependenciesTests
+    [TestFixture("framework/nunit.nuspec", "NUnitFramework/framework/nunit.framework.csproj")]
+    [TestFixture("nunitlite/nunitlite.nuspec", "NUnitFramework/nunitlite/nunitlite.csproj")]
+    internal sealed class NuspecDependenciesTests
     {
+        private readonly string _nuspecPath;
+        private readonly string _csprojPath;
+
         private Dictionary<string, List<string>> _nuspecPackages;
         private Dictionary<string, List<string>> _csprojPackages;
 
         private const string Root = "../../../../../../";
         private const string NotSpecified = nameof(NotSpecified);
 
+        public NuspecDependenciesTests(string nuspecPath, string csProjPath)
+        {
+            _nuspecPath = Path.GetFullPath($"{Root}/nuget/{nuspecPath}");
+            _csprojPath = Path.GetFullPath($"{Root}/src/{csProjPath}");
+        }
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var nuspec = new NuspecReader("framework/nunit.nuspec");
-            var csproj = new CsprojReader("framework/nunit.framework.csproj");
-            _nuspecPackages = nuspec.ExtractNuspecPackages();
-            _csprojPackages = csproj.ExtractCsprojPackages();
+            _nuspecPackages = NuspecReader.ExtractNuspecPackages(_nuspecPath);
+            _csprojPackages = CsprojReader.ExtractCsprojPackages(_csprojPath);
         }
 
         [Test]
@@ -40,23 +49,15 @@ namespace NUnit.Framework.Tests.SolutionTests
             VerifyDependencies.CheckNuspecPackages(_nuspecPackages, _csprojPackages);
         }
 
-        private sealed class CsprojReader
+        private static class CsprojReader
         {
-            private const string PathToFrameworkFolder = $"{Root}/src/NUnitFramework/";
-
-            private string Xml { get; }
-
-            public CsprojReader(string nunitFrameworkCsproj)
-            {
-                var path = Path.GetFullPath(Path.Combine(PathToFrameworkFolder, nunitFrameworkCsproj));
-                Assert.That(File.Exists(path), $"Csproj file at {path} not found.");
-                Xml = File.ReadAllText(path);
-            }
-
             // Function to extract packages from the .csproj file
-            public Dictionary<string, List<string>> ExtractCsprojPackages()
+            public static Dictionary<string, List<string>> ExtractCsprojPackages(string path)
             {
-                var doc = XDocument.Parse(Xml);
+                Assert.That(path, Does.Exist, $"Csproj file at {path} not found.");
+                string xml = File.ReadAllText(path);
+
+                var doc = XDocument.Parse(xml);
                 var groupedPackages = new Dictionary<string, List<string>>();
 
                 foreach (var itemGroup in doc.Descendants("ItemGroup"))
@@ -76,6 +77,15 @@ namespace NUnit.Framework.Tests.SolutionTests
                                                      .Select(include => include!) // Use non-null assertion to ensure the result is a List<string>
                                                      .ToList();
 
+                    if (itemGroup.Descendants("ProjectReference")
+                                 .Select(pr => pr.Attribute("Include")?.Value)
+                                 .Where(include => !string.IsNullOrEmpty(include)) // Ensure it's non-null and non-empty
+                                 .Select(include => include!) // Use non-null assertion to ensure the result is a List<string>
+                                 .Any(include => include.EndsWith("nunit.framework.csproj")))
+                    {
+                        packageReferences.Add("NUnit");
+                    }
+
                     if (!groupedPackages.TryGetValue(framework, out List<string>? referencesForFramework))
                     {
                         referencesForFramework = new List<string>();
@@ -89,22 +99,14 @@ namespace NUnit.Framework.Tests.SolutionTests
             }
         }
 
-        private sealed class NuspecReader
+        private static class NuspecReader
         {
-            private const string PathToNuspecFolder = $"{Root}/nuget/";
-
-            private string Xml { get; }
-
-            public NuspecReader(string nuspecPath)
+            public static Dictionary<string, List<string>> ExtractNuspecPackages(string path)
             {
-                var path = Path.GetFullPath(Path.Combine(PathToNuspecFolder, nuspecPath));
-                Assert.That(File.Exists(path), $"Nuspec file at {path} not found.");
-                Xml = File.ReadAllText(path);
-            }
+                Assert.That(path, Does.Exist, $"Nuspec file at {path} not found.");
+                string xml = File.ReadAllText(path);
 
-            public Dictionary<string, List<string>> ExtractNuspecPackages()
-            {
-                var doc = XDocument.Parse(Xml);
+                var doc = XDocument.Parse(xml);
                 XNamespace ns = "http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd";
 
                 // Dictionary to hold dependencies grouped by targetFramework
