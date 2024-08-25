@@ -42,7 +42,7 @@ namespace NUnit.Framework.Tests.SolutionTests
         }
 
         [Test]
-        public void NUnitFrameworkNuspecContainsCorrectDependencies()
+        public void AllPackagesInCsprojIsInNuspec()
         {
             VerifyDependencies.ComparePackages(_csprojPackages, _nuspecPackages);
         }
