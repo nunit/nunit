@@ -310,7 +310,7 @@ namespace NUnit.Framework.Constraints
             EqualConstraintResult.ResultData GetConstraintResultData() => new()
             {
                 // TODO: Handle string-specific cases separately?
-                ExpectedValue = Arguments[0],
+                ExpectedValue = _expected,
                 Tolerance = Tolerance,
                 CaseInsensitive = false,
                 IgnoringWhiteSpace = false,
