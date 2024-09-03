@@ -25,6 +25,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
+            if (numberOfGenericArgs == 0) // Nothing to compare
+                return EqualMethodResult.ComparedEqual;
+
             uint redoWithoutTolerance = 0x0;
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
