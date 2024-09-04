@@ -408,8 +408,6 @@ namespace NUnit.Framework
         /// </summary>
         public class TestAdapter
         {
-            private readonly Test _test;
-
             #region Constructor
 
             /// <summary>
@@ -418,7 +416,7 @@ namespace NUnit.Framework
             /// <param name="test">The Test to be adapted</param>
             public TestAdapter(Test test)
             {
-                _test = test;
+                Test = test;
             }
 
             #endregion
@@ -426,70 +424,75 @@ namespace NUnit.Framework
             #region Properties
 
             /// <summary>
+            /// The adapted Test
+            /// </summary>
+            public Test Test { get; }
+
+            /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public string ID => _test.Id;
+            public string ID => Test.Id;
 
             /// <summary>
             /// The name of the test, which may or may not be
             /// the same as the method name.
             /// </summary>
-            public string Name => _test.Name;
+            public string Name => Test.Name;
 
             /// <summary>
             /// Get the Namespace of the test.
             /// </summary>
-            public string? Namespace => _test.TypeInfo?.Namespace;
+            public string? Namespace => Test.TypeInfo?.Namespace;
 
             /// <summary>
             /// Get the display name of the test.
             /// </summary>
-            public string? DisplayName => _test.TypeInfo?.GetDisplayName();
+            public string? DisplayName => Test.TypeInfo?.GetDisplayName();
 
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-            public string? MethodName => (_test as TestMethod)?.Method.Name;
+            public string? MethodName => (Test as TestMethod)?.Method.Name;
 
             /// <summary>
             /// The method representing the test.
             /// </summary>
-            public IMethodInfo? Method => (_test as TestMethod)?.Method;
+            public IMethodInfo? Method => (Test as TestMethod)?.Method;
 
             /// <summary>
             /// Gets the underlying Type.
             /// </summary>
-            public Type? Type => _test.TypeInfo?.Type;
+            public Type? Type => Test.TypeInfo?.Type;
 
             /// <summary>
             /// The FullName of the test
             /// </summary>
-            public string FullName => _test.FullName;
+            public string FullName => Test.FullName;
 
             /// <summary>
             /// The ClassName of the test
             /// </summary>
-            public string? ClassName => _test.ClassName;
+            public string? ClassName => Test.ClassName;
 
             /// <summary>
             /// A shallow copy of the properties of the test.
             /// </summary>
-            public PropertyBagAdapter Properties => new(_test.Properties);
+            public PropertyBagAdapter Properties => new(Test.Properties);
 
             /// <summary>
             /// The arguments to use in creating the test or empty array if none are required.
             /// </summary>
-            public object?[] Arguments => _test.Arguments;
+            public object?[] Arguments => Test.Arguments;
 
             /// <summary>
             /// The expected result if there is one for the test
             /// </summary>
-            public object? ExpectedResult => (_test as TestMethod)?.ExpectedResult;
+            public object? ExpectedResult => (Test as TestMethod)?.ExpectedResult;
 
             /// <summary>
             /// The parent of this test or suite
             /// </summary>
-            public ITest? Parent => _test.Parent;
+            public ITest? Parent => Test.Parent;
 
             /// <summary>
             /// Returns all properties in the hierarchy
@@ -499,7 +502,7 @@ namespace NUnit.Framework
             public IDictionary<PropertyHierachyItem, IList> PropertyHierarchy()
             {
                 var dict = new Dictionary<PropertyHierachyItem, IList>();
-                ITest? test = _test;
+                ITest? test = Test;
                 do
                 {
                     foreach (var property in test.Properties.Keys)
@@ -522,7 +525,7 @@ namespace NUnit.Framework
             private IList<PropertyValueHierarchyItem> PropertyValues(string property)
             {
                 var values = new List<PropertyValueHierarchyItem>();
-                ITest? test = _test;
+                ITest? test = Test;
                 do
                 {
                     var propValues = test.Properties[property];
