@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Runtime.ExceptionServices;
-using System.Threading.Tasks;
 using System;
-using NUnit.Framework.Constraints;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {
@@ -26,16 +25,17 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            try
+            var resolvedConstraint = constraint.Resolve();
+
+            IncrementAssertCount();
+            var result = await resolvedConstraint.ApplyToAsync(async () =>
             {
                 await code();
-                Assert.That(() => { }, constraint, message, actualExpression, constraintExpression);
-            }
-            catch (Exception ex)
-            {
-                var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
-            }
+                return (object?)null;
+            });
+
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -52,16 +52,17 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            try
+            var resolvedConstraint = constraint.Resolve();
+
+            IncrementAssertCount();
+            var result = await resolvedConstraint.ApplyToAsync(async () =>
             {
                 await code();
-                Assert.That(() => { }, constraint, message, actualExpression, constraintExpression);
-            }
-            catch (Exception ex)
-            {
-                var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
-            }
+                return (object?)null;
+            });
+
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -78,16 +79,13 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            try
-            {
-                var result = await code();
-                Assert.That(() => result, constraint, message, actualExpression, constraintExpression);
-            }
-            catch (Exception ex)
-            {
-                var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
-            }
+            var resolvedConstraint = constraint.Resolve();
+
+            IncrementAssertCount();
+            var result = await resolvedConstraint.ApplyToAsync(code);
+
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -104,16 +102,13 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            try
-            {
-                var result = await code();
-                Assert.That(() => result, constraint, message, actualExpression, constraintExpression);
-            }
-            catch (Exception ex)
-            {
-                var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
-            }
+            var resolvedConstraint = constraint.Resolve();
+
+            IncrementAssertCount();
+            var result = await resolvedConstraint.ApplyToAsync(code);
+
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
         }
 
         #endregion

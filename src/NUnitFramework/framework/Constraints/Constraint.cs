@@ -1,9 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -107,6 +108,12 @@ namespace NUnit.Framework.Constraints
         public virtual ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
             return ApplyTo(actual);
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
+        {
+            return ApplyTo(await taskDel());
         }
 
         /// <summary>
