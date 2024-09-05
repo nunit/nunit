@@ -70,6 +70,7 @@ namespace NUnit.Framework.Constraints
             return ApplyTo((Delegate)del);
         }
 
+        /// <inheritdoc/>
         public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> actual)
         {
             _caughtException = await ExceptionHelper.RecordExceptionAsync(actual, nameof(actual));
