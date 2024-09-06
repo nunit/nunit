@@ -13,12 +13,11 @@ namespace NUnit.Framework.Constraints
     /// value. NUnit has special semantics for some object types.
     /// </summary>
     public class EqualConstraint<T> : EqualConstraint
-        where T : struct, IEquatable<T>
+        where T : struct//, IEquatable<T>
     {
         #region Static and Instance Fields
 
         private readonly T _expected;
-        private Func<T, T, bool> _customComparer = null!;
 
         #endregion
 
@@ -30,6 +29,7 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint(T expected)
             : base(expected)
         {
+            AdjustArgumentIfNeeded(ref expected);
             _expected = expected;
         }
         #endregion
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
             if (!_tolerance.IsUnsetOrDefault)
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
-            _tolerance = new Tolerance(amount);
+            _tolerance = new Tolerance(amount!);
             return this;
         }
 
@@ -148,7 +148,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IComparer<T> comparer)
         {
-            _customComparer = (l, r) => comparer.Compare(l, r) == 0;
             return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
@@ -159,7 +158,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Func<T, T, bool> comparer)
         {
-            _customComparer = comparer;
             return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
@@ -170,7 +168,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Comparison<T> comparer)
         {
-            _customComparer = (l, r) => comparer(l, r) == 0;
             return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
@@ -181,7 +178,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public new EqualConstraint<T> Using(IEqualityComparer comparer)
         {
-            _customComparer = (l, r) => comparer.Equals(l, r);
             return (EqualConstraint<T>)base.Using(comparer);
         }
 
@@ -192,8 +188,19 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IEqualityComparer<T> comparer)
         {
-            _customComparer = (l, r) => comparer.Equals(l, r);
             return (EqualConstraint<T>)base.Using<T>(comparer);
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public new EqualConstraint<T> UsingPropertiesComparer()
+        {
+            return (EqualConstraint<T>)base.UsingPropertiesComparer();
         }
 
         #endregion
