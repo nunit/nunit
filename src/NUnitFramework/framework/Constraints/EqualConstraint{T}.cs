@@ -13,7 +13,6 @@ namespace NUnit.Framework.Constraints
     /// value. NUnit has special semantics for some object types.
     /// </summary>
     public class EqualConstraint<T> : EqualConstraint
-        where T : struct//, IEquatable<T>
     {
         #region Static and Instance Fields
 
@@ -148,7 +147,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IComparer<T> comparer)
         {
-            return (EqualConstraint<T>)base.Using<T>(comparer);
+            return (EqualConstraint<T>)base.Using(comparer);
         }
 
         /// <summary>
@@ -168,7 +167,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Comparison<T> comparer)
         {
-            return (EqualConstraint<T>)base.Using<T>(comparer);
+            return (EqualConstraint<T>)base.Using(comparer);
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IEqualityComparer<T> comparer)
         {
-            return (EqualConstraint<T>)base.Using<T>(comparer);
+            return (EqualConstraint<T>)base.Using(comparer);
         }
 
         /// <summary>
