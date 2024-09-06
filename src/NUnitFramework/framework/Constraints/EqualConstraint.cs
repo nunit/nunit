@@ -445,7 +445,7 @@ namespace NUnit.Framework.Constraints
 
         // Currently, we only adjust for ArraySegments that have a
         // null array reference. Others could be added in the future.
-        private void AdjustArgumentIfNeeded<T>(ref T arg)
+        private protected static void AdjustArgumentIfNeeded<T>(ref T arg)
         {
             if (arg is not null)
             {
