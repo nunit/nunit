@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -13,16 +12,12 @@ namespace NUnit.Framework.Constraints
     /// considered equal if both are null, or if both have the same
     /// value. NUnit has special semantics for some object types.
     /// </summary>
-    public class EqualConstraint<T> : Constraint
-        where T : IEquatable<T>
+    public class EqualConstraint<T> : EqualConstraint
+        where T : struct//, IEquatable<T>
     {
         #region Static and Instance Fields
 
         private readonly T _expected;
-
-        private Tolerance _tolerance = Tolerance.Default;
-        private Func<T, T, bool> _comparer = null!;
-        private readonly NUnitEqualityComparer _fallbackComparer = new();
 
         #endregion
 
@@ -34,43 +29,33 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint(T expected)
             : base(expected)
         {
+            AdjustArgumentIfNeeded(ref expected);
             _expected = expected;
         }
         #endregion
 
-        #region Properties
-
-        // TODO: Remove public properties
-        // They are only used by EqualConstraintResult
-        // EqualConstraint should inject them into the constructor.
-
-        /// <summary>
-        /// Gets the tolerance for this comparison.
-        /// </summary>
-        /// <value>
-        /// The tolerance.
-        /// </value>
-        public Tolerance Tolerance
-        {
-            get { return _tolerance; }
-        }
-
-        #endregion
-
         #region Constraint Modifiers
+        /// <summary>
+        /// Flag the constraint to ignore case and return self.
+        /// </summary>
+        public new EqualConstraint<T> IgnoreCase => (EqualConstraint<T>)base.IgnoreCase;
 
         /// <summary>
-        /// Flag the constraint to use a tolerance when determining equality.
+        /// Flag the constraint to ignore white space and return self.
         /// </summary>
-        /// <param name="amount">Tolerance value to be used</param>
-        /// <returns>Self.</returns>
-        public EqualConstraint Within(object amount)
-        {
-            if (!_tolerance.IsUnsetOrDefault)
-                throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
+        public new EqualConstraint<T> IgnoreWhiteSpace => (EqualConstraint<T>)base.IgnoreWhiteSpace;
 
-            return new EqualConstraint(_expected).Within(amount);
-        }
+        /// <summary>
+        /// Flag the constraint to suppress string clipping
+        /// and return self.
+        /// </summary>
+        public new EqualConstraint<T> NoClip => (EqualConstraint<T>)base.NoClip;
+
+        /// <summary>
+        /// Flag the constraint to compare arrays as collections
+        /// and return self.
+        /// </summary>
+        public new EqualConstraint<T> AsCollection => (EqualConstraint<T>)base.AsCollection;
 
         /// <summary>
         /// Flag the constraint to use a tolerance when determining equality.
@@ -82,9 +67,19 @@ namespace NUnit.Framework.Constraints
             if (!_tolerance.IsUnsetOrDefault)
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
-            _tolerance = new Tolerance(amount);
+            _tolerance = new Tolerance(amount!);
             return this;
         }
+
+        /// <summary>
+        /// Flags the constraint to include <see cref="DateTimeOffset.Offset"/>
+        /// property in comparison of two <see cref="DateTimeOffset"/> values.
+        /// </summary>
+        /// <remarks>
+        /// Using this modifier does not allow to use the <see cref="Within"/>
+        /// constraint modifier.
+        /// </remarks>
+        public new EqualConstraint<T> WithSameOffset => (EqualConstraint<T>)base.WithSameOffset;
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
@@ -100,14 +95,7 @@ namespace NUnit.Framework.Constraints
         /// point results instead of fixed tolerances is safer because it will
         /// automatically compensate for the added inaccuracy of larger numbers.
         /// </remarks>
-        public EqualConstraint<T> Ulps
-        {
-            get
-            {
-                _tolerance = _tolerance.Ulps;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Ulps => (EqualConstraint<T>)base.Ulps;
 
         /// <summary>
         /// Switches the .Within() modifier to interpret its tolerance as
@@ -115,102 +103,43 @@ namespace NUnit.Framework.Constraints
         /// the expected value.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Percent
-        {
-            get
-            {
-                _tolerance = _tolerance.Percent;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Percent => (EqualConstraint<T>)base.Percent;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in days.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Days
-        {
-            get
-            {
-                _tolerance = _tolerance.Days;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Days => (EqualConstraint<T>)base.Days;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in hours.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Hours
-        {
-            get
-            {
-                _tolerance = _tolerance.Hours;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Hours => (EqualConstraint<T>)base.Hours;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in minutes.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Minutes
-        {
-            get
-            {
-                _tolerance = _tolerance.Minutes;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Minutes => (EqualConstraint<T>)base.Minutes;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in seconds.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Seconds
-        {
-            get
-            {
-                _tolerance = _tolerance.Seconds;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Seconds => (EqualConstraint<T>)base.Seconds;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in milliseconds.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Milliseconds
-        {
-            get
-            {
-                _tolerance = _tolerance.Milliseconds;
-                return this;
-            }
-        }
+        public new EqualConstraint<T> Milliseconds => (EqualConstraint<T>)base.Milliseconds;
 
         /// <summary>
         /// Causes the tolerance to be interpreted as a TimeSpan in clock ticks.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualConstraint<T> Ticks
-        {
-            get
-            {
-                _tolerance = _tolerance.Ticks;
-                return this;
-            }
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
-        public EqualConstraint Using(IComparer comparer)
-        {
-            return new EqualConstraint(_expected).Using(comparer);
-        }
+        public new EqualConstraint<T> Ticks => (EqualConstraint<T>)base.Ticks;
 
         /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
@@ -219,9 +148,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IComparer<T> comparer)
         {
-            _comparer = (l, r) => comparer.Compare(l, r) == 0;
-            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
+            return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
         /// <summary>
@@ -231,9 +158,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Func<T, T, bool> comparer)
         {
-            _comparer = comparer;
-            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
+            return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
         /// <summary>
@@ -243,9 +168,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Comparison<T> comparer)
         {
-            _comparer = (l, r) => comparer(l, r) == 0;
-            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
+            return (EqualConstraint<T>)base.Using<T>(comparer);
         }
 
         /// <summary>
@@ -253,11 +176,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        public EqualConstraint<T> Using(IEqualityComparer comparer)
+        public new EqualConstraint<T> Using(IEqualityComparer comparer)
         {
-            _comparer = (l, r) => comparer.Equals(l, r);
-            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
+            return (EqualConstraint<T>)base.Using(comparer);
         }
 
         /// <summary>
@@ -267,9 +188,19 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IEqualityComparer<T> comparer)
         {
-            _comparer = (l, r) => comparer.Equals(l, r);
-            _fallbackComparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
+            return (EqualConstraint<T>)base.Using<T>(comparer);
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public new EqualConstraint<T> UsingPropertiesComparer()
+        {
+            return (EqualConstraint<T>)base.UsingPropertiesComparer();
         }
 
         #endregion
@@ -285,51 +216,26 @@ namespace NUnit.Framework.Constraints
         {
             if (actual is T a)
             {
-                bool isSuccess = false;
-
-                if (_comparer is null)
-                {
-                    GetTolerance(ref _tolerance);
-                    isSuccess = _fallbackComparer.AreEqual(_expected, a, ref _tolerance);
-                }
-                else
-                {
-                    isSuccess = _comparer(_expected, a);
-                }
+                AdjustArgumentIfNeeded(ref a);
+                bool isSuccess = _comparer.AreEqual(_expected, a, ref _tolerance);
 
                 return new EqualConstraintResult(this, GetConstraintResultData(), actual, isSuccess);
             }
             else
             {
-                var value = _fallbackComparer.AreEqual(_expected, actual, ref _tolerance);
-                return new EqualConstraintResult(this, GetConstraintResultData(), actual, value);
+                return base.ApplyTo(actual);
             }
-
-            throw new ArgumentException("Wrong type", nameof(actual));
 
             EqualConstraintResult.ResultData GetConstraintResultData() => new()
             {
-                // TODO: Handle string-specific cases separately?
                 ExpectedValue = _expected,
                 Tolerance = Tolerance,
-                CaseInsensitive = false,
-                IgnoringWhiteSpace = false,
-                ComparingProperties = false,
-                ClipStrings = false,
-                FailurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>()
+                CaseInsensitive = CaseInsensitive,
+                IgnoringWhiteSpace = IgnoringWhiteSpace,
+                ComparingProperties = ComparingProperties,
+                ClipStrings = ClipStrings,
+                FailurePoints = HasFailurePoints ? FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>()
             };
-        }
-
-        private static void GetTolerance(ref Tolerance tolerance)
-        {
-            if (tolerance.IsUnsetOrDefault && (typeof(T) == typeof(double) || typeof(T) == typeof(float)))
-            {
-                var defaultFloatingPointTolerance = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (defaultFloatingPointTolerance is not null && !defaultFloatingPointTolerance.IsUnsetOrDefault)
-                {
-                    tolerance = defaultFloatingPointTolerance;
-                }
-            }
         }
 
         /// <summary>

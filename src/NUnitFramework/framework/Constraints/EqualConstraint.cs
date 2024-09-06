@@ -19,12 +19,12 @@ namespace NUnit.Framework.Constraints
 
         private readonly object? _expected;
 
-        private Tolerance _tolerance = Tolerance.Default;
+        private protected Tolerance _tolerance = Tolerance.Default;
 
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
         /// </summary>
-        private readonly NUnitEqualityComparer _comparer = new();
+        private protected readonly NUnitEqualityComparer _comparer = new();
 
         #endregion
 
@@ -445,7 +445,7 @@ namespace NUnit.Framework.Constraints
 
         // Currently, we only adjust for ArraySegments that have a
         // null array reference. Others could be added in the future.
-        private void AdjustArgumentIfNeeded<T>(ref T arg)
+        private protected static void AdjustArgumentIfNeeded<T>(ref T arg)
         {
             if (arg is not null)
             {
