@@ -17,6 +17,22 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void SucceedsWhenTuplesAreTheSameWithinTolerance()
+        {
+            var tuple1 = Tuple.Create("Hello", 3);
+            var tuple2 = Tuple.Create("Hello", 4);
+            Assert.That(tuple1, Is.EqualTo(tuple2).Within(1));
+        }
+
+        [Test]
+        public void SucceedsWhenSingleTuplesAreTheSame()
+        {
+            var tuple1 = Tuple.Create(3);
+            var tuple2 = Tuple.Create(3);
+            Assert.That(tuple1, Is.EqualTo(tuple2));
+        }
+
+        [Test]
         public void SucceedsWhenContentOfTuplesAreEquivalent()
         {
             var actual = Tuple.Create(1, 2);

@@ -7,12 +7,12 @@
   <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageVersion Include="System.Memory" Version="4.5.5" />
-    <PackageVersion Include="System.ValueTuple" version="4.5.0" />
+    <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
   </ItemGroup>

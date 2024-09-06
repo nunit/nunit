@@ -9,11 +9,35 @@ namespace NUnit.Framework.Tests.Constraints
     public class ValueTupleEqualityTests
     {
         [Test]
+        public void SucceedsWhenTuplesAreEmpty()
+        {
+            ValueTuple tuple1 = ValueTuple.Create();
+            ValueTuple tuple2 = ValueTuple.Create();
+            Assert.That(tuple1, Is.EqualTo(tuple2));
+        }
+
+        [Test]
+        public void SucceedsWhenSingleTuplesAreTheSame()
+        {
+            ValueTuple<int> tuple1 = ValueTuple.Create(3);
+            ValueTuple<int> tuple2 = ValueTuple.Create(3);
+            Assert.That(tuple1, Is.EqualTo(tuple2));
+        }
+
+        [Test]
         public void SucceedsWhenTuplesAreTheSame()
         {
             ValueTuple<string, int> tuple1 = ("Hello", 3);
             ValueTuple<string, int> tuple2 = ("Hello", 3);
             Assert.That(tuple1, Is.EqualTo(tuple2));
+        }
+
+        [Test]
+        public void SucceedsWhenTuplesAreTheSameWithinTolerance()
+        {
+            ValueTuple<string, int> tuple1 = ("Hello", 3);
+            ValueTuple<string, int> tuple2 = ("Hello", 4);
+            Assert.That(tuple1, Is.EqualTo(tuple2).Within(1));
         }
 
         [Test]

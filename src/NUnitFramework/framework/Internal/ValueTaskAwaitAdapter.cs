@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        private sealed class NonGenericAdapter : AwaitAdapter
+        private sealed class NonGenericAdapter : DefaultBlockingAwaitAdapter
         {
             private readonly ValueTaskAwaiter _awaiter;
 
@@ -40,9 +40,6 @@ namespace NUnit.Framework.Internal
 
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
 
-            // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.ValueTask.
-            public override void BlockUntilCompleted() => _awaiter.GetResult();
-
             public override object? GetResult()
             {
                 _awaiter.GetResult(); // Throws exceptions, if any
@@ -50,7 +47,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private sealed class GenericAdapter<T> : AwaitAdapter
+        private sealed class GenericAdapter<T> : DefaultBlockingAwaitAdapter
         {
             private readonly ValueTaskAwaiter<T> _awaiter;
 
@@ -62,9 +59,6 @@ namespace NUnit.Framework.Internal
             public override bool IsCompleted => _awaiter.IsCompleted;
 
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
-
-            // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.ValueTask.
-            public override void BlockUntilCompleted() => _awaiter.GetResult();
 
             public override object? GetResult()
             {
