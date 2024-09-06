@@ -19,12 +19,12 @@ namespace NUnit.Framework.Constraints
 
         private readonly object? _expected;
 
-        private Tolerance _tolerance = Tolerance.Default;
+        private protected Tolerance _tolerance = Tolerance.Default;
 
         /// <summary>
         /// NUnitEqualityComparer used to test equality.
         /// </summary>
-        private readonly NUnitEqualityComparer _comparer = new();
+        private protected readonly NUnitEqualityComparer _comparer = new();
 
         #endregion
 
