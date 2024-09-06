@@ -258,7 +258,6 @@ namespace NUnit.Framework.Constraints
             long now = Stopwatch.GetTimestamp();
             long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
-            object? actual;
             if (PollingInterval.IsNotZero)
             {
                 long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
@@ -268,11 +267,9 @@ namespace NUnit.Framework.Constraints
                         ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
-                    actual = InvokeDelegate(del);
-
                     try
                     {
-                        ConstraintResult result = BaseConstraint.ApplyTo(actual);
+                        ConstraintResult result = BaseConstraint.ApplyTo(del);
                         if (result.IsSuccess)
                             return new DelegatingConstraintResult(this, result);
                     }
@@ -285,8 +282,7 @@ namespace NUnit.Framework.Constraints
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            actual = InvokeDelegate(del);
-            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
+            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(del));
         }
 
         /// <summary>
