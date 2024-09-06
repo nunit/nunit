@@ -151,6 +151,16 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use the supplied IComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public new EqualConstraint<T> Using<TOther>(IComparer<TOther> comparer)
+        {
+            return (EqualConstraint<T>)base.Using(comparer);
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied boolean-returning delegate.
         /// </summary>
         /// <param name="comparer">The boolean-returning delegate to use.</param>
@@ -161,11 +171,31 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The boolean-returning delegate to use.</param>
+        /// <returns>Self.</returns>
+        public new EqualConstraint<T> Using<TOther>(Func<TOther, TOther, bool> comparer)
+        {
+            return (EqualConstraint<T>)base.Using<TOther>(comparer);
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(Comparison<T> comparer)
+        {
+            return (EqualConstraint<T>)base.Using(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied Comparison object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public new EqualConstraint<T> Using<TOther>(Comparison<TOther> comparer)
         {
             return (EqualConstraint<T>)base.Using(comparer);
         }
@@ -186,6 +216,16 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
         public EqualConstraint<T> Using(IEqualityComparer<T> comparer)
+        {
+            return (EqualConstraint<T>)base.Using<T>(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied IEqualityComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        public new EqualConstraint<T> Using<TOther>(IEqualityComparer<TOther> comparer)
         {
             return (EqualConstraint<T>)base.Using(comparer);
         }
