@@ -15,7 +15,7 @@ namespace NUnit.Framework.Tests.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That("abcdgfe", new EqualConstraint("abcdefg"));
+                    Assert.That("abcdgfe", new EqualStringConstraint("abcdefg"));
                 }));
         }
 
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, Is.EqualTo(expected));
                 }));
         }
 
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, Is.EqualTo(expected));
                 }));
         }
 
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Tests.Constraints
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
                 {
-                    Assert.That(actual, new EqualConstraint(expected));
+                    Assert.That(actual, Is.EqualTo(expected));
                 }));
         }
 

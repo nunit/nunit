@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.Syntax
         {
             IResolveConstraint expr = Throws.Exception.With.Property("ParamName").EqualTo("myParam");
             Assert.That(
-                expr.Resolve().ToString(), Is.EqualTo(@"<throws <property ParamName <equal ""myParam"">>>"));
+                expr.Resolve().ToString(), Is.EqualTo(@"<throws <property ParamName <equalstring ""myParam"">>>"));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Tests.Syntax
         {
             IResolveConstraint expr = Throws.TypeOf(typeof(ArgumentException)).And.Property("ParamName").EqualTo("myParam");
             Assert.That(
-                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>"));
+                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equalstring ""myParam"">>>>"));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.Syntax
         {
             IResolveConstraint expr = Throws.Exception.TypeOf(typeof(ArgumentException)).And.Property("ParamName").EqualTo("myParam");
             Assert.That(
-                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>"));
+                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equalstring ""myParam"">>>>"));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Tests.Syntax
         {
             IResolveConstraint expr = Throws.TypeOf(typeof(ArgumentException)).With.Property("ParamName").EqualTo("myParam");
             Assert.That(
-                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>"));
+                expr.Resolve().ToString(), Is.EqualTo(@"<throws <and <typeof System.ArgumentException> <property ParamName <equalstring ""myParam"">>>>"));
         }
 
         [Test]

@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void RespectsCultureWhenCaseIgnored()
         {
-            var constraint = new EqualConstraint("r\u00E9sum\u00E9").IgnoreCase;
+            var constraint = new EqualStringConstraint("r\u00E9sum\u00E9").IgnoreCase;
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesntRespectCultureWhenCasingMatters()
         {
-            var constraint = new EqualConstraint("r\u00E9sum\u00E9");
+            var constraint = new EqualStringConstraint("r\u00E9sum\u00E9");
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpace()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace;
 
             var result = constraint.ApplyTo("Hello\tWorld");
 
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpaceFail()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace;
 
             var result = constraint.ApplyTo("Hello Universe");
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpaceAndIgnoreCase()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
 
             var result = constraint.ApplyTo("hello\r\nworld\r\n");
 
@@ -804,7 +804,9 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CompareObjectsWithToleranceAsserts()
             {
-                Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+                // This now no longer compiled as EqualStringConstraint doesn't support Tolerance.
+                // Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualStringConstraint("abcd").Within(1)));
+                Assert.Pass("EqualStringConstraint does not support Tolerance, so this test is not applicable.");
             }
         }
 
@@ -949,7 +951,7 @@ namespace NUnit.Framework.Tests.Constraints
             [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+                Assert.That("hello", Is.EqualTo("HELLO").Using((x, y) => StringUtil.Compare(x, y, true)));
             }
 
             [Test]
