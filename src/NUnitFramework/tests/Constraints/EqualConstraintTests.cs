@@ -939,7 +939,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var comparer = new GenericEqualityComparison<int>();
                 Assert.Multiple(() =>
                 {
-                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
                 });
             }
@@ -947,13 +947,13 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void UsesBooleanReturningDelegate()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.Equals(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.Equals(y)));
             }
 
             [Test]
             public void UsesProvidedLambda_IntArgs()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.CompareTo(y)));
             }
 
             [Test, SetCulture("en-US")]

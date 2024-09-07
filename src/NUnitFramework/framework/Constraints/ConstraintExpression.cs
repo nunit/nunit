@@ -459,6 +459,17 @@ namespace NUnit.Framework.Constraints
             return Append(new EqualTimeBaseConstraint<TimeSpan>(expected, x => x.Ticks));
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+#pragma warning disable CS3024 // Constraint type is not CLS-compliant
+        public EqualNumericConstraint<T> EqualTo<T>(T expected)
+            where T : unmanaged, IConvertible, IEquatable<T>
+        {
+            return Append(new EqualNumericConstraint<T>(expected));
+        }
+#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+
         #endregion
 
         #region SameAs

@@ -60,6 +60,21 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Construct an EqualConstraintResult
         /// </summary>
+        public EqualConstraintResult(Constraint constraint, object? actual, Tolerance tolerance, bool hasSucceeded)
+            : base(constraint, actual, hasSucceeded)
+        {
+            _expectedValue = constraint.Arguments[0];
+            _tolerance = tolerance;
+            _comparingProperties = false;
+            _caseInsensitive = false;
+            _ignoringWhiteSpace = false;
+            _clipStrings = false;
+            _failurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>();
+        }
+
+        /// <summary>
+        /// Construct an EqualConstraintResult
+        /// </summary>
         public EqualConstraintResult(EqualStringConstraint constraint, object? actual, bool caseInsensitive, bool ignoringWhiteSpace, bool clipStrings, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded)
         {
