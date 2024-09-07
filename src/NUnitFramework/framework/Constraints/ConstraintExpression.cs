@@ -427,6 +427,14 @@ namespace NUnit.Framework.Constraints
             return Append(new EqualConstraint(expected));
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two strings for equality
+        /// </summary>
+        public EqualStringConstraint EqualTo(string? expected)
+        {
+            return Append(new EqualStringConstraint(expected));
+        }
+
         #endregion
 
         #region SameAs
