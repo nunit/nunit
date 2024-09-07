@@ -125,8 +125,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(Is.EqualTo(5).Within(2).Tolerance.ToString(), Is.EqualTo("2"));
                 Assert.That(Is.EqualTo(5).Within(2).Ulps.Tolerance.ToString(), Is.EqualTo("2 Ulps"));
                 Assert.That(Is.EqualTo(5).Within(2).Percent.Tolerance.ToString(), Is.EqualTo("2 Percent"));
-                Assert.That(Is.EqualTo(5).Within(2).Seconds.Tolerance.ToString(), Is.EqualTo("00:00:02"));
-                Assert.That(Is.EqualTo(5).Within(2).Minutes.Tolerance.ToString(), Is.EqualTo("00:02:00"));
             });
         }
     }

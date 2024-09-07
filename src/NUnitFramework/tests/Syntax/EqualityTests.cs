@@ -83,12 +83,8 @@ namespace NUnit.Framework.Tests.Syntax
                 // Bug Fix 1743844
                 Assert.That(2.20492d, Is.EqualTo(2.2d).Within(0.01f),
                     "Double actual, Double expected, Single tolerance");
-                Assert.That(2.20492d, Is.EqualTo(2.2f).Within(0.01d),
-                    "Double actual, Single expected, Double tolerance");
                 Assert.That(2.20492d, Is.EqualTo(2.2f).Within(0.01f),
                     "Double actual, Single expected, Single tolerance");
-                Assert.That(2.20492f, Is.EqualTo(2.2f).Within(0.01d),
-                    "Single actual, Single expected, Double tolerance");
                 Assert.That(2.20492f, Is.EqualTo(2.2d).Within(0.01d),
                     "Single actual, Double expected, Double tolerance");
                 Assert.That(2.20492f, Is.EqualTo(2.2d).Within(0.01f),
@@ -104,8 +100,6 @@ namespace NUnit.Framework.Tests.Syntax
                 // Extending tolerance to all numeric types
                 Assert.That(202d, Is.EqualTo(200d).Within(2),
                     "Double actual, Double expected, int tolerance");
-                Assert.That(4.87m, Is.EqualTo(5).Within(.25),
-                    "Decimal actual, int expected, Double tolerance");
                 Assert.That(4.87m, Is.EqualTo(5ul).Within(1),
                     "Decimal actual, ulong expected, int tolerance");
                 Assert.That(487, Is.EqualTo(500).Within(25),

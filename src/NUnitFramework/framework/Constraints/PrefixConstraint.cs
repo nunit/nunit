@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -42,8 +44,16 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         internal static string FormatDescription(string descriptionPrefix, IConstraint baseConstraint)
         {
+            bool isEqualConstraint = baseConstraint is EqualConstraint;
+
+            if (!isEqualConstraint)
+            {
+                Type constraintType = baseConstraint.GetType();
+                isEqualConstraint = constraintType.IsGenericType && constraintType.GetGenericTypeDefinition() == typeof(EqualNumericConstraint<>);
+            }
+
             return string.Format(
-                baseConstraint is EqualConstraint ? "{0} equal to {1}" : "{0} {1}",
+                isEqualConstraint ? "{0} equal to {1}" : "{0} {1}",
                 descriptionPrefix,
                 baseConstraint.Description);
         }
