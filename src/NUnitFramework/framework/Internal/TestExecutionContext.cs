@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-            if (other.HookExtension is object)
+            if (other.HookExtension is not null)
             {
                 HookExtension = new HookExtension(other.HookExtension);
             }
