@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
     /// within NUnit. It provides the operator overloads used to combine
     /// constraints.
     /// </summary>
-    public abstract class Constraint : IConstraint
+    public abstract class Constraint : IAsyncConstraint
     {
         private readonly Lazy<string> _displayName;
 

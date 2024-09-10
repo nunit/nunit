@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
