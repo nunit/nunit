@@ -11,16 +11,10 @@ namespace NUnit.Framework.Internal
     public class HookExtension
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HookExtension"/> class.
+        /// Default ctor of <see cref="HookExtension"/> class.
         /// </summary>
         public HookExtension()
         {
-            BeforeAnySetUps = (context, method) => { };
-            AfterAnySetUps = (context, method) => { };
-            BeforeTest = (context, testMethod) => { };
-            AfterTest = (context, testMethod) => { };
-            BeforeAnyTearDowns = (context, method) => { };
-            AfterAnyTearDowns = (context, method) => { };
         }
 
         /// <summary>
@@ -38,19 +32,19 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary/>
-        public event SetUpTearDownHookHandler BeforeAnySetUps;
+        public event SetUpTearDownHookHandler? BeforeAnySetUps;
         /// <summary/>
-        public event SetUpTearDownHookHandler AfterAnySetUps;
+        public event SetUpTearDownHookHandler? AfterAnySetUps;
 
         /// <summary/>
-        public event TestHookHandler BeforeTest;
+        public event TestHookHandler? BeforeTest;
         /// <summary/>
-        public event TestHookHandler AfterTest;
+        public event TestHookHandler? AfterTest;
 
         /// <summary/>
-        public event SetUpTearDownHookHandler BeforeAnyTearDowns;
+        public event SetUpTearDownHookHandler? BeforeAnyTearDowns;
         /// <summary/>
-        public event SetUpTearDownHookHandler AfterAnyTearDowns;
+        public event SetUpTearDownHookHandler? AfterAnyTearDowns;
 
         /// <summary/>
         public void OnBeforeAnySetUps(TestExecutionContext context, IMethodInfo method)
