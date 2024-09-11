@@ -69,6 +69,8 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
+        private HookExtension _hookExtension;
+
         #endregion
 
         #region Constructors
@@ -104,7 +106,7 @@ namespace NUnit.Framework.Internal
             CurrentTest = other.CurrentTest;
             if (other.HookExtension is not null)
             {
-                HookExtension = new HookExtension(other.HookExtension);
+                _hookExtension = new HookExtension(other.HookExtension);
             }
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
@@ -404,7 +406,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Hook Extension to support high level test extensions.
         /// </summary>
-        public HookExtension? HookExtension { get; } = new();
+        public HookExtension? HookExtension => _hookExtension ??= new HookExtension();
 
         #endregion
 
