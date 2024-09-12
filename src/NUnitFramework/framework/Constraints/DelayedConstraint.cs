@@ -338,7 +338,8 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        await Task.Delay(TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now));
+
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     try
@@ -353,8 +354,9 @@ namespace NUnit.Framework.Constraints
                     }
                 }
             }
+
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                await Task.Delay(TimestampDiff(delayEnd, now));
 
             return new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
         }
