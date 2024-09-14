@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
+using System;
 
 namespace NUnit.Framework.Constraints
 {
@@ -30,7 +30,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual)
         {
-            return actual is not null && StringUtil.StringsEqual(Canonicalize(expected), Canonicalize(actual), caseInsensitive);
+            StringComparison comparisonType = caseInsensitive
+                ? StringComparison.CurrentCultureIgnoreCase
+                : StringComparison.CurrentCulture;
+
+            return actual is not null && string.Equals(Canonicalize(expected), Canonicalize(actual), comparisonType);
         }
     }
 }

@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
+using System;
 
 namespace NUnit.Framework.Constraints
 {
@@ -35,7 +35,11 @@ namespace NUnit.Framework.Constraints
 
             string path1 = Canonicalize(expected);
             string path2 = Canonicalize(actual);
-            return StringUtil.StringsEqual(path1, path2, caseInsensitive) || IsSubPath(path1, path2);
+            StringComparison comparisonType = caseInsensitive
+                ? StringComparison.CurrentCultureIgnoreCase
+                : StringComparison.CurrentCulture;
+
+            return string.Equals(path1, path2, comparisonType) || IsSubPath(path1, path2);
         }
     }
 }

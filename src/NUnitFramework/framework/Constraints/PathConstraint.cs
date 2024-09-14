@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -117,7 +116,10 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             // path 2 is longer than path 1: see if initial parts match
-            if (!StringUtil.StringsEqual(path1, path2.Substring(0, length1), caseInsensitive))
+            StringComparison comparisonType = caseInsensitive
+                ? StringComparison.CurrentCultureIgnoreCase
+                : StringComparison.CurrentCulture;
+            if (!string.Equals(path1, path2.Substring(0, length1), comparisonType))
                 return false;
 
             // must match through or up to a directory separator boundary
