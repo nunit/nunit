@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
@@ -197,7 +198,7 @@ namespace NUnit.Framework.Tests.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
 
             Assert.That(dictionary,
-                new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+                new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").Using<string>((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         [Test]
