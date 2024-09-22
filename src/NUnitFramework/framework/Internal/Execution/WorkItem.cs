@@ -434,17 +434,11 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunOnSeparateThread(ApartmentState apartment)
         {
-            _thread = new Thread(() =>
+            _thread = new Thread(Start)
             {
-                Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
-                Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
-#if THREAD_ABORT
-                lock (_threadLock)
-                    _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
-#endif
-                RunOnCurrentThread();
-            });
-
+                Name="NUnit.Fw.WorkItemThread"
+            };
+            
 #if NET6_0_OR_GREATER
             if (OperatingSystem.IsWindows())
             {
@@ -475,6 +469,17 @@ namespace NUnit.Framework.Internal.Execution
 
             _thread.Start();
             _thread.Join();
+        }
+
+        private void Start()
+        {
+            Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
+            Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
+#if THREAD_ABORT
+                lock (_threadLock)
+                    _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+#endif
+            RunOnCurrentThread();
         }
 
         private void RunOnCurrentThread()

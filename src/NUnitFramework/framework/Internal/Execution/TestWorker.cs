@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc))
+            _workerThread = new Thread(TestWorkerThreadProc)
             {
                 Name = Name
             };
