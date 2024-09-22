@@ -436,9 +436,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             _thread = new Thread(Start)
             {
-                Name="NUnit.Fw.WorkItemThread"
+                Name = "NUnit.Fw.WorkItemThread"
             };
-            
+
 #if NET6_0_OR_GREATER
             if (OperatingSystem.IsWindows())
             {
@@ -476,8 +476,8 @@ namespace NUnit.Framework.Internal.Execution
             Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
             Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
 #if THREAD_ABORT
-                lock (_threadLock)
-                    _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+            lock (_threadLock)
+                _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 #endif
             RunOnCurrentThread();
         }
