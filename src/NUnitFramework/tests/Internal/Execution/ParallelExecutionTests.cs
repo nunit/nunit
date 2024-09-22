@@ -96,7 +96,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
         [Test]
         public void CorrectInitialShift()
         {
-            string expected = "NUnit.Fw.NonParallel";
+            string expected = "NonParallel";
             if (_testSuite.Properties.ContainsKey(PropertyNames.ParallelScope))
             {
                 var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope)!;
