@@ -3,8 +3,8 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
-using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -599,6 +599,15 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
+        [Test]
+        public void AssertRecordsComparingProperties()
+        {
+            var record1 = new Record("Name", new[] { 1, 2, 3 });
+            var record2 = new Record("Name", new[] { 1, 2, 3 });
+
+            Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
+        }
+
         private sealed class LinkedList
         {
             public LinkedList(int value, LinkedList? next = null)
@@ -654,6 +663,8 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(two, Is.EqualTo(one).UsingPropertiesComparer());
              */
         }
+
+        private record Record(string Name, int[] Collection);
 
         private sealed class ParentClass
         {

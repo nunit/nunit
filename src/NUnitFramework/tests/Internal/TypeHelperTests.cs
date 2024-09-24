@@ -84,5 +84,53 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         #endregion
+
+        #region IsRecord
+
+        [TestCase(typeof(RecordClass), ExpectedResult = true)]
+        [TestCase(typeof(RecordStruct), ExpectedResult = true)]
+        [TestCase(typeof(RecordWithProperties), ExpectedResult = true)]
+        [TestCase(typeof(int), ExpectedResult = false)]
+        [TestCase(typeof(int[]), ExpectedResult = false)]
+        [TestCase(typeof(DtoClass), ExpectedResult = false)]
+        [TestCase(typeof(ClassWithPrimaryConstructor), ExpectedResult = false)]
+        [TestCase(typeof(ClassWithOverriddenEquals), ExpectedResult = false)]
+        public bool IsRecordTests(Type type) => TypeHelper.IsRecord(type);
+
+        private class DtoClass
+        {
+            public string? Name { get; set; }
+        }
+
+        private class ClassWithPrimaryConstructor(string name)
+        {
+            public string Name => name;
+        }
+
+        private class ClassWithOverriddenEquals
+        {
+            public string? Name { get; set; }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is ClassWithOverriddenEquals other && other.Name == Name;
+            }
+
+            public override int GetHashCode()
+            {
+                return 539060726 + EqualityComparer<string?>.Default.GetHashCode(Name ?? string.Empty);
+            }
+        }
+
+        private record class RecordClass(string Name);
+
+        private record struct RecordStruct(string Name);
+
+        private record RecordWithProperties
+        {
+            public string? Name { get; set; }
+        }
+
+        #endregion
     }
 }
