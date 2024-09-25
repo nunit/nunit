@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -17,6 +18,12 @@ namespace NUnit.Framework.Constraints.Comparers
 
             Type xType = x.GetType();
             Type yType = y.GetType();
+
+            if (equalityComparer.CompareProperties && TypeHelper.HasCompilerGeneratedEquals(xType))
+            {
+                // For record types, when CompareProperties is requested, we ignore generated Equals method and compare by properties.
+                return EqualMethodResult.TypesNotSupported;
+            }
 
             MethodInfo? equals = FirstImplementsIEquatableOfSecond(xType, yType);
             if (equals is not null)
