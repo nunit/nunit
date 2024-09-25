@@ -389,13 +389,10 @@ namespace NUnit.Framework.Internal
             return type.FullName ?? throw new InvalidOperationException("No name for type: " + type);
         }
 
-        private static readonly Type[] EqualsObjectParameterTypes = { typeof(object) };
-
-        internal static bool IsRecord(this Type type)
+        internal static bool HasCompilerGeneratedEquals(this Type type)
         {
-            // Check if Equals method has CompilerGenerated attribute
             var equalsMethod = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
-                                  null, EqualsObjectParameterTypes, null);
+                null, [type], null);
 
             return equalsMethod?.GetCustomAttribute<CompilerGeneratedAttribute>() is not null;
         }

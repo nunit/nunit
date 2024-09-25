@@ -602,9 +602,20 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertRecordsComparingProperties()
         {
-            var record1 = new Record("Name", new[] { 1, 2, 3 });
-            var record2 = new Record("Name", new[] { 1, 2, 3 });
+            var record1 = new Record("Name", [1, 2, 3]);
+            var record2 = new Record("Name", [1, 2, 3]);
 
+            Assert.That(record1, Is.Not.EqualTo(record2)); // Record's generated method does not handle collections
+            Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void AssertRecordsComparingProperties_WhenRecordHasUserDefinedEqualsMethod()
+        {
+            var record1 = new ParentRecord(new RecordWithOverriddenEquals("Name"), [1, 2, 3]);
+            var record2 = new ParentRecord(new RecordWithOverriddenEquals("NAME"), [1, 2, 3]);
+
+            Assert.That(record1, Is.Not.EqualTo(record2)); // ParentRecord's generated method does not handle collections
             Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
         }
 
@@ -665,6 +676,21 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         private record Record(string Name, int[] Collection);
+
+        private record ParentRecord(RecordWithOverriddenEquals Child, int[] Collection);
+
+        private record RecordWithOverriddenEquals(string Name)
+        {
+            public virtual bool Equals(RecordWithOverriddenEquals? other)
+            {
+                return string.Equals(Name, other?.Name, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.ToUpperInvariant().GetHashCode();
+            }
+        }
 
         private sealed class ParentClass
         {

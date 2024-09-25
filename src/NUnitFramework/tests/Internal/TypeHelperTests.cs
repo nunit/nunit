@@ -85,17 +85,18 @@ namespace NUnit.Framework.Tests.Internal
 
         #endregion
 
-        #region IsRecord
+        #region HasCompilerGeneratedEquals
 
         [TestCase(typeof(RecordClass), ExpectedResult = true)]
         [TestCase(typeof(RecordStruct), ExpectedResult = true)]
         [TestCase(typeof(RecordWithProperties), ExpectedResult = true)]
+        [TestCase(typeof(RecordWithOverriddenEquals), ExpectedResult = false)]
         [TestCase(typeof(int), ExpectedResult = false)]
         [TestCase(typeof(int[]), ExpectedResult = false)]
         [TestCase(typeof(DtoClass), ExpectedResult = false)]
         [TestCase(typeof(ClassWithPrimaryConstructor), ExpectedResult = false)]
         [TestCase(typeof(ClassWithOverriddenEquals), ExpectedResult = false)]
-        public bool IsRecordTests(Type type) => TypeHelper.IsRecord(type);
+        public bool HasCompilerGeneratedEqualsTests(Type type) => TypeHelper.HasCompilerGeneratedEquals(type);
 
         private class DtoClass
         {
@@ -129,6 +130,19 @@ namespace NUnit.Framework.Tests.Internal
         private record RecordWithProperties
         {
             public string? Name { get; set; }
+        }
+
+        private record RecordWithOverriddenEquals(string Name)
+        {
+            public virtual bool Equals(RecordWithOverriddenEquals? other)
+            {
+                return string.Equals(Name, other?.Name, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.ToUpperInvariant().GetHashCode();
+            }
         }
 
         #endregion
