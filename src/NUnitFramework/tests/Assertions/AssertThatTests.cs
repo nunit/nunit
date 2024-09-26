@@ -675,6 +675,34 @@ namespace NUnit.Framework.Tests.Assertions
              */
         }
 
+        [Test]
+        public void UseAssertThatWithCollectionExpression_EqualTo()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.EqualTo([1, 2, 3]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_EquivalentTo()
+        {
+            var actual = new[] { 3, 2, 1 };
+            Assert.That(actual, Is.EquivalentTo([1, 2, 3]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_SubsetOf()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.SubsetOf([1, 2, 3, 4, 5]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_SupersetOf()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.SupersetOf([1, 2]));
+        }
+
         private record Record(string Name, int[] Collection);
 
         private record ParentRecord(RecordWithOverriddenEquals Child, int[] Collection);
