@@ -153,7 +153,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two collections for equality.
         /// </summary>
-        public static EqualConstraint EqualTo<T>(IEnumerable<T> expected)
+        public static EqualConstraint EqualTo<T>(IEnumerable<T>? expected)
         {
             return new EqualConstraint(expected);
         }
