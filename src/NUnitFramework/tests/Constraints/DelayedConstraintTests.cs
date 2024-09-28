@@ -247,9 +247,9 @@ namespace NUnit.Framework.Tests.Constraints
             int i = 0;
             void ThrowsAfterRetry()
             {
-                if (i++ > 3)
+                if (i++ > 0)
                 {
-                    throw new InvalidOperationException("Always throws after third attempt.");
+                    throw new InvalidOperationException("Always throws after first attempt.");
                 }
             }
 
