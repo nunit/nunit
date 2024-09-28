@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -153,6 +154,14 @@ namespace NUnit.Framework
         /// Returns a constraint that tests two items for equality
         /// </summary>
         public static EqualConstraint EqualTo(object? expected)
+        {
+            return new EqualConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two collections for equality.
+        /// </summary>
+        public static EqualConstraint EqualTo<T>(IEnumerable<T>? expected)
         {
             return new EqualConstraint(expected);
         }
@@ -341,6 +350,16 @@ namespace NUnit.Framework
             return new CollectionEquivalentConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a collection containing the same elements as the
+        /// collection supplied as an argument.
+        /// </summary>
+        public static CollectionEquivalentConstraint EquivalentTo<T>(IEnumerable<T> expected)
+        {
+            return new CollectionEquivalentConstraint(expected);
+        }
+
         #endregion
 
         #region SubsetOf
@@ -354,6 +373,15 @@ namespace NUnit.Framework
             return new CollectionSubsetConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a subset of the collection supplied as an argument.
+        /// </summary>
+        public static CollectionSubsetConstraint SubsetOf<T>(IEnumerable<T> expected)
+        {
+            return new CollectionSubsetConstraint(expected);
+        }
+
         #endregion
 
         #region SupersetOf
@@ -363,6 +391,15 @@ namespace NUnit.Framework
         /// is a superset of the collection supplied as an argument.
         /// </summary>
         public static CollectionSupersetConstraint SupersetOf(IEnumerable expected)
+        {
+            return new CollectionSupersetConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// is a superset of the collection supplied as an argument.
+        /// </summary>
+        public static CollectionSupersetConstraint SupersetOf<T>(IEnumerable<T> expected)
         {
             return new CollectionSupersetConstraint(expected);
         }

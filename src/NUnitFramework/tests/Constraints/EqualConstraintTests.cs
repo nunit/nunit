@@ -949,7 +949,7 @@ namespace NUnit.Framework.Tests.Constraints
             [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
             }
 
             [Test]
@@ -1027,7 +1027,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new[] { "yeti", "łysy", "rysiu" };
                 var actual = new[] { "YETI", "Łysy", "RySiU" };
 
-                Assert.That(actual, Is.EqualTo(expected).Using<string>((x, y) => StringUtil.StringsEqual(x, y, true)));
+                Assert.That(actual, Is.EqualTo(expected).Using<string>((x, y) => string.Equals(x, y, StringComparison.CurrentCultureIgnoreCase)));
             }
 
             [Test]

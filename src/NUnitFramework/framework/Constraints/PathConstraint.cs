@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -102,6 +101,19 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Determines the <see cref="StringComparison"/> value based on the
+        /// <see cref="StringConstraint.caseInsensitive"/> field.
+        /// If <c>caseInsensitive</c> is true, it returns <see cref="StringComparison.OrdinalIgnoreCase"/>;
+        /// otherwise, it returns <see cref="StringComparison.Ordinal"/>.
+        /// </summary>
+        protected StringComparison DetermineComparisonType()
+        {
+            return caseInsensitive
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
+        }
+
+        /// <summary>
         /// Test whether one path in canonical form is a subpath of another path
         /// </summary>
         /// <param name="path1">The first path - supposed to be the parent path</param>
@@ -117,7 +129,7 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             // path 2 is longer than path 1: see if initial parts match
-            if (!StringUtil.StringsEqual(path1, path2.Substring(0, length1), caseInsensitive))
+            if (!string.Equals(path1, path2.Substring(0, length1), DetermineComparisonType()))
                 return false;
 
             // must match through or up to a directory separator boundary

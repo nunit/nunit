@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using NUnit.Framework.Interfaces;
 
@@ -386,6 +387,14 @@ namespace NUnit.Framework.Internal
         internal static string FullName(this Type type)
         {
             return type.FullName ?? throw new InvalidOperationException("No name for type: " + type);
+        }
+
+        internal static bool HasCompilerGeneratedEquals(this Type type)
+        {
+            var equalsMethod = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
+                null, [type], null);
+
+            return equalsMethod?.GetCustomAttribute<CompilerGeneratedAttribute>() is not null;
         }
     }
 }
