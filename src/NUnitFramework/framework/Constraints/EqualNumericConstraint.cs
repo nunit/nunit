@@ -50,6 +50,11 @@ namespace NUnit.Framework.Constraints
         public override string DisplayName => "Equal";
 
         /// <summary>
+        /// The expected value.
+        /// </summary>
+        public T Expected => _expected;
+
+        /// <summary>
         /// Gets the tolerance for this comparison.
         /// </summary>
         /// <value>
