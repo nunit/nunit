@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Syntax
         [SetUp]
         public void SetUp()
         {
-            ParseTree = @"<equal ""X"">";
+            ParseTree = @"<equalstring ""X"">";
             StaticSyntax = Is.EqualTo("X").IgnoreCase;
             BuilderSyntax = Builder().EqualTo("X").IgnoreCase;
         }

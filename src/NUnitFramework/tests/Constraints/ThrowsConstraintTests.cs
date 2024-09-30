@@ -67,13 +67,13 @@ namespace NUnit.Framework.Tests.Constraints
         protected override Constraint TheConstraint { get; } = new ThrowsConstraint(
                 new AndConstraint(
                     new ExceptionTypeConstraint(typeof(ArgumentException)),
-                    new PropertyConstraint("ParamName", new EqualConstraint("myParam"))));
+                    new PropertyConstraint("ParamName", new EqualStringConstraint("myParam"))));
 
         [SetUp]
         public void SetUp()
         {
             ExpectedDescription = @"<System.ArgumentException> and property ParamName equal to ""myParam""";
-            StringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>";
+            StringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equalstring ""myParam"">>>>";
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
