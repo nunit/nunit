@@ -43,6 +43,14 @@ namespace NUnit.Framework.Constraints
             IEnumerable actual,
             out CollectionTally.CollectionTallyResult tallyResult)
         {
+            // Early return if both collections are reference-equal or
+            // both collections are in their default or uninitialized state.
+            if (actual.Equals(_expected))
+            {
+                tallyResult = new CollectionTally.CollectionTallyResult([], []);
+                return true;
+            }
+
             CollectionTally ct = Tally(_expected);
             ct.TryRemove(actual);
 
