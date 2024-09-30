@@ -186,15 +186,15 @@ namespace NUnit.Framework.Internal
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
-                sb.Append("<");
+                sb.Append('<');
                 int cnt = 0;
                 foreach (Type t in method.GetGenericArguments())
                 {
                     if (cnt++ > 0)
-                        sb.Append(",");
+                        sb.Append(',');
                     sb.Append(t.Name);
                 }
-                sb.Append(">");
+                sb.Append('>');
             }
 
             protected static string GetDisplayString(object? arg, int stringMax)
