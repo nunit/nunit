@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal
         /// <inheritdoc />
         public bool Equals(MethodWrapper? other)
         {
-            if (other is null)
+            if (ReferenceEquals(null, other))
             {
                 return false;
             }
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Internal
         /// <inheritdoc />
         public override bool Equals(object? obj)
         {
-            if (obj is null)
+            if (ReferenceEquals(null, obj))
             {
                 return false;
             }

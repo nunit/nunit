@@ -8,7 +8,7 @@
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;net6.0;net8.0;net9.0</NUnitRuntimeFrameworks>
+    <NUnitRuntimeFrameworks>net462;net6.0;net9.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -25,7 +25,7 @@
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <!-- Ideally this is always enabled, but that tends to hurt developer productivity -->
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
