@@ -33,6 +33,9 @@ How to use this package:
       <group targetFramework="net6.0">
         <dependency id="NUnit" version="[$version$]" />
       </group>
+      <group targetFramework="net8.0">
+        <dependency id="NUnit" version="[$version$]" />      
+      </group>
 	  <group targetFramework="net9.0">
         <dependency id="NUnit" version="[$version$]" />
       </group>
