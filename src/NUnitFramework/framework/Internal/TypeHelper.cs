@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
                 foreach (string nestedClass in name.Tokenize('+'))
                 {
                     if (firstClassSeen)
-                        sb.Append("+");
+                        sb.Append('+');
 
                     firstClassSeen = true;
 
@@ -58,17 +58,17 @@ namespace NUnit.Framework.Internal
                     {
                         var nestedClassName = nestedClass.Substring(0, index);
                         sb.Append(nestedClassName);
-                        sb.Append("<");
+                        sb.Append('<');
 
                         var argumentCount = Int32.Parse(nestedClass.Substring(index + 1));
                         for (int i = 0; i < argumentCount; i++)
                         {
                             if (i > 0)
-                                sb.Append(",");
+                                sb.Append(',');
 
                             sb.Append(GetDisplayName(genericArguments[currentArgument++]));
                         }
-                        sb.Append(">");
+                        sb.Append('>');
                     }
                     else
                     {
@@ -100,15 +100,16 @@ namespace NUnit.Framework.Internal
 
             StringBuilder sb = new StringBuilder(baseName);
 
-            sb.Append("(");
-            for (int i = 0; i < arglist.Length; i++)
-            {
-                if (i > 0)
-                    sb.Append(",");
+            sb.Append('(');
+            sb.Append(DisplayName.GetValueString(arglist[0], STRING_MAX));
 
+            for (int i = 1; i < arglist.Length; i++)
+            {
+                sb.Append(',');
                 sb.Append(DisplayName.GetValueString(arglist[i], STRING_MAX));
             }
-            sb.Append(")");
+
+            sb.Append(')');
 
             return sb.ToString();
         }

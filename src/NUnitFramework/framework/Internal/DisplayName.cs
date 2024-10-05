@@ -24,7 +24,7 @@ namespace NUnit.Framework.Internal
                 else
                 {
                     var builder = new StringBuilder();
-                    builder.Append("[");
+                    builder.Append('[');
 
                     const int maxNumItemsToEnumerate = 5;
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
                     if (argArray.Length > maxNumItemsToEnumerate)
                         builder.Append($", {THREE_DOTS}");
 
-                    builder.Append("]");
+                    builder.Append(']');
                     display = builder.ToString();
                 }
             }
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal
                 {
                     // cleanup
                     var sb = new StringBuilder();
-                    sb.Append("\"");
+                    sb.Append('\"');
                     foreach (char c in str)
                     {
                         sb.Append(EscapeCharInString(c));
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
                             break;
                         }
                     }
-                    sb.Append("\"");
+                    sb.Append('\"');
                     display = sb.ToString();
                 }
             }
