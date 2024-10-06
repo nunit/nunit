@@ -158,6 +158,30 @@ namespace NUnit.Framework
             return new EqualConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two times for equality.
+        /// </summary>
+        public static EqualDateTimeOffsetConstraint EqualTo(DateTimeOffset expected)
+        {
+            return new EqualDateTimeOffsetConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two times for equality.
+        /// </summary>
+        public static EqualTimeBaseConstraint<DateTime> EqualTo(DateTime expected)
+        {
+            return new EqualTimeBaseConstraint<DateTime>(expected, x => x.Ticks);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two times for equality.
+        /// </summary>
+        public static EqualTimeBaseConstraint<TimeSpan> EqualTo(TimeSpan expected)
+        {
+            return new EqualTimeBaseConstraint<TimeSpan>(expected, x => x.Ticks);
+        }
+
         #endregion
 
         #region SameAs
