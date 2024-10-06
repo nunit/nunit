@@ -384,6 +384,9 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
+/*
+ * This no longer compiles! Preventing illegal code and runtime exceptions.
+ *
             [Test]
             public void ErrorIfDaysPrecedesWithin()
             {
@@ -419,6 +422,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
             }
+*/
         }
 
         #endregion
@@ -469,6 +473,9 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
             }
 
+/*
+ * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
+ *
             [Theory]
             public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
             {
@@ -494,6 +501,7 @@ namespace NUnit.Framework.Tests.Constraints
 
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
             }
+*/
         }
 
         public class DateTimeOffSetEquality
