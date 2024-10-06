@@ -161,6 +161,43 @@ namespace NUnit.Framework.Constraints
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
 
+        /// <summary>
+        /// Test two numeric values for equality, performing the usual numeric
+        /// conversions and using a provided or default tolerance. If the tolerance
+        /// provided is Empty, this method may set it to a default tolerance.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="tolerance">A reference to the tolerance in effect</param>
+        /// <returns>True if the values are equal</returns>
+        public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
+            where T1 : unmanaged, IConvertible
+            where T2 : unmanaged, IConvertible
+        {
+            if (expected is double || actual is double)
+                return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
+
+            if (expected is float || actual is float)
+                return AreEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
+
+            if (tolerance.Mode == ToleranceMode.Ulps)
+                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+
+            if (expected is decimal || actual is decimal)
+                return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+
+            if (expected is ulong || actual is ulong)
+                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
+
+            if (expected is long || actual is long)
+                return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
+
+            if (expected is uint || actual is uint)
+                return AreEqual(expected.ToUInt32(null), actual.ToUInt32(null), tolerance);
+
+            return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
+        }
+
         private static bool AreEqual(double expected, double actual, ref Tolerance tolerance)
         {
             if (double.IsNaN(expected) && double.IsNaN(actual))

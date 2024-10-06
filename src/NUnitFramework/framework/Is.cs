@@ -158,6 +158,25 @@ namespace NUnit.Framework
             return new EqualConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two collections for equality.
+        /// </summary>
+        public static EqualConstraint EqualTo(DateTime expected)
+        {
+            return new EqualConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+#pragma warning disable CS3024 // Constraint type is not CLS-compliant
+        public static EqualNumericConstraint<T> EqualTo<T>(T expected)
+            where T : unmanaged, IConvertible, IEquatable<T>
+        {
+            return new EqualNumericConstraint<T>(expected);
+        }
+#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+
         #endregion
 
         #region SameAs

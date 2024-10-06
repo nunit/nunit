@@ -427,6 +427,25 @@ namespace NUnit.Framework.Constraints
             return Append(new EqualConstraint(expected));
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two items for equality
+        /// </summary>
+        public EqualConstraint EqualTo(DateTime expected)
+        {
+            return Append(new EqualConstraint(expected));
+        }
+
+#pragma warning disable CS3024 // Constraint type is not CLS-compliant
+        /// <summary>
+        /// Returns a constraint that tests two items for equality
+        /// </summary>
+        public EqualNumericConstraint<T> EqualTo<T>(T expected)
+            where T : unmanaged, IConvertible, IEquatable<T>
+        {
+            return Append(new EqualNumericConstraint<T>(expected));
+        }
+#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+
         #endregion
 
         #region SameAs
