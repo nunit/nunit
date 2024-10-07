@@ -69,6 +69,8 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
+            throw new ArgumentException($"Expected: IEnumerable<KeyValuePair<,>> But was: {actual.GetType()}", nameof(actual));
+
             static bool ImplementsIEnumerableKeyValuePair(object instance)
             {
                 foreach (var @interface in instance.GetType().GetInterfaces())
@@ -85,8 +87,6 @@ namespace NUnit.Framework.Constraints
 
                 return false;
             }
-
-            throw new ArgumentException($"Expected: IEnumerable<KeyValuePair<,>> But was: {actual.GetType()}", nameof(actual));
         }
 
         /// <summary>
