@@ -225,6 +225,23 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
         }
 
+        [Test]
+        public void WorksWithTypeThatImplementsIEnumerableOfKeyValuePairs()
+        {
+            var dictionary = new Dictionary<int, string>()
+            {
+                { 1, "World" },
+                { 2, "Universe" },
+                { 3, "Mundo" }
+            };
+
+            var enumeration = new KVPEnumeration(dictionary);
+
+            Assert.That(enumeration, new DictionaryContainsKeyValuePairConstraint(3, "Mundo"));
+            Assert.That(enumeration, Does.ContainKey(2).WithValue("Universe"));
+            Assert.That(enumeration, Does.Not.ContainKey(1).WithValue("Universe"));
+        }
+
         private class TestDictionary : IDictionary<int, string>
         {
             private readonly Dictionary<int, string> _internalDictionary = new Dictionary<int, string>();
@@ -291,6 +308,20 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             IEnumerator IEnumerable.GetEnumerator() => _internalDictionary.GetEnumerator();
+        }
+
+        private sealed class KVPEnumeration : IEnumerable<KeyValuePair<int, string>>
+        {
+            private readonly Dictionary<int, string> _values;
+
+            public KVPEnumeration(Dictionary<int, string> values)
+            {
+                _values = values;
+            }
+
+            public IEnumerator<KeyValuePair<int, string>> GetEnumerator() => _values.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

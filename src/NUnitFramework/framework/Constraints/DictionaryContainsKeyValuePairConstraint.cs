@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework.Internal;
 
@@ -68,6 +69,33 @@ namespace NUnit.Framework.Constraints
                 }
 
                 return false;
+            }
+
+            // If 'actual' implements IEnumerable<KeyValuePair<TKey, TValue>>, we can find the value using that interface
+            var enumerableType = actual.GetType().GetInterface("IEnumerable`1");
+            if (enumerableType is not null)
+            {
+                var enumerableInnerType = enumerableType.GenericTypeArguments[0];
+                if (enumerableInnerType.IsGenericType && enumerableInnerType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+                {
+                    var keyGetter = enumerableInnerType.GetProperty("Key");
+                    var valueGetter = enumerableInnerType.GetProperty("Value");
+
+                    Debug.Assert(keyGetter is not null && valueGetter is not null);
+
+                    foreach (object item in (IEnumerable)actual)
+                    {
+                        var expectedKvp = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
+                        var actualKvp = new KeyValuePair<object, object?>(keyGetter.GetValue(item)!, valueGetter.GetValue(item));
+
+                        if (ItemsEqual(actualKvp, expectedKvp))
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
             }
 
             throw new ArgumentException($"Expected: IDictionary But was: {actual.GetType()}", nameof(actual));
