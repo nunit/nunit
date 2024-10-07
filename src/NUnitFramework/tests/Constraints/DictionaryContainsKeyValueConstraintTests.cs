@@ -100,12 +100,16 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
-            List<KeyValuePair<string, string>> keyValuePairs = new List<KeyValuePair<string, string>>(
-                new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } });
+            List<string> keyValuePairs = new List<string>
+            {
+                "Hello",
+                "Hi",
+                "Hola"
+            };
 
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable<KeyValuePair<,>>"));
         }
 
         [Test]
@@ -222,7 +226,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IEnumerable<KeyValuePair<,>> But was: null"));
         }
 
         [Test]
