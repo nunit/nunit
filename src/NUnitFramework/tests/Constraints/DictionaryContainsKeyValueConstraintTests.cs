@@ -100,12 +100,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
-            List<string> keyValuePairs = new List<string>
-            {
-                "Hello",
-                "Hi",
-                "Hola"
-            };
+            var keyValuePairs = new List<string> { "Hello", "Hi", "Hola" };
 
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
