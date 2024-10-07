@@ -58,13 +58,12 @@ namespace NUnit.Framework.Constraints
             if (ImplementsIEnumerableKeyValuePair(actual))
             {
                 var expected = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
+                var enumerable = (IEnumerable)actual;
 
-                foreach (object item in (IEnumerable)actual)
+                foreach (var item in enumerable)
                 {
                     if (ItemsEqual(item, expected))
-                    {
                         return true;
-                    }
                 }
 
                 return false;
