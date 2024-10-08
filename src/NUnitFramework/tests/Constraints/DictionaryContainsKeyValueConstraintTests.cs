@@ -104,7 +104,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable<KeyValuePair<,>>"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary or IEnumerable<KeyValuePair<,>>"));
         }
 
         [Test]
@@ -221,7 +221,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IEnumerable<KeyValuePair<,>> But was: null"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null"));
         }
 
         [Test]

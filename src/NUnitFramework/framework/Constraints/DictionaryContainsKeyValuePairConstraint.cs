@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         private bool Matches(object? actual)
         {
             if (actual is null)
-                throw new ArgumentException("Expected: IEnumerable<KeyValuePair<,>> But was: null", nameof(actual));
+                throw new ArgumentException("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null", nameof(actual));
 
             if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
             {
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
-            throw new ArgumentException($"Expected: IEnumerable<KeyValuePair<,>> But was: {actual.GetType()}", nameof(actual));
+            throw new ArgumentException($"Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: {actual.GetType()}", nameof(actual));
 
             static bool ImplementsIEnumerableKeyValuePair(object instance)
             {
