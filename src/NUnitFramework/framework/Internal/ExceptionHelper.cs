@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -189,6 +190,22 @@ namespace NUnit.Framework.Internal
                         return ex;
                     }
                 }
+            }
+
+            return null;
+        }
+
+        internal static async Task<Exception?> RecordExceptionAsync<T>(Func<Task<T>> parameterlessDelegate, string parameterName)
+        {
+            Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
+
+            try
+            {
+                await parameterlessDelegate();
+            }
+            catch (Exception e)
+            {
+                return e;
             }
 
             return null;

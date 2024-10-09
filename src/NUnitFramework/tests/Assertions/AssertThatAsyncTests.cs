@@ -107,6 +107,43 @@ namespace NUnit.Framework.Tests.Assertions
             await Assert.ThatAsync(() => Task.FromException<int>(new InvalidOperationException()), Throws.InvalidOperationException);
         }
 
+        [Test]
+        public async Task AssertionPasses_WhenConditionPassesWithRetry()
+        {
+            var i = 0;
+            Task<string> GetResult() => Task.FromResult(new string('1', i++));
+
+            await Assert.ThatAsync(GetResult, Is.Not.Empty.After(1000, 10));
+        }
+
+        [Test]
+        public async Task AssertionPasses_WhenDelegateThrowsNothingWithRetry()
+        {
+            var i = 0;
+            Task<string> GetResult()
+            {
+                if (i == 0)
+                {
+                    i++;
+                    throw new InvalidOperationException();
+                }
+                else
+                {
+                    return Task.FromResult(new string('1', i++));
+                }
+            }
+
+            await Assert.ThatAsync(GetResult, Throws.Nothing.After(1000, 10));
+        }
+
+        [Test]
+        public async Task AssertionFails_WhenDelegateThrowsEvenWithRetry()
+        {
+            Task<string> GetResult() => throw new InvalidOperationException();
+
+            await AssertAssertionFailsAsync(() => Assert.ThatAsync(GetResult, Throws.Nothing.After(10, 1)));
+        }
+
         private static async Task AssertAssertionFailsAsync(Func<Task> assertion)
         {
             await Assert.ThatAsync(

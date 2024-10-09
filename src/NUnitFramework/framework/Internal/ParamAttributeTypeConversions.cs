@@ -118,7 +118,104 @@ namespace NUnit.Framework.Internal
                 return convertedValue is not null;
             }
 
+            if (TryGetTupleType(underlyingTargetType, out var tupleTypes))
+            {
+                convertedValue = TryConvertToTuple(value, underlyingTargetType, tupleTypes);
+                return convertedValue is not null;
+            }
+
             convertedValue = null;
+            return false;
+        }
+
+        private static object? TryConvertToTuple(object? value, Type targetType, Type[] tupleTypes)
+        {
+            var inflatedValue = InflateTupleRestArg(value, tupleTypes);
+
+            if (inflatedValue is object?[] array &&
+                array.Length == tupleTypes.Length &&
+                TryConvertTupleComponents(array, tupleTypes, out var ctorArgs))
+            {
+                var ctor = targetType.GetConstructor(tupleTypes)!;
+                return ctor.Invoke(ctorArgs);
+            }
+            else if (tupleTypes.Length == 1 &&
+                     TryConvert(inflatedValue, tupleTypes[0], out var tupleArg))
+            {
+                var ctor = targetType.GetConstructor(tupleTypes)!;
+                return ctor.Invoke(new[] { tupleArg });
+            }
+
+            return null;
+        }
+
+        private static object? InflateTupleRestArg(object? value, Type[] tupleTypes)
+        {
+            object? inflatedValue;
+            if (value is object?[] longArray &&
+                longArray.Length > tupleTypes.Length &&
+                tupleTypes.Length > 0 &&
+                TryGetTupleType(tupleTypes[tupleTypes.Length - 1], out _))
+            {
+                var inflatedArray = new object[tupleTypes.Length];
+                Array.Copy(longArray, inflatedArray, tupleTypes.Length - 1);
+                var restArray = new object[longArray.Length - tupleTypes.Length + 1];
+                Array.Copy(longArray, tupleTypes.Length - 1, restArray, 0, restArray.Length);
+                inflatedArray[tupleTypes.Length - 1] = restArray;
+
+                inflatedValue = inflatedArray;
+            }
+            else
+            {
+                inflatedValue = value;
+            }
+
+            return inflatedValue;
+        }
+
+        private static bool TryConvertTupleComponents
+            (object?[] array, Type[] tupleTypes, [MaybeNullWhen(false)] out object?[] tupleComponents)
+        {
+            var components = new object?[array.Length];
+            for (int i = 0; i < components.Length; i++)
+            {
+                if (!TryConvert(array[i], tupleTypes[i], out components[i]))
+                {
+                    tupleComponents = null;
+                    return false;
+                }
+            }
+
+            tupleComponents = components;
+            return true;
+        }
+
+        private static bool TryGetTupleType(Type type, [MaybeNullWhen(false)] out Type[] typeArgs)
+        {
+            if (!type.IsGenericType)
+            {
+                typeArgs = null;
+                return false;
+            }
+
+            Type genericType = type.GetGenericTypeDefinition();
+            if (genericType.Assembly == typeof(Tuple).Assembly &&
+                genericType.Namespace == typeof(Tuple).Namespace &&
+                genericType.Name.StartsWith("Tuple`", StringComparison.Ordinal))
+            {
+                typeArgs = type.GetGenericArguments();
+                return true;
+            }
+
+            if (genericType.Assembly == typeof(ValueTuple).Assembly &&
+                genericType.Namespace == typeof(ValueTuple).Namespace &&
+                genericType.Name.StartsWith("ValueTuple`", StringComparison.Ordinal))
+            {
+                typeArgs = type.GetGenericArguments();
+                return true;
+            }
+
+            typeArgs = null;
             return false;
         }
     }

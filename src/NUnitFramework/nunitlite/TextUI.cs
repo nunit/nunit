@@ -132,6 +132,9 @@ namespace NUnitLite
             WriteHelpLine("      If --explore is used without any specification following, a list of");
             WriteHelpLine("      test cases is output to the console.");
             Writer.WriteLine();
+            WriteHelpLine("      The --where option documentation can be found here:");
+            WriteHelpLine("          https://docs.nunit.org/articles/nunit/running-tests/Test-Selection-Language.html");
+            Writer.WriteLine();
         }
 
         #endregion

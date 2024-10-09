@@ -3,8 +3,8 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
-using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -599,6 +599,26 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
+        [Test]
+        public void AssertRecordsComparingProperties()
+        {
+            var record1 = new Record("Name", [1, 2, 3]);
+            var record2 = new Record("Name", [1, 2, 3]);
+
+            Assert.That(record1, Is.Not.EqualTo(record2)); // Record's generated method does not handle collections
+            Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void AssertRecordsComparingProperties_WhenRecordHasUserDefinedEqualsMethod()
+        {
+            var record1 = new ParentRecord(new RecordWithOverriddenEquals("Name"), [1, 2, 3]);
+            var record2 = new ParentRecord(new RecordWithOverriddenEquals("NAME"), [1, 2, 3]);
+
+            Assert.That(record1, Is.Not.EqualTo(record2)); // ParentRecord's generated method does not handle collections
+            Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
+        }
+
         private sealed class LinkedList
         {
             public LinkedList(int value, LinkedList? next = null)
@@ -653,6 +673,51 @@ namespace NUnit.Framework.Tests.Assertions
              *
             Assert.That(two, Is.EqualTo(one).UsingPropertiesComparer());
              */
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_EqualTo()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.EqualTo([1, 2, 3]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_EquivalentTo()
+        {
+            var actual = new[] { 3, 2, 1 };
+            Assert.That(actual, Is.EquivalentTo([1, 2, 3]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_SubsetOf()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.SubsetOf([1, 2, 3, 4, 5]));
+        }
+
+        [Test]
+        public void UseAssertThatWithCollectionExpression_SupersetOf()
+        {
+            var actual = new[] { 1, 2, 3 };
+            Assert.That(actual, Is.SupersetOf([1, 2]));
+        }
+
+        private record Record(string Name, int[] Collection);
+
+        private record ParentRecord(RecordWithOverriddenEquals Child, int[] Collection);
+
+        private record RecordWithOverriddenEquals(string Name)
+        {
+            public virtual bool Equals(RecordWithOverriddenEquals? other)
+            {
+                return string.Equals(Name, other?.Name, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.ToUpperInvariant().GetHashCode();
+            }
         }
 
         private sealed class ParentClass

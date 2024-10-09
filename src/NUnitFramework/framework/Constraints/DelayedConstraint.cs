@@ -2,7 +2,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -258,7 +260,6 @@ namespace NUnit.Framework.Constraints
             long now = Stopwatch.GetTimestamp();
             long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
-            object? actual;
             if (PollingInterval.IsNotZero)
             {
                 long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
@@ -268,11 +269,9 @@ namespace NUnit.Framework.Constraints
                         ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
-                    actual = InvokeDelegate(del);
-
                     try
                     {
-                        ConstraintResult result = BaseConstraint.ApplyTo(actual);
+                        ConstraintResult result = BaseConstraint.ApplyTo(del);
                         if (result.IsSuccess)
                             return new DelegatingConstraintResult(this, result);
                     }
@@ -285,8 +284,7 @@ namespace NUnit.Framework.Constraints
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            actual = InvokeDelegate(del);
-            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
+            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(del));
         }
 
         /// <summary>
@@ -326,6 +324,41 @@ namespace NUnit.Framework.Constraints
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
+        }
+
+        /// <inheritdoc/>
+        public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
+        {
+            long now = Stopwatch.GetTimestamp();
+            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
+
+            if (PollingInterval.IsNotZero)
+            {
+                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
+                while ((now = Stopwatch.GetTimestamp()) < delayEnd)
+                {
+                    if (nextPoll > now)
+                        await Task.Delay(TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now));
+
+                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
+
+                    try
+                    {
+                        ConstraintResult result = await BaseConstraint.ApplyToAsync(taskDel);
+                        if (result.IsSuccess)
+                            return new DelegatingConstraintResult(this, result);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
+                }
+            }
+
+            if ((now = Stopwatch.GetTimestamp()) < delayEnd)
+                await Task.Delay(TimestampDiff(delayEnd, now));
+
+            return new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
         }
 
         private static object? InvokeDelegate<T>(ActualValueDelegate<T> del)

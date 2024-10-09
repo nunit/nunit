@@ -12,7 +12,7 @@
   <!-- General Packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
   </ItemGroup>
@@ -30,7 +30,7 @@
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.10.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.3.0" />
-    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.507" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
   </ItemGroup>
   <!-- Specific dependencies -->
   <ItemGroup>

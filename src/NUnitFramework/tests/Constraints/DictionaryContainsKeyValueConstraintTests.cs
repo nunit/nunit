@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
@@ -99,12 +100,11 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
-            List<KeyValuePair<string, string>> keyValuePairs = new List<KeyValuePair<string, string>>(
-                new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } });
+            var keyValuePairs = new List<string> { "Hello", "Hi", "Hola" };
 
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary or IEnumerable<KeyValuePair<,>>"));
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Tests.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
 
             Assert.That(dictionary,
-                new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+                new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").Using<string>((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
         }
 
         [Test]
@@ -221,7 +221,24 @@ namespace NUnit.Framework.Tests.Constraints
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null"));
+        }
+
+        [Test]
+        public void WorksWithTypeThatImplementsIEnumerableOfKeyValuePairs()
+        {
+            var dictionary = new Dictionary<int, string>()
+            {
+                { 1, "World" },
+                { 2, "Universe" },
+                { 3, "Mundo" }
+            };
+
+            var enumeration = new KVPEnumeration(dictionary);
+
+            Assert.That(enumeration, new DictionaryContainsKeyValuePairConstraint(3, "Mundo"));
+            Assert.That(enumeration, Does.ContainKey(2).WithValue("Universe"));
+            Assert.That(enumeration, Does.Not.ContainKey(1).WithValue("Universe"));
         }
 
         private class TestDictionary : IDictionary<int, string>
@@ -290,6 +307,20 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             IEnumerator IEnumerable.GetEnumerator() => _internalDictionary.GetEnumerator();
+        }
+
+        private sealed class KVPEnumeration : IEnumerable<KeyValuePair<int, string>>
+        {
+            private readonly Dictionary<int, string> _values;
+
+            public KVPEnumeration(Dictionary<int, string> values)
+            {
+                _values = values;
+            }
+
+            public IEnumerator<KeyValuePair<int, string>> GetEnumerator() => _values.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

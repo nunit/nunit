@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -41,7 +40,7 @@ namespace NUnit.Framework.Constraints
         private bool Matches(object? actual)
         {
             if (actual is null)
-                throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
+                throw new ArgumentException("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null", nameof(actual));
 
             if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
             {
@@ -54,9 +53,9 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
-            // If 'actual' implements IDictionary<TKey, TValue>, construct an 'expected' KeyValuePair<TKey, TValue>
+            // If 'actual' implements IEnumerable<KeyValuePair<TKey, TValue>>, construct an 'expected' KeyValuePair<TKey, TValue>
             // and look it up by iterating using IEnumerable
-            if (actual.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
+            if (ImplementsIEnumerableKeyValuePair(actual))
             {
                 var expected = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
                 var enumerable = (IEnumerable)actual;
@@ -70,7 +69,24 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
-            throw new ArgumentException($"Expected: IDictionary But was: {actual.GetType()}", nameof(actual));
+            throw new ArgumentException($"Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: {actual.GetType()}", nameof(actual));
+
+            static bool ImplementsIEnumerableKeyValuePair(object instance)
+            {
+                foreach (var @interface in instance.GetType().GetInterfaces())
+                {
+                    if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                    {
+                        var enumerableInnerType = @interface.GenericTypeArguments[0];
+                        if (enumerableInnerType.IsGenericType && enumerableInnerType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
         }
 
         /// <summary>

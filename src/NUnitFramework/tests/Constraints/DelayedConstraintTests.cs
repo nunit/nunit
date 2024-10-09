@@ -241,6 +241,53 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(PollCount, Is.EqualTo(4).After(110, 25));
         }
 
+        [Test]
+        public void AssertionExpectingAnExceptionWithRetrySucceeds()
+        {
+            int i = 0;
+            void ThrowsAfterRetry()
+            {
+                if (i++ > 0)
+                {
+                    throw new InvalidOperationException("Always throws after first attempt.");
+                }
+            }
+
+            Assert.That(ThrowsAfterRetry, Throws.InvalidOperationException.After(AFTER, POLLING));
+        }
+
+        [Test]
+        public void AssertionExpectingNoExceptionWithRetrySucceeds()
+        {
+            int i = 0;
+            void DoesNotThrowAfterRetry()
+            {
+                if (i++ < 3)
+                {
+                    throw new InvalidOperationException("Only throws before third attempt.");
+                }
+            }
+
+            Assert.That(DoesNotThrowAfterRetry, Throws.Nothing.After(AFTER, POLLING));
+        }
+
+        [Test]
+        public void AssertionForDelegateWhichThrowsExceptionUntilRetriedSucceeds()
+        {
+            int i = 0;
+            string DoesNotThrowAfterRetry()
+            {
+                if (i++ < 3)
+                {
+                    throw new InvalidOperationException("Only throws before third attempt.");
+                }
+
+                return "Success!";
+            }
+
+            Assert.That(DoesNotThrowAfterRetry, Is.EqualTo("Success!").After(AFTER, POLLING));
+        }
+
         private int PollCount()
         {
             return _pollCount++;
@@ -280,7 +327,8 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
 
-        [OneTimeTearDown] public void OneTimeTearDown()
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
             WaitEvent.Dispose();
         }
