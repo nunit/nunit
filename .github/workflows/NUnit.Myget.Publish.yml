@@ -35,7 +35,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
 
     - name: 🔨 Windows Specific Tests
-      run: dotnet test --no-build --configuration=Release src/NUnitFramework/windows-tests/windows-tests.csproj
+      run: dotnet test --no-build --logger trx --collect:"XPlat Code Coverage" --configuration=Release src/NUnitFramework/windows-tests/windows-tests.csproj
 
     - name: 📦 Package
       run: dotnet tool run dotnet-cake --target=Package 
