@@ -16,6 +16,7 @@
     <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CsWinRTAotOptimizerEnabled>false</CsWinRTAotOptimizerEnabled>
     <Company>NUnit Software</Company>
     <Product>NUnit 4</Product>
     <Version Condition="'$(Version)'==''">4.0.0.0</Version>
