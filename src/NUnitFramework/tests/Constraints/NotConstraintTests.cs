@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualConstraint("ABC").IgnoreCase)));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new NotConstraint(new EqualStringConstraint("ABC").IgnoreCase)));
             Assert.That(ex?.Message, Does.Contain("ignoring case"));
         }
 

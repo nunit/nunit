@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<propertyexists X>"));
             constraint = Has.Attribute(typeof(TestAttribute)).With.Property("Description").EqualTo("smoke");
             Assert.That(constraint.Resolve().ToString(),
-                Is.EqualTo("<attribute NUnit.Framework.TestAttribute <property Description <equal \"smoke\">>>"));
+                Is.EqualTo("<attribute NUnit.Framework.TestAttribute <property Description <equalstring \"smoke\">>>"));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Is.Not.All.EqualTo(5).ToString(), Is.EqualTo("<unresolved <equal 5>>"));
             Assert.That(Has.Property("X").EqualTo(5).ToString(), Is.EqualTo("<unresolved <equal 5>>"));
             Assert.That(Has.Attribute(typeof(TestAttribute)).With.Property("Description").EqualTo("smoke").ToString(),
-                Is.EqualTo("<unresolved <equal \"smoke\">>"));
+                Is.EqualTo("<unresolved <equalstring \"smoke\">>"));
         }
 
         [Test]
