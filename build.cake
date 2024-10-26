@@ -138,7 +138,7 @@ DotNetBuildSettings CreateDotNetBuildSettings()
         AssemblyVersion = assemblyVersion,
         FileVersion = assemblyVersion,
         InformationalVersion = version
-    }.WithProperty("EmbedUntrackedSources" BuildSystem.GitHubActions.IsRunningOnGitHubActions.ToString().ToLower()), 
+    }.WithProperty("EmbedUntrackedSources", BuildSystem.GitHubActions.IsRunningOnGitHubActions.ToString().ToLower()), 
     Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
     Information("FileVersion: {0}", msBuildSettings.FileVersion);
     Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
