@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            _runnerThread = new Thread(RunnerThreadProc);
+            _runnerThread = new Thread(RunnerThreadProc) { Name = "NUnit.Fw.SimpleWorkItem" };
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {

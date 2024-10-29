@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 _pumpThread = new Thread(PumpThreadProc)
                 {
-                    Name = $"{Name}EventPumpThread",
+                    Name = $"NUnit.Fw.{Name}EventPumpThread",
                     Priority = ThreadPriority.Highest
                 };
 

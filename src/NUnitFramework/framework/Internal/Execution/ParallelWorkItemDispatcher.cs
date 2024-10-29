@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger Log = InternalTrace.GetLogger("Dispatcher");
 
-        private const int WAIT_FOR_FORCED_TERMINATION = 5000;
+        private const int WaitForForcedTermination = 5000;
 
         private WorkItem? _topLevelWorkItem;
         private readonly Stack<WorkItem> _savedWorkItems = new();
@@ -65,17 +65,17 @@ namespace NUnit.Framework.Internal.Execution
             // TODO: Avoid creating all the workers till needed
             for (int i = 1; i <= LevelOfParallelism; i++)
             {
-                string name = $"ParallelWorker#{i}";
+                string name = $"NUnit.Fw.ParallelWorker#{i}";
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
-            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "ParallelSTAWorker"));
+            ParallelShift.Assign(new TestWorker(ParallelSTAQueue, "NUnit.Fw.ParallelSTAWorker"));
 
-            var worker = new TestWorker(NonParallelQueue, "NonParallelWorker");
+            var worker = new TestWorker(NonParallelQueue, "NUnit.Fw.NonParallelWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelShift.Assign(worker);
 
-            worker = new TestWorker(NonParallelSTAQueue, "NonParallelSTAWorker");
+            worker = new TestWorker(NonParallelSTAQueue, "NUnit.Fw.NonParallelSTAWorker");
             worker.Busy += OnStartNonParallelWorkItem;
             NonParallelSTAShift.Assign(worker);
         }
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Internal.Execution
 
             if (force)
             {
-                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WAIT_FOR_FORCED_TERMINATION);
+                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
 
                 // Notify termination of any remaining in-process suites
                 lock (_activeWorkItems)
