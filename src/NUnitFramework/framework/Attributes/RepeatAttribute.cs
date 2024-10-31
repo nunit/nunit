@@ -22,17 +22,28 @@ namespace NUnit.Framework
     public class RepeatAttribute : PropertyAttribute, IRepeatTest
     {
         private readonly int _count;
-        private readonly bool _stopOnFailure;
+        /// <summary>
+        /// Whether to stop when a test is not successful or not
+        /// </summary>
+        public bool StopOnFailure { get; set; }
+
+        /// <summary>
+        /// Construct a RepeatAttribute
+        /// </summary>
+        /// <param name="count">The number of times to run the test</param>
+        public RepeatAttribute(int count) : this(count, true)
+        {
+        }
 
         /// <summary>
         /// Construct a RepeatAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
         /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
-        public RepeatAttribute(int count, bool stopOnFailure = true) : base(count)
+        public RepeatAttribute(int count, bool stopOnFailure) : base(count)
         {
             _count = count;
-            _stopOnFailure = stopOnFailure;
+            StopOnFailure = stopOnFailure;
         }
 
         #region IRepeatTest Members
@@ -44,7 +55,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RepeatedTestCommand(command, _count, _stopOnFailure);
+            return new RepeatedTestCommand(command, _count, StopOnFailure);
         }
 
         #endregion
