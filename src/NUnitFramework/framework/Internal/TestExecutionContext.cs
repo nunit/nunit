@@ -12,6 +12,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework.Internal.HookExtensions;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
