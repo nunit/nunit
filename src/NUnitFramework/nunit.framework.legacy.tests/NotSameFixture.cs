@@ -15,6 +15,7 @@ namespace NUnit.Framework.Legacy.Tests
         public void NotSame()
         {
             Legacy.ClassicAssert.AreNotSame(_s1, _s2);
+            Legacy.ClassicAssert.AreNotSame(_s1, _s2, "Different {0}", "string");
         }
 
         [Test]
@@ -25,6 +26,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  But was:  \"S1\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotSame(_s1, _s1));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotSame(_s1, _s1, "Different {0}", "string"));
+            Assert.That(ex?.Message, Does.Contain("Different string"));
         }
 
         [Test]
