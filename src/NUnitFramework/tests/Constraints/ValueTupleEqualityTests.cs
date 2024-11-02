@@ -97,5 +97,14 @@ namespace NUnit.Framework.Tests.Constraints
             var b = ValueTuple.Create(new Dictionary<string, string>());
             Assert.That(a, Is.EqualTo(b));
         }
+
+        [Test]
+        public void SucceedsWithStringModifiers()
+        {
+            var a = (2, 5, "HELLO ");
+            var b = (2, 5, "hello");
+
+            Assert.That(a, Is.EqualTo(b).IgnoreCase.IgnoreWhiteSpace);
+        }
     }
 }
