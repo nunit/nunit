@@ -875,5 +875,27 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(convertedValue, Is.TypeOf<T>());
             Assert.That(convertedValue, Is.Not.TypeOf(input.GetType()));
         }
+
+        [TestCase(0, TypeArgs = [typeof(int)])]
+#if NET6_0_OR_GREATER
+        [TestCase<int>(0)]
+#endif
+        [TestCase(0)]
+        [TestCase(1L)]
+        [TestCase(2UL)]
+        [TestCase(3F)]
+        [TestCase(4D)]
+        public void GenericNullable<TValue>(TValue? value)
+            where TValue : struct, IConvertible
+        {
+            Assert.That(value, Is.Not.Null);
+            int index = value.Value.ToInt32(null);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.EqualTo(index));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.InstanceOf(ExpectedType[index]));
+        }
+
+        private static readonly Type[] ExpectedType = [typeof(int), typeof(long), typeof(ulong), typeof(float), typeof(double)];
     }
 }
