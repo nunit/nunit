@@ -897,5 +897,25 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly Type[] ExpectedType = [typeof(int), typeof(long), typeof(ulong), typeof(float), typeof(double)];
+
+        [TestCase("Hello", null)]
+        [TestCase(null, "World")]
+        [TestCase("Hello", "World")]
+        public void GenericNullableClass<TValue>(TValue? greeting, TValue? to)
+            where TValue : class
+        {
+            Assert.That(greeting, Is.Null.Or.Not.Null);
+            Assert.That(to, Is.Not.Null.Or.Null);
+        }
+
+        [TestCase(3, null)]
+        [TestCase(null, 4.0)]
+        [TestCase(3, 4)]
+        public void GenericNullableStruct<TValue>(TValue? greeting, TValue? to)
+            where TValue : struct
+        {
+            Assert.That(greeting, Is.Null.Or.Not.Null);
+            Assert.That(to, Is.Not.Null.Or.Null);
+        }
     }
 }
