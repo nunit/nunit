@@ -115,6 +115,22 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
+        public void NotCaseInsensitiveCompare()
+        {
+            StringAssert.AreNotEqualIgnoringCase("name", "NAMES");
+        }
+
+        [Test]
+        public void NotCaseInsensitiveCompareFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "not equal to \"Name\", ignoring case" + Environment.NewLine
+                + TextMessageWriter.Pfx_Actual + "\"NAME\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.AreNotEqualIgnoringCase("Name", "NAME"));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
         public void IsMatch()
         {
             StringAssert.IsMatch("a?bc", "12a3bc45");
@@ -127,6 +143,22 @@ namespace NUnit.Framework.Legacy.Tests
                 TextMessageWriter.Pfx_Expected + "String matching \"a?b*c\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"12ab456\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => StringAssert.IsMatch("a?b*c", "12ab456"));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
+        public void DoesNotMatch()
+        {
+            StringAssert.DoesNotMatch("a?b*c", "12ab456");
+        }
+
+        [Test]
+        public void DoesNotMatchFails()
+        {
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "not String matching \"a?bc\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "\"12a3bc45\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.DoesNotMatch("a?bc", "12a3bc45"));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 

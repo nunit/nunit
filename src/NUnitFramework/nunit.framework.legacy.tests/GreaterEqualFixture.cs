@@ -23,56 +23,79 @@ namespace NUnit.Framework.Legacy.Tests
         private readonly decimal _de2 = 33.4M;
         private readonly double _d1 = 4.85948654;
         private readonly double _d2 = 1.0;
-        private readonly Enum _e1 = RunState.Explicit;
-        private readonly Enum _e2 = RunState.Ignored;
+        private readonly Enum _e1 = RunState.Ignored;
+        private readonly Enum _e2 = RunState.Explicit;
 
         [Test]
         public void GreaterOrEqual_Int32()
         {
             ClassicAssert.GreaterOrEqual(_i1, _i1);
-            ClassicAssert.GreaterOrEqual(_i1, _i2);
+            ClassicAssert.GreaterOrEqual(_i1, _i2, "Type: {0}", "int");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_i2, _i1, "Type: {0}", "int"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("int"));
         }
 
         [Test]
         public void GreaterOrEqual_UInt32()
         {
             ClassicAssert.GreaterOrEqual(_u1, _u1);
-            ClassicAssert.GreaterOrEqual(_u1, _u2);
+            ClassicAssert.GreaterOrEqual(_u1, _u2, "Type: {0}", "uint");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_u2, _u1, "Type: {0}", "uint"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("uint"));
         }
 
         [Test]
         public void GreaterOrEqual_Long()
         {
             ClassicAssert.GreaterOrEqual(_l1, _l1);
-            ClassicAssert.GreaterOrEqual(_l1, _l2);
+            ClassicAssert.GreaterOrEqual(_l1, _l2, "Type: {0}", "long");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_l2, _l1, "Type: {0}", "long"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("long"));
         }
 
         [Test]
         public void GreaterOrEqual_ULong()
         {
             ClassicAssert.GreaterOrEqual(_ul1, _ul1);
-            ClassicAssert.GreaterOrEqual(_ul1, _ul2);
+            ClassicAssert.GreaterOrEqual(_ul1, _ul2, "Type: {0}", "ulong");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_ul2, _ul1, "Type: {0}", "ulong"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("ulong"));
         }
 
         [Test]
         public void GreaterOrEqual_Double()
         {
-            ClassicAssert.GreaterOrEqual(_d1, _d1, "double");
-            ClassicAssert.GreaterOrEqual(_d1, _d2, "double");
+            ClassicAssert.GreaterOrEqual(_d1, _d1);
+            ClassicAssert.GreaterOrEqual(_d1, _d2, "Type: {0}", "double");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_d2, _d1, "Type: {0}", "double"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("double"));
         }
 
         [Test]
         public void GreaterOrEqual_Decimal()
         {
-            ClassicAssert.GreaterOrEqual(_de1, _de1, "{0}", "decimal");
+            ClassicAssert.GreaterOrEqual(_de1, _de1);
             ClassicAssert.GreaterOrEqual(_de1, _de2, "{0}", "decimal");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_de2, _de1, "{0}", "decimal"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("decimal"));
         }
 
         [Test]
         public void GreaterOrEqual_Float()
         {
-            ClassicAssert.GreaterOrEqual(_f1, _f1, "float");
-            ClassicAssert.GreaterOrEqual(_f1, _f2, "float");
+            ClassicAssert.GreaterOrEqual(_f1, _f1);
+            ClassicAssert.GreaterOrEqual(_f1, _f2, "Type: {0}", "float");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_f2, _f1, "Type: {0}", "float"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("float"));
+        }
+
+        [Test]
+        public void GreaterOrEqual_IComparable()
+        {
+            ClassicAssert.GreaterOrEqual(_e1, _e1);
+            ClassicAssert.GreaterOrEqual(_e1, _e2, "Type: {0}", "enum");
+            Assert.That(() => ClassicAssert.GreaterOrEqual(_e2, _e1, "Type: {0}", "enum"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("enum"));
         }
 
         [Test]
@@ -144,7 +167,7 @@ namespace NUnit.Framework.Legacy.Tests
             var expectedMessage =
                 "  Expected: greater than or equal to Ignored" + Environment.NewLine +
                 "  But was:  Explicit" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.GreaterOrEqual(_e1, _e2));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.GreaterOrEqual(_e2, _e1));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 

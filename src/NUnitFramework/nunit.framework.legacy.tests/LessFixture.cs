@@ -33,10 +33,13 @@ namespace NUnit.Framework.Legacy.Tests
             ClassicAssert.Less(_i1, _i2);
             ClassicAssert.Less(_i1, _i2, "int");
             ClassicAssert.Less(_i1, _i2, "{0}", "int");
+            ClassicAssert.Less(_u1, _u2);
             ClassicAssert.Less(_u1, _u2, "uint");
             ClassicAssert.Less(_u1, _u2, "{0}", "uint");
+            ClassicAssert.Less(_l1, _l2);
             ClassicAssert.Less(_l1, _l2, "long");
             ClassicAssert.Less(_l1, _l2, "{0}", "long");
+            ClassicAssert.Less(_ul1, _ul2);
             ClassicAssert.Less(_ul1, _ul2, "ulong");
             ClassicAssert.Less(_ul1, _ul2, "{0}", "ulong");
             ClassicAssert.Less(_d1, _d2);
@@ -48,6 +51,30 @@ namespace NUnit.Framework.Legacy.Tests
             ClassicAssert.Less(_f1, _f2);
             ClassicAssert.Less(_f1, _f2, "float");
             ClassicAssert.Less(_f1, _f2, "{0}", "float");
+            ClassicAssert.Less(_e1, _e2);
+            ClassicAssert.Less(_e1, _e2, "enum");
+            ClassicAssert.Less(_e1, _e2, "{0}", "enum");
+        }
+
+        [Test]
+        public void LessFails()
+        {
+            Assert.That(() => ClassicAssert.Less(_i2, _i1, "{0}", "int"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("int"));
+            Assert.That(() => ClassicAssert.Less(_u2, _u1, "{0}", "uint"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("uint"));
+            Assert.That(() => ClassicAssert.Less(_l2, _l1, "{0}", "long"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("long"));
+            Assert.That(() => ClassicAssert.Less(_ul2, _ul1, "{0}", "ulong"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("ulong"));
+            Assert.That(() => ClassicAssert.Less(_d2, _d1, "{0}", "double"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("double"));
+            Assert.That(() => ClassicAssert.Less(_de2, _de1, "{0}", "decimal"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("decimal"));
+            Assert.That(() => ClassicAssert.Less(_f2, _f1, "{0}", "float"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("float"));
+            Assert.That(() => ClassicAssert.Less(_e2, _e1, "{0}", "enum"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains("enum"));
         }
 
         [Test]

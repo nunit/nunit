@@ -170,6 +170,17 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
+        public void Double()
+        {
+            double val = (double)1.0;
+            double expected = val;
+            double actual = val;
+
+            ClassicAssert.IsTrue(expected == actual);
+            ClassicAssert.AreEqual(expected, actual, (double)0.0, "double");
+        }
+
+        [Test]
         public void Float()
         {
             float val = (float)1.0;
