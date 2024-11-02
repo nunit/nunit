@@ -108,6 +108,10 @@ namespace NUnit.Framework.Internal
                             TryApplyArgType(genericArgTypes[i], argTypes[i]);
                     }
                 }
+                else if (Reflect.IsNullable(parmType) && !argType.IsClass)
+                {
+                    ApplyArgType(genericArgTypes[0], argType);
+                }
             }
         }
 

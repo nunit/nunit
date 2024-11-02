@@ -336,7 +336,7 @@ namespace NUnit.Framework.Internal
             return !type.IsValueType || IsNullable(type);
         }
 
-        private static bool IsNullable(Type type)
+        internal static bool IsNullable(Type type)
         {
             // Compare with https://github.com/dotnet/coreclr/blob/bb01fb0d954c957a36f3f8c7aad19657afc2ceda/src/mscorlib/src/System/Nullable.cs#L152-L157
             return type.IsGenericType
