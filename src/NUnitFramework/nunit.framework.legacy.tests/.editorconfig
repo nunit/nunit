@@ -1,12 +1,25 @@
 
 [*.cs]
 
+dotnet_diagnostic.NUnit2002.severity = none
 dotnet_diagnostic.NUnit2003.severity = none
 dotnet_diagnostic.NUnit2005.severity = none
 dotnet_diagnostic.NUnit2006.severity = none
 dotnet_diagnostic.NUnit2007.severity = none
+dotnet_diagnostic.NUnit2015.severity = none
+dotnet_diagnostic.NUnit2017.severity = none
 dotnet_diagnostic.NUnit2018.severity = none
+dotnet_diagnostic.NUnit2019.severity = none
+dotnet_diagnostic.NUnit2027.severity = none
+dotnet_diagnostic.NUnit2028.severity = none
+dotnet_diagnostic.NUnit2029.severity = none
+dotnet_diagnostic.NUnit2030.severity = none
 dotnet_diagnostic.NUnit2031.severity = none
+dotnet_diagnostic.NUnit2034.severity = none
+dotnet_diagnostic.NUnit2035.severity = none
+dotnet_diagnostic.NUnit2036.severity = none
+dotnet_diagnostic.NUnit2038.severity = none
+dotnet_diagnostic.NUnit2039.severity = none
 dotnet_diagnostic.NUnit2048.severity = none
 dotnet_diagnostic.NUnit2049.severity = none
 
