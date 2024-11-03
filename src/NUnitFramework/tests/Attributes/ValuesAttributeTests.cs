@@ -191,5 +191,39 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
             });
         }
+
+        [Test]
+        public void GenericNullable<TValue>([Values(0, 1L, 2UL, 3F, 4D)] TValue? value)
+            where TValue : struct, IConvertible
+        {
+            Assert.That(value, Is.Not.Null);
+            int index = value.Value.ToInt32(null);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.EqualTo(index));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.InstanceOf(ExpectedType[index]));
+        }
+
+        private static readonly Type[] ExpectedType = [typeof(int), typeof(long), typeof(ulong), typeof(float), typeof(double)];
+
+        [Test, Sequential]
+        public void GenericNullableClass<TValue>(
+            [Values("Hello", null, "Hello")] TValue? greeting,
+            [Values(null, "World", "World")] TValue? to)
+            where TValue : class
+        {
+            Assert.That(greeting, Is.Null.Or.Not.Null);
+            Assert.That(to, Is.Not.Null.Or.Null);
+        }
+
+        [Test, Sequential]
+        public void GenericNullableStruct<TValue>(
+            [Values(3, null, 3)] TValue? greeting,
+            [Values(null, 4.0, 4)] TValue? to)
+            where TValue : struct
+        {
+            Assert.That(greeting, Is.Null.Or.Not.Null);
+            Assert.That(to, Is.Not.Null.Or.Null);
+        }
     }
 }
