@@ -302,4 +302,26 @@ namespace NUnit.TestData.RepeatingTests
             Assert.Fail();
         }
     }
+
+    public class RepeatStopOnFailurePropertyTrueTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(3, StopOnFailure = true)]
+        [TestCase]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
+
+    public class RepeatStopOnFailurePropertyFalseTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(3, StopOnFailure = false)]
+        [TestCase]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
 }

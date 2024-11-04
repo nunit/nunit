@@ -161,5 +161,23 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(fixture.Count, Is.EqualTo(nTries));
             });
         }
+
+        [TestCase(typeof(RepeatStopOnFailurePropertyTrueTestCaseFixture), "Failed(Child)", 1)]
+        [TestCase(typeof(RepeatStopOnFailurePropertyFalseTestCaseFixture), "Failed(Child)", 3)]
+        public void RepeatStopOnFailurePropertyTest(Type fixtureType, string outcome, int nTries)
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+                Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+                Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+                Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            });
+        }
     }
 }
