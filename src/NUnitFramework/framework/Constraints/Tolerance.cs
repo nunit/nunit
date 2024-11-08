@@ -19,6 +19,7 @@ namespace NUnit.Framework.Constraints
         private const string ModeMustFollowTolerance = "Tolerance amount must be specified before setting mode";
         private const string MultipleToleranceModes = "Tried to use multiple tolerance modes at the same time";
         private const string NumericToleranceRequired = "A numeric tolerance is required";
+        private const string NoNegativeTolerance = "Tolerance amount must not be negative";
 
         /// <summary>
         /// Returns a default Tolerance object, equivalent to a default matching rules.
@@ -46,6 +47,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private Tolerance(object amount, ToleranceMode mode)
         {
+            CheckNotNegative(amount);
             Amount = amount;
             Mode = mode;
         }
@@ -209,6 +211,19 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        ///     Tests that <paramref name="value" /> is not negative.
+        ///     Throws an exception otherwise.
+        /// </summary>
+        private static void CheckNotNegative(object value)
+        {
+            if (Numerics.IsNumericType(value) && Numerics.Compare(value, 0) < 0)
+                throw new ArgumentException(NoNegativeTolerance);
+
+            if (value is TimeSpan timeSpan && timeSpan.Ticks < 0)
+                throw new ArgumentException(NoNegativeTolerance);
+        }
 
         /// <summary>
         /// Tests that the current Tolerance is linear with a
