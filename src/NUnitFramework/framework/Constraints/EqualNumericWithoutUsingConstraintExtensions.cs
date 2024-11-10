@@ -5,9 +5,9 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Extension methods for <see cref="EqualNumericConstraint{T}"/>.
+    /// Extension methods for <see cref="EqualNumericWithoutUsingConstraint{T}"/>.
     /// </summary>
-    public static class EqualNumericConstraintExtensions
+    public static class EqualNumericWithoutUsingConstraintExtensions
     {
         /// <summary>
         /// Flag the constraint to use a tolerance when determining equality.
@@ -15,7 +15,7 @@ namespace NUnit.Framework
         /// <param name="constraint">The original constraint.</param>
         /// <param name="amount">Tolerance value to be used</param>
         /// <returns>Original constraint promoted to <see cref="double"/>.</returns>
-        public static EqualNumericConstraint<double> Within(this EqualNumericConstraint<int> constraint, double amount)
+        public static EqualNumericWithoutUsingConstraint<double> Within(this EqualNumericWithoutUsingConstraint<int> constraint, double amount)
         {
             return new EqualNumericConstraint<double>(constraint.Expected).Within(amount);
         }
@@ -26,7 +26,7 @@ namespace NUnit.Framework
         /// <param name="constraint">The original constraint.</param>
         /// <param name="amount">Tolerance value to be used</param>
         /// <returns>Original constraint promoted to <see cref="double"/>.</returns>
-        public static EqualNumericConstraint<double> Within(this EqualNumericConstraint<float> constraint, double amount)
+        public static EqualNumericWithoutUsingConstraint<double> Within(this EqualNumericWithoutUsingConstraint<float> constraint, double amount)
         {
             return new EqualNumericConstraint<double>(constraint.Expected).Within(amount);
         }
