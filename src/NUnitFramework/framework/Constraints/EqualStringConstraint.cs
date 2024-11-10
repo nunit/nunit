@@ -1,5 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Collections.Generic;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -19,6 +22,23 @@ namespace NUnit.Framework.Constraints
         public EqualStringConstraint(string? expected)
             : base(expected)
         {
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Sets the <see cref="StringComparer"/> to be used in the comparison.
+        /// </summary>
+        /// <param name="comparer">comparer to use for comparing strings.</param>
+        /// <returns>
+        /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
+        /// with an actual value using the user supplied comparer.
+        /// </returns>
+        public EqualUsingConstraint<string> Using(StringComparer comparer)
+        {
+            return new EqualUsingConstraint<string>(Expected, (IEqualityComparer<string>)comparer);
         }
 
         #endregion

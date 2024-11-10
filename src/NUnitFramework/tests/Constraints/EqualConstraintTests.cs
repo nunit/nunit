@@ -962,6 +962,12 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That("hello", Is.EqualTo("HELLO").Using((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
             }
 
+            [Test, SetCulture("en-US")]
+            public void UsesStringComparer()
+            {
+                Assert.That("hello", Is.EqualTo("HELLO").Using(StringComparer.OrdinalIgnoreCase));
+            }
+
             [Test]
             public void UsesProvidedListComparer()
             {
