@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
 
             if (methodInfo.IsAsyncOperation)
             {
-                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context, lastParameterAcceptsCancellationToken));
+                return AsyncToSyncAdapter.Await(context, () => InvokeTestMethod(context, lastParameterAcceptsCancellationToken));
             }
 
             return InvokeTestMethod(context, lastParameterAcceptsCancellationToken);

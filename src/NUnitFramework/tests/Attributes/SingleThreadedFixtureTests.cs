@@ -5,6 +5,7 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -37,26 +38,26 @@ namespace NUnit.Framework.Tests.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("may not specify a different apartment");
         }
 
-#if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
-#endif
-        [SingleThreaded]
-        public class SingleThreadedFixtureWithApartmentStateTests : ThreadingTests
-        {
-            [Test, Apartment(ApartmentState.MTA)]
-            public void TestWithSameApartmentIsValid()
-            {
-                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
-            }
-        }
-
         private void CheckTestIsInvalid<TFixture>(string reason)
         {
             var result = TestBuilder.RunTestFixture(typeof(TFixture));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.Child)));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
             Assert.That(result.Children.ToArray()[0].Message, Does.Contain(reason));
+        }
+    }
+
+#if NETCOREAPP
+    [Platform(Include = "Win, Mono")]
+#endif
+    [SingleThreaded]
+    public class SingleThreadedFixtureWithApartmentStateTests : ThreadingTests
+    {
+        [Test, Apartment(ApartmentState.MTA)]
+        public void TestWithSameApartmentIsValid()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
         }
     }
 
@@ -78,6 +79,18 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+        }
+    }
+
+    [SingleThreaded]
+    public class SingleThreadedFixtureWithAsyncTests : ThreadingTests
+    {
+        [Test]
+        public async Task AsyncTestRunsOnSameThread()
+        {
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+            await Task.Yield();
+            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
     }
 }
