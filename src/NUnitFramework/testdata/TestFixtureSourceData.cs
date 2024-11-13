@@ -72,7 +72,10 @@ namespace NUnit.TestData.TestFixtureSourceData
         {
         }
 
-        public static object[] StaticProperty => new object[] { new object[] { "StaticPropertyInClass" } };
+        public static object[] StaticProperty
+        {
+            get { return new object[] { new object[] { "StaticPropertyInClass" } }; }
+        }
     }
 
     [TestFixtureSource(nameof(StaticProperty))]
