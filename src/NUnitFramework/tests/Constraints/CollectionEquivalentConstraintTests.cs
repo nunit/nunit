@@ -48,6 +48,15 @@ public class CollectionEquivalentConstraintTests
     }
 
     [Test]
+    public void WorksWithDefaultImmutableArrays()
+    {
+        ImmutableArray<int> array1 = default;
+        ImmutableArray<int> array2 = default;
+
+        Assert.That(new CollectionEquivalentConstraint(array1).ApplyTo(array2).IsSuccess);
+    }
+
+    [Test]
     public void EquivalentIgnoresOrder()
     {
         ICollection set1 = new SimpleObjectCollection("x", "y", "z");
