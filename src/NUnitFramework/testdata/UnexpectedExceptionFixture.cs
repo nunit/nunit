@@ -9,6 +9,12 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
     public class UnexpectedExceptionFixture
     {
         [Test]
+        public void ThrowsException()
+        {
+            throw new Exception("Thrown Exception");
+        }
+
+        [Test]
         public void ThrowsWithInnerException()
         {
             throw new Exception("Outer Exception", new Exception("Inner Exception"));
@@ -48,6 +54,12 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         public void ThrowsCustomException()
         {
             throw new CustomException("message", new CustomType());
+        }
+
+        [Test]
+        public void ThrowsTargetInvocationException()
+        {
+            GetType().GetMethod(nameof(ThrowsException))!.Invoke(this, null);
         }
 
         [Test]
