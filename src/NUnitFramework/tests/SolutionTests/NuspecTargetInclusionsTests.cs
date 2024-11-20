@@ -57,8 +57,8 @@ namespace NUnit.Framework.Tests.SolutionTests
                     foreach (var extension in _extensions)
                     {
                         requiredIncludedLibFiles.Add(new FileReference(
-                            $"bin{Path.AltDirectorySeparatorChar}{targetFramework}{Path.AltDirectorySeparatorChar}{file}{extension}",
-                            $"lib{Path.AltDirectorySeparatorChar}{targetFramework}"));
+                            $"bin/{targetFramework}/{file}{extension}",
+                            $"lib/{targetFramework}"));
                     }
                 }
             }
@@ -128,9 +128,10 @@ namespace NUnit.Framework.Tests.SolutionTests
                             var src = group.Attribute("src")?.Value;
                             if (src is not null)
                             {
+                                // Microsoft with their backslashes...
                                 includedLibFiles.Add(new FileReference(
-                                    src.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
-                                    target.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)));
+                                    src.Replace('\\', '/'),
+                                    target.Replace('\\', '/')));
                             }
                         }
                     }
