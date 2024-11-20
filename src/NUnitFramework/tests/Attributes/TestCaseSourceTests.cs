@@ -756,6 +756,24 @@ namespace NUnit.Framework.Tests.Attributes
             await Task.Delay(100); // Simulate another asynchronous operation
             yield return new TestCaseData(51, 51);
         }
+
+        #region Generic Nullable
+
+        [TestCaseSource(nameof(GenericNullableSource))]
+        public void GenericNullableTest<TValue>(TValue? value)
+            where TValue : struct, IConvertible
+        {
+            Assert.That(value, Is.Not.Null);
+            int index = value.Value.ToInt32(null);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.EqualTo(index));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.InstanceOf(GenericNullableSource[index].GetType()));
+        }
+
+        private static readonly object[] GenericNullableSource = [0, 1L, 2UL, 3F, 4D];
+
+        #endregion
     }
 
     public class TestSourceMayBeInherited

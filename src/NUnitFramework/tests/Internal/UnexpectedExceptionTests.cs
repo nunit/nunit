@@ -17,6 +17,22 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        public void FailRecordsException()
+        {
+            string expectedMessage =
+                "System.Exception : Thrown Exception";
+
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsException));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo(expectedMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsException)));
+            });
+        }
+
+        [Test]
         public void FailRecordsInnerException()
         {
             string expectedMessage =
@@ -28,6 +44,7 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
                 Assert.That(result.Message, Is.EqualTo(expectedMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsWithInnerException)));
             });
         }
 
@@ -45,6 +62,7 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
                 Assert.That(result.Message, Is.EqualTo(expectedMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsWithNestedInnerException)));
             });
         }
 
@@ -63,6 +81,7 @@ namespace NUnit.Framework.Tests.Internal
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
                 Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
                 Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateException)));
             });
         }
 
@@ -81,6 +100,7 @@ namespace NUnit.Framework.Tests.Internal
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
                 Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
                 Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateExceptionContainingNestedInnerException)));
             });
         }
 
@@ -106,6 +126,25 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
                 Assert.That(result.Message, Is.EqualTo("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message"));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsCustomException)));
+            });
+        }
+
+        [Test]
+        public void TargetInvocationExceptionInUserCodeIsPassedThrough()
+        {
+            string expectedStartOfMessage = "System.Reflection.TargetInvocationException";
+            string expectedEndOfMessage = "  ----> System.Exception : Thrown Exception";
+
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsTargetInvocationException));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
+                Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsTargetInvocationException)));
+                Assert.That(result.StackTrace, Does.Contain(nameof(UnexpectedExceptionFixture.ThrowsException)));
             });
         }
 

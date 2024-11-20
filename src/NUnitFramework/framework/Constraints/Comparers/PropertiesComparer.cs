@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -30,9 +31,9 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            if (properties.Length == 0 || properties.Length >= 32 || properties.Any(p => p.GetIndexParameters().Length > 0))
+            if (properties.Length == 0 || properties.Any(p => p.GetIndexParameters().Length > 0))
             {
-                // We can't compare if there are no (or too many) properties.
+                // We can't compare if there are no properties.
                 // We also can't deal with indexer properties as we don't know the range of valid values.
                 return EqualMethodResult.TypesNotSupported;
             }
@@ -41,7 +42,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
             string declaringTypeName = xType.Name;
 
-            uint redoWithoutTolerance = 0x0;
+            BitArray redoWithoutTolerance = new BitArray(properties.Length);
+            int toleranceNotSupportedCount = 0;
+
             for (int i = 0; i < properties.Length; i++)
             {
                 PropertyInfo property = properties[i];
@@ -56,19 +59,23 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 if (result == EqualMethodResult.ToleranceNotSupported)
                 {
-                    redoWithoutTolerance |= 1U << i;
+                    redoWithoutTolerance.Set(i, true);
+                    toleranceNotSupportedCount++;
                 }
             }
 
-            if (redoWithoutTolerance == (1U << properties.Length) - 1)
+            if (toleranceNotSupportedCount == properties.Length)
+            {
+                // If none of the properties supported the tolerance don't retry without it
                 return EqualMethodResult.ToleranceNotSupported;
+            }
 
-            if (redoWithoutTolerance != 0)
+            if (toleranceNotSupportedCount != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    if ((redoWithoutTolerance & (1U << i)) != 0)
+                    if (redoWithoutTolerance.Get(i))
                     {
                         PropertyInfo property = properties[i];
                         object? xPropertyValue = property.GetValue(x, null);

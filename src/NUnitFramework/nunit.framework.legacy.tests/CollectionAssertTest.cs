@@ -414,8 +414,13 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: not equal to < \"x\", \"y\", \"z\" >" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreNotEqual(set1, set2));
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreNotEqual(set1, set2, new TestComparer(), "test {0}", "1"));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain("test 1"));
+
+            ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreNotEqual(set1, set2, "test {0}", "1"));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain("test 1"));
         }
 
         [Test]
@@ -599,7 +604,6 @@ namespace NUnit.Framework.Legacy.Tests
             var set2 = new SimpleObjectList("y", "z");
 
             CollectionAssert.IsSubsetOf(set2, set1);
-            Assert.That(set2, Is.SubsetOf(set1));
         }
 
         [Test]
@@ -624,7 +628,6 @@ namespace NUnit.Framework.Legacy.Tests
             var set2 = new SimpleObjectList(null, "z");
 
             CollectionAssert.IsSubsetOf(set2, set1);
-            Assert.That(set2, Is.SubsetOf(set1));
         }
         #endregion
 
@@ -636,7 +639,6 @@ namespace NUnit.Framework.Legacy.Tests
             var set2 = new SimpleObjectList("y", "z", "a");
 
             CollectionAssert.IsNotSubsetOf(set1, set2);
-            Assert.That(set1, Is.Not.SubsetOf(set2));
         }
 
         [Test]
@@ -660,6 +662,75 @@ namespace NUnit.Framework.Legacy.Tests
             var set2 = new SimpleObjectList(null, "z", "a");
 
             CollectionAssert.IsNotSubsetOf(set1, set2);
+        }
+        #endregion
+
+        #region IsSupersetOf
+        [Test]
+        public void IsSupersetOf()
+        {
+            var set1 = new SimpleObjectList("x", "y", "z");
+            var set2 = new SimpleObjectList("y", "z");
+
+            CollectionAssert.IsSupersetOf(set1, set2);
+        }
+
+        [Test]
+        public void IsSupersetOf_Fails()
+        {
+            var set1 = new SimpleObjectList("x", "y", "z");
+            var set2 = new SimpleObjectList("y", "z", "a");
+
+            var expectedMessage =
+                "  Expected: superset of < \"y\", \"z\", \"a\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  Missing items: < \"a\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsSupersetOf(set1, set2));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
+        public void IsSupersetOfHandlesNull()
+        {
+            var set1 = new SimpleObjectList("x", null, "z");
+            var set2 = new SimpleObjectList(null, "z");
+
+            CollectionAssert.IsSupersetOf(set1, set2);
+        }
+        #endregion
+
+        #region IsNotSupersetOf
+        [Test]
+        public void IsNotSupersetOf()
+        {
+            var set1 = new SimpleObjectList("x", "y", "z");
+            var set2 = new SimpleObjectList("y", "z", "a");
+
+            CollectionAssert.IsNotSubsetOf(set2, set1);
+        }
+
+        [Test]
+        public void IsNotSupersetOf_Fails()
+        {
+            var set1 = new SimpleObjectList("x", "y", "z");
+            var set2 = new SimpleObjectList("y", "z");
+
+            var expectedMessage =
+                "  Expected: not superset of < \"y\", \"z\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsNotSupersetOf(set1, set2));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
+        public void IsNotSupersetOfHandlesNull()
+        {
+            var set1 = new SimpleObjectList("x", null, "z");
+            var set2 = new SimpleObjectList(null, "z", "a");
+
+            CollectionAssert.IsNotSupersetOf(set2, set1);
         }
         #endregion
 
@@ -697,8 +768,7 @@ namespace NUnit.Framework.Legacy.Tests
         public void IsOrdered_Handles_null()
         {
             var list = new SimpleObjectList(null, "x", "z");
-
-            Assert.That(list, Is.Ordered);
+            CollectionAssert.IsOrdered(list);
         }
 
         [Test]
@@ -727,6 +797,14 @@ namespace NUnit.Framework.Legacy.Tests
         {
             var list = new SimpleObjectList(2, 1);
             CollectionAssert.IsOrdered(list, new TestComparer());
+        }
+
+        [Test]
+        public void IsOrdered_Fails_With_custom_comparison()
+        {
+            var list = new SimpleObjectList("2", "1");
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsOrdered(list, new ObjectToStringComparer(), "test {0}", "1"));
+            Assert.That(ex?.Message, Does.Contain("test 1"));
         }
 
         #endregion
@@ -791,6 +869,39 @@ namespace NUnit.Framework.Legacy.Tests
             };
 
             CollectionAssert.AreEquivalent(a, b);
+        }
+        #endregion
+
+        #region Empty
+
+        [Test]
+        public void IsEmpty()
+        {
+            var list = new SimpleObjectList();
+            CollectionAssert.IsEmpty(list);
+        }
+
+        [Test]
+        public void IsEmptyFails()
+        {
+            var list = new SimpleObjectList(1, 2);
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsEmpty(list, "test {0}", 1));
+            Assert.That(ex?.Message, Does.Contain("test 1"));
+        }
+
+        [Test]
+        public void IsNotEmpty()
+        {
+            var list = new SimpleObjectList(1, 2);
+            CollectionAssert.IsNotEmpty(list);
+        }
+
+        [Test]
+        public void IsNotEmptyFails()
+        {
+            var list = new SimpleObjectList();
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsNotEmpty(list, "test {0}", 1));
+            Assert.That(ex?.Message, Does.Contain("test 1"));
         }
         #endregion
     }

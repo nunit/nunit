@@ -225,7 +225,8 @@ namespace NUnit.Framework.Internal
             }
 
             while (exception is TargetInvocationException targetInvocationException &&
-                targetInvocationException.InnerException is not null)
+                targetInvocationException.InnerException is not null &&
+                targetInvocationException.StackTrace?.Contains("NUnit.Framework") is true)
             {
                 exception = targetInvocationException.InnerException;
             }

@@ -279,6 +279,21 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[4].Name, Is.EqualTo(@"MethodWithArrayArguments([System.Byte[,]])"));
             });
         }
+
+        [Test]
+        public void GenericNullableTest<TValue>(
+            [ValueSource(nameof(GenericNullableSource))] TValue? value)
+            where TValue : struct, IConvertible
+        {
+            Assert.That(value, Is.Not.Null);
+            int index = value.Value.ToInt32(null);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.EqualTo(index));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value.Value, Is.InstanceOf(GenericNullableSource[index].GetType()));
+        }
+
+        private static readonly object[] GenericNullableSource = [0, 1L, 2UL, 3F, 4D];
     }
 
     public class ValueSourceMayBeInherited

@@ -162,4 +162,166 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
         }
     }
+
+    public class RepeatWithoutStopSucceedsOnFirstTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void SucceedsEveryTime()
+        {
+            Count++;
+            Assert.Pass();
+        }
+    }
+
+    public class RepeatWithoutStopFailsEveryTimeFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
+
+    public class RepeatWithoutStopSucceedsOnSecondTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void SucceedsOnSecondTry()
+        {
+            Count++;
+
+            if (Count < 2)
+                Assert.Fail();
+        }
+    }
+
+    public class RepeatWithoutStopSucceedsOnThirdTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void SucceedsOnThirdTry()
+        {
+            Count++;
+
+            if (Count < 3)
+                Assert.Fail();
+        }
+    }
+
+    public class RepeatWithoutStopWithIgnoreAttributeFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false), Ignore("Ignore this test")]
+        public void RepeatShouldIgnore()
+        {
+            Assert.Fail("Ignored test executed");
+        }
+    }
+
+    public class RepeatWithoutStopIgnoredOnFirstTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+            Assert.Ignore("Ignoring");
+        }
+    }
+
+    public class RepeatWithoutStopIgnoredOnSecondTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+
+            if (Count < 2)
+                Assert.Fail("Failed");
+
+            Assert.Ignore("Ignoring");
+        }
+    }
+
+    public class RepeatWithoutStopIgnoredOnThirdTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+
+            if (Count < 3)
+                Assert.Fail("Failed");
+
+            Assert.Ignore("Ignoring");
+        }
+    }
+
+    public class RepeatWithoutStopErrorOnFirstTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+            throw new Exception("Deliberate Exception");
+        }
+    }
+
+    public class RepeatWithoutStopErrorOnSecondTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+
+            if (Count < 2)
+                Assert.Fail("Failed");
+
+            throw new Exception("Deliberate Exception");
+        }
+    }
+
+    public class RepeatWithoutStopErrorOnThirdTryFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, false)]
+        public void Test()
+        {
+            Count++;
+
+            if (Count < 3)
+                Assert.Fail("Failed");
+
+            throw new Exception("Deliberate Exception");
+        }
+    }
+
+    public class RepeatWithoutStopTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(3, false)]
+        [TestCase(0)]
+        public void FailsEveryTime(int unused)
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
+
+    public class RepeatStopOnFailurePropertyTrueTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(3, StopOnFailure = true)]
+        [TestCase]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
+
+    public class RepeatStopOnFailurePropertyFalseTestCaseFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(3, StopOnFailure = false)]
+        [TestCase]
+        public void FailsEveryTime()
+        {
+            Count++;
+            Assert.Fail();
+        }
+    }
 }

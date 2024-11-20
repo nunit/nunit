@@ -96,6 +96,20 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void TestNumericToleranceMustNotBeNegative()
+        {
+            Assert.That(() => new Tolerance(-0.1),
+                Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be negative"));
+        }
+
+        [Test]
+        public void TestTimeSpanToleranceMustNotBeNegative()
+        {
+            Assert.That(() => new Tolerance(new TimeSpan(-1)),
+                Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be negative"));
+        }
+
+        [Test]
         public void TestModeMustFollowTolerance()
         {
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)

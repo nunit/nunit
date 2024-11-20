@@ -22,8 +22,8 @@ namespace NUnit.Framework.Legacy.Tests
         private readonly decimal _de2 = 33.4M;
         private readonly double _d1 = 4.85948654;
         private readonly double _d2 = 1.0;
-        private readonly Enum _e1 = RunState.Explicit;
-        private readonly Enum _e2 = RunState.Ignored;
+        private readonly Enum _e1 = RunState.Ignored;
+        private readonly Enum _e2 = RunState.Explicit;
 
         [Test]
         public void Greater()
@@ -32,9 +32,44 @@ namespace NUnit.Framework.Legacy.Tests
             ClassicAssert.Greater(_u1, _u2);
             ClassicAssert.Greater(_l1, _l2);
             ClassicAssert.Greater(_ul1, _ul2);
+            ClassicAssert.Greater(_d1, _d2);
+            ClassicAssert.Greater(_de1, _de2);
+            ClassicAssert.Greater(_f1, _f2);
+            ClassicAssert.Greater(_e1, _e2);
+        }
+
+        [Test]
+        public void GreaterWithArgs()
+        {
+            ClassicAssert.Greater(_i1, _i2, "int");
+            ClassicAssert.Greater(_u1, _u2, "uint");
+            ClassicAssert.Greater(_l1, _l2, "long");
+            ClassicAssert.Greater(_ul1, _ul2, "ulong");
             ClassicAssert.Greater(_d1, _d2, "double");
             ClassicAssert.Greater(_de1, _de2, "{0}", "decimal");
             ClassicAssert.Greater(_f1, _f2, "float");
+            ClassicAssert.Greater(_e1, _e2, "IComparable");
+        }
+
+        [Test]
+        public void GreaterWithArgsFails()
+        {
+            Assert.That(() => ClassicAssert.Greater(_i2, _i1, "int"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("int"));
+            Assert.That(() => ClassicAssert.Greater(_u2, _u1, "uint"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("uint"));
+            Assert.That(() => ClassicAssert.Greater(_l2, _l1, "long"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("long"));
+            Assert.That(() => ClassicAssert.Greater(_ul2, _ul1, "ulong"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("ulong"));
+            Assert.That(() => ClassicAssert.Greater(_d2, _d1, "double"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("double"));
+            Assert.That(() => ClassicAssert.Greater(_de2, _de1, "{0}", "decimal"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("decimal"));
+            Assert.That(() => ClassicAssert.Greater(_f2, _f1, "float"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("float"));
+            Assert.That(() => ClassicAssert.Greater(_e2, _e1, "enum"),
+                        Throws.InstanceOf<AssertionException>().With.Message.Contains("enum"));
         }
 
         [Test]
@@ -116,7 +151,7 @@ namespace NUnit.Framework.Legacy.Tests
             var expectedMessage =
                 "  Expected: greater than Ignored" + Environment.NewLine +
                 "  But was:  Explicit" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.Greater(_e1, _e2));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.Greater(_e2, _e1));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
