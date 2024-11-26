@@ -40,8 +40,10 @@ namespace NUnitLite
         public const int INVALID_ARG = -1;
         /// <summary>File not found</summary>
         public const int FILE_NOT_FOUND = -2;
+      /*
         /// <summary>Test fixture not found - No longer in use</summary>
         //public const int FIXTURE_NOT_FOUND = -3;
+       */
         /// <summary>Invalid test suite</summary>
         public const int INVALID_TEST_FIXTURE = -4;
         /// <summary>Unexpected error occurred</summary>
@@ -73,7 +75,6 @@ namespace NUnitLite
         /// specifying a test assembly whose tests are to be run.
         /// </summary>
         /// <param name="testAssembly"></param>
-        /// </summary>
         public TextRunner(Assembly testAssembly)
         {
             _testAssembly = testAssembly;

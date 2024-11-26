@@ -4,10 +4,12 @@
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
     <Nullable>disable</Nullable>
+    <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

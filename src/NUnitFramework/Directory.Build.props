@@ -7,13 +7,13 @@
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
+    <NUnitLibraryFrameworks>net462;net6.0;net8.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;net6.0;net8.0;net9.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <Nullable>enable</Nullable>
-    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
+    <AnnotatedReferenceAssemblyVersion>8.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CsWinRTAotOptimizerEnabled>false</CsWinRTAotOptimizerEnabled>

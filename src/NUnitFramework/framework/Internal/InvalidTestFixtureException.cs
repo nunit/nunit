@@ -3,7 +3,9 @@
 namespace NUnit.Framework.Internal
 {
     using System;
+#if !NET8_0_OR_GREATER
     using System.Runtime.Serialization;
+#endif
 
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test
@@ -36,6 +38,7 @@ namespace NUnit.Framework.Internal
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Serialization Constructor
         /// </summary>
@@ -43,5 +46,6 @@ namespace NUnit.Framework.Internal
             StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

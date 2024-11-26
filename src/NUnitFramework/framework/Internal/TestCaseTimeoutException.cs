@@ -3,7 +3,9 @@
 namespace NUnit.Framework.Internal
 {
     using System;
+#if !NET8_0_OR_GREATER
     using System.Runtime.Serialization;
+#endif
 
     /// <summary>
     /// TestCaseTimeoutException is thrown when a test running directly
@@ -36,6 +38,7 @@ namespace NUnit.Framework.Internal
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Serialization Constructor
         /// </summary>
@@ -43,5 +46,6 @@ namespace NUnit.Framework.Internal
             StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }
