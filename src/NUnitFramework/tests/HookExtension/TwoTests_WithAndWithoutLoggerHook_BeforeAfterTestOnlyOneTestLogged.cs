@@ -7,7 +7,7 @@ namespace NUnit.Framework.Tests.HookExtension
     public class OneTestWithLoggingHooksAndOneWithout
     {
         [TestSetupUnderTest]
-        public class TestsUnderTest
+        public class TestUnderTest
         {
             [Test, ActivateHookLogging, Order(1)]
             public void TestWithHookLogging()
@@ -30,10 +30,10 @@ namespace NUnit.Framework.Tests.HookExtension
 
             Assert.That(testResult.Logs, Is.EqualTo(new[]
             {
-                $"- BeforeTestCase({nameof(TestUnderTests.TestWithHookLogging)})",
-                nameof(TestUnderTests.TestWithHookLogging),
-                $"- AfterTestCase({nameof(TestUnderTests.TestWithHookLogging)})",
-                nameof(TestUnderTests.TestWithoutHookLogging)
+                $"- BeforeTestCase({nameof(TestUnderTest.TestWithHookLogging)})",
+                nameof(TestUnderTest.TestWithHookLogging),
+                $"- AfterTestCase({nameof(TestUnderTest.TestWithHookLogging)})",
+                nameof(TestUnderTest.TestWithoutHookLogging)
             }));
         }
     }
