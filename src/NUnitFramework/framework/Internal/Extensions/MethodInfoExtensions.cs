@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal.Extensions
         public static TReturn? InvokeMaybeAwait<TReturn>(this MethodInfo m, object?[]? methodArgs)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(m))
-                return (TReturn?)AsyncToSyncAdapter.Await(() => m.Invoke(null, methodArgs));
+                return (TReturn?)AsyncToSyncAdapter.Await(context: null, () => m.Invoke(null, methodArgs));
             return (TReturn?)m.Invoke(null, methodArgs);
         }
 

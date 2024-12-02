@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal
                 {
                     try
                     {
-                        AsyncToSyncAdapter.Await(parameterlessDelegate.DynamicInvokeWithTransparentExceptions);
+                        AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, parameterlessDelegate.DynamicInvokeWithTransparentExceptions);
                     }
                     catch (Exception ex)
                     {

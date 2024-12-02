@@ -361,14 +361,6 @@ namespace NUnit.Framework.Constraints
             return new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
         }
 
-        private static object? InvokeDelegate<T>(ActualValueDelegate<T> del)
-        {
-            if (AsyncToSyncAdapter.IsAsyncOperation(del))
-                return AsyncToSyncAdapter.Await(() => del.Invoke());
-
-            return del();
-        }
-
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>

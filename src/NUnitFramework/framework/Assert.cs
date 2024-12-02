@@ -230,7 +230,7 @@ namespace NUnit.Framework
         {
             using (EnterMultipleScope())
             {
-                AsyncToSyncAdapter.Await(testDelegate.Invoke);
+                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, testDelegate.Invoke);
             }
         }
 
