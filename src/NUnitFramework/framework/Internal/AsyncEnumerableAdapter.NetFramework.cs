@@ -95,10 +95,10 @@ namespace NUnit.Framework.Internal
             public object? Current => _getCurrentMethod.Invoke();
 
             public void Dispose()
-                => AsyncToSyncAdapter.Await(() => _disposeAsyncMethod.Invoke(_asyncEnumerator, null));
+                => AsyncToSyncAdapter.Await(context: null, () => _disposeAsyncMethod.Invoke(_asyncEnumerator, null));
 
             public bool MoveNext()
-                => AsyncToSyncAdapter.Await<bool>(() => _moveNextAsyncMethod.Invoke());
+                => AsyncToSyncAdapter.Await<bool>(context: null, () => _moveNextAsyncMethod.Invoke());
 
             public void Reset()
                 => throw new InvalidOperationException("Can not reset an async enumerable.");

@@ -21,12 +21,6 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        public static object? Await(Func<object?> invoke)
-            => Await<object?>(default(TestExecutionContext), invoke);
-
-        public static TResult? Await<TResult>(Func<object?> invoke)
-            => Await<TResult>(default(TestExecutionContext), invoke);
-
         public static object? Await(TestExecutionContext? context, Func<object?> invoke)
             => Await<object?>(context, invoke);
 
