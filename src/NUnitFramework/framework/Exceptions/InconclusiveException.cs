@@ -28,6 +28,7 @@ namespace NUnit.Framework
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Serialization Constructor
         /// </summary>
@@ -36,6 +37,7 @@ namespace NUnit.Framework
             : base(info, context)
         {
         }
+#endif
 
         /// <summary>
         /// Gets the ResultState provided by this exception

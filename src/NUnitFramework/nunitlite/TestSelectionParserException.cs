@@ -1,7 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NET8_0_OR_GREATER
 using System.Runtime.Serialization;
+#endif
 
 namespace NUnit.Common
 {
@@ -28,11 +30,13 @@ namespace NUnit.Common
         {
         }
 
+#if !NET8_0_OR_GREATER
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

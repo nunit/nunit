@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void RespectsCultureWhenCaseIgnored()
         {
-            var constraint = new EqualConstraint("r\u00E9sum\u00E9").IgnoreCase;
+            var constraint = new EqualStringConstraint("r\u00E9sum\u00E9").IgnoreCase;
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesntRespectCultureWhenCasingMatters()
         {
-            var constraint = new EqualConstraint("r\u00E9sum\u00E9");
+            var constraint = new EqualStringConstraint("r\u00E9sum\u00E9");
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpace()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace;
 
             var result = constraint.ApplyTo("Hello\tWorld");
 
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpaceFail()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace;
 
             var result = constraint.ApplyTo("Hello Universe");
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void IgnoreWhiteSpaceAndIgnoreCase()
         {
-            var constraint = new EqualConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreWhiteSpace.IgnoreCase;
 
             var result = constraint.ApplyTo("hello\r\nworld\r\n");
 
@@ -384,6 +384,9 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
+/*
+ * This no longer compiles! Preventing illegal code and runtime exceptions.
+ *
             [Test]
             public void ErrorIfDaysPrecedesWithin()
             {
@@ -419,6 +422,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
             }
+*/
         }
 
         #endregion
@@ -469,6 +473,9 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
             }
 
+/*
+ * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
+ *
             [Theory]
             public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
             {
@@ -494,6 +501,7 @@ namespace NUnit.Framework.Tests.Constraints
 
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
             }
+*/
         }
 
         public class DateTimeOffSetEquality
@@ -804,7 +812,9 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CompareObjectsWithToleranceAsserts()
             {
-                Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+                // This now no longer compiles as EqualStringConstraint doesn't support Tolerance.
+                // Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualStringConstraint("abcd").Within(1)));
+                Assert.Pass("EqualStringConstraint does not support Tolerance, so this test is not applicable.");
             }
         }
 
@@ -907,7 +917,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var comparer = new GenericComparer<int>();
                 Assert.Multiple(() =>
                 {
-                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
                 });
             }
@@ -937,19 +947,25 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void UsesBooleanReturningDelegate()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.Equals(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.Equals(y)));
             }
 
             [Test]
             public void UsesProvidedLambda_IntArgs()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
+                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.CompareTo(y)));
             }
 
             [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
+                Assert.That("hello", Is.EqualTo("HELLO").Using((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
+            }
+
+            [Test, SetCulture("en-US")]
+            public void UsesStringComparer()
+            {
+                Assert.That("hello", Is.EqualTo("HELLO").Using(StringComparer.OrdinalIgnoreCase));
             }
 
             [Test]

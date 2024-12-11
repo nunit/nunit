@@ -176,6 +176,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Replaces the last pushed constraint with the specified constraint.
+        /// </summary>
+        /// <param name="constraint">The constraint to replace the lastPushed with.</param>
+        public void Replace(Constraint constraint)
+        {
+            _constraints.Pop();
+            _lastPushed = _ops.Top;
+            Append(constraint);
+        }
+
+        /// <summary>
         /// Sets the top operator right context.
         /// </summary>
         /// <param name="rightContext">The right context.</param>

@@ -158,6 +158,49 @@ namespace NUnit.Framework
             return new EqualConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests two strings for equality
+        /// </summary>
+        public static EqualStringConstraint EqualTo(string? expected)
+        {
+            return new EqualStringConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two date time offset instances for equality.
+        /// </summary>
+        public static EqualDateTimeOffsetConstraint EqualTo(DateTimeOffset expected)
+        {
+            return new EqualDateTimeOffsetConstraint(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two date time instances for equality.
+        /// </summary>
+        public static EqualTimeBaseConstraint<DateTime> EqualTo(DateTime expected)
+        {
+            return new EqualTimeBaseConstraint<DateTime>(expected, x => x.Ticks);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two timespan instances for equality.
+        /// </summary>
+        public static EqualTimeBaseConstraint<TimeSpan> EqualTo(TimeSpan expected)
+        {
+            return new EqualTimeBaseConstraint<TimeSpan>(expected, x => x.Ticks);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+#pragma warning disable CS3024 // Constraint type is not CLS-compliant
+        public static EqualNumericConstraint<T> EqualTo<T>(T expected)
+            where T : unmanaged, IConvertible, IEquatable<T>
+        {
+            return new EqualNumericConstraint<T>(expected);
+        }
+#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+
         #endregion
 
         #region SameAs
