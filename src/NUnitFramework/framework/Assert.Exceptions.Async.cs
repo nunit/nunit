@@ -23,7 +23,7 @@ namespace NUnit.Framework
             Exception? caughtException = null;
             try
             {
-                AsyncToSyncAdapter.Await(code.Invoke);
+                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, code.Invoke);
             }
             catch (Exception e)
             {

@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests
                 if (AsyncToSyncAdapter.IsAsyncOperation(@delegate))
                 {
                     stopwatch.Start();
-                    AsyncToSyncAdapter.Await(() => @delegate.DynamicInvoke());
+                    AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => @delegate.DynamicInvoke());
                     stopwatch.Stop();
                 }
                 else

@@ -21,14 +21,14 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        public static object? Await(Func<object?> invoke)
-            => Await<object?>(invoke);
+        public static object? Await(TestExecutionContext? context, Func<object?> invoke)
+            => Await<object?>(context, invoke);
 
-        public static TResult? Await<TResult>(Func<object?> invoke)
+        public static TResult? Await<TResult>(TestExecutionContext? context, Func<object?> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
-            using (InitializeExecutionEnvironment())
+            using (InitializeExecutionEnvironment(context))
             {
                 var awaiter = AwaitAdapter.FromAwaitable(invoke.Invoke());
 
@@ -41,10 +41,10 @@ namespace NUnit.Framework.Internal
                 return (TResult?)awaiter.GetResult();
             }
         }
-
-        private static IDisposable? InitializeExecutionEnvironment()
+        private static IDisposable? InitializeExecutionEnvironment(TestExecutionContext? executionContext)
         {
-            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
+            if (executionContext?.IsSingleThreaded == true ||
+                Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
                 if (context is null || context.GetType() == typeof(SynchronizationContext))

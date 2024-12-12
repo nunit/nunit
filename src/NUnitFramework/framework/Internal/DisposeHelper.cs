@@ -30,12 +30,12 @@ namespace NUnit.Framework.Internal
 #if NETFRAMEWORK
                 if (TryGetAsyncDispose(value.GetType(), out var method))
                 {
-                    AsyncToSyncAdapter.Await(() => method.Invoke(value, null));
+                    AsyncToSyncAdapter.Await(context: null, () => method.Invoke(value, null));
                 }
 #else
                 if (value is IAsyncDisposable asyncDisposable)
                 {
-                    AsyncToSyncAdapter.Await(() => asyncDisposable.DisposeAsync());
+                    AsyncToSyncAdapter.Await(context: null, () => asyncDisposable.DisposeAsync());
                 }
 #endif
                 else if (value is IDisposable disposable)
