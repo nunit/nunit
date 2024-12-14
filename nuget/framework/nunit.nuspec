@@ -25,10 +25,10 @@
 
             Supported platforms:
             - .NET Framework 4.6.2+
-            - .NET 6.0
+            - .NET 6.0+
             - .NET 8.0+
         </description>
-        <releaseNotes>See release notes at https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-400---november-26-2023</releaseNotes>
+        <releaseNotes>See release notes at https://docs.nunit.org/articles/nunit/release-notes/framework.html#nunit-430----dec-15-2024</releaseNotes>
         <language>en-US</language>
         <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
         <copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License.</copyright>
