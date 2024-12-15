@@ -7,8 +7,6 @@
         <LangVersion>latest</LangVersion>
         <Optimize>true</Optimize>
         <RootNamespace>NUnit.Framework</RootNamespace>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
