@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework.Legacy</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn/>
   </PropertyGroup>
 
   <ItemGroup>

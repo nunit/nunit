@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsTestProject>false</IsTestProject>
+    <NoWarn/>
   </PropertyGroup>
 
   <PropertyGroup>
