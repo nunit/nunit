@@ -3,4 +3,6 @@
 using BenchmarkDotNet.Running;
 using NUnit.Framework;
 
+[assembly: NUnitJob]
+
 BenchmarkSwitcher.FromAssembly(typeof(FrameworkControllerBenchmark).Assembly).Run(args);

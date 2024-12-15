@@ -34,7 +34,7 @@
   </ItemGroup>
   <!-- Specific dependencies -->
   <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />
