@@ -7,11 +7,6 @@
     <Title>NUnitLite Runner $(AssemblyConfiguration)</Title>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CS1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>

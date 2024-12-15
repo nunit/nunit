@@ -2,13 +2,18 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>latest</LangVersion>
         <Optimize>true</Optimize>
-        <AssemblyOriginatorKeyFile>..\..\..\nunit.snk</AssemblyOriginatorKeyFile>
         <RootNamespace>NUnit.Framework</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+      <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+      <None Remove="BenchmarkDotNet.Artifacts\**" />
+    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" />

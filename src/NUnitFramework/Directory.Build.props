@@ -4,7 +4,7 @@
     <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">12</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net6.0;net8.0</NUnitLibraryFrameworks>
@@ -27,6 +27,13 @@
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <!-- Ideally this is always enabled, but that tends to hurt developer productivity -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Somehow needed for rule IDE0005 to detect unused using directives -->
+    <!-- https://github.com/dotnet/roslyn/issues/41640 -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
