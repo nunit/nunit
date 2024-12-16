@@ -125,10 +125,6 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = _expected is null;
             }
-            else if (_expected is null)
-            {
-                hasSucceeded = false;
-            }
             else if (actual is string actualString)
             {
                 return ApplyTo(actualString);
@@ -145,6 +141,10 @@ namespace NUnit.Framework.Constraints
                 }
 
                 hasSucceeded = equatableString.Equals(_expected);
+            }
+            else if (_expected is null)
+            {
+                hasSucceeded = false;
             }
             else
             {
