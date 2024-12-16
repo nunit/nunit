@@ -103,6 +103,46 @@ namespace NUnit.Framework.Tests.Assertions
 
         private int ReturnsFour() => 4;
 
+        [Test]
+        public void TestEquatableWithConvertible()
+        {
+            var actual = new Number(42);
+            var expected = new Number(42.0);
+
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        private readonly struct Number : IEquatable<Number>, IConvertible
+        {
+            private readonly double _value;
+
+            public Number(int value) => _value = value;
+            public Number(double value) => _value = value;
+
+            public bool Equals(Number other)
+            {
+                return _value == other._value;
+            }
+
+            TypeCode IConvertible.GetTypeCode() => TypeCode.Object;
+            byte IConvertible.ToByte(IFormatProvider? provider) => throw new NotImplementedException();
+            sbyte IConvertible.ToSByte(IFormatProvider? provider) => throw new NotImplementedException();
+            ushort IConvertible.ToUInt16(IFormatProvider? provider) => throw new NotImplementedException();
+            short IConvertible.ToInt16(IFormatProvider? provider) => throw new NotImplementedException();
+            uint IConvertible.ToUInt32(IFormatProvider? provider) => throw new NotImplementedException();
+            int IConvertible.ToInt32(IFormatProvider? provider) => throw new NotImplementedException();
+            ulong IConvertible.ToUInt64(IFormatProvider? provider) => throw new NotImplementedException();
+            long IConvertible.ToInt64(IFormatProvider? provider) => throw new NotImplementedException();
+            string IConvertible.ToString(IFormatProvider? provider) => throw new NotImplementedException();
+            bool IConvertible.ToBoolean(IFormatProvider? provider) => throw new NotImplementedException();
+            char IConvertible.ToChar(IFormatProvider? provider) => throw new NotImplementedException();
+            DateTime IConvertible.ToDateTime(IFormatProvider? provider) => throw new NotImplementedException();
+            decimal IConvertible.ToDecimal(IFormatProvider? provider) => throw new NotImplementedException();
+            double IConvertible.ToDouble(IFormatProvider? provider) => throw new NotImplementedException();
+            float IConvertible.ToSingle(IFormatProvider? provider) => throw new NotImplementedException();
+            object IConvertible.ToType(Type conversionType, IFormatProvider? provider) => throw new NotImplementedException();
+        }
+
 #pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
@@ -368,10 +408,28 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void AssertWithExpectedClassImplicitConvertibleToString()
+        {
+            const string value = "Implicit Cast";
+            var instance = new ClassWithImplicitCastToString(value);
+
+            Assert.That(value, Is.EqualTo(instance), "EqualStringConstaint");
+        }
+
+        [Test]
+        public void AssertWithExpectedStructImplicitConvertibleToString()
+        {
+            const string value = "Implicit Cast";
+            var instance = new StructWithImplicitCastToString(value);
+
+            Assert.That(value, Is.EqualTo(instance), "EqualStringConstaint");
+        }
+
+        [Test]
         public void AssertWithTypeImplicitConvertibleToString()
         {
             const string value = "Implicit Cast";
-            var instance = new TypeWithImplicitCastToString(value);
+            var instance = new ClassWithImplicitCastToString(value);
 
             Assert.Multiple(() =>
             {
@@ -382,16 +440,28 @@ namespace NUnit.Framework.Tests.Assertions
             });
         }
 
-        private sealed class TypeWithImplicitCastToString
+        private sealed class StructWithImplicitCastToString
         {
             public string Value { get; }
 
-            public TypeWithImplicitCastToString(string value)
+            public StructWithImplicitCastToString(string value)
             {
                 Value = value;
             }
 
-            public static implicit operator string(TypeWithImplicitCastToString instance) => instance.Value;
+            public static implicit operator string(StructWithImplicitCastToString instance) => instance.Value;
+        }
+
+        private sealed class ClassWithImplicitCastToString
+        {
+            public string Value { get; }
+
+            public ClassWithImplicitCastToString(string value)
+            {
+                Value = value;
+            }
+
+            public static implicit operator string(ClassWithImplicitCastToString instance) => instance.Value;
         }
 
         [Test]

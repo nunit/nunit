@@ -141,12 +141,17 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = false;
             }
-            else if (actual is T t)
+            else if (actual is T t && typeof(T).IsPrimitive)
             {
                 hasSucceeded = Numerics.AreEqual(_expected, t, ref _tolerance);
             }
             else if (actual is IEquatable<T> equatable)
             {
+                if (!_tolerance.IsUnsetOrDefault)
+                {
+                    throw new InvalidOperationException("Cannot use Tolerance with IEquatable<>.");
+                }
+
                 hasSucceeded = equatable.Equals(_expected);
             }
             else if (actual is not string and IConvertible)
