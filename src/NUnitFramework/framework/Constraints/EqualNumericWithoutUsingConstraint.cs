@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = false;
             }
-            else if (actual is T t && typeof(T).IsPrimitive)
+            else if (actual is T t && (typeof(T).IsPrimitive || typeof(T) == typeof(decimal)))
             {
                 hasSucceeded = Numerics.AreEqual(_expected, t, ref _tolerance);
             }
