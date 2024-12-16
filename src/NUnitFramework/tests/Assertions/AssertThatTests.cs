@@ -360,6 +360,70 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => false, Is.True)"));
         }
 
+        [TestCase(default(string), default(string))]
+        [TestCase("", "")]
+        public void AssertWithStrings(string? actual, string? expected)
+        {
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void AssertWithTypeImplicitConvertibleToString()
+        {
+            const string value = "Implicit Cast";
+            var instance = new TypeWithImplicitCastToString(value);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(instance.Value, Is.EqualTo(value), "Value");
+                Assert.That(instance, Is.EqualTo(value), "EqualStringConstaint");
+                Assert.That(instance, Is.EqualTo(value.ToLowerInvariant()).IgnoreCase, "EqualStringConstaint.IgnoreCase");
+                Assert.That(instance, Is.EqualTo(value.Replace(" ", string.Empty)).IgnoreWhiteSpace, "EqualStringConstaint.IgnoreWhiteSpace");
+            });
+        }
+
+        private sealed class TypeWithImplicitCastToString
+        {
+            public string Value { get; }
+
+            public TypeWithImplicitCastToString(string value)
+            {
+                Value = value;
+            }
+
+            public static implicit operator string(TypeWithImplicitCastToString instance) => instance.Value;
+        }
+
+        [Test]
+        public void AssertWithTypeWhichImplementsIEquatableString()
+        {
+            const string value = "Equatable<string>";
+            var intance = new TypeWhichImplementsIEquatableString(value);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(intance.Value, Is.EqualTo(value), "Value");
+                Assert.That(intance, Is.EqualTo(value), "EqualStringConstaint");
+                Assert.That(() => Assert.That(intance, Is.EqualTo(value.ToLowerInvariant()).IgnoreCase),
+                            Throws.InvalidOperationException);
+            });
+        }
+
+        private sealed class TypeWhichImplementsIEquatableString : IEquatable<string>
+        {
+            public string Value { get; }
+
+            public TypeWhichImplementsIEquatableString(string value)
+            {
+                Value = value;
+            }
+
+            public bool Equals(string? other)
+            {
+                return Value.Equals(other);
+            }
+        }
+
         [TestCase("Hello", "World")]
         [TestCase('A', 'B')]
         [TestCase(false, true)]
