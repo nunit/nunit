@@ -167,10 +167,9 @@ namespace NUnit.Framework.Constraints
             // Note that we don't have to check the parameter types
             // as the compiler only allows cast from/to TActual and we check the return type.
             var implicitCastToString = typeof(TActual).GetMethods()
-                                                      .Where(x => x.IsStatic &&
-                                                                  x.Name == "op_Implicit" &&
-                                                                  x.ReturnType == typeof(string))
-                                                      .SingleOrDefault();
+                                                      .FirstOrDefault(x => x.IsStatic &&
+                                                                      x.Name == "op_Implicit" &&
+                                                                      x.ReturnType == typeof(string));
 
             if (implicitCastToString is null)
             {
