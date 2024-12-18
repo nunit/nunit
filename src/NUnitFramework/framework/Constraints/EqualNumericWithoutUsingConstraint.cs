@@ -127,7 +127,7 @@ namespace NUnit.Framework.Constraints
             // In that case fall back to the default equality comparison.
             bool hasSucceeded;
 
-            if (Numerics.IsNumericType(actual))
+            if (Numerics.IsNumericType(typeof(T)))
             {
                 hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
             }
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = false;
             }
-            else if (actual is T t && Numerics.IsNumericType(t))
+            else if (actual is T t && Numerics.IsNumericType(typeof(T)))
             {
                 hasSucceeded = Numerics.AreEqual(_expected, t, ref _tolerance);
             }
