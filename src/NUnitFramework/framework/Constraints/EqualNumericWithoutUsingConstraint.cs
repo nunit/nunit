@@ -123,7 +123,21 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public ConstraintResult ApplyTo(T actual)
         {
-            bool hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
+            // As we cannot use exact generic constraints, T could be a type not supported by Numerics.
+            // In that case fall back to the default equality comparison.
+            bool hasSucceeded;
+
+            if (Numerics.IsNumericType(actual))
+            {
+                hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
+            }
+            else
+            {
+                if (!_tolerance.IsUnsetOrDefault)
+                    throw new InvalidOperationException("Cannot use Tolerance with IEquatable<>.");
+
+                hasSucceeded = _expected.Equals(actual);
+            }
 
             return ConstraintResult(actual, hasSucceeded);
         }
@@ -141,16 +155,14 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = false;
             }
-            else if (actual is T t && (typeof(T).IsPrimitive || typeof(T) == typeof(decimal)))
+            else if (actual is T t && Numerics.IsNumericType(t))
             {
                 hasSucceeded = Numerics.AreEqual(_expected, t, ref _tolerance);
             }
             else if (actual is IEquatable<T> equatable)
             {
                 if (!_tolerance.IsUnsetOrDefault)
-                {
                     throw new InvalidOperationException("Cannot use Tolerance with IEquatable<>.");
-                }
 
                 hasSucceeded = equatable.Equals(_expected);
             }
