@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq;
 using System.Text;
 using NUnit.Framework.Constraints.Comparers;
 
@@ -129,10 +128,6 @@ namespace NUnit.Framework.Constraints
             {
                 return ApplyTo(actualString);
             }
-            else if (CanCastToString(actual, out string? actualCastToString))
-            {
-                return ApplyTo(actualCastToString);
-            }
             else if (actual is IEquatable<string> equatableString)
             {
                 if (_caseInsensitive || _ignoringWhiteSpace)
@@ -155,26 +150,6 @@ namespace NUnit.Framework.Constraints
             }
 
             return ConstraintResult(actual, hasSucceeded);
-        }
-
-        private static bool CanCastToString<TActual>(TActual actual, out string? s)
-        {
-            // Check if the type implements an implicit cast to string
-            // Note that we don't have to check the parameter types
-            // as the compiler only allows cast from/to TActual and we check the return type.
-            var implicitCastToString = typeof(TActual).GetMethods()
-                                                      .FirstOrDefault(x => x.IsStatic &&
-                                                                      x.Name == "op_Implicit" &&
-                                                                      x.ReturnType == typeof(string));
-
-            if (implicitCastToString is null)
-            {
-                s = null;
-                return false;
-            }
-
-            s = (string?)implicitCastToString.Invoke(null, [actual]);
-            return true;
         }
 
         private ConstraintResult ConstraintResult<T>(T actual, bool hasSucceeded)

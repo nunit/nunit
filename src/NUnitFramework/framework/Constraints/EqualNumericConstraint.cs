@@ -20,8 +20,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
+        /// <remarks>
+        /// Marked internal to prevent external instantiation with non-supported types.
+        /// </remarks>
         /// <param name="expected">The expected value.</param>
-        public EqualNumericConstraint(T expected)
+        internal EqualNumericConstraint(T expected)
             : base(expected)
         {
         }

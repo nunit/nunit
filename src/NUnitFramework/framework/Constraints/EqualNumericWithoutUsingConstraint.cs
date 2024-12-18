@@ -29,8 +29,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
+        /// <remarks>
+        /// Marked internal to prevent external instantiation with non-supported types.
+        /// </remarks>
         /// <param name="expected">The expected value.</param>
-        public EqualNumericWithoutUsingConstraint(T expected)
+        internal EqualNumericWithoutUsingConstraint(T expected)
             : base(expected)
         {
             _expected = expected;
@@ -123,21 +126,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public ConstraintResult ApplyTo(T actual)
         {
-            // As we cannot use exact generic constraints, T could be a type not supported by Numerics.
-            // In that case fall back to the default equality comparison.
-            bool hasSucceeded;
-
-            if (Numerics.IsNumericType(typeof(T)))
-            {
-                hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
-            }
-            else
-            {
-                if (!_tolerance.IsUnsetOrDefault)
-                    throw new InvalidOperationException("Cannot use Tolerance with IEquatable<>.");
-
-                hasSucceeded = _expected.Equals(actual);
-            }
+            bool hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
 
             return ConstraintResult(actual, hasSucceeded);
         }
@@ -155,7 +144,7 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = false;
             }
-            else if (actual is T t && Numerics.IsNumericType(typeof(T)))
+            else if (actual is T t)
             {
                 hasSucceeded = Numerics.AreEqual(_expected, t, ref _tolerance);
             }

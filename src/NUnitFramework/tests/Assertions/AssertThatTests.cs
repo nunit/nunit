@@ -408,73 +408,52 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void AssertWithExpectedClassImplicitConvertibleToString()
+        public void AssertWithExpectedTypeImplicitConvertibleToString()
         {
             const string value = "Implicit Cast";
-            var instance = new ClassWithImplicitCastToString(value);
+            var instance = new TypeWithImplicitCastToString(value);
 
-            Assert.That(value, Is.EqualTo(instance), "EqualStringConstaint");
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That(value, Is.Not.EqualTo(instance), "EqualConstaint");
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 
         [Test]
-        public void AssertWithExpectedStructImplicitConvertibleToString()
+        public void AssertWithActualTypeImplicitConvertibleToString()
         {
             const string value = "Implicit Cast";
-            var instance = new StructWithImplicitCastToString(value);
-
-            Assert.That(value, Is.EqualTo(instance), "EqualStringConstaint");
-        }
-
-        [Test]
-        public void AssertWithTypeImplicitConvertibleToString()
-        {
-            const string value = "Implicit Cast";
-            var instance = new ClassWithImplicitCastToString(value);
+            var instance = new TypeWithImplicitCastToString(value);
 
             Assert.Multiple(() =>
             {
                 Assert.That(instance.Value, Is.EqualTo(value), "Value");
-                Assert.That(instance, Is.EqualTo(value), "EqualStringConstaint");
-                Assert.That(instance, Is.EqualTo(value.ToLowerInvariant()).IgnoreCase, "EqualStringConstaint.IgnoreCase");
-                Assert.That(instance, Is.EqualTo(value.Replace(" ", string.Empty)).IgnoreWhiteSpace, "EqualStringConstaint.IgnoreWhiteSpace");
+                Assert.That(instance, Is.Not.EqualTo(value), "ImplicitOperatorNotConsidered");
             });
         }
 
-        private sealed class StructWithImplicitCastToString
+        private sealed class TypeWithImplicitCastToString
         {
             public string Value { get; }
 
-            public StructWithImplicitCastToString(string value)
+            public TypeWithImplicitCastToString(string value)
             {
                 Value = value;
             }
 
-            public static implicit operator string(StructWithImplicitCastToString instance) => instance.Value;
-        }
-
-        private sealed class ClassWithImplicitCastToString
-        {
-            public string Value { get; }
-
-            public ClassWithImplicitCastToString(string value)
-            {
-                Value = value;
-            }
-
-            public static implicit operator string(ClassWithImplicitCastToString instance) => instance.Value;
+            public static implicit operator string(TypeWithImplicitCastToString instance) => instance.Value;
         }
 
         [Test]
         public void AssertWithTypeWhichImplementsIEquatableString()
         {
             const string value = "Equatable<string>";
-            var intance = new TypeWhichImplementsIEquatableString(value);
+            var instance = new TypeWhichImplementsIEquatableString(value);
 
             Assert.Multiple(() =>
             {
-                Assert.That(intance.Value, Is.EqualTo(value), "Value");
-                Assert.That(intance, Is.EqualTo(value), "EqualStringConstaint");
-                Assert.That(() => Assert.That(intance, Is.EqualTo(value.ToLowerInvariant()).IgnoreCase),
+                Assert.That(instance.Value, Is.EqualTo(value), "Value");
+                Assert.That(instance, Is.EqualTo(value), "EqualStringConstaint");
+                Assert.That(() => Assert.That(instance, Is.EqualTo(value.ToLowerInvariant()).IgnoreCase),
                             Throws.InvalidOperationException);
             });
         }
