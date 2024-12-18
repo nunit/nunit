@@ -148,14 +148,10 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-#if TRUE
-                hasSucceeded = false;
-#else
-                // Alternatively we could fall back to pre 4.3 EqualConstraint behavior
+                // We fall back to pre 4.3 EqualConstraint behavior
                 // But if the actual value cannot be convert to a string nor can be compared to one
-                // we should fail the test.
+                // not sure if that makes any difference.
                 return new EqualConstraint(_expected).ApplyTo(actual);
-#endif
             }
 
             return ConstraintResult(actual, hasSucceeded);
