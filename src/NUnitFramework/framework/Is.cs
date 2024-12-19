@@ -145,7 +145,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public static EqualConstraint EqualTo(object? expected)
+        public static EqualConstraint EqualTo<T>(T? expected)
         {
             return new EqualConstraint(expected);
         }
@@ -193,13 +193,96 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two numbers for equality
         /// </summary>
-#pragma warning disable CS3024 // Constraint type is not CLS-compliant
-        public static EqualNumericConstraint<T> EqualTo<T>(T expected)
-            where T : unmanaged, IConvertible, IEquatable<T>
+        public static EqualNumericConstraint<double> EqualTo(double expected)
         {
-            return new EqualNumericConstraint<T>(expected);
+            return new EqualNumericConstraint<double>(expected);
         }
-#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<float> EqualTo(float expected)
+        {
+            return new EqualNumericConstraint<float>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<decimal> EqualTo(decimal expected)
+        {
+            return new EqualNumericConstraint<decimal>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<long> EqualTo(long expected)
+        {
+            return new EqualNumericConstraint<long>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<int> EqualTo(int expected)
+        {
+            return new EqualNumericConstraint<int>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<short> EqualTo(short expected)
+        {
+            return new EqualNumericConstraint<short>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<byte> EqualTo(byte expected)
+        {
+            return new EqualNumericConstraint<byte>(expected);
+        }
+
+#pragma warning disable CS3002 // Return type is not CLS-compliant
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<ulong> EqualTo(ulong expected)
+        {
+            return new EqualNumericConstraint<ulong>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<uint> EqualTo(uint expected)
+        {
+            return new EqualNumericConstraint<uint>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<ushort> EqualTo(ushort expected)
+        {
+            return new EqualNumericConstraint<ushort>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two numbers for equality
+        /// </summary>
+        public static EqualNumericConstraint<sbyte> EqualTo(sbyte expected)
+        {
+            return new EqualNumericConstraint<sbyte>(expected);
+        }
+
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
+#pragma warning restore CS3002 // Return type is not CLS-compliant
 
         #endregion
 

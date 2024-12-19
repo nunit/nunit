@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Text;
 using NUnit.Framework.Constraints.Comparers;
 
@@ -123,13 +124,29 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = _expected is null;
             }
+            else if (actual is string actualString)
+            {
+                return ApplyTo(actualString);
+            }
+            else if (actual is IEquatable<string> equatableString)
+            {
+                if (_caseInsensitive || _ignoringWhiteSpace)
+                {
+                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace with IEquatable<string>.");
+                }
+
+                hasSucceeded = equatableString.Equals(_expected);
+            }
             else if (_expected is null)
             {
                 hasSucceeded = false;
             }
             else
             {
-                return ApplyTo(actual as string);
+                // We fall back to pre 4.3 EqualConstraint behavior
+                // But if the actual value cannot be convert to a string nor can be compared to one
+                // not sure if that makes any difference.
+                return new EqualConstraint(_expected).ApplyTo(actual);
             }
 
             return ConstraintResult(actual, hasSucceeded);
@@ -160,6 +177,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
     }
 }
