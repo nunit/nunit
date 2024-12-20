@@ -11,10 +11,8 @@ namespace NUnit.Framework.Constraints
     /// considered equal if both are null, or if both have the same
     /// value. NUnit has special semantics for some object types.
     /// </summary>
-#pragma warning disable CS3024 // Constraint type is not CLS-compliant
     public class EqualNumericWithoutUsingConstraint<T> : Constraint
-        where T : unmanaged, IConvertible, IEquatable<T>
-#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+        where T : struct
     {
         #region Static and Instance Fields
 
@@ -29,10 +27,15 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
+        /// <remarks>
+        /// Marked internal to prevent external instantiation with non-supported types.
+        /// </remarks>
         /// <param name="expected">The expected value.</param>
         public EqualNumericWithoutUsingConstraint(T expected)
             : base(expected)
         {
+            Guard.ArgumentValid(Numerics.IsNumericType(typeof(T)), "EqualNumericWithoutUsingConstraint<T> may only be used with numeric types.", nameof(T));
+
             _expected = expected;
         }
 
@@ -147,15 +150,20 @@ namespace NUnit.Framework.Constraints
             }
             else if (actual is IEquatable<T> equatable)
             {
+                if (!_tolerance.IsUnsetOrDefault)
+                    throw new InvalidOperationException("Cannot use Tolerance with IEquatable<>.");
+
                 hasSucceeded = equatable.Equals(_expected);
             }
-            else if (actual is not string and IConvertible)
+            else if (Numerics.IsNumericType(typeof(TActual)))
             {
                 hasSucceeded = Numerics.AreEqual(actual, _expected, ref _tolerance);
             }
             else
             {
-                hasSucceeded = false;
+                // We fall back to pre 4.3 EqualConstraint behavior
+                // Maybe TActual is not a numeric type, but supports indirect comparions with T
+                return new EqualConstraint(_expected).ApplyTo(actual);
             }
 
             return ConstraintResult(actual, hasSucceeded);
