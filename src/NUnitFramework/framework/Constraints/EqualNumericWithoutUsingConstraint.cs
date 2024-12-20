@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// Marked internal to prevent external instantiation with non-supported types.
         /// </remarks>
         /// <param name="expected">The expected value.</param>
-        internal EqualNumericWithoutUsingConstraint(T expected)
+        public EqualNumericWithoutUsingConstraint(T expected)
             : base(expected)
         {
             Guard.ArgumentValid(Numerics.IsNumericType(typeof(T)), "EqualNumericWithoutUsingConstraint<T> may only be used with numeric types.", nameof(T));

@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         /// Marked internal to prevent external instantiation with non-supported types.
         /// </remarks>
         /// <param name="expected">The expected value.</param>
-        internal EqualNumericConstraint(T expected)
+        public EqualNumericConstraint(T expected)
             : base(expected)
         {
         }
