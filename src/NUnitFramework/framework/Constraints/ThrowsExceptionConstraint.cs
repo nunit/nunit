@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -40,6 +41,14 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             return ApplyTo((Delegate)del);
+        }
+
+        /// <inheritdoc/>
+        public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> actual)
+        {
+            var exception = await ExceptionHelper.RecordExceptionAsync(actual, nameof(actual));
+
+            return new ThrowsExceptionConstraintResult(this, exception);
         }
 
         #region Nested Result Class
