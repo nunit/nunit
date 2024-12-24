@@ -9,6 +9,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestContextData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests
 {
@@ -461,33 +462,22 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestTruth()
         {
-            Assert.That(true, Is.True);
-        }
+            var fixture = new TestContextOneTimeTearDownData();
 
-        [Test]
-        public void TestFalsehood()
-        {
-            Assert.That(false, Is.False);
-        }
+            var result = TestBuilder.RunTestFixture(fixture);
+            var tearDownResult = fixture.ResultInOneTimeTearDown;
 
-        [Test, Explicit]
-        public void TestExplicit()
-        {
-            Assert.Pass("Always passes if you run it!");
-        }
+            Assert.That(tearDownResult, Is.Not.Null);
+            Assert.That(tearDownResult.Outcome, Is.EqualTo(ResultState.Success));
+            Assert.That(tearDownResult.PassCount, Is.EqualTo(2));
+            Assert.That(tearDownResult.FailCount, Is.EqualTo(0));
+            Assert.That(tearDownResult.SkipCount, Is.EqualTo(1));
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            TestContext context = TestContext.CurrentContext;
-            Assert.That(context, Is.Not.Null);
-            Assert.That(context.Test, Is.Not.Null);
-            Assert.That(context.Test.Name, Is.EqualTo("TestContextOneTimeTearDownTests"));
-            Assert.That(context.Result, Is.Not.Null);
-            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
-            Assert.That(context.Result.PassCount, Is.EqualTo(2));
-            Assert.That(context.Result.FailCount, Is.EqualTo(0));
-            Assert.That(context.Result.SkipCount, Is.EqualTo(1));
+            //Assert.That(result, Is.Not.Null);
+            //Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            //Assert.That(result.PassCount, Is.EqualTo(2));
+            //Assert.That(result.FailCount, Is.EqualTo(0));
+            //Assert.That(result.SkipCount, Is.EqualTo(1));
         }
     }
 
