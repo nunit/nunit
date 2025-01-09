@@ -1,13 +1,7 @@
-name: NUnit.Myget.Publish
+name: NUnit.Nuget.Publish
 env:
   MinVerAutoIncrement: minor
 on:
-  push:
-    branches:
-      - main
-      - release
-      - 'v3'
-      - myget
   workflow_dispatch:
   
 
@@ -59,6 +53,6 @@ jobs:
     - name: Publish nupkg and snupkg to Myget.org
       run: |
           foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.PUBLISHMYGET }}" --source https://www.myget.org/F/nunit/api/v3/index.json --skip-duplicate
+              dotnet nuget push $file --api-key "${{ secrets.PUBLISHNUGET }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
-
+ 
