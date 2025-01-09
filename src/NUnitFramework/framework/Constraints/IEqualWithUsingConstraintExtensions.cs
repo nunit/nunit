@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -39,6 +40,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
+        [OverloadResolutionPriority(2)]
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IEqualityComparer<TExpected> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
@@ -54,6 +56,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
+        [OverloadResolutionPriority(1)]
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer<TExpected> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
@@ -106,6 +109,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
+        [OverloadResolutionPriority(1)]
         public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer<TActual> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected,
@@ -126,6 +130,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
+        [OverloadResolutionPriority(-1)]
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IEqualityComparer comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
@@ -141,6 +146,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
+        [OverloadResolutionPriority(-2)]
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
