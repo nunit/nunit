@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -38,7 +37,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public EqualUsingConstraint<string> Using(StringComparer comparer)
         {
-            return new EqualUsingConstraint<string>(Expected, (IEqualityComparer<string>)comparer);
+            return new EqualUsingConstraint<string>(Expected, comparer);
         }
 
         #endregion

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NUnit.Framework.Constraints
@@ -52,6 +53,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
+        [OverloadResolutionPriority(1)]
         public EqualUsingConstraint(T? expected, IEqualityComparer<T> comparer)
             : this(expected, comparer.Equals)
         {
