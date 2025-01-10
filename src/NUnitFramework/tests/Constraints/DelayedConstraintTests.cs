@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Tests.Constraints
         [SetUp]
         public void SetUp()
         {
-            ExpectedDescription = "True after 500 milliseconds delay";
+            ExpectedDescription = "After 500 milliseconds delay";
             StringRepresentation = "<after 500 <equal True>>";
 
             _boolValue = false;
@@ -300,12 +301,63 @@ namespace NUnit.Framework.Tests.Constraints
                 () => Assert.That(() => new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
 
             var expectedMessage =
-                "  Expected: equivalent to < 2, 3 > after 1 millisecond delay" + Environment.NewLine +
+                "  After 1 millisecond delay" + Environment.NewLine +
+                "  Expected: equivalent to < 2, 3 >" + Environment.NewLine +
                 "  But was:  < 1, 2 >" + Environment.NewLine +
                 "  Missing (1): < 3 >" + Environment.NewLine +
                 "  Extra (1): < 1 >" + Environment.NewLine;
 
             Assert.That(exception.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
+        public async Task PreservesUsingPropertiesComparerResultWithPolling()
+        {
+            await Assert.ThatAsync(FailingDelayedAssertion, Throws.InstanceOf<AssertionException>()
+                .With.Message.Contains("After 200 milliseconds delay")
+                .With.Message.Contains("Expected: ExpectedType { My = 9.876m, Type = 0.432m, With = <{ Lots = True, Of = 23456, Properties = 1 }> }")
+                .With.Message.Contains("But was:  ExpectedType { My = 3.548m, Type = 0.123m, With = <{ Lots = False, Of = 13456, Properties = -1 }> }")
+                .With.Message.Contains("at property ExpectedType.My:")
+                .With.Message.Contains("Expected: 9.876m")
+                .With.Message.Contains("But was:  3.548m"));
+
+            static async Task FailingDelayedAssertion()
+            {
+                await Assert.ThatAsync(GetExpectedResult, Is.EqualTo(new ExpectedType()
+                {
+                    My = 9.876m,
+                    Type = 0.432m,
+                    With = new
+                    {
+                        Lots = true,
+                        Of = "23456",
+                        Properties = 1,
+                    }
+                }).UsingPropertiesComparer().After(200, 100));
+            }
+
+            static async Task<ExpectedType> GetExpectedResult()
+            {
+                await Task.Yield();
+                return new ExpectedType()
+                {
+                    My = 3.548m,
+                    Type = 0.123m,
+                    With = new
+                    {
+                        Lots = false,
+                        Of = "13456",
+                        Properties = -1,
+                    }
+                };
+            }
+        }
+
+        private sealed class ExpectedType
+        {
+            public decimal My { get; set; }
+            public decimal Type { get; set; }
+            public object? With { get; set; }
         }
 
         private static int _setValuesDelay;
