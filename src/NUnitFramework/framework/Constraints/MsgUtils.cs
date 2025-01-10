@@ -5,6 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using NUnit.Framework.Internal;
 
@@ -92,6 +94,55 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
             AddFormatter(next => val => val is Array valArray ? FormatArray(valArray) : next(val));
+        }
+
+        /// <summary>
+        /// Try to format the properties of an object as a string.
+        /// </summary>
+        /// <param name="val">The object to format.</param>
+        /// <returns>Formatted string for all properties.</returns>
+        public static string FormatValueProperties(object? val)
+        {
+            if (val is null)
+                return "null";
+
+            Type valueType = val.GetType();
+
+            // If the type is a low level type, call our default formatter.
+            if (valueType.IsPrimitive || valueType == typeof(string) || valueType == typeof(decimal))
+                return FormatValue(val);
+
+            // If the type implements its own ToString() method, call that.
+            MethodInfo? toStringMethod = valueType.GetMethod(nameof(ToString), Type.EmptyTypes);
+            if (toStringMethod?.DeclaringType == valueType)
+                return FormatValueWithoutThrowing(val);
+
+            PropertyInfo[] properties = valueType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            if (properties.Length == 0 || properties.Any(p => p.GetIndexParameters().Length > 0))
+            {
+                // We can't print if there are no properties.
+                // We also can't deal with indexer properties as we don't know the range of valid values.
+                return FormatValue(val);
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(valueType.Name);
+            sb.Append(" { ");
+
+            bool firstProperty = true;
+            foreach (var property in properties)
+            {
+                if (!firstProperty)
+                    sb.Append(", ");
+                else
+                    firstProperty = false;
+
+                sb.Append(property.Name);
+                sb.Append(" = ");
+                sb.Append(FormatValue(property.GetValue(val, null)));
+            }
+            sb.Append(" }");
+            return sb.ToString();
         }
 
 #if NETFRAMEWORK

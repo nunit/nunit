@@ -551,37 +551,53 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertThatEqualsWithStructMemberDifferences()
         {
-            var instance = new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One);
+            var instance = new StructWithSomeToleranceAwareMembers(1, 0.123, "1.1", SomeEnum.One);
 
             Assert.That(() =>
-                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueA")
-                                                       .And.Message.Contains("Expected: 1"));
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 0.123, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                    Throws.InstanceOf<AssertionException>().With
+                        .Message.Contains("Expected: StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("But was:  StructWithSomeToleranceAwareMembers { ValueA = 2, ValueB = 0.123d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueA").And
+                        .Message.Contains("Expected: 1").And
+                        .Message.Contains("But was:  2"));
             Assert.That(() =>
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueB")
-                                                       .And.Message.Contains("Expected: 1.1"));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.246, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                    Throws.InstanceOf<AssertionException>().With
+                        .Message.Contains("Expected: StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("But was:  StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.246d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueB").And
+                        .Message.Contains("Expected: 0.123d").And
+                        .Message.Contains("But was:  0.246d"));
             Assert.That(() =>
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueC")
-                                                       .And.Message.Contains("Expected: \"1.1\""));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.123, "2.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer()),
+                    Throws.InstanceOf<AssertionException>().With
+                        .Message.Contains("Expected: StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("But was:  StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"2.2\", ValueD = One }").And
+                        .Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueC").And
+                        .Message.Contains("Expected: \"1.1\"").And
+                        .Message.Contains("But was:  \"2.2\""));
             Assert.That(() =>
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer()),
-                Throws.InstanceOf<AssertionException>().With.Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueD")
-                                                       .And.Message.Contains("Expected: One"));
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.123, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer()),
+                    Throws.InstanceOf<AssertionException>().With
+                        .Message.Contains("Expected: StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"1.1\", ValueD = One }").And
+                        .Message.Contains("But was:  StructWithSomeToleranceAwareMembers { ValueA = 1, ValueB = 0.123d, ValueC = \"1.1\", ValueD = Two }").And
+                        .Message.Contains("at property StructWithSomeToleranceAwareMembers.ValueD").And
+                        .Message.Contains("Expected: One").And
+                        .Message.Contains("But was:  Two"));
 
             /*
              * Uncomment this block to see the actual exception messages. Test will fail.
              *
             Assert.Multiple(() =>
             {
-                Assert.That(new StructWithSomeToleranceAwareMembers(2, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.2, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(2, 0.123, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.246, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.123, "1.1", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.123, "1.2", SomeEnum.One), Is.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new StructWithSomeToleranceAwareMembers(1, 0.123, "1.1", SomeEnum.Two), Is.EqualTo(instance).UsingPropertiesComparer());
             });
-            */
+             */
         }
 
         private enum SomeEnum
@@ -604,11 +620,6 @@ namespace NUnit.Framework.Tests.Assertions
             public double ValueB { get; }
             public string ValueC { get; }
             public SomeEnum ValueD { get; }
-
-            public override string ToString()
-            {
-                return $"{ValueA} {ValueB} '{ValueC}' {ValueD}";
-            }
         }
 
         [Test]
