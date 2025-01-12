@@ -404,6 +404,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            // Reset the comparer before each use, e.g. for DelayedConstraint
+            if (_comparer.HasFailurePoints)
+                _comparer.FailurePoints.Clear();
+
             AdjustArgumentIfNeeded(ref actual);
             return new EqualConstraintResult(this, actual, _comparer.AreEqual(_expected, actual, ref _tolerance));
         }

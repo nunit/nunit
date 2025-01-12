@@ -74,6 +74,13 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void ThrowsAsyncIsNotAffectedByAssertionsInDelegate()
+        {
+            Assert.ThrowsAsync<AssertionException>(
+                () => Assert.ThatAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync, Throws.InvalidOperationException));
+        }
+
+        [Test]
         public void CorrectExceptionIsReturnedToMethod()
         {
             ArgumentException? ex = Assert.ThrowsAsync(typeof(ArgumentException),
