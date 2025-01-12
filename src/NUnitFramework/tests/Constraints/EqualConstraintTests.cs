@@ -857,6 +857,20 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
+            public void PrefersGenericProvidedEqualityComparer()
+            {
+                var comparer = EqualityComparer<int>.Default;
+                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+            }
+
+            [Test]
+            public void WillUseObjectEqualityComparer()
+            {
+                IEqualityComparer comparer = EqualityComparer<int>.Default;
+                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+            }
+
+            [Test]
             public void UsesProvidedEqualityComparerForExpectedIsString()
             {
                 var comparer = new ObjectToStringEqualityComparer();
