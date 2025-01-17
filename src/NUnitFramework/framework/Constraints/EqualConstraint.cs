@@ -401,6 +401,40 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint UsingPropertiesComparer()
         {
             _comparer.CompareProperties = true;
+            _comparer.PropertiesToExclude = null;
+            _comparer.PropertiesToCompare = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertiesToCompare">List of properties to compare.</param>
+        public EqualConstraint UsingPropertiesComparerOnlyProperties(params string[] propertiesToCompare)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertiesToExclude = null;
+            _comparer.PropertiesToCompare = new HashSet<string>(propertiesToCompare);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertiesToIgnore">List of properties to exclude from comparison.</param>
+        public EqualConstraint UsingPropertiesComparerExcludingProperties(params string[] propertiesToIgnore)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertiesToExclude = new HashSet<string>(propertiesToIgnore);
+            _comparer.PropertiesToCompare = null;
             return this;
         }
 
