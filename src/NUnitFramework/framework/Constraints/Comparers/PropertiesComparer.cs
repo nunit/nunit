@@ -31,6 +31,19 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            if (equalityComparer.PropertiesToCompare is not null)
+            {
+                // TODO: Should we throw if the user expected to compare a property that doesn't exist?
+                properties = properties.Where(p => equalityComparer.PropertiesToCompare.Contains(p.Name))
+                                       .ToArray();
+            }
+            if (equalityComparer.PropertiesToExclude is not null)
+            {
+                // TODO: Should we throw if the user excludes a property that doesn't exist?
+                properties = properties.Where(p => !equalityComparer.PropertiesToExclude.Contains(p.Name))
+                                       .ToArray();
+            }
+
             if (properties.Length == 0 || properties.Any(p => p.GetIndexParameters().Length > 0))
             {
                 // We can't compare if there are no properties.
