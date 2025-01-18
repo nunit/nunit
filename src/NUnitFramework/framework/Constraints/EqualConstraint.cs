@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace NUnit.Framework.Constraints
@@ -401,8 +403,8 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint UsingPropertiesComparer()
         {
             _comparer.CompareProperties = true;
-            _comparer.PropertiesToExclude = null;
-            _comparer.PropertiesToCompare = null;
+            _comparer.PropertyNamesToExclude = null;
+            _comparer.PropertyNamesToUse = null;
             return this;
         }
 
@@ -413,12 +415,12 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertiesToCompare">List of properties to compare.</param>
-        public EqualConstraint UsingPropertiesComparerOnlyProperties(params string[] propertiesToCompare)
+        /// <param name="propertyNamesToUse">List of properties to compare.</param>
+        public EqualConstraint UsingPropertiesComparerUsingOnly<T>(params Expression<Func<T, object?>>[] propertyNamesToUse)
         {
             _comparer.CompareProperties = true;
-            _comparer.PropertiesToExclude = null;
-            _comparer.PropertiesToCompare = new HashSet<string>(propertiesToCompare);
+            _comparer.PropertyNamesToExclude = null;
+            _comparer.PropertyNamesToUse = new HashSet<string>(propertyNamesToUse.Select(GetNameFromExpression<T>));
             return this;
         }
 
@@ -429,13 +431,63 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertiesToIgnore">List of properties to exclude from comparison.</param>
-        public EqualConstraint UsingPropertiesComparerExcludingProperties(params string[] propertiesToIgnore)
+        /// <param name="propertyNamesToUse">List of property names to compare.</param>
+        public EqualConstraint UsingPropertiesComparerUsingOnly(params string[] propertyNamesToUse)
         {
             _comparer.CompareProperties = true;
-            _comparer.PropertiesToExclude = new HashSet<string>(propertiesToIgnore);
-            _comparer.PropertiesToCompare = null;
+            _comparer.PropertyNamesToExclude = null;
+            _comparer.PropertyNamesToUse = new HashSet<string>(propertyNamesToUse);
             return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToExclude">List of property names to exclude from comparison.</param>
+        public EqualConstraint UsingPropertiesComparerExcluding<T>(params Expression<Func<T, object?>>[] propertyNamesToExclude)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertyNamesToExclude = new HashSet<string>(propertyNamesToExclude.Select(GetNameFromExpression<T>));
+            _comparer.PropertyNamesToUse = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToExclude">List of property names to exclude from comparison.</param>
+        public EqualConstraint UsingPropertiesComparerExcluding(params string[] propertyNamesToExclude)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertyNamesToExclude = new HashSet<string>(propertyNamesToExclude);
+            _comparer.PropertyNamesToUse = null;
+            return this;
+        }
+
+        private static string GetNameFromExpression<T>(Expression<Func<T, object?>> expression)
+        {
+            Expression body = expression.Body;
+
+            // We only expect a single member access, but it might include in implicit cast to object.
+            if (body is UnaryExpression unaryExpresion &&
+                unaryExpresion.NodeType == ExpressionType.Convert &&
+                unaryExpresion.Type == typeof(object))
+            {
+                body = unaryExpresion.Operand;
+            }
+
+            if (body is MemberExpression memberExpression)
+                return memberExpression.Member.Name;
+
+            throw new ArgumentException("Expression must be a member expression", nameof(expression));
         }
 
         #endregion
