@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -31,16 +32,26 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            if (equalityComparer.PropertiesToCompare is not null)
+            HashSet<string> propertyNames = new HashSet<string>(properties.Select(p => p.Name));
+
+            if (equalityComparer.PropertyNamesToUse is not null)
             {
-                // TODO: Should we throw if the user expected to compare a property that doesn't exist?
-                properties = properties.Where(p => equalityComparer.PropertiesToCompare.Contains(p.Name))
+                if (!equalityComparer.PropertyNamesToUse.IsSubsetOf(propertyNames))
+                {
+                    throw new ArgumentException("The properties to use must all exist on the object.");
+                }
+
+                properties = properties.Where(p => equalityComparer.PropertyNamesToUse.Contains(p.Name))
                                        .ToArray();
             }
-            if (equalityComparer.PropertiesToExclude is not null)
+            if (equalityComparer.PropertyNamesToExclude is not null)
             {
-                // TODO: Should we throw if the user excludes a property that doesn't exist?
-                properties = properties.Where(p => !equalityComparer.PropertiesToExclude.Contains(p.Name))
+                if (!equalityComparer.PropertyNamesToExclude.IsSubsetOf(propertyNames))
+                {
+                    throw new ArgumentException("The properties to exclude must all exist on the object.");
+                }
+
+                properties = properties.Where(p => !equalityComparer.PropertyNamesToExclude.Contains(p.Name))
                                        .ToArray();
             }
 

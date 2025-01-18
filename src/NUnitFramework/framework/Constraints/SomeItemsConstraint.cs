@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
+using System.Linq.Expressions;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -149,11 +149,11 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertiesToIgnore">List of properties to exclude from comparison.</param>
-        public SomeItemsConstraint UsingPropertiesComparerExcludingProperties(params string[] propertiesToIgnore)
+        /// <param name="propertyNamesToExclude">List of properties to exclude from comparison.</param>
+        public SomeItemsConstraint UsingPropertiesComparerExcluding(params string[] propertyNamesToExclude)
         {
-            CheckPrecondition(nameof(UsingPropertiesComparerExcludingProperties));
-            _equalConstraint.UsingPropertiesComparerExcludingProperties(propertiesToIgnore);
+            CheckPrecondition(nameof(UsingPropertiesComparerExcluding));
+            _equalConstraint.UsingPropertiesComparerExcluding(propertyNamesToExclude);
             return this;
         }
 
@@ -164,11 +164,41 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertiesToCompare">List of properties to compare.</param>
-        public SomeItemsConstraint UsingPropertiesComparerOnlyProperties(params string[] propertiesToCompare)
+        /// <param name="propertyNamesToExclude">List of properties to exclude from comparison.</param>
+        public SomeItemsConstraint UsingPropertiesComparerExcluding<T>(params Expression<Func<T, object?>>[] propertyNamesToExclude)
         {
-            CheckPrecondition(nameof(UsingPropertiesComparerOnlyProperties));
-            _equalConstraint.UsingPropertiesComparerOnlyProperties(propertiesToCompare);
+            CheckPrecondition(nameof(UsingPropertiesComparerExcluding));
+            _equalConstraint.UsingPropertiesComparerExcluding(propertyNamesToExclude);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToUse">List of properties to compare.</param>
+        public SomeItemsConstraint UsingPropertiesComparerUsingOnly<T>(params Expression<Func<T, object?>>[] propertyNamesToUse)
+        {
+            CheckPrecondition(nameof(UsingPropertiesComparerUsingOnly));
+            _equalConstraint.UsingPropertiesComparerUsingOnly(propertyNamesToUse);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToUse">List of properties to compare.</param>
+        public SomeItemsConstraint UsingPropertiesComparerUsingOnly(params string[] propertyNamesToUse)
+        {
+            CheckPrecondition(nameof(UsingPropertiesComparerUsingOnly));
+            _equalConstraint.UsingPropertiesComparerUsingOnly(propertyNamesToUse);
             return this;
         }
 

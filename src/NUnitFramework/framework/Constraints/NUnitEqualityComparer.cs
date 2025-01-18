@@ -78,12 +78,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The names of properties to exclude from comparison.
         /// </summary>
-        private HashSet<string>? _propertiesToExclude = null;
+        private HashSet<string>? _propertyNamesToExclude = null;
 
         /// <summary>
         /// The names of properties to compare.
         /// </summary>
-        private HashSet<string>? _propertiesToCompare = null;
+        private HashSet<string>? _propertyNamesToUse = null;
 
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
@@ -139,19 +139,19 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets and sets the names of properties to exclude from comparison.
         /// </summary>
-        public HashSet<string>? PropertiesToExclude
+        public HashSet<string>? PropertyNamesToExclude
         {
-            get => _propertiesToExclude;
-            set => _propertiesToExclude = value;
+            get => _propertyNamesToExclude;
+            set => _propertyNamesToExclude = value;
         }
 
         /// <summary>
         /// Gets and sets the names of properties to compare.
         /// </summary>
-        public HashSet<string>? PropertiesToCompare
+        public HashSet<string>? PropertyNamesToUse
         {
-            get => _propertiesToCompare;
-            set => _propertiesToCompare = value;
+            get => _propertyNamesToUse;
+            set => _propertyNamesToUse = value;
         }
 
         /// <summary>
