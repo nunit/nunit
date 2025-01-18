@@ -43,6 +43,13 @@ namespace NUnit.Framework
             new(new EqualConstraint(expected));
 
         /// <summary>
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
+        /// presence of a particular object in the collection.
+        /// </summary>
+        public static SomeItemsConstraint<T> Contain<T>(T? expected) =>
+            new(new EqualConstraint<T>(expected));
+
+        /// <summary>
         /// Returns a new <see cref="ContainsConstraint"/>. This constraint
         /// will, in turn, make use of the appropriate second-level
         /// constraint, depending on the type of the actual argument.
