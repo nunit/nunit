@@ -200,6 +200,52 @@ namespace NUnit.Framework.Tests.Assertions
                                         .Not.Contain(nonNullString).And
                                         .Not.Contain(nullString));
         }
-#pragma warning restore NUnit2025 // Wrong actual type used with ContainsConstraint
+
+        [Test]
+        public void ContainsUsingPropertiesComparer()
+        {
+            const string florence = "Florence";
+            const string nathan = "Nathan";
+            const string kassidy = "Kassidy";
+
+            Person[] persons =
+            [
+                new() { Name = florence, Age = 42 },
+                new() { Name = nathan, Age = 43 },
+                new() { Name = kassidy, Age = 44 },
+                new() { Name = kassidy, Age = 20 }
+            ];
+
+            Assert.That(persons, Does.Contain(new Person { Name = florence, Age = 42 })
+                                     .UsingPropertiesComparer());
+            Assert.That(persons, Does.Not.Contain(new Person { Name = florence, Age = 43 })
+                                     .UsingPropertiesComparer());
+            Assert.That(persons, Does.Contain(new Person { Name = florence })
+                                     .UsingPropertiesComparerUsingOnly(x => x.Name));
+            Assert.That(persons, Does.Contain(new Person { Name = florence })
+                                     .UsingPropertiesComparerExcluding(x => x.Age));
+
+            Assert.That(persons, Has.Member(new Person { Name = nathan, Age = 43 })
+                                    .UsingPropertiesComparer());
+            Assert.That(persons, Has.No.Member(new Person { Name = nathan, Age = 40 })
+                                    .UsingPropertiesComparer());
+            Assert.That(persons, Has.Member(new Person { Name = nathan })
+                                    .UsingPropertiesComparerUsingOnly(x => x.Name));
+            Assert.That(persons, Has.Member(new Person { Name = nathan })
+                                    .UsingPropertiesComparerExcluding(x => x.Age));
+
+            Assert.That(persons, Contains.Item(new Person { Name = kassidy, Age = 44 })
+                                        .UsingPropertiesComparer());
+            Assert.That(persons, Has.Exactly(2).EqualTo(new Person { Name = kassidy })
+                                    .UsingPropertiesComparerUsingOnly(x => x.Name));
+            Assert.That(persons, Has.Some.EqualTo(new Person { Name = kassidy })
+                                    .UsingPropertiesComparerExcluding(x => x.Age));
+        }
+
+        private sealed class Person
+        {
+            public string? Name { get; set; }
+            public int Age { get; set; }
+        }
     }
 }
