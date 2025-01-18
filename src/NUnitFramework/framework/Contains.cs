@@ -20,6 +20,13 @@ namespace NUnit.Framework
         public static SomeItemsConstraint Item(object? expected) =>
             new(new EqualConstraint(expected));
 
+        /// <summary>
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
+        /// presence of a particular object in the collection.
+        /// </summary>
+        public static SomeItemsConstraint<T> Item<T>(T? expected) =>
+            new(new EqualConstraint<T>(expected));
+
         #endregion
 
         #region Key
