@@ -45,6 +45,11 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
+        /// <summary>
+        /// The underlying comparer used.
+        /// </summary>
+        protected internal NUnitEqualityComparer Comparer => _comparer;
+
         // TODO: Remove public properties
         // They are only used by EqualConstraintResult
         // EqualConstraint should inject them into the constructor.
@@ -390,6 +395,40 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint UsingPropertiesComparer()
         {
             _comparer.CompareProperties = true;
+            _comparer.PropertyNamesToExclude = null;
+            _comparer.PropertyNamesToUse = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToUse">List of property names to compare.</param>
+        public EqualConstraint UsingPropertiesComparerUsingOnly(params string[] propertyNamesToUse)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertyNamesToExclude = null;
+            _comparer.PropertyNamesToUse = new HashSet<string>(propertyNamesToUse);
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="propertyNamesToExclude">List of property names to exclude from comparison.</param>
+        public EqualConstraint UsingPropertiesComparerExcluding(params string[] propertyNamesToExclude)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.PropertyNamesToExclude = new HashSet<string>(propertyNamesToExclude);
+            _comparer.PropertyNamesToUse = null;
             return this;
         }
 

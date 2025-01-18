@@ -491,13 +491,83 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.Multiple(() =>
             {
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero), Is.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null), Is.Not.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
-                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparer());
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero),
+                            Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(nameof(ClassWithSomeToleranceAwareMembers.ValueB)));
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.2, "1.1", zero),
+                            Is.EqualTo(instance).Within(0.1).UsingPropertiesComparer());
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null),
+                            Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(nameof(ClassWithSomeToleranceAwareMembers.Chained)));
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero),
+                            Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 1.1, "2.2", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(nameof(ClassWithSomeToleranceAwareMembers.ValueC)));
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.Not.EqualTo(instance).UsingPropertiesComparer());
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(nameof(ClassWithSomeToleranceAwareMembers.ValueA)));
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 2.2, "2.2", zero),
+                            Is.Not.EqualTo(instance).UsingPropertiesComparer());
+
+                // Exclude all but one property.
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(
+                                nameof(ClassWithSomeToleranceAwareMembers.ValueA),
+                                nameof(ClassWithSomeToleranceAwareMembers.ValueB),
+                                nameof(ClassWithSomeToleranceAwareMembers.ValueC)));
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerExcluding(
+                                x => x.ValueA,
+                                x => x.ValueB,
+                                x => x.ValueC));
+
+                // Only test for the one property.
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerUsingOnly(
+                                nameof(ClassWithSomeToleranceAwareMembers.Chained)));
+
+                Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                            Is.EqualTo(instance).UsingPropertiesComparerUsingOnly(
+                                x => x.Chained));
+
+                // Property names work on nested classes!
+                var alsmostZero = new ClassWithSomeToleranceAwareMembers(1, 0.0, string.Empty, null);
+                Assert.That(new ClassWithSomeToleranceAwareMembers(1, 2.2, "2.2", alsmostZero),
+                            Is.EqualTo(instance).UsingPropertiesComparerUsingOnly(
+                                nameof(ClassWithSomeToleranceAwareMembers.ValueA)));
+
+                // We can't test properties that don't exist
+                Assert.That(() =>
+                            Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                                        Is.EqualTo(instance).UsingPropertiesComparerUsingOnly("ValueD")),
+                            Throws.InstanceOf<ArgumentException>().With.Message.Contains("must all exist"));
+
+                // We can't exclude properties that don't exist
+                Assert.That(() =>
+                            Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
+                                        Is.EqualTo(instance).UsingPropertiesComparerExcluding("ValueD")),
+                            Throws.InstanceOf<ArgumentException>().With.Message.Contains("must all exist"));
+
+                // We don't allow excluding all properties.
+                Assert.That(() =>
+                            Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", null),
+                                        Is.EqualTo(instance).UsingPropertiesComparerExcluding(
+                                            nameof(ClassWithSomeToleranceAwareMembers.ValueA),
+                                            nameof(ClassWithSomeToleranceAwareMembers.ValueB),
+                                            nameof(ClassWithSomeToleranceAwareMembers.ValueC),
+                                            nameof(ClassWithSomeToleranceAwareMembers.Chained))),
+                            Throws.InstanceOf<NotSupportedException>().With.Message.Contains("No comparer found"));
             });
         }
 
