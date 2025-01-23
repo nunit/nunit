@@ -156,6 +156,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use a tolerance defined elsewhere when determining equality.
+        /// </summary>
+        /// <param name="tolerance">Tolerance to be used</param>
+        /// <returns>Self.</returns>
+        internal EqualConstraint WithinConfiguredTolerance(Tolerance tolerance)
+        {
+            _tolerance = tolerance;
+            return this;
+        }
+
+        /// <summary>
         /// Flag the constraint to use a tolerance when determining equality.
         /// </summary>
         /// <param name="amount">Tolerance value to be used</param>

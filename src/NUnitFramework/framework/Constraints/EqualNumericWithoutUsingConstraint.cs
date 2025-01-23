@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
 
                 hasSucceeded = equatable.Equals(_expected);
             }
-            else if (Numerics.IsNumericType(typeof(TActual)))
+            else if (Numerics.IsNumericType(actual))
             {
                 hasSucceeded = Numerics.AreEqual(actual, _expected, ref _tolerance);
             }
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints
             {
                 // We fall back to pre 4.3 EqualConstraint behavior
                 // Maybe TActual is not a numeric type, but supports indirect comparions with T
-                return new EqualConstraint(_expected).ApplyTo(actual);
+                return new EqualConstraint(_expected).WithinConfiguredTolerance(_tolerance).ApplyTo(actual);
             }
 
             return ConstraintResult(actual, hasSucceeded);
