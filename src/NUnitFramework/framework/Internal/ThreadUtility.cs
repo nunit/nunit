@@ -16,11 +16,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class ThreadUtility
     {
-        internal static void BlockingDelay(int milliseconds)
-        {
-            Thread.Sleep(milliseconds);
-        }
-
 #if THREAD_ABORT
         private const int ThreadAbortedCheckDelay = 100;
 

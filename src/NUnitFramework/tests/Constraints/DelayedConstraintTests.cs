@@ -242,7 +242,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(500, 50)),
                         Throws.InstanceOf<AssertionException>());
 #pragma warning restore NUnit2044 // Non-delegate actual parameter
-            Assert.That(list.PollCount, Is.LessThanOrEqualTo(10 + 1));
+            Assert.That(list.PollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
         }
 
         private class PretendList
@@ -265,7 +265,7 @@ namespace NUnit.Framework.Tests.Constraints
             int pollCount = 0;
             Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(500, 50)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
         }
 
         [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
@@ -274,7 +274,7 @@ namespace NUnit.Framework.Tests.Constraints
             int pollCount = 0;
             Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(500, 50)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
         }
 
         [Test]
