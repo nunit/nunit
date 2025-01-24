@@ -233,13 +233,48 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
-        private int _pollCount;
+        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        public void ThatPollingChecksValueCorrectNumberOfTimes()
+        {
+            var list = new PretendList();
+
+#pragma warning disable NUnit2044 // Non-delegate actual parameter
+            Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(500, 50)),
+                        Throws.InstanceOf<AssertionException>());
+#pragma warning restore NUnit2044 // Non-delegate actual parameter
+            Assert.That(list.PollCount, Is.LessThanOrEqualTo(10 + 1));
+        }
+
+        private class PretendList
+        {
+            public int PollCount { get; private set; }
+
+            public int Count
+            {
+                get
+                {
+                    PollCount++;
+                    return 0;
+                }
+            }
+        }
 
         [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
-            _pollCount = 0;
-            Assert.That(PollCount, Is.EqualTo(4).After(110, 25));
+            int pollCount = 0;
+            Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(500, 50)),
+                        Throws.InstanceOf<AssertionException>());
+            Assert.That(pollCount, Is.LessThanOrEqualTo(10 + 1));
+        }
+
+        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
+        {
+            int pollCount = 0;
+            Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(500, 50)),
+                        Throws.InstanceOf<AssertionException>());
+            Assert.That(pollCount, Is.LessThanOrEqualTo(10 + 1));
         }
 
         [Test]
@@ -287,11 +322,6 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             Assert.That(DoesNotThrowAfterRetry, Is.EqualTo("Success!").After(AFTER, POLLING));
-        }
-
-        private int PollCount()
-        {
-            return _pollCount++;
         }
 
         [Test]
