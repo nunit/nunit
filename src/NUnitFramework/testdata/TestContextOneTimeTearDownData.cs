@@ -1,14 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.TestData
 {
     [TestFixture]
     public class TestContextOneTimeTearDownData
     {
-        public TestContext.ResultAdapter ResultInOneTimeTearDown { get; private set; }
+        public TestContext.ResultAdapter? ResultInOneTimeTearDown { get; private set; }
 
         [Test]
         public void TestTruth()

@@ -460,24 +460,31 @@ namespace NUnit.Framework.Tests
     public class TestContextOneTimeTearDownTests
     {
         [Test]
-        public void TestTruth()
+        public void TestContextContainsSuiteResults()
         {
             var fixture = new TestContextOneTimeTearDownData();
 
             var result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.PassCount, Is.EqualTo(2));
+                Assert.That(result.FailCount, Is.EqualTo(0));
+                Assert.That(result.SkipCount, Is.EqualTo(1));
+            });
+
             var tearDownResult = fixture.ResultInOneTimeTearDown;
 
             Assert.That(tearDownResult, Is.Not.Null);
-            Assert.That(tearDownResult.Outcome, Is.EqualTo(ResultState.Success));
-            Assert.That(tearDownResult.PassCount, Is.EqualTo(2));
-            Assert.That(tearDownResult.FailCount, Is.EqualTo(0));
-            Assert.That(tearDownResult.SkipCount, Is.EqualTo(1));
-
-            //Assert.That(result, Is.Not.Null);
-            //Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            //Assert.That(result.PassCount, Is.EqualTo(2));
-            //Assert.That(result.FailCount, Is.EqualTo(0));
-            //Assert.That(result.SkipCount, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(tearDownResult!.Outcome, Is.EqualTo(result.ResultState));
+                Assert.That(tearDownResult.PassCount, Is.EqualTo(result.PassCount));
+                Assert.That(tearDownResult.FailCount, Is.EqualTo(result.FailCount));
+                Assert.That(tearDownResult.SkipCount, Is.EqualTo(result.SkipCount));
+            });
         }
     }
 
