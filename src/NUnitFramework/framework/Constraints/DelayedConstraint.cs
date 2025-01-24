@@ -271,11 +271,21 @@ namespace NUnit.Framework.Constraints
 
         private async Task<bool> PollingDelayAsync(Stopwatch stopwatch)
         {
-            TimeSpan maxDelay = DelayInterval.AsTimeSpan - stopwatch.Elapsed;
+            TimeSpan elapsed = stopwatch.Elapsed;
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - elapsed;
             TimeSpan pollingDelay = maxDelay < PollingInterval.AsTimeSpan ? maxDelay : PollingInterval.AsTimeSpan;
             bool needsToWait = pollingDelay > TimeSpan.Zero;
             if (needsToWait)
+            {
                 await Task.Delay(pollingDelay);
+
+                // The below should not be needed, except that on github runners
+                // waiting for a specified time doesn't seem to work.
+                TimeSpan endElapsed = elapsed + pollingDelay;
+                while ((elapsed = stopwatch.Elapsed) < endElapsed)
+                    await Task.Delay(endElapsed - elapsed);
+            }
+
             return needsToWait;
         }
 
@@ -315,11 +325,20 @@ namespace NUnit.Framework.Constraints
 
         private bool PollingDelay(Stopwatch stopwatch)
         {
-            TimeSpan maxDelay = DelayInterval.AsTimeSpan - stopwatch.Elapsed;
+            TimeSpan elapsed = stopwatch.Elapsed;
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - elapsed;
             TimeSpan pollingDelay = maxDelay < PollingInterval.AsTimeSpan ? maxDelay : PollingInterval.AsTimeSpan;
             bool needsToWait = pollingDelay > TimeSpan.Zero;
             if (needsToWait)
+            {
                 Thread.Sleep(pollingDelay);
+
+                // The below should not be needed, except that on github runners
+                // waiting for a specified time doesn't seem to work.
+                TimeSpan endElapsed = elapsed + pollingDelay;
+                while ((elapsed = stopwatch.Elapsed) < endElapsed)
+                    Thread.Sleep(endElapsed - elapsed);
+            }
             return needsToWait;
         }
 
