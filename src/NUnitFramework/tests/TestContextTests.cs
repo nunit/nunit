@@ -480,7 +480,7 @@ namespace NUnit.Framework.Tests
             Assert.That(tearDownResult, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                Assert.That(tearDownResult!.Outcome, Is.EqualTo(result.ResultState));
+                Assert.That(tearDownResult.Outcome, Is.EqualTo(result.ResultState));
                 Assert.That(tearDownResult.PassCount, Is.EqualTo(result.PassCount));
                 Assert.That(tearDownResult.FailCount, Is.EqualTo(result.FailCount));
                 Assert.That(tearDownResult.SkipCount, Is.EqualTo(result.SkipCount));
