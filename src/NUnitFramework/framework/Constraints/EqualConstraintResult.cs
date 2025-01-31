@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -123,7 +124,7 @@ namespace NUnit.Framework.Constraints
             else if (expected is Stream expectedStream && actual is Stream actualStream)
                 DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
             else if (_comparingProperties && IsPropertyFailurePoint(depth))
-                DisplayPropertyDifferences(writer, depth);
+                DisplayPropertyDifferences(writer, expected, actual, depth);
             else if (_tolerance is not null)
                 writer.DisplayDifferences(expected, actual, _tolerance);
             else
@@ -220,8 +221,8 @@ namespace NUnit.Framework.Constraints
                     writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatchExpected);
                 else
                     writer.WriteMessageLine(StringsDiffer_2, expectedString.Length, actualString.Length, mismatchExpected);
-                writer.WriteLine($"  Expected: {MsgUtils.FormatCollection(expected)}");
-                writer.WriteLine($"  But was:  {MsgUtils.FormatCollection(actual)}");
+                writer.WriteLine($"{TextMessageWriter.Pfx_Expected}{MsgUtils.FormatCollection(expected)}");
+                writer.WriteLine($"{TextMessageWriter.Pfx_Actual}{MsgUtils.FormatCollection(actual)}");
                 writer.WriteLine($"  First non-matching item at index [{failurePoint.Position}]: \"{failurePoint.ExpectedValue}\"");
                 return;
             }
@@ -346,13 +347,15 @@ namespace NUnit.Framework.Constraints
 
         #region DisplayPropertyDifferences
 
-        private void DisplayPropertyDifferences(MessageWriter writer, int depth)
+        private void DisplayPropertyDifferences(MessageWriter writer, object? expected, object? actual, int depth)
         {
             if (_failurePoints.Count > depth)
             {
                 NUnitEqualityComparer.FailurePoint failurePoint = _failurePoints[depth];
 
-                writer.WriteMessageLine($"Values differ at property {failurePoint.PropertyName}");
+                writer.WriteLine($"{TextMessageWriter.Pfx_Expected}{MsgUtils.FormatValueProperties(expected)}");
+                writer.WriteLine($"{TextMessageWriter.Pfx_Actual}{MsgUtils.FormatValueProperties(actual)}");
+                writer.WriteLine($"  Values differ at property {failurePoint.PropertyName}:");
                 DisplayDifferences(writer, failurePoint.ExpectedValue, failurePoint.ActualValue, ++depth);
             }
         }

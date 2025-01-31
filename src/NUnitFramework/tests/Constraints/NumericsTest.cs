@@ -85,6 +85,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void TestFloatsAndDoubles()
+        {
+            object x = 0.0500000007f;
+            Assert.That(x, Is.EqualTo(0.05).Within(0.0000001));
+        }
+
+        [Test]
         public void CanCompareDecimalsWithHighPrecision()
         {
             var expected = 95217168582.206969750145956m;

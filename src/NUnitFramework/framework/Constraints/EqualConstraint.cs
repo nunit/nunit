@@ -156,6 +156,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to use a tolerance defined elsewhere when determining equality.
+        /// </summary>
+        /// <param name="tolerance">Tolerance to be used</param>
+        /// <returns>Self.</returns>
+        internal EqualConstraint WithinConfiguredTolerance(Tolerance tolerance)
+        {
+            _tolerance = tolerance;
+            return this;
+        }
+
+        /// <summary>
         /// Flag the constraint to use a tolerance when determining equality.
         /// </summary>
         /// <param name="amount">Tolerance value to be used</param>
@@ -404,6 +415,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            // Reset the comparer before each use, e.g. for DelayedConstraint
+            if (_comparer.HasFailurePoints)
+                _comparer.FailurePoints.Clear();
+
             AdjustArgumentIfNeeded(ref actual);
             return new EqualConstraintResult(this, actual, _comparer.AreEqual(_expected, actual, ref _tolerance));
         }

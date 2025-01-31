@@ -27,6 +27,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
+        dotnet-version: |
+            6.0.x
+            8.0.x
         
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
@@ -68,6 +71,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
+        dotnet-version: |
+            6.0.x
+            8.0.x
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -100,7 +106,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         global-json-file: global.json
-        dotnet-version: 6.x
+        dotnet-version: |
+            6.0.x
+            8.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore

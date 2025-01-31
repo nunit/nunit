@@ -159,13 +159,7 @@ namespace NUnit.Framework.Tests.Assertions
         private static async Task AssertAssertionFailsAsync(Func<Task> assertion)
         {
             await Assert.ThatAsync(
-                async () =>
-                {
-                    using (new TestExecutionContext.IsolatedContext())
-                    {
-                        await assertion();
-                    }
-                },
+                async () => await assertion(),
                 Throws.InstanceOf<AssertionException>());
         }
     }

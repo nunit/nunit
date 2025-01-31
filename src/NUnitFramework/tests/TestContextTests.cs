@@ -9,6 +9,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestContextData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests
 {
@@ -459,35 +460,31 @@ namespace NUnit.Framework.Tests
     public class TestContextOneTimeTearDownTests
     {
         [Test]
-        public void TestTruth()
+        public void TestContextContainsSuiteResults()
         {
-            Assert.That(true, Is.True);
-        }
+            var fixture = new TestContextOneTimeTearDownData();
 
-        [Test]
-        public void TestFalsehood()
-        {
-            Assert.That(false, Is.False);
-        }
+            var result = TestBuilder.RunTestFixture(fixture);
 
-        [Test, Explicit]
-        public void TestExplicit()
-        {
-            Assert.Pass("Always passes if you run it!");
-        }
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.PassCount, Is.EqualTo(2));
+                Assert.That(result.FailCount, Is.EqualTo(0));
+                Assert.That(result.SkipCount, Is.EqualTo(1));
+            });
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            TestContext context = TestContext.CurrentContext;
-            Assert.That(context, Is.Not.Null);
-            Assert.That(context.Test, Is.Not.Null);
-            Assert.That(context.Test.Name, Is.EqualTo("TestContextOneTimeTearDownTests"));
-            Assert.That(context.Result, Is.Not.Null);
-            Assert.That(context.Result.Outcome, Is.EqualTo(ResultState.Success));
-            Assert.That(context.Result.PassCount, Is.EqualTo(2));
-            Assert.That(context.Result.FailCount, Is.EqualTo(0));
-            Assert.That(context.Result.SkipCount, Is.EqualTo(1));
+            var tearDownResult = fixture.ResultInOneTimeTearDown;
+
+            Assert.That(tearDownResult, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tearDownResult.Outcome, Is.EqualTo(result.ResultState));
+                Assert.That(tearDownResult.PassCount, Is.EqualTo(result.PassCount));
+                Assert.That(tearDownResult.FailCount, Is.EqualTo(result.FailCount));
+                Assert.That(tearDownResult.SkipCount, Is.EqualTo(result.SkipCount));
+            });
         }
     }
 

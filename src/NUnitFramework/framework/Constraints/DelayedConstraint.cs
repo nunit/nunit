@@ -220,7 +220,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description => $"{BaseConstraint.Description} after {DelayInterval} delay";
+        public override string Description => $"After {DelayInterval} delay";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -401,9 +401,11 @@ namespace NUnit.Framework.Constraints
                 _innerResult = innerResult;
             }
 
-            public override void WriteActualValueTo(MessageWriter writer) => _innerResult.WriteActualValueTo(writer);
-
-            public override void WriteAdditionalLinesTo(MessageWriter writer) => _innerResult.WriteAdditionalLinesTo(writer);
+            public override void WriteMessageTo(MessageWriter writer)
+            {
+                writer.WriteMessageLine(Description);
+                _innerResult.WriteMessageTo(writer);
+            }
         }
     }
 }

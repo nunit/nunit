@@ -21,13 +21,17 @@ namespace NUnit.Framework
         public static Exception? ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, string message, params object?[]? args)
         {
             Exception? caughtException = null;
-            try
+
+            using (new TestExecutionContext.IsolatedContext())
             {
-                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, code.Invoke);
-            }
-            catch (Exception e)
-            {
-                caughtException = e;
+                try
+                {
+                    AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, code.Invoke);
+                }
+                catch (Exception e)
+                {
+                    caughtException = e;
+                }
             }
 
             Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
