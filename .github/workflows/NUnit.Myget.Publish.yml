@@ -6,7 +6,6 @@ on:
     branches:
       - main
       - release
-      - 'v3'
       - myget
   workflow_dispatch:
   
