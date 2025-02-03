@@ -741,7 +741,7 @@ namespace NUnit.Framework.Tests.Constraints
                     ["Key"] = new BaseType { V1 = "2", V2 = "2" }
                 };
 
-                Assert.Throws<NotSupportedException>(
+                Assert.Throws<AssertionException>(
                     () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
             }
 

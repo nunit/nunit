@@ -784,7 +784,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var actual = new TypeWithObjectProperty { Value = new ClassA(123) };
             var expected = new TypeWithObjectProperty { Value = new ClassB("Not A Number") };
-            Assert.That(() => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()), Throws.InstanceOf<AssertionException>());
         }
 
         private class TypeWithObjectProperty
