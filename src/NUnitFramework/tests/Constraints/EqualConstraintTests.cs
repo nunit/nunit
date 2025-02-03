@@ -4,10 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Text;
+
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
@@ -383,45 +384,45 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
-            /*
-             * This no longer compiles! Preventing illegal code and runtime exceptions.
-             *
-                        [Test]
-                        public void ErrorIfDaysPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
-                        }
+/*
+ * This no longer compiles! Preventing illegal code and runtime exceptions.
+ *
+            [Test]
+            public void ErrorIfDaysPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
+            }
 
-                        [Test]
-                        public void ErrorIfHoursPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
-                        }
+            [Test]
+            public void ErrorIfHoursPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
+            }
 
-                        [Test]
-                        public void ErrorIfMinutesPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
-                        }
+            [Test]
+            public void ErrorIfMinutesPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
+            }
 
-                        [Test]
-                        public void ErrorIfSecondsPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
-                        }
+            [Test]
+            public void ErrorIfSecondsPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
+            }
 
-                        [Test]
-                        public void ErrorIfMillisecondsPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
-                        }
+            [Test]
+            public void ErrorIfMillisecondsPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
+            }
 
-                        [Test]
-                        public void ErrorIfTicksPrecedesWithin()
-                        {
-                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
-                        }
-            */
+            [Test]
+            public void ErrorIfTicksPrecedesWithin()
+            {
+                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
+            }
+*/
         }
 
         #endregion
@@ -472,35 +473,35 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
             }
 
-            /*
-             * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
-             *
-                        [Theory]
-                        public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-                        {
-                            Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
+/*
+ * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
+ *
+            [Theory]
+            public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
 
-                            Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-                        }
+                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
 
-                        [Theory]
-                        public void PositiveEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-                        {
-                            Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
-                            Assume.That(value1.Offset == value2.Offset);
+            [Theory]
+            public void PositiveEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                Assume.That(value1.Offset == value2.Offset);
 
-                            Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-                        }
+                Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
 
-                        [Theory]
-                        public void NegativeEqualityTestWithinToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-                        {
-                            Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
-                            Assume.That(value1.Offset != value2.Offset);
+            [Theory]
+            public void NegativeEqualityTestWithinToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+            {
+                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                Assume.That(value1.Offset != value2.Offset);
 
-                            Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-                        }
-            */
+                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+            }
+*/
         }
 
         public class DateTimeOffSetEquality
