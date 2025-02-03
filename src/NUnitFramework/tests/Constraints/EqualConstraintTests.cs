@@ -4,11 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
-
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
@@ -384,45 +383,45 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
-/*
- * This no longer compiles! Preventing illegal code and runtime exceptions.
- *
-            [Test]
-            public void ErrorIfDaysPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
-            }
+            /*
+             * This no longer compiles! Preventing illegal code and runtime exceptions.
+             *
+                        [Test]
+                        public void ErrorIfDaysPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Days.Within(5)));
+                        }
 
-            [Test]
-            public void ErrorIfHoursPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
-            }
+                        [Test]
+                        public void ErrorIfHoursPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Hours.Within(5)));
+                        }
 
-            [Test]
-            public void ErrorIfMinutesPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
-            }
+                        [Test]
+                        public void ErrorIfMinutesPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Minutes.Within(5)));
+                        }
 
-            [Test]
-            public void ErrorIfSecondsPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
-            }
+                        [Test]
+                        public void ErrorIfSecondsPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Seconds.Within(5)));
+                        }
 
-            [Test]
-            public void ErrorIfMillisecondsPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
-            }
+                        [Test]
+                        public void ErrorIfMillisecondsPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Milliseconds.Within(5)));
+                        }
 
-            [Test]
-            public void ErrorIfTicksPrecedesWithin()
-            {
-                Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
-            }
-*/
+                        [Test]
+                        public void ErrorIfTicksPrecedesWithin()
+                        {
+                            Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
+                        }
+            */
         }
 
         #endregion
@@ -473,35 +472,35 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes);
             }
 
-/*
- * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
- *
-            [Theory]
-            public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-            {
-                Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
+            /*
+             * The XML documentation says that WithSameOffset doesn't work together with Within, but the code below would says it is.
+             *
+                        [Theory]
+                        public void NegativeEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+                        {
+                            Assume.That((value1 - value2).Duration() > new TimeSpan(0, 1, 0));
 
-                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-            }
+                            Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+                        }
 
-            [Theory]
-            public void PositiveEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-            {
-                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
-                Assume.That(value1.Offset == value2.Offset);
+                        [Theory]
+                        public void PositiveEqualityTestWithToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+                        {
+                            Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                            Assume.That(value1.Offset == value2.Offset);
 
-                Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-            }
+                            Assert.That(value1, Is.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+                        }
 
-            [Theory]
-            public void NegativeEqualityTestWithinToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
-            {
-                Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
-                Assume.That(value1.Offset != value2.Offset);
+                        [Theory]
+                        public void NegativeEqualityTestWithinToleranceAndWithSameOffset(DateTimeOffset value1, DateTimeOffset value2)
+                        {
+                            Assume.That((value1 - value2).Duration() <= new TimeSpan(0, 1, 0));
+                            Assume.That(value1.Offset != value2.Offset);
 
-                Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
-            }
-*/
+                            Assert.That(value1, Is.Not.EqualTo(value2).Within(1).Minutes.WithSameOffset);
+                        }
+            */
         }
 
         public class DateTimeOffSetEquality
@@ -638,6 +637,125 @@ namespace NUnit.Framework.Tests.Constraints
             public void CanMatchHashtableWithDictionary()
             {
                 Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key1"] = new Record("Name1", [1, 2, 3]),
+                    ["Key"] = new Record("Name", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [1, 2, 3]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer());
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer_FailureDueToKeyMismatch()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name1", [1, 2, 3]),
+                    ["Key1"] = new Record("Name", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name1", [1, 2, 3]),
+                    ["Key2"] = new Record("Name", [1, 2, 3])
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer_FailureDueToValueMismatch()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [1, 2, 3]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [2, 3, 4]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithSameDerivedTypes_UsingPropertiesComparer()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer());
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithSameDerivedTypes_UsingPropertiesComparer_FailureDueToValueMismatch()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "2" }
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_UsingPropertiesComparer_FailureWhenDifferentTypesCompared()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new BaseType { V1 = "2", V2 = "2" }
+                };
+
+                Assert.Throws<NotSupportedException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            private record Record(string Name, int[] Collection);
+
+            private class BaseType
+            {
+                public string? V1 { get; set; }
+                public string? V2 { get; set; }
+            }
+
+            private class DerivedType : BaseType
+            {
+                public string? V3 { get; set; }
             }
         }
 
