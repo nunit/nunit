@@ -780,6 +780,22 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void PropertiesComparerDoesNotSupportPropertiesOfDifferentTypes()
+        {
+            var actual = new TypeWithObjectProperty { Value = new ClassA(123) };
+            var expected = new TypeWithObjectProperty { Value = new ClassB("Not A Number") };
+            Assert.That(() => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()), Throws.InstanceOf<AssertionException>());
+        }
+
+        private class TypeWithObjectProperty
+        {
+            public object? Value { get; set; }
+        }
+
+        private record ClassA(int Number);
+        private record ClassB(string String);
+
+        [Test]
         public void TestPropertyFailureSecondLevel()
         {
             var one = new ParentClass(new ChildClass(new GrandChildClass(1)), new ChildClass(new GrandChildClass(2), new GrandChildClass(3)));

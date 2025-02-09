@@ -639,6 +639,125 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key1"] = new Record("Name1", [1, 2, 3]),
+                    ["Key"] = new Record("Name", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [1, 2, 3]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer());
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer_FailureDueToKeyMismatch()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name1", [1, 2, 3]),
+                    ["Key1"] = new Record("Name", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name1", [1, 2, 3]),
+                    ["Key2"] = new Record("Name", [1, 2, 3])
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithRecords_UsingPropertiesComparer_FailureDueToValueMismatch()
+            {
+                var actual = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [1, 2, 3]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                var expected = new Dictionary<string, Record>
+                {
+                    ["Key"] = new Record("Name", [2, 3, 4]),
+                    ["Key1"] = new Record("Name1", [1, 2, 3])
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithSameDerivedTypes_UsingPropertiesComparer()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer());
+            }
+
+            [Test]
+            public void CanMatchDictionaries_WithSameDerivedTypes_UsingPropertiesComparer_FailureDueToValueMismatch()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "2" }
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            [Test]
+            public void CanMatchDictionaries_UsingPropertiesComparer_FailureWhenDifferentTypesCompared()
+            {
+                var actual = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new DerivedType { V1 = "1", V2 = "1" }
+                };
+
+                var expected = new Dictionary<string, BaseType>
+                {
+                    ["Key"] = new BaseType { V1 = "2", V2 = "2" }
+                };
+
+                Assert.Throws<AssertionException>(
+                    () => Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer()));
+            }
+
+            private record Record(string Name, int[] Collection);
+
+            private class BaseType
+            {
+                public string? V1 { get; set; }
+                public string? V2 { get; set; }
+            }
+
+            private class DerivedType : BaseType
+            {
+                public string? V3 { get; set; }
+            }
         }
 
         #endregion

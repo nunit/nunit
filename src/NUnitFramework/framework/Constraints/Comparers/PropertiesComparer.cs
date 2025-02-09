@@ -52,7 +52,8 @@ namespace NUnit.Framework.Constraints.Comparers
                 object? yPropertyValue = property.GetValue(y, null);
 
                 EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
-                if (result == EqualMethodResult.ComparedNotEqual)
+
+                if (result == EqualMethodResult.ComparedNotEqual || result == EqualMethodResult.TypesNotSupported)
                 {
                     return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
                 }
