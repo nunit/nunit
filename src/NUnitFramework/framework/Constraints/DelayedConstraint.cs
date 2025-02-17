@@ -2,8 +2,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
@@ -229,25 +229,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for if the base constraint fails, false if it succeeds</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
-
-            if (PollingInterval.IsNotZero)
-            {
-                while ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                {
-                    long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-                    ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-
-                    ConstraintResult result = BaseConstraint.ApplyTo(actual);
-                    if (result.IsSuccess)
-                        return new DelegatingConstraintResult(this, result);
-                }
-            }
-            if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
-
-            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
+            return PollLoop(() => BaseConstraint.ApplyTo(actual));
         }
 
         /// <summary>
@@ -257,91 +239,18 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
-
-            if (PollingInterval.IsNotZero)
-            {
-                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-                while ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                {
-                    if (nextPoll > now)
-                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-
-                    try
-                    {
-                        ConstraintResult result = BaseConstraint.ApplyTo(del);
-                        if (result.IsSuccess)
-                            return new DelegatingConstraintResult(this, result);
-                    }
-                    catch (Exception)
-                    {
-                        // Ignore any exceptions when polling
-                    }
-                }
-            }
-            if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
-
-            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(del));
-        }
-
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given reference.
-        /// Overridden to wait for the specified delay period before
-        /// calling the base constraint with the dereferenced value.
-        /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo<TActual>(ref TActual actual)
-        {
-            long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
-
-            if (PollingInterval.IsNotZero)
-            {
-                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-                while ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                {
-                    if (nextPoll > now)
-                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
-                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-
-                    try
-                    {
-                        ConstraintResult result = BaseConstraint.ApplyTo(actual);
-                        if (result.IsSuccess)
-                            return new DelegatingConstraintResult(this, result);
-                    }
-                    catch (Exception)
-                    {
-                        // Ignore any exceptions when polling
-                    }
-                }
-            }
-            if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
-
-            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
+            return PollLoop(() => BaseConstraint.ApplyTo(del));
         }
 
         /// <inheritdoc/>
         public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {
-            long now = Stopwatch.GetTimestamp();
-            long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             if (PollingInterval.IsNotZero)
             {
-                long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-                while ((now = Stopwatch.GetTimestamp()) < delayEnd)
+                while (await PollingDelayAsync(stopwatch))
                 {
-                    if (nextPoll > now)
-                        await Task.Delay(TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now));
-
-                    nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
-
                     try
                     {
                         ConstraintResult result = await BaseConstraint.ApplyToAsync(taskDel);
@@ -355,10 +264,89 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                await Task.Delay(TimestampDiff(delayEnd, now));
+            await FinalDelayAsync(stopwatch);
 
             return new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
+        }
+
+        private async Task<bool> PollingDelayAsync(Stopwatch stopwatch)
+        {
+            TimeSpan elapsed = stopwatch.Elapsed;
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - elapsed;
+            TimeSpan pollingDelay = maxDelay < PollingInterval.AsTimeSpan ? maxDelay : PollingInterval.AsTimeSpan;
+            bool needsToWait = pollingDelay > TimeSpan.Zero;
+            if (needsToWait)
+            {
+                await Task.Delay(pollingDelay);
+
+                // The below should not be needed, except that on github runners
+                // waiting for a specified time doesn't seem to work.
+                TimeSpan endElapsed = elapsed + pollingDelay;
+                while ((elapsed = stopwatch.Elapsed) < endElapsed)
+                    await Task.Delay(endElapsed - elapsed);
+            }
+
+            return needsToWait;
+        }
+
+        private Task FinalDelayAsync(Stopwatch stopwatch)
+        {
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - stopwatch.Elapsed;
+            if (maxDelay > TimeSpan.Zero)
+                return Task.Delay(maxDelay);
+            return Task.CompletedTask;
+        }
+
+        private ConstraintResult PollLoop(Func<ConstraintResult> applyBaseConstraint)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            if (PollingInterval.IsNotZero)
+            {
+                while (PollingDelay(stopwatch))
+                {
+                    try
+                    {
+                        ConstraintResult result = applyBaseConstraint();
+                        if (result.IsSuccess)
+                            return new DelegatingConstraintResult(this, result);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
+                }
+            }
+
+            FinalDelay(stopwatch);
+
+            return new DelegatingConstraintResult(this, applyBaseConstraint());
+        }
+
+        private bool PollingDelay(Stopwatch stopwatch)
+        {
+            TimeSpan elapsed = stopwatch.Elapsed;
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - elapsed;
+            TimeSpan pollingDelay = maxDelay < PollingInterval.AsTimeSpan ? maxDelay : PollingInterval.AsTimeSpan;
+            bool needsToWait = pollingDelay > TimeSpan.Zero;
+            if (needsToWait)
+            {
+                Thread.Sleep(pollingDelay);
+
+                // The below should not be needed, except that on github runners
+                // waiting for a specified time doesn't seem to work.
+                TimeSpan endElapsed = elapsed + pollingDelay;
+                while ((elapsed = stopwatch.Elapsed) < endElapsed)
+                    Thread.Sleep(endElapsed - elapsed);
+            }
+            return needsToWait;
+        }
+
+        private void FinalDelay(Stopwatch stopwatch)
+        {
+            TimeSpan maxDelay = DelayInterval.AsTimeSpan - stopwatch.Elapsed;
+            if (maxDelay > TimeSpan.Zero)
+                Thread.Sleep(maxDelay);
         }
 
         /// <summary>
@@ -367,28 +355,6 @@ namespace NUnit.Framework.Constraints
         protected override string GetStringRepresentation()
         {
             return $"<after {DelayInterval.AsTimeSpan.TotalMilliseconds} {BaseConstraint}>";
-        }
-
-        /// <summary>
-        /// Adjusts a Timestamp by a given TimeSpan
-        /// </summary>
-        /// <param name="timestamp"></param>
-        /// <param name="offset"></param>
-        /// <returns></returns>
-        private static long TimestampOffset(long timestamp, TimeSpan offset)
-        {
-            return timestamp + (long)(offset.TotalSeconds * Stopwatch.Frequency);
-        }
-
-        /// <summary>
-        /// Returns the difference between two Timestamps as a TimeSpan
-        /// </summary>
-        /// <param name="timestamp1"></param>
-        /// <param name="timestamp2"></param>
-        /// <returns></returns>
-        private static TimeSpan TimestampDiff(long timestamp1, long timestamp2)
-        {
-            return TimeSpan.FromSeconds((double)(timestamp1 - timestamp2) / Stopwatch.Frequency);
         }
 
         private class DelegatingConstraintResult : ConstraintResult
