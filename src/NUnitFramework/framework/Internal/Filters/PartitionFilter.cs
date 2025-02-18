@@ -31,6 +31,7 @@ namespace NUnit.Framework.Internal.Filters
 #else
         private readonly ThreadLocal<byte[]> _buffer = new(() => GC.AllocateUninitializedArray<byte>(4096));
 #endif
+        private readonly ThreadLocal<Encoder> _encoder = new(() => Encoding.UTF8.GetEncoder());
 
         /// <summary>
         /// Construct a PartitionFilter that matches tests that have the assigned partition number from the total partition count
@@ -115,14 +116,14 @@ namespace NUnit.Framework.Internal.Filters
         {
 #if NETFRAMEWORK
             var buffer = _buffer.Value!;
-            var bytesWritten = Encoding.UTF8.GetBytes(name, 0, name.Length, buffer, 0);
+            _encoder.Value!.Convert(name.ToCharArray(), 0, name.Length, buffer, 0, buffer.Length, flush: true, out _, out var bytesWritten, out _);
 
             var hashValue = _sha256.Value!.ComputeHash(buffer, 0, bytesWritten);
 
             return BitConverter.ToUInt32(hashValue, 0);
 #else
             Span<byte> buffer = _buffer.Value;
-            var bytesWritten = Encoding.UTF8.GetBytes(name, buffer);
+            _encoder.Value!.Convert(name.AsSpan(), buffer, flush: true, out _, out var bytesWritten, out _);
 
             Span<byte> hashValue = stackalloc byte[32];
             SHA256.HashData(buffer[..bytesWritten], hashValue);
