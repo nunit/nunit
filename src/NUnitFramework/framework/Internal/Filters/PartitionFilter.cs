@@ -115,14 +115,15 @@ namespace NUnit.Framework.Internal.Filters
         {
 #if NETFRAMEWORK
             var buffer = _buffer.Value!;
-            var bytesWritten = Encoding.UTF8.GetBytes(name, 0, name.Length, buffer, 0);
+            var bytesWritten = Encoding.UTF8.GetBytes(name, 0, Math.Min(name.Length, buffer.Length), buffer, 0);
 
             var hashValue = _sha256.Value!.ComputeHash(buffer, 0, bytesWritten);
 
             return BitConverter.ToUInt32(hashValue, 0);
 #else
             Span<byte> buffer = _buffer.Value;
-            var bytesWritten = Encoding.UTF8.GetBytes(name, buffer);
+            ReadOnlySpan<char> nameSpan = name.AsSpan(0, Math.Min(name.Length, buffer.Length));
+            var bytesWritten = Encoding.UTF8.GetBytes(nameSpan, buffer);
 
             Span<byte> hashValue = stackalloc byte[32];
             SHA256.HashData(buffer[..bytesWritten], hashValue);
