@@ -406,40 +406,22 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint UsingPropertiesComparer()
         {
             _comparer.CompareProperties = true;
-            _comparer.PropertyNamesToExclude = null;
-            _comparer.PropertyNamesToUse = null;
+            _comparer.ComparePropertiesConfiguration = null;
             return this;
         }
 
         /// <summary>
-        /// Enables comparing a subset of instance properties.
+        /// Enables comparing of instance properties.
         /// </summary>
         /// <remarks>
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertyNamesToUse">List of property names to compare.</param>
-        public EqualConstraint UsingPropertiesComparerUsingOnly(params string[] propertyNamesToUse)
+        /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
+        public EqualConstraint UsingPropertiesComparer(Func<PropertiesComparerConfigurationUntyped, PropertiesComparerConfigurationUntyped> configure)
         {
             _comparer.CompareProperties = true;
-            _comparer.PropertyNamesToExclude = null;
-            _comparer.PropertyNamesToUse = new HashSet<string>(propertyNamesToUse);
-            return this;
-        }
-
-        /// <summary>
-        /// Enables comparing a subset of instance properties.
-        /// </summary>
-        /// <remarks>
-        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
-        /// without having to compare each property separately in own code.
-        /// </remarks>
-        /// <param name="propertyNamesToExclude">List of property names to exclude from comparison.</param>
-        public EqualConstraint UsingPropertiesComparerExcluding(params string[] propertyNamesToExclude)
-        {
-            _comparer.CompareProperties = true;
-            _comparer.PropertyNamesToExclude = new HashSet<string>(propertyNamesToExclude);
-            _comparer.PropertyNamesToUse = null;
+            _comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfigurationUntyped());
             return this;
         }
 
@@ -478,7 +460,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
-                        sb.Append(" ");
+                        sb.Append(' ');
                         sb.Append(_tolerance.Mode.ToString());
                     }
                 }
@@ -499,7 +481,7 @@ namespace NUnit.Framework.Constraints
 
         // Currently, we only adjust for ArraySegments that have a
         // null array reference. Others could be added in the future.
-        private void AdjustArgumentIfNeeded<T>(ref T arg)
+        private static void AdjustArgumentIfNeeded<T>(ref T arg)
         {
             if (arg is not null)
             {

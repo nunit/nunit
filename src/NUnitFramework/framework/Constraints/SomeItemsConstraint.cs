@@ -142,32 +142,16 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Enables comparing a subset of instance properties.
+        /// Enables comparing of instance properties.
         /// </summary>
         /// <remarks>
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertyNamesToExclude">List of properties to exclude from comparison.</param>
-        public SomeItemsConstraint UsingPropertiesComparerExcluding(params string[] propertyNamesToExclude)
+        public SomeItemsConstraint UsingPropertiesComparer(Func<PropertiesComparerConfigurationUntyped, PropertiesComparerConfigurationUntyped> configure)
         {
-            CheckPrecondition(nameof(UsingPropertiesComparerExcluding));
-            _equalConstraint.UsingPropertiesComparerExcluding(propertyNamesToExclude);
-            return this;
-        }
-
-        /// <summary>
-        /// Enables comparing a subset of instance properties.
-        /// </summary>
-        /// <remarks>
-        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
-        /// without having to compare each property separately in own code.
-        /// </remarks>
-        /// <param name="propertyNamesToUse">List of properties to compare.</param>
-        public SomeItemsConstraint UsingPropertiesComparerUsingOnly(params string[] propertyNamesToUse)
-        {
-            CheckPrecondition(nameof(UsingPropertiesComparerUsingOnly));
-            _equalConstraint.UsingPropertiesComparerUsingOnly(propertyNamesToUse);
+            CheckPrecondition(nameof(UsingPropertiesComparer));
+            _equalConstraint.UsingPropertiesComparer(configure);
             return this;
         }
 

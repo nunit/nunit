@@ -1,9 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -27,21 +24,6 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Constraint Modifiers
-        /// <summary>
-        /// Enables comparing a subset of instance properties.
-        /// </summary>
-        /// <remarks>
-        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
-        /// without having to compare each property separately in own code.
-        /// </remarks>
-        /// <param name="propertyNamesToUse">List of properties to compare.</param>
-        public EqualConstraint UsingPropertiesComparerUsingOnly(params Expression<Func<T, object?>>[] propertyNamesToUse)
-        {
-            Comparer.CompareProperties = true;
-            Comparer.PropertyNamesToExclude = null;
-            Comparer.PropertyNamesToUse = new HashSet<string>(propertyNamesToUse.Select(GetNameFromExpression));
-            return this;
-        }
 
         /// <summary>
         /// Enables comparing a subset of instance properties.
@@ -50,31 +32,12 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertyNamesToExclude">List of property names to exclude from comparison.</param>
-        public EqualConstraint UsingPropertiesComparerExcluding(params Expression<Func<T, object?>>[] propertyNamesToExclude)
+        /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
+        public EqualConstraint UsingPropertiesComparer(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
         {
             Comparer.CompareProperties = true;
-            Comparer.PropertyNamesToExclude = new HashSet<string>(propertyNamesToExclude.Select(GetNameFromExpression));
-            Comparer.PropertyNamesToUse = null;
+            Comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<T>());
             return this;
-        }
-
-        private static string GetNameFromExpression(Expression<Func<T, object?>> expression)
-        {
-            Expression body = expression.Body;
-
-            // We only expect a single member access, but it might include in implicit cast to object.
-            if (body is UnaryExpression unaryExpresion &&
-                unaryExpresion.NodeType == ExpressionType.Convert &&
-                unaryExpresion.Type == typeof(object))
-            {
-                body = unaryExpresion.Operand;
-            }
-
-            if (body is MemberExpression memberExpression)
-                return memberExpression.Member.Name;
-
-            throw new ArgumentException("Expression must be a member expression", nameof(expression));
         }
 
         #endregion

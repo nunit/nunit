@@ -221,25 +221,25 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(persons, Does.Not.Contain(new Person { Name = florence, Age = 43 })
                                      .UsingPropertiesComparer());
             Assert.That(persons, Does.Contain(new Person { Name = florence })
-                                     .UsingPropertiesComparerUsingOnly(x => x.Name));
+                                     .UsingPropertiesComparer(c => c.Using(x => x.Name)));
             Assert.That(persons, Does.Contain(new Person { Name = florence })
-                                     .UsingPropertiesComparerExcluding(x => x.Age));
+                                     .UsingPropertiesComparer(c => c.Excluding(x => x.Age)));
 
             Assert.That(persons, Has.Member(new Person { Name = nathan, Age = 43 })
                                     .UsingPropertiesComparer());
             Assert.That(persons, Has.No.Member(new Person { Name = nathan, Age = 40 })
                                     .UsingPropertiesComparer());
             Assert.That(persons, Has.Member(new Person { Name = nathan })
-                                    .UsingPropertiesComparerUsingOnly(x => x.Name));
+                                    .UsingPropertiesComparer(c => c.Using(x => x.Name)));
             Assert.That(persons, Has.Member(new Person { Name = nathan })
-                                    .UsingPropertiesComparerExcluding(x => x.Age));
+                                    .UsingPropertiesComparer(c => c.Excluding(x => x.Age)));
 
             Assert.That(persons, Contains.Item(new Person { Name = kassidy, Age = 44 })
                                         .UsingPropertiesComparer());
             Assert.That(persons, Has.Exactly(2).EqualTo(new Person { Name = kassidy })
-                                    .UsingPropertiesComparerUsingOnly(x => x.Name));
+                                    .UsingPropertiesComparer(c => c.Using(x => x.Name)));
             Assert.That(persons, Has.Some.EqualTo(new Person { Name = kassidy })
-                                    .UsingPropertiesComparerExcluding(x => x.Age));
+                                    .UsingPropertiesComparer(c => c.Excluding(x => x.Age)));
         }
 
         private sealed class Person

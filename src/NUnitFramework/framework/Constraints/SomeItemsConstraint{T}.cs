@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq.Expressions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -30,24 +29,10 @@ namespace NUnit.Framework.Constraints
         /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
         /// without having to compare each property separately in own code.
         /// </remarks>
-        /// <param name="propertyNamesToExclude">List of properties to exclude from comparison.</param>
-        public SomeItemsConstraint UsingPropertiesComparerExcluding(params Expression<Func<T, object?>>[] propertyNamesToExclude)
+        /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
+        public SomeItemsConstraint UsingPropertiesComparer(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
         {
-            _equalConstraint.UsingPropertiesComparerExcluding(propertyNamesToExclude);
-            return this;
-        }
-
-        /// <summary>
-        /// Enables comparing a subset of instance properties.
-        /// </summary>
-        /// <remarks>
-        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
-        /// without having to compare each property separately in own code.
-        /// </remarks>
-        /// <param name="propertyNamesToUse">List of properties to compare.</param>
-        public SomeItemsConstraint UsingPropertiesComparerUsingOnly(params Expression<Func<T, object?>>[] propertyNamesToUse)
-        {
-            _equalConstraint.UsingPropertiesComparerUsingOnly(propertyNamesToUse);
+            _equalConstraint.UsingPropertiesComparer(configure);
             return this;
         }
     }
