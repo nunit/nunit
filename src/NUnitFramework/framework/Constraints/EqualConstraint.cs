@@ -45,6 +45,11 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
+        /// <summary>
+        /// The underlying comparer used.
+        /// </summary>
+        protected internal NUnitEqualityComparer Comparer => _comparer;
+
         // TODO: Remove public properties
         // They are only used by EqualConstraintResult
         // EqualConstraint should inject them into the constructor.
@@ -401,6 +406,22 @@ namespace NUnit.Framework.Constraints
         public EqualConstraint UsingPropertiesComparer()
         {
             _comparer.CompareProperties = true;
+            _comparer.ComparePropertiesConfiguration = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
+        public EqualConstraint UsingPropertiesComparer(Func<PropertiesComparerConfigurationUntyped, PropertiesComparerConfigurationUntyped> configure)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfigurationUntyped());
             return this;
         }
 
@@ -439,7 +460,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
-                        sb.Append(" ");
+                        sb.Append(' ');
                         sb.Append(_tolerance.Mode.ToString());
                     }
                 }
@@ -460,7 +481,7 @@ namespace NUnit.Framework.Constraints
 
         // Currently, we only adjust for ArraySegments that have a
         // null array reference. Others could be added in the future.
-        private void AdjustArgumentIfNeeded<T>(ref T arg)
+        private static void AdjustArgumentIfNeeded<T>(ref T arg)
         {
             if (arg is not null)
             {
