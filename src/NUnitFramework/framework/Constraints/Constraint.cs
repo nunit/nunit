@@ -105,6 +105,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">A reference to the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
+        [Obsolete("This was never implemented and will be removed.")]
         public virtual ConstraintResult ApplyTo<TActual>(ref TActual actual)
         {
             return ApplyTo(actual);
