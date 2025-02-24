@@ -384,6 +384,25 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region MultipleOf, Even, Odd
+
+        /// <summary>
+        /// Returns a constraint that tests for a number to be a multiple of another.
+        /// </summary>
+        public MultipleOfConstraint MultipleOf(int multiple) => Append(new MultipleOfConstraint(multiple));
+
+        /// <summary>
+        /// Returns a constraint that tests for a number to be even (i.e. a multiple of two)
+        /// </summary>
+        public MultipleOfConstraint Even => MultipleOf(2);
+
+        /// <summary>
+        /// Returns a constraint that tests for a number to be odd.
+        /// </summary>
+        public MultipleOfConstraint Odd => Not.Even;
+
+        #endregion
+
         #region Empty
 
         /// <summary>

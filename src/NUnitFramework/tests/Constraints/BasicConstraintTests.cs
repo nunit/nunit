@@ -96,4 +96,28 @@ namespace NUnit.Framework.Tests.Constraints
         };
 #pragma warning restore IDE0052 // Remove unread private members
     }
+
+    [TestFixture]
+    public class MultipleOfConstraintTest : ConstraintTestBase
+    {
+        protected override Constraint TheConstraint { get; } = new MultipleOfConstraint(3);
+
+        [SetUp]
+        public void SetUp()
+        {
+            ExpectedDescription = "MultipleOf(3)";
+            StringRepresentation = "<multipleof>";
+        }
+
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 3, 9 };
+        private static readonly object[] FailureData = new object[]
+        {
+            new object?[] { null, "null" },
+            new object[] { "hello", "\"hello\"" },
+            new object[] { false, "False" },
+            new object[] { 2, "2" }
+        };
+#pragma warning restore IDE0052 // Remove unread private members
+    }
 }
