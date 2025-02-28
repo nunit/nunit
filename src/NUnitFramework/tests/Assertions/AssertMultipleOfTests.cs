@@ -74,5 +74,12 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(3 * 3, Is.MultipleOf(3).And.Odd);
             Assert.That(2 * 4, Is.Not.MultipleOf(3).And.Even);
         }
+
+        [Test]
+        public void ZeroIsEvenNotOdd()
+        {
+            Assert.That(0, Is.Even);
+            Assert.That(0, Is.Not.Odd);
+        }
     }
 }
