@@ -45,7 +45,6 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                // Should this throw an exception instead?
                 result = false;
             }
 
