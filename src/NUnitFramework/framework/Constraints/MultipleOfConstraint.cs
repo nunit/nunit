@@ -5,7 +5,7 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EvenConstraint tests that the actual value is an even integer
+    /// MultipleOfConstraint tests that the actual value is a multiple of a specified integer.
     /// </summary>
     public class MultipleOfConstraint : Constraint
     {
