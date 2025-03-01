@@ -13,6 +13,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         private PartitionFilter _filter;
         private ITest _testMatchingPartition;
         private ITest _testNotMatchingPartition;
+        private ITest _testFixtureWithWithLongTestCaseNames;
 
         [SetUp]
         public void CreateFilter()
@@ -22,6 +23,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
             _testMatchingPartition = FixtureWithMultipleTestsSuite.Tests[0];
             _testNotMatchingPartition = FixtureWithMultipleTestsSuite.Tests[1];
+            _testFixtureWithWithLongTestCaseNames = FixtureWithLongTestCaseNamesSuite.Tests[0];
         }
 
         [Test]
@@ -96,6 +98,13 @@ namespace NUnit.Framework.Tests.Internal.Filters
             await Task.WhenAll(tasks);
 
             Assert.That(expected, Is.EqualTo(tasks.Select(t => t.Result)));
+        }
+
+        [Test]
+        public void ComputeParitionNumberHandlesLongTestCaseName()
+        {
+            Assert.DoesNotThrow(() => _filter.ComputePartitionNumber(_testFixtureWithWithLongTestCaseNames.Tests[0]));
+            Assert.DoesNotThrow(() => _filter.ComputePartitionNumber(_testFixtureWithWithLongTestCaseNames.Tests[1]));
         }
     }
 }
