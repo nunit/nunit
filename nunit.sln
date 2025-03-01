@@ -76,6 +76,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{08744334-2350-4885-B57E-347010A27ABB}"
 	ProjectSection(SolutionItems) = preProject
 		.config\dotnet-tools.json = .config\dotnet-tools.json
+		.config-macos\dotnet-tools.json = .config-macos\dotnet-tools.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "windows-tests", "src\NUnitFramework\windows-tests\windows-tests.csproj", "{7C19F745-B5F0-4A3A-B545-1E1DF4FA1F78}"

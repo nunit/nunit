@@ -111,7 +111,7 @@ jobs:
             8.0.x
 
     - name: 🛠️ Install dotnet tools
-      run: dotnet tool restore
+      run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
 
     - name: 🔨 Build and Test
       run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
