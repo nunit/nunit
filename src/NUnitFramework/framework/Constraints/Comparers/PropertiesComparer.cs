@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints.Comparers
             Dictionary<string, string>? propertyNameMap = GetPropertyNameMap();
             Dictionary<string, object?>? propertyNameToValueMap = GetPropertyToValueMap();
 
-            if (configuration.CompareCommonProperties &&
+            if (configuration.OnlyCompareCommonProperties &&
                 !ReferenceEquals(xPropertyNames, yPropertyNames))
             {
                 xPropertyNames.IntersectWith(yPropertyNames);

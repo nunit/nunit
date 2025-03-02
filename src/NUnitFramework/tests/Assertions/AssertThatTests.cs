@@ -592,7 +592,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Throws.InstanceOf<NotSupportedException>());
 
             Assert.That(instanceS, Is.EqualTo(instanceC).UsingPropertiesComparer(
-                c => c.AllowExtraProperties()));
+                c => c.CompareOnlyCommonProperties()));
         }
 
         private sealed class ClassWithSomeToleranceAwareMembers

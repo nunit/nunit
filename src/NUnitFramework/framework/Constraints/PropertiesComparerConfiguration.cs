@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets and sets the option to compare only matching properties, ignoring others.
         /// </summary>
-        internal bool CompareCommonProperties { get; set; }
+        internal bool OnlyCompareCommonProperties { get; set; }
 
         /// <summary>
         /// Gets and sets the names of properties to exclude from comparison.
@@ -85,13 +85,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Set the <see cref="PropertiesComparerConfiguration.CompareCommonProperties"/> property.
+        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareCommonProperties"/> property.
         /// </summary>
         /// <remarks>Implies <see cref="AllowDifferentTypes" /></remarks>
         /// <returns>Self.</returns>
-        public PropertiesComparerConfigurationUntyped AllowExtraProperties()
+        public PropertiesComparerConfigurationUntyped CompareOnlyCommonProperties()
         {
-            CompareCommonProperties = true;
+            OnlyCompareCommonProperties = true;
             return AllowDifferentTypes();
         }
 
@@ -166,13 +166,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Set the <see cref="PropertiesComparerConfiguration.CompareCommonProperties"/> property.
+        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareCommonProperties"/> property.
         /// </summary>
         /// <remarks>Implies <see cref="AllowDifferentTypes" /></remarks>
         /// <returns>Self.</returns>
-        public PropertiesComparerConfiguration<T> AllowExtraProperties()
+        public PropertiesComparerConfiguration<T> CompareOnlyCommonProperties()
         {
-            CompareCommonProperties = true;
+            OnlyCompareCommonProperties = true;
             return AllowDifferentTypes();
         }
 
