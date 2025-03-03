@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -139,6 +138,20 @@ namespace NUnit.Framework.Constraints
         {
             CheckPrecondition(nameof(UsingPropertiesComparer));
             _equalConstraint.UsingPropertiesComparer();
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public SomeItemsConstraint UsingPropertiesComparer(Func<PropertiesComparerConfigurationUntyped, PropertiesComparerConfigurationUntyped> configure)
+        {
+            CheckPrecondition(nameof(UsingPropertiesComparer));
+            _equalConstraint.UsingPropertiesComparer(configure);
             return this;
         }
 

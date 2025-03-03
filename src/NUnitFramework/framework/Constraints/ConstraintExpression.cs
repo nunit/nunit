@@ -449,9 +449,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public EqualConstraint EqualTo<T>(T? expected)
+        public EqualConstraint<T> EqualTo<T>(T? expected)
         {
-            return Append(new EqualConstraint(expected));
+            return Append(new EqualConstraint<T>(expected));
         }
 
         /// <summary>
@@ -812,6 +812,15 @@ namespace NUnit.Framework.Constraints
             return Append(new SomeItemsConstraint(new EqualConstraint(expected)));
         }
 
+        /// <summary>
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
+        /// presence of a particular object in the collection.
+        /// </summary>
+        public SomeItemsConstraint<T> Member<T>(T? expected)
+        {
+            return Append(new SomeItemsConstraint<T>(new EqualConstraint<T>(expected)));
+        }
+
         #endregion
 
         #region Contains
@@ -829,6 +838,21 @@ namespace NUnit.Framework.Constraints
         public SomeItemsConstraint Contains(object? expected)
         {
             return Append(new SomeItemsConstraint(new EqualConstraint(expected)));
+        }
+
+        /// <summary>
+        /// <para>
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
+        /// presence of a particular object in the collection.
+        /// </para>
+        /// <para>
+        /// To search for a substring instead of a collection element, use the
+        /// <see cref="Contains(string)"/> overload.
+        /// </para>
+        /// </summary>
+        public SomeItemsConstraint<T> Contains<T>(T? expected)
+        {
+            return Append(new SomeItemsConstraint<T>(new EqualConstraint<T>(expected)));
         }
 
         /// <summary>
@@ -852,6 +876,15 @@ namespace NUnit.Framework.Constraints
         /// presence of a particular object in the collection.
         /// </summary>
         public SomeItemsConstraint Contain(object? expected)
+        {
+            return Contains(expected);
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
+        /// presence of a particular object in the collection.
+        /// </summary>
+        public SomeItemsConstraint<T> Contain<T>(T? expected)
         {
             return Contains(expected);
         }

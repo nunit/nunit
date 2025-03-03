@@ -75,6 +75,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private bool _compareProperties;
 
+        private PropertiesComparerConfiguration? _comparePropertiesConfiguration;
+
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
@@ -124,6 +126,15 @@ namespace NUnit.Framework.Constraints
         {
             get => _compareProperties;
             set => _compareProperties = value;
+        }
+
+        /// <summary>
+        /// Gets and sets the names of properties to exclude from comparison.
+        /// </summary>
+        public PropertiesComparerConfiguration? ComparePropertiesConfiguration
+        {
+            get => _comparePropertiesConfiguration;
+            set => _comparePropertiesConfiguration = value;
         }
 
         /// <summary>

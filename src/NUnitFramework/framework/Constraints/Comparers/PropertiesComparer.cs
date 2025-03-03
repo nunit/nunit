@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -17,45 +18,84 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            if (xType != yType)
+            PropertiesComparerConfiguration configuration = equalityComparer.ComparePropertiesConfiguration ?? PropertiesComparerConfiguration.Default;
+
+            if (xType != yType && !configuration.AllowComparingDifferentTypes)
             {
                 // Both operands need to be the same type.
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            if (xType.IsPrimitive)
+            if (xType.IsPrimitive || yType.IsPrimitive)
             {
                 // We should never get here if the order in NUnitEqualityComparer is correct.
                 // We don't do built-in value types
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-            if (properties.Length == 0 || properties.Any(p => p.GetIndexParameters().Length > 0))
+            PropertyInfo[] xProperties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            HashSet<string> xPropertyNames = new HashSet<string>(xProperties.Select(p => p.Name));
+
+            PropertyInfo[] yProperties = xProperties;
+            HashSet<string> yPropertyNames = xPropertyNames;
+            HashSet<string> allPropertyNames = xPropertyNames;
+
+            if (xType != yType)
             {
-                // We can't compare if there are no properties.
+                yProperties = yType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                yPropertyNames = new HashSet<string>(yProperties.Select(p => p.Name));
+                allPropertyNames = new HashSet<string>(xPropertyNames.Concat(yPropertyNames));
+                UseProperties(yType, yPropertyNames);
+                ExcludeProperties(yType, yPropertyNames);
+            }
+
+            UseProperties(xType, xPropertyNames);
+            ExcludeProperties(xType, xPropertyNames);
+
+            Dictionary<string, string>? propertyNameMap = GetPropertyNameMap();
+            Dictionary<string, object?>? propertyNameToValueMap = GetPropertyToValueMap();
+
+            if (configuration.OnlyCompareCommonProperties &&
+                !ReferenceEquals(xPropertyNames, yPropertyNames))
+            {
+                xPropertyNames.IntersectWith(yPropertyNames);
+                yPropertyNames = xPropertyNames;
+            }
+
+            if (xPropertyNames.Count != yPropertyNames.Count + (propertyNameToValueMap?.Count ?? 0) ||
+                xPropertyNames.Count == 0)
+            {
+                // We can't compare if there are no properties left or the count is different.
+                return EqualMethodResult.TypesNotSupported;
+            }
+
+            xProperties = xProperties.Where(p => xPropertyNames.Contains(p.Name)).ToArray();
+            yProperties = yProperties.Where(p => yPropertyNames.Contains(p.Name)).ToArray();
+
+            if (xProperties.Any(p => p.GetIndexParameters().Length > 0) ||
+                yProperties.Any(p => p.GetIndexParameters().Length > 0))
+            {
                 // We also can't deal with indexer properties as we don't know the range of valid values.
                 return EqualMethodResult.TypesNotSupported;
             }
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
-            string declaringTypeName = xType.Name;
-
-            BitArray redoWithoutTolerance = new BitArray(properties.Length);
+            BitArray redoWithoutTolerance = new BitArray(xProperties.Length);
             int toleranceNotSupportedCount = 0;
 
-            for (int i = 0; i < properties.Length; i++)
+            // We compare in 'x' order, but need to lookup corresponding yProperty.
+            Dictionary<string, PropertyInfo> yPropertyDictionary = yProperties.ToDictionary(x => x.Name);
+            for (int i = 0; i < xProperties.Length; i++)
             {
-                PropertyInfo property = properties[i];
-                object? xPropertyValue = property.GetValue(x, null);
-                object? yPropertyValue = property.GetValue(y, null);
+                (string xPropertyName, object? xPropertyValue, string yPropertyName, object? yPropertyValue) =
+                    GetPropertyNamesAndValues(i);
 
                 EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
 
                 if (result == EqualMethodResult.ComparedNotEqual || result == EqualMethodResult.TypesNotSupported)
                 {
-                    return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
+                    return PropertyNotEqualResult(equalityComparer, i, xType.Name, xPropertyName, xPropertyValue, yType.Name, yPropertyName, yPropertyValue);
                 }
 
                 if (result == EqualMethodResult.ToleranceNotSupported)
@@ -65,7 +105,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 }
             }
 
-            if (toleranceNotSupportedCount == properties.Length)
+            if (toleranceNotSupportedCount == xProperties.Length)
             {
                 // If none of the properties supported the tolerance don't retry without it
                 return EqualMethodResult.ToleranceNotSupported;
@@ -74,32 +114,135 @@ namespace NUnit.Framework.Constraints.Comparers
             if (toleranceNotSupportedCount != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
-                for (int i = 0; i < properties.Length; i++)
+                for (int i = 0; i < xProperties.Length; i++)
                 {
                     if (redoWithoutTolerance.Get(i))
                     {
-                        PropertyInfo property = properties[i];
-                        object? xPropertyValue = property.GetValue(x, null);
-                        object? yPropertyValue = property.GetValue(y, null);
+                        (string xPropertyName, object? xPropertyValue, string yPropertyName, object? yPropertyValue) =
+                            GetPropertyNamesAndValues(i);
 
                         EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref noTolerance, comparisonState);
                         if (result == EqualMethodResult.ComparedNotEqual)
                         {
-                            return PropertyNotEqualResult(equalityComparer, i, declaringTypeName, property.Name, xPropertyValue, yPropertyValue);
+                            return PropertyNotEqualResult(equalityComparer, i, xType.Name, xPropertyName, xPropertyValue, yType.Name, yPropertyName, yPropertyValue);
                         }
                     }
                 }
             }
 
             return EqualMethodResult.ComparedEqual;
+
+            void UseProperties(Type type, HashSet<string> propertyNames)
+            {
+                if (configuration.PropertyNamesToUseForType is null ||
+                    !configuration.PropertyNamesToUseForType.TryGetValue(type, out HashSet<string>? propertyNamesToUse))
+                {
+                    propertyNamesToUse = configuration.PropertyNamesToUse;
+                }
+
+                if (propertyNamesToUse is not null)
+                {
+                    if (!propertyNamesToUse.IsSubsetOf(allPropertyNames))
+                    {
+                        throw new ArgumentException("The properties to use must all exist on the object.");
+                    }
+
+                    propertyNames.IntersectWith(propertyNamesToUse);
+                }
+            }
+
+            void ExcludeProperties(Type type, HashSet<string> propertyNames)
+            {
+                if (configuration.PropertyNamesToExcludeForType is null ||
+                    !configuration.PropertyNamesToExcludeForType.TryGetValue(type, out HashSet<string>? propertyNamesToExclude))
+                {
+                    propertyNamesToExclude = configuration.PropertyNamesToExclude;
+                }
+
+                if (propertyNamesToExclude is not null)
+                {
+                    if (!propertyNamesToExclude.IsSubsetOf(allPropertyNames))
+                    {
+                        throw new ArgumentException("The properties to exclude must all exist on the object.");
+                    }
+
+                    propertyNames.ExceptWith(propertyNamesToExclude);
+                }
+            }
+
+            Dictionary<string, string>? GetPropertyNameMap()
+            {
+                if (configuration.PropertyNameMapForType is null ||
+                    !configuration.PropertyNameMapForType.TryGetValue(xType, out Dictionary<string, string>? propertyNameMap))
+                {
+                    propertyNameMap = configuration.PropertyNameMap;
+                }
+
+                if (propertyNameMap is not null)
+                {
+                    // Verify that all Keys are in x and all Values are in y
+                    if (!xPropertyNames.IsSupersetOf(propertyNameMap.Keys))
+                    {
+                        throw new ArgumentException($"The properties to map from must all exist on the type {xType.Name}.");
+                    }
+                    if (!yPropertyNames.IsSupersetOf(propertyNameMap.Values))
+                    {
+                        throw new ArgumentException($"The properties to map to must all exist on the type {yType.Name}.");
+                    }
+                }
+
+                return propertyNameMap;
+            }
+
+            Dictionary<string, object?>? GetPropertyToValueMap()
+            {
+                if (configuration.PropertyNameToValueMapForType is null ||
+                    !configuration.PropertyNameToValueMapForType.TryGetValue(xType, out Dictionary<string, object?>? propertyNameToValueMap))
+                {
+                    propertyNameToValueMap = null;
+                }
+
+                if (propertyNameToValueMap is not null)
+                {
+                    // Verify that all Keys are in x
+                    if (!xPropertyNames.IsSupersetOf(propertyNameToValueMap.Keys))
+                    {
+                        throw new ArgumentException($"The properties to map from must all exist on the type {xType.Name}.");
+                    }
+                }
+
+                return propertyNameToValueMap;
+            }
+
+            (string, object?, string, object?) GetPropertyNamesAndValues(int i)
+            {
+                PropertyInfo xProperty = xProperties[i];
+                object? xPropertyValue = xProperty.GetValue(x, null);
+
+                if (propertyNameMap is null ||
+                    !propertyNameMap.TryGetValue(xProperty.Name, out string? yPropertyName))
+                {
+                    yPropertyName = xProperty.Name;
+                }
+                if (propertyNameToValueMap is null ||
+                    !propertyNameToValueMap.TryGetValue(xProperty.Name, out object? yPropertyValue))
+                {
+                    PropertyInfo yProperty = yPropertyDictionary[yPropertyName];
+                    yPropertyValue = yProperty.GetValue(y, null);
+                }
+
+                return (xProperty.Name, xPropertyValue, yPropertyName, yPropertyValue);
+            }
         }
 
-        private static EqualMethodResult PropertyNotEqualResult(NUnitEqualityComparer equalityComparer, int i, string declaringTypeName, string propertyName, object? xPropertyValue, object? yPropertyValue)
+        private static EqualMethodResult PropertyNotEqualResult(NUnitEqualityComparer equalityComparer, int i, string xTypeName, string xPropertyName, object? xPropertyValue, string yTypeName, string yPropertyName, object? yPropertyValue)
         {
             var fp = new NUnitEqualityComparer.FailurePoint
             {
                 Position = i,
-                PropertyName = $"{declaringTypeName}.{propertyName}",
+                PropertyName = xTypeName == yTypeName ?
+                    $"{xTypeName}.{xPropertyName}" :
+                    $"{xTypeName}.{xPropertyName} => {yTypeName}.{yPropertyName}",
                 ExpectedHasData = true,
                 ExpectedValue = xPropertyValue,
                 ActualHasData = true,
