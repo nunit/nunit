@@ -95,21 +95,24 @@ namespace NUnit.Framework.Constraints
             {
                 return ApplyTo(t);
             }
-
-            return new ConstraintResult(this, actual, false);
+            else if (actual is IEquatable<T> equatable)
+            {
+                return new ConstraintResult(this, actual, equatable.Equals(_expected));
+            }
+            else
+            {
+                // We fall back to pre 4.3 EqualConstraint behavior
+                // But if the actual value cannot be convert to a DateTime nor can be compared to one
+                // not sure if that makes any difference.
+                return new EqualConstraint(_expected).ApplyTo(actual);
+            }
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return MsgUtils.FormatValue(_expected);
-            }
-        }
+        public override string Description => MsgUtils.FormatValue(_expected);
 
         #endregion
     }
