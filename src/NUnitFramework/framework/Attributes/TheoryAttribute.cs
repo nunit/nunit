@@ -8,26 +8,31 @@ namespace NUnit.Framework
     using Internal.Builders;
 
     /// <summary>
-    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/>
-    /// class makes the method callable from the NUnit test runner. There is a property
-    /// called Description which is optional which you can provide a more detailed test
-    /// description. This class cannot be inherited.
+    /// Indicates that a test method is a theory and can be run multiple times with different input data.
     /// </summary>
+    /// <remarks>
+    /// The theory attribute allows a test to be executed with a variety of data sets. For more details, please refer to the NUnit documentation.
+    /// </remarks>
+    /// <seealso href="https://docs.nunit.org/articles/nunit/writing-tests/attributes/theory.html">NUnit Theory Documentation</seealso>
     ///
     /// <example>
-    /// [TestFixture]
-    /// public class Fixture
-    /// {
-    ///   [Test]
-    ///   public void MethodToTest()
-    ///   {}
+    /// public class SqrtTests
+    ///{
+    ///    [DatapointSource]
+    ///    public double[] values = new double[] { 0.0, 1.0, -1.0, 42.0 };
     ///
-    ///   [Test(Description = "more detailed description")]
-    ///   public void TestDescriptionMethod()
-    ///   {}
-    /// }
+    ///    [Theory]
+    ///    public void SquareRootDefinition(double num)
+    ///    {
+    ///        Assume.That(num >= 0.0);
+    ///
+    ///        double sqrt = Math.Sqrt(num);
+    ///
+    ///        Assert.That(sqrt >= 0.0);
+    ///        Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
+    ///    }
+    ///}
     /// </example>
-    ///
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TheoryAttribute : CombiningStrategyAttribute, ITestBuilder, IImplyFixture
     {
