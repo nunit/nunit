@@ -445,6 +445,25 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(myDateTime, Is.EqualTo(nowOffset));
                     Assert.That(myDateTime, Is.EqualTo(nowUtc));
+
+                    Assert.That(nowOffset, Is.EqualTo(myDateTime));
+                    Assert.That(nowUtc, Is.EqualTo(myDateTime));
+                }
+            }
+
+            [Test]
+            public void CanCompareTypesOverridingObjectEquals()
+            {
+                DateTimeOffset nowOffset = new(2025, 3, 8, 07, 59, 20, TimeSpan.FromHours(8));
+
+                MyBasicDateTime myDateTime = new MyBasicDateTime(nowOffset);
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(myDateTime, Is.EqualTo(nowOffset));
+                    Assert.That(myDateTime, new EqualConstraint(nowOffset));
+
+                    Assert.That(nowOffset, Is.EqualTo(myDateTime));
+                    Assert.That(nowOffset, new EqualConstraint(myDateTime));
                 }
             }
 
@@ -471,15 +490,27 @@ namespace NUnit.Framework.Tests.Constraints
                 }
             }
 
-            private sealed class MyDateTime : IEquatable<DateTimeOffset>, IEquatable<DateTime>
+            private sealed class MyDateTime : MyBasicDateTime, IEquatable<DateTimeOffset>, IEquatable<DateTime>
             {
-                public MyDateTime(DateTimeOffset value) => Value = value;
-
-                public DateTimeOffset Value { get; }
+                public MyDateTime(DateTimeOffset value)
+                    : base(value)
+                {
+                }
 
                 public bool Equals(DateTimeOffset other) => Value.Equals(other);
 
                 public bool Equals(DateTime other) => Value.UtcDateTime.Equals(other.ToUniversalTime());
+            }
+
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+            private class MyBasicDateTime
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+            {
+                public MyBasicDateTime(DateTimeOffset value) => Value = value;
+
+                public DateTimeOffset Value { get; }
+
+                public override bool Equals(object? other) => Value.Equals(other);
 
                 public override string ToString() => MsgUtils.FormatValue(Value);
             }
