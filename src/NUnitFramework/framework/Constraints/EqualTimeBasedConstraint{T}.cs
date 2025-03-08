@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -91,21 +92,33 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            bool hasSucceeded;
+
             if (actual is T t)
             {
                 return ApplyTo(t);
             }
+            else if (actual is null)
+            {
+                hasSucceeded = false;
+            }
             else if (actual is IEquatable<T> equatable)
             {
-                return new ConstraintResult(this, actual, equatable.Equals(_expected));
+                hasSucceeded = equatable.Equals(_expected);
+            }
+            else if (TypeHelper.OverridesEqualsObject(actual.GetType()))
+            {
+                hasSucceeded = actual.Equals(_expected);
             }
             else
             {
                 // We fall back to pre 4.3 EqualConstraint behavior
-                // But if the actual value cannot be convert to a DateTime nor can be compared to one
+                // But if the actual value cannot be compared to one
                 // not sure if that makes any difference.
                 return new EqualConstraint(_expected).ApplyTo(actual);
             }
+
+            return new ConstraintResult(this, actual, hasSucceeded);
         }
 
         /// <summary>
