@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -26,8 +25,8 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            bool xOverridesEqualsObject = OverridesEqualsObject(xType);
-            bool yOverridesEqualsObject = OverridesEqualsObject(yType);
+            bool xOverridesEqualsObject = TypeHelper.OverridesEqualsObject(xType);
+            bool yOverridesEqualsObject = TypeHelper.OverridesEqualsObject(yType);
 
             if (xOverridesEqualsObject || yOverridesEqualsObject)
             {
@@ -52,16 +51,6 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             return EqualMethodResult.TypesNotSupported;
-        }
-
-        private static readonly Type[] EqualsObjectParameterTypes = { typeof(object) };
-
-        private static bool OverridesEqualsObject(Type type)
-        {
-            // Check for Equals(object) override
-            var equalsObject = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
-                                  null, EqualsObjectParameterTypes, null);
-            return equalsObject is not null && equalsObject.DeclaringType != (type.IsValueType ? typeof(ValueType) : typeof(object));
         }
     }
 }
