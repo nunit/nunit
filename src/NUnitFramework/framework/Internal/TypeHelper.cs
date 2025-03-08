@@ -397,5 +397,15 @@ namespace NUnit.Framework.Internal
 
             return equalsMethod?.GetCustomAttribute<CompilerGeneratedAttribute>() is not null;
         }
+
+        private static readonly Type[] EqualsObjectParameterTypes = { typeof(object) };
+
+        internal static bool OverridesEqualsObject(Type type)
+        {
+            // Check for Equals(object) override
+            var equalsObject = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
+                null, EqualsObjectParameterTypes, null);
+            return equalsObject is not null && equalsObject.DeclaringType != (type.IsValueType ? typeof(ValueType) : typeof(object));
+        }
     }
 }

@@ -309,6 +309,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1);
                 DateTime actual = new DateTime(2007, 4, 1);
                 Assert.That(actual, new EqualConstraint(expected));
+                Assert.That(actual, Is.EqualTo(expected));
             }
 
             [Test]
@@ -318,6 +319,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 TimeSpan tolerance = TimeSpan.FromMinutes(5.0);
                 Assert.That(actual, new EqualConstraint(expected).Within(tolerance));
+                Assert.That(actual, Is.EqualTo(expected).Within(tolerance));
             }
 
             [Test]
@@ -326,6 +328,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 4, 13, 0, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Days);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Days);
             }
 
             [Test]
@@ -334,6 +337,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 16, 0, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Hours);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Hours);
             }
 
             [Test]
@@ -341,6 +345,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.FromMinutes(2)));
                 Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromMinutes(2)));
             }
 
@@ -350,6 +355,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Minutes);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Minutes);
             }
 
             [Test]
@@ -358,6 +364,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TimeSpan expected = new TimeSpan(10, 0, 0);
                 TimeSpan actual = new TimeSpan(10, 2, 30);
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Minutes);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Minutes);
             }
 
             [Test]
@@ -366,6 +373,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(300).Seconds);
+                Assert.That(actual, Is.EqualTo(expected).Within(300).Seconds);
             }
 
             [Test]
@@ -374,6 +382,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
+                Assert.That(actual, Is.EqualTo(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -382,6 +391,7 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
+                Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
 /*
@@ -423,6 +433,87 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.Throws<InvalidOperationException>(() => Assert.That(DateTime.Now, Is.EqualTo(DateTime.Now).Ticks.Within(5)));
             }
 */
+
+            [Test]
+            public void CanCompareTypesImplementingIEquatableDateTime()
+            {
+                DateTimeOffset nowOffset = new(2025, 3, 8, 07, 59, 20, TimeSpan.FromHours(8));
+                DateTime nowUtc = nowOffset.UtcDateTime;
+
+                MyDateTime myDateTime = new MyDateTime(nowOffset);
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(myDateTime, Is.EqualTo(nowOffset));
+                    Assert.That(myDateTime, Is.EqualTo(nowUtc));
+
+                    Assert.That(nowOffset, Is.EqualTo(myDateTime));
+                    Assert.That(nowUtc, Is.EqualTo(myDateTime));
+                }
+            }
+
+            [Test]
+            public void CanCompareTypesOverridingObjectEquals()
+            {
+                DateTimeOffset nowOffset = new(2025, 3, 8, 07, 59, 20, TimeSpan.FromHours(8));
+
+                MyBasicDateTime myDateTime = new MyBasicDateTime(nowOffset);
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(myDateTime, Is.EqualTo(nowOffset));
+                    Assert.That(myDateTime, new EqualConstraint(nowOffset));
+
+                    Assert.That(nowOffset, Is.EqualTo(myDateTime));
+                    Assert.That(nowOffset, new EqualConstraint(myDateTime));
+                }
+            }
+
+            [Test]
+            public void CanNotCompareTypesImplementingIEquatableDateTimeWhenUsingOffset()
+            {
+                TimeSpan timeZoneOffset = TimeSpan.FromHours(8);
+                DateTimeOffset nowOffset = new(2025, 3, 8, 07, 59, 20, timeZoneOffset);
+                DateTime nowUtc = new(2025, 3, 8, 07, 59, 20, DateTimeKind.Utc);
+
+                MyDateTime myDateTime = new(nowOffset);
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(myDateTime, Is.EqualTo(nowOffset));
+                    Assert.That(() => Assert.That(myDateTime, Is.EqualTo(nowUtc).Within(timeZoneOffset)),
+                                Throws.InstanceOf<NotSupportedException>()
+                                      .With.Message.Contains("Tolerance not supported"));
+
+                    // Pre special DateTimeConstraints behaviour
+                    Assert.That(myDateTime, new EqualConstraint(nowOffset));
+                    Assert.That(() => Assert.That(myDateTime, new EqualConstraint(nowUtc).Within(timeZoneOffset)),
+                                Throws.InstanceOf<NotSupportedException>()
+                                      .With.Message.Contains("Tolerance not supported"));
+                }
+            }
+
+            private sealed class MyDateTime : MyBasicDateTime, IEquatable<DateTimeOffset>, IEquatable<DateTime>
+            {
+                public MyDateTime(DateTimeOffset value)
+                    : base(value)
+                {
+                }
+
+                public bool Equals(DateTimeOffset other) => Value.Equals(other);
+
+                public bool Equals(DateTime other) => Value.UtcDateTime.Equals(other.ToUniversalTime());
+            }
+
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+            private class MyBasicDateTime
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+            {
+                public MyBasicDateTime(DateTimeOffset value) => Value = value;
+
+                public DateTimeOffset Value { get; }
+
+                public override bool Equals(object? other) => Value.Equals(other);
+
+                public override string ToString() => MsgUtils.FormatValue(Value);
+            }
         }
 
         #endregion
@@ -512,6 +603,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1));
                 Assert.That(actual, new EqualConstraint(expected));
+                Assert.That(actual, Is.EqualTo(expected));
             }
 
             [Test]
@@ -521,6 +613,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 var tolerance = TimeSpan.FromMinutes(5.0);
                 Assert.That(actual, new EqualConstraint(expected).Within(tolerance));
+                Assert.That(actual, Is.EqualTo(expected).Within(tolerance));
             }
 
             [Test]
@@ -529,6 +622,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 4, 13, 0, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Days);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Days);
             }
 
             [Test]
@@ -536,6 +630,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.FromMinutes(2)));
                 Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromMinutes(2)));
             }
 
@@ -545,6 +640,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Minutes);
+                Assert.That(actual, Is.EqualTo(expected).Within(5).Minutes);
             }
 
             [Test]
@@ -553,6 +649,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300).Seconds);
+                Assert.That(actual, Is.EqualTo(expected).Within(300).Seconds);
             }
 
             [Test]
@@ -561,6 +658,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
+                Assert.That(actual, Is.EqualTo(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -569,6 +667,7 @@ namespace NUnit.Framework.Tests.Constraints
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
+                Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
             [Test]

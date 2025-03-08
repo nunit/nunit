@@ -19,7 +19,8 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            if (equalityComparer.CompareProperties && TypeHelper.HasCompilerGeneratedEquals(xType))
+            if (equalityComparer.CompareProperties &&
+                (TypeHelper.HasCompilerGeneratedEquals(xType) || TypeHelper.HasCompilerGeneratedEquals(yType)))
             {
                 // For record types, when CompareProperties is requested, we ignore generated Equals method and compare by properties.
                 return EqualMethodResult.TypesNotSupported;
