@@ -93,6 +93,10 @@ namespace NUnit.Framework.Tests.Syntax
                     "Single actual, Double expected, Double tolerance");
                 Assert.That(2.20492f, Is.EqualTo(2.2d).Within(0.01f),
                     "Single actual, Double expected, Single tolerance");
+
+                // Issue 4964
+                Assert.That(2.20492f, Is.Not.EqualTo(2.2f).Within(0.001d),
+                    "Single actual, Single expected, Double tolerance");
             });
         }
 
@@ -116,6 +120,10 @@ namespace NUnit.Framework.Tests.Syntax
                     "long actual, int expected, int tolerance");
                 Assert.That(487ul, Is.EqualTo(500).Within(25),
                     "ulong actual, int expected, int tolerance");
+
+                // Issue 4964
+                Assert.That(4.87m, Is.Not.EqualTo(5).Within(.10),
+                    "Decimal actual, int expected, Double tolerance");
             });
         }
 

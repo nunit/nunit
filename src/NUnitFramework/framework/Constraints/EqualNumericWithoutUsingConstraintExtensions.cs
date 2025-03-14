@@ -17,7 +17,7 @@ namespace NUnit.Framework
         /// <returns>Original constraint promoted to <see cref="double"/>.</returns>
         public static EqualNumericWithoutUsingConstraint<double> Within(this EqualNumericWithoutUsingConstraint<int> constraint, double amount)
         {
-            return new EqualNumericConstraint<double>(constraint.Expected).Within(amount);
+            return WithUpdatedBuilder(new EqualNumericConstraint<double>(constraint.Expected).Within(amount), constraint.Builder);
         }
 
         /// <summary>
@@ -28,7 +28,16 @@ namespace NUnit.Framework
         /// <returns>Original constraint promoted to <see cref="double"/>.</returns>
         public static EqualNumericWithoutUsingConstraint<double> Within(this EqualNumericWithoutUsingConstraint<float> constraint, double amount)
         {
-            return new EqualNumericConstraint<double>(constraint.Expected).Within(amount);
+            return WithUpdatedBuilder(new EqualNumericConstraint<double>(constraint.Expected).Within(amount), constraint.Builder);
+        }
+
+        private static EqualNumericWithoutUsingConstraint<double> WithUpdatedBuilder(
+            EqualNumericWithoutUsingConstraint<double> constraint,
+            ConstraintBuilder? builder)
+        {
+            constraint.Builder = builder;
+            constraint.Builder?.Replace(constraint);
+            return constraint;
         }
     }
 }
