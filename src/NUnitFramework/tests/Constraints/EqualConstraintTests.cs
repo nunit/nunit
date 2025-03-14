@@ -1050,17 +1050,26 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using(comparer));
                 });
             }
 
             [Test]
             public void CanCompareUncomparableTypes()
             {
+                Assert.Multiple(() =>
+                {
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-                Assert.That(2 + 2, Is.Not.EqualTo("4"));
+                    Assert.That(2 + 2, Is.Not.EqualTo("4"));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-                var comparer = new ConvertibleComparer();
-                Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
+                    var comparer = new ConvertibleComparer();
+                    Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo("4").Using(comparer));
+                });
             }
 
             [Test]
@@ -1071,6 +1080,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
                     Assert.That(comparer.Called, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using(comparer));
                 });
             }
 
@@ -1082,6 +1094,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(4, Is.EqualTo("4").Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(5, Is.Not.EqualTo("4").Using(comparer));
                 });
             }
 
@@ -1093,6 +1108,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That("4", Is.EqualTo(4).Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That("5", Is.Not.EqualTo(4).Using(comparer));
                 });
             }
 
@@ -1104,6 +1122,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(4, Is.EqualTo("4").Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(5, Is.Not.EqualTo("4").Using(comparer));
                 });
             }
 
@@ -1115,6 +1136,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That("4", Is.EqualTo(4).Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That("5", Is.Not.EqualTo(4).Using(comparer));
                 });
             }
 
@@ -1126,6 +1150,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using(comparer));
                 });
             }
 
@@ -1137,6 +1164,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using<int>(comparer));
                 });
             }
 
@@ -1148,6 +1178,9 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using(comparer.Delegate));
                 });
             }
 
@@ -1159,31 +1192,58 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
                     Assert.That(comparer.WasCalled, "Comparer was not called");
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using<int>(comparer.Delegate));
                 });
             }
 
             [Test]
             public void UsesBooleanReturningDelegate()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.Equals(y)));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.Equals(y)));
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using((x, y) => x.Equals(y)));
+                });
             }
 
             [Test]
             public void UsesProvidedLambda_IntArgs()
             {
-                Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.CompareTo(y)));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using((x, y) => x.CompareTo(y)));
+
+                    // Issue 4964
+                    Assert.That(2 + 3, Is.Not.EqualTo(4).Using((x, y) => x.CompareTo(y)));
+                });
             }
 
             [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
+                Assert.Multiple(() =>
+                {
+                    Assert.That("hello", Is.EqualTo("HELLO").Using((x, y) => string.Compare(x, y, StringComparison.CurrentCultureIgnoreCase)));
+
+                    // Issue 4964
+                    Assert.That("hello", Is.Not.EqualTo("HELLO").Using((x, y) => string.Compare(x, y, StringComparison.CurrentCulture)));
+                });
             }
 
             [Test, SetCulture("en-US")]
             public void UsesStringComparer()
             {
-                Assert.That("hello", Is.EqualTo("HELLO").Using(StringComparer.OrdinalIgnoreCase));
+                Assert.Multiple(() =>
+                {
+                    Assert.That("hello", Is.EqualTo("HELLO").Using(StringComparer.OrdinalIgnoreCase));
+
+                    // Issue 4964
+                    Assert.That("hello", Is.Not.EqualTo("HELLO").Using(StringComparer.Ordinal));
+                });
             }
 
             [Test]

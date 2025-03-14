@@ -38,7 +38,12 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public EqualUsingConstraint<string> Using(StringComparer comparer)
         {
-            return new EqualUsingConstraint<string>(Expected, (IEqualityComparer<string>)comparer);
+            var constraint = new EqualUsingConstraint<string>(Expected, (IEqualityComparer<string>)comparer)
+            {
+                Builder = Builder
+            };
+            constraint.Builder?.Replace(constraint);
+            return constraint;
         }
 
         #endregion

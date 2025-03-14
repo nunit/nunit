@@ -26,7 +26,7 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TExpected, TExpected, bool> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IEqualityComparer<TExpected> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer<TExpected> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Comparison<TExpected> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         #endregion
@@ -91,8 +91,8 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TActual, TExpected, bool> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected,
-                (object x, object y) => comparer.Invoke((TActual)x, (TExpected)y));
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected,
+                (object x, object y) => comparer.Invoke((TActual)x, (TExpected)y)), constraint.Builder);
         }
 
         /// <summary>
@@ -108,8 +108,8 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer<TActual> comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected,
-                (object x, object y) => comparer.Compare((TActual)x, (TActual)y) == 0);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected,
+                (object x, object y) => comparer.Compare((TActual)x, (TActual)y) == 0), constraint.Builder);
         }
 
         #endregion
@@ -128,7 +128,7 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IEqualityComparer comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         /// <summary>
@@ -143,9 +143,18 @@ namespace NUnit.Framework
         /// </returns>
         public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer comparer)
         {
-            return new EqualUsingConstraint<TExpected>(constraint.Expected, comparer);
+            return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
 
         #endregion
+
+        private static EqualUsingConstraint<TExpected> WithUpdatedBuilder<TExpected>(
+            EqualUsingConstraint<TExpected> constraint,
+            ConstraintBuilder? builder)
+        {
+            constraint.Builder = builder;
+            constraint.Builder?.Replace(constraint);
+            return constraint;
+        }
     }
 }
