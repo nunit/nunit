@@ -61,9 +61,36 @@ namespace NUnit.Framework.Constraints
         internal Dictionary<Type, Dictionary<string, object?>>? PropertyNameToValueMapForType { get; set; }
 
         /// <summary>
-        /// Gets and sets the mapping of property name to values.
+        /// Gets and sets the tolerance to apply for time values.
         /// </summary>
-        internal Dictionary<Type, Tolerance>? ToleranceForType { get; set; }
+        internal Tolerance TimeSpanTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Gets and sets the tolerance to apply for numeric values.
+        /// </summary>
+        internal Tolerance NumericTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Set the tolerance to apply based upon the type of the tolerance.
+        /// </summary>
+        /// <remarks>
+        /// This method accepts a <see cref="TimeSpan"/>, a numeric value or a <see cref="Tolerance"/> instance.
+        /// </remarks>
+        /// <param name="amount"></param>
+        protected void SetTolerance(object amount)
+        {
+            if (amount is not Tolerance instance)
+                instance = new Tolerance(amount);
+
+            if (instance.Amount is TimeSpan)
+            {
+                TimeSpanTolerance = instance;
+            }
+            else
+            {
+                NumericTolerance = instance;
+            }
+        }
     }
 
     // new HashSet<string>(properties) is clearer to me then [.. properties]
@@ -152,11 +179,14 @@ namespace NUnit.Framework.Constraints
             return AllowDifferentTypes();
         }
 
-        /// <inheritdoc/>
-        public PropertiesComparerConfigurationUntyped Within<TProperty>(object tolerance)
+        /// <summary>
+        /// Specify a tolerance for all numeric comparisons.
+        /// </summary>
+        /// <param name="amount">The tolerance to apply.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfigurationUntyped Within(object amount)
         {
-            ToleranceForType ??= new Dictionary<Type, Tolerance>();
-            ToleranceForType[typeof(TProperty)] = new Tolerance(tolerance);
+            SetTolerance(amount);
             return this;
         }
     }
@@ -308,11 +338,14 @@ namespace NUnit.Framework.Constraints
             return AllowDifferentTypes();
         }
 
-        /// <inheritdoc/>
-        public PropertiesComparerConfiguration<T> Within<TProperty>(object tolerance)
+        /// <summary>
+        /// Specify a tolerance for all numeric comparisons.
+        /// </summary>
+        /// <param name="amount">The tolerance to apply.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfiguration<T> Within(object amount)
         {
-            ToleranceForType ??= new Dictionary<Type, Tolerance>();
-            ToleranceForType[typeof(TProperty)] = new Tolerance(tolerance);
+            SetTolerance(amount);
             return this;
         }
 

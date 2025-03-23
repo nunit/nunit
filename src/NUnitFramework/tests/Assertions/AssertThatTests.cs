@@ -524,11 +524,11 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new RecordWithOneTimespanToleranceAwareMember(2, "Name", DateTimeOffset.UtcNow);
 
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
-                c => c.Within<DateTimeOffset>(TimeSpan.FromSeconds(1))));
+                c => c.Within(TimeSpan.FromSeconds(1))));
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
-                c => c.Within<int>(1)));
+                c => c.Within(1)));
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
-                c => c.Within<int>(1).Within<DateTimeOffset>(TimeSpan.FromSeconds(1))));
+                c => c.Within(1).Within(TimeSpan.FromSeconds(1))));
         }
 
         private record RecordWithOneTimespanToleranceAwareMember(int Id, string Name, DateTimeOffset Start);

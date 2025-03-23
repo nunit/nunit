@@ -93,11 +93,16 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 Tolerance toleranceToApply = tolerance;
 
-                if (configuration.ToleranceForType is not null &&
-                    xPropertyValue is not null &&
-                    configuration.ToleranceForType.TryGetValue(xPropertyValue.GetType(), out Tolerance? typeTolerance))
+                if (tolerance.IsUnsetOrDefault)
                 {
-                    toleranceToApply = typeTolerance;
+                    if (xPropertyValue is TimeSpan or DateTime or DateTimeOffset)
+                    {
+                        toleranceToApply = configuration.TimeSpanTolerance;
+                    }
+                    else
+                    {
+                        toleranceToApply = configuration.NumericTolerance;
+                    }
                 }
 
                 EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref toleranceToApply, comparisonState);
