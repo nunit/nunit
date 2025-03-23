@@ -59,6 +59,11 @@ namespace NUnit.Framework.Constraints
         /// Gets and sets the mapping of property name to values.
         /// </summary>
         internal Dictionary<Type, Dictionary<string, object?>>? PropertyNameToValueMapForType { get; set; }
+
+        /// <summary>
+        /// Gets and sets the mapping of property name to values.
+        /// </summary>
+        internal Dictionary<Type, Tolerance>? ToleranceForType { get; set; }
     }
 
     // new HashSet<string>(properties) is clearer to me then [.. properties]
@@ -145,6 +150,14 @@ namespace NUnit.Framework.Constraints
         {
             PropertyNameMap = properties.ToDictionary(x => x.From, x => x.To);
             return AllowDifferentTypes();
+        }
+
+        /// <inheritdoc/>
+        public PropertiesComparerConfigurationUntyped Within<TProperty>(object tolerance)
+        {
+            ToleranceForType ??= new Dictionary<Type, Tolerance>();
+            ToleranceForType[typeof(TProperty)] = new Tolerance(tolerance);
+            return this;
         }
     }
 
@@ -293,6 +306,14 @@ namespace NUnit.Framework.Constraints
             }
             nameToValueMapping.Add(GetNameFromExpression(from), value);
             return AllowDifferentTypes();
+        }
+
+        /// <inheritdoc/>
+        public PropertiesComparerConfiguration<T> Within<TProperty>(object tolerance)
+        {
+            ToleranceForType ??= new Dictionary<Type, Tolerance>();
+            ToleranceForType[typeof(TProperty)] = new Tolerance(tolerance);
+            return this;
         }
 
         private static string GetNameFromExpression<TExpression>(Expression<Func<TExpression, object?>> expression)

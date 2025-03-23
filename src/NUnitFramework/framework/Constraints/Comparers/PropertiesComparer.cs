@@ -91,7 +91,16 @@ namespace NUnit.Framework.Constraints.Comparers
                 (string xPropertyName, object? xPropertyValue, string yPropertyName, object? yPropertyValue) =
                     GetPropertyNamesAndValues(i);
 
-                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
+                Tolerance toleranceToApply = tolerance;
+
+                if (configuration.ToleranceForType is not null &&
+                    xPropertyValue is not null &&
+                    configuration.ToleranceForType.TryGetValue(xPropertyValue.GetType(), out Tolerance? typeTolerance))
+                {
+                    toleranceToApply = typeTolerance;
+                }
+
+                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref toleranceToApply, comparisonState);
 
                 if (result == EqualMethodResult.ComparedNotEqual || result == EqualMethodResult.TypesNotSupported)
                 {

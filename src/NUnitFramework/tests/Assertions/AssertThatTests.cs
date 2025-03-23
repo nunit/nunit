@@ -511,7 +511,24 @@ namespace NUnit.Framework.Tests.Assertions
             await Task.Delay(500);
             var actual = new RecordWithOneTimespanToleranceAwareMember(1, "Name", DateTimeOffset.UtcNow);
 
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
+        }
+
+        [Test]
+        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereSpecified()
+        {
+            var expected = new RecordWithOneTimespanToleranceAwareMember(1, "Name", DateTimeOffset.UtcNow);
+            await Task.Delay(500);
+            var actual = new RecordWithOneTimespanToleranceAwareMember(2, "Name", DateTimeOffset.UtcNow);
+
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within<DateTimeOffset>(TimeSpan.FromSeconds(1))));
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within<int>(1)));
+            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within<int>(1).Within<DateTimeOffset>(TimeSpan.FromSeconds(1))));
         }
 
         private record RecordWithOneTimespanToleranceAwareMember(int Id, string Name, DateTimeOffset Start);
