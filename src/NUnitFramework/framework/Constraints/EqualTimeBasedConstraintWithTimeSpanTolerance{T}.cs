@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
             }
             else if (actual is IEquatable<T>)
             {
-                throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{actual.GetType()}' and '{typeof(T)}'");
+                throw new NotSupportedException($"Specified Tolerance of type {_tolerance} not supported for instances of type '{actual.GetType()}' and '{typeof(T)}'");
             }
 
             return new ConstraintResult(this, actual, false);

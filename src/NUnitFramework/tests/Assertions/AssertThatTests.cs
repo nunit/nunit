@@ -483,6 +483,39 @@ namespace NUnit.Framework.Tests.Assertions
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
         }
 
+        [TestCase(40, 42)]
+        public void AssertThatWithInvalidTolerance(object actual, object expected)
+        {
+            Assert.That(() => Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
+
+        [Test]
+        public async Task AssertThatWithInvalidTolerance()
+        {
+            DateTime expected = DateTime.UtcNow;
+
+            await Task.Delay(500);
+
+            DateTime actual = DateTime.UtcNow;
+
+            Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds);
+            Assert.That(() => Assert.That(actual, Is.EqualTo((object)expected).Within(1)),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
+
+        [Test]
+        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
+        {
+            var expected = new RecordWithOneTimespanToleranceAwareMember(1, "Name", DateTimeOffset.UtcNow);
+            await Task.Delay(500);
+            var actual = new RecordWithOneTimespanToleranceAwareMember(1, "Name", DateTimeOffset.UtcNow);
+
+            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
+        }
+
+        private record RecordWithOneTimespanToleranceAwareMember(int Id, string Name, DateTimeOffset Start);
+
         [Test]
         public void AssertThatEqualsWithClassWithSomeToleranceAwareMembers()
         {
