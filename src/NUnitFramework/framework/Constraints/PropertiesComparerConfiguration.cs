@@ -68,7 +68,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets and sets the tolerance to apply for numeric values.
         /// </summary>
-        internal Tolerance NumericTolerance { get; set; } = Tolerance.Default;
+        internal Tolerance FloatingPointTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Gets and sets the tolerance to apply for numeric values.
+        /// </summary>
+        internal Tolerance FixedPointTolerance { get; set; } = Tolerance.Default;
 
         /// <summary>
         /// Set the tolerance to apply based upon the type of the tolerance.
@@ -86,9 +91,13 @@ namespace NUnit.Framework.Constraints
             {
                 TimeSpanTolerance = instance;
             }
+            else if (Numerics.IsFloatingPointNumeric(instance.Amount) || instance.Mode == ToleranceMode.Ulps)
+            {
+                FloatingPointTolerance = instance;
+            }
             else
             {
-                NumericTolerance = instance;
+                FixedPointTolerance = instance;
             }
         }
     }

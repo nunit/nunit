@@ -99,9 +99,21 @@ namespace NUnit.Framework.Constraints.Comparers
                     {
                         toleranceToApply = configuration.TimeSpanTolerance;
                     }
-                    else
+                    else if (Numerics.IsFloatingPointNumeric(xPropertyValue))
                     {
-                        toleranceToApply = configuration.NumericTolerance;
+                        toleranceToApply = configuration.FloatingPointTolerance;
+                        if (toleranceToApply.IsUnsetOrDefault)
+                        {
+                            toleranceToApply = configuration.FixedPointTolerance;
+                        }
+                    }
+                    else if (Numerics.IsFixedPointNumeric(xPropertyValue))
+                    {
+                        toleranceToApply = configuration.FixedPointTolerance;
+                        if (toleranceToApply.IsUnsetOrDefault)
+                        {
+                            toleranceToApply = configuration.FloatingPointTolerance;
+                        }
                     }
                 }
 
