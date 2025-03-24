@@ -528,20 +528,20 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
                 c => c.Within(TimeSpan.FromSeconds(1))));
 
-            // Fails because of Star field
+            // Fails because of Start field
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
                 c => c.Within(1)));
 
-            // Succeeds, but uses 1 tolerance for Height
-            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
+            // Fails because of Height field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
                 c => c.Within(1).Within(TimeSpan.FromSeconds(1))));
-            // Succeeds, uses 1.0 tolerance for Id
-            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
+            // Fails because of Id field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
                 c => c.Within(1.0).Within(TimeSpan.FromSeconds(1))));
 
             // Succeeds, uses 1 tolerance for Id and 0.1 tolerance for Height
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
-                c => c.Within(1).Within(0.02).Within(TimeSpan.FromSeconds(1))));
+                c => c.Within(1).Within(0.1).Within(TimeSpan.FromSeconds(1))));
 
             // Succeeds, used 1 tolerance for Id and 1% tolerance for Height
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(

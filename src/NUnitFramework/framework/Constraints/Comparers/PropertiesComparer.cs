@@ -102,18 +102,10 @@ namespace NUnit.Framework.Constraints.Comparers
                     else if (Numerics.IsFloatingPointNumeric(xPropertyValue))
                     {
                         toleranceToApply = configuration.FloatingPointTolerance;
-                        if (toleranceToApply.IsUnsetOrDefault)
-                        {
-                            toleranceToApply = configuration.FixedPointTolerance;
-                        }
                     }
                     else if (Numerics.IsFixedPointNumeric(xPropertyValue))
                     {
                         toleranceToApply = configuration.FixedPointTolerance;
-                        if (toleranceToApply.IsUnsetOrDefault)
-                        {
-                            toleranceToApply = configuration.FloatingPointTolerance;
-                        }
                     }
                 }
 
