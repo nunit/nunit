@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -8,8 +10,10 @@ namespace NUnit.Framework.Constraints
     /// considered equal if both are null, or if both have the same
     /// value. NUnit has special semantics for some object types.
     /// </summary>
+#pragma warning disable CS3024 // Constraint type is not CLS-compliant
     public class EqualNumericConstraint<T> : EqualNumericWithoutUsingConstraint<T>, IEqualWithUsingConstraint<T>
-        where T : struct
+#pragma warning restore CS3024 // Constraint type is not CLS-compliant
+        where T : unmanaged, IConvertible
     {
         #region Constructor
 

@@ -480,13 +480,13 @@ namespace NUnit.Framework.Tests.Constraints
                     Assert.That(myDateTime, Is.EqualTo(nowOffset));
                     Assert.That(() => Assert.That(myDateTime, Is.EqualTo(nowUtc).Within(timeZoneOffset)),
                                 Throws.InstanceOf<NotSupportedException>()
-                                      .With.Message.Contains("Tolerance not supported"));
+                                      .With.Message.Contains("Tolerance"));
 
                     // Pre special DateTimeConstraints behaviour
                     Assert.That(myDateTime, new EqualConstraint(nowOffset));
                     Assert.That(() => Assert.That(myDateTime, new EqualConstraint(nowUtc).Within(timeZoneOffset)),
                                 Throws.InstanceOf<NotSupportedException>()
-                                      .With.Message.Contains("Tolerance not supported"));
+                                      .With.Message.Contains("Tolerance"));
                 }
             }
 

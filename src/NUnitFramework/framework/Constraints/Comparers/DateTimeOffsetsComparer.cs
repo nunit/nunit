@@ -16,9 +16,13 @@ namespace NUnit.Framework.Constraints.Comparers
 
             bool result;
 
-            if (tolerance?.Amount is TimeSpan amount)
+            if (tolerance.Amount is TimeSpan amount)
             {
                 result = (xOffset - yOffset).Duration() <= amount;
+            }
+            else if (tolerance.Mode != ToleranceMode.Unset)
+            {
+                return EqualMethodResult.ToleranceNotSupported;
             }
             else
             {

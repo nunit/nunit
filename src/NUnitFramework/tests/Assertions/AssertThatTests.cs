@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
@@ -482,6 +483,76 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(() => Assert.That(x, Is.EqualTo(y).Within(0.1)),
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
         }
+
+        [TestCase(40, 42)]
+        public void AssertThatWithInvalidTolerance(object actual, object expected)
+        {
+            Assert.That(() => Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
+
+        [Test]
+        public async Task AssertThatWithInvalidTolerance()
+        {
+            DateTime expected = DateTime.UtcNow;
+
+            await Task.Delay(500);
+
+            DateTime actual = DateTime.UtcNow;
+
+            Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds);
+            Assert.That(() => Assert.That(actual, Is.EqualTo((object)expected).Within(1)),
+                        Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
+        }
+
+        [Test]
+        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
+        {
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+            await Task.Delay(500);
+            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
+            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
+        }
+
+        [Test]
+        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereSpecified()
+        {
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+            await Task.Delay(500);
+            var actual = new RecordWithDifferentToleranceAwareMembers(2, "Name", 1.81, DateTimeOffset.UtcNow);
+
+            // Fails because of Id and Height field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(TimeSpan.FromSeconds(1))));
+
+            // Fails because of Start field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1)));
+
+            // Fails because of Height field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1).Within(TimeSpan.FromSeconds(1))));
+            // Fails because of Id field
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1.0).Within(TimeSpan.FromSeconds(1))));
+
+            // Succeeds, uses 1 tolerance for Id and 0.1 tolerance for Height
+            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1).Within(0.1).Within(TimeSpan.FromSeconds(1))));
+
+            // Succeeds, used 1 tolerance for Id and 1% tolerance for Height
+            Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1).Within(new Tolerance(1.0).Percent).Within(TimeSpan.FromSeconds(1))));
+
+            // Fails because Height tolerance is too small
+            Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
+                c => c.Within(1).Within(0.001).Within(TimeSpan.FromSeconds(1))));
+        }
+
+        private record RecordWithDifferentToleranceAwareMembers(int Id, string Name, double Height, DateTimeOffset Start);
 
         [Test]
         public void AssertThatEqualsWithClassWithSomeToleranceAwareMembers()

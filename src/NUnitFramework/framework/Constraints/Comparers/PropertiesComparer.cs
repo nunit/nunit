@@ -91,7 +91,25 @@ namespace NUnit.Framework.Constraints.Comparers
                 (string xPropertyName, object? xPropertyValue, string yPropertyName, object? yPropertyValue) =
                     GetPropertyNamesAndValues(i);
 
-                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref tolerance, comparisonState);
+                Tolerance toleranceToApply = tolerance;
+
+                if (tolerance.IsUnsetOrDefault)
+                {
+                    if (xPropertyValue is TimeSpan or DateTime or DateTimeOffset)
+                    {
+                        toleranceToApply = configuration.TimeSpanTolerance;
+                    }
+                    else if (Numerics.IsFloatingPointNumeric(xPropertyValue))
+                    {
+                        toleranceToApply = configuration.FloatingPointTolerance;
+                    }
+                    else if (Numerics.IsFixedPointNumeric(xPropertyValue))
+                    {
+                        toleranceToApply = configuration.FixedPointTolerance;
+                    }
+                }
+
+                EqualMethodResult result = equalityComparer.AreEqual(xPropertyValue, yPropertyValue, ref toleranceToApply, comparisonState);
 
                 if (result == EqualMethodResult.ComparedNotEqual || result == EqualMethodResult.TypesNotSupported)
                 {

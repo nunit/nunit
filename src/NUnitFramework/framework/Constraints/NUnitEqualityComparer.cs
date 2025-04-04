@@ -192,7 +192,7 @@ namespace NUnit.Framework.Constraints
                 case EqualMethodResult.TypesNotSupported:
                     throw new NotSupportedException($"No comparer found for instances of type '{GetType(x)}' and '{GetType(y)}'");
                 case EqualMethodResult.ToleranceNotSupported:
-                    throw new NotSupportedException($"Specified Tolerance not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
+                    throw new NotSupportedException($"Specified Tolerance of type {tolerance.Amount.GetType()} not supported for instances of type '{GetType(x)}' and '{GetType(y)}'");
                 case EqualMethodResult.ComparedEqual:
                     return true;
                 case EqualMethodResult.ComparisonPending:

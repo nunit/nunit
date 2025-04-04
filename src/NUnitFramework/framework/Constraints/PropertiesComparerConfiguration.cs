@@ -59,6 +59,47 @@ namespace NUnit.Framework.Constraints
         /// Gets and sets the mapping of property name to values.
         /// </summary>
         internal Dictionary<Type, Dictionary<string, object?>>? PropertyNameToValueMapForType { get; set; }
+
+        /// <summary>
+        /// Gets and sets the tolerance to apply for time values.
+        /// </summary>
+        internal Tolerance TimeSpanTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Gets and sets the tolerance to apply for numeric values.
+        /// </summary>
+        internal Tolerance FloatingPointTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Gets and sets the tolerance to apply for numeric values.
+        /// </summary>
+        internal Tolerance FixedPointTolerance { get; set; } = Tolerance.Default;
+
+        /// <summary>
+        /// Set the tolerance to apply based upon the type of the tolerance.
+        /// </summary>
+        /// <remarks>
+        /// This method accepts a <see cref="TimeSpan"/>, a numeric value or a <see cref="Tolerance"/> instance.
+        /// </remarks>
+        /// <param name="amount"></param>
+        protected void SetTolerance(object amount)
+        {
+            if (amount is not Tolerance instance)
+                instance = new Tolerance(amount);
+
+            if (instance.Amount is TimeSpan)
+            {
+                TimeSpanTolerance = instance;
+            }
+            else if (Numerics.IsFloatingPointNumeric(instance.Amount) || instance.Mode == ToleranceMode.Ulps)
+            {
+                FloatingPointTolerance = instance;
+            }
+            else
+            {
+                FixedPointTolerance = instance;
+            }
+        }
     }
 
     // new HashSet<string>(properties) is clearer to me then [.. properties]
@@ -145,6 +186,17 @@ namespace NUnit.Framework.Constraints
         {
             PropertyNameMap = properties.ToDictionary(x => x.From, x => x.To);
             return AllowDifferentTypes();
+        }
+
+        /// <summary>
+        /// Specify a tolerance for all numeric comparisons.
+        /// </summary>
+        /// <param name="amount">The tolerance to apply.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfigurationUntyped Within(object amount)
+        {
+            SetTolerance(amount);
+            return this;
         }
     }
 
@@ -293,6 +345,17 @@ namespace NUnit.Framework.Constraints
             }
             nameToValueMapping.Add(GetNameFromExpression(from), value);
             return AllowDifferentTypes();
+        }
+
+        /// <summary>
+        /// Specify a tolerance for all numeric comparisons.
+        /// </summary>
+        /// <param name="amount">The tolerance to apply.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfiguration<T> Within(object amount)
+        {
+            SetTolerance(amount);
+            return this;
         }
 
         private static string GetNameFromExpression<TExpression>(Expression<Func<TExpression, object?>> expression)
