@@ -85,6 +85,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeScripts", "CakeScripts\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeScripts.Tests", "CakeScripts.Tests\CakeScripts.Tests.csproj", "{FCF45E25-C1CB-42E8-8E83-F7FCB818E8D3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{1063F4F8-4743-47D1-A5E1-6A76EFB87143}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{9DE4FA35-8F8A-4EDF-A30B-D913D1EC513B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\NUnit.CI.yml = .github\workflows\NUnit.CI.yml
+		.github\workflows\NUnit.Myget.Publish.yml = .github\workflows\NUnit.Myget.Publish.yml
+		.github\workflows\NUnit.Nuget.Publish.yml = .github\workflows\NUnit.Nuget.Publish.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +170,7 @@ Global
 		{8D43A220-7FE8-4214-BBB4-08568B88C7AA} = {863DEE19-B23F-4FA6-951A-A6304F91ED67}
 		{AA246190-ECE1-479E-AB8D-12F5FB60BE8B} = {5A163AE0-C741-4824-8250-E56E1B3DF68A}
 		{8C31C709-FAC1-445C-BAD6-7FFFB3F1D39E} = {AA246190-ECE1-479E-AB8D-12F5FB60BE8B}
+		{9DE4FA35-8F8A-4EDF-A30B-D913D1EC513B} = {1063F4F8-4743-47D1-A5E1-6A76EFB87143}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E644AD96-B769-431B-BF0A-500AC32D2975}
