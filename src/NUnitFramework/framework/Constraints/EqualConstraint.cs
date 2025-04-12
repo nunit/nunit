@@ -491,7 +491,7 @@ namespace NUnit.Framework.Constraints
                 if (_comparer.IgnoreWhiteSpace)
                     sb.Append(", ignoring white-space");
 
-                if (_comparer.IgnoreWhiteSpace)
+                if (_comparer.NormalizeLineEndings)
                     sb.Append(", normalizing newlines");
 
                 return sb.ToString();
