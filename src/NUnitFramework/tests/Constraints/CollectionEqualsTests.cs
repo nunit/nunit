@@ -106,6 +106,17 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new SimpleObjectCollection(" x", "y ", " z "), new SimpleObjectCollection("x ", " y", "z") },
         };
 
+        [TestCaseSource(nameof(NormalizeLineEndingsData))]
+        public void HonorsNormalizeLineEndings(IEnumerable expected, IEnumerable actual)
+        {
+            Assert.That(expected, Is.EqualTo(actual).NormalizeLineEndings);
+        }
+
+        private static readonly object[] NormalizeLineEndingsData =
+        [
+            new object[] { new SimpleObjectCollection("x\r", "y\n", "z\r\n"), new SimpleObjectCollection("x\n", "y\r\n", "z\r") },
+        ];
+
         [Test]
         [DefaultFloatingPointTolerance(0.5)]
         public void StructuralComparerOnSameCollection_RespectsAndSetsToleranceByRef()

@@ -20,6 +20,7 @@ namespace NUnit.Framework.Constraints
 
         private bool _caseInsensitive;
         private bool _ignoringWhiteSpace;
+        private bool _NormalizeLineEndings;
         private bool _clipStrings;
 
         #endregion
@@ -71,6 +72,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to normalize newlines and return self.
+        /// </summary>
+        public EqualStringWithoutUsingConstraint NormalizeLineEndings
+        {
+            get
+            {
+                _NormalizeLineEndings = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to suppress string clipping
         /// and return self.
         /// </summary>
@@ -106,7 +119,7 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace);
+                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace, _NormalizeLineEndings);
             }
 
             return ConstraintResult(actual, hasSucceeded);
@@ -130,9 +143,9 @@ namespace NUnit.Framework.Constraints
             }
             else if (actual is IEquatable<string> equatableString)
             {
-                if (_caseInsensitive || _ignoringWhiteSpace)
+                if (_caseInsensitive || _ignoringWhiteSpace || _NormalizeLineEndings)
                 {
-                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace with IEquatable<string>.");
+                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace or NormalizeLineEndings with IEquatable<string>.");
                 }
 
                 hasSucceeded = equatableString.Equals(_expected);

@@ -64,6 +64,11 @@ namespace NUnit.Framework.Constraints
         private bool _ignoreWhiteSpace;
 
         /// <summary>
+        /// If true, all string comparisons will be done after normalizing newlines
+        /// </summary>
+        private bool _NormalizeLineEndings;
+
+        /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
@@ -116,6 +121,16 @@ namespace NUnit.Framework.Constraints
         {
             get => _ignoreWhiteSpace;
             set => _ignoreWhiteSpace = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether newlines should
+        /// be normalized when determining equality.
+        /// </summary>
+        public bool NormalizeLineEndings
+        {
+            get => _NormalizeLineEndings;
+            set => _NormalizeLineEndings = value;
         }
 
         /// <summary>

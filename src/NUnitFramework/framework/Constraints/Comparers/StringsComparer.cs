@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -17,12 +18,12 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace) ?
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.NormalizeLineEndings) ?
                 EqualMethodResult.ComparedEqual :
                 EqualMethodResult.ComparedNotEqual;
         }
 
-        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace)
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool NormalizeLineEndings)
         {
             if (ignoreWhiteSpace)
             {
@@ -31,7 +32,14 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             else
             {
-                return x.Equals(y, ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal);
+                IEqualityComparer<string> comparer = (ignoreCase, NormalizeLineEndings) switch
+                {
+                    (true, true) => LineEndingNormalizingStringComparer.CurrentCultureIgnoreCase,
+                    (true, false) => StringComparer.CurrentCultureIgnoreCase,
+                    (false, true) => LineEndingNormalizingStringComparer.Ordinal,
+                    (false, false) => StringComparer.Ordinal,
+                };
+                return comparer.Equals(x, y);
             }
         }
     }

@@ -24,6 +24,8 @@ namespace NUnit.Framework.Tests.TestUtilities.Collections
             _contents = new List<object?>(source);
         }
 
+        public override string ToString() => $"SimpleObjectCollection [{string.Join(", ", _contents)}]";
+
         #region ICollection Members
 
         public void CopyTo(Array array, int index)

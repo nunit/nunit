@@ -18,6 +18,7 @@ namespace NUnit.Framework.Constraints
         private Constraint? _realConstraint;
         private bool _ignoreCase;
         private bool _ignoreWhiteSpace;
+        private bool _NormalizeLineEndings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
@@ -75,6 +76,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to normalize newlines and return self.
+        /// </summary>
+        public ContainsConstraint NormalizeLineEndings
+        {
+            get
+            {
+                _NormalizeLineEndings = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
@@ -93,6 +106,8 @@ namespace NUnit.Framework.Constraints
                     constraint = constraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     throw new InvalidOperationException("IgnoreWhiteSpace not supported on SubStringConstraint");
+                if (_NormalizeLineEndings)
+                    constraint = constraint.NormalizeLineEndings;
                 _realConstraint = constraint;
             }
             else
@@ -102,6 +117,8 @@ namespace NUnit.Framework.Constraints
                     itemConstraint = itemConstraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     itemConstraint = itemConstraint.IgnoreWhiteSpace;
+                if (_NormalizeLineEndings)
+                    itemConstraint = itemConstraint.NormalizeLineEndings;
                 _realConstraint = new SomeItemsConstraint(itemConstraint);
             }
 

@@ -191,6 +191,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi", " U n i v e r s e").IgnoreWhiteSpace);
         }
 
+        [Test]
+        public void NormalizeLineEndingsIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi\r\n", "Universe\r" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi\r", "Universe\n").NormalizeLineEndings);
+        }
+
         [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {

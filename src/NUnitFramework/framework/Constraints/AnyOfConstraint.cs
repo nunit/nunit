@@ -83,6 +83,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to normalize newlines and return self.
+        /// </summary>
+        public AnyOfConstraint NormalizeLineEndings
+        {
+            get
+            {
+                _comparer.NormalizeLineEndings = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>

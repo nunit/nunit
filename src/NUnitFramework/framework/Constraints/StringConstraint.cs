@@ -30,6 +30,11 @@ namespace NUnit.Framework.Constraints
 #pragma warning restore IDE1006
 
         /// <summary>
+        /// Indicates whether tests should normalize newlines
+        /// </summary>
+        protected bool NormalizingLineEndings;
+
+        /// <summary>
         /// Description of this constraint
         /// </summary>
 #pragma warning disable IDE1006
@@ -79,6 +84,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 caseInsensitive = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Modify the constraint to normalize newlines before matching.
+        /// </summary>
+        public virtual StringConstraint NormalizeLineEndings
+        {
+            get
+            {
+                NormalizingLineEndings = true;
                 return this;
             }
         }

@@ -36,14 +36,19 @@ namespace NUnit.Framework.Constraints
         #region Protected Properties
 
         /// <summary>
-        /// Get a flag indicating whether the user requested us to ignore case.
+        /// Get a flag indicating whether the user requested that we ignore case.
         /// </summary>
         protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
-        /// Get a flag indicating whether the user requested us to ignore white space.
+        /// Get a flag indicating whether the user requested that we ignore white space.
         /// </summary>
         protected bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
+
+        /// <summary>
+        /// Get a flag indicating whether the user requested that we normalize newlines.
+        /// </summary>
+        protected bool NormalizingLineEndings => _comparer.NormalizeLineEndings;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
@@ -74,6 +79,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Flag the constraint to normalize newlines and return self.
+        /// </summary>
+        public CollectionItemsEqualConstraint NormalizeLineEndings
+        {
+            get
+            {
+                _comparer.NormalizeLineEndings = true;
                 return this;
             }
         }

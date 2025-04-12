@@ -45,6 +45,27 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ItemIsPresent_NormalizeLineEndings()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a\nb\r" }).NormalizeLineEndings;
+            Assert.That(anyOf.ApplyTo("a\rb\r\n").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ItemIsPresent_IgnoreCaseNormalizeLineEndings()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "A\nb\r" }).IgnoreCase.NormalizeLineEndings;
+            Assert.That(anyOf.ApplyTo("a\rB\r\n").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ItemIsPresent_IgnoreWhiteSpaceNormalizeLineEndings()
+        {
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace;
+            Assert.That(anyOf.ApplyTo("ab").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
         public void ItemIsPresent_WithEqualityComparer()
         {
             Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);
