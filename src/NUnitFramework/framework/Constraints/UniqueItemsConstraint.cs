@@ -253,19 +253,19 @@ namespace NUnit.Framework.Constraints
 
             private readonly bool _ignoreCase;
             private readonly bool _ignoreWhiteSpace;
-            private readonly bool _NormalizeLineEndings;
+            private readonly bool _normalizeLineEndings;
 
             public NUnitStringEqualityComparer(bool ignoreCase, bool ignoreWhiteSpace, bool NormalizeLineEndings)
             {
                 _ignoreCase = ignoreCase;
                 _ignoreWhiteSpace = ignoreWhiteSpace;
-                _NormalizeLineEndings = NormalizeLineEndings;
+                _normalizeLineEndings = NormalizeLineEndings;
             }
 
             public bool Equals(string? x, string? y)
             {
                 return x is not null && y is not null ?
-                    StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _NormalizeLineEndings) :
+                    StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _normalizeLineEndings) :
                     ReferenceEquals(x, y);
             }
 
@@ -285,7 +285,7 @@ namespace NUnit.Framework.Constraints
                         return s.GetHashCode();
                 }
 
-                IEqualityComparer<string> comparer = (_ignoreCase, _NormalizeLineEndings) switch
+                IEqualityComparer<string> comparer = (_ignoreCase, _normalizeLineEndings) switch
                 {
                     (true, true) => LineEndingNormalizingStringComparer.CurrentCultureIgnoreCase,
                     (true, false) => StringComparer.CurrentCultureIgnoreCase,

@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// If true, all string comparisons will be done after normalizing newlines
         /// </summary>
-        private bool _NormalizeLineEndings;
+        private bool _normalizeLineEndings;
 
         /// <summary>
         /// If true, arrays will be treated as collections, allowing
@@ -129,8 +129,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool NormalizeLineEndings
         {
-            get => _NormalizeLineEndings;
-            set => _NormalizeLineEndings = value;
+            get => _normalizeLineEndings;
+            set => _normalizeLineEndings = value;
         }
 
         /// <summary>
