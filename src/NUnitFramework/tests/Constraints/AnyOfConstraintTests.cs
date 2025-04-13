@@ -61,7 +61,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void ItemIsPresent_IgnoreWhiteSpaceIgnoreLineEndingFormat()
         {
-            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace;
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace.IgnoreLineEndingFormat;
             Assert.That(anyOf.ApplyTo("ab").Status, Is.EqualTo(ConstraintStatus.Success));
         }
 
