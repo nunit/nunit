@@ -97,10 +97,10 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void ConstraintExpressionAnyOfTypeNormalizeLineEndings()
+        public void ConstraintExpressionAnyOfTypeIgnoreLineEndingFormat()
         {
             var constraintExpression = new ConstraintExpression();
-            var constraint = constraintExpression.AnyOf(new string[] { "R\rE\nD\r\n", "GREEN" }).NormalizeLineEndings;
+            var constraint = constraintExpression.AnyOf(new string[] { "R\rE\nD\r\n", "GREEN" }).IgnoreLineEndingFormat;
             Assert.That("R\nE\r\nD\r", constraint);
         }
 

@@ -18,7 +18,7 @@ namespace NUnit.Framework.Constraints
         private Constraint? _realConstraint;
         private bool _ignoreCase;
         private bool _ignoreWhiteSpace;
-        private bool _normalizeLineEndings;
+        private bool _ignoreLineEndingFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
@@ -76,13 +76,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to normalize newlines and return self.
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
         /// </summary>
-        public ContainsConstraint NormalizeLineEndings
+        public ContainsConstraint IgnoreLineEndingFormat
         {
             get
             {
-                _normalizeLineEndings = true;
+                _ignoreLineEndingFormat = true;
                 return this;
             }
         }
@@ -106,8 +106,8 @@ namespace NUnit.Framework.Constraints
                     constraint = constraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     throw new InvalidOperationException("IgnoreWhiteSpace not supported on SubStringConstraint");
-                if (_normalizeLineEndings)
-                    constraint = constraint.NormalizeLineEndings;
+                if (_ignoreLineEndingFormat)
+                    constraint = constraint.IgnoreLineEndingFormat;
                 _realConstraint = constraint;
             }
             else
@@ -117,8 +117,8 @@ namespace NUnit.Framework.Constraints
                     itemConstraint = itemConstraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     itemConstraint = itemConstraint.IgnoreWhiteSpace;
-                if (_normalizeLineEndings)
-                    itemConstraint = itemConstraint.NormalizeLineEndings;
+                if (_ignoreLineEndingFormat)
+                    itemConstraint = itemConstraint.IgnoreLineEndingFormat;
                 _realConstraint = new SomeItemsConstraint(itemConstraint);
             }
 

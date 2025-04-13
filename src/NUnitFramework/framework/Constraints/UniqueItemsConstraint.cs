@@ -102,10 +102,10 @@ namespace NUnit.Framework.Constraints
                 {
                     var itemsOfT = ItemsCastMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { actual })!;
 
-                    if (IgnoringCase || IgnoringWhiteSpace || NormalizingLineEndings)
+                    if (IgnoringCase || IgnoringWhiteSpace || IgnoringLineEndingFormat)
                     {
                         if (itemsType == typeof(string))
-                            return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrNormalizingLineEndings((IEnumerable<string>)itemsOfT);
+                            return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat((IEnumerable<string>)itemsOfT);
                         else if (itemsType == typeof(char))
                             return (ICollection)CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline((IEnumerable<char>)itemsOfT);
                     }
@@ -159,10 +159,10 @@ namespace NUnit.Framework.Constraints
                 return OriginalAlgorithm(actual);
 
             // Special handling for ignore case/white-space with strings and chars
-            if (IgnoringCase || IgnoringWhiteSpace || NormalizingLineEndings)
+            if (IgnoringCase || IgnoringWhiteSpace || IgnoringLineEndingFormat)
             {
                 if (memberType == typeof(string))
-                    return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrNormalizingLineEndings((IEnumerable<string>)actual);
+                    return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat((IEnumerable<string>)actual);
                 else if (memberType == typeof(char))
                     return (ICollection)CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline((IEnumerable<char>)actual);
             }
@@ -184,14 +184,14 @@ namespace NUnit.Framework.Constraints
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
-        private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrNormalizingLineEndings(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, NormalizingLineEndings));
+        private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)
+            => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, IgnoringLineEndingFormat));
 
         private ICollection<char> CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline(IEnumerable<char> actual)
         {
             var result = NonUniqueItemsInternal(
                 actual.Select(x => x.ToString()),
-                new NUnitStringEqualityComparer(IgnoringCase, false, NormalizingLineEndings));
+                new NUnitStringEqualityComparer(IgnoringCase, false, IgnoringLineEndingFormat));
             return result.Select(x => x[0]).ToList();
         }
 
@@ -253,19 +253,19 @@ namespace NUnit.Framework.Constraints
 
             private readonly bool _ignoreCase;
             private readonly bool _ignoreWhiteSpace;
-            private readonly bool _normalizeLineEndings;
+            private readonly bool _ignoreLineEndingFormat;
 
-            public NUnitStringEqualityComparer(bool ignoreCase, bool ignoreWhiteSpace, bool NormalizeLineEndings)
+            public NUnitStringEqualityComparer(bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat)
             {
                 _ignoreCase = ignoreCase;
                 _ignoreWhiteSpace = ignoreWhiteSpace;
-                _normalizeLineEndings = NormalizeLineEndings;
+                _ignoreLineEndingFormat = ignoreLineEndingFormat;
             }
 
             public bool Equals(string? x, string? y)
             {
                 return x is not null && y is not null ?
-                    StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _normalizeLineEndings) :
+                    StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _ignoreLineEndingFormat) :
                     ReferenceEquals(x, y);
             }
 
@@ -285,11 +285,11 @@ namespace NUnit.Framework.Constraints
                         return s.GetHashCode();
                 }
 
-                IEqualityComparer<string> comparer = (_ignoreCase, _normalizeLineEndings) switch
+                IEqualityComparer<string> comparer = (_ignoreCase, _ignoreLineEndingFormat) switch
                 {
-                    (true, true) => LineEndingNormalizingStringComparer.CurrentCultureIgnoreCase,
+                    (true, true) => IgnoreLineEndingFormatStringComparer.CurrentCultureIgnoreCase,
                     (true, false) => StringComparer.CurrentCultureIgnoreCase,
-                    (false, true) => LineEndingNormalizingStringComparer.Ordinal,
+                    (false, true) => IgnoreLineEndingFormatStringComparer.Ordinal,
                     (false, false) => StringComparer.Ordinal,
                 };
                 return comparer.GetHashCode();

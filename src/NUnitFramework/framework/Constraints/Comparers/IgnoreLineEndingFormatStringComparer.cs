@@ -5,49 +5,49 @@ using System.Text;
 namespace NUnit.Framework.Constraints.Comparers;
 
 /// <summary>
-/// Normalizes different line endings (\r, \n, and \r\n) to \n before comparig strings.
+/// <see cref="IEqualityComparer{String}"/> that ignores line ending format (\r, \n, and \r\n).
 /// </summary>
-internal sealed class LineEndingNormalizingStringComparer : IEqualityComparer<string>
+internal sealed class IgnoreLineEndingFormatStringComparer : IEqualityComparer<string>
 {
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs case-sensitive comparison using the rules
-    /// of the current culture after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs case-sensitive comparison using the rules
+    /// of the current culture ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer CurrentCulture = new(StringComparison.CurrentCulture);
+    public static readonly IgnoreLineEndingFormatStringComparer CurrentCulture = new(StringComparison.CurrentCulture);
 
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs case-insensitive comparison using the rules
-    /// of the current culture after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs case-insensitive comparison using the rules
+    /// of the current culture ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer CurrentCultureIgnoreCase = new(StringComparison.CurrentCultureIgnoreCase);
+    public static readonly IgnoreLineEndingFormatStringComparer CurrentCultureIgnoreCase = new(StringComparison.CurrentCultureIgnoreCase);
 
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs case-sensitive comparison using the rules
-    /// of the invariant culture after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs case-sensitive comparison using the rules
+    /// of the invariant culture ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer InvariantCulture = new(StringComparison.InvariantCulture);
+    public static readonly IgnoreLineEndingFormatStringComparer InvariantCulture = new(StringComparison.InvariantCulture);
 
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs case-insensitive comparison using the rules
-    /// of the invariant culture after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs case-insensitive comparison using the rules
+    /// of the invariant culture ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer InvariantCultureIgnoreCase = new(StringComparison.InvariantCultureIgnoreCase);
+    public static readonly IgnoreLineEndingFormatStringComparer InvariantCultureIgnoreCase = new(StringComparison.InvariantCultureIgnoreCase);
 
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs a case-sensitive ordinal comparison
-    /// after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs a case-sensitive ordinal comparison
+    /// ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer Ordinal = new(StringComparison.Ordinal);
+    public static readonly IgnoreLineEndingFormatStringComparer Ordinal = new(StringComparison.Ordinal);
 
     /// <summary>
-    /// Gets a <see cref="LineEndingNormalizingStringComparer"/> that performs a case-insensitive ordinal comparison
-    /// after normalizing line endings.
+    /// Gets a <see cref="IgnoreLineEndingFormatStringComparer"/> that performs a case-insensitive ordinal comparison
+    /// ignoring line ending format.
     /// </summary>
-    public static readonly LineEndingNormalizingStringComparer OrdinalIgnoreCase = new(StringComparison.OrdinalIgnoreCase);
+    public static readonly IgnoreLineEndingFormatStringComparer OrdinalIgnoreCase = new(StringComparison.OrdinalIgnoreCase);
 
     private readonly StringComparison _comparisonType;
 
-    private LineEndingNormalizingStringComparer(StringComparison comparisonType)
+    private IgnoreLineEndingFormatStringComparer(StringComparison comparisonType)
     {
         _comparisonType = comparisonType;
     }
@@ -126,7 +126,7 @@ internal sealed class LineEndingNormalizingStringComparer : IEqualityComparer<st
         if (obj is null)
             return 0;
 
-        // Calculate hash code iteratively, normalizing newlines on the fly.
+        // Calculate hash code iteratively, normalizing newlines to \n on the fly.
         // For case-insensitivity, we need consistency with the underlying comparer.
         // Re-normalizing the string *only for hashing* might be the simplest
         // way to guarantee consistency with StringComparer.CurrentCultureIgnoreCase.GetHashCode,

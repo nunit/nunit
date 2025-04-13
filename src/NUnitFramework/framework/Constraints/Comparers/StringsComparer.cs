@@ -18,12 +18,12 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.NormalizeLineEndings) ?
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.IgnoreLineEndingFormat) ?
                 EqualMethodResult.ComparedEqual :
                 EqualMethodResult.ComparedNotEqual;
         }
 
-        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool normalizeLineEndings)
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat)
         {
             if (ignoreWhiteSpace)
             {
@@ -32,11 +32,11 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             else
             {
-                IEqualityComparer<string> comparer = (ignoreCase, normalizeLineEndings) switch
+                IEqualityComparer<string> comparer = (ignoreCase, ignoreLineEndingFormat) switch
                 {
-                    (true, true) => LineEndingNormalizingStringComparer.CurrentCultureIgnoreCase,
+                    (true, true) => IgnoreLineEndingFormatStringComparer.CurrentCultureIgnoreCase,
                     (true, false) => StringComparer.CurrentCultureIgnoreCase,
-                    (false, true) => LineEndingNormalizingStringComparer.Ordinal,
+                    (false, true) => IgnoreLineEndingFormatStringComparer.Ordinal,
                     (false, false) => StringComparer.Ordinal,
                 };
                 return comparer.Equals(x, y);

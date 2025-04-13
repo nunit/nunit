@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
 
         private bool _caseInsensitive;
         private bool _ignoringWhiteSpace;
-        private bool _normalizeLineEndings;
+        private bool _ignoreLineEndingFormat;
         private bool _clipStrings;
 
         #endregion
@@ -72,13 +72,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to normalize newlines and return self.
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
         /// </summary>
-        public EqualStringWithoutUsingConstraint NormalizeLineEndings
+        public EqualStringWithoutUsingConstraint IgnoreLineEndingFormat
         {
             get
             {
-                _normalizeLineEndings = true;
+                _ignoreLineEndingFormat = true;
                 return this;
             }
         }
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace, _normalizeLineEndings);
+                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace, _ignoreLineEndingFormat);
             }
 
             return ConstraintResult(actual, hasSucceeded);
@@ -143,9 +143,9 @@ namespace NUnit.Framework.Constraints
             }
             else if (actual is IEquatable<string> equatableString)
             {
-                if (_caseInsensitive || _ignoringWhiteSpace || _normalizeLineEndings)
+                if (_caseInsensitive || _ignoringWhiteSpace || _ignoreLineEndingFormat)
                 {
-                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace or NormalizeLineEndings with IEquatable<string>.");
+                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace or IgnoreLineEndingFormat with IEquatable<string>.");
                 }
 
                 hasSucceeded = equatableString.Equals(_expected);

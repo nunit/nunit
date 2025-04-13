@@ -108,12 +108,12 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void SucceedsWithStringModifiersIgnoreCaseAndNormalizeLineEndings()
+        public void SucceedsWithStringModifiersIgnoreCaseAndLineEnding()
         {
             var a = (2, 5, "HELLO\r");
             var b = (2, 5, "hello\n");
 
-            Assert.That(a, Is.EqualTo(b).IgnoreCase.NormalizeLineEndings);
+            Assert.That(a, Is.EqualTo(b).IgnoreCase.IgnoreLineEndingFormat);
         }
     }
 }

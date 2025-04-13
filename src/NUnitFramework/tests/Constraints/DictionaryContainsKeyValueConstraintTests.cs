@@ -192,11 +192,11 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void NormalizeLineEndingsIsHonored()
+        public void IgnoreLineEndingFormatIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi\r\n", "Universe\r" }, { "Hola", "Mundo" } };
 
-            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi\r", "Universe\n").NormalizeLineEndings);
+            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hi\r", "Universe\n").IgnoreLineEndingFormat);
         }
 
         [Test, SetCulture("en-US")]

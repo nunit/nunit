@@ -120,9 +120,9 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void NormalizeLineEndings()
+        public void IgnoreLineEndingFormat()
         {
-            var constraint = new EqualStringConstraint("Hello\r\nWorld").NormalizeLineEndings;
+            var constraint = new EqualStringConstraint("Hello\r\nWorld").IgnoreLineEndingFormat;
 
             var result = constraint.ApplyTo("Hello\nWorld");
 
@@ -130,9 +130,9 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void NormalizeLineEndingsFail()
+        public void IgnoreLineEndingFormatFail()
         {
-            var constraint = new EqualStringConstraint("Hello World").NormalizeLineEndings;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreLineEndingFormat;
 
             var result = constraint.ApplyTo("Hello World\n");
 
@@ -140,9 +140,9 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void NormalizeLineEndingsAndIgnoreCase()
+        public void IgnoreLineEndingFormatAndIgnoreCase()
         {
-            var constraint = new EqualStringConstraint("\rHello\nWorld\r\n").NormalizeLineEndings.IgnoreCase;
+            var constraint = new EqualStringConstraint("\rHello\nWorld\r\n").IgnoreLineEndingFormat.IgnoreCase;
 
             var result = constraint.ApplyTo("\nhello\nworld\n");
 
@@ -150,9 +150,9 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void NormalizeLineEndingsAndIgnoreWhiteSpace()
+        public void IgnoreLineEndingFormatAndIgnoreWhiteSpace()
         {
-            var constraint = new EqualStringConstraint("Hello World").NormalizeLineEndings.IgnoreWhiteSpace;
+            var constraint = new EqualStringConstraint("Hello World").IgnoreLineEndingFormat.IgnoreWhiteSpace;
 
             var result = constraint.ApplyTo("Hello\r\nWorld\r\n");
 

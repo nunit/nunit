@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Get a flag indicating whether the user requested that line ending format be ignored.
         /// </summary>
-        protected bool NormalizingLineEndings => _comparer.NormalizeLineEndings;
+        protected bool IgnoringLineEndingFormat => _comparer.IgnoreLineEndingFormat;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
@@ -84,13 +84,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to normalize newlines and return self.
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
         /// </summary>
-        public CollectionItemsEqualConstraint NormalizeLineEndings
+        public CollectionItemsEqualConstraint IgnoreLineEndingFormat
         {
             get
             {
-                _comparer.NormalizeLineEndings = true;
+                _comparer.IgnoreLineEndingFormat = true;
                 return this;
             }
         }

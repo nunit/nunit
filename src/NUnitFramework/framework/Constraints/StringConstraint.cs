@@ -30,9 +30,9 @@ namespace NUnit.Framework.Constraints
 #pragma warning restore IDE1006
 
         /// <summary>
-        /// Indicates whether tests should normalize newlines
+        /// Indicates whether tests should ignore line ending format (\r vs. \n vs. \r\n)
         /// </summary>
-        protected bool NormalizingLineEndings;
+        protected bool IgnoringLineEndingFormat;
 
         /// <summary>
         /// Description of this constraint
@@ -89,13 +89,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to normalize newlines before matching.
+        /// Modify the constraint to ignore line ending format (\r vs. \n vs. \r\n) in matching.
         /// </summary>
-        public virtual StringConstraint NormalizeLineEndings
+        public virtual StringConstraint IgnoreLineEndingFormat
         {
             get
             {
-                NormalizingLineEndings = true;
+                IgnoringLineEndingFormat = true;
                 return this;
             }
         }

@@ -45,21 +45,21 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void ItemIsPresent_NormalizeLineEndings()
+        public void ItemIsPresent_IgnoreLineEndingFormat()
         {
-            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a\nb\r" }).NormalizeLineEndings;
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "a\nb\r" }).IgnoreLineEndingFormat;
             Assert.That(anyOf.ApplyTo("a\rb\r\n").Status, Is.EqualTo(ConstraintStatus.Success));
         }
 
         [Test]
-        public void ItemIsPresent_IgnoreCaseNormalizeLineEndings()
+        public void ItemIsPresent_IgnoreCaseIgnoreLineEndingFormat()
         {
-            var anyOf = new AnyOfConstraint(new[] { "a", "B", "A\nb\r" }).IgnoreCase.NormalizeLineEndings;
+            var anyOf = new AnyOfConstraint(new[] { "a", "B", "A\nb\r" }).IgnoreCase.IgnoreLineEndingFormat;
             Assert.That(anyOf.ApplyTo("a\rB\r\n").Status, Is.EqualTo(ConstraintStatus.Success));
         }
 
         [Test]
-        public void ItemIsPresent_IgnoreWhiteSpaceNormalizeLineEndings()
+        public void ItemIsPresent_IgnoreWhiteSpaceIgnoreLineEndingFormat()
         {
             var anyOf = new AnyOfConstraint(new[] { "a", "B", "a b" }).IgnoreWhiteSpace;
             Assert.That(anyOf.ApplyTo("ab").Status, Is.EqualTo(ConstraintStatus.Success));

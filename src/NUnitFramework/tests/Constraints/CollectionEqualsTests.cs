@@ -106,13 +106,13 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new SimpleObjectCollection(" x", "y ", " z "), new SimpleObjectCollection("x ", " y", "z") },
         };
 
-        [TestCaseSource(nameof(NormalizeLineEndingsData))]
-        public void HonorsNormalizeLineEndings(IEnumerable expected, IEnumerable actual)
+        [TestCaseSource(nameof(IgnoreLineEndingFormatData))]
+        public void HonorsIgnoreLineEndingFormat(IEnumerable expected, IEnumerable actual)
         {
-            Assert.That(expected, Is.EqualTo(actual).NormalizeLineEndings);
+            Assert.That(expected, Is.EqualTo(actual).IgnoreLineEndingFormat);
         }
 
-        private static readonly object[] NormalizeLineEndingsData =
+        private static readonly object[] IgnoreLineEndingFormatData =
         [
             new object[] { new SimpleObjectCollection("x\r", "y\n", "z\r\n"), new SimpleObjectCollection("x\n", "y\r\n", "z\r") },
         ];

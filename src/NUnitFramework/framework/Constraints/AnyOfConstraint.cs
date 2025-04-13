@@ -83,13 +83,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Flag the constraint to normalize newlines and return self.
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
         /// </summary>
-        public AnyOfConstraint NormalizeLineEndings
+        public AnyOfConstraint IgnoreLineEndingFormat
         {
             get
             {
-                _comparer.NormalizeLineEndings = true;
+                _comparer.IgnoreLineEndingFormat = true;
                 return this;
             }
         }

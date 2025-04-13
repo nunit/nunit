@@ -64,9 +64,9 @@ namespace NUnit.Framework.Constraints
         private bool _ignoreWhiteSpace;
 
         /// <summary>
-        /// If true, all string comparisons will be done after normalizing newlines
+        /// If true, all string comparisons will ignore line ending format (\r vs. \n vs. \r\n)
         /// </summary>
-        private bool _normalizeLineEndings;
+        private bool _ignoreLineEndingFormat;
 
         /// <summary>
         /// If true, arrays will be treated as collections, allowing
@@ -124,13 +124,13 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Gets and sets a flag indicating whether newlines should
-        /// be normalized when determining equality.
+        /// Gets and sets a flag indicating whether line ending format (\r vs. \n vs. \r\n) should
+        /// be ignored in determining equality.
         /// </summary>
-        public bool NormalizeLineEndings
+        public bool IgnoreLineEndingFormat
         {
-            get => _normalizeLineEndings;
-            set => _normalizeLineEndings = value;
+            get => _ignoreLineEndingFormat;
+            set => _ignoreLineEndingFormat = value;
         }
 
         /// <summary>

@@ -54,31 +54,31 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique ignoring white-space");
         }
 
-        [TestCaseSource(nameof(NormalizeLineEndingsData))]
-        public void HonorsNormalizeLineEndings(IEnumerable actual)
+        [TestCaseSource(nameof(IgnoreLineEndingFormatData))]
+        public void HonorsIgnoreLineEndingFormat(IEnumerable actual)
         {
-            var constraint = new UniqueItemsConstraint().NormalizeLineEndings;
+            var constraint = new UniqueItemsConstraint().IgnoreLineEndingFormat;
             var result = constraint.ApplyTo(actual);
 
-            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after normalizing newlines");
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
         }
 
-        [TestCaseSource(nameof(NormalizeLineEndingsData))] // reuse the same test data
-        public void HonorsIgnoreWhiteSpaceAndNormalizeLineEndings(IEnumerable actual)
+        [TestCaseSource(nameof(IgnoreLineEndingFormatData))] // reuse the same test data
+        public void HonorsIgnoreWhiteSpaceAndIgnoreLineEndingFormat(IEnumerable actual)
         {
-            var constraint = new UniqueItemsConstraint().IgnoreWhiteSpace.NormalizeLineEndings;
+            var constraint = new UniqueItemsConstraint().IgnoreWhiteSpace.IgnoreLineEndingFormat;
             var result = constraint.ApplyTo(actual);
 
-            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after normalizing newlines");
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
         }
 
-        [TestCaseSource(nameof(IgnoreCaseNormalizeLineEndingsData))]
-        public void HonorsIgnoreCaseAndNormalizeLineEndings(IEnumerable actual)
+        [TestCaseSource(nameof(IgnoreCaseIgnoreLineEndingFormatData))]
+        public void HonorsIgnoreCaseAndIgnoreLineEndingFormat(IEnumerable actual)
         {
-            var constraint = new UniqueItemsConstraint().IgnoreCase.NormalizeLineEndings;
+            var constraint = new UniqueItemsConstraint().IgnoreCase.IgnoreLineEndingFormat;
             var result = constraint.ApplyTo(actual);
 
-            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after normalizing newlines");
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
         }
 
         private static readonly object[] IgnoreCaseData =
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new[] { "a", "b", "c", " c " } }
         };
 
-        private static readonly object[] NormalizeLineEndingsData =
+        private static readonly object[] IgnoreLineEndingFormatData =
         [
             new object[] { new SimpleObjectCollection("x", "y", "z\r", "z\n") },
             new object[] { new SimpleObjectCollection("x", "y", "z\n", "z\r\n") },
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new[] { "a", "b", "\r\nc", "\nc" } },
         ];
 
-        private static readonly object[] IgnoreCaseNormalizeLineEndingsData =
+        private static readonly object[] IgnoreCaseIgnoreLineEndingFormatData =
         [
             new object[] { new SimpleObjectCollection("x", "y", "Z\r", "z\n") },
             new object[] { new SimpleObjectCollection("x", "y", "Z\n", "z\r\n") },

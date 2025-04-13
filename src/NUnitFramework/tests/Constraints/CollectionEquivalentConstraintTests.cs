@@ -120,12 +120,12 @@ public class CollectionEquivalentConstraintTests
     }
 
     [Test]
-    public void EquivalentHonorsNormalizeLineEndings()
+    public void EquivalentHonorsIgnoreLineEndingFormat()
     {
         ICollection set1 = new SimpleObjectCollection("a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n");
         ICollection set2 = new SimpleObjectCollection("g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n");
 
-        Assert.That(new CollectionEquivalentConstraint(set1).NormalizeLineEndings.ApplyTo(set2).IsSuccess);
+        Assert.That(new CollectionEquivalentConstraint(set1).IgnoreLineEndingFormat.ApplyTo(set2).IsSuccess);
     }
 
     [Test]
