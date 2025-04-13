@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 EqualMethodResult.ComparedNotEqual;
         }
 
-        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool NormalizeLineEndings)
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool normalizeLineEndings)
         {
             if (ignoreWhiteSpace)
             {
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             else
             {
-                IEqualityComparer<string> comparer = (ignoreCase, NormalizeLineEndings) switch
+                IEqualityComparer<string> comparer = (ignoreCase, normalizeLineEndings) switch
                 {
                     (true, true) => LineEndingNormalizingStringComparer.CurrentCultureIgnoreCase,
                     (true, false) => StringComparer.CurrentCultureIgnoreCase,
