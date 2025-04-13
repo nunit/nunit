@@ -36,17 +36,17 @@ namespace NUnit.Framework.Constraints
         #region Protected Properties
 
         /// <summary>
-        /// Get a flag indicating whether the user requested that we ignore case.
+        /// Get a flag indicating whether the user requested that case be ignored.
         /// </summary>
         protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
-        /// Get a flag indicating whether the user requested that we ignore white space.
+        /// Get a flag indicating whether the user requested that white space be ignored.
         /// </summary>
         protected bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
 
         /// <summary>
-        /// Get a flag indicating whether the user requested that we normalize newlines.
+        /// Get a flag indicating whether the user requested that line ending format be ignored.
         /// </summary>
         protected bool NormalizingLineEndings => _comparer.NormalizeLineEndings;
 
