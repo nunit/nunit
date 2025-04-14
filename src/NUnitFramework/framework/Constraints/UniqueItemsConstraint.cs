@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
                         if (itemsType == typeof(string))
                             return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat((IEnumerable<string>)itemsOfT);
                         else if (itemsType == typeof(char))
-                            return (ICollection)CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline((IEnumerable<char>)itemsOfT);
+                            return (ICollection)CharsUniqueIgnoringCaseOrCarriageReturnVsNewline((IEnumerable<char>)itemsOfT);
                     }
 
                     return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { itemsOfT })!;
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
                 if (memberType == typeof(string))
                     return (ICollection)StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat((IEnumerable<string>)actual);
                 else if (memberType == typeof(char))
-                    return (ICollection)CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline((IEnumerable<char>)actual);
+                    return (ICollection)CharsUniqueIgnoringCaseOrCarriageReturnVsNewline((IEnumerable<char>)actual);
             }
 
             return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual })!;
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Constraints
         private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, IgnoringLineEndingFormat));
 
-        private ICollection<char> CharsUniqueIgnoringCaseOrCarraigeReturnVsNewline(IEnumerable<char> actual)
+        private ICollection<char> CharsUniqueIgnoringCaseOrCarriageReturnVsNewline(IEnumerable<char> actual)
         {
             var result = NonUniqueItemsInternal(
                 actual.Select(x => x.ToString()),
