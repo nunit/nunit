@@ -167,7 +167,7 @@ namespace NUnit.Framework.Constraints
 
         private ConstraintResult ConstraintResult<T>(T actual, bool hasSucceeded)
         {
-            return new EqualConstraintResult(this, actual, _caseInsensitive, _ignoringWhiteSpace, _clipStrings, hasSucceeded);
+            return new EqualConstraintResult(this, actual, _caseInsensitive, _ignoringWhiteSpace, _ignoreLineEndingFormat, _clipStrings, hasSucceeded);
         }
 
         /// <summary>
@@ -185,6 +185,9 @@ namespace NUnit.Framework.Constraints
 
                 if (_ignoringWhiteSpace)
                     sb.Append(", ignoring white-space");
+
+                if (_ignoreLineEndingFormat)
+                    sb.Append(", ignoring line ending format");
 
                 return sb.ToString();
             }

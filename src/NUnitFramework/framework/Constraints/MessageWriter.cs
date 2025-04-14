@@ -110,6 +110,30 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Display the expected and actual string values on separate lines.
+        /// If the mismatch parameter is >=0, an additional line is displayed
+        /// line containing a caret that points to the mismatch point.
+        /// </summary>
+        /// <param name="expected">The expected string value</param>
+        /// <param name="actual">The actual string value</param>
+        /// <param name="mismatchExpected">The point in <paramref name="expected"/> at which the strings don't match or -1</param>
+        /// <param name="mismatchActual">The point in <paramref name="actual"/> at which the strings don't match or -1</param>
+        /// <param name="ignoreCase">If true, case is ignored in locating the point where the strings differ</param>
+        /// <param name="ignoreWhiteSpace">If true, white space is ignored in locating the point where the strings differ</param>
+        /// <param name="ignoreLineEndingFormat">If true, line ending format is ignored in locating the point where the strings differ</param>
+        /// <param name="clipping">If true, the strings should be clipped to fit the line</param>
+        // TODO: consider updating visibility in v5
+        internal virtual void DisplayStringDifferences(string expected, string actual, int mismatchExpected, int mismatchActual, bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat, bool clipping)
+        {
+            if ((ignoreWhiteSpace || ignoreLineEndingFormat) && mismatchExpected != mismatchActual)
+            {
+                throw new NotImplementedException("Please override to show difference with 'ignoreWhiteSpace' or 'ignoreLineEndingFormat'");
+            }
+
+            DisplayStringDifferences(expected, actual, mismatchExpected, ignoreCase, clipping);
+        }
+
+        /// <summary>
         /// Writes the text for an actual value.
         /// </summary>
         /// <param name="actual">The actual value.</param>

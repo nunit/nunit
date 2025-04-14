@@ -18,6 +18,7 @@ namespace NUnit.Framework.Constraints
         private readonly Tolerance _tolerance;
         private readonly bool _caseInsensitive;
         private readonly bool _ignoringWhiteSpace;
+        private readonly bool _ignoringLineEndingFormat;
         private readonly bool _comparingProperties;
         private readonly bool _clipStrings;
         private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
@@ -53,6 +54,7 @@ namespace NUnit.Framework.Constraints
             _tolerance = constraint.Tolerance;
             _caseInsensitive = constraint.CaseInsensitive;
             _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
+            _ignoringLineEndingFormat = constraint.IgnoringLineEndingFormat;
             _comparingProperties = constraint.ComparingProperties;
             _clipStrings = constraint.ClipStrings;
             _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>();
@@ -69,6 +71,7 @@ namespace NUnit.Framework.Constraints
             _comparingProperties = false;
             _caseInsensitive = false;
             _ignoringWhiteSpace = false;
+            _ignoringLineEndingFormat = false;
             _clipStrings = false;
             _failurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
@@ -84,6 +87,7 @@ namespace NUnit.Framework.Constraints
             _comparingProperties = false;
             _caseInsensitive = false;
             _ignoringWhiteSpace = false;
+            _ignoringLineEndingFormat = false;
             _clipStrings = false;
             _failurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
@@ -92,6 +96,14 @@ namespace NUnit.Framework.Constraints
         /// Construct an EqualConstraintResult
         /// </summary>
         public EqualConstraintResult(EqualStringWithoutUsingConstraint constraint, object? actual, bool caseInsensitive, bool ignoringWhiteSpace, bool clipStrings, bool hasSucceeded)
+            : this(constraint, actual, caseInsensitive, ignoringWhiteSpace, ignoringLineEndingFormat: false, clipStrings, hasSucceeded)
+        {
+        }
+
+        /// <summary>
+        /// Construct an EqualConstraintResult
+        /// </summary>
+        public EqualConstraintResult(EqualStringWithoutUsingConstraint constraint, object? actual, bool caseInsensitive, bool ignoringWhiteSpace, bool ignoringLineEndingFormat, bool clipStrings, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded)
         {
             _expectedValue = constraint.Arguments[0];
@@ -99,6 +111,7 @@ namespace NUnit.Framework.Constraints
             _comparingProperties = false;
             _caseInsensitive = caseInsensitive;
             _ignoringWhiteSpace = ignoringWhiteSpace;
+            _ignoringLineEndingFormat = ignoringLineEndingFormat;
             _clipStrings = clipStrings;
             _failurePoints = Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
@@ -134,7 +147,7 @@ namespace NUnit.Framework.Constraints
         #region DisplayStringDifferences
         private void DisplayStringDifferences(MessageWriter writer, string expected, string actual)
         {
-            (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(expected, actual, _caseInsensitive, _ignoringWhiteSpace);
+            (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(expected, actual, _caseInsensitive, _ignoringWhiteSpace, _ignoringLineEndingFormat);
 
             if (expected.Length == actual.Length)
                 writer.WriteMessageLine(StringsDiffer_1, expected.Length, mismatchExpected);
@@ -215,7 +228,7 @@ namespace NUnit.Framework.Constraints
         {
             if (failurePoint.ExpectedValue is string expectedString && failurePoint.ActualValue is string actualString)
             {
-                (int mismatchExpected, int _) = MsgUtils.FindMismatchPosition(expectedString, actualString, _caseInsensitive, _ignoringWhiteSpace);
+                (int mismatchExpected, int _) = MsgUtils.FindMismatchPosition(expectedString, actualString, _caseInsensitive, _ignoringWhiteSpace, _ignoringLineEndingFormat);
 
                 if (expectedString.Length == actualString.Length)
                     writer.WriteMessageLine(StringsDiffer_1, expectedString.Length, mismatchExpected);

@@ -721,8 +721,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual string</param>
         /// <param name="ignoreCase">Boolean indicating whether case should be ignored</param>
         /// <param name="ignoreWhiteSpace">Boolean indicating whether white space should be ignored</param>
+        /// <param name="ignoreLineEndingFormat">Boolean indicating whether line ending format should be ignored</param>
         /// <returns>(-1,-1) if no mismatch found, or the indices (expected, actual) where mismatches found.</returns>
-        public static (int, int) FindMismatchPosition(string expected, string actual, bool ignoreCase, bool ignoreWhiteSpace)
+        public static (int, int) FindMismatchPosition(string expected, string actual, bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat)
         {
             string s1 = ignoreCase ? expected.ToLower() : expected;
             string s2 = ignoreCase ? actual.ToLower() : actual;
@@ -740,8 +741,30 @@ namespace NUnit.Framework.Constraints
 
                 if (i1 < s1.Length && i2 < s2.Length)
                 {
-                    if (s1[i1] != s2[i2])
+                    char c1 = s1[i1];
+                    char c2 = s2[i2];
+
+                    if (ignoreLineEndingFormat)
+                    {
+                        bool isLineBreak1 = TryConsumeLineBreak(s1, i1, out int nextI1);
+                        bool isLineBreak2 = TryConsumeLineBreak(s2, i2, out int nextI2);
+
+                        if (isLineBreak1 && isLineBreak2)
+                        {
+                            i1 = nextI1;
+                            i2 = nextI2;
+                            continue;
+                        }
+
+                        if (isLineBreak1 || isLineBreak2)
+                        {
+                            return (i1, i2);
+                        }
+                    }
+
+                    if (c1 != c2)
                         return (i1, i2);
+
                     i1++;
                     i2++;
                 }
@@ -771,6 +794,37 @@ namespace NUnit.Framework.Constraints
                 i++;
 
             return i;
+        }
+
+        private static bool TryConsumeLineBreak(string s, int index, out int nextIndex)
+        {
+            if (index >= s.Length)
+            {
+                nextIndex = index;
+                return false;
+            }
+
+            char current = s[index];
+            if (current == '\r')
+            {
+                if (index + 1 < s.Length && s[index + 1] == '\n')
+                {
+                    nextIndex = index + 2;
+                    return true;
+                }
+
+                nextIndex = index + 1;
+                return true;
+            }
+
+            if (current == '\n')
+            {
+                nextIndex = index + 1;
+                return true;
+            }
+
+            nextIndex = index;
+            return false;
         }
     }
 }

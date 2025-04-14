@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             if (ignoreWhiteSpace)
             {
-                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, true);
+                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, ignoreWhiteSpace: true, /* not used but required */ignoreLineEndingFormat);
                 return mismatchExpected == -1 && mismatchActual == -1;
             }
             else
