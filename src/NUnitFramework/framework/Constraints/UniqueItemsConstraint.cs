@@ -279,10 +279,6 @@ namespace NUnit.Framework.Constraints
                 if (_ignoreWhiteSpace)
                 {
                     s = WhiteSpace.Replace(s, string.Empty);
-                    if (_ignoreCase)
-                        return StringComparer.CurrentCultureIgnoreCase.GetHashCode(s);
-                    else
-                        return s.GetHashCode();
                 }
 
                 IEqualityComparer<string> comparer = (_ignoreCase, _ignoreLineEndingFormat) switch
@@ -292,7 +288,7 @@ namespace NUnit.Framework.Constraints
                     (false, true) => IgnoreLineEndingFormatStringComparer.Ordinal,
                     (false, false) => StringComparer.Ordinal,
                 };
-                return comparer.GetHashCode();
+                return comparer.GetHashCode(s);
             }
         }
 
