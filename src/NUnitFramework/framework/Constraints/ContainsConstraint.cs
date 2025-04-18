@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
                 if (_ignoreWhiteSpace)
                     throw new InvalidOperationException("IgnoreWhiteSpace not supported on SubStringConstraint");
                 if (_ignoreLineEndingFormat)
-                    constraint = constraint.IgnoreLineEndingFormat;
+                    throw new InvalidOperationException("IgnoreLineEndingFormat not supported on SubStringConstraint");
                 _realConstraint = constraint;
             }
             else
