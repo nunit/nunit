@@ -57,10 +57,13 @@ namespace NUnit.Framework.Tests.Assertions
             ITestResult fixtureResult = TestBuilder.RunTestFixture(typeof(IgnoreInSetUpFixture));
 
             // TODO: Decide whether to pass Ignored state to containing fixture
-            //Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
+            Assert.That(fixtureResult.ResultState, Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.Child)));
 
+            ResultState ignoredInSetUp = ResultState.Ignored.WithSite(FailureSite.SetUp);
             foreach (var testResult in fixtureResult.Children)
-                Assert.That(testResult.ResultState, Is.EqualTo(ResultState.Ignored));
+            {
+                Assert.That(testResult.ResultState, Is.EqualTo(ignoredInSetUp));
+            }
         }
 
         [Test]

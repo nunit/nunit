@@ -103,9 +103,10 @@ namespace NUnit.Framework.Tests.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, Is.True, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
-            string expected = $"{e.GetType().FullName} : {e.Message}";
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError), "Test should be in error state");
+            string expected = $"SetUp : {e.GetType().FullName} : {e.Message}";
             Assert.That(result.Message, Is.EqualTo(expected));
+            Assert.That(result.StackTrace, Does.StartWith("--SetUp"));
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
@@ -122,7 +123,7 @@ namespace NUnit.Framework.Tests.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.TearDownError), "Test should be in error state");
             string expected = $"TearDown : {e.GetType().FullName} : {e.Message}";
             Assert.That(result.Message, Is.EqualTo(expected));
             Assert.That(result.StackTrace, Does.StartWith("--TearDown"));
@@ -145,15 +146,44 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
-            string expected = $"{e1.GetType().FullName} : {e1.Message}" + Environment.NewLine
-                                                                        + $"TearDown : {e2.GetType().FullName} : {e2.Message}";
-            Assert.That(result.Message, Is.EqualTo(expected));
-            Assert.That(result.StackTrace, Does.Contain("--TearDown"));
+            string expectedSetUpError = $"SetUp : {e1.GetType().FullName} : {e1.Message}";
+            string expectedTearDownError = $"TearDown : {e2.GetType().FullName} : {e2.Message}";
+            Assert.That(result.Message, Does.Contain(expectedSetUpError).And.Contain(expectedTearDownError));
 
-            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
-            {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
-            });
+            // Multiple failures, so no single stackTrace, each failure has its own.
+        }
+
+        [Test]
+        public void HandleExceptionInTest()
+        {
+            Exception e1 = new Exception("Test message for exception thrown from test");
+            SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
+            fixture.TestException = e1;
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
+            ITestResult result = suiteResult.Children.ToArray()[0];
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            string expectedTestError = $"{e1.GetType().FullName} : {e1.Message}";
+            Assert.That(result.Message, Does.Contain(expectedTestError));
+        }
+
+        [Test]
+        public void HandleExceptionInTestAndTearDown()
+        {
+            Exception e1 = new Exception("Test message for exception thrown from test");
+            Exception e2 = new Exception("Test message for exception thrown from tear down");
+            SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
+            fixture.TestException = e1;
+            fixture.TearDownException = e2;
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
+            ITestResult result = suiteResult.Children.ToArray()[0];
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            string expectedTestError = $"{e1.GetType().FullName} : {e1.Message}";
+            string expectedTearDownError = $"TearDown : {e2.GetType().FullName} : {e2.Message}";
+            Assert.That(result.Message, Does.Contain(expectedTestError).And.Contain(expectedTearDownError));
+
+            // Multiple failures, so no single stackTrace, each failure has its own.
         }
 
         public class SetupCallBase

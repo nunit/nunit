@@ -41,6 +41,11 @@ namespace NUnit.Framework.Internal
         internal const string USER_CANCELLED_MESSAGE = "Test run cancelled by user";
 
         /// <summary>
+        /// Error prefix for when there are multiple faiures and/or warnings.
+        /// </summary>
+        internal const string MULTIPLE_FAILURES_OR_WARNINGS_MESSAGE = "Multiple failures or warnings in test:";
+
+        /// <summary>
         /// The minimum duration for tests
         /// </summary>
         internal const double MIN_DURATION = 0.000001d;
@@ -425,8 +430,17 @@ namespace NUnit.Framework.Internal
             RwLock.EnterWriteLock();
             try
             {
+                if (ResultState.Site == FailureSite.Child)
+                {
+                    // Do not overwrite Child status, but augment.
+                    Message += Environment.NewLine + message;
+                }
+                else
+                {
+                    Message = message;
+                }
+
                 ResultState = resultState;
-                Message = message;
                 StackTrace = stackTrace;
             }
             finally
@@ -441,30 +455,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            var result = new ExceptionResult(ex, FailureSite.Test);
-
-            SetResult(result.ResultState, result.Message, result.StackTrace);
-
-            if (_assertionResults.Count > 0 && result.ResultState == ResultState.Error)
-            {
-                // Add pending failures to the legacy result message
-                Message += Environment.NewLine + Environment.NewLine + CreateLegacyFailureMessage();
-
-                // Add to the list of assertion errors, so that newer runners will see it
-                _assertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
-            }
-        }
-
-        /// <summary>
-        /// Set the test result based on the type of exception thrown
-        /// </summary>
-        /// <param name="ex">The exception that was thrown</param>
-        /// <param name="site">The FailureSite to use in the result</param>
-        public void RecordException(Exception ex, FailureSite site)
-        {
-            var result = new ExceptionResult(ex, site);
-
-            SetResult(result.ResultState, result.Message, result.StackTrace);
+            RecordException(ex, FailureSite.Test);
         }
 
         /// <summary>
@@ -480,23 +471,54 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The Exception to be recorded</param>
         public void RecordTearDownException(Exception ex)
         {
-            var result = new ExceptionResult(ex, FailureSite.TearDown);
+            RecordException(ex, FailureSite.TearDown);
+        }
 
-            ResultState resultState = ResultState == ResultState.Cancelled
-                ? ResultState.Cancelled
-                : ResultState.Error;
-            if (Test.IsSuite)
-                resultState = resultState.WithSite(FailureSite.TearDown);
+        /// <summary>
+        /// Set the test result based on the type of exception thrown
+        /// </summary>
+        /// <param name="ex">The exception that was thrown</param>
+        /// <param name="site">The FailureSite to use in the result</param>
+        public void RecordException(Exception ex, FailureSite site)
+        {
+            var result = new ExceptionResult(ex, site);
 
-            string message = "TearDown : " + result.Message;
-            if (!string.IsNullOrEmpty(Message))
-                message = Message + Environment.NewLine + message;
+            if (ex is NUnitException nUnitException && nUnitException.InnerException is ResultStateException ||
+                ex is ResultStateException)
+            {
+                SetResult(result.ResultState, result.Message, result.StackTrace);
+            }
+            else
+            {
+                RecordAssertion(new AssertionResult(site,
+                                ResultStateToAssertionStatus(result.ResultState),
+                                FailureSiteMessage(site, result.Message),
+                                FailureSiteStackTrace(site, result.StackTrace)));
+                RecordTestCompletion();
+            }
+        }
 
-            string stackTrace = "--TearDown" + Environment.NewLine + result.StackTrace;
-            if (StackTrace is not null)
-                stackTrace = StackTrace + Environment.NewLine + stackTrace;
+        private string FailureSiteMessage(FailureSite site, string message)
+        {
+            return site switch
+            {
+                FailureSite.SetUp => "SetUp : " + message,
+                FailureSite.TearDown => "TearDown : " + message,
+                _ => message
+            };
+        }
 
-            SetResult(resultState, message, stackTrace);
+        private string? FailureSiteStackTrace(FailureSite site, string? stackTrace)
+        {
+            if (string.IsNullOrEmpty(stackTrace))
+                return null;
+
+            return site switch
+            {
+                FailureSite.SetUp => "--SetUp" + Environment.NewLine + stackTrace,
+                FailureSite.TearDown => "--TearDown" + Environment.NewLine + stackTrace,
+                _ => stackTrace
+            };
         }
 
         private static Exception ValidateAndUnwrap(Exception ex)
@@ -557,10 +579,11 @@ namespace NUnit.Framework.Internal
                     SetResult(ResultState.Success);
                     break;
                 case 1:
+                    AssertionResult assertionResult = AssertionResults[0];
                     SetResult(
-                        AssertionStatusToResultState(_assertionResults[0].Status),
-                        _assertionResults[0].Message,
-                        _assertionResults[0].StackTrace);
+                        AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
+                        assertionResult.Message,
+                        assertionResult.StackTrace);
                     break;
                 default:
                     SetResult(
@@ -605,11 +628,15 @@ namespace NUnit.Framework.Internal
             var writer = new StringWriter();
 
             if (_assertionResults.Count > 1)
-                writer.WriteLine("Multiple failures or warnings in test:");
+                writer.WriteLine(MULTIPLE_FAILURES_OR_WARNINGS_MESSAGE);
 
             int counter = 0;
             foreach (var assertion in _assertionResults)
+            {
                 writer.WriteLine($"  {++counter}) {assertion.Message}");
+                if (assertion.StackTrace is not null)
+                    writer.WriteLine($"  {assertion.StackTrace}");
+            }
 
             return writer.ToString();
         }
@@ -674,6 +701,27 @@ namespace NUnit.Framework.Internal
                 case AssertionStatus.Error:
                     return ResultState.Error;
             }
+        }
+
+        private AssertionStatus ResultStateToAssertionStatus(ResultState resultState)
+        {
+            if (resultState.Status == TestStatus.Failed)
+            {
+                if (resultState.Label == ResultState.Error.Label)
+                    return AssertionStatus.Error;
+                else if (resultState.Label == ResultState.Failure.Label)
+                    return AssertionStatus.Failed;
+            }
+            else if (resultState.Status == TestStatus.Warning)
+            {
+                return AssertionStatus.Warning;
+            }
+            else if (resultState.Status == TestStatus.Passed)
+            {
+                return AssertionStatus.Passed;
+            }
+
+            return AssertionStatus.Inconclusive;
         }
 
         /// <summary>

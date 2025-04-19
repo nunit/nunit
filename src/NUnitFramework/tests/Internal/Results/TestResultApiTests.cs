@@ -18,9 +18,9 @@ namespace NUnit.Framework.Tests.Internal.Results
 
         private static IEnumerable<Action<TestResult, Exception>> RecordExceptionMethods => new Action<TestResult, Exception>[]
         {
-            (result, exception) => result.RecordException(exception),
+            (result, exception) => result.RecordException(exception, FailureSite.SetUp),
             (result, exception) => result.RecordException(exception, FailureSite.Test),
-            (result, exception) => result.RecordTearDownException(exception)
+            (result, exception) => result.RecordException(exception, FailureSite.TearDown)
         };
 
         [Test]

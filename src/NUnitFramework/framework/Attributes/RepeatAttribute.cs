@@ -94,18 +94,33 @@ namespace NUnit.Framework
 
                 while (count-- > 0)
                 {
-                    context.CurrentResult = innerCommand.Execute(context);
+                    try
+                    {
+                        context.CurrentResult = innerCommand.Execute(context);
+                    }
+                    // Commands are supposed to catch exceptions, but some don't
+                    // and we want to look at restructuring the API in the future.
+                    catch (Exception ex)
+                    {
+                        if (context.CurrentResult is null)
+                            context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult.RecordException(ex);
+                    }
 
                     if (_stopOnFailure && context.CurrentResult.ResultState != ResultState.Success)
                         break;
 
-                    context.CurrentRepeatCount++;
+                    // Clear result for repeat
+                    if (count > 0)
+                    {
+                        context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                    }
                 }
 
                 return context.CurrentResult;
             }
         }
-
         #endregion
     }
 }

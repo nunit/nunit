@@ -175,7 +175,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
                 Assert.That(result.Message, Does.Contain("50ms"));
                 Assert.That(fixture.TearDownWasRun, "TearDown was not run");
             });
@@ -192,7 +192,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.TearDown));
                 Assert.That(result.Message, Does.Contain("50ms"));
                 Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
             });

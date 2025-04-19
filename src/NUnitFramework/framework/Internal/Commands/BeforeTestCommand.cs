@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -26,7 +27,11 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest(context);
 
-            return context.CurrentResult = innerCommand.Execute(context);
+            // If the BeforeTest method fails, we don't run the test
+            if (context.CurrentResult.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped)
+                context.CurrentResult = innerCommand.Execute(context);
+
+            return context.CurrentResult;
         }
 
         /// <summary>

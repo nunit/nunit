@@ -167,6 +167,7 @@ namespace NUnit.TestData.SetUpData
     public class SetupAndTearDownExceptionFixture
     {
         public Exception? SetupException;
+        public Exception? TestException;
         public Exception? TearDownException;
 
         [SetUp]
@@ -186,6 +187,8 @@ namespace NUnit.TestData.SetUpData
         [Test]
         public void TestOne()
         {
+            if (TestException is not null)
+                throw TestException;
         }
     }
 }
