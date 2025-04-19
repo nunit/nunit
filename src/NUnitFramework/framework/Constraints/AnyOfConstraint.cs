@@ -83,6 +83,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
+        /// </summary>
+        public AnyOfConstraint IgnoreLineEndingFormat
+        {
+            get
+            {
+                _comparer.IgnoreLineEndingFormat = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>

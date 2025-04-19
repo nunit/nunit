@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -17,21 +18,28 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace) ?
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.IgnoreLineEndingFormat) ?
                 EqualMethodResult.ComparedEqual :
                 EqualMethodResult.ComparedNotEqual;
         }
 
-        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace)
+        public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat)
         {
             if (ignoreWhiteSpace)
             {
-                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, true);
+                (int mismatchExpected, int mismatchActual) = MsgUtils.FindMismatchPosition(x, y, ignoreCase, ignoreWhiteSpace: true, /* not used but required */ignoreLineEndingFormat);
                 return mismatchExpected == -1 && mismatchActual == -1;
             }
             else
             {
-                return x.Equals(y, ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal);
+                IEqualityComparer<string> comparer = (ignoreCase, ignoreLineEndingFormat) switch
+                {
+                    (true, true) => IgnoreLineEndingFormatStringComparer.CurrentCultureIgnoreCase,
+                    (true, false) => StringComparer.CurrentCultureIgnoreCase,
+                    (false, true) => IgnoreLineEndingFormatStringComparer.Ordinal,
+                    (false, false) => StringComparer.Ordinal,
+                };
+                return comparer.Equals(x, y);
             }
         }
     }

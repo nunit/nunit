@@ -41,6 +41,26 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess);
         }
 
+        [Test]
+        public void HonorsIgnoreLineEndingFormatForStringCollection()
+        {
+            var actualItems = new[] { "ABC", "d\re\nf\r\n" };
+            var constraint = new ContainsConstraint("d\ne\r\nf\r").IgnoreLineEndingFormat;
+
+            var result = constraint.ApplyTo(actualItems);
+            Assert.That(result.IsSuccess);
+        }
+
+        [Test]
+        public void HonorsIgnoreLineEndingFormatForStringCollectionSearchItem()
+        {
+            var actualItems = new[] { "A\r\nB\rC\n", "d e f" };
+            var constraint = new ContainsConstraint("A\rB\nC\r\n").IgnoreLineEndingFormat;
+
+            var result = constraint.ApplyTo(actualItems);
+            Assert.That(result.IsSuccess);
+        }
+
         [Test, SetCulture("en-US")]
         public void HonorsIgnoreCaseForString()
         {

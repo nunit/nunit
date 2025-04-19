@@ -99,12 +99,21 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void SucceedsWithStringModifiers()
+        public void SucceedsWithStringModifiersIgnoreCaseAndIgnoreWhiteSpace()
         {
             var a = (2, 5, "HELLO ");
             var b = (2, 5, "hello");
 
             Assert.That(a, Is.EqualTo(b).IgnoreCase.IgnoreWhiteSpace);
+        }
+
+        [Test]
+        public void SucceedsWithStringModifiersIgnoreCaseAndLineEnding()
+        {
+            var a = (2, 5, "HELLO\r");
+            var b = (2, 5, "hello\n");
+
+            Assert.That(a, Is.EqualTo(b).IgnoreCase.IgnoreLineEndingFormat);
         }
     }
 }

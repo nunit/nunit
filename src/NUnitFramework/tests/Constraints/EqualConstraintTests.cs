@@ -120,6 +120,46 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void IgnoreLineEndingFormat()
+        {
+            var constraint = new EqualStringConstraint("Hello\r\nWorld").IgnoreLineEndingFormat;
+
+            var result = constraint.ApplyTo("Hello\nWorld");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void IgnoreLineEndingFormatFail()
+        {
+            var constraint = new EqualStringConstraint("Hello World").IgnoreLineEndingFormat;
+
+            var result = constraint.ApplyTo("Hello World\n");
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void IgnoreLineEndingFormatAndIgnoreCase()
+        {
+            var constraint = new EqualStringConstraint("\rHello\nWorld\r\n").IgnoreLineEndingFormat.IgnoreCase;
+
+            var result = constraint.ApplyTo("\nhello\nworld\n");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void IgnoreLineEndingFormatAndIgnoreWhiteSpace()
+        {
+            var constraint = new EqualStringConstraint("Hello World").IgnoreLineEndingFormat.IgnoreWhiteSpace;
+
+            var result = constraint.ApplyTo("Hello\r\nWorld\r\n");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
         public void Bug524CharIntWithoutOverload()
         {
             char c = '\u0000';

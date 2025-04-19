@@ -20,6 +20,7 @@ namespace NUnit.Framework.Constraints
 
         private bool _caseInsensitive;
         private bool _ignoringWhiteSpace;
+        private bool _ignoreLineEndingFormat;
         private bool _clipStrings;
 
         #endregion
@@ -71,6 +72,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
+        /// </summary>
+        public EqualStringWithoutUsingConstraint IgnoreLineEndingFormat
+        {
+            get
+            {
+                _ignoreLineEndingFormat = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Flag the constraint to suppress string clipping
         /// and return self.
         /// </summary>
@@ -106,7 +119,7 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace);
+                hasSucceeded = StringsComparer.Equals(_expected, actual, _caseInsensitive, _ignoringWhiteSpace, _ignoreLineEndingFormat);
             }
 
             return ConstraintResult(actual, hasSucceeded);
@@ -130,9 +143,9 @@ namespace NUnit.Framework.Constraints
             }
             else if (actual is IEquatable<string> equatableString)
             {
-                if (_caseInsensitive || _ignoringWhiteSpace)
+                if (_caseInsensitive || _ignoringWhiteSpace || _ignoreLineEndingFormat)
                 {
-                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace with IEquatable<string>.");
+                    throw new InvalidOperationException("Cannot use IgnoreCase or IgnoreWhiteSpace or IgnoreLineEndingFormat with IEquatable<string>.");
                 }
 
                 hasSucceeded = equatableString.Equals(_expected);
@@ -154,7 +167,7 @@ namespace NUnit.Framework.Constraints
 
         private ConstraintResult ConstraintResult<T>(T actual, bool hasSucceeded)
         {
-            return new EqualConstraintResult(this, actual, _caseInsensitive, _ignoringWhiteSpace, _clipStrings, hasSucceeded);
+            return new EqualConstraintResult(this, actual, _caseInsensitive, _ignoringWhiteSpace, _ignoreLineEndingFormat, _clipStrings, hasSucceeded);
         }
 
         /// <summary>
@@ -172,6 +185,9 @@ namespace NUnit.Framework.Constraints
 
                 if (_ignoringWhiteSpace)
                     sb.Append(", ignoring white-space");
+
+                if (_ignoreLineEndingFormat)
+                    sb.Append(", ignoring line ending format");
 
                 return sb.ToString();
             }

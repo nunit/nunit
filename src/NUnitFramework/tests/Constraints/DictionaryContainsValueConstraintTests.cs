@@ -79,6 +79,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("U n i v e r s e").IgnoreWhiteSpace);
         }
 
+        [Test]
+        public void IgnoreLineEndingFormatIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe\r" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsValueConstraint("Universe\r\n").IgnoreLineEndingFormat);
+        }
+
         [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {

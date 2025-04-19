@@ -36,14 +36,19 @@ namespace NUnit.Framework.Constraints
         #region Protected Properties
 
         /// <summary>
-        /// Get a flag indicating whether the user requested us to ignore case.
+        /// Get a flag indicating whether the user requested that case be ignored.
         /// </summary>
         protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
-        /// Get a flag indicating whether the user requested us to ignore white space.
+        /// Get a flag indicating whether the user requested that white space be ignored.
         /// </summary>
         protected bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
+
+        /// <summary>
+        /// Get a flag indicating whether the user requested that line ending format be ignored.
+        /// </summary>
+        protected bool IgnoringLineEndingFormat => _comparer.IgnoreLineEndingFormat;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
@@ -74,6 +79,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
+        /// </summary>
+        public CollectionItemsEqualConstraint IgnoreLineEndingFormat
+        {
+            get
+            {
+                _comparer.IgnoreLineEndingFormat = true;
                 return this;
             }
         }

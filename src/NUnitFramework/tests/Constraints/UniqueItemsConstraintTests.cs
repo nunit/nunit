@@ -54,6 +54,33 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique ignoring white-space");
         }
 
+        [TestCaseSource(nameof(IgnoreLineEndingFormatData))]
+        public void HonorsIgnoreLineEndingFormat(IEnumerable actual)
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreLineEndingFormat;
+            var result = constraint.ApplyTo(actual);
+
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
+        }
+
+        [TestCaseSource(nameof(IgnoreLineEndingFormatData))] // reuse the same test data
+        public void HonorsIgnoreWhiteSpaceAndIgnoreLineEndingFormat(IEnumerable actual)
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreWhiteSpace.IgnoreLineEndingFormat;
+            var result = constraint.ApplyTo(actual);
+
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
+        }
+
+        [TestCaseSource(nameof(IgnoreCaseIgnoreLineEndingFormatData))]
+        public void HonorsIgnoreCaseAndIgnoreLineEndingFormat(IEnumerable actual)
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreCase.IgnoreLineEndingFormat;
+            var result = constraint.ApplyTo(actual);
+
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique after ignoring line ending format");
+        }
+
         private static readonly object[] IgnoreCaseData =
         {
             new object[] { new SimpleObjectCollection("x", "y", "z", "Z") },
@@ -66,6 +93,26 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new SimpleObjectCollection("x", "y", "z", " z ") },
             new object[] { new[] { "a", "b", "c", " c " } }
         };
+
+        private static readonly object[] IgnoreLineEndingFormatData =
+        [
+            new object[] { new SimpleObjectCollection("x", "y", "z\r", "z\n") },
+            new object[] { new SimpleObjectCollection("x", "y", "z\n", "z\r\n") },
+            new object[] { new SimpleObjectCollection("x", "y", "z\r\n", "z\r") },
+            new object[] { new[] { "a", "b", "\nc", "\rc" } },
+            new object[] { new[] { "a", "b", "\rc", "\r\nc" } },
+            new object[] { new[] { "a", "b", "\r\nc", "\nc" } },
+        ];
+
+        private static readonly object[] IgnoreCaseIgnoreLineEndingFormatData =
+        [
+            new object[] { new SimpleObjectCollection("x", "y", "Z\r", "z\n") },
+            new object[] { new SimpleObjectCollection("x", "y", "Z\n", "z\r\n") },
+            new object[] { new SimpleObjectCollection("x", "y", "Z\r\n", "z\r") },
+            new object[] { new[] { "a", "b", "\nC", "\rc" } },
+            new object[] { new[] { "a", "b", "\rC", "\r\nc" } },
+            new object[] { new[] { "a", "b", "\r\nC", "\nc" } },
+        ];
 
         private static readonly object[] DuplicateItemsData =
         {

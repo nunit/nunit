@@ -18,6 +18,7 @@ namespace NUnit.Framework.Constraints
         private Constraint? _realConstraint;
         private bool _ignoreCase;
         private bool _ignoreWhiteSpace;
+        private bool _ignoreLineEndingFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
@@ -75,6 +76,18 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
+        /// </summary>
+        public ContainsConstraint IgnoreLineEndingFormat
+        {
+            get
+            {
+                _ignoreLineEndingFormat = true;
+                return this;
+            }
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
@@ -93,6 +106,8 @@ namespace NUnit.Framework.Constraints
                     constraint = constraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     throw new InvalidOperationException("IgnoreWhiteSpace not supported on SubStringConstraint");
+                if (_ignoreLineEndingFormat)
+                    throw new InvalidOperationException("IgnoreLineEndingFormat not supported on SubStringConstraint");
                 _realConstraint = constraint;
             }
             else
@@ -102,6 +117,8 @@ namespace NUnit.Framework.Constraints
                     itemConstraint = itemConstraint.IgnoreCase;
                 if (_ignoreWhiteSpace)
                     itemConstraint = itemConstraint.IgnoreWhiteSpace;
+                if (_ignoreLineEndingFormat)
+                    itemConstraint = itemConstraint.IgnoreLineEndingFormat;
                 _realConstraint = new SomeItemsConstraint(itemConstraint);
             }
 

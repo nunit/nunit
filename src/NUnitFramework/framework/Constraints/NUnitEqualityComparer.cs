@@ -64,6 +64,11 @@ namespace NUnit.Framework.Constraints
         private bool _ignoreWhiteSpace;
 
         /// <summary>
+        /// If true, all string comparisons will ignore line ending format (\r vs. \n vs. \r\n)
+        /// </summary>
+        private bool _ignoreLineEndingFormat;
+
+        /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
@@ -116,6 +121,16 @@ namespace NUnit.Framework.Constraints
         {
             get => _ignoreWhiteSpace;
             set => _ignoreWhiteSpace = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether line ending format (\r vs. \n vs. \r\n) should
+        /// be ignored in determining equality.
+        /// </summary>
+        public bool IgnoreLineEndingFormat
+        {
+            get => _ignoreLineEndingFormat;
+            set => _ignoreLineEndingFormat = value;
         }
 
         /// <summary>

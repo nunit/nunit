@@ -74,9 +74,17 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether to compare ignoring white space.
         /// </summary>
         /// <value>
-        ///   <see langword="true"/> if comparing ignoreing white space; otherwise, <see langword="false"/>.
+        ///   <see langword="true"/> if comparing ignoring white space; otherwise, <see langword="false"/>.
         /// </value>
         public bool IgnoringWhiteSpace => _comparer.IgnoreWhiteSpace;
+
+        /// <summary>
+        /// Gets a value indicating whether to compare ignoring line ending format (\r vs. \n vs. \r\n).
+        /// </summary>
+        /// <value>
+        ///   <see langword="true"/> if comparing ignoring line ending format (\r vs. \n vs. \r\n); otherwise, <see langword="false"/>.
+        /// </value>
+        public bool IgnoringLineEndingFormat => _comparer.IgnoreLineEndingFormat;
 
         /// <summary>
         /// Gets a value indicating whether to compare separate properties.
@@ -130,6 +138,18 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _comparer.IgnoreWhiteSpace = true;
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Flag the constraint to ignore line ending format (\r vs. \n vs. \r\n) and return self.
+        /// </summary>
+        public EqualConstraint IgnoreLineEndingFormat
+        {
+            get
+            {
+                _comparer.IgnoreLineEndingFormat = true;
                 return this;
             }
         }
@@ -470,6 +490,9 @@ namespace NUnit.Framework.Constraints
 
                 if (_comparer.IgnoreWhiteSpace)
                     sb.Append(", ignoring white-space");
+
+                if (_comparer.IgnoreLineEndingFormat)
+                    sb.Append(", ignoring line ending format");
 
                 return sb.ToString();
             }
