@@ -30,7 +30,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary> Where did the failure occur.</summary>
-        public FailureSite Site;
+        public FailureSite Site { get; }
 
         /// <summary> The pass/fail status of the assertion</summary>
         public AssertionStatus Status { get; }

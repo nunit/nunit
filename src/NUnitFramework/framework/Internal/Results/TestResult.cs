@@ -483,8 +483,7 @@ namespace NUnit.Framework.Internal
         {
             var result = new ExceptionResult(ex, site);
 
-            if (ex is NUnitException nUnitException && nUnitException.InnerException is ResultStateException ||
-                ex is ResultStateException)
+            if (ex is NUnitException { InnerException: ResultStateException } or ResultStateException)
             {
                 SetResult(result.ResultState, result.Message, result.StackTrace);
             }
@@ -705,23 +704,23 @@ namespace NUnit.Framework.Internal
 
         private AssertionStatus ResultStateToAssertionStatus(ResultState resultState)
         {
-            if (resultState.Status == TestStatus.Failed)
+            switch (resultState.Status)
             {
-                if (resultState.Label == ResultState.Error.Label)
-                    return AssertionStatus.Error;
-                else if (resultState.Label == ResultState.Failure.Label)
-                    return AssertionStatus.Failed;
+                case TestStatus.Skipped:
+                case TestStatus.Inconclusive:
+                    return AssertionStatus.Inconclusive;
+                default:
+                case TestStatus.Passed:
+                    return AssertionStatus.Passed;
+                case TestStatus.Warning:
+                    return AssertionStatus.Warning;
+                case TestStatus.Failed:
+                    if (resultState.Label == ResultState.Error.Label)
+                        return AssertionStatus.Error;
+                    if (resultState.Label == ResultState.Failure.Label)
+                        return AssertionStatus.Failed;
+                    return AssertionStatus.Inconclusive;
             }
-            else if (resultState.Status == TestStatus.Warning)
-            {
-                return AssertionStatus.Warning;
-            }
-            else if (resultState.Status == TestStatus.Passed)
-            {
-                return AssertionStatus.Passed;
-            }
-
-            return AssertionStatus.Inconclusive;
         }
 
         /// <summary>
