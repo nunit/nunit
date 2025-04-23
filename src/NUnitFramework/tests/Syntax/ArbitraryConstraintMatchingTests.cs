@@ -7,7 +7,7 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
-    public class ArbitraryConstraintMatching
+    public class ArbitraryConstraintMatchingTests
     {
         private readonly Constraint _custom = new CustomConstraint();
         private readonly Constraint _another = new AnotherConstraint();
