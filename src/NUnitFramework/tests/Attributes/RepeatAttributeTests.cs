@@ -135,8 +135,8 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase(typeof(RepeatWithoutStopSucceedsOnFirstTryFixture), "Passed", 3)]
-        [TestCase(typeof(RepeatWithoutStopSucceedsOnSecondTryFixture), "Passed", 3)]
-        [TestCase(typeof(RepeatWithoutStopSucceedsOnThirdTryFixture), "Passed", 3)]
+        [TestCase(typeof(RepeatWithoutStopSucceedsOnSecondTryFixture), "Failed(Child)", 3)]
+        [TestCase(typeof(RepeatWithoutStopSucceedsOnThirdTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopFailsEveryTimeFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopWithIgnoreAttributeFixture), "Skipped:Ignored(Child)", 0)]
         [TestCase(typeof(RepeatWithoutStopIgnoredOnFirstTryFixture), "Skipped:Ignored(Child)", 3)]

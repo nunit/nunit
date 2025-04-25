@@ -91,6 +91,7 @@ namespace NUnit.Framework
             public override TestResult Execute(TestExecutionContext context)
             {
                 int count = _repeatCount;
+                TestResult? overallResult = null;
 
                 while (count-- > 0)
                 {
@@ -107,8 +108,13 @@ namespace NUnit.Framework
                         context.CurrentResult.RecordException(ex);
                     }
 
-                    if (_stopOnFailure && context.CurrentResult.ResultState != ResultState.Success)
-                        break;
+                    if (context.CurrentResult.ResultState != ResultState.Success)
+                    {
+                        // If any repeat fails, the whole test is considered failed
+                        overallResult = context.CurrentResult;
+                        if (_stopOnFailure)
+                            break;
+                    }
 
                     // Clear result for repeat
                     if (count > 0)
@@ -116,6 +122,11 @@ namespace NUnit.Framework
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
                     }
+                }
+
+                if (overallResult is not null)
+                {
+                    context.CurrentResult = overallResult;
                 }
 
                 return context.CurrentResult;
