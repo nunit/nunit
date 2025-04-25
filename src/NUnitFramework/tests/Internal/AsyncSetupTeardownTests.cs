@@ -34,11 +34,13 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
-        public void FailingSetupShouldLetExceptionBubbleUpUnwrapped()
+        public void FailingSetupShouldShouldRecordFailureInTestContext()
         {
             var item = new SetUpTearDownItem(Failure.ToList(), Empty);
 
-            Assert.Throws<InvalidOperationException>(() => item.RunSetUp(_context));
+            item.RunSetUp(_context);
+
+            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.SetUpError));
         }
 
         [Test]
@@ -49,16 +51,17 @@ namespace NUnit.Framework.Tests.Internal
             item.RunSetUp(_context);
             item.RunTearDown(_context);
 
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Error));
+            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.TearDownError));
         }
 
         [Test]
-        public void SuccessfulThenFailingSetupShouldLetExceptionBubbleUpUnwrapped()
+        public void SuccessfulThenFailingSetupShouldRecordFailureInTestContext()
         {
             var item = new SetUpTearDownItem(Success.Concat(Failure).ToList(), Empty);
 
-            Assert.Throws<InvalidOperationException>(() => item.RunSetUp(_context));
+            item.RunSetUp(_context);
             Assert.That(_testObject.SuccessfulAsyncMethodRuns, Is.EqualTo(1));
+            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.SetUpError));
         }
 
         [Test]
@@ -69,7 +72,7 @@ namespace NUnit.Framework.Tests.Internal
             item.RunSetUp(_context);
             item.RunTearDown(_context);
 
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Error));
+            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.TearDownError));
         }
 
         private IEnumerable<IMethodInfo> Success

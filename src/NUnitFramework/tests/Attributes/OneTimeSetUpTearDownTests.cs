@@ -178,8 +178,8 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
-            Assert.That(result.Message, Is.EqualTo("System.Exception : This was thrown from fixture setup"), "TestSuite Message");
-            Assert.That(result.StackTrace, Is.Not.Null, "TestSuite StackTrace should not be null");
+            Assert.That(result.Message, Is.EqualTo("SetUp : System.Exception : This was thrown from fixture setup"), "TestSuite Message");
+            Assert.That(result.StackTrace, Does.Contain($"{nameof(MisbehavingFixture)}.{nameof(MisbehavingFixture.SetUp)}"), "TestSuite StackTrace should not be null");
 
             Assert.That(result.Children.Count(), Is.EqualTo(1), "Child result count");
             Assert.That(result.FailCount, Is.EqualTo(1), "Failure count");
@@ -261,14 +261,19 @@ namespace NUnit.Framework.Tests.Attributes
             fixture.BlowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
             Assert.That(result.Children.Count(), Is.EqualTo(1));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.TearDownError));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1), "setUpCount");
             Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");
 
-            Assert.That(result.Message, Is.EqualTo("System.Exception : This was thrown from fixture setup" + Environment.NewLine +
-                "TearDown : System.Exception : This was thrown from fixture teardown"));
-            Assert.That(result.StackTrace, Does.Contain("--TearDown"));
+            Assert.That(result.Message, Does.StartWith(TestResult.MULTIPLE_FAILURES_OR_WARNINGS_MESSAGE));
+            Assert.That(result.Message, Does.Contain("SetUp : System.Exception : This was thrown from fixture setup"));
+            Assert.That(result.Message, Does.Contain("TearDown : System.Exception : This was thrown from fixture teardown"));
+            Assert.That(result.Message, Does.Contain("--SetUp"));
+            Assert.That(result.Message, Does.Contain("--TearDown"));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(2));
+            Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("--SetUp"));
+            Assert.That(result.AssertionResults[1].StackTrace, Does.Contain("--TearDown"));
         }
 
         [Test]
@@ -277,7 +282,7 @@ namespace NUnit.Framework.Tests.Attributes
             ITestResult result = TestBuilder.RunTestFixture(typeof(ExceptionInConstructor));
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
-            Assert.That(result.Message, Is.EqualTo("System.Exception : This was thrown in constructor"), "TestSuite Message");
+            Assert.That(result.Message, Is.EqualTo("SetUp : System.Exception : This was thrown in constructor"), "TestSuite Message");
             Assert.That(result.StackTrace, Is.Not.Null, "TestSuite StackTrace should not be null");
 
             Assert.That(result.Children.Count(), Is.EqualTo(1), "Child result count");

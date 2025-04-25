@@ -202,7 +202,7 @@ namespace NUnit.Framework.Tests.Internal
             var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
 
             var ex = RecordPossiblyDangerousException(() =>
-                result.RecordException(new RecursivelyThrowingException(), FailureSite.Test));
+                result.RecordException(new RecursivelyThrowingException()));
 
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 

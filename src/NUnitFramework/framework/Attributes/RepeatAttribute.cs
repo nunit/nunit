@@ -91,21 +91,47 @@ namespace NUnit.Framework
             public override TestResult Execute(TestExecutionContext context)
             {
                 int count = _repeatCount;
+                TestResult? overallResult = null;
 
                 while (count-- > 0)
                 {
-                    context.CurrentResult = innerCommand.Execute(context);
+                    try
+                    {
+                        context.CurrentResult = innerCommand.Execute(context);
+                    }
+                    // Commands are supposed to catch exceptions, but some don't
+                    // and we want to look at restructuring the API in the future.
+                    catch (Exception ex)
+                    {
+                        if (context.CurrentResult is null)
+                            context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentResult.RecordException(ex);
+                    }
 
-                    if (_stopOnFailure && context.CurrentResult.ResultState != ResultState.Success)
-                        break;
+                    if (context.CurrentResult.ResultState != ResultState.Success)
+                    {
+                        // If any repeat fails, the whole test is considered failed
+                        overallResult = context.CurrentResult;
+                        if (_stopOnFailure)
+                            break;
+                    }
 
-                    context.CurrentRepeatCount++;
+                    // Clear result for repeat
+                    if (count > 0)
+                    {
+                        context.CurrentResult = context.CurrentTest.MakeTestResult();
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                    }
+                }
+
+                if (overallResult is not null)
+                {
+                    context.CurrentResult = overallResult;
                 }
 
                 return context.CurrentResult;
             }
         }
-
         #endregion
     }
 }

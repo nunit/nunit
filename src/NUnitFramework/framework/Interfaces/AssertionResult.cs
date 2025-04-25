@@ -14,11 +14,23 @@ namespace NUnit.Framework.Interfaces
         /// Construct an AssertionResult
         /// </summary>
         public AssertionResult(AssertionStatus status, string message, string? stackTrace)
+            : this(FailureSite.Test, status, message, stackTrace)
         {
+        }
+
+        /// <summary>
+        /// Construct an AssertionResult
+        /// </summary>
+        public AssertionResult(FailureSite site, AssertionStatus status, string message, string? stackTrace)
+        {
+            Site = site;
             Status = status;
             Message = message;
             StackTrace = stackTrace;
         }
+
+        /// <summary> Where did the failure occur.</summary>
+        public FailureSite Site { get; }
 
         /// <summary> The pass/fail status of the assertion</summary>
         public AssertionStatus Status { get; }

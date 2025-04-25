@@ -63,12 +63,11 @@ namespace NUnit.Framework.Tests.Assertions
             CheckResult(methodName, ResultState.Warning, asserts, assertionMessages);
         }
 
-        [TestCase(nameof(AM.ExceptionThrown), 0)]
+        [TestCase(nameof(AM.ExceptionThrown), 0, "Simulated Error")]
         [TestCase(nameof(AM.ExceptionThrownAfterWarning), 0, "WARNING", "Simulated Error")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
-            ITestResult result = CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
-            Assert.That(result.Message, Does.StartWith("System.Exception : Simulated Error"));
+            _ = CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
         }
 
         [TestCase(nameof(AM.AssertPassInBlock), "Assert.Pass")]
@@ -77,17 +76,22 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.AssumptionInBlock), "Assume.That")]
         public void AssertMultiple_InvalidAssertThrowsException(string methodName, string invalidAssert)
         {
-            ITestResult result = CheckResult(methodName, ResultState.Error, 0);
-            Assert.That(result.Message, Contains.Substring($"{invalidAssert} may not be used in a multiple assertion block."));
+            _ = CheckResult(methodName, ResultState.Error, 0,
+                $"{invalidAssert} may not be used in a multiple assertion block.");
         }
 
-        [TestCase(nameof(AM.NonReleasedScope), 2, "Test completed with 1 active assertion scopes")]
-        [TestCase(nameof(AM.NonReleasedScopes), 3, "Test completed with 2 active assertion scopes")]
-        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3, "The assertion scope was disposed out of order")]
-        public void NonOrOutOfOrderReleaseScope(string methodName, int asserts, string errorMessage)
+        [TestCase(nameof(AM.NonReleasedScope), 2, "Test completed with 1 active assertion scope(s)")]
+        [TestCase(nameof(AM.NonReleasedScopes), 3, "Test completed with 2 active assertion scope(s)")]
+        public void NonReleaseScope(string methodName, int asserts, string errorMessage)
         {
             ITestResult result = CheckResult(methodName, ResultState.Error, asserts);
             Assert.That(result.Message, Contains.Substring(errorMessage));
+        }
+
+        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3, "The assertion scope was disposed out of order")]
+        public void OutOfOrderReleaseScope(string methodName, int asserts, string errorMessage)
+        {
+            _ = CheckResult(methodName, ResultState.Error, asserts, errorMessage);
         }
 
         [Test]
@@ -125,7 +129,7 @@ namespace NUnit.Framework.Tests.Assertions
                     --numFailures;
 
                 if (numFailures > 1)
-                    Assert.That(result.Message, Contains.Substring("Multiple failures or warnings in test:"));
+                    Assert.That(result.Message, Contains.Substring(TestResult.MULTIPLE_FAILURES_OR_WARNINGS_MESSAGE));
 
                 int i = 0;
                 foreach (var assertion in result.AssertionResults)

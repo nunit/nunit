@@ -49,8 +49,15 @@ namespace NUnit.Framework.Internal.Commands
         {
             _setUpWasRun = true;
 
-            foreach (IMethodInfo setUpMethod in _setUpMethods)
-                RunSetUpOrTearDownMethod(context, setUpMethod);
+            try
+            {
+                foreach (IMethodInfo setUpMethod in _setUpMethods)
+                    RunSetUpOrTearDownMethod(context, setUpMethod);
+            }
+            catch (Exception ex)
+            {
+                context.CurrentResult.RecordException(ex, FailureSite.SetUp);
+            }
         }
 
         /// <summary>
@@ -81,7 +88,7 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 catch (Exception ex)
                 {
-                    context.CurrentResult.RecordTearDownException(ex);
+                    context.CurrentResult.RecordException(ex, FailureSite.TearDown);
                 }
             }
         }

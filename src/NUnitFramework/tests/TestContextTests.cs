@@ -271,7 +271,7 @@ namespace NUnit.Framework.Tests
                 SetUpFailure = true
             };
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Failed"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Failed(SetUp)"));
         }
 
         [Test]
@@ -293,7 +293,7 @@ namespace NUnit.Framework.Tests
                 SetUpIgnore = true
             };
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored(SetUp)"));
         }
 
         [Test]
