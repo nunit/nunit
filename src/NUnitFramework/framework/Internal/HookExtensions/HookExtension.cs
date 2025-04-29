@@ -27,5 +27,10 @@ namespace NUnit.Framework.Internal.HookExtensions
         public HookExtension(HookExtension other) : this()
         {
         }
+
+        internal void OnBeforeTest(TestExecutionContext context)
+        {
+            BeforeTestHook.InvokeHandlers(this, new MethodHookEventArgs(context));
+        }
     }
 }

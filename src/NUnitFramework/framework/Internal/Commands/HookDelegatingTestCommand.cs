@@ -17,6 +17,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>The result of the test execution.</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            context.HookExtension?.OnBeforeTest(context);
             innerCommand.Execute(context);
             return context.CurrentResult;
         }

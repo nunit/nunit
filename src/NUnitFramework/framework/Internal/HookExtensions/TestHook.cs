@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.HookExtensions
 {
@@ -20,6 +21,26 @@ namespace NUnit.Framework.Internal.HookExtensions
         {
             lock (_handlers)
                 _handlers.Add(handler);
+        }
+
+        internal void InvokeHandlers(object? sender, EventArgs e)
+        {
+            if (!_handlers.Any())
+            {
+                return;
+            }
+            Delegate[] syncHandlers;
+
+            lock (_handlers)
+                syncHandlers = _handlers.ToArray();
+
+            foreach (var handler in syncHandlers)
+            {
+                if (handler is EventHandler syncHandler)
+                {
+                    syncHandler(sender, e);
+                }
+            }
         }
     }
 }
