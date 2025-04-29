@@ -12,7 +12,13 @@ namespace NUnit.Framework.Internal.HookExtensions
         /// </summary>
         public HookExtension()
         {
+            BeforeTestHook = new TestHook();
         }
+
+        /// <summary>
+        /// Gets or sets the hook event that is triggered before a test method is executed.
+        /// </summary>
+        public TestHook BeforeTestHook { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HookExtension"/> class by copying hooks from another instance.
