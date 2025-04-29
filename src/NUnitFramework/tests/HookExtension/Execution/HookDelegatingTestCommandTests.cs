@@ -10,6 +10,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
     [TestFixture]
     internal class HookDelegatingTestCommandTests
     {
+        [Explicit]
         [TestFixture]
         private class SomeEmptyTest
         {
