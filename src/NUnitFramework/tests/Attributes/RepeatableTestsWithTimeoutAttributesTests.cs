@@ -69,6 +69,11 @@ namespace NUnit.Framework.Tests.Attributes
 
             command = GetInnerCommand(applyChangesToContextCommand);
 
+            Assert.That(command, Is.TypeOf(typeof(HookDelegatingTestCommand)));
+            HookDelegatingTestCommand hookDelegatingTestCommandCommand = (HookDelegatingTestCommand)command;
+
+            command = GetInnerCommand(hookDelegatingTestCommandCommand);
+
             Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
         }
 
@@ -98,7 +103,10 @@ namespace NUnit.Framework.Tests.Attributes
 
             command = GetInnerCommand(applyChangesToContextCommand);
 
-            Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
+            Assert.That(command, Is.TypeOf(typeof(HookDelegatingTestCommand)));
+            HookDelegatingTestCommand hookDelegatingTestCommandCommand = (HookDelegatingTestCommand)command;
+
+            command = GetInnerCommand(hookDelegatingTestCommandCommand);
         }
 
         private TestCommand GetInnerCommand(DelegatingTestCommand command)
