@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     internal class HookDelegatingTestCommand : DelegatingTestCommand
@@ -17,8 +19,26 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>The result of the test execution.</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            context.HookExtension?.OnBeforeTest(context);
-            innerCommand.Execute(context);
+            var afterTestExecutedWithExceptionContext = false;
+
+            try
+            {
+                context.HookExtension?.OnBeforeTest(context);
+                innerCommand.Execute(context);
+            }
+            catch (Exception ex)
+            {
+                afterTestExecutedWithExceptionContext = true;
+                context.HookExtension?.OnAfterTest(context);
+                throw;
+            }
+
+            // Ensure that after test hooks are not again executed when there are exceptions from inner command
+            if (!afterTestExecutedWithExceptionContext)
+            {
+                context.HookExtension?.OnAfterTest(context);
+            }
+
             return context.CurrentResult;
         }
     }
