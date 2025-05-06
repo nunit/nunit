@@ -19,12 +19,21 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
             }
         }
 
+        internal class ActivateAfterTestHooks : NUnitAttribute, IApplyToContext
+        {
+            public virtual void ApplyToContext(TestExecutionContext context)
+            {
+                context?.HookExtension?.AfterTestHook.AddHandler((sender, eventArgs) => { });
+            }
+        }
+
         [Explicit]
         [TestFixture]
         private class SomeEmptyTest
         {
             [Test]
             [ActivateBeforeTestHooks]
+            [ActivateAfterTestHooks]
             public void EmptyTest() { }
         }
 
@@ -51,6 +60,19 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
 
             Assert.That(work.Context.HookExtension, Is.Not.Null);
             Assert.That(work.Context.HookExtension.BeforeTestHook, Is.Not.Null);
+        }
+
+        [Test]
+        public void AfterTestHookAdded()
+        {
+            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
+            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+
+            Assert.That(work, Is.Not.Null);
+            TestCommand command = work.MakeTestCommand();
+
+            Assert.That(work.Context.HookExtension, Is.Not.Null);
+            Assert.That(work.Context.HookExtension.AfterTestHook, Is.Not.Null);
         }
     }
 }
