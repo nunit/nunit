@@ -15,7 +15,9 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
         private class SomeEmptyTest
         {
             [Test]
-            public void EmptyTest() { }
+            public void EmptyTest()
+            {
+            }
         }
 
         [Test]

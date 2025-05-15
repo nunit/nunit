@@ -8,22 +8,22 @@ namespace NUnit.Framework.Tests.HookExtension
 {
     internal static class TestLog
     {
-        private static readonly AsyncLocal<List<string>> _logs = new AsyncLocal<List<string>>();
-        private static readonly object logLock = new object();
+        private static readonly AsyncLocal<List<string>> LocalLogs = new AsyncLocal<List<string>>();
+        private static readonly object LogLock = new object();
 
         // Each aync context gets its own instance of Logs
         public static List<string> Logs
         {
             get
             {
-                lock (logLock)
+                lock (LogLock)
                 {
-                    if (_logs.Value == null)
+                    if (LocalLogs.Value is null)
                     {
-                        _logs.Value = new List<string>();
+                        LocalLogs.Value = new List<string>();
                     }
 
-                    return _logs.Value;
+                    return LocalLogs.Value;
                 }
             }
         }
