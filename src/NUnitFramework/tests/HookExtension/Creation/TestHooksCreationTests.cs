@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
     [TestFixture]
     internal class TestHooksCreationTests
     {
-        internal class ActivateBeforeTestHooks: NUnitAttribute, IApplyToContext
+        internal class ActivateBeforeTestHooks : NUnitAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
@@ -34,7 +34,9 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
             [Test]
             [ActivateBeforeTestHooks]
             [ActivateAfterTestHooks]
-            public void EmptyTest() { }
+            public void EmptyTest()
+            {
+            }
         }
 
         [Test]

@@ -10,7 +10,9 @@ namespace NUnit.Framework.Internal.Commands
         /// Initializes a new instance of the <see cref="HookDelegatingTestCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner test command to delegate to.</param>
-        public HookDelegatingTestCommand(TestCommand innerCommand) : base(innerCommand) { }
+        public HookDelegatingTestCommand(TestCommand innerCommand) : base(innerCommand)
+        {
+        }
 
         /// <summary>
         /// Executes the test command within the provided context
@@ -26,7 +28,7 @@ namespace NUnit.Framework.Internal.Commands
                 context.HookExtension?.OnBeforeTest(context);
                 innerCommand.Execute(context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 afterTestExecutedWithExceptionContext = true;
                 context.HookExtension?.OnAfterTest(context);

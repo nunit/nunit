@@ -88,9 +88,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
                 "--where",
                 $"class == {typeof(SomeEmptyTest).FullName}"
             ]);
-            
             Assert.That(TestLog.Logs, Is.EqualTo([
-
                 nameof(SomeEmptyTest.OneTimeSetUp),
                 "BeforeTest_Action",
                 nameof(SomeEmptyTest.SetUp),
