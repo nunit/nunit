@@ -18,7 +18,6 @@ namespace NUnit.Framework.Constraints
         private const string ContainsMethodName = nameof(IDictionary.Contains);
         private const string ContainsKeyMethodName = nameof(IDictionary<,>.ContainsKey);
 
-        private readonly bool _isDeprecatedMode = false;
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint
         /// </summary>
