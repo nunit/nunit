@@ -13,11 +13,12 @@ namespace NUnit.Framework.Constraints
     /// DictionaryContainsKeyConstraint is used to test whether a dictionary
     /// contains an expected object as a key.
     /// </summary>
-    public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
+    public class DictionaryContainsKeyConstraint : Constraint
     {
-        private const string ContainsMethodName = "Contains";
-        private readonly bool _isDeprecatedMode = false;
+        private const string ContainsMethodName = nameof(IDictionary.Contains);
+        private const string ContainsKeyMethodName = nameof(IDictionary<,>.ContainsKey);
 
+        private readonly bool _isDeprecatedMode = false;
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint
         /// </summary>
@@ -61,23 +62,16 @@ namespace NUnit.Framework.Constraints
             if (actual is null)
                 throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
 
-            if (_isDeprecatedMode)
-            {
-                var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-                foreach (var obj in dictionary.Keys)
-                {
-                    if (ItemsEqual(obj, Expected))
-                        return true;
-                }
-
-                return false;
-            }
-
             var method = GetContainsKeyMethod(actual);
             if (method is not null)
-                return (bool)method.Invoke(actual, new[] { Expected })!;
+                return (bool)method.Invoke(actual, [Expected])!;
 
-            throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a ContainsKey or Contains(TKey) method.");
+            if (actual is IDictionary dictionary)
+            {
+                return dictionary.Contains(Expected);
+            }
+
+            throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a {ContainsKeyMethodName} or {ContainsMethodName}(TKey) method.");
         }
 
         /// <summary>
@@ -87,14 +81,6 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             return new ConstraintResult(this, actual, Matches(actual));
-        }
-
-        /// <summary>
-        /// Test whether the expected key is contained in the dictionary
-        /// </summary>
-        protected override bool Matches(IEnumerable collection)
-        {
-            return Matches(collection);
         }
 
         private static MethodInfo? GetContainsKeyMethod(object keyedItemContainer)
@@ -116,7 +102,7 @@ namespace NUnit.Framework.Constraints
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
-                && (m.Name == "ContainsKey" || (m.Name == nameof(IDictionary.Contains) && m.DeclaringType == typeof(IDictionary)))
+                && m.Name == ContainsKeyMethodName
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
@@ -132,8 +118,9 @@ namespace NUnit.Framework.Constraints
                              .FirstOrDefault(m => m.ReturnType == typeof(bool) &&
                                                   m.Name == ContainsMethodName &&
                                                   !m.IsGenericMethod &&
-                                                  m.GetParameters().Length == 1 &&
-                                                  m.GetParameters()[0].ParameterType == tKeyGenericArg);
+                                                  m.GetParameters() is ParameterInfo[] parameters &&
+                                                  parameters.Length == 1 &&
+                                                  parameters[0].ParameterType == tKeyGenericArg);
 
                     if (method is not null)
                     {
