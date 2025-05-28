@@ -23,6 +23,12 @@ namespace NUnit.Framework.Internal.HookExtensions
                 _handlers.Add(handler);
         }
 
+        internal IReadOnlyList<Delegate> GetHandlers()
+        {
+            lock (_handlers)
+                return _handlers;
+        }
+
         internal void InvokeHandlers(object? sender, EventArgs e)
         {
             if (!_handlers.Any())
