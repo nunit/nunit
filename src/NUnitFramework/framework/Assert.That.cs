@@ -213,7 +213,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #endregion
+#endregion
 
         #region Assert.That<TActual>
 
