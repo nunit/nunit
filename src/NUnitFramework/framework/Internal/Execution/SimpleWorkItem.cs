@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal.Execution
                 Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test))
             {
                 // Command to execute test
-                TestCommand command = new TestMethodCommand(_testMethod);
+                TestCommand command = new HookDelegatingTestCommand(new TestMethodCommand(_testMethod));
 
                 var method = MethodInfoCache.Get(_testMethod.Method);
 
