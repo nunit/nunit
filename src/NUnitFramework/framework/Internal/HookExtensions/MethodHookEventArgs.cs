@@ -4,7 +4,7 @@ using System;
 
 namespace NUnit.Framework.Internal.HookExtensions
 {
-    internal class MethodHookEventArgs : EventArgs
+    internal sealed class MethodHookEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodHookEventArgs"/> class.

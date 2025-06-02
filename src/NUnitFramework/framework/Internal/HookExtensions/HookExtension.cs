@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal.HookExtensions
     /// <summary>
     /// Hook Extension interface to run custom code synchronously before or after any test activity.
     /// </summary>
-    public class HookExtension
+    public sealed class HookExtension
     {
         /// <summary>
         /// Default ctor of <see cref="HookExtension"/> class.
