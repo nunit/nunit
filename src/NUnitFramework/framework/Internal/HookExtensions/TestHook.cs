@@ -30,10 +30,14 @@ namespace NUnit.Framework.Internal.HookExtensions
 
         internal void InvokeHandlers(object? sender, EventArgs e)
         {
-            if (_handlers.Count == 0)
+            lock (_handlers)
             {
-                return;
+                if (_handlers.Count == 0)
+                {
+                    return;
+                }
             }
+
             EventHandler[] syncHandlers;
 
             lock (_handlers)
