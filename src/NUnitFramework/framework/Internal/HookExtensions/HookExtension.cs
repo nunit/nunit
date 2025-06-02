@@ -22,12 +22,12 @@ namespace NUnit.Framework.Internal.HookExtensions
         /// <summary>
         /// Gets or sets the hook event that is triggered before a test method is executed.
         /// </summary>
-        public TestHook BeforeTestHook { get; set; }
+        public TestHook BeforeTestHook { get; }
 
         /// <summary>
         /// Gets or sets the hook event that is triggered after a test method is executed.
         /// </summary>
-        public TestHook AfterTestHook { get; set; }
+        public TestHook AfterTestHook { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HookExtension"/> class by copying hooks from another instance.
