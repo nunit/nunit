@@ -12,6 +12,8 @@ using System.Text;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
+using NUnit.Framework.Constraints.Comparers;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -322,6 +324,44 @@ namespace NUnit.Framework.Tests.Constraints
                 }
 
                 return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
+            }
+
+            [Test]
+            public void LocalPoolRentAndReturnOne()
+            {
+                byte[] buffer = StreamsComparer.LocalPool.Rent();
+                Assert.That(buffer, Is.Not.Null);
+                Assert.That(buffer, Has.Length.EqualTo(4096)); // Default size
+                StreamsComparer.LocalPool.Return(buffer);
+
+                Assert.That(() => StreamsComparer.LocalPool.Return(buffer),
+                            Throws.ArgumentException.With.Message.Contain("not rented out"));
+                Assert.That(() => StreamsComparer.LocalPool.Return(new byte[1024]),
+                            Throws.ArgumentException.With.Message.Contain("not found in pool"));
+            }
+
+            [Test]
+            public async Task LocalPoolRentAndReturnMultiple()
+            {
+                Task[] tasksUsingPool = new Task[8];
+                for (int i = 0; i < tasksUsingPool.Length; i++)
+                {
+                    // Start tasks with a small delay
+                    await Task.Delay(10);
+
+                    int task = i;
+                    tasksUsingPool[i] = Task.Run(async () =>
+                    {
+                        byte[] buffer = StreamsComparer.LocalPool.Rent();
+                        Assert.That(buffer, Is.Not.Null);
+                        await Task.Delay(20);
+                        StreamsComparer.LocalPool.Return(buffer);
+                    });
+                }
+
+                await Task.WhenAll(tasksUsingPool);
+
+                Assert.That(StreamsComparer.LocalPool.RentedBuffers, Is.Zero);
             }
 
             private class ShortReadingMemoryStream : MemoryStream
