@@ -15,7 +15,7 @@ namespace NUnit.Framework.Internal.HookExtensions
         /// <summary>
         /// Adds a test hook handler.
         /// </summary>
-        /// <param name="handler">The event handler to be attached to the handler</param>
+        /// <param name="handler">The event handler to be attached to the hook.</param>
         public void AddHandler(EventHandler handler)
         {
             lock (_handlers)
@@ -25,25 +25,12 @@ namespace NUnit.Framework.Internal.HookExtensions
         internal IReadOnlyList<EventHandler> GetHandlers()
         {
             lock (_handlers)
-                return _handlers;
+                return _handlers.ToArray();
         }
 
         internal void InvokeHandlers(object? sender, EventArgs e)
         {
-            lock (_handlers)
-            {
-                if (_handlers.Count == 0)
-                {
-                    return;
-                }
-            }
-
-            EventHandler[] syncHandlers;
-
-            lock (_handlers)
-                syncHandlers = _handlers.ToArray();
-
-            foreach (var handler in syncHandlers)
+            foreach (var handler in GetHandlers())
             {
                 handler(sender, e);
             }
