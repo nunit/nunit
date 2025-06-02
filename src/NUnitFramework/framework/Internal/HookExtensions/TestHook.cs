@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal.HookExtensions
     /// <summary>
     /// Event that supports both synchronous and asynchronous handlers.
     /// </summary>
-    public class TestHook
+    public sealed class TestHook
     {
         private readonly List<Delegate> _handlers = new();
 
