@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal.HookExtensions
     /// </summary>
     public sealed class TestHook
     {
-        private readonly List<Delegate> _handlers = new();
+        private readonly List<EventHandler> _handlers = new();
 
         /// <summary>
         /// Adds a test hook handler.
@@ -23,7 +23,7 @@ namespace NUnit.Framework.Internal.HookExtensions
                 _handlers.Add(handler);
         }
 
-        internal IReadOnlyList<Delegate> GetHandlers()
+        internal IReadOnlyList<EventHandler> GetHandlers()
         {
             lock (_handlers)
                 return _handlers;
@@ -35,17 +35,14 @@ namespace NUnit.Framework.Internal.HookExtensions
             {
                 return;
             }
-            Delegate[] syncHandlers;
+            EventHandler[] syncHandlers;
 
             lock (_handlers)
                 syncHandlers = _handlers.ToArray();
 
             foreach (var handler in syncHandlers)
             {
-                if (handler is EventHandler syncHandler)
-                {
-                    syncHandler(sender, e);
-                }
+                handler(sender, e);
             }
         }
     }

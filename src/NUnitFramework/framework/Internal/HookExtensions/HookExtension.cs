@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Linq;
 
 namespace NUnit.Framework.Internal.HookExtensions
@@ -35,8 +34,8 @@ namespace NUnit.Framework.Internal.HookExtensions
         /// <param name="other">The instance of <see cref="HookExtension"/> to copy hooks from.</param>
         public HookExtension(HookExtension other) : this()
         {
-            other.BeforeTestHook.GetHandlers().ToList().ForEach(d => BeforeTestHook.AddHandler((EventHandler)d));
-            other.AfterTestHook.GetHandlers().ToList().ForEach(d => AfterTestHook.AddHandler((EventHandler)d));
+            other.BeforeTestHook.GetHandlers().ToList().ForEach(d => BeforeTestHook.AddHandler(d));
+            other.AfterTestHook.GetHandlers().ToList().ForEach(d => AfterTestHook.AddHandler(d));
         }
 
         internal void OnBeforeTest(TestExecutionContext context)
