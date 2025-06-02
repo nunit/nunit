@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NUnit.Framework.Internal.HookExtensions
 {
@@ -31,7 +30,7 @@ namespace NUnit.Framework.Internal.HookExtensions
 
         internal void InvokeHandlers(object? sender, EventArgs e)
         {
-            if (!_handlers.Any())
+            if (_handlers.Count == 0)
             {
                 return;
             }
