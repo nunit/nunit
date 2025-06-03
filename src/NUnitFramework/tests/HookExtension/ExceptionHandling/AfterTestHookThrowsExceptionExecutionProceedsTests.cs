@@ -14,7 +14,7 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context?.HookExtension?.BeforeTestHook.AddHandler((sender, eventArgs) =>
+                context?.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
                 {
                     TestLog.LogCurrentMethod();
                 });
@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context?.HookExtension?.AfterTestHook.AddHandler((sender, eventArgs) =>
+                context?.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
                 {
                     TestLog.LogCurrentMethod();
                     throw new Exception("After test hook crashed!!");
