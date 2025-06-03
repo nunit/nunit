@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnitLite;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
 {
@@ -33,7 +33,6 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
             }
         }
 
-        [Explicit]
         [TestFixture]
         private class SomeEmptyTest
         {
@@ -75,10 +74,8 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         {
             TestLog.Logs.Clear();
 
-            new AutoRun(typeof(SomeEmptyTest).Assembly).Execute([
-                "--where",
-                $"class == {typeof(SomeEmptyTest).FullName}"
-            ]);
+            var workItem = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            workItem.Execute();
 
             // no test is executed
             Assert.That(TestLog.Logs, Is.EqualTo([
