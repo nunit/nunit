@@ -20,11 +20,13 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="NUnit3TestAdapter" />
         <PackageReference Include="NUnit.Analyzers" />
-       
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="System.Collections.Immutable" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-        <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.ValueTuple" />
     </ItemGroup>
 
