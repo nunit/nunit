@@ -5,8 +5,8 @@
   </PropertyGroup>
   <!-- Packages for used features -->
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-    <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageVersion Include="System.Memory" Version="4.6.0" />
+    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <!-- General Packages -->
@@ -34,7 +34,8 @@
   </ItemGroup>
   <!-- Specific dependencies -->
   <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.0" />
+    <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />

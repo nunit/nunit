@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using NUnit.Framework.Internal;
@@ -144,7 +143,7 @@ internal static class ParamAttributeTypeConversions_Original
     public static object Convert(object? value, Type targetType)
     {
         if (TryConvert(value, targetType, out var convertedValue))
-            return convertedValue;
+            return convertedValue!;
 
         throw new InvalidOperationException(
             (value is null ? "Null" : $"A value of type {value.GetType()} ({value})")
@@ -163,7 +162,7 @@ internal static class ParamAttributeTypeConversions_Original
     /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
     /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
     /// </returns>
-    public static bool TryConvert(object? value, Type targetType, [NotNullWhen(true)] out object? convertedValue)
+    public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
     {
         if (targetType.IsInstanceOfType(value))
         {
@@ -259,7 +258,7 @@ internal static class ParamAttributeTypeConversions_WithTuples
     public static object Convert(object? value, Type targetType)
     {
         if (TryConvert(value, targetType, out var convertedValue))
-            return convertedValue;
+            return convertedValue!;
 
         throw new InvalidOperationException(
             (value is null ? "Null" : $"A value of type {value.GetType()} ({value})")
@@ -278,7 +277,7 @@ internal static class ParamAttributeTypeConversions_WithTuples
     /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
     /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
     /// </returns>
-    public static bool TryConvert(object? value, Type targetType, [NotNullWhen(true)] out object? convertedValue)
+    public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
     {
         if (targetType.IsInstanceOfType(value))
         {
@@ -378,14 +377,14 @@ internal static class ParamAttributeTypeConversions_WithTuples
     }
 
     private static bool TryConvertTupleComponents
-        (object?[] array, Type[] tupleTypes, [MaybeNullWhen(false)] out object?[] tupleComponents)
+        (object?[] array, Type[] tupleTypes, out object?[] tupleComponents)
     {
         var components = new object?[array.Length];
         for (int i = 0; i < components.Length; i++)
         {
             if (!TryConvert(array[i], tupleTypes[i], out components[i]))
             {
-                tupleComponents = null;
+                tupleComponents = null!;
                 return false;
             }
         }
@@ -394,11 +393,11 @@ internal static class ParamAttributeTypeConversions_WithTuples
         return true;
     }
 
-    private static bool TryGetTupleType(Type type, [MaybeNullWhen(false)] out Type[] typeArgs)
+    private static bool TryGetTupleType(Type type, out Type[] typeArgs)
     {
         if (!type.IsGenericType)
         {
-            typeArgs = null;
+            typeArgs = null!;
             return false;
         }
 
@@ -419,7 +418,7 @@ internal static class ParamAttributeTypeConversions_WithTuples
             return true;
         }
 
-        typeArgs = null;
+        typeArgs = null!;
         return false;
     }
 }
