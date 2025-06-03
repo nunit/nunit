@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnitLite;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.HookExtension.Execution
 {
@@ -19,7 +19,6 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
             }
         }
 
-        [Explicit]
         [TestFixture]
         private class SomeEmptyTest
         {
@@ -60,10 +59,9 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
         {
             TestLog.Logs.Clear();
 
-            new AutoRun(typeof(SomeEmptyTest).Assembly).Execute([
-                "--where",
-                $"class == {typeof(SomeEmptyTest).FullName}"
-            ]);
+            var workItem = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            workItem.Execute();
+
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(SomeEmptyTest.OneTimeSetUp),
                 nameof(SomeEmptyTest.SetUp),
