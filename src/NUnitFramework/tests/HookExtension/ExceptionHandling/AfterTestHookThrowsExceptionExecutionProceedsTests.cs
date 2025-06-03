@@ -1,90 +1,29 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.HookExtensionTests;
 
 namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
 {
     [TestFixture]
     internal class AfterTestHookThrowsExceptionExecutionProceedsTests
     {
-        internal class ActivateBeforeTestHook : NUnitAttribute, IApplyToContext
-        {
-            public virtual void ApplyToContext(TestExecutionContext context)
-            {
-                context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
-                {
-                    TestLog.LogCurrentMethod();
-                });
-            }
-        }
-
-        internal class ActivateAfterTestHookThrowingException : NUnitAttribute, IApplyToContext
-        {
-            public virtual void ApplyToContext(TestExecutionContext context)
-            {
-                context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
-                {
-                    TestLog.LogCurrentMethod();
-                    throw new Exception("After test hook crashed!!");
-                });
-            }
-        }
-
-        [TestFixture]
-        private class SomeEmptyTest
-        {
-            [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [SetUp]
-            public void SetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [Test]
-            [ActivateBeforeTestHook]
-            [ActivateAfterTestHookThrowingException]
-            public void EmptyTest()
-            {
-                TestLog.LogCurrentMethod();
-            }
-        }
-
         [Test]
         public void AfterTestHookThrowsException_ExecutionProceeds()
         {
             TestLog.Logs.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(SomeEmptyTest.OneTimeSetUp),
-                nameof(SomeEmptyTest.SetUp),
+                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.OneTimeSetUp),
+                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.SetUp),
                 nameof(ActivateBeforeTestHook.ApplyToContext),
-                nameof(SomeEmptyTest.EmptyTest),
+                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.EmptyTest),
                 nameof(ActivateAfterTestHookThrowingException.ApplyToContext),
-                nameof(SomeEmptyTest.TearDown),
-                nameof(SomeEmptyTest.OneTimeTearDown)
+                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.TearDown),
+                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.OneTimeTearDown)
             ]));
         }
     }

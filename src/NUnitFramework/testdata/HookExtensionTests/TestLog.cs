@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace NUnit.Framework.Tests.HookExtension
+namespace NUnit.TestData.HookExtensionTests
 {
-    internal static class TestLog
+    public static class TestLog
     {
         private static readonly AsyncLocal<List<string>> LocalLogs = new AsyncLocal<List<string>>();
         private static readonly object LogLock = new object();
