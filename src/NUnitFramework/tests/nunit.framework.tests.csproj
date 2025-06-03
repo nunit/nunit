@@ -22,11 +22,8 @@
         <PackageReference Include="NUnit.Analyzers" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.Collections.Immutable" />
-    </ItemGroup>
-
     <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+        <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.ValueTuple" />
     </ItemGroup>
 

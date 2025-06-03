@@ -5,7 +5,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using NUnit.Framework;
 
-[assembly: SimpleJob(RuntimeMoniker.Net462)]
+////[assembly: SimpleJob(RuntimeMoniker.Net462)]
 [assembly: SimpleJob(RuntimeMoniker.Net80)]
 [assembly: HideColumns("StdDev", "RatioSD", "Job")]
 

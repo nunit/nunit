@@ -7,6 +7,7 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <PackageVersion Include="System.Memory" Version="4.6.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.5.0" />
+    <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
   </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
@@ -14,7 +15,6 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
-    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
   <!-- Package to allow Nullability etc. in older SDKS -->
   <ItemGroup>
@@ -35,7 +35,6 @@
   <!-- Specific dependencies -->
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.0" />
-    <PackageVersion Include="System.Reflection.Metadata" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageVersion Include="System.Security.Principal.Windows" Version="5.0.0" />
