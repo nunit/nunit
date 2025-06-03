@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         [Test]
         public void BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes()
         {
-            TestLog.Logs.Clear();
+            TestLog.Clear();
 
             var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes));
             workItem.Execute();

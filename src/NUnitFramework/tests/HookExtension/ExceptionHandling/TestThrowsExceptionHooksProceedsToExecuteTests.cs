@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         [Test]
         public void TestThrowsException_HooksProceedsToExecute()
         {
-            TestLog.Logs.Clear();
+            TestLog.Clear();
 
             var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute));
             workItem.Execute();
