@@ -73,11 +73,13 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
+#if !NETFRAMEWORK
                     if (bufferExpected.SequenceEqual(bufferActual))
                     {
                         readByte += readActual;
                         continue;
                     }
+#endif
 
                     for (int count = 0; count < BUFFER_SIZE; ++count)
                     {
@@ -93,6 +95,10 @@ namespace NUnit.Framework.Constraints.Comparers
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
+
+#if NETFRAMEWORK
+                    readByte += readActual;
+#endif
                 }
             }
             finally
