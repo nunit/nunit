@@ -19,7 +19,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.OneTimeSetUp),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.SetUp),
-                nameof(ActivateBeforeTestHook.ApplyToContext),
+                nameof(ActivateBeforeTestHook),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.EmptyTest),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.TearDown),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.OneTimeTearDown)

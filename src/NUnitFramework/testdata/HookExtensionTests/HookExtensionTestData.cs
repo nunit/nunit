@@ -30,7 +30,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateBeforeTestHook));
             });
         }
     }
@@ -41,7 +41,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingException));
                 throw new Exception("Before test hook crashed!!");
             });
         }
@@ -53,7 +53,7 @@ namespace NUnit.TestData.HookExtensionTests
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHook));
             });
         }
     }
@@ -64,7 +64,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateAfterTestHook));
             });
         }
     }
@@ -75,7 +75,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingException));
                 throw new Exception("After test hook crashed!!");
             });
         }
@@ -88,7 +88,7 @@ namespace NUnit.TestData.HookExtensionTests
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
-                TestLog.LogCurrentMethod();
+                TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHook));
             });
         }
     }
