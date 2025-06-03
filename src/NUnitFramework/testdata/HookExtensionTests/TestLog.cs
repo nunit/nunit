@@ -42,6 +42,11 @@ namespace NUnit.TestData.HookExtensionTests
             Log(callerMethodName);
         }
 
+        public static void LogMessage(string message)
+        {
+            Log(message);
+        }
+
         public static void Clear() => Logs?.Clear();
     }
 }

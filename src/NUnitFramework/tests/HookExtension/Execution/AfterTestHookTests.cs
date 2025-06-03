@@ -19,7 +19,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.OneTimeSetUp),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.SetUp),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.EmptyTest),
-                nameof(ActivateAfterTestHook.ApplyToContext),
+                nameof(ActivateAfterTestHook),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.TearDown),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.OneTimeTearDown)
             ]));

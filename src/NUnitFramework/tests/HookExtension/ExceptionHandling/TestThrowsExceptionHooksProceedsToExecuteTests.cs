@@ -19,9 +19,9 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute.OneTimeSetUp),
                 nameof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute.SetUp),
-                nameof(ActivateBeforeTestHook.ApplyToContext),
+                nameof(ActivateBeforeTestHook),
                 nameof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute.EmptyTest),
-                nameof(ActivateAfterTestHook.ApplyToContext),
+                nameof(ActivateAfterTestHook),
                 nameof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute.TearDown),
                 nameof(EmptyTestFor_TestThrowsException_HooksProceedsToExecute.OneTimeTearDown)
             ]));
