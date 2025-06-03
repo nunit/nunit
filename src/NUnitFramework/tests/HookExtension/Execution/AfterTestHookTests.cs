@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
         [Test]
         public void ExecutionProceedsAfterTheAfterTestHookCompletes()
         {
-            TestLog.Logs.Clear();
+            TestLog.Clear();
 
             var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes));
             workItem.Execute();

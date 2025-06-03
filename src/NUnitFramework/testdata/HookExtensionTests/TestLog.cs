@@ -8,34 +8,40 @@ namespace NUnit.TestData.HookExtensionTests
 {
     public static class TestLog
     {
-        private static readonly AsyncLocal<List<string>> LocalLogs = new AsyncLocal<List<string>>();
-        private static readonly object LogLock = new object();
+        private static readonly AsyncLocal<List<string>?> LocalLogs = new();
+        private static readonly object LogLock = new();
+
+        private static void Log(string infoToLog)
+        {
+            Logs ??= [];
+            Logs.Add(infoToLog);
+        }
 
         // Each aync context gets its own instance of Logs
-        public static List<string> Logs
+        public static List<string>? Logs
         {
             get
             {
                 lock (LogLock)
                 {
-                    if (LocalLogs.Value is null)
-                    {
-                        LocalLogs.Value = new List<string>();
-                    }
-
                     return LocalLogs.Value;
                 }
             }
-        }
 
-        public static void Log(string infoToLog)
-        {
-            Logs.Add(infoToLog);
+            private set
+            {
+                lock (LogLock)
+                {
+                    LocalLogs.Value = value;
+                }
+            }
         }
 
         public static void LogCurrentMethod([CallerMemberName] string callerMethodName = "")
         {
             Log(callerMethodName);
         }
+
+        public static void Clear() => Logs?.Clear();
     }
 }

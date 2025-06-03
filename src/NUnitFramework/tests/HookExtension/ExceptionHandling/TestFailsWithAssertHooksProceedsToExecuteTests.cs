@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
         [Test]
         public void TestFailsWithAssert_HooksProceedsToExecute()
         {
-            TestLog.Logs.Clear();
+            TestLog.Clear();
 
             var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute));
             workItem.Execute();
