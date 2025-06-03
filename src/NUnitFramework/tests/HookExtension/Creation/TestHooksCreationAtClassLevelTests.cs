@@ -2,8 +2,6 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.HookExtension.Creation
@@ -27,7 +25,6 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
             }
         }
 
-        [Explicit]
         [TestFixture]
         [ActivateBeforeTestHooks]
         [ActivateAfterTestHooks]
@@ -40,41 +37,13 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         }
 
         [Test]
-        public void NewHooksAppliedToContext()
+        public void TestHooksAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            var work = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            work.Execute();
 
-            Assert.That(work, Is.Not.Null);
-            TestCommand command = work.MakeTestCommand();
-
-            Assert.That(command, Is.TypeOf(typeof(HookDelegatingTestCommand)));
-        }
-
-        [Test]
-        public void BeforeTestHookAdded()
-        {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-
-            Assert.That(work, Is.Not.Null);
-            TestCommand command = work.MakeTestCommand();
-
-            Assert.That(work.Context.HookExtension, Is.Not.Null);
-            Assert.That(work.Context.HookExtension.BeforeTestHook, Is.Not.Null);
-        }
-
-        [Test]
-        public void AfterTestHookAdded()
-        {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-
-            Assert.That(work, Is.Not.Null);
-            TestCommand command = work.MakeTestCommand();
-
-            Assert.That(work.Context.HookExtension, Is.Not.Null);
-            Assert.That(work.Context.HookExtension.AfterTestHook, Is.Not.Null);
+            Assert.That(work.Context.HookExtension.BeforeTestHook.GetHandlers(), Has.Count.EqualTo(1));
+            Assert.That(work.Context.HookExtension.AfterTestHook.GetHandlers(), Has.Count.EqualTo(1));
         }
     }
 }
