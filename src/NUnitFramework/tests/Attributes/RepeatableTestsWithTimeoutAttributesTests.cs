@@ -107,6 +107,7 @@ namespace NUnit.Framework.Tests.Attributes
             HookDelegatingTestCommand hookDelegatingTestCommandCommand = (HookDelegatingTestCommand)command;
 
             command = GetInnerCommand(hookDelegatingTestCommandCommand);
+            Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
         }
 
         private TestCommand GetInnerCommand(DelegatingTestCommand command)
