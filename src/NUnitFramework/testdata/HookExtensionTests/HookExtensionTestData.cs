@@ -24,71 +24,71 @@ namespace NUnit.TestData.HookExtensionTests
         public ActionTargets Targets { get; }
     }
 
-    public class ActivateBeforeTestHook : NUnitAttribute, IApplyToContext
+    public class ActivateBeforeTestHookAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateBeforeTestHook));
+                TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
             });
         }
     }
 
-    public class ActivateBeforeTestHookThrowingException : NUnitAttribute, IApplyToContext
+    public class ActivateBeforeTestHookThrowingExceptionAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingException));
+                TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingExceptionAttribute));
                 throw new Exception("Before test hook crashed!!");
             });
         }
     }
-    public class ActivateLongRunningBeforeTestHook : NUnitAttribute, IApplyToContext
+    public class ActivateLongRunningBeforeTestHookAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
-                TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHook));
+                TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHookAttribute));
             });
         }
     }
 
-    public class ActivateAfterTestHook : NUnitAttribute, IApplyToContext
+    public class ActivateAfterTestHookAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateAfterTestHook));
+                TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
             });
         }
     }
 
-    public class ActivateAfterTestHookThrowingException : NUnitAttribute, IApplyToContext
+    public class ActivateAfterTestHookThrowingExceptionAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingException));
+                TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
                 throw new Exception("After test hook crashed!!");
             });
         }
     }
 
-    public class ActivateLongRunningAfterTestHook : NUnitAttribute, IApplyToContext
+    public class ActivateLongRunningAfterTestHookAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
-                TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHook));
+                TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
             });
         }
     }

@@ -20,9 +20,9 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.OneTimeSetUp),
                 "BeforeTest_Action",
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.SetUp),
-                nameof(ActivateBeforeTestHook),
+                nameof(ActivateBeforeTestHookAttribute),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.EmptyTest),
-                nameof(ActivateAfterTestHook),
+                nameof(ActivateAfterTestHookAttribute),
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.TearDown),
                 "AfterTest_Action",
                 nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.OneTimeTearDown)
