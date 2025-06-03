@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
     internal class TestHooksCreationAtAssemblyLevelTests
     {
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateBeforeTestHooks : NUnitAttribute, IApplyToContext
+        internal class ActivateBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         }
 
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateAfterTestHooks : NUnitAttribute, IApplyToContext
+        internal class ActivateAfterTestHooksAttribute : NUnitAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
-            var hookAttribute = new ActivateBeforeTestHooks();
+            var hookAttribute = new ActivateBeforeTestHooksAttribute();
             hookAttribute.ApplyToContext(context);
 
             var work = TestBuilder.CreateWorkItem(test, context) as SimpleWorkItem;
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
-            var hookAttribute = new ActivateAfterTestHooks();
+            var hookAttribute = new ActivateAfterTestHooksAttribute();
             hookAttribute.ApplyToContext(context);
 
             var work = TestBuilder.CreateWorkItem(test, context) as SimpleWorkItem;

@@ -20,8 +20,8 @@ namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.OneTimeSetUp),
                 nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.SetUp),
-                nameof(ActivateBeforeTestHookThrowingException),
-                nameof(ActivateAfterTestHook),
+                nameof(ActivateBeforeTestHookThrowingExceptionAttribute),
+                nameof(ActivateAfterTestHookAttribute),
                 nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.TearDown),
                 nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.OneTimeTearDown)
             ]));

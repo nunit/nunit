@@ -18,11 +18,11 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeSetUp),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.SetUp),
-                nameof(ActivateLongRunningBeforeTestHook),
-                nameof(ActivateBeforeTestHook),
+                nameof(ActivateLongRunningBeforeTestHookAttribute),
+                nameof(ActivateBeforeTestHookAttribute),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.EmptyTest),
-                nameof(ActivateLongRunningAfterTestHook),
-                nameof(ActivateAfterTestHook),
+                nameof(ActivateLongRunningAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAttribute),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.TearDown),
                 nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeTearDown)
             ]));
