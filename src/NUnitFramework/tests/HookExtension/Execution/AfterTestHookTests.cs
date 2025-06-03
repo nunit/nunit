@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context?.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+                context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
                 {
                     TestLog.LogCurrentMethod();
                 });

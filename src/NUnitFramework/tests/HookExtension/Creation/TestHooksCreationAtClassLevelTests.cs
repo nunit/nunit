@@ -15,7 +15,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context?.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) => { });
+                context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) => { });
             }
         }
 
@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context?.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) => { });
+                context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) => { });
             }
         }
 
