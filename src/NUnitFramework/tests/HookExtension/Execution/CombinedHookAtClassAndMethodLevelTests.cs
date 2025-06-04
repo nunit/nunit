@@ -12,19 +12,34 @@ namespace NUnit.Framework.Tests.HookExtension.Execution
         {
             TestLog.Clear();
 
+            const string oneTimeSetUp = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.OneTimeSetUp);
+            const string setUp = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.SetUp);
+            const string testWithHooks = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.EmptyTestWithHooks);
+            const string testWithoutHooks = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.EmptyTestWithoutHooks1);
+            const string tearDown = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.TearDown);
+            const string oneTimeTearDown = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.OneTimeTearDown);
             var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(ActivateClassLevelAfterTestHooksAttribute),
-                nameof(ActivateClassLevelBeforeTestHooksAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeSetUp),
-                nameof(ActivateMethodLevelAfterTestHooksAttribute),
-                nameof(ActivateMethodLevelBeforeTestHooksAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.SetUp),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.EmptyTest),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.TearDown),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeTearDown)
+                oneTimeSetUp,
+                // Test with hooks starts
+                setUp,
+                "ActivateBeforeClassHook",
+                "ActivateBeforeTestMethodHook",
+                testWithHooks,
+                "ActivateAfterClassHook",
+                "ActivateAfterTestMethodHook",
+                tearDown,
+                // Test with hooks ends
+                // Test without hooks starts
+                setUp,
+                "ActivateBeforeClassHook",
+                testWithoutHooks,
+                "ActivateAfterClassHook",
+                tearDown,
+                // Test without hooks ends
+                oneTimeTearDown
             ]));
         }
     }

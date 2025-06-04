@@ -31,7 +31,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateClassLevelBeforeTestHooksAttribute));
+                TestLog.LogMessage("ActivateBeforeClassHook");
             });
         }
     }
@@ -43,7 +43,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateClassLevelAfterTestHooksAttribute));
+                TestLog.LogMessage("ActivateAfterClassHook");
             });
         }
     }
@@ -55,7 +55,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateMethodLevelBeforeTestHooksAttribute));
+                TestLog.LogMessage("ActivateBeforeTestMethodHook");
             });
         }
     }
@@ -67,7 +67,7 @@ namespace NUnit.TestData.HookExtensionTests
         {
             context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
             {
-                TestLog.LogMessage(nameof(ActivateMethodLevelAfterTestHooksAttribute));
+                TestLog.LogMessage("ActivateAfterTestMethodHook");
             });
         }
     }
@@ -426,7 +426,13 @@ namespace NUnit.TestData.HookExtensionTests
         [Test]
         [ActivateMethodLevelBeforeTestHooks]
         [ActivateMethodLevelAfterTestHooks]
-        public void EmptyTest()
+        public void EmptyTestWithHooks()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [Test]
+        public void EmptyTestWithoutHooks1()
         {
             TestLog.LogCurrentMethod();
         }
