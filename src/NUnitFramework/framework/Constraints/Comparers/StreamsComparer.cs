@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Buffers;
+using System.Linq;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -51,8 +52,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
             try
             {
-                bufferExpected = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
-                bufferActual = ArrayPool<byte>.Shared.Rent(BUFFER_SIZE);
+                bufferExpected = LocalPool.Rent();
+                bufferActual = LocalPool.Rent();
 
                 if (xStream.CanSeek)
                 {
@@ -72,11 +73,13 @@ namespace NUnit.Framework.Constraints.Comparers
                     readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
 
-                    if (MemoryExtensions.SequenceEqual<byte>(bufferExpected.AsSpan(0, readExpected), bufferActual.AsSpan(0, readActual)))
+#if !NETFRAMEWORK
+                    if (bufferExpected.SequenceEqual(bufferActual))
                     {
                         readByte += readActual;
                         continue;
                     }
+#endif
 
                     for (int count = 0; count < BUFFER_SIZE; ++count)
                     {
@@ -92,6 +95,10 @@ namespace NUnit.Framework.Constraints.Comparers
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
+
+#if NETFRAMEWORK
+                    readByte += readActual;
+#endif
                 }
             }
             finally
@@ -106,13 +113,73 @@ namespace NUnit.Framework.Constraints.Comparers
                 }
 
                 if (bufferExpected is not null)
-                    ArrayPool<byte>.Shared.Return(bufferExpected);
+                    LocalPool.Return(bufferExpected);
 
                 if (bufferActual is not null)
-                    ArrayPool<byte>.Shared.Return(bufferActual);
+                    LocalPool.Return(bufferActual);
             }
 
             return EqualMethodResult.ComparedEqual;
+        }
+
+        internal static class LocalPool
+        {
+            private static readonly List<Buffer> Buffers = [new Buffer(), new Buffer()];
+
+            internal static int RentedBuffers => Buffers.Count(b => b.Rented);
+            internal static int AvailableBuffers => Buffers.Count(b => !b.Rented);
+
+            public static byte[] Rent()
+            {
+                lock (Buffers)
+                {
+                    var buffer = Buffers.Find(b => !b.Rented);
+                    if (buffer is null)
+                    {
+                        buffer = new Buffer();
+                        Buffers.Add(buffer);
+                    }
+
+                    return buffer.Rent();
+                }
+            }
+
+            public static void Return(byte[] data)
+            {
+                lock (Buffers)
+                {
+                    var buffer = Buffers.Find(b => ReferenceEquals(data, b.Data));
+                    if (buffer is null)
+                    {
+                        throw new ArgumentException("Buffer not found in pool", nameof(data));
+                    }
+                    if (!buffer.Rented)
+                    {
+                        throw new ArgumentException("Buffer not rented out", nameof(data));
+                    }
+
+                    buffer.Return();
+                }
+            }
+
+            private sealed class Buffer
+            {
+                public static int Where { get; internal set; }
+                public byte[] Data { get; } = new byte[BUFFER_SIZE];
+
+                public bool Rented { get; private set; }
+
+                public byte[] Rent()
+                {
+                    Rented = true;
+                    return Data;
+                }
+
+                public void Return()
+                {
+                    Rented = false;
+                }
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
         <LangVersion>latest</LangVersion>
         <Optimize>true</Optimize>
         <RootNamespace>NUnit.Framework</RootNamespace>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,6 +18,12 @@
 
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+        <PackageReference Include="System.Memory" />
+        <PackageReference Include="System.Reflection.Metadata" />
+        <PackageReference Include="System.Collections.Immutable" />
     </ItemGroup>
 
     <ItemGroup>

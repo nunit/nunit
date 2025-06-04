@@ -1,0 +1,7 @@
+﻿<Project>
+
+  <Target Name="CheckConfiguration" BeforeTargets="Compile">
+    <Error Condition="'$(AssemblyConfiguration)' == ''" Text="Missing AssemblyConfiguration for '$(TargetFramework)'" />
+  </Target>
+
+</Project>

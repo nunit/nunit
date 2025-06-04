@@ -76,10 +76,6 @@
     </Otherwise>
   </Choose>
 
-  <Target Name="CheckConfiguration" BeforeTargets="Compile">
-    <Error Condition="'$(AssemblyConfiguration)' == ''" Text="Missing AssemblyConfiguration for $(TargetFramework)" />
-  </Target>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />
