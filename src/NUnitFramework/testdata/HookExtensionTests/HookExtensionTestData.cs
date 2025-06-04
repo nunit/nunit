@@ -24,6 +24,54 @@ namespace NUnit.TestData.HookExtensionTests
         public ActionTargets Targets { get; }
     }
 
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ActivateClassLevelBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
+    {
+        public virtual void ApplyToContext(TestExecutionContext context)
+        {
+            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            {
+                TestLog.LogMessage(nameof(ActivateClassLevelBeforeTestHooksAttribute));
+            });
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ActivateClassLevelAfterTestHooksAttribute : NUnitAttribute, IApplyToContext
+    {
+        public virtual void ApplyToContext(TestExecutionContext context)
+        {
+            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            {
+                TestLog.LogMessage(nameof(ActivateClassLevelAfterTestHooksAttribute));
+            });
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ActivateMethodLevelBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
+    {
+        public virtual void ApplyToContext(TestExecutionContext context)
+        {
+            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            {
+                TestLog.LogMessage(nameof(ActivateMethodLevelBeforeTestHooksAttribute));
+            });
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ActivateMethodLevelAfterTestHooksAttribute : NUnitAttribute, IApplyToContext
+    {
+        public virtual void ApplyToContext(TestExecutionContext context)
+        {
+            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            {
+                TestLog.LogMessage(nameof(ActivateMethodLevelAfterTestHooksAttribute));
+            });
+        }
+    }
+
     public class ActivateBeforeTestHookAttribute : NUnitAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
@@ -340,6 +388,44 @@ namespace NUnit.TestData.HookExtensionTests
         [ActivateLongRunningBeforeTestHook]
         [ActivateAfterTestHook]
         [ActivateLongRunningAfterTestHook]
+        public void EmptyTest()
+        {
+            TestLog.LogCurrentMethod();
+        }
+    }
+
+    [TestFixture]
+    [ActivateClassLevelBeforeTestHooks]
+    [ActivateClassLevelAfterTestHooks]
+    public class EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [Test]
+        [ActivateMethodLevelBeforeTestHooks]
+        [ActivateMethodLevelAfterTestHooks]
         public void EmptyTest()
         {
             TestLog.LogCurrentMethod();
