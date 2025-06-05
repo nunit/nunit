@@ -1,48 +1,42 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Reflection;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Tests.TestUtilities;
+using NUnit.Framework.Tests.Attributes;
 
 namespace NUnit.Framework.Tests.HookExtension.Execution
 {
     [TestFixture]
     internal class HookDelegatingTestCommandTests
     {
-        [Explicit]
-        [TestFixture]
-        private class SomeEmptyTest
+        public class Prover
         {
-            [Test]
-            public void EmptyTest()
+            public bool WasInsideExecute = false;
+        }
+
+        public class MockedTestCommand(Test test, Prover prover) : TestCommand(test)
+        {
+            private readonly Prover _prover = prover;
+
+            public override TestResult Execute(TestExecutionContext context)
             {
+                _prover.WasInsideExecute = true;
+                return context.CurrentResult;
             }
         }
 
         [Test]
         public void InnerCommandIsAlwaysExecuted()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            var prover = new Prover();
+            var mockedTestCommand = new MockedTestCommand(new TestDummy(), prover);
+            var hookDelegatingTestCommandCommand = new HookDelegatingTestCommand(mockedTestCommand);
 
-            Assert.That(work, Is.Not.Null);
-            TestCommand command = work.MakeTestCommand();
+            Assert.That(prover.WasInsideExecute, Is.False);
 
-            Assert.That(command, Is.TypeOf(typeof(HookDelegatingTestCommand)));
-            HookDelegatingTestCommand hookDelegatingTestCommandCommand = (HookDelegatingTestCommand)command;
+            hookDelegatingTestCommandCommand.Execute(TestExecutionContext.CurrentContext);
 
-            command = GetInnerCommand(hookDelegatingTestCommandCommand);
-
-            Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
-        }
-
-        private TestCommand GetInnerCommand(DelegatingTestCommand command)
-        {
-            FieldInfo? innerCommand =
-                command.GetType().GetField("innerCommand", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.That(innerCommand, Is.Not.Null);
-            return (TestCommand)innerCommand.GetValue(command)!;
+            Assert.That(prover.WasInsideExecute, Is.True);
         }
     }
 }
