@@ -2,19 +2,18 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Tests.HookExtension.Creation
+namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
     [TestFixture]
-    internal class TestHooksCreationAtMethodLevelTests
+    internal class TestHooksCreationAtClassLevelTests
     {
         internal class ActivateBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) => { });
+                context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) => { });
             }
         }
 
@@ -22,16 +21,16 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
-                context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) => { });
+                context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) => { });
             }
         }
 
         [TestFixture]
+        [ActivateBeforeTestHooks]
+        [ActivateAfterTestHooks]
         private class SomeEmptyTest
         {
             [Test]
-            [ActivateBeforeTestHooks]
-            [ActivateAfterTestHooks]
             public void EmptyTest()
             {
             }
@@ -40,12 +39,11 @@ namespace NUnit.Framework.Tests.HookExtension.Creation
         [Test]
         public void TestHooksAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-            work!.Execute();
+            var work = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            work.Execute();
 
-            Assert.That(work.Context.HookExtension.BeforeTestHook.GetHandlers(), Has.Count.EqualTo(1));
-            Assert.That(work.Context.HookExtension.AfterTestHook.GetHandlers(), Has.Count.EqualTo(1));
+            Assert.That(work.Context.ExecutionHooks.BeforeTest.GetHandlers(), Has.Count.EqualTo(1));
+            Assert.That(work.Context.ExecutionHooks.AfterTest.GetHandlers(), Has.Count.EqualTo(1));
         }
     }
 }

@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.HookExtensionTests;
+using NUnit.TestData.ExecutionHookTests;
 
-namespace NUnit.Framework.Tests.HookExtension.Execution
+namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     [TestFixture]
     internal class BeforeTestHookTests

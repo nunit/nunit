@@ -4,7 +4,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Tests.Attributes;
 
-namespace NUnit.Framework.Tests.HookExtension.Execution
+namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     [TestFixture]
     internal class HookDelegatingTestCommandTests

@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.HookExtensionTests;
+using NUnit.TestData.ExecutionHookTests;
 
-namespace NUnit.Framework.Tests.HookExtension.ExceptionHandling
+namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
     [TestFixture]
     internal class TestThrowsExceptionHooksProceedsToExecuteTests
