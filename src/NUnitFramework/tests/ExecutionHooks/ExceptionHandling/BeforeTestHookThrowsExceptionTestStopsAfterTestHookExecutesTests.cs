@@ -1,0 +1,30 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
+using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHookTests;
+
+namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
+{
+    [TestFixture]
+    internal class BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesTests
+    {
+        [Test]
+        public void BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes()
+        {
+            TestLog.Clear();
+
+            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes));
+            workItem.Execute();
+
+            // no test is executed
+            Assert.That(TestLog.Logs, Is.EqualTo([
+                nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.OneTimeSetUp),
+                nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.SetUp),
+                nameof(ActivateBeforeTestHookThrowingExceptionAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.TearDown),
+                nameof(EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes.OneTimeTearDown)
+            ]));
+        }
+    }
+}
