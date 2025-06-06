@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace NUnit.TestData.HookExtensionTests
+namespace NUnit.TestData.ExecutionHookTests
 {
     public static class TestLog
     {

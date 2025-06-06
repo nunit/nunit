@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework.Internal.HookExtensions
+namespace NUnit.Framework.Internal.ExecutionHooks
 {
     internal sealed class MethodHookEventArgs : EventArgs
     {

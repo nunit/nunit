@@ -12,7 +12,6 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework.Internal.HookExtensions;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
@@ -70,7 +69,7 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
-        private HookExtension _hookExtension;
+        private ExecutionHooks.ExecutionHooks _executionHooks;
 
         #endregion
 
@@ -105,7 +104,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-            _hookExtension = new HookExtension(other.HookExtension);
+            _executionHooks = new ExecutionHooks.ExecutionHooks(other.ExecutionHooks);
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -404,7 +403,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Hook Extension to support high level test extensions.
         /// </summary>
-        public HookExtension HookExtension => _hookExtension ??= new HookExtension();
+        public ExecutionHooks.ExecutionHooks ExecutionHooks => _executionHooks ??= new ExecutionHooks.ExecutionHooks();
 
         #endregion
 

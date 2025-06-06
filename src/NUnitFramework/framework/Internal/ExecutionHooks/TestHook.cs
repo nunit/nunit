@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Internal.HookExtensions
+namespace NUnit.Framework.Internal.ExecutionHooks
 {
     /// <summary>
     /// Event that supports both synchronous and asynchronous handlers.

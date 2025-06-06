@@ -23,15 +23,15 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                context.HookExtension.OnBeforeTest(context);
+                context.ExecutionHooks.OnBeforeTest(context);
                 innerCommand.Execute(context);
             }
             catch (Exception)
             {
-                context.HookExtension.OnAfterTest(context);
+                context.ExecutionHooks.OnAfterTest(context);
                 throw;
             }
-            context.HookExtension.OnAfterTest(context);
+            context.ExecutionHooks.OnAfterTest(context);
             return context.CurrentResult;
         }
     }

@@ -6,7 +6,7 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.TestData.HookExtensionTests
+namespace NUnit.TestData.ExecutionHookTests
 {
     [AttributeUsage(AttributeTargets.Class)]
     internal class SomeTestActionAttribute : Attribute, ITestAction
@@ -29,7 +29,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage("ActivateBeforeClassHook");
             });
@@ -41,7 +41,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage("ActivateAfterClassHook");
             });
@@ -53,7 +53,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage("ActivateBeforeTestMethodHook");
             });
@@ -65,7 +65,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage("ActivateAfterTestMethodHook");
             });
@@ -76,7 +76,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
             });
@@ -87,7 +87,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingExceptionAttribute));
                 throw new Exception("Before test hook crashed!!");
@@ -98,7 +98,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.BeforeTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
                 TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHookAttribute));
@@ -110,7 +110,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
             });
@@ -121,7 +121,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) =>
             {
                 TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
                 throw new Exception("After test hook crashed!!");
@@ -133,7 +133,7 @@ namespace NUnit.TestData.HookExtensionTests
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
-            context.HookExtension.AfterTestHook.AddHandler((sender, eventArgs) =>
+            context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) =>
             {
                 Thread.Sleep(500);
                 TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
