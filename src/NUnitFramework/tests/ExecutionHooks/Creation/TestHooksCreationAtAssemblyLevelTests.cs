@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     internal class TestHooksCreationAtAssemblyLevelTests
     {
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
+        internal class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         }
 
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateAfterTestHooksAttribute : NUnitAttribute, IApplyToContext
+        internal class ActivateAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {

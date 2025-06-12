@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     [TestFixture]
     internal class TestHooksCreationAtClassLevelTests
     {
-        internal class ActivateBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext
+        internal class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
@@ -17,7 +17,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             }
         }
 
-        internal class ActivateAfterTestHooksAttribute : NUnitAttribute, IApplyToContext
+        internal class ActivateAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
             public virtual void ApplyToContext(TestExecutionContext context)
             {
