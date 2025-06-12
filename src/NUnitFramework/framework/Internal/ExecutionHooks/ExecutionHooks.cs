@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Linq;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
@@ -9,30 +10,38 @@ namespace NUnit.Framework.Internal.ExecutionHooks
     /// </summary>
     public sealed class ExecutionHooks
     {
-        /// <summary>
-        /// Default ctor of <see cref="ExecutionHooks"/> class.
-        /// </summary>
-        public ExecutionHooks()
+        internal ExecutionHooks()
         {
-            BeforeTest = new TestHook();
-            AfterTest = new TestHook();
+        }
+
+        internal TestHook BeforeTest { get; } = new();
+        internal TestHook AfterTest { get; } = new();
+
+        /// <summary>
+        /// Adds a hook handler to be invoked before the test method is executed.
+        /// </summary>
+        /// <param name="hookHandler">The event handler to attach to the before-test hook.</param>
+        public void AddBeforeTestHandler(EventHandler hookHandler)
+        {
+            BeforeTest.AddHandler(hookHandler);
         }
 
         /// <summary>
-        /// Gets or sets the hook event that is triggered before a test method is executed.
+        /// Adds a hook handler to be invoked after the test method is executed.
         /// </summary>
-        public TestHook BeforeTest { get; }
+        /// <param name="hookHandler">The event handler to attach to the after-test hook.</param>
+        public void AddAfterTestHandler(EventHandler hookHandler)
+        {
+            AfterTest.AddHandler(hookHandler);
+        }
 
         /// <summary>
-        /// Gets or sets the hook event that is triggered after a test method is executed.
+        /// Gets a value indicating whether any test hooks are registered
+        /// in either <see cref="BeforeTest"/> or <see cref="AfterTest"/>.
         /// </summary>
-        public TestHook AfterTest { get; }
+        internal bool TestHooksUsed => BeforeTest.GetHandlers().Count > 0 || AfterTest.GetHandlers().Count > 0;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExecutionHooks"/> class by copying hooks from another instance.
-        /// </summary>
-        /// <param name="other">The instance of <see cref="ExecutionHooks"/> to copy hooks from.</param>
-        public ExecutionHooks(ExecutionHooks other) : this()
+        internal ExecutionHooks(ExecutionHooks other)
         {
             other.BeforeTest.GetHandlers().ToList().ForEach(d => BeforeTest.AddHandler(d));
             other.AfterTest.GetHandlers().ToList().ForEach(d => AfterTest.AddHandler(d));

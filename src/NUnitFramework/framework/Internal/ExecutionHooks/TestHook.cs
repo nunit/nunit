@@ -12,11 +12,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
     {
         private readonly List<EventHandler> _handlers = new();
 
-        /// <summary>
-        /// Adds a test hook handler.
-        /// </summary>
-        /// <param name="handler">The event handler to be attached to the hook.</param>
-        public void AddHandler(EventHandler handler)
+        internal void AddHandler(EventHandler handler)
         {
             lock (_handlers)
                 _handlers.Add(handler);
