@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Builders
                 // inherited
                 RepeatTestAttributes = method.GetCustomAttributes<IRepeatTest>(true);
                 WrapTestMethodAttributes = GetCustomAttributeFromChain<IWrapTestMethod>(method, true);
-                WrapSetupTearDownAttributes = method.GetCustomAttributes<IWrapSetUpTearDown>(true);
+                WrapSetupTearDownAttributes = GetCustomAttributeFromChain<IWrapSetUpTearDown>(method, true);
                 ApplyToContextAttributes = method.GetCustomAttributes<IApplyToContext>(true);
 
                 // non-inherited

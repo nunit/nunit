@@ -34,7 +34,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage("ActivateBeforeClassHook");
             });
         }
-
     }
 
     [AttributeUsage(AttributeTargets.Class)]
@@ -59,7 +58,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage("ActivateBeforeTestMethodHook");
             });
         }
-
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -72,7 +70,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage("ActivateAfterTestMethodHook");
             });
         }
-
     }
 
     public class ActivateBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
@@ -84,7 +81,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
             });
         }
-
     }
 
     public class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
@@ -97,7 +93,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 throw new Exception("Before test hook crashed!!");
             });
         }
-
     }
     public class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
@@ -109,7 +104,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHookAttribute));
             });
         }
-
     }
 
     public class ActivateAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
@@ -121,7 +115,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
             });
         }
-
     }
 
     public class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
@@ -134,7 +127,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 throw new Exception("After test hook crashed!!");
             });
         }
-
     }
 
     public class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
@@ -146,7 +138,6 @@ namespace NUnit.TestData.ExecutionHookTests
                 Thread.Sleep(500);
                 TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
             });
-
         }
     }
 
