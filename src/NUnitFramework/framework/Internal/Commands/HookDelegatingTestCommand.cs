@@ -4,7 +4,7 @@ using System;
 
 namespace NUnit.Framework.Internal.Commands
 {
-    public class HookDelegatingTestCommand : DelegatingTestCommand
+    internal sealed class HookDelegatingTestCommand : DelegatingTestCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HookDelegatingTestCommand"/> class.

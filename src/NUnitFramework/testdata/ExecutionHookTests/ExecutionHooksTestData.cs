@@ -5,7 +5,6 @@ using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.TestData.ExecutionHookTests
 {
@@ -26,9 +25,9 @@ namespace NUnit.TestData.ExecutionHookTests
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ActivateClassLevelBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public sealed class ActivateClassLevelBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
@@ -36,14 +35,10 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ActivateClassLevelAfterTestHooksAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -52,16 +47,12 @@ namespace NUnit.TestData.ExecutionHookTests
                 TestLog.LogMessage("ActivateAfterClassHook");
             });
         }
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class ActivateMethodLevelBeforeTestHooksAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public sealed class ActivateMethodLevelBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) =>
             {
@@ -69,14 +60,10 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class ActivateMethodLevelAfterTestHooksAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -86,13 +73,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
-    public class ActivateBeforeTestHookAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -102,13 +85,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
-    public class ActivateBeforeTestHookThrowingExceptionAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -119,12 +98,8 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
-    public class ActivateLongRunningBeforeTestHookAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -135,13 +110,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
-    public class ActivateAfterTestHookAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -151,13 +122,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
-    public class ActivateAfterTestHookThrowingExceptionAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -168,13 +135,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
-        }
     }
 
-    public class ActivateLongRunningAfterTestHookAttribute : NUnitAttribute, IApplyToContext, IWrapTestMethod
+    public class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
         public virtual void ApplyToContext(TestExecutionContext context)
         {
@@ -183,11 +146,7 @@ namespace NUnit.TestData.ExecutionHookTests
                 Thread.Sleep(500);
                 TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
             });
-        }
 
-        public TestCommand Wrap(TestCommand command)
-        {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
         }
     }
 
