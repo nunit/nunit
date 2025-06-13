@@ -428,7 +428,9 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Multiple(() =>
             {
                 Assert.That(instance.Value, Is.EqualTo(value), "Value");
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
                 Assert.That(instance, Is.Not.EqualTo(value), "ImplicitOperatorNotConsidered");
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             });
         }
 
@@ -658,9 +660,11 @@ namespace NUnit.Framework.Tests.Assertions
             var instanceC = new ClassWithSomeToleranceAwareMembers(1, 1.1, "1.1", null);
             var instanceS = new StructWithSomeToleranceAwareMembers(1, 1.1, "1.1", SomeEnum.Two);
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             Assert.That(() =>
                 Assert.That(instanceS, Is.Not.EqualTo(instanceC).UsingPropertiesComparer()),
                 Throws.InstanceOf<NotSupportedException>());
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
             Assert.That(instanceS, Is.EqualTo(instanceC).UsingPropertiesComparer(
                 c => c.CompareOnlyCommonProperties()));
