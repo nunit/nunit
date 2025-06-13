@@ -161,8 +161,7 @@ namespace NUnit.Framework.Tests.Attributes
         #endregion
     }
 
-    [TestFixture]
-    public class BaseRepeatableTestFixture
+    public abstract class BaseRepeatableTestFixture
     {
         protected int RepeatCount = 0;
 
@@ -172,6 +171,11 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatCount++;
             Assert.That(RepeatCount, Is.GreaterThanOrEqualTo(1));
         }
+    }
+
+    [TestFixture]
+    public class DefaultRepeatableTestFixture : BaseRepeatableTestFixture
+    {
     }
 
     [TestFixture]
