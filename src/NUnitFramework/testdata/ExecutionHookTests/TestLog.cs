@@ -34,6 +34,11 @@ namespace NUnit.TestData.ExecutionHookTests
             Logs.Add(callerMethodName);
         }
 
+        public static void LogCurrentMethodWithContextInfo(string contextInfo, [CallerMemberName] string callerMethodName = "")
+        {
+            Logs.Add($"{callerMethodName}({contextInfo})");
+        }
+
         public static void LogMessage(string message)
         {
             Logs.Add(message);

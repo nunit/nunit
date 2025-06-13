@@ -37,8 +37,18 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void BeforeTest(Interfaces.ITest test)
         {
-            BeforeTestWasRun = true;
-            _action.BeforeTest(test);
+            var context = TestExecutionContext.CurrentContext;
+            try
+            {
+                context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
+
+                BeforeTestWasRun = true;
+                _action.BeforeTest(test);
+            }
+            finally
+            {
+                context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+            }
         }
 
         /// <summary>
@@ -48,8 +58,18 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void AfterTest(Interfaces.ITest test)
         {
-            if (BeforeTestWasRun)
-                _action.AfterTest(test);
+            var context = TestExecutionContext.CurrentContext;
+            try
+            {
+                context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
+
+                if (BeforeTestWasRun)
+                    _action.AfterTest(test);
+            }
+            finally
+            {
+                context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+            }
         }
     }
 }
