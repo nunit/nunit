@@ -69,6 +69,9 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
+        // internal for only testing
+        internal ExecutionHooks.ExecutionHooks? ExecutionHooksInternal;
+
         #endregion
 
         #region Constructors
@@ -102,7 +105,10 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-
+            if (other.ExecutionHooksInternal is not null)
+            {
+                ExecutionHooksInternal = new ExecutionHooks.ExecutionHooks(other.ExecutionHooks);
+            }
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -397,6 +403,11 @@ namespace NUnit.Framework.Internal
         /// Currently only being executed in a test using the <see cref="RetryAttribute"/>
         /// </summary>
         public int CurrentRepeatCount { get; set; }
+
+        /// <summary>
+        /// Hook Extension to support high level test extensions.
+        /// </summary>
+        public ExecutionHooks.ExecutionHooks ExecutionHooks => ExecutionHooksInternal ??= new ExecutionHooks.ExecutionHooks();
 
         #endregion
 
