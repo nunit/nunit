@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
@@ -10,11 +9,11 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     [TestFixture]
     internal class TestExecutionContextHookCreationTests
     {
-        internal class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
-            public virtual void ApplyToContext(TestExecutionContext context)
+            public void ApplyToContext(TestExecutionContext context)
             {
-                context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) => { });
+                context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) => { });
             }
         }
 
@@ -41,10 +40,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         public void WhenNoHooksAreProvidedNoInstanceOfHooksAreCreated()
         {
             var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTestWithNoHooks), nameof(SomeEmptyTestWithNoHooks.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-            work!.Execute();
+            var work = TestBuilder.CreateWorkItem(test);
+            work.Execute();
 
-            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksEnabled, Is.False);
+            Assert.That(work.Context.ExecutionHooksEnabled, Is.False);
         }
 
         [Test]
@@ -52,10 +51,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         public void WhenHooksAreProvidedInstanceOfHooksAreCreated()
         {
             var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTestWithHooks), nameof(SomeEmptyTestWithHooks.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-            work!.Execute();
+            var work = TestBuilder.CreateWorkItem(test);
+            work.Execute();
 
-            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksEnabled, Is.True);
+            Assert.That(work.Context.ExecutionHooksEnabled, Is.True);
         }
     }
 }

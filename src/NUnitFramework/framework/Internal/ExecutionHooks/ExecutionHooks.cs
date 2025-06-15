@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
 {
@@ -35,16 +34,10 @@ namespace NUnit.Framework.Internal.ExecutionHooks
             AfterTest.AddHandler(hookHandler);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether any test hooks are registered
-        /// in either <see cref="BeforeTest"/> or <see cref="AfterTest"/>.
-        /// </summary>
-        internal bool TestHooksUsed => BeforeTest.GetHandlers().Count > 0 || AfterTest.GetHandlers().Count > 0;
-
         internal ExecutionHooks(ExecutionHooks other)
         {
-            other.BeforeTest.GetHandlers().ToList().ForEach(d => BeforeTest.AddHandler(d));
-            other.AfterTest.GetHandlers().ToList().ForEach(d => AfterTest.AddHandler(d));
+            BeforeTest = new TestHook(other.BeforeTest);
+            AfterTest = new TestHook(other.AfterTest);
         }
 
         internal void OnBeforeTest(TestExecutionContext context)

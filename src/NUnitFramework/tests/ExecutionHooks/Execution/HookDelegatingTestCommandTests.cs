@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
     {
         public class Prover
         {
-            public bool WasInsideExecute = false;
+            public bool WasInsideExecute { get; set; }
         }
 
         public class MockedTestCommand(Test test, Prover prover) : TestCommand(test)

@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.TestData.ExecutionHookTests
 {
     [AttributeUsage(AttributeTargets.Class)]
-    internal class SomeTestActionAttribute : Attribute, ITestAction
+    internal sealed class SomeTestActionAttribute : Attribute, ITestAction
     {
         public void BeforeTest(ITest test)
         {
@@ -37,9 +37,9 @@ namespace NUnit.TestData.ExecutionHookTests
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
             {
@@ -61,9 +61,9 @@ namespace NUnit.TestData.ExecutionHookTests
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
             {
@@ -72,9 +72,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    public class ActivateBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
             {
@@ -83,9 +83,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    public class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
             {
@@ -94,9 +94,9 @@ namespace NUnit.TestData.ExecutionHookTests
             });
         }
     }
-    public class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
             {
@@ -106,9 +106,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    public class ActivateAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
             {
@@ -117,9 +117,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    public class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
             {
@@ -129,9 +129,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    public class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
     {
-        public virtual void ApplyToContext(TestExecutionContext context)
+        public void ApplyToContext(TestExecutionContext context)
         {
             context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
             {

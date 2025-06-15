@@ -3,7 +3,6 @@
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
@@ -12,20 +11,20 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     internal class TestHooksCreationAtAssemblyLevelTests
     {
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
-            public virtual void ApplyToContext(TestExecutionContext context)
+            public void ApplyToContext(TestExecutionContext context)
             {
-                context.ExecutionHooks.BeforeTest.AddHandler((sender, eventArgs) => { });
+                context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) => { });
             }
         }
 
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal class ActivateAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
         {
-            public virtual void ApplyToContext(TestExecutionContext context)
+            public void ApplyToContext(TestExecutionContext context)
             {
-                context.ExecutionHooks.AfterTest.AddHandler((sender, eventArgs) => { });
+                context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) => { });
             }
         }
 
@@ -48,9 +47,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var hookAttribute = new ActivateBeforeTestHooksAttribute();
             hookAttribute.ApplyToContext(context);
 
-            var work = TestBuilder.CreateWorkItem(test, context) as SimpleWorkItem;
-            Assert.That(work, Is.Not.Null);
-            Assert.That(work!.Context.ExecutionHooks.BeforeTest.GetHandlers(), Has.Count.EqualTo(1));
+            var work = TestBuilder.CreateWorkItem(test, context);
+            Assert.That(work.Context.ExecutionHooks.BeforeTest, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -63,9 +61,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var hookAttribute = new ActivateAfterTestHooksAttribute();
             hookAttribute.ApplyToContext(context);
 
-            var work = TestBuilder.CreateWorkItem(test, context) as SimpleWorkItem;
-            Assert.That(work, Is.Not.Null);
-            Assert.That(work!.Context.ExecutionHooks.AfterTest.GetHandlers(), Has.Count.EqualTo(1));
+            var work = TestBuilder.CreateWorkItem(test, context);
+            Assert.That(work.Context.ExecutionHooks.AfterTest, Has.Count.EqualTo(1));
         }
     }
 }
