@@ -69,8 +69,7 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
-        // internal for only testing
-        internal ExecutionHooks.ExecutionHooks? ExecutionHooksInternal;
+        private ExecutionHooks.ExecutionHooks? _executionHooks;
 
         #endregion
 
@@ -105,9 +104,9 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-            if (other.ExecutionHooksInternal is not null)
+            if (other._executionHooks is not null)
             {
-                ExecutionHooksInternal = new ExecutionHooks.ExecutionHooks(other.ExecutionHooks);
+                _executionHooks = new ExecutionHooks.ExecutionHooks(other._executionHooks);
             }
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
@@ -407,7 +406,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Hook Extension to support high level test extensions.
         /// </summary>
-        public ExecutionHooks.ExecutionHooks ExecutionHooks => ExecutionHooksInternal ??= new ExecutionHooks.ExecutionHooks();
+        public ExecutionHooks.ExecutionHooks ExecutionHooks => _executionHooks ??= new ExecutionHooks.ExecutionHooks();
+
+        /// <summary>
+        /// Property indicating whether execution hooks are enabled.
+        /// </summary>
+        internal bool ExecutionHooksEnabled => _executionHooks is not null;
 
         #endregion
 
