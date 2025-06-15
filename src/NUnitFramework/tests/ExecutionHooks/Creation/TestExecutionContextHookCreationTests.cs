@@ -44,7 +44,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
             work!.Execute();
 
-            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksInternal, Is.Null);
+            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksEnabled, Is.False);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
             work!.Execute();
 
-            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksInternal, Is.Not.Null);
+            Assert.That(TestExecutionContext.CurrentContext.ExecutionHooksEnabled, Is.True);
         }
     }
 }
