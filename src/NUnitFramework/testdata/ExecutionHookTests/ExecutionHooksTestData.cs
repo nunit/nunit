@@ -3,6 +3,7 @@
 using System;
 using System.Threading;
 using NUnit.Framework;
+using NUnit.Framework.Attributes;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
