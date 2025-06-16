@@ -12,7 +12,16 @@ namespace NUnit.Framework.Internal.ExecutionHooks
     {
         private readonly List<EventHandler> _handlers;
 
-        internal int Count => _handlers.Count;
+        internal int Count
+        {
+            get
+            {
+                lock (_handlers)
+                {
+                    return _handlers.Count;
+                }
+            }
+        }
 
         public TestHook()
         {
