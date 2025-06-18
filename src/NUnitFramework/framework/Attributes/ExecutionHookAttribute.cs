@@ -3,7 +3,7 @@
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework
 {
     /// <summary>
     /// Attribute to activate execution hooks.
