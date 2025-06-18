@@ -25,119 +25,91 @@ namespace NUnit.TestData.ExecutionHookTests
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ActivateClassLevelBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateClassLevelBeforeTestHooksAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage("ActivateBeforeClassHook");
-            });
+            TestLog.LogMessage("ActivateBeforeClassHook");
         }
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void AfterTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage("ActivateAfterClassHook");
-            });
+            TestLog.LogMessage("ActivateAfterClassHook");
         }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateMethodLevelBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateMethodLevelBeforeTestHooksAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage("ActivateBeforeTestMethodHook");
-            });
+            TestLog.LogMessage("ActivateBeforeTestMethodHook");
         }
     }
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void AfterTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage("ActivateAfterTestMethodHook");
-            });
+            TestLog.LogMessage("ActivateAfterTestMethodHook");
         }
     }
 
-    public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
-            });
+            TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
         }
     }
 
-    public sealed class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingExceptionAttribute));
-                throw new Exception("Before test hook crashed!!");
-            });
-        }
-    }
-    public sealed class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute, IApplyToContext
-    {
-        public void ApplyToContext(TestExecutionContext context)
-        {
-            context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-            {
-                Thread.Sleep(500);
-                TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHookAttribute));
-            });
+            TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingExceptionAttribute));
+            throw new Exception("Before test hook crashed!!");
         }
     }
 
-    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
-            });
+            Thread.Sleep(500);
+            TestLog.LogMessage(nameof(ActivateLongRunningBeforeTestHookAttribute));
         }
     }
 
-    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void AfterTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-            {
-                TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
-                throw new Exception("After test hook crashed!!");
-            });
+            TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
         }
     }
 
-    public sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute, IApplyToContext
+    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
     {
-        public void ApplyToContext(TestExecutionContext context)
+        public override void AfterTestHook(TestExecutionContext context)
         {
-            context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-            {
-                Thread.Sleep(500);
-                TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
-            });
+            TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
+            throw new Exception("After test hook crashed!!");
+        }
+    }
+
+    public sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute
+    {
+        public override void AfterTestHook(TestExecutionContext context)
+        {
+            // Simulate a long-running after test hook
+            Thread.Sleep(500);
+            TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
         }
     }
 
