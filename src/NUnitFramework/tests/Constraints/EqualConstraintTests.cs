@@ -12,6 +12,8 @@ using System.Text;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
+using NUnit.Framework.Constraints.Comparers;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -324,6 +326,44 @@ namespace NUnit.Framework.Tests.Constraints
                 return new ZipArchive(archiveContents, ZipArchiveMode.Read, leaveOpen: false);
             }
 
+            [Test]
+            public void LocalPoolRentAndReturnOne()
+            {
+                byte[] buffer = StreamsComparer.LocalPool.Rent();
+                Assert.That(buffer, Is.Not.Null);
+                Assert.That(buffer, Has.Length.EqualTo(4096)); // Default size
+                StreamsComparer.LocalPool.Return(buffer);
+
+                Assert.That(() => StreamsComparer.LocalPool.Return(buffer),
+                            Throws.ArgumentException.With.Message.Contain("not rented out"));
+                Assert.That(() => StreamsComparer.LocalPool.Return(new byte[1024]),
+                            Throws.ArgumentException.With.Message.Contain("not found in pool"));
+            }
+
+            [Test]
+            public async Task LocalPoolRentAndReturnMultiple()
+            {
+                Task[] tasksUsingPool = new Task[8];
+                for (int i = 0; i < tasksUsingPool.Length; i++)
+                {
+                    // Start tasks with a small delay
+                    await Task.Delay(10);
+
+                    int task = i;
+                    tasksUsingPool[i] = Task.Run(async () =>
+                    {
+                        byte[] buffer = StreamsComparer.LocalPool.Rent();
+                        Assert.That(buffer, Is.Not.Null);
+                        await Task.Delay(20);
+                        StreamsComparer.LocalPool.Return(buffer);
+                    });
+                }
+
+                await Task.WhenAll(tasksUsingPool);
+
+                Assert.That(StreamsComparer.LocalPool.RentedBuffers, Is.Zero);
+            }
+
             private class ShortReadingMemoryStream : MemoryStream
             {
                 public ShortReadingMemoryStream(byte[] bytes) : base(bytes)
@@ -499,11 +539,31 @@ namespace NUnit.Framework.Tests.Constraints
                 MyBasicDateTime myDateTime = new MyBasicDateTime(nowOffset);
                 using (Assert.EnterMultipleScope())
                 {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+                    // MyBasicDateTime override Equals(object o) to compare with DateTimeOffset
+                    // Violating the Equality contract
+                    // https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/statements-expressions-operators/how-to-define-value-equality-for-a-type
+
+                    // This fails because MyBasicDateTime cannot compare with MyBasicDateTime
+                    // Violating point 1 of the Equality contract: x.Equals(x) returns true
+                    Assert.That(() => Assert.That(myDateTime.Equals(myDateTime), Is.True, "x.Equals(x) should be true"),
+                                Throws.InstanceOf<AssertionException>());
+
+                    Assert.That(myDateTime.Equals(nowOffset), Is.True, "x.Equals(y)");
+                    // This fails because DateTimeOffset knows nothing about MyBasicDateTime
+                    Assert.That(() => Assert.That(nowOffset.Equals(myDateTime), Is.True, "y.Equals(x) should return same as x.Equals(y)"),
+                                Throws.InstanceOf<AssertionException>());
+
+                    // This works because MyBasicDateTime overrides Equals(object o) and assumes the other type is DateTimeOffset
                     Assert.That(myDateTime, Is.EqualTo(nowOffset));
                     Assert.That(myDateTime, new EqualConstraint(nowOffset));
 
+                    // This works because Nunit does 'x.Equals(y) || y.Equals(x)'
+                    // https://github.com/nunit/nunit/issues/4954
                     Assert.That(nowOffset, Is.EqualTo(myDateTime));
                     Assert.That(nowOffset, new EqualConstraint(myDateTime));
+
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
                 }
             }
 

@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    public class ThreadingTests
+    public abstract class ThreadingTests
     {
         protected Thread ParentThread { get; private set; }
         protected Thread SetupThread { get; private set; }
@@ -43,5 +43,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             return thread.GetApartmentState();
         }
+    }
+
+    [TestFixture]
+    public class DefaultThreadingTests : ThreadingTests
+    {
+        // This class is used to ensure that the default threading behavior is applied
+        // when no specific attributes are set on the test fixture or tests.
     }
 }

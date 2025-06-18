@@ -1,12 +1,7 @@
-name: NUnit.Myget.Publish
+name: NUnit.Nuget.Publish
 env:
   MinVerAutoIncrement: minor
 on:
-  push:
-    branches:
-      - main
-      - release
-      - myget
   workflow_dispatch:
   
 
@@ -58,9 +53,9 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
 
-    - name: Publish nupkg and snupkg to Myget.org
+    - name: Publish nupkg and snupkg to Nuget.org
       run: |
           foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.PUBLISHMYGET }}" --source https://www.myget.org/F/nunit/api/v3/index.json --skip-duplicate
+              dotnet nuget push $file --api-key "${{ secrets.PUBLISHNUGET }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
-
+ 
