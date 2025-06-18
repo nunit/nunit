@@ -39,16 +39,8 @@ namespace NUnit.Framework
 
         private bool IsHookImplemented(string methodName)
         {
-            var thisMethod = GetType().GetMethod(methodName);
-            var baseMethod = typeof(ExecutionHookAttribute).GetMethod(methodName);
-
-            // If either method is null, this method was not called for a hook method.
-            if (thisMethod is null || baseMethod is null)
-            {
-                return false;
-            }
-
-            return thisMethod.DeclaringType != baseMethod.DeclaringType;
+            // using a null suppression operator as we know the method exist
+            return GetType().GetMethod(methodName)!.DeclaringType != typeof(ExecutionHookAttribute);
         }
 
         /// <summary>
