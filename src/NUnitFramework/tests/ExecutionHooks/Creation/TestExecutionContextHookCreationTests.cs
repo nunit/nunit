@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -9,11 +8,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     [TestFixture]
     internal class TestExecutionContextHookCreationTests
     {
-        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
-            public void ApplyToContext(TestExecutionContext context)
+            public override void BeforeTestHook(TestExecutionContext context)
             {
-                context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) => { });
             }
         }
 

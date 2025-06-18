@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -11,20 +10,18 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     internal class TestHooksCreationAtAssemblyLevelTests
     {
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
-            public void ApplyToContext(TestExecutionContext context)
+            public override void BeforeTestHook(TestExecutionContext context)
             {
-                context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) => { });
             }
         }
 
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute, IApplyToContext
+        internal sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
         {
-            public void ApplyToContext(TestExecutionContext context)
+            public override void AfterTestHook(TestExecutionContext context)
             {
-                context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) => { });
             }
         }
 
