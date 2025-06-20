@@ -5,17 +5,15 @@ using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
-    [TestFixture]
     internal class TestExecutionContextHookCreationTests
     {
-        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
+        private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
             public override void BeforeTestHook(TestExecutionContext context)
             {
             }
         }
 
-        [TestFixture]
         private class SomeEmptyTestWithNoHooks
         {
             [Test]
@@ -24,7 +22,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             }
         }
 
-        [TestFixture]
         private class SomeEmptyTestWithHooks
         {
             [Test]

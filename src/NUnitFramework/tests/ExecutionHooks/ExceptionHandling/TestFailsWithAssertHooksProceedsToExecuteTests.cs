@@ -5,7 +5,6 @@ using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
-    [TestFixture]
     internal class TestFailsWithAssertHooksProceedsToExecuteTests
     {
         [Test]
@@ -13,17 +12,17 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute));
+            var workItem = TestBuilder.CreateWorkItem(typeof(FailingTestWithTestHookOnMethod));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute.OneTimeSetUp),
-                nameof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute.SetUp),
+                nameof(FailingTestWithTestHookOnMethod.OneTimeSetUp),
+                nameof(FailingTestWithTestHookOnMethod.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute.EmptyTest),
+                nameof(FailingTestWithTestHookOnMethod.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
-                nameof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute.TearDown),
-                nameof(EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute.OneTimeTearDown)
+                nameof(FailingTestWithTestHookOnMethod.TearDown),
+                nameof(FailingTestWithTestHookOnMethod.OneTimeTearDown)
             ]));
         }
     }

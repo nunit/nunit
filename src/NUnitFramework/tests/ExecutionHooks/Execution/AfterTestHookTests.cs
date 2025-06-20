@@ -12,16 +12,16 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithAfterTestHookOnMethod));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.OneTimeSetUp),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.SetUp),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.EmptyTest),
+                nameof(TestWithAfterTestHookOnMethod.OneTimeSetUp),
+                nameof(TestWithAfterTestHookOnMethod.SetUp),
+                nameof(TestWithAfterTestHookOnMethod.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.TearDown),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes.OneTimeTearDown)
+                nameof(TestWithAfterTestHookOnMethod.TearDown),
+                nameof(TestWithAfterTestHookOnMethod.OneTimeTearDown)
             ]));
         }
     }
