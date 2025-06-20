@@ -5,7 +5,6 @@ using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
-    [TestFixture]
     internal class AfterTestHookThrowsExceptionExecutionProceedsTests
     {
         [Test]
@@ -13,17 +12,17 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.OneTimeSetUp),
-                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.SetUp),
+                nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.OneTimeSetUp),
+                nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.EmptyTest),
+                nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.EmptyTest),
                 nameof(ActivateAfterTestHookThrowingExceptionAttribute),
-                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.TearDown),
-                nameof(EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds.OneTimeTearDown)
+                nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.TearDown),
+                nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.OneTimeTearDown)
             ]));
         }
     }

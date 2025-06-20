@@ -6,21 +6,18 @@ using NUnit.Framework.Tests.Attributes;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
-    [TestFixture]
     internal class HookDelegatingTestCommandTests
     {
-        public class Prover
+        private class Prover
         {
             public bool WasInsideExecute { get; set; }
         }
 
-        public class MockedTestCommand(Test test, Prover prover) : TestCommand(test)
+        private class MockedTestCommand(Test test, Prover prover) : TestCommand(test)
         {
-            private readonly Prover _prover = prover;
-
             public override TestResult Execute(TestExecutionContext context)
             {
-                _prover.WasInsideExecute = true;
+                prover.WasInsideExecute = true;
                 return context.CurrentResult;
             }
         }

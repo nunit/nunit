@@ -5,7 +5,6 @@ using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
-    [TestFixture]
     internal class TestActionAndHookTests
     {
         [Test]
@@ -13,19 +12,19 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksAndClassTestActionAttribute));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.OneTimeSetUp),
-                "BeforeTest_Action",
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.SetUp),
+                nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeSetUp),
+                nameof(SomeTestActionAttribute.BeforeTest),
+                nameof(TestWithTestHooksAndClassTestActionAttribute.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.EmptyTest),
+                nameof(TestWithTestHooksAndClassTestActionAttribute.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.TearDown),
-                "AfterTest_Action",
-                nameof(EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2.OneTimeTearDown)
+                nameof(TestWithTestHooksAndClassTestActionAttribute.TearDown),
+                nameof(SomeTestActionAttribute.AfterTest),
+                nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeTearDown)
             ]));
         }
     }

@@ -5,7 +5,6 @@ using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
-    [TestFixture]
     internal class BeforeTestHookTests
     {
         [Test]
@@ -13,16 +12,16 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithBeforeTestHookOnMethod));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.OneTimeSetUp),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.SetUp),
+                nameof(TestWithBeforeTestHookOnMethod.OneTimeSetUp),
+                nameof(TestWithBeforeTestHookOnMethod.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.EmptyTest),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.TearDown),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes.OneTimeTearDown)
+                nameof(TestWithBeforeTestHookOnMethod.EmptyTest),
+                nameof(TestWithBeforeTestHookOnMethod.TearDown),
+                nameof(TestWithBeforeTestHookOnMethod.OneTimeTearDown)
             ]));
         }
     }

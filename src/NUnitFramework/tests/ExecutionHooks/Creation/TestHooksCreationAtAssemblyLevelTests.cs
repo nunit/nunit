@@ -6,11 +6,10 @@ using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
-    [TestFixture]
     internal class TestHooksCreationAtAssemblyLevelTests
     {
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
+        private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
             public override void BeforeTestHook(TestExecutionContext context)
             {
@@ -18,7 +17,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         }
 
         [AttributeUsage(AttributeTargets.Assembly)]
-        internal sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
+        private sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
         {
             public override void AfterTestHook(TestExecutionContext context)
             {

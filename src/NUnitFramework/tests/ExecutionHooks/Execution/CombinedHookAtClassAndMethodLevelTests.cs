@@ -12,34 +12,35 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            const string oneTimeSetUp = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.OneTimeSetUp);
-            const string setUp = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.SetUp);
-            const string testWithHooks = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.EmptyTestWithHooks);
-            const string testWithoutHooks = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.EmptyTestWithoutHooks1);
-            const string tearDown = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.TearDown);
-            const string oneTimeTearDown = nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels.OneTimeTearDown);
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                oneTimeSetUp,
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.OneTimeSetUp),
+
                 // Test with hooks starts
-                setUp,
-                "ActivateBeforeClassHook",
-                "ActivateBeforeTestMethodHook",
-                testWithHooks,
-                "ActivateAfterClassHook",
-                "ActivateAfterTestMethodHook",
-                tearDown,
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.SetUp),
+                nameof(ActivateClassLevelBeforeTestHooksAttribute),
+                nameof(ActivateMethodLevelBeforeTestHooksAttribute),
+
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.EmptyTestWithHooks),
+
+                nameof(ActivateClassLevelAfterTestHooksAttribute),
+                nameof(ActivateMethodLevelAfterTestHooksAttribute),
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.TearDown),
                 // Test with hooks ends
+
                 // Test without hooks starts
-                setUp,
-                "ActivateBeforeClassHook",
-                testWithoutHooks,
-                "ActivateAfterClassHook",
-                tearDown,
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.SetUp),
+                nameof(ActivateClassLevelBeforeTestHooksAttribute),
+
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.EmptyTestWithoutHooks),
+
+                nameof(ActivateClassLevelAfterTestHooksAttribute),
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.TearDown),
                 // Test without hooks ends
-                oneTimeTearDown
+
+                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.OneTimeTearDown)
             ]));
         }
     }

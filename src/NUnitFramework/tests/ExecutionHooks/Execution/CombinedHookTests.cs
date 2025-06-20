@@ -12,19 +12,19 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithNormalAndLongRunningTestHooks));
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeSetUp),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.SetUp),
+                nameof(TestWithNormalAndLongRunningTestHooks.OneTimeSetUp),
+                nameof(TestWithNormalAndLongRunningTestHooks.SetUp),
                 nameof(ActivateLongRunningBeforeTestHookAttribute),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.EmptyTest),
+                nameof(TestWithNormalAndLongRunningTestHooks.EmptyTest),
                 nameof(ActivateLongRunningAfterTestHookAttribute),
                 nameof(ActivateAfterTestHookAttribute),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.TearDown),
-                nameof(EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete.OneTimeTearDown)
+                nameof(TestWithNormalAndLongRunningTestHooks.TearDown),
+                nameof(TestWithNormalAndLongRunningTestHooks.OneTimeTearDown)
             ]));
         }
     }

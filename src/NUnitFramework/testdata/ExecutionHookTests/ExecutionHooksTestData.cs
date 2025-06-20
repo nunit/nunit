@@ -9,19 +9,19 @@ using NUnit.Framework.Internal;
 namespace NUnit.TestData.ExecutionHookTests
 {
     [AttributeUsage(AttributeTargets.Class)]
-    internal sealed class SomeTestActionAttribute : Attribute, ITestAction
+    public sealed class SomeTestActionAttribute : Attribute, ITestAction
     {
         public void BeforeTest(ITest test)
         {
-            TestLog.LogCurrentMethod("BeforeTest_Action");
+            TestLog.LogCurrentMethod();
         }
 
         public void AfterTest(ITest test)
         {
-            TestLog.LogCurrentMethod("AfterTest_Action");
+            TestLog.LogCurrentMethod();
         }
 
-        public ActionTargets Targets { get; }
+        public ActionTargets Targets => ActionTargets.Suite;
     }
 
     [AttributeUsage(AttributeTargets.Class)]
@@ -29,7 +29,7 @@ namespace NUnit.TestData.ExecutionHookTests
     {
         public override void BeforeTestHook(TestExecutionContext context)
         {
-            TestLog.LogMessage("ActivateBeforeClassHook");
+            TestLog.LogMessage(nameof(ActivateClassLevelBeforeTestHooksAttribute));
         }
     }
 
@@ -38,7 +38,7 @@ namespace NUnit.TestData.ExecutionHookTests
     {
         public override void AfterTestHook(TestExecutionContext context)
         {
-            TestLog.LogMessage("ActivateAfterClassHook");
+            TestLog.LogMessage(nameof(ActivateClassLevelAfterTestHooksAttribute));
         }
     }
 
@@ -47,7 +47,7 @@ namespace NUnit.TestData.ExecutionHookTests
     {
         public override void BeforeTestHook(TestExecutionContext context)
         {
-            TestLog.LogMessage("ActivateBeforeTestMethodHook");
+            TestLog.LogMessage(nameof(ActivateMethodLevelBeforeTestHooksAttribute));
         }
     }
 
@@ -56,7 +56,7 @@ namespace NUnit.TestData.ExecutionHookTests
     {
         public override void AfterTestHook(TestExecutionContext context)
         {
-            TestLog.LogMessage("ActivateAfterTestMethodHook");
+            TestLog.LogMessage(nameof(ActivateMethodLevelAfterTestHooksAttribute));
         }
     }
 
@@ -113,8 +113,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_TestFailsWithAssert_HooksProceedsToExecute
+    public class FailingTestWithTestHookOnMethod
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -150,8 +149,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_AfterTestHookThrowsException_ExecutionProceeds
+    public class TestWithTestHooksOnMethodAndErrorOnAfterTestHook
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -186,8 +184,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes
+    public class TestWithTestHooksOnMethodAndErrorOnBeforeTestHook
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -222,8 +219,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_TestThrowsException_HooksProceedsToExecute
+    public class TestWithTestHooksOnMethod
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -258,8 +254,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes
+    public class TestWithAfterTestHookOnMethod
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -293,8 +288,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_ExecutionProceedsAfterBeforeTestHookCompletes
+    public class TestWithBeforeTestHookOnMethod
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -328,8 +322,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
-    public class EmptyTestFor_ExecutionProceedsAfterBothTestHooksComplete
+    public class TestWithNormalAndLongRunningTestHooks
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -366,10 +359,9 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
     [ActivateClassLevelBeforeTestHooks]
     [ActivateClassLevelAfterTestHooks]
-    public class EmptyTestFor_ExecutionProceedsAfterBothTestHooksCompleteAtClassAndMethodLevels
+    public class TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -404,15 +396,14 @@ namespace NUnit.TestData.ExecutionHookTests
         }
 
         [Test]
-        public void EmptyTestWithoutHooks1()
+        public void EmptyTestWithoutHooks()
         {
             TestLog.LogCurrentMethod();
         }
     }
 
-    [TestFixture]
     [SomeTestAction]
-    public class EmptyTestFor_ExecutionProceedsAfterTheAfterTestHookCompletes2
+    public class TestWithTestHooksAndClassTestActionAttribute
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()
