@@ -51,21 +51,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        #region ToString()
-
-        /// <summary>
-        /// Returns a string representation of the expression as it
-        /// currently stands. This should only be used for testing,
-        /// since it has the side-effect of resolving the expression.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return builder.Resolve().ToString()!;
-        }
-
-        #endregion
-
         #region Append Methods
 
         /// <summary>

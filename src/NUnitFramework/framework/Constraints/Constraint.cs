@@ -226,6 +226,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public ConstraintExpression And
         {
             get
@@ -247,12 +248,14 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public ConstraintExpression With => And;
 
         /// <summary>
         /// Returns a ConstraintExpression by appending Or
         /// to the current constraint.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         public ConstraintExpression Or
         {
             get
@@ -274,6 +277,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending Instead
         /// to the current constraint.
         /// </summary>
+        [System.Diagnostics.DebuggerBrowsable(System.Diagnostics.DebuggerBrowsableState.Never)]
         internal ConstraintExpression Instead
         {
             get
