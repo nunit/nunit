@@ -23,11 +23,11 @@ namespace NUnit.Framework.Tests.Constraints
         [Test] public void Success_NullableInt() => AssertSuccess(default(int?));
         [Test] public void Success_Long() => AssertSuccess(default(long));
         [Test] public void Success_ImmutableArray() => AssertSuccess(default(ImmutableArray<int>));
+        [Test] public void Success_BoxedInt() => AssertSuccess((object)default(int));
 
         [Test] public void Failure_NewObject() => AssertFailure(new object());
         [Test] public void Failure_EmptyString() => AssertFailure(string.Empty);
         [Test] public void Failure_NullableInt_Zero() => AssertFailure((int?)0);
-        [Test] public void Failure_BoxedInt_Zero() => AssertFailure((object)0);
         [Test] public void Failure_Int_NonZero() => AssertFailure(1);
         [Test] public void Failure_Double_NaN() => AssertFailure(double.NaN);
         [Test] public void Failure_ImmutableArray_Empty() => AssertFailure(ImmutableArray.Create<int>());
@@ -47,6 +47,13 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var constraintResult = TheConstraint.ApplyTo(actual);
             Assert.That(!constraintResult.IsSuccess);
+        }
+
+        [Test]
+        public void EqualDefault()
+        {
+            var instance = 0;
+            Assert.That(instance, Is.InstanceOf<int>().And.Default);
         }
     }
 }
