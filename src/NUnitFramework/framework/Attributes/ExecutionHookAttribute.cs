@@ -53,19 +53,13 @@ namespace NUnit.Framework
             if (BeforeTestHook != base.BeforeTestHook)
             {
                 // Only add the BeforeTestHook if it has been overridden
-                context.ExecutionHooks.AddBeforeTestHandler((sender, eventArgs) =>
-                {
-                    BeforeTestHook(context);
-                });
+                context.ExecutionHooks.AddBeforeTestHandler(BeforeTestHook);
             }
 
             if (AfterTestHook != base.AfterTestHook)
             {
                 // Only add the AfterTestHook if it has been overridden
-                context.ExecutionHooks.AddAfterTestHandler((sender, eventArgs) =>
-                {
-                    AfterTestHook(context);
-                });
+                context.ExecutionHooks.AddAfterTestHandler(AfterTestHook);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
     /// </summary>
     internal sealed class TestHook
     {
-        private readonly List<EventHandler> _handlers;
+        private readonly List<Action<TestExecutionContext>> _handlers;
 
         internal int Count
         {
@@ -25,29 +25,29 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         public TestHook()
         {
-            _handlers = new List<EventHandler>();
+            _handlers = new List<Action<TestExecutionContext>>();
         }
 
         public TestHook(TestHook source)
         {
-            _handlers = new List<EventHandler>(source._handlers);
+            _handlers = new List<Action<TestExecutionContext>>(source._handlers);
         }
 
-        internal void AddHandler(EventHandler handler)
+        internal void AddHandler(Action<TestExecutionContext> handler)
         {
             lock (_handlers)
                 _handlers.Add(handler);
         }
 
-        internal void InvokeHandlers(object? sender, EventArgs e)
+        internal void InvokeHandlers(TestExecutionContext context)
         {
             foreach (var handler in GetHandlers())
             {
-                handler(sender, e);
+                handler(context);
             }
         }
 
-        private IReadOnlyList<EventHandler> GetHandlers()
+        private IReadOnlyList<Action<TestExecutionContext>> GetHandlers()
         {
             lock (_handlers)
                 return _handlers.ToArray();

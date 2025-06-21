@@ -17,19 +17,19 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         internal TestHook AfterTest { get; } = new();
 
         /// <summary>
-        /// Adds a hook handler to be invoked before the test method is executed.
+        /// Adds a hook action to be invoked before the test method is executed.
         /// </summary>
-        /// <param name="hookHandler">The event handler to attach to the before-test hook.</param>
-        public void AddBeforeTestHandler(EventHandler hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the before-test hook.</param>
+        public void AddBeforeTestHandler(Action<TestExecutionContext> hookHandler)
         {
             BeforeTest.AddHandler(hookHandler);
         }
 
         /// <summary>
-        /// Adds a hook handler to be invoked after the test method is executed.
+        /// Adds a hook action to be invoked after the test method is executed.
         /// </summary>
-        /// <param name="hookHandler">The event handler to attach to the after-test hook.</param>
-        public void AddAfterTestHandler(EventHandler hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the after-test hook.</param>
+        public void AddAfterTestHandler(Action<TestExecutionContext> hookHandler)
         {
             AfterTest.AddHandler(hookHandler);
         }
@@ -42,12 +42,12 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnBeforeTest(TestExecutionContext context)
         {
-            BeforeTest.InvokeHandlers(this, new MethodHookEventArgs(context));
+            BeforeTest.InvokeHandlers(context);
         }
 
         internal void OnAfterTest(TestExecutionContext context)
         {
-            AfterTest.InvokeHandlers(this, new MethodHookEventArgs(context));
+            AfterTest.InvokeHandlers(context);
         }
     }
 }
