@@ -246,5 +246,25 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That((object)type, Has.Property("Namespace").EqualTo("System"), "GetType()");
             });
         }
+
+        [Test]
+        public void PropertyIsCastToPropertyType()
+        {
+            var defaultLength = string.Empty;
+            var nonDefaultLength = "1";
+
+            Assert.Multiple(() =>
+            {
+                // Verify that property is cast to the property's actual type.
+
+                Assert.That(defaultLength.Length, Is.Zero);
+                Assert.That(defaultLength.Length, Is.Default);
+                Assert.That(defaultLength, Has.Property("Length").Default);
+
+                Assert.That(nonDefaultLength.Length, Is.EqualTo(1));
+                Assert.That(nonDefaultLength.Length, Is.Not.Default);
+                Assert.That(nonDefaultLength, Has.Property("Length").Not.Default);
+            });
+        }
     }
 }

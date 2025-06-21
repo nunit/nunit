@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Concurrent;
+using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
@@ -12,6 +14,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PropertyConstraint : PrefixConstraint
     {
+        private static readonly ConcurrentDictionary<Type, Func<IConstraint, object?, ConstraintResult>> ApplyToLookup = new();
+
         private readonly string _name;
         private object? _propValue;
 
@@ -68,7 +72,8 @@ namespace NUnit.Framework.Constraints
             }
 
             _propValue = property.GetValue(actual, null);
-            var baseResult = BaseConstraint.ApplyTo(_propValue);
+            var applyTo = ApplyToLookup.GetOrAdd(property.PropertyType, BuildApplyToMethod);
+            var baseResult = applyTo(BaseConstraint, _propValue);
             return new PropertyConstraintResult(this, baseResult);
         }
 
@@ -78,6 +83,23 @@ namespace NUnit.Framework.Constraints
         protected override string GetStringRepresentation()
         {
             return $"<property {_name} {BaseConstraint}>";
+        }
+
+        private static Func<IConstraint, object?, ConstraintResult> BuildApplyToMethod(Type type)
+        {
+            Expression<Action<IConstraint>> lambda = x => x.ApplyTo(0);
+            var methodInfo = ((MethodCallExpression)lambda.Body)
+                .Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(type);
+
+            var constraintParam = Expression.Parameter(typeof(IConstraint));
+            var actualParam = Expression.Parameter(typeof(object));
+
+            return Expression.Lambda<Func<IConstraint, object?, ConstraintResult>>(
+                Expression.Call(constraintParam, methodInfo, Expression.Convert(actualParam, type)),
+                constraintParam, actualParam)
+                .Compile();
         }
     }
 }
