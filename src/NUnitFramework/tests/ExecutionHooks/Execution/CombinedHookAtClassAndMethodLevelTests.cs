@@ -25,8 +25,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 
                 nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.EmptyTestWithHooks),
 
-                nameof(ActivateClassLevelAfterTestHooksAttribute),
                 nameof(ActivateMethodLevelAfterTestHooksAttribute),
+                nameof(ActivateClassLevelAfterTestHooksAttribute),
                 nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.TearDown),
                 // Test with hooks ends
 
