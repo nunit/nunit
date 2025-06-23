@@ -1092,9 +1092,8 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void Abc()
+        public void TestToVerifyThatWhenSteppingThroughWithDebuggerThisDoesNotAlterBehaviour()
         {
-            // Test deconstructed so we can verify debugging doesn't break it.
             EqualStringConstraint expression = Is.Not.EqualTo("abc");
             Assert.That(expression.Builder, Is.Not.Null, "Builder should not be null");
             IConstraint constraint = expression.Builder.Resolve();
