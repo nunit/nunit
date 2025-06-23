@@ -2,41 +2,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
 {
-    /// <summary>
-    /// Event that supports both synchronous and asynchronous handlers.
-    /// </summary>
-    internal sealed class TestHook
+    internal abstract class TestHook
     {
-        private readonly List<Action<TestExecutionContext>> _handlers;
+        protected abstract IReadOnlyCollection<Action<TestExecutionContext>> Handlers { get; }
 
-        internal int Count
+        internal int Count => Handlers.Count;
+
+        internal abstract void AddHandler(Action<TestExecutionContext> handler);
+
+        internal IReadOnlyCollection<Action<TestExecutionContext>> GetHandlers()
         {
-            get
+            lock (Handlers)
             {
-                lock (_handlers)
-                {
-                    return _handlers.Count;
-                }
+                return Handlers.ToArray();
             }
-        }
-
-        public TestHook()
-        {
-            _handlers = new List<Action<TestExecutionContext>>();
-        }
-
-        public TestHook(TestHook source)
-        {
-            _handlers = new List<Action<TestExecutionContext>>(source._handlers);
-        }
-
-        internal void AddHandler(Action<TestExecutionContext> handler)
-        {
-            lock (_handlers)
-                _handlers.Add(handler);
         }
 
         internal void InvokeHandlers(TestExecutionContext context)
@@ -45,12 +28,6 @@ namespace NUnit.Framework.Internal.ExecutionHooks
             {
                 handler(context);
             }
-        }
-
-        private IReadOnlyList<Action<TestExecutionContext>> GetHandlers()
-        {
-            lock (_handlers)
-                return _handlers.ToArray();
         }
     }
 }
