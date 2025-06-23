@@ -1090,5 +1090,16 @@ namespace NUnit.Framework.Tests.Assertions
                           .And.Message.Contains("Expected: \"89030\"")
                           .And.Message.Contains("But was:  \"89031\""));
         }
+
+        [Test]
+        public void TestToVerifyThatWhenSteppingThroughWithDebuggerThisDoesNotAlterBehaviour()
+        {
+            EqualStringConstraint expression = Is.Not.EqualTo("abc");
+            Assert.That(expression.Builder, Is.Not.Null, "Builder should not be null");
+            IConstraint constraint = expression.Builder.Resolve();
+            Assert.That(() => Assert.That("abc", constraint), Throws.InstanceOf<AssertionException>()
+                .With.Message.Contains("Expected: not equal to \"abc\"")
+                .And.Message.Contains("But was:  \"abc\""));
+        }
     }
 }
