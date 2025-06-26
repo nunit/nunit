@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
             int index = 0;
             foreach (object item in enumerable)
             {
-                if (BaseConstraint.ApplyTo(item).IsSuccess)
+                if (Reflect.InvokeApplyTo(BaseConstraint, item?.GetType(), item).IsSuccess)
                 {
                     return new EachItemConstraintResult(this, actual, item, index);
                 }

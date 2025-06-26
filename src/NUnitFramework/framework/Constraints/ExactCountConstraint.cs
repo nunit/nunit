@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (_itemConstraint is not null)
                 {
-                    if (_itemConstraint.ApplyTo(item).IsSuccess)
+                    if (Reflect.InvokeApplyTo(_itemConstraint, item?.GetType(), item).IsSuccess)
                         matchCount++;
                 }
                 else

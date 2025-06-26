@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
 
             foreach (object item in enumerable)
             {
-                if (BaseConstraint.ApplyTo(item).IsSuccess)
+                if (Reflect.InvokeApplyTo(BaseConstraint, item?.GetType(), item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);
             }
 

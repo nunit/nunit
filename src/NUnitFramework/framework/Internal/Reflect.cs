@@ -1,10 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Internal
 {
@@ -25,6 +28,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class Reflect
     {
+        private static readonly ConcurrentDictionary<Type, Func<IConstraint, object?, ConstraintResult>> InvokeApplyToLookup = [];
+
         internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         #region Get Methods of a type
@@ -272,6 +277,43 @@ namespace NUnit.Framework.Internal
             {
                 throw new NUnitException("Rethrown", e);
             }
+        }
+
+        /// <summary>
+        /// Invokes <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> using the given <paramref name="constraint"/> and
+        /// <paramref name="type"/> as its generic type argument.
+        /// </summary>
+        /// <param name="constraint">The <see cref="IConstraint"/>.</param>
+        /// <param name="type">The generic type argument to pass to <see cref="IConstraint.ApplyTo{TActual}(TActual)"/>.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <returns>A <see cref="ConstraintResult"/>.</returns>
+        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type? type, object? actual)
+        {
+            Guard.ArgumentNotNull(constraint, nameof(constraint));
+
+            type ??= typeof(object);
+            var actualType = actual?.GetType();
+            Guard.ArgumentValid(actualType is null
+                ? !type.IsValueType
+                : type.IsAssignableFrom(actualType),
+                "The actual value must be assignable to the provided type.",
+                nameof(type));
+
+            return InvokeApplyToLookup.GetOrAdd(type, BuildApplyToDelegate).Invoke(constraint, actual);
+        }
+
+        private static Func<IConstraint, object?, ConstraintResult> BuildApplyToDelegate(Type type)
+        {
+            var methodInfo = ((MethodCallExpression)((LambdaExpression)((IConstraint x) => x.ApplyTo(0))).Body).Method
+                .GetGenericMethodDefinition();
+
+            var targetParameter = Expression.Parameter(typeof(IConstraint), "constraint");
+            var actualParameter = Expression.Parameter(typeof(object), "actual");
+
+            return Expression.Lambda<Func<IConstraint, object?, ConstraintResult>>(
+                Expression.Call(targetParameter, methodInfo.MakeGenericMethod(type), Expression.Convert(actualParameter, type)),
+                [targetParameter, actualParameter])
+                .Compile();
         }
 
         #endregion
