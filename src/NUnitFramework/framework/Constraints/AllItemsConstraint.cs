@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
             int index = 0;
-            foreach (object item in enumerable)
+            foreach (var item in enumerable)
             {
                 if (!Reflect.InvokeApplyTo(BaseConstraint, item?.GetType(), item).IsSuccess)
                 {

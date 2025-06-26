@@ -305,14 +305,15 @@ namespace NUnit.Framework.Internal
         private static Func<IConstraint, object?, ConstraintResult> BuildApplyToDelegate(Type type)
         {
             var methodInfo = ((MethodCallExpression)((LambdaExpression)((IConstraint x) => x.ApplyTo(0))).Body).Method
-                .GetGenericMethodDefinition();
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(type);
 
-            var targetParameter = Expression.Parameter(typeof(IConstraint), "constraint");
+            var constraintParameter = Expression.Parameter(typeof(IConstraint), "constraint");
             var actualParameter = Expression.Parameter(typeof(object), "actual");
 
             return Expression.Lambda<Func<IConstraint, object?, ConstraintResult>>(
-                Expression.Call(targetParameter, methodInfo.MakeGenericMethod(type), Expression.Convert(actualParameter, type)),
-                [targetParameter, actualParameter])
+                Expression.Call(constraintParameter, methodInfo, Expression.Convert(actualParameter, type)),
+                [constraintParameter, actualParameter])
                 .Compile();
         }
 

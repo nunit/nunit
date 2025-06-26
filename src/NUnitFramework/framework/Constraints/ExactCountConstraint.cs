@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
-            var itemList = new Collection<object>();
+            var itemList = new Collection<object?>();
             var matchCount = 0;
 
             foreach (var item in enumerable)
