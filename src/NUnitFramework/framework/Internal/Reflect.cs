@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -29,6 +30,8 @@ namespace NUnit.Framework.Internal
     public static class Reflect
     {
         private static readonly ConcurrentDictionary<Type, Func<IConstraint, object?, ConstraintResult>> InvokeApplyToLookup = [];
+
+        private static readonly ConcurrentDictionary<(Type, Type), Func<ICollectionConstraint, object?, object?, ConstraintResult>> InvokeApplyToCollectionLookup = [];
 
         internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
@@ -280,26 +283,26 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Invokes <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> using the given <paramref name="constraint"/> and
-        /// <paramref name="type"/> as its generic type argument.
+        /// Invokes <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> using the given <paramref name="constraint"/> as the instance
+        /// with <paramref name="actualType"/> as its generic type argument.
         /// </summary>
         /// <param name="constraint">The <see cref="IConstraint"/>.</param>
-        /// <param name="type">The generic type argument to pass to <see cref="IConstraint.ApplyTo{TActual}(TActual)"/>.</param>
+        /// <param name="actualType">The generic type argument to pass to <see cref="IConstraint.ApplyTo{TActual}(TActual)"/>.</param>
         /// <param name="actual">The actual value.</param>
         /// <returns>A <see cref="ConstraintResult"/>.</returns>
-        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type? type, object? actual)
+        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type? actualType, object? actual)
         {
             Guard.ArgumentNotNull(constraint, nameof(constraint));
 
-            type ??= typeof(object);
-            var actualType = actual?.GetType();
-            Guard.ArgumentValid(actualType is null
-                ? !type.IsValueType
-                : type.IsAssignableFrom(actualType),
+            actualType ??= typeof(object);
+            var runtimeActualType = actual?.GetType();
+            Guard.ArgumentValid(runtimeActualType is null
+                ? !actualType.IsValueType
+                : actualType.IsAssignableFrom(runtimeActualType),
                 "The actual value must be assignable to the provided type.",
-                nameof(type));
+                nameof(actual));
 
-            return InvokeApplyToLookup.GetOrAdd(type, BuildApplyToDelegate).Invoke(constraint, actual);
+            return InvokeApplyToLookup.GetOrAdd(actualType, BuildApplyToDelegate).Invoke(constraint, actual);
         }
 
         private static Func<IConstraint, object?, ConstraintResult> BuildApplyToDelegate(Type type)
@@ -314,6 +317,68 @@ namespace NUnit.Framework.Internal
             return Expression.Lambda<Func<IConstraint, object?, ConstraintResult>>(
                 Expression.Call(constraintParameter, methodInfo, Expression.Convert(actualParameter, type)),
                 [constraintParameter, actualParameter])
+                .Compile();
+        }
+
+        /// <summary>
+        /// Invokes <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        /// using the given <paramref name="constraint"/> as the instance with <paramref name="actualType"/> and
+        /// <paramref name="collectionType"/> as its generic type arguments.
+        /// </summary>
+        /// <param name="constraint">The <see cref="IConstraint"/>.</param>
+        /// <param name="actualType">The actual type argument to pass to <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
+        /// <param name="collectionType">The collection type to be used with <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <param name="collection">The collection.</param>
+        /// <returns>A <see cref="ConstraintResult"/>.</returns>
+        public static ConstraintResult InvokeApplyToCollection(ICollectionConstraint constraint, Type? actualType, Type? collectionType, object? actual, IEnumerable collection)
+        {
+            Guard.ArgumentNotNull(constraint, nameof(constraint));
+            Guard.ArgumentNotNull(collection, nameof(collection));
+
+            actualType ??= typeof(object);
+            var runtimeActualType = actual?.GetType();
+            Guard.ArgumentValid(runtimeActualType is null
+                ? !actualType.IsValueType
+                : actualType.IsAssignableFrom(runtimeActualType),
+                "The actual value must be assignable to the provided type.",
+                nameof(actual));
+
+            if (collectionType is null)
+            {
+                collectionType = typeof(IEnumerable<>).MakeGenericType(typeof(object));
+                collection = collection.Cast<object>();
+            }
+            else
+            {
+                Guard.ArgumentValid(collectionType.IsGenericType && collectionType.GetGenericTypeDefinition() == typeof(IEnumerable<>),
+                    "The collection type must be an `IEnumerable<T>`.",
+                    nameof(collectionType));
+
+                Guard.ArgumentValid(collectionType.IsAssignableFrom(collection.GetType()),
+                    "The collection must be assignable to the provided collection type.",
+                    nameof(collection));
+            }
+
+            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, collectionType), BuildApplyToCollectionDelegate).Invoke(constraint, actual, collection);
+        }
+
+        private static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildApplyToCollectionDelegate((Type, Type) pair)
+        {
+            var (actualType, collectionType) = pair;
+            var itemType = collectionType.GenericTypeArguments[0];
+
+            var methodInfo = ((MethodCallExpression)((LambdaExpression)((ICollectionConstraint x) => x.ApplyToCollection(0, Array.Empty<int>()))).Body).Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(actualType, itemType);
+
+            var constraintParameter = Expression.Parameter(typeof(ICollectionConstraint), "collectionConstraint");
+            var actualParameter = Expression.Parameter(typeof(object), "actual");
+            var collectionParameter = Expression.Parameter(typeof(object), "collection");
+
+            return Expression.Lambda<Func<ICollectionConstraint, object?, object?, ConstraintResult>>(
+                Expression.Call(constraintParameter, methodInfo, Expression.Convert(actualParameter, actualType), Expression.Convert(collectionParameter, collectionType)),
+                [constraintParameter, actualParameter, collectionParameter])
                 .Compile();
         }
 

@@ -1,7 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// NoItemConstraint applies another constraint to each
     /// item in a collection, failing if any of them succeeds.
     /// </summary>
-    public class NoItemConstraint : PrefixConstraint
+    public class NoItemConstraint : PrefixConstraint, ICollectionConstraint
     {
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
@@ -33,24 +34,28 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// failing if any item fails.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IConstraint.ApplyTo{TActual}(TActual)"/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var enumerableType = TypeHelper.FindPrimaryEnumerableInterface(typeof(TActual));
 
-            var underlyingValueTypes = TypeHelper.GetNullableValueTypesFromDeclaredEnumerableInterfaces(typeof(TActual));
+            return enumerableType is null
+                ? ApplyToCollection(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), enumerableType, actual, enumerable);
+        }
 
+        /// <summary>
+        /// Apply the item constraint to each item in the collection,
+        /// failing if any item fails.
+        /// </summary>
+        /// <inheritdoc cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToCollection<TActual, TItem>(TActual actual, IEnumerable<TItem> collection)
+        {
             int index = 0;
-            foreach (var item in enumerable)
+            foreach (var item in collection)
             {
-                var type = item?.GetType();
-                if (type is not null && underlyingValueTypes.Contains(type))
-                {
-                    type = typeof(Nullable<>).MakeGenericType(type);
-                }
-
-                if (Reflect.InvokeApplyTo(BaseConstraint, type, item).IsSuccess)
+                if (BaseConstraint.ApplyTo(item).IsSuccess)
                 {
                     return new EachItemConstraintResult(this, actual, item, index);
                 }

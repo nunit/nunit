@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -12,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// item in a collection, succeeding only if a specified
     /// number of items succeed.
     /// </summary>
-    public class ExactCountConstraint : Constraint
+    public class ExactCountConstraint : Constraint, ICollectionConstraint
     {
         private readonly int _expectedCount;
         private readonly IConstraint? _itemConstraint;
@@ -44,25 +45,32 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// succeeding only if the expected number of items pass.
         /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
+        /// <inheritdoc cref="IConstraint.ApplyTo{TActual}(TActual)"/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var enumerableType = TypeHelper.FindPrimaryEnumerableInterface(typeof(TActual));
+
+            return enumerableType is null
+                ? ApplyToCollection(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), enumerableType, actual, enumerable);
+        }
+
+        /// <summary>
+        /// Apply the item constraint to each item in the collection,
+        /// succeeding only if the expected number of items pass.
+        /// </summary>
+        /// <inheritdoc cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToCollection<TActual, TItem>(TActual actual, IEnumerable<TItem> collection)
+        {
             var itemList = new Collection<object?>();
             var matchCount = 0;
 
-            var underlyingValueTypes = TypeHelper.GetNullableValueTypesFromDeclaredEnumerableInterfaces(typeof(TActual));
-
-            foreach (var item in enumerable)
+            foreach (var item in collection)
             {
                 if (_itemConstraint is not null)
                 {
-                    var type = item?.GetType();
-                    if (type is not null && underlyingValueTypes.Contains(type))
-                        type = typeof(Nullable<>).MakeGenericType(type);
-
-                    if (Reflect.InvokeApplyTo(_itemConstraint, type, item).IsSuccess)
+                    if (_itemConstraint.ApplyTo(item).IsSuccess)
                         matchCount++;
                 }
                 else

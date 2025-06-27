@@ -333,45 +333,49 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// For the given <paramref name="type"/>, find all declared <see cref="IEnumerable{T}"/> interfaces
-        /// on it, collect any <see cref="Nullable{T}"/> type arguments for said interfaces, and finally return
-        /// a collection of their underlying value types.
+        /// For the given <paramref name="type"/>, find the primary <see cref="IEnumerable{T}"/> interface declared
+        /// on it. If multiple <see cref="IEnumerable{T}"/> interfaces are declared, return <see langword="null"/>.
         /// </summary>
         /// <param name="type">The given <see cref="Type"/>.</param>
         /// <returns>
-        /// A <see cref="HashSet{T}"/> of underlying value types for all <see cref="IEnumerable{T}"/>
-        /// interfaces that have <see cref="Nullable{T}"/> type arguments declared on the given <paramref name="type"/>.
+        /// the primary <see cref="IEnumerable{T}"/> interface declared on the given <paramref name="type"/>,
+        /// or <see langword="null"/> if zero are found or more than one is found.
         /// </returns>
-        /// <remarks>
-        /// This is used with collection constraints to help figure out what value types to convert back into <see cref="Nullable{T}"/>. Because <see cref="Nullable{T}"/>
-        /// gets boxed to either its underlying type or null and not the original <see cref="Nullable{T}"/>, we need to inspect the given <paramref name="type"/> to determine
-        /// what value types should be cast back. For more information see
-        /// <see href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/nullable-value-types#boxing-and-unboxing">Nullable Value Types: Boxing and Unboxing</see>
-        /// </remarks>
-        public static HashSet<Type> GetNullableValueTypesFromDeclaredEnumerableInterfaces(Type type)
+        public static Type? FindPrimaryEnumerableInterface(Type type)
         {
-            static bool tryGetValueType(Type type, [NotNullWhen(true)] out Type? valueType)
-                => (valueType = null) is null
-                && type.IsGenericType
-                && type.GetGenericTypeDefinition() == typeof(IEnumerable<>)
-                && (valueType = Nullable.GetUnderlyingType(type.GenericTypeArguments[0])) is not null;
+            static bool predicate(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
 
-            var ret = new HashSet<Type>();
+            Type? primaryEnumerableType = null;
+            var found = false;
+            var queue = new Queue<Type>();
+            queue.Enqueue(type);
 
-            if (tryGetValueType(type, out var valueType))
+            // We need to scan interfaces declared on interfaces recursively here because the type
+            // might only implement `IList<T>`, which technically isn't an `IEnumerable<T>` and would
+            // cause a basic interface scan to fail.
+            while (queue.Count > 0)
             {
-                ret.Add(valueType);
-            }
+                var @interface = queue.Dequeue();
 
-            foreach (var @interface in GetDeclaredInterfaces(type))
-            {
-                if (tryGetValueType(@interface, out valueType))
+                // if we run into multiple `IEnumerable<T>` that have the same T generic argument then that's fine,
+                // i.e. if the primary enumerable type is equal to the interface type we can skip this check.
+                if (primaryEnumerableType != @interface && predicate(@interface))
                 {
-                    ret.Add(valueType);
+                    if (found)
+                    {
+                        return null;
+                    }
+                    primaryEnumerableType = @interface;
+                    found = true;
+                }
+
+                foreach (var subInterface in @interface.GetInterfaces())
+                {
+                    queue.Enqueue(subInterface);
                 }
             }
 
-            return ret;
+            return primaryEnumerableType;
         }
 
         private static bool IsTupleInternal(Type type, string tupleName)
