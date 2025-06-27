@@ -44,9 +44,15 @@ namespace NUnit.Framework.Constraints
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
+            var underlyingValueTypes = TypeHelper.GetNullableValueTypesFromDeclaredEnumerableInterfaces(typeof(TActual));
+
             foreach (var item in enumerable)
             {
-                if (Reflect.InvokeApplyTo(BaseConstraint, item?.GetType(), item).IsSuccess)
+                var type = item?.GetType();
+                if (type is not null && underlyingValueTypes.Contains(type))
+                    type = typeof(Nullable<>).MakeGenericType(type);
+
+                if (Reflect.InvokeApplyTo(BaseConstraint, type, item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);
             }
 

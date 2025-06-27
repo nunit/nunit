@@ -72,6 +72,26 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void NullableExactConstraint()
+        {
+            var oneDefaultItems = new List<int?>() { default };
+            var noDefaultItems = new List<int?>() { 0 };
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(oneDefaultItems.Single(), Is.Null);
+                Assert.That(oneDefaultItems.Single(), Is.Default);
+                Assert.That(oneDefaultItems, Has.One.Default);
+                Assert.That(oneDefaultItems, Has.Exactly(1).Default);
+
+                Assert.That(noDefaultItems.Single(), Is.Not.Null);
+                Assert.That(noDefaultItems.Single(), Is.Not.Default);
+                Assert.That(noDefaultItems, Has.One.Not.Default);
+                Assert.That(noDefaultItems, Has.Exactly(1).Not.Default);
+            }
+        }
+
+        [Test]
         public void SomeItemsConstraint()
         {
             var someDefaultItems = new List<int>() { default, 1, 2, 3 };
@@ -80,9 +100,29 @@ namespace NUnit.Framework.Tests.Constraints
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(someDefaultItems.Any(x => x == default), Is.True);
+                Assert.That(someDefaultItems, Has.Some.Zero);
                 Assert.That(someDefaultItems, Has.Some.Default);
 
                 Assert.That(noDefaultItems.Any(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.Some.Not.Zero);
+                Assert.That(noDefaultItems, Has.Some.Not.Default);
+            }
+        }
+
+        [Test]
+        public void NullableSomeItemsConstraint()
+        {
+            var someDefaultItems = new List<int?>() { default, 0, 1, 2, 3 };
+            var noDefaultItems = new List<int?>() { 0, 1, 2, 3 };
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(someDefaultItems.Any(x => x == default), Is.True);
+                Assert.That(someDefaultItems, Has.Some.Null);
+                Assert.That(someDefaultItems, Has.Some.Default);
+
+                Assert.That(noDefaultItems.Any(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.Some.Not.Null);
                 Assert.That(noDefaultItems, Has.Some.Not.Default);
             }
         }
@@ -96,9 +136,29 @@ namespace NUnit.Framework.Tests.Constraints
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(allDefaultItems.All(x => x == default), Is.True);
+                Assert.That(allDefaultItems, Has.All.Zero);
                 Assert.That(allDefaultItems, Has.All.Default);
 
                 Assert.That(noDefaultItems.All(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.All.Not.Zero);
+                Assert.That(noDefaultItems, Has.All.Not.Default);
+            }
+        }
+
+        [Test]
+        public void NullableAllItemsConstraint()
+        {
+            var allDefaultItems = new List<int?>() { default, default, default };
+            var noDefaultItems = new List<int?>() { 0, 1, 2, 3 };
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(allDefaultItems.All(x => x == default), Is.True);
+                Assert.That(allDefaultItems, Has.All.Null);
+                Assert.That(allDefaultItems, Has.All.Default);
+
+                Assert.That(noDefaultItems.All(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.All.Not.Null);
                 Assert.That(noDefaultItems, Has.All.Not.Default);
             }
         }
@@ -112,9 +172,29 @@ namespace NUnit.Framework.Tests.Constraints
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(allDefaultItems.All(x => x == default), Is.True);
+                Assert.That(allDefaultItems, Has.None.Not.Zero);
                 Assert.That(allDefaultItems, Has.None.Not.Default);
 
                 Assert.That(noDefaultItems.All(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.None.Zero);
+                Assert.That(noDefaultItems, Has.None.Default);
+            }
+        }
+
+        [Test]
+        public void NullableNoItemConstraint()
+        {
+            var allDefaultItems = new List<int?>() { default, default, default };
+            var noDefaultItems = new List<int?>() { 0, 1, 2, 3 };
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(allDefaultItems.All(x => x == default), Is.True);
+                Assert.That(allDefaultItems, Has.None.Not.Null);
+                Assert.That(allDefaultItems, Has.None.Not.Default);
+
+                Assert.That(noDefaultItems.All(x => x == default), Is.False);
+                Assert.That(noDefaultItems, Has.None.Null);
                 Assert.That(noDefaultItems, Has.None.Default);
             }
         }

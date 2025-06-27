@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using NUnit.Framework.Internal;
@@ -51,11 +52,17 @@ namespace NUnit.Framework.Constraints
             var itemList = new Collection<object?>();
             var matchCount = 0;
 
+            var underlyingValueTypes = TypeHelper.GetNullableValueTypesFromDeclaredEnumerableInterfaces(typeof(TActual));
+
             foreach (var item in enumerable)
             {
                 if (_itemConstraint is not null)
                 {
-                    if (Reflect.InvokeApplyTo(_itemConstraint, item?.GetType(), item).IsSuccess)
+                    var type = item?.GetType();
+                    if (type is not null && underlyingValueTypes.Contains(type))
+                        type = typeof(Nullable<>).MakeGenericType(type);
+
+                    if (Reflect.InvokeApplyTo(_itemConstraint, type, item).IsSuccess)
                         matchCount++;
                 }
                 else
