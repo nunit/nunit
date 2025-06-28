@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using NUnit.Framework.Constraints;
 
@@ -307,17 +306,13 @@ namespace NUnit.Framework.Internal
 
         private static Func<IConstraint, object?, ConstraintResult> BuildApplyToDelegate(Type type)
         {
-            var methodInfo = ((MethodCallExpression)((LambdaExpression)((IConstraint x) => x.ApplyTo(0))).Body).Method
+            static ConstraintResult DelegateTemplate<T>(IConstraint constraint, object? actual)
+                => constraint.ApplyTo((T?)actual);
+
+            return ((Delegate)DelegateTemplate<object>).Method
                 .GetGenericMethodDefinition()
-                .MakeGenericMethod(type);
-
-            var constraintParameter = Expression.Parameter(typeof(IConstraint), "constraint");
-            var actualParameter = Expression.Parameter(typeof(object), "actual");
-
-            return Expression.Lambda<Func<IConstraint, object?, ConstraintResult>>(
-                Expression.Call(constraintParameter, methodInfo, Expression.Convert(actualParameter, type)),
-                [constraintParameter, actualParameter])
-                .Compile();
+                .MakeGenericMethod(type)
+                .CreateDelegate<Func<IConstraint, object?, ConstraintResult>>();
         }
 
         /// <summary>
@@ -360,26 +355,18 @@ namespace NUnit.Framework.Internal
                     nameof(collection));
             }
 
-            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, collectionType), BuildApplyToCollectionDelegate).Invoke(constraint, actual, collection);
+            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, collectionType.GenericTypeArguments[0]), BuildApplyToCollectionDelegate).Invoke(constraint, actual, collection);
         }
 
-        private static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildApplyToCollectionDelegate((Type, Type) pair)
+        private static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildApplyToCollectionDelegate((Type ActualType, Type ItemType) pair)
         {
-            var (actualType, collectionType) = pair;
-            var itemType = collectionType.GenericTypeArguments[0];
+            static ConstraintResult DelegateTemplate<TActual, TItem>(ICollectionConstraint constraint, object? actual, object collection)
+                => constraint.ApplyToCollection((TActual?)actual, (IEnumerable<TItem>)collection);
 
-            var methodInfo = ((MethodCallExpression)((LambdaExpression)((ICollectionConstraint x) => x.ApplyToCollection(0, Array.Empty<int>()))).Body).Method
+            return ((Delegate)DelegateTemplate<object, object>).Method
                 .GetGenericMethodDefinition()
-                .MakeGenericMethod(actualType, itemType);
-
-            var constraintParameter = Expression.Parameter(typeof(ICollectionConstraint), "collectionConstraint");
-            var actualParameter = Expression.Parameter(typeof(object), "actual");
-            var collectionParameter = Expression.Parameter(typeof(object), "collection");
-
-            return Expression.Lambda<Func<ICollectionConstraint, object?, object?, ConstraintResult>>(
-                Expression.Call(constraintParameter, methodInfo, Expression.Convert(actualParameter, actualType), Expression.Convert(collectionParameter, collectionType)),
-                [constraintParameter, actualParameter, collectionParameter])
-                .Compile();
+                .MakeGenericMethod(pair.ActualType, pair.ItemType)
+                .CreateDelegate<Func<ICollectionConstraint, object?, object?, ConstraintResult>>();
         }
 
         #endregion
