@@ -301,18 +301,16 @@ namespace NUnit.Framework.Internal
                 "The actual value must be assignable to the provided type.",
                 nameof(actual));
 
-            return InvokeApplyToLookup.GetOrAdd(actualType, BuildApplyToDelegate).Invoke(constraint, actual);
-        }
-
-        private static Func<IConstraint, object?, ConstraintResult> BuildApplyToDelegate(Type type)
-        {
             static ConstraintResult DelegateTemplate<T>(IConstraint constraint, object? actual)
                 => constraint.ApplyTo((T?)actual);
 
-            return ((Delegate)DelegateTemplate<object>).Method
+            static Func<IConstraint, object?, ConstraintResult> BuildDelegate(Type type)
+                => ((Delegate)DelegateTemplate<object>).Method
                 .GetGenericMethodDefinition()
                 .MakeGenericMethod(type)
                 .CreateDelegate<Func<IConstraint, object?, ConstraintResult>>();
+
+            return InvokeApplyToLookup.GetOrAdd(actualType, BuildDelegate).Invoke(constraint, actual);
         }
 
         /// <summary>
@@ -355,18 +353,16 @@ namespace NUnit.Framework.Internal
                     nameof(collection));
             }
 
-            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, collectionType.GenericTypeArguments[0]), BuildApplyToCollectionDelegate).Invoke(constraint, actual, collection);
-        }
-
-        private static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildApplyToCollectionDelegate((Type ActualType, Type ItemType) pair)
-        {
             static ConstraintResult DelegateTemplate<TActual, TItem>(ICollectionConstraint constraint, object? actual, object collection)
                 => constraint.ApplyToCollection((TActual?)actual, (IEnumerable<TItem>)collection);
 
-            return ((Delegate)DelegateTemplate<object, object>).Method
+            static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildDelegate((Type ActualType, Type ItemType) pair)
+                => ((Delegate)DelegateTemplate<object, object>).Method
                 .GetGenericMethodDefinition()
                 .MakeGenericMethod(pair.ActualType, pair.ItemType)
                 .CreateDelegate<Func<ICollectionConstraint, object?, object?, ConstraintResult>>();
+
+            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, collectionType.GenericTypeArguments[0]), BuildDelegate).Invoke(constraint, actual, collection);
         }
 
         #endregion
