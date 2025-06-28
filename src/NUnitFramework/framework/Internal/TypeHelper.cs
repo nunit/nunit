@@ -334,14 +334,15 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// For the given <paramref name="type"/>, find the primary <see cref="IEnumerable{T}"/> interface declared
-        /// on it. If multiple <see cref="IEnumerable{T}"/> interfaces are declared, return <see langword="null"/>.
+        /// on it and return its generic type argument. If multiple <see cref="IEnumerable{T}"/> interfaces are declared,
+        /// return <see langword="null"/>.
         /// </summary>
         /// <param name="type">The given <see cref="Type"/>.</param>
         /// <returns>
-        /// the primary <see cref="IEnumerable{T}"/> interface declared on the given <paramref name="type"/>,
-        /// or <see langword="null"/> if zero are found or more than one is found.
+        /// The generic type argument of the primary <see cref="IEnumerable{T}"/> interface declared on the given
+        /// <paramref name="type"/>, or <see langword="null"/> if zero interfaces are found or more than one interface is found.
         /// </returns>
-        public static Type? FindPrimaryEnumerableInterface(Type type)
+        public static Type? FindPrimaryEnumerableInterfaceGenericTypeArgument(Type type)
         {
             static bool predicate(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
 
@@ -375,7 +376,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            return primaryEnumerableType;
+            return primaryEnumerableType?.GenericTypeArguments[0];
         }
 
         private static bool IsTupleInternal(Type type, string tupleName)

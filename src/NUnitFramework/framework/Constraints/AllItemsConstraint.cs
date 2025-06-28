@@ -38,11 +38,11 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
-            var enumerableType = TypeHelper.FindPrimaryEnumerableInterface(typeof(TActual));
+            var itemType = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(TActual));
 
-            return enumerableType is null
+            return itemType is null
                 ? ApplyToCollection(actual, enumerable.Cast<object>())
-                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), enumerableType, actual, enumerable);
+                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), itemType, actual, enumerable);
         }
 
         /// <summary>
