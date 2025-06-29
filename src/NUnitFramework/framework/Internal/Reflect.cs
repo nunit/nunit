@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -30,7 +29,7 @@ namespace NUnit.Framework.Internal
     {
         private static readonly ConcurrentDictionary<Type, Func<IConstraint, object?, ConstraintResult>> InvokeApplyToLookup = [];
 
-        private static readonly ConcurrentDictionary<(Type, Type), Func<ICollectionConstraint, object?, object?, ConstraintResult>> InvokeApplyToCollectionLookup = [];
+        private static readonly ConcurrentDictionary<(Type, Type), Func<IEnumerableConstraint, object, ConstraintResult>> InvokeApplyToCollectionLookup = [];
 
         internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
@@ -289,11 +288,9 @@ namespace NUnit.Framework.Internal
         /// <param name="actualType">The generic type argument to pass to <see cref="IConstraint.ApplyTo{TActual}(TActual)"/>.</param>
         /// <param name="actual">The actual value.</param>
         /// <returns>A <see cref="ConstraintResult"/>.</returns>
-        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type? actualType, object? actual)
+        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type actualType, object? actual)
         {
             Guard.ArgumentNotNull(constraint, nameof(constraint));
-
-            actualType ??= typeof(object);
 
             Guard.ArgumentValid(actual is null
                 ? IsAssignableFromNull(actualType)
@@ -314,48 +311,35 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Invokes <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
-        /// using the given <paramref name="constraint"/> as the instance with <paramref name="actualType"/> and
+        /// Invokes <see cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        /// using the given <paramref name="constraint"/> as the instance with <paramref name="actual"/>.GetType() and
         /// <paramref name="itemType"/> as its generic type arguments.
         /// </summary>
         /// <param name="constraint">The <see cref="IConstraint"/>.</param>
-        /// <param name="actualType">The actual type argument to pass to <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
-        /// <param name="itemType">The item type argument to pass to <see cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
+        /// <param name="itemType">The item type argument to pass to <see cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
         /// <param name="actual">The actual value.</param>
-        /// <param name="collection">The collection.</param>
         /// <returns>A <see cref="ConstraintResult"/>.</returns>
-        public static ConstraintResult InvokeApplyToCollection(ICollectionConstraint constraint, Type? actualType, Type? itemType, object? actual, IEnumerable collection)
+        public static ConstraintResult InvokeApplyToEnumerable(IEnumerableConstraint constraint, object actual, Type itemType)
         {
             Guard.ArgumentNotNull(constraint, nameof(constraint));
-            Guard.ArgumentNotNull(collection, nameof(collection));
+            Guard.ArgumentNotNull(actual, nameof(actual));
 
-            actualType ??= typeof(object);
-            itemType ??= typeof(object);
-            if (itemType == typeof(object))
-            {
-                collection = collection.Cast<object>();
-            }
+            Type actualType = actual.GetType();
 
-            Guard.ArgumentValid(actual is null
-                ? IsAssignableFromNull(actualType)
-                : actualType.IsAssignableFrom(actual.GetType()),
-                "The actual value must be assignable to the provided actual type.",
+            Guard.ArgumentValid(typeof(IEnumerable<>).MakeGenericType(itemType).IsAssignableFrom(actualType),
+                "The collection must be assignable to an `IEnumerable<T>` where T is the provided item type.",
                 nameof(actual));
 
-            Guard.ArgumentValid(typeof(IEnumerable<>).MakeGenericType(itemType).IsAssignableFrom(collection.GetType()),
-                "The collection must be assignable to an `IEnumerable<T>` where T is the provided item type.",
-                nameof(collection));
+            static ConstraintResult DelegateTemplate<TActual, TItem>(IEnumerableConstraint constraint, object actual)
+                => constraint.ApplyToEnumerable((TActual)actual, (IEnumerable<TItem>)actual);
 
-            static ConstraintResult DelegateTemplate<TActual, TItem>(ICollectionConstraint constraint, object? actual, object collection)
-                => constraint.ApplyToCollection((TActual?)actual, (IEnumerable<TItem>)collection);
-
-            static Func<ICollectionConstraint, object?, object?, ConstraintResult> BuildDelegate((Type ActualType, Type ItemType) pair)
+            static Func<IEnumerableConstraint, object, ConstraintResult> BuildDelegate((Type ActualType, Type ItemType) pair)
                 => ((Delegate)DelegateTemplate<object, object>).Method
                 .GetGenericMethodDefinition()
                 .MakeGenericMethod(pair.ActualType, pair.ItemType)
-                .CreateDelegate<Func<ICollectionConstraint, object?, object?, ConstraintResult>>();
+                .CreateDelegate<Func<IEnumerableConstraint, object, ConstraintResult>>();
 
-            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, itemType), BuildDelegate).Invoke(constraint, actual, collection);
+            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, itemType), BuildDelegate).Invoke(constraint, actual);
         }
 
         #endregion

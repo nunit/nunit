@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// NoItemConstraint applies another constraint to each
     /// item in a collection, failing if any of them succeeds.
     /// </summary>
-    public class NoItemConstraint : PrefixConstraint, ICollectionConstraint
+    public class NoItemConstraint : PrefixConstraint, IEnumerableConstraint
     {
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
@@ -40,20 +40,20 @@ namespace NUnit.Framework.Constraints
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
             var itemType = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(TActual));
 
-            return itemType is null
-                ? ApplyToCollection(actual, enumerable.Cast<object>())
-                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), itemType, actual, enumerable);
+            return itemType is null || itemType == typeof(object)
+                ? ApplyToEnumerable(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToEnumerable(this, actual, itemType);
         }
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
         /// failing if any item fails.
         /// </summary>
-        /// <inheritdoc cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
-        public ConstraintResult ApplyToCollection<TActual, TItem>(TActual actual, IEnumerable<TItem> collection)
+        /// <inheritdoc cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToEnumerable<TActual, TItem>(TActual actual, IEnumerable<TItem> enumerable)
         {
             int index = 0;
-            foreach (var item in collection)
+            foreach (var item in enumerable)
             {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                 {

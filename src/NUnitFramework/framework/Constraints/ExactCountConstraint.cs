@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// item in a collection, succeeding only if a specified
     /// number of items succeed.
     /// </summary>
-    public class ExactCountConstraint : Constraint, ICollectionConstraint
+    public class ExactCountConstraint : Constraint, IEnumerableConstraint
     {
         private readonly int _expectedCount;
         private readonly IConstraint? _itemConstraint;
@@ -51,22 +51,22 @@ namespace NUnit.Framework.Constraints
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
             var itemType = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(TActual));
 
-            return itemType is null
-                ? ApplyToCollection(actual, enumerable.Cast<object>())
-                : Reflect.InvokeApplyToCollection(this, actual?.GetType(), itemType, actual, enumerable);
+            return itemType is null || itemType == typeof(object)
+                ? ApplyToEnumerable(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToEnumerable(this, actual, itemType);
         }
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,
         /// succeeding only if the expected number of items pass.
         /// </summary>
-        /// <inheritdoc cref="ICollectionConstraint.ApplyToCollection{TActual, TItem}(TActual, IEnumerable{TItem})"/>
-        public ConstraintResult ApplyToCollection<TActual, TItem>(TActual actual, IEnumerable<TItem> collection)
+        /// <inheritdoc cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToEnumerable<TActual, TItem>(TActual actual, IEnumerable<TItem> enumerable)
         {
             var itemList = new Collection<object?>();
             var matchCount = 0;
 
-            foreach (var item in collection)
+            foreach (var item in enumerable)
             {
                 if (_itemConstraint is not null)
                 {
