@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -9,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// NoItemConstraint applies another constraint to each
     /// item in a collection, failing if any of them succeeds.
     /// </summary>
-    public class NoItemConstraint : PrefixConstraint
+    public class NoItemConstraint : PrefixConstraint, IEnumerableConstraint
     {
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
@@ -32,14 +34,26 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// failing if any item fails.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IConstraint.ApplyTo{TActual}(TActual)"/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var itemType = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(TActual));
 
+            return itemType is null || itemType == typeof(object)
+                ? ApplyToEnumerable(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToEnumerable(this, actual, itemType);
+        }
+
+        /// <summary>
+        /// Apply the item constraint to each item in the collection,
+        /// failing if any item fails.
+        /// </summary>
+        /// <inheritdoc cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToEnumerable<TActual, TItem>(TActual actual, IEnumerable<TItem> enumerable)
+        {
             int index = 0;
-            foreach (object item in enumerable)
+            foreach (var item in enumerable)
             {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                 {

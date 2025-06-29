@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
             }
 
             _propValue = property.GetValue(actual, null);
-            var baseResult = BaseConstraint.ApplyTo(_propValue);
+            var baseResult = Reflect.InvokeApplyTo(BaseConstraint, property.PropertyType, _propValue);
             return new PropertyConstraintResult(this, baseResult);
         }
 

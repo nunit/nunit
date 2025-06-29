@@ -332,6 +332,53 @@ namespace NUnit.Framework.Internal
             return IsTupleInternal(type, "System.Tuple");
         }
 
+        /// <summary>
+        /// For the given <paramref name="type"/>, find the primary <see cref="IEnumerable{T}"/> interface declared
+        /// on it and return its generic type argument. If multiple <see cref="IEnumerable{T}"/> interfaces are declared,
+        /// return <see langword="null"/>.
+        /// </summary>
+        /// <param name="type">The given <see cref="Type"/>.</param>
+        /// <returns>
+        /// The generic type argument of the primary <see cref="IEnumerable{T}"/> interface declared on the given
+        /// <paramref name="type"/>, or <see langword="null"/> if zero interfaces are found or more than one interface is found.
+        /// </returns>
+        public static Type? FindPrimaryEnumerableInterfaceGenericTypeArgument(Type type)
+        {
+            static bool predicate(Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+
+            Type? primaryEnumerableType = null;
+            var found = false;
+            var queue = new Queue<Type>();
+            queue.Enqueue(type);
+
+            // We need to scan interfaces declared on interfaces recursively here because the type
+            // might only implement `IList<T>`, which technically isn't an `IEnumerable<T>` and would
+            // cause a basic interface scan to fail.
+            while (queue.Count > 0)
+            {
+                var @interface = queue.Dequeue();
+
+                // if we run into multiple `IEnumerable<T>` that have the same T generic argument then that's fine,
+                // i.e. if the primary enumerable type is equal to the interface type we can skip this check.
+                if (primaryEnumerableType != @interface && predicate(@interface))
+                {
+                    if (found)
+                    {
+                        return null;
+                    }
+                    primaryEnumerableType = @interface;
+                    found = true;
+                }
+
+                foreach (var subInterface in @interface.GetInterfaces())
+                {
+                    queue.Enqueue(subInterface);
+                }
+            }
+
+            return primaryEnumerableType?.GenericTypeArguments[0];
+        }
+
         private static bool IsTupleInternal(Type type, string tupleName)
         {
             string typeName = type.FullName();

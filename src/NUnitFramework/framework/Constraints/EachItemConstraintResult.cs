@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     internal sealed class EachItemConstraintResult : ConstraintResult
     {
-        private readonly object _nonMatchingItem;
+        private readonly object? _nonMatchingItem;
         private readonly int _nonMatchingItemIndex;
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied</param>
         /// <param name="nonMatchingItem">Actual item that does not match expected condition</param>
         /// <param name="nonMatchingIndex">Non matching item index</param>
-        public EachItemConstraintResult(IConstraint constraint, object? actualValue, object nonMatchingItem, int nonMatchingIndex)
+        public EachItemConstraintResult(IConstraint constraint, object? actualValue, object? nonMatchingItem, int nonMatchingIndex)
             : base(constraint, actualValue, false)
         {
             _nonMatchingItem = nonMatchingItem;
