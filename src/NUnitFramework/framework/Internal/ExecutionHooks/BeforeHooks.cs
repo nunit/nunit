@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
 {
-    internal sealed class ForwardTestHook : TestHook
+    internal sealed class BeforeHooks : Hooks
     {
         private readonly List<Action<TestExecutionContext>> _list;
 
@@ -13,12 +13,12 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal override void AddHandler(Action<TestExecutionContext> handler) => _list.Add(handler);
 
-        public ForwardTestHook()
+        public BeforeHooks()
         {
             _list = new List<Action<TestExecutionContext>>();
         }
 
-        public ForwardTestHook(ForwardTestHook source)
+        public BeforeHooks(BeforeHooks source)
         {
             _list = new List<Action<TestExecutionContext>>(source._list);
         }
