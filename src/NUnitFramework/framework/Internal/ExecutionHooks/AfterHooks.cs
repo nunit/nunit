@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
 {
-    internal sealed class ReverseTestHook : TestHook
+    internal sealed class AfterHooks : Hooks
     {
         private readonly Stack<Action<TestExecutionContext>> _stack;
 
@@ -13,12 +13,12 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal override void AddHandler(Action<TestExecutionContext> handler) => _stack.Push(handler);
 
-        public ReverseTestHook()
+        public AfterHooks()
         {
             _stack = new Stack<Action<TestExecutionContext>>();
         }
 
-        public ReverseTestHook(ReverseTestHook source)
+        public AfterHooks(AfterHooks source)
         {
             _stack = new Stack<Action<TestExecutionContext>>(source._stack);
         }

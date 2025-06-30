@@ -13,8 +13,8 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         {
         }
 
-        internal ForwardTestHook BeforeTest { get; } = new();
-        internal ReverseTestHook AfterTest { get; } = new();
+        internal BeforeHooks BeforeTest { get; } = new();
+        internal AfterHooks AfterTest { get; } = new();
 
         /// <summary>
         /// Adds a hook action to be invoked before the test method is executed.
@@ -36,8 +36,8 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal ExecutionHooks(ExecutionHooks other)
         {
-            BeforeTest = new ForwardTestHook(other.BeforeTest);
-            AfterTest = new ReverseTestHook(other.AfterTest);
+            BeforeTest = new BeforeHooks(other.BeforeTest);
+            AfterTest = new AfterHooks(other.AfterTest);
         }
 
         internal void OnBeforeTest(TestExecutionContext context)

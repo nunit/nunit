@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace NUnit.Framework.Internal.ExecutionHooks
 {
-    internal abstract class TestHook
+    internal abstract class Hooks
     {
         protected abstract IReadOnlyCollection<Action<TestExecutionContext>> Handlers { get; }
 
