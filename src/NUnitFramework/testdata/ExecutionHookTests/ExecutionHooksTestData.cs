@@ -11,14 +11,17 @@ namespace NUnit.TestData.ExecutionHookTests
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class SomeTestActionAttribute : Attribute, ITestAction
     {
+        public static string LogStringForBeforeTest = $"{nameof(SomeTestActionAttribute)}.{nameof(BeforeTest)}";
+        public static string LogStringForAfterTest = $"{nameof(SomeTestActionAttribute)}.{nameof(AfterTest)}";
+
         public void BeforeTest(ITest test)
         {
-            TestLog.LogCurrentMethod();
+            TestLog.LogMessage(LogStringForBeforeTest);
         }
 
         public void AfterTest(ITest test)
         {
-            TestLog.LogCurrentMethod();
+            TestLog.LogMessage(LogStringForAfterTest);
         }
 
         public ActionTargets Targets => ActionTargets.Suite;
