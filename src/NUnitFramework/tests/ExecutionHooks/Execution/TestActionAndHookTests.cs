@@ -17,13 +17,13 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeSetUp),
-                nameof(SomeTestActionAttribute.BeforeTest),
+                SomeTestActionAttribute.LogStringForBeforeTest,
                 nameof(TestWithTestHooksAndClassTestActionAttribute.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
                 nameof(TestWithTestHooksAndClassTestActionAttribute.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
                 nameof(TestWithTestHooksAndClassTestActionAttribute.TearDown),
-                nameof(SomeTestActionAttribute.AfterTest),
+                SomeTestActionAttribute.LogStringForAfterTest,
                 nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeTearDown)
             ]));
         }
