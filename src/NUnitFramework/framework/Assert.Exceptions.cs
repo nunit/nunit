@@ -118,7 +118,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception? Catch(TestDelegate code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
+            return Throws(new InstanceOfTypeConstraint<Exception>(), code, message, args);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         public static Exception? Catch(TestDelegate code)
         {
-            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
+            return Throws(new InstanceOfTypeConstraint<Exception>(), code);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace NUnit.Framework
         public static TActual? Catch<TActual>(TestDelegate code, string message, params object?[]? args)
             where TActual : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
+            return (TActual?)Throws(new InstanceOfTypeConstraint<TActual>(), code, message, args);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace NUnit.Framework
         public static TActual? Catch<TActual>(TestDelegate code)
             where TActual : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code);
+            return (TActual?)Throws(new InstanceOfTypeConstraint<TActual>(), code);
         }
 
         #endregion
