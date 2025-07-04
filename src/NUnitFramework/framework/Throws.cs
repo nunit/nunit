@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Reflection;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -35,7 +36,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint TargetInvocationException => TypeOf(typeof(System.Reflection.TargetInvocationException));
+        public static ExactTypeConstraint<TargetInvocationException> TargetInvocationException => TypeOf<TargetInvocationException>();
 
         #endregion
 
@@ -44,7 +45,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected ArgumentException
         /// </summary>
-        public static ExactTypeConstraint ArgumentException => TypeOf(typeof(System.ArgumentException));
+        public static ExactTypeConstraint<ArgumentException> ArgumentException => TypeOf<ArgumentException>();
 
         #endregion
 
@@ -53,7 +54,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected ArgumentNullException
         /// </summary>
-        public static ExactTypeConstraint ArgumentNullException => TypeOf(typeof(System.ArgumentNullException));
+        public static ExactTypeConstraint<ArgumentNullException> ArgumentNullException => TypeOf<ArgumentNullException>();
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected InvalidOperationException
         /// </summary>
-        public static ExactTypeConstraint InvalidOperationException => TypeOf(typeof(System.InvalidOperationException));
+        public static ExactTypeConstraint<InvalidOperationException> InvalidOperationException => TypeOf<InvalidOperationException>();
 
         #endregion
 
@@ -88,10 +89,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the exact type of exception expected
         /// </summary>
-        public static ExactTypeConstraint TypeOf<TExpected>()
+        public static ExactTypeConstraint<TExpected> TypeOf<TExpected>()
             where TExpected : Exception
         {
-            return TypeOf(typeof(TExpected));
+            return Exception.TypeOf<TExpected>();
         }
 
         #endregion
@@ -109,10 +110,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying the type of exception expected
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf<TExpected>()
+        public static InstanceOfTypeConstraint<TExpected> InstanceOf<TExpected>()
             where TExpected : Exception
         {
-            return InstanceOf(typeof(TExpected));
+            return Exception.InstanceOf<TExpected>();
         }
 
         #endregion

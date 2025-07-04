@@ -117,7 +117,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception? CatchAsync(AsyncTestDelegate code, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
+            return ThrowsAsync(new InstanceOfTypeConstraint<Exception>(), code, message, args);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         public static Exception? CatchAsync(AsyncTestDelegate code)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code);
+            return ThrowsAsync(new InstanceOfTypeConstraint<Exception>(), code);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), code, message, args);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), code);
         }
 
         #endregion

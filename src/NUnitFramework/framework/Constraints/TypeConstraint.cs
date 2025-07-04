@@ -8,6 +8,23 @@ namespace NUnit.Framework.Constraints
     /// TypeConstraint is the abstract base for constraints
     /// that take a Type as their expected value.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public abstract class TypeConstraint<TExpected> : TypeConstraint
+    {
+        /// <summary>
+        /// Construct a TypeConstraint for a given Type
+        /// </summary>
+        /// <param name="descriptionPrefix">Prefix used in forming the constraint description</param>
+        protected TypeConstraint(string descriptionPrefix)
+            : base(typeof(TExpected), descriptionPrefix)
+        {
+        }
+    }
+
+    /// <summary>
+    /// TypeConstraint is the abstract base for constraints
+    /// that take a Type as their expected value.
+    /// </summary>
     public abstract class TypeConstraint : Constraint
     {
 #pragma warning disable IDE1006
