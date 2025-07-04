@@ -8,6 +8,22 @@ namespace NUnit.Framework.Constraints
     /// InstanceOfTypeConstraint is used to test that an object
     /// is of the same type provided or derived from it.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class InstanceOfTypeConstraint<TExpected> : InstanceOfTypeConstraint
+    {
+        /// <summary>
+        /// Construct an InstanceOfTypeConstraint for the type provided
+        /// </summary>
+        public InstanceOfTypeConstraint()
+            : base(typeof(TExpected))
+        {
+        }
+    }
+
+    /// <summary>
+    /// InstanceOfTypeConstraint is used to test that an object
+    /// is of the same type provided or derived from it.
+    /// </summary>
     public class InstanceOfTypeConstraint : TypeConstraint
     {
         /// <summary>

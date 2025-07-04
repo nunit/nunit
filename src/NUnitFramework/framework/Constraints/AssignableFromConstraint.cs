@@ -8,6 +8,21 @@ namespace NUnit.Framework.Constraints
     /// AssignableFromConstraint is used to test that an object
     /// can be assigned from a given Type.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class AssignableFromConstraint<TExpected> : AssignableFromConstraint
+    {
+        /// <summary>
+        /// Construct an AssignableFromConstraint for the type provided
+        /// </summary>
+        public AssignableFromConstraint() : base(typeof(TExpected))
+        {
+        }
+    }
+
+    /// <summary>
+    /// AssignableFromConstraint is used to test that an object
+    /// can be assigned from a given Type.
+    /// </summary>
     public class AssignableFromConstraint : TypeConstraint
     {
         /// <summary>

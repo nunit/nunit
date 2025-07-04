@@ -418,9 +418,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public static ExactTypeConstraint TypeOf<TExpected>()
+        public static ExactTypeConstraint<TExpected> TypeOf<TExpected>()
         {
-            return new ExactTypeConstraint(typeof(TExpected));
+            return new ExactTypeConstraint<TExpected>();
         }
 
         #endregion
@@ -440,9 +440,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public static InstanceOfTypeConstraint InstanceOf<TExpected>()
+        public static InstanceOfTypeConstraint<TExpected> InstanceOf<TExpected>()
         {
-            return new InstanceOfTypeConstraint(typeof(TExpected));
+            return new InstanceOfTypeConstraint<TExpected>();
         }
 
         #endregion
@@ -462,9 +462,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public static AssignableFromConstraint AssignableFrom<TExpected>()
+        public static AssignableFromConstraint<TExpected> AssignableFrom<TExpected>()
         {
-            return new AssignableFromConstraint(typeof(TExpected));
+            return new AssignableFromConstraint<TExpected>();
         }
 
         #endregion
@@ -484,9 +484,9 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual value
         /// is assignable to the type supplied as an argument.
         /// </summary>
-        public static AssignableToConstraint AssignableTo<TExpected>()
+        public static AssignableToConstraint<TExpected> AssignableTo<TExpected>()
         {
-            return new AssignableToConstraint(typeof(TExpected));
+            return new AssignableToConstraint<TExpected>();
         }
 
         #endregion
