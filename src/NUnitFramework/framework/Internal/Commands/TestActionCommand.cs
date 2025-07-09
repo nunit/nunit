@@ -22,29 +22,43 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = context =>
             {
-                try
+                if (context.ExecutionHooksEnabled)
                 {
-                    context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
 
-                    action.BeforeTest(Test);
+                        action.BeforeTest(Test);
+                    }
+                    finally
+                    {
+                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+                    }
                 }
-                finally
+                else
                 {
-                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+                    action.BeforeTest(Test);
                 }
             };
 
             AfterTest = context =>
             {
-                try
+                if (context.ExecutionHooksEnabled)
                 {
-                    context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
 
-                    action.AfterTest(Test);
+                        action.AfterTest(Test);
+                    }
+                    finally
+                    {
+                        context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+                    }
                 }
-                finally
+                else
                 {
-                    context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+                    action.AfterTest(Test);
                 }
             };
         }

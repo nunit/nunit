@@ -37,17 +37,25 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void BeforeTest(Interfaces.ITest test)
         {
-            var context = TestExecutionContext.CurrentContext;
-            try
+            if (TestExecutionContext.CurrentContext.ExecutionHooksEnabled)
             {
-                context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
+                var context = TestExecutionContext.CurrentContext;
+                try
+                {
+                    context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
 
+                    BeforeTestWasRun = true;
+                    _action.BeforeTest(test);
+                }
+                finally
+                {
+                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+                }
+            }
+            else
+            {
                 BeforeTestWasRun = true;
                 _action.BeforeTest(test);
-            }
-            finally
-            {
-                context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
             }
         }
 
@@ -58,17 +66,25 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void AfterTest(Interfaces.ITest test)
         {
-            var context = TestExecutionContext.CurrentContext;
-            try
+            if (TestExecutionContext.CurrentContext.ExecutionHooksEnabled)
             {
-                context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
+                var context = TestExecutionContext.CurrentContext;
+                try
+                {
+                    context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
 
+                    if (BeforeTestWasRun)
+                        _action.AfterTest(test);
+                }
+                finally
+                {
+                    context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+                }
+            }
+            else
+            {
                 if (BeforeTestWasRun)
                     _action.AfterTest(test);
-            }
-            finally
-            {
-                context.ExecutionHooks.OnAfterTestActionAfterTest(context);
             }
         }
     }

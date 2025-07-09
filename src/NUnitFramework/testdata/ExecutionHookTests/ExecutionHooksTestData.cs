@@ -63,6 +63,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute
     {
         public override void BeforeTestHook(TestExecutionContext context)
@@ -71,6 +72,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateBeforeTestHookThrowingExceptionAttribute : ExecutionHookAttribute
     {
         public override void BeforeTestHook(TestExecutionContext context)
@@ -80,6 +82,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateLongRunningBeforeTestHookAttribute : ExecutionHookAttribute
     {
         public override void BeforeTestHook(TestExecutionContext context)
@@ -89,6 +92,27 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook);
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class ActivateLongRunningBeforeTestHooksAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeTestHook(TestExecutionContext context)
+        {
+            // Delay to ensure that handlers run longer than the test case
+            Thread.Sleep(1000);
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook);
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(TestExecutionContext context)
@@ -97,6 +121,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(TestExecutionContext context)
@@ -106,6 +131,7 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(TestExecutionContext context)
@@ -113,6 +139,20 @@ namespace NUnit.TestData.ExecutionHookTests
             // Simulate a long-running after test hook
             Thread.Sleep(500);
             TestLog.LogMessage(nameof(ActivateLongRunningAfterTestHookAttribute));
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class ActivateTestHookAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook + $"({context.CurrentTest.MethodName})");
+        }
+
+        public override void AfterTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.AfterTestHook + $"({context.CurrentTest.MethodName})");
         }
     }
 
@@ -132,6 +172,7 @@ namespace NUnit.TestData.ExecutionHookTests
         public ActionTargets Targets => ActionTargets.Test | ActionTargets.Suite;
     }
 
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class TestActionLoggingHookExtensionAttribute : NUnitAttribute, IApplyToContext
     {
         public void ApplyToContext(TestExecutionContext context)
@@ -155,7 +196,62 @@ namespace NUnit.TestData.ExecutionHookTests
         }
     }
 
-    [TestFixture]
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class ActivateAllSynchronousTestHooksAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeAnySetUpsHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeAnySetUpsHook);
+        }
+
+        public override void AfterAnySetUpsHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.AfterAnySetUpsHook);
+        }
+
+        public override void BeforeTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook);
+        }
+
+        public override void AfterTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.AfterTestHook);
+        }
+
+        public override void BeforeAnyTearDownsHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeAnyTearDownsHook);
+        }
+
+        public override void AfterAnyTearDownsHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.AfterAnyTearDownsHook);
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class ActivateSynchronousTestHookAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook);
+
+            TestExecutionContext.CurrentContext
+                                    .CurrentTest.Properties
+                                    .Add("BeforeTestHook_ThreadId", Environment.CurrentManagedThreadId);
+        }
+
+        public override void AfterTestHook(TestExecutionContext context)
+        {
+            TestLog.LogMessage(HookIdentifiers.AfterTestHook);
+
+            TestExecutionContext.CurrentContext
+                                .CurrentTest.Properties
+                                .Add("AfterTestHook_ThreadId", Environment.CurrentManagedThreadId);
+        }
+    }
+
     public class FailingTestWithTestHookOnMethod
     {
         [OneTimeSetUp]
@@ -491,5 +587,83 @@ namespace NUnit.TestData.ExecutionHookTests
         {
             TestLog.LogCurrentMethod();
         }
+    }
+
+    /// <remarks>
+    /// This TestUnderTest class is failing by intention. Therefore is currently cannot reside in the same
+    /// class as the calling test inside nunit.framework.tests since it would fail the whole test suite.
+    /// Once https://github.com/nunit/nunit/issues/5002 is solved it can be moved back and marked as explicit.
+    /// Then it can be executed with the TestBuilder while still not execute during the test suite execution.
+    /// </remarks>
+    public class ExecutionProceedsOnlyAfterAllAfterTestHooksExecute_TestUnderTest
+    {
+        [Test]
+        [ActivateAfterTestHook]
+        [ActivateAfterTestHook]
+        [ActivateAfterTestHook]
+        [ActivateAfterTestHookThrowingException]
+        public void TestPasses()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TestLog.LogCurrentMethod();
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TestLog.LogCurrentMethod();
+        }
+    }
+
+    /// <remarks>
+    /// This TestUnderTest class is failing by intention. Therefore is currently cannot reside in the same
+    /// class as the calling test inside nunit.framework.tests since it would fail the whole test suite.
+    /// Once https://github.com/nunit/nunit/issues/5002 is solved it can be moved back and marked as explicit.
+    /// Then it can be executed with the TestBuilder while still not execute during the test suite execution.
+    /// </remarks>
+    public class SynchronousHookInvocationTests_TestUnderTest
+    {
+        [SetUp]
+        public void Setup()
+        {
+            TestExecutionContext.CurrentContext
+                                .CurrentTest.Properties
+                                .Add("TestThreadId", Environment.CurrentManagedThreadId);
+        }
+
+        [Test, ActivateSynchronousTestHook]
+        public void TestPasses_WithAssertPass()
+        {
+            Assert.Pass("Test passed.");
+        }
+
+        [Test, ActivateSynchronousTestHook]
+        public void TestFails_WithAssertFail()
+        {
+            Assert.Fail("Test failed with Assert.Fail");
+        }
+
+        [Test, ActivateSynchronousTestHook]
+        public void TestFails_WithException()
+        {
+            throw new Exception("Test failed with Exception");
+        }
+    }
+
+    public static class HookIdentifiers
+    {
+        public static readonly string Hook = "_Hook";
+
+        public static readonly string AfterTestHook = $"AfterTestHook{Hook}";
+        public static readonly string BeforeAnySetUpsHook = $"BeforeAnySetUpsHook{Hook}";
+        public static readonly string AfterAnySetUpsHook = $"AfterAnySetUpsHook{Hook}";
+        public static readonly string BeforeTestHook = $"BeforeTestHook{Hook}";
+        public static readonly string BeforeAnyTearDownsHook = $"BeforeAnyTearDownsHook{Hook}";
+        public static readonly string AfterAnyTearDownsHook = $"AfterAnyTearDownsHook{Hook}";
     }
 }

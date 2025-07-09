@@ -49,14 +49,33 @@ namespace NUnit.Framework.Internal.Commands
         {
             _setUpWasRun = true;
 
-            try
+            if (context.ExecutionHooksEnabled)
             {
                 foreach (IMethodInfo setUpMethod in _setUpMethods)
-                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                {
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeAnySetUps(context);
+                        RunSetUpOrTearDownMethod(context, setUpMethod);
+                    }
+                    catch (Exception ex)
+                    {
+                        context.CurrentResult.RecordException(ex, FailureSite.SetUp);
+                    }
+                    context.ExecutionHooks.OnAfterAnySetUps(context);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                context.CurrentResult.RecordException(ex, FailureSite.SetUp);
+                try
+                {
+                    foreach (IMethodInfo setUpMethod in _setUpMethods)
+                        RunSetUpOrTearDownMethod(context, setUpMethod);
+                }
+                catch (Exception ex)
+                {
+                    context.CurrentResult.RecordException(ex, FailureSite.SetUp);
+                }
             }
         }
 
@@ -78,8 +97,29 @@ namespace NUnit.Framework.Internal.Commands
                     // Even though we are only running one level at a time, we
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
-                    while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+
+                    if (context.ExecutionHooksEnabled)
+                    {
+                        while (--index >= 0)
+                        {
+                            try
+                            {
+                                context.ExecutionHooks.OnBeforeAnyTearDowns(context);
+                                RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                            }
+                            catch
+                            {
+                                context.ExecutionHooks.OnAfterAnyTearDowns(context);
+                                throw;
+                            }
+                            context.ExecutionHooks.OnAfterAnyTearDowns(context);
+                        }
+                    }
+                    else
+                    {
+                        while (--index >= 0)
+                            RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
