@@ -79,7 +79,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void MultipleDifferentNestedEnumerableHasIntTypeArgument()
+        public void MultipleDifferentNestedEnumerableHasNoTypeArgument()
         {
             var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(MultipleDifferentNestedEnumerable));
             Assert.That(actual, Is.Null);
