@@ -1,5 +1,8 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Internal;
 
 #pragma warning disable NUnit2046 // Use Constraint for better assertion messages in case of failure
 namespace NUnit.Framework.Tests.Constraints
@@ -11,6 +14,77 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class ConstraintCastingTests
     {
+        private class NonGenericEnumerable : IEnumerable
+        {
+            public IEnumerator GetEnumerator() => throw new NotImplementedException();
+        }
+
+        private class SimpleEnumerable : IEnumerable<int>
+        {
+            public IEnumerator<int> GetEnumerator() => throw new NotImplementedException();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private class NestedEnumerable : IReadOnlyList<int>
+        {
+            public int this[int index] => throw new NotImplementedException();
+            public int Count => throw new NotImplementedException();
+            public IEnumerator<int> GetEnumerator() => throw new NotImplementedException();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private class MultipleNestedEnumerable : IReadOnlyList<int>, IReadOnlyCollection<int>
+        {
+            public int this[int index] => throw new NotImplementedException();
+            public int Count => throw new NotImplementedException();
+            public IEnumerator<int> GetEnumerator() => throw new NotImplementedException();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        private class MultipleDifferentNestedEnumerable : IReadOnlyList<int>, IReadOnlyCollection<string>
+        {
+            public int this[int index] => throw new NotImplementedException();
+            public int Count => throw new NotImplementedException();
+            public IEnumerator<int> GetEnumerator() => throw new NotImplementedException();
+            IEnumerator<string> IEnumerable<string>.GetEnumerator() => throw new NotImplementedException();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        [Test]
+        public void NonGenericEnumerableHasNoTypeArgument()
+        {
+            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(NonGenericEnumerable));
+            Assert.That(actual, Is.Null);
+        }
+
+        [Test]
+        public void SimpleEnumerableHasIntTypeArgument()
+        {
+            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(SimpleEnumerable));
+            Assert.That(actual, Is.EqualTo(typeof(int)));
+        }
+
+        [Test]
+        public void NestedEnumerableHasIntTypeArgument()
+        {
+            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(NestedEnumerable));
+            Assert.That(actual, Is.EqualTo(typeof(int)));
+        }
+
+        [Test]
+        public void MultipleNestedEnumerableHasIntTypeArgument()
+        {
+            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(MultipleNestedEnumerable));
+            Assert.That(actual, Is.EqualTo(typeof(int)));
+        }
+
+        [Test]
+        public void MultipleDifferentNestedEnumerableHasIntTypeArgument()
+        {
+            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(MultipleDifferentNestedEnumerable));
+            Assert.That(actual, Is.Null);
+        }
+
         [Test]
         public void LengthPropertyConstraint()
         {
