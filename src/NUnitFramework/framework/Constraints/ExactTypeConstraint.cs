@@ -8,6 +8,22 @@ namespace NUnit.Framework.Constraints
     /// ExactTypeConstraint is used to test that an object
     /// is of the exact type provided in the constructor
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class ExactTypeConstraint<TExpected> : ExactTypeConstraint
+    {
+        /// <summary>
+        /// Construct an ExactTypeConstraint for a given Type
+        /// </summary>
+        public ExactTypeConstraint()
+            : base(typeof(TExpected))
+        {
+        }
+    }
+
+    /// <summary>
+    /// ExactTypeConstraint is used to test that an object
+    /// is of the exact type provided in the constructor
+    /// </summary>
     public class ExactTypeConstraint : TypeConstraint
     {
         /// <summary>

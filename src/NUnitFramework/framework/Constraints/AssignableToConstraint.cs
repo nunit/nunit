@@ -8,6 +8,21 @@ namespace NUnit.Framework.Constraints
     /// AssignableToConstraint is used to test that an object
     /// can be assigned to a given Type.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class AssignableToConstraint<TExpected> : AssignableToConstraint
+    {
+        /// <summary>
+        /// Construct an AssignableToConstraint for the type provided
+        /// </summary>
+        public AssignableToConstraint() : base(typeof(TExpected))
+        {
+        }
+    }
+
+    /// <summary>
+    /// AssignableToConstraint is used to test that an object
+    /// can be assigned to a given Type.
+    /// </summary>
     public class AssignableToConstraint : TypeConstraint
     {
         /// <summary>

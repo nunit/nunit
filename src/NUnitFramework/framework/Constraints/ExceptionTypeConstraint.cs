@@ -10,6 +10,23 @@ namespace NUnit.Framework.Constraints
     /// used to provided detailed info about the exception thrown in
     /// an error message.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class ExceptionTypeConstraint<TExpected> : ExceptionTypeConstraint
+        where TExpected : Exception
+    {
+        /// <summary>
+        /// Constructs an ExceptionTypeConstraint
+        /// </summary>
+        public ExceptionTypeConstraint() : base(typeof(TExpected))
+        {
+        }
+    }
+
+    /// <summary>
+    /// ExceptionTypeConstraint is a special version of ExactTypeConstraint
+    /// used to provided detailed info about the exception thrown in
+    /// an error message.
+    /// </summary>
     public class ExceptionTypeConstraint : ExactTypeConstraint
     {
         /// <summary>
