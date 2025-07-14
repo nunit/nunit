@@ -310,14 +310,18 @@ namespace NUnit.Framework
 
         #region Helper Method
 
-        private static void ReportFailure(ConstraintResult result, string message, string actualExpression, string constraintExpression)
+        private static string ComposeFailureMessage(ConstraintResult result, string message, string actualExpression, string constraintExpression, string method)
         {
             MessageWriter writer = new TextMessageWriter(
-                ExtendedMessage($"{nameof(Assert)}.{nameof(Assert.That)}",
+                ExtendedMessage($"{nameof(Assert)}.{method}",
                 message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
+            return writer.ToString();
+        }
 
-            ReportFailure(writer.ToString());
+        private static void ReportFailure(ConstraintResult result, string message, string actualExpression, string constraintExpression, string method = nameof(Assert.That))
+        {
+            ReportFailure(ComposeFailureMessage(result, message, actualExpression, constraintExpression, method));
         }
 
         #endregion
