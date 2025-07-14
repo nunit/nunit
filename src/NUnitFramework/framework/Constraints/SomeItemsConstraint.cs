@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -12,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// SomeItemsConstraint applies another constraint to each
     /// item in a collection, succeeding if any of them succeeds.
     /// </summary>
-    public class SomeItemsConstraint : PrefixConstraint
+    public class SomeItemsConstraint : PrefixConstraint, IEnumerableConstraint
     {
         private readonly EqualConstraint? _equalConstraint;
 
@@ -38,13 +39,25 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// succeeding if any item succeeds.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IConstraint.ApplyTo{TActual}(TActual)"/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var itemType = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(TActual));
 
-            foreach (object item in enumerable)
+            return itemType is null || itemType == typeof(object)
+                ? ApplyToEnumerable(actual, enumerable.Cast<object>())
+                : Reflect.InvokeApplyToEnumerable(this, actual, itemType);
+        }
+
+        /// <summary>
+        /// Apply the item constraint to each item in the collection,
+        /// succeeding if any item succeeds.
+        /// </summary>
+        /// <inheritdoc cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        public ConstraintResult ApplyToEnumerable<TActual, TItem>(TActual actual, IEnumerable<TItem> enumerable)
+        {
+            foreach (var item in enumerable)
             {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
                     return new ConstraintResult(this, actual, ConstraintStatus.Success);

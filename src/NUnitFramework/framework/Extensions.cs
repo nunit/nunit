@@ -61,5 +61,11 @@ namespace NUnit.Framework
                 }
             }
         }
+
+        public static TDelegate CreateDelegate<TDelegate>(this MethodInfo methodInfo)
+            where TDelegate : Delegate
+        {
+            return (TDelegate)methodInfo.CreateDelegate(typeof(TDelegate));
+        }
     }
 }
