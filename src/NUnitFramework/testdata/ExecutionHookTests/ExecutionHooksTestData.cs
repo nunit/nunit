@@ -173,7 +173,7 @@ namespace NUnit.TestData.ExecutionHookTests
     }
 
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class TestActionLoggingHookExtensionAttribute : NUnitAttribute, IApplyToContext
+    public class TestActionLoggingExecutionHooksAttribute : NUnitAttribute, IApplyToContext
     {
         public void ApplyToContext(TestExecutionContext context)
         {
@@ -579,7 +579,7 @@ namespace NUnit.TestData.ExecutionHookTests
 
     [TestFixture]
     [LogTestAction]
-    [TestActionLoggingHookExtension]
+    [TestActionLoggingExecutionHooks]
     public class TestClassWithTestAction
     {
         [Test]

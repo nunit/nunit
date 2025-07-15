@@ -18,7 +18,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void BeforeAnySetUpsHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             throw new NUnitException("BeforeAnySetUpsHook must be overridden in a derived class to provide custom logic.");
         }
@@ -37,7 +37,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Method that is called <b>immediately before</b> the test is executed.
-        /// Override this to implement custom logic to run before the setup.
+        /// Override this to implement custom logic to run before the test.
         /// </summary>
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void BeforeTestHook(TestExecutionContext context)

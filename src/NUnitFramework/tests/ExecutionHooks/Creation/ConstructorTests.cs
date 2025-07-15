@@ -4,10 +4,10 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
-    internal class HookExtensionConstructorTests
+    internal class ExecutionHooksConstructorTests
     {
         [Test]
-        public void CopyCtor_CreateNewHookExtension_InvocationListShouldBeEmpty()
+        public void CopyCtor_CreateNewExecutionHook_InvocationListShouldBeEmpty()
         {
             var exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
 

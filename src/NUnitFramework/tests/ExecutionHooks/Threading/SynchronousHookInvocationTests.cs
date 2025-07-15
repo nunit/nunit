@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
-namespace NUnit.Framework.Tests.HookExtension.ThreadingTests
+namespace NUnit.Framework.Tests.ExecutionHooks.ThreadingTests
 {
     internal class SynchronousHookInvocationTests
     {

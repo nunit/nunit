@@ -3,7 +3,7 @@
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
-namespace NUnit.Framework.Tests.HookExtension.ExecutionSequence;
+namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence;
 
 public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
 {
