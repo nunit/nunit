@@ -600,7 +600,7 @@ namespace NUnit.Framework.Tests.Assertions
                                 nameof(ClassWithSomeToleranceAwareMembers.ValueC))));
 
                 Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
-                            Is.EqualTo(instance).UsingPropertiesComparer(c => c.Excluding(
+                            Is.EqualToGeneric(instance).UsingPropertiesComparer(c => c.Excluding(
                                 x => x.ValueA,
                                 x => x.ValueB,
                                 x => x.ValueC)));
@@ -611,7 +611,7 @@ namespace NUnit.Framework.Tests.Assertions
                                 c => c.Using(nameof(ClassWithSomeToleranceAwareMembers.Chained))));
 
                 Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
-                            Is.EqualTo(instance)
+                            Is.EqualToGeneric(instance)
                               .UsingPropertiesComparer(c => c.Using(x => x.Chained)));
 
                 // Property names work on nested classes!
@@ -1060,14 +1060,14 @@ namespace NUnit.Framework.Tests.Assertions
             var usPerson = new USPerson("John Doe", new USAddress("10", "CSI", "Las Vegas", "89030"));
 
             // We can supply a Value for the missing property 'Country'
-            Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer(
+            Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer<Person>(
                 c => c.Map<USPerson>(x => x.Address, y => y.USAddress)
                       .Map<Address, USAddress>(x => x.AreaCode, y => y.ZipCode)
                       .Map<Address>(x => x.Country, "U.S.A.")));
 
             // Or we can exclude the 'Country' property.
             // However this would also pass when the source country is not U.S.A.
-            Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer(
+            Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer<Person>(
                 c => c.Map<USPerson>(x => x.Address, y => y.USAddress)
                       .Map<Address, USAddress>(x => x.AreaCode, y => y.ZipCode)
                       .Excluding<Address>(x => x.Country)));
@@ -1080,7 +1080,7 @@ namespace NUnit.Framework.Tests.Assertions
             var usPerson = new USPerson("John Doe", new USAddress("10", "CSI", "Las Vegas", "89031"));
 
             Assert.That(() =>
-                Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer(
+                Assert.That(usPerson, Is.EqualTo(person).UsingPropertiesComparer<Person>(
                     c => c.Map<USPerson>(x => x.Address, y => y.USAddress)
                           .Map<Address, USAddress>(x => x.AreaCode, y => y.ZipCode)
                           .Map<Address>(x => x.Country, "U.S.A."))),
@@ -1089,6 +1089,19 @@ namespace NUnit.Framework.Tests.Assertions
                           .And.Message.Contains("at property Address.AreaCode => USAddress.ZipCode")
                           .And.Message.Contains("Expected: \"89030\"")
                           .And.Message.Contains("But was:  \"89031\""));
+        }
+
+        [Test]
+        public void CompareWrongTypes()
+        {
+            var person1 = new Person("John Doe", new Address("10", "CSI", "Las Vegas", "89030", "U.S.A."));
+            var person2 = new Person("John Doe", new Address("10", "CSI", "Las Vegas", "89030", "U.S.A."));
+
+            Assert.That(() =>
+                Assert.That(person1, Is.EqualTo(person2).UsingPropertiesComparer<USPerson>(
+                    c => c.Excluding(x => x.USAddress))),
+                    Throws.ArgumentException.With.Message.Contains(
+                    "The type parameter USPerson does not match the type parameter Person of this constraint."));
         }
 
         [Test]

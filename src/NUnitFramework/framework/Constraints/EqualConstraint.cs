@@ -445,6 +445,21 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        /// <summary>
+        /// Enables comparing a subset of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
+        public virtual EqualConstraint UsingPropertiesComparer<T>(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
+        {
+            Comparer.CompareProperties = true;
+            Comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<T>());
+            return this;
+        }
+
         #endregion
 
         #region Public Methods
