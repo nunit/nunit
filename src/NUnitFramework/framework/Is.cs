@@ -172,7 +172,18 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public static EqualConstraint<T> EqualTo<T>(T? expected)
+        /// <remarks>
+        /// Do not change the return type of this method to <see cref="EqualConstraint{T}"/> as that breaks backward compatibility.
+        /// </remarks>
+        public static EqualConstraint EqualTo<T>(T? expected)
+        {
+            return new EqualConstraint<T>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two items for equality
+        /// </summary>
+        public static EqualConstraint<T> EqualToGeneric<T>(T? expected)
         {
             return new EqualConstraint<T>(expected);
         }
@@ -180,7 +191,18 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two collections for equality.
         /// </summary>
-        public static EqualConstraint<T> EqualTo<T>(IEnumerable<T>? expected)
+        /// <remarks>
+        /// Do not change the return type of this method to <see cref="EqualConstraint{T}"/> as that breaks backward compatibility.
+        /// </remarks>
+        public static EqualConstraint EqualTo<T>(IEnumerable<T>? expected)
+        {
+            return new EqualConstraint<T>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two collections for equality.
+        /// </summary>
+        public static EqualConstraint<T> EqualToGeneric<T>(IEnumerable<T>? expected)
         {
             return new EqualConstraint<T>(expected);
         }

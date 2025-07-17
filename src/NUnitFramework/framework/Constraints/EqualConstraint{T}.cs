@@ -40,6 +40,17 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        /// <inheritdoc/>
+        public override EqualConstraint UsingPropertiesComparer<TParam>(Func<PropertiesComparerConfiguration<TParam>, PropertiesComparerConfiguration<TParam>> configure)
+        {
+            if (typeof(TParam) != typeof(T))
+                throw new ArgumentException($"The type parameter {typeof(TParam).Name} does not match the type parameter {typeof(T).Name} of this constraint.", nameof(configure));
+
+            Comparer.CompareProperties = true;
+            Comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<TParam>());
+            return this;
+        }
+
         #endregion
 
     }
