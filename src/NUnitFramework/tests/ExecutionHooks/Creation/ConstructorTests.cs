@@ -9,50 +9,50 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void CopyCtor_CreateNewExecutionHook_InvocationListShouldBeEmpty()
         {
-            var exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
+            var executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
 
             Assert.Multiple(() =>
             {
-                Assert.That(exHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
 
-                Assert.That(exHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeTestActionAfterTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterTestActionAfterTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTestActionAfterTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterTestActionAfterTest.GetHandlers(), Has.Count.Zero);
             });
         }
 
         [Test]
         public void CopyCtor_CallMultipleTimes_ShallNotIncreaseInvocationList()
         {
-            var exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
-            exHooks.AfterTest.AddHandler((context) => { });
+            var executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
+            executionHooks.AfterTest.AddHandler((context) => { });
 
-            exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(exHooks);
-            exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(exHooks);
-            exHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(exHooks);
+            executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(executionHooks);
+            executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(executionHooks);
+            executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(executionHooks);
 
             // handlers shall stay empty
             Assert.Multiple(() =>
             {
-                Assert.That(exHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
 
                 // initially assigned handlers shall be copied
-                Assert.That(exHooks.AfterTest.GetHandlers(), Has.Count.EqualTo(1));
+                Assert.That(executionHooks.AfterTest.GetHandlers(), Has.Count.EqualTo(1));
 
-                Assert.That(exHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.BeforeTestActionAfterTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(exHooks.AfterTestActionAfterTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeTestActionAfterTest.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterTestActionAfterTest.GetHandlers(), Has.Count.Zero);
             });
         }
     }
