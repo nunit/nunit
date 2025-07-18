@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -11,6 +12,11 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class ExecutionHookMethodsAttribute : NUnitAttribute
     {
+        private static void ThrowNeedsOverride([CallerMemberName] string methodName = "")
+        {
+            throw new NUnitException($"{methodName} must be overridden in a derived class to provide custom logic.");
+        }
+
         /// <summary>
         /// Method that is called <b>immediately before</b> any [SetUp] or [OneTimeSetUp] method is executed.
         /// Override this to implement custom logic to run before the test.
@@ -20,7 +26,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("BeforeAnySetUpsHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
 
         /// <summary>
@@ -32,7 +38,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("AfterAnySetUpsHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
 
         /// <summary>
@@ -44,7 +50,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("BeforeTestHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("AfterTestHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
 
         /// <summary>
@@ -68,7 +74,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("BeforeAnyTearDownsHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
 
         /// <summary>
@@ -80,7 +86,7 @@ namespace NUnit.Framework
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
-            throw new NUnitException("AfterAnyTearDownsHook must be overridden in a derived class to provide custom logic.");
+            ThrowNeedsOverride();
         }
     }
 
