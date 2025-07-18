@@ -37,9 +37,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void BeforeTest(Interfaces.ITest test)
         {
-            if (TestExecutionContext.CurrentContext.ExecutionHooksEnabled)
+            var context = TestExecutionContext.CurrentContext;
+            if (context.ExecutionHooksEnabled)
             {
-                var context = TestExecutionContext.CurrentContext;
                 try
                 {
                     context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
@@ -66,9 +66,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void AfterTest(Interfaces.ITest test)
         {
-            if (TestExecutionContext.CurrentContext.ExecutionHooksEnabled)
+            var context = TestExecutionContext.CurrentContext;
+            if (context.ExecutionHooksEnabled)
             {
-                var context = TestExecutionContext.CurrentContext;
                 try
                 {
                     context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
