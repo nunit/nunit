@@ -199,14 +199,14 @@ namespace NUnit.TestData.ExecutionHookTests
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class ActivateAllSynchronousTestHooksAttribute : ExecutionHookAttribute
     {
-        public override void BeforeAnySetUpsHook(TestExecutionContext context)
+        public override void BeforeEverySetUpHook(TestExecutionContext context)
         {
-            TestLog.LogMessage(HookIdentifiers.BeforeAnySetUpsHook);
+            TestLog.LogMessage(HookIdentifiers.BeforeEverySetUpHook);
         }
 
-        public override void AfterAnySetUpsHook(TestExecutionContext context)
+        public override void AfterEverySetUpHook(TestExecutionContext context)
         {
-            TestLog.LogMessage(HookIdentifiers.AfterAnySetUpsHook);
+            TestLog.LogMessage(HookIdentifiers.AfterEverySetUpHook);
         }
 
         public override void BeforeTestHook(TestExecutionContext context)
@@ -219,14 +219,14 @@ namespace NUnit.TestData.ExecutionHookTests
             TestLog.LogMessage(HookIdentifiers.AfterTestHook);
         }
 
-        public override void BeforeAnyTearDownsHook(TestExecutionContext context)
+        public override void BeforeEveryTearDownHook(TestExecutionContext context)
         {
-            TestLog.LogMessage(HookIdentifiers.BeforeAnyTearDownsHook);
+            TestLog.LogMessage(HookIdentifiers.BeforeEveryTearDownHook);
         }
 
-        public override void AfterAnyTearDownsHook(TestExecutionContext context)
+        public override void AfterEveryTearDownHook(TestExecutionContext context)
         {
-            TestLog.LogMessage(HookIdentifiers.AfterAnyTearDownsHook);
+            TestLog.LogMessage(HookIdentifiers.AfterEveryTearDownHook);
         }
     }
 
@@ -660,10 +660,10 @@ namespace NUnit.TestData.ExecutionHookTests
         public static readonly string Hook = "_Hook";
 
         public static readonly string AfterTestHook = $"AfterTestHook{Hook}";
-        public static readonly string BeforeAnySetUpsHook = $"BeforeAnySetUpsHook{Hook}";
-        public static readonly string AfterAnySetUpsHook = $"AfterAnySetUpsHook{Hook}";
+        public static readonly string BeforeEverySetUpHook = $"BeforeEverySetUpHook{Hook}";
+        public static readonly string AfterEverySetUpHook = $"AfterEverySetUpHook{Hook}";
         public static readonly string BeforeTestHook = $"BeforeTestHook{Hook}";
-        public static readonly string BeforeAnyTearDownsHook = $"BeforeAnyTearDownsHook{Hook}";
-        public static readonly string AfterAnyTearDownsHook = $"AfterAnyTearDownsHook{Hook}";
+        public static readonly string BeforeEveryTearDownHook = $"BeforeEveryTearDownHook{Hook}";
+        public static readonly string AfterEveryTearDownHook = $"AfterEveryTearDownHook{Hook}";
     }
 }

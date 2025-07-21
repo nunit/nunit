@@ -13,33 +13,33 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         {
         }
 
-        internal BeforeHooks BeforeAnySetUps { get; } = new();
-        internal AfterHooks AfterAnySetUps { get; } = new();
+        internal BeforeHooks BeforeEverySetUp { get; } = new();
+        internal AfterHooks AfterEverySetUp { get; } = new();
         internal BeforeHooks BeforeTest { get; } = new();
         internal AfterHooks AfterTest { get; } = new();
-        internal BeforeHooks BeforeAnyTearDowns { get; } = new();
-        internal AfterHooks AfterAnyTearDowns { get; } = new();
+        internal BeforeHooks BeforeEveryTearDown { get; } = new();
+        internal AfterHooks AfterEveryTearDown { get; } = new();
         internal BeforeHooks BeforeTestActionBeforeTest { get; set; } = new();
         internal AfterHooks AfterTestActionBeforeTest { get; set; } = new();
         internal BeforeHooks BeforeTestActionAfterTest { get; set; } = new();
         internal AfterHooks AfterTestActionAfterTest { get; set; } = new();
 
         /// <summary>
-        /// Adds a hook action to be invoked before any setup methods are executed.
+        /// Adds a hook action to be invoked before every setup method is executed.
         /// </summary>
-        /// <param name="hookHandler">The hook action to attach to the before-any-setups hook.</param>
-        public void AddBeforeAnySetUpsHandler(Action<TestExecutionContext> hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the before-every-setup hook.</param>
+        public void AddBeforeEverySetUpHandler(Action<TestExecutionContext> hookHandler)
         {
-            BeforeAnySetUps.AddHandler(hookHandler);
+            BeforeEverySetUp.AddHandler(hookHandler);
         }
 
         /// <summary>
-        /// Adds a hook action to be invoked after any setup methods are executed.
+        /// Adds a hook action to be invoked after every setup method is executed.
         /// </summary>
-        /// <param name="hookHandler">The hook action to attach to the after-any-setups hook.</param>
-        public void AddAfterAnySetUpsHandler(Action<TestExecutionContext> hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the after-every-setup hook.</param>
+        public void AddAfterEverySetUpHandler(Action<TestExecutionContext> hookHandler)
         {
-            AfterAnySetUps.AddHandler(hookHandler);
+            AfterEverySetUp.AddHandler(hookHandler);
         }
 
         /// <summary>
@@ -61,31 +61,31 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         }
 
         /// <summary>
-        /// Adds a hook action to be invoked before any teardown methods are executed.
+        /// Adds a hook action to be invoked before every teardown method is executed.
         /// </summary>
-        /// <param name="hookHandler">The hook action to attach to the before-any-teardowns hook.</param>
-        public void AddBeforeAnyTearDownsHandler(Action<TestExecutionContext> hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the before-every-teardown hook.</param>
+        public void AddBeforeEveryTearDownHandler(Action<TestExecutionContext> hookHandler)
         {
-            BeforeAnyTearDowns.AddHandler(hookHandler);
+            BeforeEveryTearDown.AddHandler(hookHandler);
         }
 
         /// <summary>
-        /// Adds a hook action to be invoked after any teardown methods are executed.
+        /// Adds a hook action to be invoked after every teardown method is executed.
         /// </summary>
-        /// <param name="hookHandler">The hook action to attach to the after-any-teardowns hook.</param>
-        public void AddAfterAnyTearDownsHandler(Action<TestExecutionContext> hookHandler)
+        /// <param name="hookHandler">The hook action to attach to the after-every-teardown hook.</param>
+        public void AddAfterEveryTearDownHandler(Action<TestExecutionContext> hookHandler)
         {
-            AfterAnyTearDowns.AddHandler(hookHandler);
+            AfterEveryTearDown.AddHandler(hookHandler);
         }
 
         internal ExecutionHooks(ExecutionHooks other)
         {
-            BeforeAnySetUps = new BeforeHooks(other.BeforeAnySetUps);
-            AfterAnySetUps = new AfterHooks(other.AfterAnySetUps);
+            BeforeEverySetUp = new BeforeHooks(other.BeforeEverySetUp);
+            AfterEverySetUp = new AfterHooks(other.AfterEverySetUp);
             BeforeTest = new BeforeHooks(other.BeforeTest);
             AfterTest = new AfterHooks(other.AfterTest);
-            BeforeAnyTearDowns = new BeforeHooks(other.BeforeAnyTearDowns);
-            AfterAnyTearDowns = new AfterHooks(other.AfterAnyTearDowns);
+            BeforeEveryTearDown = new BeforeHooks(other.BeforeEveryTearDown);
+            AfterEveryTearDown = new AfterHooks(other.AfterEveryTearDown);
 
             BeforeTestActionBeforeTest = new BeforeHooks(other.BeforeTestActionBeforeTest);
             AfterTestActionBeforeTest = new AfterHooks(other.AfterTestActionBeforeTest);
@@ -129,14 +129,14 @@ namespace NUnit.Framework.Internal.ExecutionHooks
             AfterTestActionAfterTest.AddHandler(hookHandler);
         }
 
-        internal void OnBeforeAnySetUps(TestExecutionContext context)
+        internal void OnBeforeEverySetUp(TestExecutionContext context)
         {
-            BeforeAnySetUps.InvokeHandlers(context);
+            BeforeEverySetUp.InvokeHandlers(context);
         }
 
-        internal void OnAfterAnySetUps(TestExecutionContext context)
+        internal void OnAfterEverySetUp(TestExecutionContext context)
         {
-            AfterAnySetUps.InvokeHandlers(context);
+            AfterEverySetUp.InvokeHandlers(context);
         }
 
         internal void OnBeforeTest(TestExecutionContext context)
@@ -149,14 +149,14 @@ namespace NUnit.Framework.Internal.ExecutionHooks
             AfterTest.InvokeHandlers(context);
         }
 
-        internal void OnBeforeAnyTearDowns(TestExecutionContext context)
+        internal void OnBeforeEveryTearDown(TestExecutionContext context)
         {
-            BeforeAnyTearDowns.InvokeHandlers(context);
+            BeforeEveryTearDown.InvokeHandlers(context);
         }
 
-        internal void OnAfterAnyTearDowns(TestExecutionContext context)
+        internal void OnAfterEveryTearDown(TestExecutionContext context)
         {
-            AfterAnyTearDowns.InvokeHandlers(context);
+            AfterEveryTearDown.InvokeHandlers(context);
         }
 
         internal void OnBeforeTestActionBeforeTest(TestExecutionContext context)

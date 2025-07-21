@@ -70,25 +70,25 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(TestUnderTest.OneTimeSetUp),
 
-                HookIdentifiers.BeforeAnySetUpsHook,
+                HookIdentifiers.BeforeEverySetUpHook,
                 nameof(TestUnderTestBase.SetupBase),
-                HookIdentifiers.AfterAnySetUpsHook,
+                HookIdentifiers.AfterEverySetUpHook,
 
-                HookIdentifiers.BeforeAnySetUpsHook,
+                HookIdentifiers.BeforeEverySetUpHook,
                 nameof(TestUnderTest.Setup),
-                HookIdentifiers.AfterAnySetUpsHook,
+                HookIdentifiers.AfterEverySetUpHook,
 
                 HookIdentifiers.BeforeTestHook,
                 nameof(TestUnderTest.TestPasses),
                 HookIdentifiers.AfterTestHook,
 
-                HookIdentifiers.BeforeAnyTearDownsHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
                 nameof(TestUnderTest.TearDown),
-                HookIdentifiers.AfterAnyTearDownsHook,
+                HookIdentifiers.AfterEveryTearDownHook,
 
-                HookIdentifiers.BeforeAnyTearDownsHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
                 nameof(TestUnderTestBase.TearDownBase),
-                HookIdentifiers.AfterAnyTearDownsHook,
+                HookIdentifiers.AfterEveryTearDownHook,
 
                 nameof(TestUnderTest.OneTimeTearDown)
             ]));

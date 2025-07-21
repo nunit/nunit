@@ -13,12 +13,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 
             Assert.Multiple(() =>
             {
-                Assert.That(executionHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(executionHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeEverySetUp.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterEverySetUp.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.AfterTest.GetHandlers(), Has.Count.Zero);
-                Assert.That(executionHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
-                Assert.That(executionHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeEveryTearDown.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterEveryTearDown.GetHandlers(), Has.Count.Zero);
 
                 Assert.That(executionHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
@@ -40,15 +40,15 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             // handlers shall stay empty
             Assert.Multiple(() =>
             {
-                Assert.That(executionHooks.BeforeAnySetUps.GetHandlers(), Has.Count.Zero);
-                Assert.That(executionHooks.AfterAnySetUps.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeEverySetUp.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterEverySetUp.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.BeforeTest.GetHandlers(), Has.Count.Zero);
 
                 // initially assigned handlers shall be copied
                 Assert.That(executionHooks.AfterTest.GetHandlers(), Has.Count.EqualTo(1));
 
-                Assert.That(executionHooks.BeforeAnyTearDowns.GetHandlers(), Has.Count.Zero);
-                Assert.That(executionHooks.AfterAnyTearDowns.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.BeforeEveryTearDown.GetHandlers(), Has.Count.Zero);
+                Assert.That(executionHooks.AfterEveryTearDown.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.BeforeTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.AfterTestActionBeforeTest.GetHandlers(), Has.Count.Zero);
                 Assert.That(executionHooks.BeforeTestActionAfterTest.GetHandlers(), Has.Count.Zero);

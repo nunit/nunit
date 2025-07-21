@@ -18,11 +18,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately before</b> any [SetUp] or [OneTimeSetUp] method is executed.
+        /// Method that is called <b>immediately before</b> every [SetUp] or [OneTimeSetUp] method is executed.
         /// Override this to implement custom logic to run before the test.
         /// </summary>
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void BeforeAnySetUpsHook(TestExecutionContext context)
+        public virtual void BeforeEverySetUpHook(TestExecutionContext context)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -30,11 +30,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately after</b> any [SetUp] or [OneTimeSetUp] method is executed.
+        /// Method that is called <b>immediately after</b> every [SetUp] or [OneTimeSetUp] method is executed.
         /// Override this to implement custom logic to run after the setup.
         /// </summary>
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void AfterAnySetUpsHook(TestExecutionContext context)
+        public virtual void AfterEverySetUpHook(TestExecutionContext context)
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
@@ -66,11 +66,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately before</b> any [TearDown] or [OneTimeTearDown] method is executed.
+        /// Method that is called <b>immediately before</b> every [TearDown] or [OneTimeTearDown] method is executed.
         /// Override this to implement custom logic to run before the teardown.
         /// </summary>
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void BeforeAnyTearDownsHook(TestExecutionContext context)
+        public virtual void BeforeEveryTearDownHook(TestExecutionContext context)
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
@@ -78,11 +78,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately after</b> any [TearDown] or [OneTimeTearDown] method is executed.
+        /// Method that is called <b>immediately after</b> every [TearDown] or [OneTimeTearDown] method is executed.
         /// Override this to implement custom logic to run after the teardown.
         /// </summary>
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void AfterAnyTearDownsHook(TestExecutionContext context)
+        public virtual void AfterEveryTearDownHook(TestExecutionContext context)
         {
             // Just to verify our logic for detecing overridden methods works correctly.
             // This method should never be called.
@@ -104,16 +104,16 @@ namespace NUnit.Framework
         /// <inheritdoc />
         public void ApplyToContext(TestExecutionContext context)
         {
-            if (BeforeAnySetUpsHook != base.BeforeAnySetUpsHook)
+            if (BeforeEverySetUpHook != base.BeforeEverySetUpHook)
             {
-                // Only add the BeforeAnySetUpsHook if it has been overridden
-                context.ExecutionHooks.AddBeforeAnySetUpsHandler(BeforeAnySetUpsHook);
+                // Only add the BeforeEverySetUpHook if it has been overridden
+                context.ExecutionHooks.AddBeforeEverySetUpHandler(BeforeEverySetUpHook);
             }
 
-            if (AfterAnySetUpsHook != base.AfterAnySetUpsHook)
+            if (AfterEverySetUpHook != base.AfterEverySetUpHook)
             {
-                // Only add the AfterAnySetUpsHook if it has been overridden
-                context.ExecutionHooks.AddAfterAnySetUpsHandler(AfterAnySetUpsHook);
+                // Only add the AfterEverySetUpHook if it has been overridden
+                context.ExecutionHooks.AddAfterEverySetUpHandler(AfterEverySetUpHook);
             }
 
             if (BeforeTestHook != base.BeforeTestHook)
@@ -128,16 +128,16 @@ namespace NUnit.Framework
                 context.ExecutionHooks.AddAfterTestHandler(AfterTestHook);
             }
 
-            if (BeforeAnyTearDownsHook != base.BeforeAnyTearDownsHook)
+            if (BeforeEveryTearDownHook != base.BeforeEveryTearDownHook)
             {
-                // Only add the BeforeAnyTearDownsHook if it has been overridden
-                context.ExecutionHooks.AddBeforeAnyTearDownsHandler(BeforeAnyTearDownsHook);
+                // Only add the BeforeEveryTearDownHook if it has been overridden
+                context.ExecutionHooks.AddBeforeEveryTearDownHandler(BeforeEveryTearDownHook);
             }
 
-            if (AfterAnyTearDownsHook != base.AfterAnyTearDownsHook)
+            if (AfterEveryTearDownHook != base.AfterEveryTearDownHook)
             {
-                // Only add the AfterAnyTearDownsHook if it has been overridden
-                context.ExecutionHooks.AddAfterAnyTearDownsHandler(AfterAnyTearDownsHook);
+                // Only add the AfterEveryTearDownHook if it has been overridden
+                context.ExecutionHooks.AddAfterEveryTearDownHandler(AfterEveryTearDownHook);
             }
         }
     }

@@ -106,12 +106,12 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    context.ExecutionHooks.OnBeforeAnySetUps(context);
+                    context.ExecutionHooks.OnBeforeEverySetUp(context);
                     RunSetUpOrTearDownMethod(context, setUpMethod);
                 }
                 finally
                 {
-                    context.ExecutionHooks.OnAfterAnySetUps(context);
+                    context.ExecutionHooks.OnAfterEverySetUp(context);
                 }
             }
             else
@@ -126,12 +126,12 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    context.ExecutionHooks.OnBeforeAnyTearDowns(context);
+                    context.ExecutionHooks.OnBeforeEveryTearDown(context);
                     RunSetUpOrTearDownMethod(context, tearDownMethod);
                 }
                 finally
                 {
-                    context.ExecutionHooks.OnAfterAnyTearDowns(context);
+                    context.ExecutionHooks.OnAfterEveryTearDown(context);
                 }
             }
             else
