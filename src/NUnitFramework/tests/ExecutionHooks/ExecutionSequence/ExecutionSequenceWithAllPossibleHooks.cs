@@ -9,7 +9,23 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
     internal class ExecutionSequenceWithAllPossibleHooks
     {
         [TestFixture]
-        public class TestUnderTest
+        public class TestUnderTestBase
+        {
+            [SetUp]
+            public void SetupBase()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [TearDown]
+            public void TearDownBase()
+            {
+                TestLog.LogCurrentMethod();
+            }
+        }
+
+        [TestFixture]
+        public class TestUnderTest : TestUnderTestBase
         {
             [OneTimeSetUp]
             public void OneTimeSetUp()
@@ -55,6 +71,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
                 nameof(TestUnderTest.OneTimeSetUp),
 
                 HookIdentifiers.BeforeAnySetUpsHook,
+                nameof(TestUnderTestBase.SetupBase),
+                HookIdentifiers.AfterAnySetUpsHook,
+
+                HookIdentifiers.BeforeAnySetUpsHook,
                 nameof(TestUnderTest.Setup),
                 HookIdentifiers.AfterAnySetUpsHook,
 
@@ -64,6 +84,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 
                 HookIdentifiers.BeforeAnyTearDownsHook,
                 nameof(TestUnderTest.TearDown),
+                HookIdentifiers.AfterAnyTearDownsHook,
+
+                HookIdentifiers.BeforeAnyTearDownsHook,
+                nameof(TestUnderTestBase.TearDownBase),
                 HookIdentifiers.AfterAnyTearDownsHook,
 
                 nameof(TestUnderTest.OneTimeTearDown)
