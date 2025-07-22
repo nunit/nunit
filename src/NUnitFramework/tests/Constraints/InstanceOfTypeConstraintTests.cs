@@ -1,13 +1,27 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [TestFixture]
+    [TestFixtureSource(nameof(GetInstanceOfTypeConstraints))]
     public class InstanceOfTypeConstraintTests : ConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new InstanceOfTypeConstraint(typeof(D1));
+        private static IEnumerable<TestFixtureData> GetInstanceOfTypeConstraints()
+        {
+            yield return new TestFixtureData(new InstanceOfTypeConstraint<D1>())
+                .SetArgDisplayNames("generic");
+            yield return new TestFixtureData(new InstanceOfTypeConstraint(typeof(D1)))
+                .SetArgDisplayNames("non-generic");
+        }
+
+        public InstanceOfTypeConstraintTests(InstanceOfTypeConstraint constraint)
+        {
+            TheConstraint = constraint;
+        }
+
+        protected override Constraint TheConstraint { get; }
 
         [SetUp]
         public void SetUp()
