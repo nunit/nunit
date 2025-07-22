@@ -313,7 +313,7 @@ namespace NUnit.Framework
             return extendedMessage;
         }
 
-        private static void ReportFailure(string message)
+        internal static void ReportFailure(string message)
         {
             // Record the failure in an <assertion> element
             var result = TestExecutionContext.CurrentContext.CurrentResult;
@@ -366,9 +366,9 @@ namespace NUnit.Framework
             }
         }
 
-        private static void IncrementAssertCount()
+        internal static void IncrementAssertCount()
             => TestExecutionContext.CurrentContext.IncrementAssertCount();
 
-#endregion
+        #endregion
     }
 }
