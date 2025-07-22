@@ -1,13 +1,27 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [TestFixture]
+    [TestFixtureSource(nameof(GetExactTypeConstraints))]
     public class ExactTypeConstraintTests : ConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new ExactTypeConstraint(typeof(D1));
+        private static IEnumerable<TestFixtureData> GetExactTypeConstraints()
+        {
+            yield return new TestFixtureData(new ExactTypeConstraint<D1>())
+                .SetArgDisplayNames("generic");
+            yield return new TestFixtureData(new ExactTypeConstraint(typeof(D1)))
+                .SetArgDisplayNames("non-generic");
+        }
+
+        public ExactTypeConstraintTests(ExactTypeConstraint constraint)
+        {
+            TheConstraint = constraint;
+        }
+
+        protected override Constraint TheConstraint { get; }
 
         [SetUp]
         public void SetUp()

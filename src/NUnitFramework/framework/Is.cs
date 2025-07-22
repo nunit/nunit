@@ -418,6 +418,7 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
+        /// <typeparam name="TExpected">The expected Type</typeparam>
         public static ExactTypeConstraint<TExpected> TypeOf<TExpected>()
         {
             return new ExactTypeConstraint<TExpected>();
