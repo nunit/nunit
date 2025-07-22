@@ -1,17 +1,30 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [TestFixture]
+    [TestFixtureSource(nameof(GetExceptionTypeConstraints))]
     public class ThrowsConstraintTest_ExactType : ThrowsConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new ThrowsConstraint(
-                new ExceptionTypeConstraint(typeof(ArgumentException)));
+        private static IEnumerable<TestFixtureData> GetExceptionTypeConstraints()
+        {
+            yield return new TestFixtureData(new ExceptionTypeConstraint<ArgumentException>())
+                .SetArgDisplayNames("generic");
+            yield return new TestFixtureData(new ExceptionTypeConstraint(typeof(ArgumentException)))
+                .SetArgDisplayNames("non-generic");
+        }
+
+        public ThrowsConstraintTest_ExactType(ExceptionTypeConstraint constraint)
+        {
+            TheConstraint = new ThrowsConstraint(constraint);
+        }
+
+        protected override Constraint TheConstraint { get; }
 
         [SetUp]
         public void SetUp()
@@ -34,11 +47,23 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning restore IDE0052 // Remove unread private members
     }
 
-    [TestFixture]
+    [TestFixtureSource(nameof(GetInstanceOfTypeConstraints))]
     public class ThrowsConstraintTest_InstanceOfType : ThrowsConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new ThrowsConstraint(
-                new InstanceOfTypeConstraint(typeof(TestDelegates.BaseException)));
+        private static IEnumerable<TestFixtureData> GetInstanceOfTypeConstraints()
+        {
+            yield return new TestFixtureData(new InstanceOfTypeConstraint<TestDelegates.BaseException>())
+                .SetArgDisplayNames("generic");
+            yield return new TestFixtureData(new InstanceOfTypeConstraint(typeof(TestDelegates.BaseException)))
+                .SetArgDisplayNames("non-generic");
+        }
+
+        public ThrowsConstraintTest_InstanceOfType(InstanceOfTypeConstraint constraint)
+        {
+            TheConstraint = new ThrowsConstraint(constraint);
+        }
+
+        protected override Constraint TheConstraint { get; }
 
         [SetUp]
         public void SetUp()
@@ -62,12 +87,26 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning restore IDE0052 // Remove unread private members
     }
 
+    [TestFixtureSource(nameof(GetExceptionTypeConstraints))]
     public class ThrowsConstraintTest_WithConstraint : ThrowsConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new ThrowsConstraint(
+        private static IEnumerable<TestFixtureData> GetExceptionTypeConstraints()
+        {
+            yield return new TestFixtureData(new ExceptionTypeConstraint<ArgumentException>())
+                .SetArgDisplayNames("generic");
+            yield return new TestFixtureData(new ExceptionTypeConstraint(typeof(ArgumentException)))
+                .SetArgDisplayNames("non-generic");
+        }
+
+        public ThrowsConstraintTest_WithConstraint(ExceptionTypeConstraint constraint)
+        {
+            TheConstraint = new ThrowsConstraint(
                 new AndConstraint(
-                    new ExceptionTypeConstraint(typeof(ArgumentException)),
+                    constraint,
                     new PropertyConstraint("ParamName", new EqualStringConstraint("myParam"))));
+        }
+
+        protected override Constraint TheConstraint { get; }
 
         [SetUp]
         public void SetUp()

@@ -91,7 +91,7 @@ namespace NUnit.Framework
         public static TActual? Throws<TActual>(TestDelegate code, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)Throws(typeof(TActual), code, message, args);
+            return (TActual?)Throws(new ExceptionTypeConstraint<TActual>(), code, message, args);
         }
 
         /// <summary>

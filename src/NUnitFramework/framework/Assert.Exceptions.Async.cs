@@ -89,7 +89,7 @@ namespace NUnit.Framework
         public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(typeof(TActual), code, message, args);
+            return (TActual?)ThrowsAsync(new ExceptionTypeConstraint<TActual>(), code, message, args);
         }
 
         /// <summary>
