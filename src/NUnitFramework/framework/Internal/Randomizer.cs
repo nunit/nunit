@@ -676,6 +676,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public Guid NextGuid()
         {
+            //We use the algorithm described in https://tools.ietf.org/html/rfc4122#section-4.4
 #if NETFRAMEWORK
             var b = new byte[16];
             NextBytes(b);
