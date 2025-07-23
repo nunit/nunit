@@ -661,6 +661,25 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(bytes[8] & 0xc0, Is.EqualTo(0x80));
         }
 
+#if !NETFRAMEWORK
+        [Test]
+        [Description("Test that NextGuid uses the span-based code path and produces valid GUIDs on non-NETFRAMEWORK targets")]
+        public void RandomGuidSpanApiWorks()
+        {
+            // This test is to ensure the span-based code path is exercised and produces valid results.
+            // It is functionally similar to RandomGuidsAreV4, but documents the intent for the span-based implementation.
+            var guid = _randomizer.NextGuid();
+            var bytes = guid.ToByteArray();
+            // Check the version (should be 4)
+            Assert.That(bytes[7] & 0xf0, Is.EqualTo(0x40));
+            // Check the variant (should be 0b10xxxxxx)
+            Assert.That(bytes[8] & 0xc0, Is.EqualTo(0x80));
+            // Check that multiple calls produce unique GUIDs
+            var guid2 = _randomizer.NextGuid();
+            Assert.That(guid, Is.Not.EqualTo(guid2));
+        }
+#endif
+
         #endregion
 
         #region Repeatability

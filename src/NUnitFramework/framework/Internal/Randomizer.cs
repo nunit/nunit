@@ -676,9 +676,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public Guid NextGuid()
         {
-            //We use the algorithm described in https://tools.ietf.org/html/rfc4122#section-4.4
+#if NETFRAMEWORK
             var b = new byte[16];
             NextBytes(b);
+#else
+            Span<byte> b = stackalloc byte[16];
+            NextBytes(b);
+#endif
             //set the version to 4
             b[7] = (byte)((b[7] & 0x0f) | 0x40);
             //set the 2-bits indicating the variant to 1 and 0
