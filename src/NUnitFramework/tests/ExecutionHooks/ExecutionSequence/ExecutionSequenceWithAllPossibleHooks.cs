@@ -8,8 +8,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 {
     internal class ExecutionSequenceWithAllPossibleHooks
     {
-        [TestFixture]
-        public class TestUnderTestBase
+        private abstract class TestUnderTestBase
         {
             [OneTimeSetUp]
             public void OneTimeSetUpBase()
@@ -37,7 +36,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         }
 
         [TestFixture]
-        public class TestUnderTest : TestUnderTestBase
+        [Explicit("This test should only be run as part of the TestProceedsAfterAllAfterTestHooksExecute test")]
+        private sealed class TestUnderTest : TestUnderTestBase
         {
             [OneTimeSetUp]
             public void OneTimeSetUp()
@@ -61,7 +61,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 
             [Test]
             [ActivateAllSynchronousTestHooks]
-            [Explicit("This test is otherwise run as part of normal tests and would break the build")]
             public void TestFails()
             {
                 TestLog.LogCurrentMethod();
@@ -86,7 +85,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([

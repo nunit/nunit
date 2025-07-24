@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
@@ -7,7 +8,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence;
 
 public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
 {
-    public class TestUnderTest
+    [Explicit("This test should only be run as part of the CheckThatLongRunningBeforeTestHooksCompleteBeforeTest test")]
+    private sealed class TestUnderTest
     {
         [Test]
         [ActivateBeforeTestHooks]
@@ -25,7 +27,7 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
     {
         TestLog.Clear();
 
-        var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest));
+        var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest), TestFilter.Explicit);
         workItem.Execute();
 
         Assert.That(TestLog.Logs, Is.EqualTo([
