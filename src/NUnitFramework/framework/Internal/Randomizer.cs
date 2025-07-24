@@ -702,16 +702,28 @@ namespace NUnit.Framework.Internal
 
         private uint RawUInt32()
         {
+#if NETFRAMEWORK
             var buffer = new byte[sizeof(uint)];
             NextBytes(buffer);
             return BitConverter.ToUInt32(buffer, 0);
+#else
+            Span<byte> buffer = stackalloc byte[sizeof(uint)];
+            NextBytes(buffer);
+            return BitConverter.ToUInt32(buffer);
+#endif
         }
 
         private ulong RawUInt64()
         {
+#if NETFRAMEWORK
             var buffer = new byte[sizeof(ulong)];
             NextBytes(buffer);
             return BitConverter.ToUInt64(buffer, 0);
+#else
+            Span<byte> buffer = stackalloc byte[sizeof(ulong)];
+            NextBytes(buffer);
+            return BitConverter.ToUInt64(buffer);
+#endif
         }
 
         #endregion
