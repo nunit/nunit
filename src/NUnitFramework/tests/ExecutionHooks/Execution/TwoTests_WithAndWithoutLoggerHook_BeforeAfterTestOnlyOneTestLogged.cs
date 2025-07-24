@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
@@ -7,6 +8,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     public class OneTestWithLoggingHooksAndOneWithout
     {
+        [Explicit($"This test should only be run as part of the {nameof(CheckLoggingTest)} test")]
         public class TestUnderTest
         {
             [Test, ActivateTestHook, Order(1)]
@@ -27,7 +29,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([

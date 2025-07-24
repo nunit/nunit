@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
@@ -7,12 +8,50 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     internal class CombinedHookTests
     {
+        [Explicit($"This test should only be run as part of the {nameof(ExecutionProceedsAfterBothTestHookCompletes)} test")]
+        public class TestWithNormalAndLongRunningTestHooks
+        {
+            [OneTimeSetUp]
+            public void OneTimeSetUp()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [OneTimeTearDown]
+            public void OneTimeTearDown()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [SetUp]
+            public void SetUp()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [Test]
+            [ActivateBeforeTestHook]
+            [ActivateLongRunningBeforeTestHook]
+            [ActivateAfterTestHook]
+            [ActivateLongRunningAfterTestHook]
+            public void EmptyTest()
+            {
+                TestLog.LogCurrentMethod();
+            }
+        }
+
         [Test]
         public void ExecutionProceedsAfterBothTestHookCompletes()
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithNormalAndLongRunningTestHooks));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithNormalAndLongRunningTestHooks), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([

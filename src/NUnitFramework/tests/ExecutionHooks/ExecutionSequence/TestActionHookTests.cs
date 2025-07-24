@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHookTests;
 
@@ -7,12 +8,25 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 {
     public class TestActionHooksTests
     {
+        [Explicit($"This test should only be run as part of the {nameof(TestActionHooksCalledBeforeAndAfterTestAction)} test")]
+        [TestFixture]
+        [LogTestAction]
+        [TestActionLoggingExecutionHooks]
+        public class TestClassWithTestAction
+        {
+            [Test]
+            public void TestUnderTest()
+            {
+                TestLog.LogCurrentMethod();
+            }
+        }
+
         [Test]
         public void TestActionHooksCalledBeforeAndAfterTestAction()
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestClassWithTestAction));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestClassWithTestAction), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
@@ -9,12 +10,42 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ThreadingTests
 {
     internal class SynchronousHookInvocationTests
     {
+        [Explicit($"This test should only be run as part of the {nameof(SynchronousHookInvocation_HookExecutesInSameThreadAsTest)} test")]
+        public class SynchronousHookInvocationTests_TestUnderTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                TestExecutionContext.CurrentContext
+                                    .CurrentTest.Properties
+                                    .Add("TestThreadId", Environment.CurrentManagedThreadId);
+            }
+
+            [Test, ActivateSynchronousTestHook]
+            public void TestPasses_WithAssertPass()
+            {
+                Assert.Pass("Test passed.");
+            }
+
+            [Test, ActivateSynchronousTestHook]
+            public void TestFails_WithAssertFail()
+            {
+                Assert.Fail("Test failed with Assert.Fail");
+            }
+
+            [Test, ActivateSynchronousTestHook]
+            public void TestFails_WithException()
+            {
+                throw new Exception("Test failed with Exception");
+            }
+        }
+
         [Test]
         public void SynchronousHookInvocation_HookExecutesInSameThreadAsTest()
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTests_TestUnderTest));
+            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTests_TestUnderTest), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.Multiple(() =>

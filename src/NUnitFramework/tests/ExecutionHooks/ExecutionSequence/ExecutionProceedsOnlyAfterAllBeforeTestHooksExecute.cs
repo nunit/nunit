@@ -8,7 +8,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence;
 
 public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
 {
-    [Explicit("This test should only be run as part of the CheckThatLongRunningBeforeTestHooksCompleteBeforeTest test")]
+    [Explicit($"This test should only be run as part of the {nameof(CheckThatLongRunningBeforeTestHooksCompleteBeforeTest)} test")]
     private sealed class TestUnderTest
     {
         [Test]

@@ -36,7 +36,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         }
 
         [TestFixture]
-        [Explicit("This test should only be run as part of the TestProceedsAfterAllAfterTestHooksExecute test")]
+        [Explicit($"This test should only be run as part of the {nameof(TestProceedsAfterAllAfterTestHooksExecute)} test")]
         private sealed class TestUnderTest : TestUnderTestBase
         {
             [OneTimeSetUp]
