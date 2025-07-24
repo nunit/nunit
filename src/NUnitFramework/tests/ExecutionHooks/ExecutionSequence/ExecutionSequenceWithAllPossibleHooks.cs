@@ -11,6 +11,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         [TestFixture]
         public class TestUnderTestBase
         {
+            [OneTimeSetUp]
+            public void OneTimeSetUpBase()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
             [SetUp]
             public void SetupBase()
             {
@@ -19,6 +25,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 
             [TearDown]
             public void TearDownBase()
+            {
+                TestLog.LogCurrentMethod();
+            }
+
+            [OneTimeTearDown]
+            public void OneTimeTearDownBase()
             {
                 TestLog.LogCurrentMethod();
             }
@@ -44,6 +56,16 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             public void TestPasses()
             {
                 TestLog.LogCurrentMethod();
+                Assert.Pass("AfterHooks execute.");
+            }
+
+            [Test]
+            [ActivateAllSynchronousTestHooks]
+            [Explicit("This test is otherwise run as part of normal tests and would break the build")]
+            public void TestFails()
+            {
+                TestLog.LogCurrentMethod();
+                Assert.Fail("AfterHooks should still execute even if the test fails.");
             }
 
             [TearDown]
@@ -68,6 +90,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             workItem.Execute();
 
             Assert.That(TestLog.Logs, Is.EqualTo([
+                nameof(TestUnderTestBase.OneTimeSetUpBase),
                 nameof(TestUnderTest.OneTimeSetUp),
 
                 HookIdentifiers.BeforeEverySetUpHook,
@@ -90,7 +113,28 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
                 nameof(TestUnderTestBase.TearDownBase),
                 HookIdentifiers.AfterEveryTearDownHook,
 
-                nameof(TestUnderTest.OneTimeTearDown)
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(TestUnderTestBase.SetupBase),
+                HookIdentifiers.AfterEverySetUpHook,
+
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(TestUnderTest.Setup),
+                HookIdentifiers.AfterEverySetUpHook,
+
+                HookIdentifiers.BeforeTestHook,
+                nameof(TestUnderTest.TestFails),
+                HookIdentifiers.AfterTestHook,
+
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(TestUnderTest.TearDown),
+                HookIdentifiers.AfterEveryTearDownHook,
+
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(TestUnderTestBase.TearDownBase),
+                HookIdentifiers.AfterEveryTearDownHook,
+
+                nameof(TestUnderTest.OneTimeTearDown),
+                nameof(TestUnderTestBase.OneTimeTearDownBase),
             ]));
         }
     }
