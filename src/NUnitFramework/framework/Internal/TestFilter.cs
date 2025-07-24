@@ -14,6 +14,11 @@ namespace NUnit.Framework.Internal
     public abstract class TestFilter : ITestFilter
     {
         /// <summary>
+        /// Unique Explict filter which matches all tests, including those marked Explicit.
+        /// </summary>
+        public static readonly TestFilter Explicit = new ExplicitFilter();
+
+        /// <summary>
         /// Unique Empty filter.
         /// </summary>
         public static readonly TestFilter Empty = new EmptyFilter();
@@ -233,6 +238,34 @@ namespace NUnit.Framework.Internal
             public override bool IsExplicitMatch(ITest test)
             {
                 return false;
+            }
+
+            public override TNode AddToXml(TNode parentNode, bool recursive)
+            {
+                return parentNode.AddElement("filter");
+            }
+        }
+
+        /// <summary>
+        /// Nested class provides an explicit filter - one that always
+        /// returns true when called. It also matches explicit tests.
+        /// </summary>
+        [Serializable]
+        private sealed class ExplicitFilter : TestFilter
+        {
+            public override bool Match(ITest test)
+            {
+                return true;
+            }
+
+            public override bool Pass(ITest test, bool negated)
+            {
+                return true;
+            }
+
+            public override bool IsExplicitMatch(ITest test)
+            {
+                return true;
             }
 
             public override TNode AddToXml(TNode parentNode, bool recursive)

@@ -67,6 +67,11 @@ internal static class TestBuilder
         return CreateWorkItem(MakeFixture(type));
     }
 
+    public static WorkItem CreateWorkItem(Type type, ITestFilter filter)
+    {
+        return CreateWorkItem(MakeFixture(type), filter);
+    }
+
     public static WorkItem CreateWorkItem(Type type, string methodName)
     {
         return CreateWorkItem(MakeTestFromMethod(type, methodName));
@@ -80,6 +85,16 @@ internal static class TestBuilder
         };
 
         return CreateWorkItem(test, context);
+    }
+
+    public static WorkItem CreateWorkItem(Test test, ITestFilter filter)
+    {
+        var context = new TestExecutionContext
+        {
+            Dispatcher = new SuperSimpleDispatcher()
+        };
+
+        return CreateWorkItem(test, context, filter);
     }
 
     public static WorkItem CreateWorkItem(Test test, object? testObject, IDebugger? debugger = null)
@@ -96,6 +111,15 @@ internal static class TestBuilder
     public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger? debugger = null)
     {
         var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, debugger ?? new DebuggerProxy(), true);
+        Assert.That(work, Is.Not.Null);
+        work.InitializeContext(context);
+
+        return work;
+    }
+
+    public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, ITestFilter filter, IDebugger? debugger = null)
+    {
+        var work = WorkItemBuilder.CreateWorkItem(test, filter, debugger ?? new DebuggerProxy(), true);
         Assert.That(work, Is.Not.Null);
         work.InitializeContext(context);
 
