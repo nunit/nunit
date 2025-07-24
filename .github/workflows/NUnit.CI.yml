@@ -94,7 +94,7 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-15
+    runs-on: macos-15-large
 
     steps:
     - name: ⤵️ Checkout Source
