@@ -22,8 +22,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately before</b> every [SetUp] or [OneTimeSetUp] method is executed.
         /// Override this to implement custom logic to run before the test.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void BeforeEverySetUpHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void BeforeEverySetUpHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -34,8 +34,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately after</b> every [SetUp] or [OneTimeSetUp] method is executed.
         /// Override this to implement custom logic to run after the setup.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void AfterEverySetUpHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void AfterEverySetUpHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -46,8 +46,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately before</b> the test is executed.
         /// Override this to implement custom logic to run before the test.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void BeforeTestHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void BeforeTestHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -58,8 +58,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately after</b> the test is executed.
         /// Override this to implement custom logic to run after the test.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void AfterTestHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void AfterTestHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -70,8 +70,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately before</b> every [TearDown] or [OneTimeTearDown] method is executed.
         /// Override this to implement custom logic to run before the teardown.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void BeforeEveryTearDownHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void BeforeEveryTearDownHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -82,8 +82,8 @@ namespace NUnit.Framework
         /// Method that is called <b>immediately after</b> every [TearDown] or [OneTimeTearDown] method is executed.
         /// Override this to implement custom logic to run after the teardown.
         /// </summary>
-        /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
-        public virtual void AfterEveryTearDownHook(TestExecutionContext context)
+        /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
+        public virtual void AfterEveryTearDownHook(HookData hookData)
         {
             // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
@@ -143,7 +143,19 @@ namespace NUnit.Framework
         /// <inheritdoc />
         public TestCommand Wrap(TestCommand command)
         {
-            return command is HookDelegatingTestCommand ? command : new HookDelegatingTestCommand(command);
+            if (command is not TestMethodCommand testMethodCommand)
+            {
+                throw new NUnitException($"{nameof(ExecutionHookAttribute)} " +
+                    $"can only be applied to {nameof(TestMethodCommand)}. " +
+                    $"Received: {command.GetType().Name}.");
+            }
+
+            if (command is HookDelegatingTestMethodCommand)
+            {
+                return command;
+            }
+
+            return new HookDelegatingTestMethodCommand(testMethodCommand);
         }
 
         /// <inheritdoc />

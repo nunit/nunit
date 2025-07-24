@@ -104,26 +104,30 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                context.ExecutionHooks.OnBeforeEverySetUp(context);
+                context.ExecutionHooks.OnBeforeEverySetUp(context, setUpMethod);
                 RunSetUpOrTearDownMethod(context, setUpMethod);
             }
-            finally
+            catch (Exception ex)
             {
-                context.ExecutionHooks.OnAfterEverySetUp(context);
+                context.ExecutionHooks.OnAfterEverySetUp(context, setUpMethod, ex);
+                throw;
             }
+            context.ExecutionHooks.OnAfterEverySetUp(context, setUpMethod);
         }
 
         private void RunTearDownMethodWithHooks(TestExecutionContext context, IMethodInfo tearDownMethod)
         {
             try
             {
-                context.ExecutionHooks.OnBeforeEveryTearDown(context);
+                context.ExecutionHooks.OnBeforeEveryTearDown(context, tearDownMethod);
                 RunSetUpOrTearDownMethod(context, tearDownMethod);
             }
-            finally
+            catch (Exception ex)
             {
-                context.ExecutionHooks.OnAfterEveryTearDown(context);
+                context.ExecutionHooks.OnAfterEveryTearDown(context, tearDownMethod, ex);
+                throw;
             }
+            context.ExecutionHooks.OnAfterEveryTearDown(context, tearDownMethod);
         }
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)

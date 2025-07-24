@@ -32,6 +32,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 
             var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteTestUnderTest), TestFilter.Explicit);
             workItem.Execute();
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteTestUnderTest.TestPasses),

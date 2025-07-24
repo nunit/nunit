@@ -31,16 +31,19 @@ namespace NUnit.Framework.Internal.Commands
 
                 void RunBeforeTestWithHooks()
                 {
+                    var hookedMethodInfo = new MethodWrapper(action.GetType(), "BeforeTest");
                     try
                     {
-                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
+                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context, hookedMethodInfo);
 
                         RunBeforeTest();
                     }
-                    finally
+                    catch (Exception ex)
                     {
-                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo, ex);
+                        throw;
                     }
+                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo);
                 }
 
                 void RunBeforeTest() => action.BeforeTest(Test);
@@ -55,16 +58,19 @@ namespace NUnit.Framework.Internal.Commands
 
                 void RunAfterTestWithHooks()
                 {
+                    var hookedMethodInfo = new MethodWrapper(action.GetType(), "AfterTest");
                     try
                     {
-                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
+                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context, hookedMethodInfo);
 
                         RunAfterTest();
                     }
-                    finally
+                    catch (Exception ex)
                     {
-                        context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+                        context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo, ex);
+                        throw;
                     }
+                    context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo);
                 }
 
                 void RunAfterTest() => action.AfterTest(Test);

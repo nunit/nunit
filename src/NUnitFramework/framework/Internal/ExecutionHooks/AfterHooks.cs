@@ -7,20 +7,20 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 {
     internal sealed class AfterHooks : Hooks
     {
-        private readonly Stack<Action<TestExecutionContext>> _stack;
+        private readonly Stack<Action<HookData>> _stack;
 
-        protected override IReadOnlyCollection<Action<TestExecutionContext>> Handlers => _stack;
+        protected override IReadOnlyCollection<Action<HookData>> Handlers => _stack;
 
-        internal override void AddHandler(Action<TestExecutionContext> handler) => _stack.Push(handler);
+        internal override void AddHandler(Action<HookData> handler) => _stack.Push(handler);
 
         public AfterHooks()
         {
-            _stack = new Stack<Action<TestExecutionContext>>();
+            _stack = new Stack<Action<HookData>>();
         }
 
         public AfterHooks(AfterHooks source)
         {
-            _stack = new Stack<Action<TestExecutionContext>>(source._stack);
+            _stack = new Stack<Action<HookData>>(source._stack);
         }
     }
 }

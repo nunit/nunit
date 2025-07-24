@@ -33,12 +33,13 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         [Test]
         public void ExecutionProceedsAfterTheAfterTestHookCompletes2()
         {
-            TestLog.Clear();
-
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksAndClassTestActionAttribute), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksAndClassTestActionAttribute),
+                TestFilter.Explicit);
             workItem.Execute();
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
-            Assert.That(TestLog.Logs, Is.EqualTo([
+            Assert.That(currentTestLogs, Is.Not.Empty);
+            Assert.That(currentTestLogs, Is.EqualTo([
                 nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeSetUp),
                 SimpleTestActionAttribute.LogStringForBeforeTest,
                 nameof(TestWithTestHooksAndClassTestActionAttribute.SetUp),

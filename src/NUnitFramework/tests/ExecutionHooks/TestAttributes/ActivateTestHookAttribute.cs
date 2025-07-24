@@ -1,21 +1,21 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.TestAttributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     internal sealed class ActivateTestHookAttribute : ExecutionHookAttribute
     {
-        public override void BeforeTestHook(TestExecutionContext context)
+        public override void BeforeTestHook(HookData hookData)
         {
-            TestLog.LogMessage(HookIdentifiers.BeforeTestHook + $"({context.CurrentTest.MethodName})");
+            TestLog.LogMessage(HookIdentifiers.BeforeTestHook + $"({hookData.Context.CurrentTest.MethodName})");
         }
 
-        public override void AfterTestHook(TestExecutionContext context)
+        public override void AfterTestHook(HookData hookData)
         {
-            TestLog.LogMessage(HookIdentifiers.AfterTestHook + $"({context.CurrentTest.MethodName})");
+            TestLog.LogMessage(HookIdentifiers.AfterTestHook + $"({hookData.Context.CurrentTest.MethodName})");
         }
     }
 }

@@ -22,12 +22,12 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
     [Test]
     public void CheckThatLongRunningBeforeTestHooksCompleteBeforeTest()
     {
-        TestLog.Clear();
-
         var workItem = TestBuilder.CreateWorkItem(typeof(TestUnderTest), TestFilter.Explicit);
         workItem.Execute();
+        var currentTestLogs = TestLog.Logs(workItem.Test);
 
-        Assert.That(TestLog.Logs, Is.EqualTo([
+        Assert.That(currentTestLogs, Is.Not.Empty);
+        Assert.That(currentTestLogs, Is.EqualTo([
             nameof(ActivateLongRunningBeforeTestHookAttribute),
             nameof(ActivateBeforeTestHookAttribute),
             nameof(ActivateBeforeTestHookAttribute),

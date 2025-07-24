@@ -2,6 +2,7 @@
 
 using System;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [AttributeUsage(AttributeTargets.Method)]
         private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
-            public override void BeforeTestHook(TestExecutionContext context)
+            public override void BeforeTestHook(HookData hookData)
             {
             }
         }
@@ -19,7 +20,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [AttributeUsage(AttributeTargets.Method)]
         private sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
         {
-            public override void AfterTestHook(TestExecutionContext context)
+            public override void AfterTestHook(HookData hookData)
             {
             }
         }

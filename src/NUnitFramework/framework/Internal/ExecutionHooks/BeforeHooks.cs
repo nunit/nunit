@@ -7,20 +7,20 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 {
     internal sealed class BeforeHooks : Hooks
     {
-        private readonly List<Action<TestExecutionContext>> _list;
+        private readonly List<Action<HookData>> _list;
 
-        protected override IReadOnlyCollection<Action<TestExecutionContext>> Handlers => _list;
+        protected override IReadOnlyCollection<Action<HookData>> Handlers => _list;
 
-        internal override void AddHandler(Action<TestExecutionContext> handler) => _list.Add(handler);
+        internal override void AddHandler(Action<HookData> handler) => _list.Add(handler);
 
         public BeforeHooks()
         {
-            _list = new List<Action<TestExecutionContext>>();
+            _list = new List<Action<HookData>>();
         }
 
         public BeforeHooks(BeforeHooks source)
         {
-            _list = new List<Action<TestExecutionContext>>(source._list);
+            _list = new List<Action<HookData>>(source._list);
         }
     }
 }

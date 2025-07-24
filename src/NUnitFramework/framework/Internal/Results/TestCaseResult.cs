@@ -19,6 +19,14 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="other">A <see cref="TestCaseResult"/> from which the values shall be copied.</param>
+        private TestCaseResult(TestCaseResult other) : base(other)
+        {
+        }
+
         #region Overrides
 
         /// <summary>
@@ -66,6 +74,14 @@ namespace NUnit.Framework.Internal
         /// Gets the collection of child results.
         /// </summary>
         public override IEnumerable<ITestResult> Children => Array.Empty<ITestResult>();
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult.Clone"/>
+        /// </summary>
+        public override TestResult Clone()
+        {
+            return new TestCaseResult(this);
+        }
 
         #endregion
     }

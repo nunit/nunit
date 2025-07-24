@@ -8,13 +8,13 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 {
     internal abstract class Hooks
     {
-        protected abstract IReadOnlyCollection<Action<TestExecutionContext>> Handlers { get; }
+        protected abstract IReadOnlyCollection<Action<HookData>> Handlers { get; }
 
         internal int Count => Handlers.Count;
 
-        internal abstract void AddHandler(Action<TestExecutionContext> handler);
+        internal abstract void AddHandler(Action<HookData> handler);
 
-        internal IReadOnlyCollection<Action<TestExecutionContext>> GetHandlers()
+        internal IReadOnlyCollection<Action<HookData>> GetHandlers()
         {
             lock (Handlers)
             {
@@ -22,11 +22,11 @@ namespace NUnit.Framework.Internal.ExecutionHooks
             }
         }
 
-        internal void InvokeHandlers(TestExecutionContext context)
+        internal void InvokeHandlers(HookData hookInfo)
         {
             foreach (var handler in GetHandlers())
             {
-                handler(context);
+                handler(hookInfo);
             }
         }
     }

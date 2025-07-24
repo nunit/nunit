@@ -166,6 +166,11 @@ namespace NUnit.Framework.Tests
             public override bool HasChildren => false;
 
             public override IEnumerable<ITestResult> Children => Enumerable.Empty<ITestResult>();
+
+            public override TestResult Clone()
+            {
+                return new FakeTestResult(Test);
+            }
         }
 
         private class FakeWorkItem : WorkItem

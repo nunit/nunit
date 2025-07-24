@@ -8,7 +8,8 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
     internal class AfterTestHookThrowsExceptionExecutionProceedsTests
     {
-        [Explicit($"This test should only be run as part of the {nameof(AfterTestHookThrowsException_ExecutionProceeds)} test")]
+        [Explicit(
+            $"This test should only be run as part of the {nameof(AfterTestHookThrowsException_ExecutionProceeds)} test")]
         public class TestWithTestHooksOnMethodAndErrorOnAfterTestHook
         {
             [OneTimeSetUp]
@@ -32,12 +33,14 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         [Test]
         public void AfterTestHookThrowsException_ExecutionProceeds()
         {
-            TestLog.Clear();
-
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook),
+                TestFilter.Explicit);
             workItem.Execute();
 
-            Assert.That(TestLog.Logs, Is.EqualTo([
+            var currentTestLogs = TestLog.Logs(workItem.Test);
+
+            Assert.That(currentTestLogs, Is.Not.Empty);
+            Assert.That(currentTestLogs, Is.EqualTo([
                 nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.OneTimeSetUp),
                 nameof(TestWithTestHooksOnMethodAndErrorOnAfterTestHook.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
