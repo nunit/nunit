@@ -1,15 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.ExecutionHooks.Common;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     internal class TestActionAndHookTests
     {
         [Explicit($"This test should only be run as part of the {nameof(ExecutionProceedsAfterTheAfterTestHookCompletes2)} test")]
-        [SomeTestAction]
+        [SimpleTestAction]
         public class TestWithTestHooksAndClassTestActionAttribute
         {
             [OneTimeSetUp]
@@ -55,13 +55,13 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 
             Assert.That(TestLog.Logs, Is.EqualTo([
                 nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeSetUp),
-                SomeTestActionAttribute.LogStringForBeforeTest,
+                SimpleTestActionAttribute.LogStringForBeforeTest,
                 nameof(TestWithTestHooksAndClassTestActionAttribute.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
                 nameof(TestWithTestHooksAndClassTestActionAttribute.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
                 nameof(TestWithTestHooksAndClassTestActionAttribute.TearDown),
-                SomeTestActionAttribute.LogStringForAfterTest,
+                SimpleTestActionAttribute.LogStringForAfterTest,
                 nameof(TestWithTestHooksAndClassTestActionAttribute.OneTimeTearDown)
             ]));
         }

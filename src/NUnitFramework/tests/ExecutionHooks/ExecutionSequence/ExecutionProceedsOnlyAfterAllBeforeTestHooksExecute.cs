@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.ExecutionHooks.Common;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.ExecutionHookTests;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence;
 
@@ -12,10 +12,10 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
     private sealed class TestUnderTest
     {
         [Test]
-        [ActivateBeforeTestHooks]
-        [ActivateBeforeTestHooks]
-        [ActivateBeforeTestHooks]
-        [ActivateLongRunningBeforeTestHooks]
+        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHook]
+        [ActivateLongRunningBeforeTestHook]
         public void SomeTest()
         {
             TestLog.LogCurrentMethod();
@@ -31,10 +31,10 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
         workItem.Execute();
 
         Assert.That(TestLog.Logs, Is.EqualTo([
-            HookIdentifiers.BeforeTestHook,
-            HookIdentifiers.BeforeTestHook,
-            HookIdentifiers.BeforeTestHook,
-            HookIdentifiers.BeforeTestHook,
+            nameof(ActivateLongRunningBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
             nameof(TestUnderTest.SomeTest)
         ]));
     }
