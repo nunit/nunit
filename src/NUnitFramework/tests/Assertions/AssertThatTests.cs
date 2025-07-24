@@ -600,7 +600,8 @@ namespace NUnit.Framework.Tests.Assertions
                                 nameof(ClassWithSomeToleranceAwareMembers.ValueC))));
 
                 Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
-                            Is.EqualToGeneric(instance).UsingPropertiesComparer(c => c.Excluding(
+                            Is.EqualTo(instance)
+                              .UsingPropertiesComparer<ClassWithSomeToleranceAwareMembers>(c => c.Excluding(
                                 x => x.ValueA,
                                 x => x.ValueB,
                                 x => x.ValueC)));
@@ -611,8 +612,8 @@ namespace NUnit.Framework.Tests.Assertions
                                 c => c.Using(nameof(ClassWithSomeToleranceAwareMembers.Chained))));
 
                 Assert.That(new ClassWithSomeToleranceAwareMembers(2, 1.1, "1.1", zero),
-                            Is.EqualToGeneric(instance)
-                              .UsingPropertiesComparer(c => c.Using(x => x.Chained)));
+                            Is.EqualTo(instance)
+                              .UsingPropertiesComparer<ClassWithSomeToleranceAwareMembers>(c => c.Using(x => x.Chained)));
 
                 // Property names work on nested classes!
                 var alsmostZero = new ClassWithSomeToleranceAwareMembers(1, 0.0, string.Empty, null);
