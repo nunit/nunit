@@ -4,7 +4,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Tests.ExecutionHooks.Common
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class LogTestActionAttribute : Attribute, ITestAction
+    internal sealed class LogTestActionAttribute : Attribute, ITestAction
     {
         public void BeforeTest(ITest test)
         {

@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.ExecutionHooks.Common
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute
+    internal sealed class ActivateLongRunningAfterTestHookAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(TestExecutionContext context)
         {

@@ -4,7 +4,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.ExecutionHooks.Common
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
+    internal sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(TestExecutionContext context)
         {

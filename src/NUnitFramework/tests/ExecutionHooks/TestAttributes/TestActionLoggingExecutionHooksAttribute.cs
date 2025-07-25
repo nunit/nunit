@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.ExecutionHooks.Common
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class TestActionLoggingExecutionHooksAttribute : NUnitAttribute, IApplyToContext
+    internal sealed class TestActionLoggingExecutionHooksAttribute : NUnitAttribute, IApplyToContext
     {
         public void ApplyToContext(TestExecutionContext context)
         {

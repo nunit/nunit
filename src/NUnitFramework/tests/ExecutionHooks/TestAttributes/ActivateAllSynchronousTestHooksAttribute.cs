@@ -4,7 +4,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.ExecutionHooks.Common
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateAllSynchronousTestHooksAttribute : ExecutionHookAttribute
+    internal sealed class ActivateAllSynchronousTestHooksAttribute : ExecutionHookAttribute
     {
         public override void BeforeEverySetUpHook(TestExecutionContext context)
         {
