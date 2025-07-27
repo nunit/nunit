@@ -128,7 +128,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         public static Exception? Catch(TestDelegate code)
         {
-            return Throws(new InstanceOfTypeConstraint<Exception>(), code);
+            return Catch<Exception>(code);
         }
 
         /// <summary>
