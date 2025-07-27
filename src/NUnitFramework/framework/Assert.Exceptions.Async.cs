@@ -117,7 +117,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception? CatchAsync(AsyncTestDelegate code, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint<Exception>(), code, message, args);
+            return CatchAsync<Exception>(code, message, args);
         }
 
         /// <summary>
