@@ -36,7 +36,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint<TargetInvocationException> TargetInvocationException => TypeOf<TargetInvocationException>();
+        public static ExactTypeConstraint TargetInvocationException => TypeOf<TargetInvocationException>();
 
         #endregion
 
