@@ -118,7 +118,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception? Catch(TestDelegate code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint<Exception>(), code, message, args);
+            return Throws<Exception>(code, message, args);
         }
 
         /// <summary>
