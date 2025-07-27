@@ -1,10 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Internal
 {
@@ -25,6 +27,10 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class Reflect
     {
+        private static readonly ConcurrentDictionary<Type, Func<IConstraint, object?, ConstraintResult>> InvokeApplyToLookup = [];
+
+        private static readonly ConcurrentDictionary<(Type, Type), Func<IEnumerableConstraint, object, ConstraintResult>> InvokeApplyToCollectionLookup = [];
+
         internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         #region Get Methods of a type
@@ -272,6 +278,68 @@ namespace NUnit.Framework.Internal
             {
                 throw new NUnitException("Rethrown", e);
             }
+        }
+
+        /// <summary>
+        /// Invokes <see cref="IConstraint.ApplyTo{TActual}(TActual)"/> using the given <paramref name="constraint"/> as the instance
+        /// with <paramref name="actualType"/> as its generic type argument.
+        /// </summary>
+        /// <param name="constraint">The <see cref="IConstraint"/>.</param>
+        /// <param name="actualType">The generic type argument to pass to <see cref="IConstraint.ApplyTo{TActual}(TActual)"/>.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <returns>A <see cref="ConstraintResult"/>.</returns>
+        public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type actualType, object? actual)
+        {
+            Guard.ArgumentNotNull(constraint, nameof(constraint));
+
+            Guard.ArgumentValid(actual is null
+                ? IsAssignableFromNull(actualType)
+                : actualType.IsAssignableFrom(actual.GetType()),
+                "The actual value must be assignable to the provided actual type.",
+                nameof(actual));
+
+            static ConstraintResult DelegateTemplate<T>(IConstraint constraint, object? actual)
+                => constraint.ApplyTo((T?)actual);
+
+            static Func<IConstraint, object?, ConstraintResult> BuildDelegate(Type type)
+                => ((Delegate)DelegateTemplate<object>).Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(type)
+                .CreateDelegate<Func<IConstraint, object?, ConstraintResult>>();
+
+            return InvokeApplyToLookup.GetOrAdd(actualType, BuildDelegate).Invoke(constraint, actual);
+        }
+
+        /// <summary>
+        /// Invokes <see cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>
+        /// using the given <paramref name="constraint"/> as the instance with <paramref name="actual"/>.GetType() and
+        /// <paramref name="itemType"/> as its generic type arguments.
+        /// </summary>
+        /// <param name="constraint">The <see cref="IConstraint"/>.</param>
+        /// <param name="itemType">The item type argument to pass to <see cref="IEnumerableConstraint.ApplyToEnumerable{TActual, TItem}(TActual, IEnumerable{TItem})"/>.</param>
+        /// <param name="actual">The actual value.</param>
+        /// <returns>A <see cref="ConstraintResult"/>.</returns>
+        public static ConstraintResult InvokeApplyToEnumerable(IEnumerableConstraint constraint, object actual, Type itemType)
+        {
+            Guard.ArgumentNotNull(constraint, nameof(constraint));
+            Guard.ArgumentNotNull(actual, nameof(actual));
+
+            Type actualType = actual.GetType();
+
+            Guard.ArgumentValid(typeof(IEnumerable<>).MakeGenericType(itemType).IsAssignableFrom(actualType),
+                "The collection must be assignable to an `IEnumerable<T>` where T is the provided item type.",
+                nameof(actual));
+
+            static ConstraintResult DelegateTemplate<TActual, TItem>(IEnumerableConstraint constraint, object actual)
+                => constraint.ApplyToEnumerable((TActual)actual, (IEnumerable<TItem>)actual);
+
+            static Func<IEnumerableConstraint, object, ConstraintResult> BuildDelegate((Type ActualType, Type ItemType) pair)
+                => ((Delegate)DelegateTemplate<object, object>).Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(pair.ActualType, pair.ItemType)
+                .CreateDelegate<Func<IEnumerableConstraint, object, ConstraintResult>>();
+
+            return InvokeApplyToCollectionLookup.GetOrAdd((actualType, itemType), BuildDelegate).Invoke(constraint, actual);
         }
 
         #endregion
