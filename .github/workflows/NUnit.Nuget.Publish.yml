@@ -56,6 +56,6 @@ jobs:
     - name: Publish nupkg and snupkg to Nuget.org
       run: |
           foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.PUBLISHNUGET }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+              dotnet nuget push $file --api-key "${{ secrets.PUBLISH_NUGET_ORG }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
  
