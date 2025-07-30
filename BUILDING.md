@@ -27,7 +27,7 @@ NUnit framework can be built from this solution using a .NET 6-capable IDE such 
    - Compile using the [build script](#script-build) instead if using VS Code (see below for details).
 - [Jetbrains Rider](https://www.jetbrains.com/rider/)
 
-On all platforms, you will need to install [.NET 6.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
+On all platforms, you will need to install [.NET 8.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
 
 On Mac or Linux, you will need to install [Mono](https://www.mono-project.com/download/), an open source implementation of Microsoft's .NET Framework. Mono version 6.12.0 Stable (6.12.0.122) has been validated to build the NUnit solution on GNU/Linux Debian 10 'buster'.
 
@@ -40,7 +40,6 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
     bin\
        Debug\
           net8.0
-          net6.0
           net462
 ```
 

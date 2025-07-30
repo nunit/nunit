@@ -7,8 +7,8 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NUnitLibraryFrameworks>net462;net6.0;net8.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;net6.0;net8.0;net9.0</NUnitRuntimeFrameworks>
+    <NUnitLibraryFrameworks>net462;net8.0</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>net462;net8.0;net9.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -52,11 +52,6 @@
     <When Condition="'$(TargetFramework)' == 'net462'">
       <PropertyGroup>
         <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
-      </PropertyGroup>
-    </When>
-    <When Condition="$(TargetFramework.StartsWith('net6.0'))">
-      <PropertyGroup>
-        <AssemblyConfiguration>.NET 6.0 $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
     <When Condition="$(TargetFramework.StartsWith('net8.0'))">
