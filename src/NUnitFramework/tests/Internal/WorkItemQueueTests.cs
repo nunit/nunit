@@ -147,8 +147,7 @@ namespace NUnit.Framework.Tests.Internal
 
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
             Assert.That(fixtureItem, Is.Not.Null);
-            // TODO: Remove '!' when https://github.com/nunit/nunit.analyzers/issues/535 is released
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem!);
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");
