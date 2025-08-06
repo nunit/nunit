@@ -119,9 +119,6 @@ namespace NUnit.Framework.Tests.Internal
             });
         }
 
-        // TOOD: Remove when https://github.com/nunit/nunit.analyzers/issues/632 is fixed and released
-#pragma warning disable NUnit1031 // The individual arguments provided by a ValuesAttribute must match the type of the corresponding parameter of the method
-
         [Test]
         public void Combinatorial_OneTypeParameterOnTwoArgs<T>(
             [Values(5, 5.0)] T x,
@@ -145,7 +142,6 @@ namespace NUnit.Framework.Tests.Internal
                 Assert.That(y, Is.EqualTo(2));
             });
         }
-#pragma warning restore NUnit1031 // The individual arguments provided by a ValuesAttribute must match the type of the corresponding parameter of the method
 
         [Test]
         public void Combinatorial_IncompatibleArgsAreNotRunnable()
