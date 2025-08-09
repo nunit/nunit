@@ -5,7 +5,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
-using TestResult = NUnit.Framework.Internal.TestResult;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
@@ -15,7 +14,7 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
     {
         internal static readonly string OutcomeMatched = "Outcome Matched";
         internal static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
-        private TestResult? _beforeHookTestResult;
+        private TestContext.ResultAdapter? _beforeHookTestResult;
         private readonly BeforeOrAfterTest _beforeOrAfterTest;
 
         public TestActionOutcomeLogger(BeforeOrAfterTest beforeOrAfterTest)
@@ -39,32 +38,32 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
 
         public void BeforeTestActionHook(HookData hookData)
         {
-            _beforeHookTestResult = hookData.Context.CurrentResult.Clone();
+            _beforeHookTestResult = hookData.Context.Result.Clone();
         }
 
         public void AfterTestActionHook(HookData hookData)
         {
             Assert.That(_beforeHookTestResult, Is.Not.Null, "BeforeTestAction was not called before AfterTestAction.");
-            Assert.That(hookData.Context.CurrentTest.MethodName, Is.Not.Null, "Hook was not called on a method.");
+            Assert.That(hookData.Context.Test.MethodName, Is.Not.Null, "Hook was not called on a method.");
 
-            TestResult testResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
+            TestContext.ResultAdapter testResult
+                    = hookData.Context.Result.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
 
-            string outcomeMatchStatement = testResult.ResultState switch
+            string outcomeMatchStatement = testResult.Outcome switch
             {
                 { Status: TestStatus.Failed } when
-                    hookData.Context.CurrentTest.MethodName.StartsWith("FailedTest") => OutcomeMatched,
+                    hookData.Context.Test.MethodName.StartsWith("FailedTest") => OutcomeMatched,
                 { Status: TestStatus.Passed } when
-                    hookData.Context.CurrentTest.MethodName.StartsWith("PassedTest") => OutcomeMatched,
+                    hookData.Context.Test.MethodName.StartsWith("PassedTest") => OutcomeMatched,
                 { Status: TestStatus.Skipped } when
-                    hookData.Context.CurrentTest.MethodName.StartsWith("TestIgnored") => OutcomeMatched,
+                    hookData.Context.Test.MethodName.StartsWith("TestIgnored") => OutcomeMatched,
                 { Status: TestStatus.Warning } when
-                    hookData.Context.CurrentTest.MethodName.StartsWith("WarningTest") => OutcomeMatched,
+                    hookData.Context.Test.MethodName.StartsWith("WarningTest") => OutcomeMatched,
                 _ => OutcomeMismatch
             };
 
             TestLog.LogMessage(
-                $"{outcomeMatchStatement}: {hookData.Context.CurrentTest.MethodName} -> {hookData.Context.CurrentResult.ResultState}");
+                $"{outcomeMatchStatement}: {hookData.Context.Test.MethodName} -> {hookData.Context.Result.Outcome}");
         }
     }
 

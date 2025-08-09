@@ -8,7 +8,6 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
-using TestResult = NUnit.Framework.Internal.TestResult;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
@@ -19,36 +18,36 @@ public class AfterSetUpHooksEvaluateTestOutcomeTests
         internal static readonly string OutcomeMatched = "Outcome Matched";
         internal static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
 
-        private TestResult? _beforeHookTestResult;
+        private TestContext.ResultAdapter? _beforeHookTestResult;
 
         public override void BeforeEverySetUpHook(HookData hookData)
         {
-            _beforeHookTestResult = hookData.Context.CurrentResult.Clone();
+             _beforeHookTestResult = hookData.Context.Result.Clone();
         }
 
         public override void AfterEverySetUpHook(HookData hookData)
         {
             Assert.That(_beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
 
-            TestResult setUpTestResult
-                = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
+            TestContext.ResultAdapter setUpTestResult
+                = hookData.Context.Result.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
 
-            string outcomeMatchStatement = setUpTestResult.ResultState switch
+            string outcomeMatchStatement = setUpTestResult.Outcome switch
             {
                 { Status: TestStatus.Failed } when
-                    hookData.Context.CurrentTest.FullName.Contains("4Failed") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Failed") => OutcomeMatched,
                 { Status: TestStatus.Passed } when
-                    hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Passed") => OutcomeMatched,
                 { Status: TestStatus.Skipped } when
-                    hookData.Context.CurrentTest.FullName.Contains("4Ignored") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Ignored") => OutcomeMatched,
                 { Status: TestStatus.Inconclusive } when
-                    hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Passed") => OutcomeMatched,
                 { Status: TestStatus.Warning } when
-                    hookData.Context.CurrentTest.FullName.Contains("4Warning") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Warning") => OutcomeMatched,
                 _ => OutcomeMismatch
             };
 
-            TestLog.LogMessage($"{outcomeMatchStatement}: {hookData.Context.CurrentTest.FullName} -> {hookData.Context.CurrentResult.ResultState}");
+            TestLog.LogMessage($"{outcomeMatchStatement}: {hookData.Context.Test.FullName} -> {hookData.Context.Result.Outcome}");
         }
     }
 

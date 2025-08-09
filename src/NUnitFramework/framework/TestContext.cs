@@ -492,6 +492,11 @@ namespace NUnit.Framework
             public ITest? Parent => _test.Parent;
 
             /// <summary>
+            /// Returns true if this is a TestSuite
+            /// </summary>
+            public bool IsSuite => _test.IsSuite;
+
+            /// <summary>
             /// Returns all properties in the hierarchy
             /// Utility method for getting all properties in the hierarchy, with their included name, level and values.
             /// </summary>
@@ -702,6 +707,25 @@ namespace NUnit.Framework
             public int InconclusiveCount => _result.InconclusiveCount;
 
             #endregion
+
+            /// <summary>
+            /// Create a clone of the current instance.
+            /// </summary>
+            /// <returns></returns>
+            public ResultAdapter Clone()
+            {
+                return new ResultAdapter(_result.Clone());
+            }
+
+            /// <summary>
+            /// Calculates the delta between the current TestResult and a previous TestResult.
+            /// This method should be used in the context of execution hooks if you need to
+            /// get the test result for a hooked method.
+            /// </summary>
+            public ResultAdapter CalculateDeltaWithPrevious(ResultAdapter previous, Exception? exception)
+            {
+                return new ResultAdapter(_result.CalculateDeltaWithPrevious(previous._result, exception));
+            }
         }
 
         #endregion
