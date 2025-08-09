@@ -30,7 +30,7 @@ public class AfterTearDownHooksEvaluateTestOutcomeTests
                 Assert.That(beforeHookTestResult, Is.Not.Null, "BeforeEveryTearDown was not called before AfterEveryTearDown.");
 
                 TestResult tearDownTestResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.ExceptionContext);
+                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.Exception);
 
                 string outcomeMatchStatement = tearDownTestResult.ResultState switch
                 {

@@ -29,8 +29,8 @@ public class AfterOneTimeSetUpHooksEvaluateTestOutcomeTests
             {
                 Assert.That(beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
 
-                TestResult oneTimeSetUpTestResult
-                = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.ExceptionContext);
+                TestResult oneTimeSetUpTestResult =
+                    hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.Exception);
 
                 string outcomeMatchStatement = oneTimeSetUpTestResult.ResultState switch
                 {

@@ -27,7 +27,7 @@ public class AfterTestHooksEvaluateTestOutcomeTests
             Assert.That(hookData.Context.CurrentTest.MethodName, Is.Not.Null, "Hook was not called on a method.");
 
             TestResult testResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.ExceptionContext);
+                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
 
             string outcomeMatchStatement = testResult.ResultState switch
             {
@@ -99,12 +99,6 @@ public class AfterTestHooksEvaluateTestOutcomeTests
         var currentTestLogs = TestLog.Logs(workItem.Test);
 
         Assert.That(currentTestLogs, Is.Not.Empty);
-        Assert.Multiple(() =>
-        {
-            foreach (var logLine in currentTestLogs)
-            {
-                Assert.That(logLine, Does.StartWith(AfterTestOutcomeLogger.OutcomeMatched));
-            }
-        });
+        Assert.That(currentTestLogs, Has.All.StartWith(AfterTestOutcomeLogger.OutcomeMatched));
     }
 }

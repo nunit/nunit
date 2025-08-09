@@ -435,9 +435,9 @@ namespace NUnit.Framework.Internal
         /// in the after hook and use this result as the "TearDown result".
         /// </summary>
         /// <param name="previous">The previous TestResult to compare against.</param>
-        /// <param name="exceptionContext">An optional exception context to consider when calculating the delta.</param>
+        /// <param name="exception">An optional exception to consider when calculating the delta.</param>
         /// <returns>A new TestResult representing the delta between the current and previous TestResults.</returns>
-        public TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exceptionContext = null)
+        public TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
         {
             var deltaResult = Clone();
 
@@ -461,10 +461,10 @@ namespace NUnit.Framework.Internal
                 deltaResult.RecordAssertion(assertion);
             }
 
-            // consider the exception context and warnings
-            if (exceptionContext is not null)
+            // consider the exception and warnings
+            if (exception is not null)
             {
-                deltaResult.RecordException(exceptionContext);
+                deltaResult.RecordException(exception);
             }
             else if (deltaResult.AssertionResults.Count > 0)
             {

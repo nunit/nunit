@@ -48,7 +48,7 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
             Assert.That(hookData.Context.CurrentTest.MethodName, Is.Not.Null, "Hook was not called on a method.");
 
             TestResult testResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.ExceptionContext);
+                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
 
             string outcomeMatchStatement = testResult.ResultState switch
             {

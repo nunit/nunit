@@ -5,22 +5,17 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
-    internal sealed class HookDelegatingTestMethodCommand : TestMethodCommand
+    internal sealed class HookDelegatingTestMethodCommand : TestCommand
     {
-        /// <summary>TODO: Documentation needed for field</summary>
-#pragma warning disable IDE1006
-        // ReSharper disable once InconsistentNaming
-        // Disregarding naming convention for back-compat
-        private readonly TestMethodCommand innerCommand;
-#pragma warning restore IDE1006
+        private readonly TestMethodCommand _innerCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HookDelegatingTestMethodCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner test command to delegate to.</param>
-        public HookDelegatingTestMethodCommand(TestMethodCommand innerCommand) : base(innerCommand.TestMethod)
+        public HookDelegatingTestMethodCommand(TestMethodCommand innerCommand) : base(innerCommand.Test)
         {
-            this.innerCommand = innerCommand;
+            _innerCommand = innerCommand;
         }
 
         /// <summary>
@@ -31,12 +26,12 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>The result of the test execution.</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            IMethodInfo hookedMethodInfo = innerCommand.TestMethod.Method;
+            IMethodInfo hookedMethodInfo = _innerCommand.TestMethod.Method;
 
             try
             {
                 context.ExecutionHooks.OnBeforeTest(context, hookedMethodInfo);
-                innerCommand.Execute(context);
+                _innerCommand.Execute(context);
             }
             catch (Exception ex)
             {

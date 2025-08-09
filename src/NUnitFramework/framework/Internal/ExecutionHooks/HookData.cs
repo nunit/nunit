@@ -15,12 +15,12 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         /// </summary>
         /// <param name="context">The test execution context.</param>
         /// <param name="hookedMethod">The hooked method information.</param>
-        /// <param name="exceptionContext">The exception context that was thrown during the hooked method execution, if any.</param>
-        public HookData(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
+        /// <param name="exception">The exception that was thrown during the hooked method execution, if any.</param>
+        public HookData(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exception = null)
         {
             Context = context;
             HookedMethod = hookedMethod;
-            ExceptionContext = exceptionContext;
+            Exception = exception;
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         public IMethodInfo HookedMethod { get; }
 
         /// <summary>
-        /// Gets the exception context that was thrown during the method execution, if any.
+        /// Gets the exception that was thrown during the method execution, if any.
         /// </summary>
-        public Exception? ExceptionContext { get; }
+        public Exception? Exception { get; }
     }
 }

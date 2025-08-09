@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
@@ -13,10 +12,14 @@ namespace NUnit.Framework.Tests.ExecutionHooks
     {
         internal const string TestLogPropertyKey = "TestLog";
 
-        public static List<string> Logs(ITest? test = null)
+        public static IEnumerable Logs(ITest? test = null)
         {
-            string s = GetPropertyBag(test);
-            return s.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            var props = GetBaseParent(test).Properties;
+            if (!props.TryGet(TestLogPropertyKey, out IList? value))
+            {
+                return Enumerable.Empty<string>();
+            }
+            return value;
         }
 
         public static void LogCurrentMethod([CallerMemberName] string callerMethodName = "")
@@ -34,12 +37,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks
             LogToPropertyBag(message);
         }
 
-        public static string GetPropertyBag(ITest? test = null)
-        {
-            var props = GetBaseParent(test).Properties;
-            return props.Get(TestLogPropertyKey) as string ?? string.Empty;
-        }
-
         public static void LogToPropertyBag(string s)
         {
             if (string.IsNullOrEmpty(s))
@@ -47,9 +44,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks
                 return;
             }
             var props = GetBaseParent().Properties;
-            string currentValue = props.Get(TestLogPropertyKey) as string ?? string.Empty;
-            currentValue += s + Environment.NewLine;
-            props.Set(TestLogPropertyKey, currentValue);
+            props.Add(TestLogPropertyKey, s);
         }
 
         public static ITest GetBaseParent(ITest? test = null)

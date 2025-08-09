@@ -29,7 +29,7 @@ public class AfterOneTimeOneTimeTearDownHooksEvaluateTestOutcomeTests
             {
                 Assert.That(beforeHookTestResult, Is.Not.Null, "BeforeEveryTearDown was not called before AfterEveryTearDown.");
                 TestResult oneTimeTearDownTestResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.ExceptionContext);
+                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.Exception);
 
                 string outcomeMatchStatement = oneTimeTearDownTestResult.ResultState switch
                 {
