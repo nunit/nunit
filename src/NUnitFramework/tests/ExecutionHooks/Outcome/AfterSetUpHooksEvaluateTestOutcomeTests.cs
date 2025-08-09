@@ -6,6 +6,7 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
 using TestResult = NUnit.Framework.Internal.TestResult;
 
@@ -13,43 +14,41 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
 public class AfterSetUpHooksEvaluateTestOutcomeTests
 {
-    public class AfterSetUpOutcomeLogger : NUnitAttribute, IApplyToContext
+    public class AfterSetUpOutcomeLogger : ExecutionHookAttribute, IApplyToContext
     {
         internal static readonly string OutcomeMatched = "Outcome Matched";
         internal static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
 
-        public void ApplyToContext(TestExecutionContext context)
+        private TestResult? _beforeHookTestResult;
+
+        public override void BeforeEverySetUpHook(HookData hookData)
         {
-            TestResult? beforeHookTestResult = null;
-            context.ExecutionHooks.BeforeEverySetUp.AddHandler((hookData) =>
+            _beforeHookTestResult = hookData.Context.CurrentResult.Clone();
+        }
+
+        public override void AfterEverySetUpHook(HookData hookData)
+        {
+            Assert.That(_beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
+
+            TestResult setUpTestResult
+                = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
+
+            string outcomeMatchStatement = setUpTestResult.ResultState switch
             {
-                beforeHookTestResult = hookData.Context.CurrentResult.Clone();
-            });
+                { Status: TestStatus.Failed } when
+                    hookData.Context.CurrentTest.FullName.Contains("4Failed") => OutcomeMatched,
+                { Status: TestStatus.Passed } when
+                    hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
+                { Status: TestStatus.Skipped } when
+                    hookData.Context.CurrentTest.FullName.Contains("4Ignored") => OutcomeMatched,
+                { Status: TestStatus.Inconclusive } when
+                    hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
+                { Status: TestStatus.Warning } when
+                    hookData.Context.CurrentTest.FullName.Contains("4Warning") => OutcomeMatched,
+                _ => OutcomeMismatch
+            };
 
-            context.ExecutionHooks.AfterEverySetUp.AddHandler((hookData) =>
-            {
-                Assert.That(beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
-
-                TestResult setUpTestResult
-                    = hookData.Context.CurrentResult.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.ExceptionContext);
-
-                string outcomeMatchStatement = setUpTestResult.ResultState switch
-                {
-                    { Status: TestStatus.Failed } when
-                        hookData.Context.CurrentTest.FullName.Contains("4Failed") => OutcomeMatched,
-                    { Status: TestStatus.Passed } when
-                        hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
-                    { Status: TestStatus.Skipped } when
-                        hookData.Context.CurrentTest.FullName.Contains("4Ignored") => OutcomeMatched,
-                    { Status: TestStatus.Inconclusive } when
-                        hookData.Context.CurrentTest.FullName.Contains("4Passed") => OutcomeMatched,
-                    { Status: TestStatus.Warning } when
-                        hookData.Context.CurrentTest.FullName.Contains("4Warning") => OutcomeMatched,
-                    _ => OutcomeMismatch
-                };
-
-                TestLog.LogMessage($"{outcomeMatchStatement}: {hookData.Context.CurrentTest.FullName} -> {hookData.Context.CurrentResult.ResultState}");
-            });
+            TestLog.LogMessage($"{outcomeMatchStatement}: {hookData.Context.CurrentTest.FullName} -> {hookData.Context.CurrentResult.ResultState}");
         }
     }
 
