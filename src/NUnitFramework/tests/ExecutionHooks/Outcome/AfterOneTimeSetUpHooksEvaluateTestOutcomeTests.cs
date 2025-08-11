@@ -5,49 +5,52 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
 public class AfterOneTimeSetUpHooksEvaluateTestOutcomeTests
 {
-    public class AfterSetUpOutcomeLogger : NUnitAttribute, IApplyToContext
+    public class AfterSetUpOutcomeLogger : ExecutionHookAttribute
     {
         internal static readonly string OutcomeMatched = "Outcome Matched";
         internal static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
+        private TestContext.ResultAdapter? _beforeHookTestResult;
 
-        public void ApplyToContext(TestExecutionContext context)
+        public override void BeforeEverySetUpHook(HookData hookData)
         {
-            TestContext.ResultAdapter? beforeHookTestResult = null;
-            context.ExecutionHooks.BeforeEverySetUp.AddHandler(hookData =>
+            _beforeHookTestResult = hookData.Context.Result.Clone();
+        }
+
+        public override void AfterEverySetUpHook(HookData hookData)
+        {
+            Assert.That(_beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
+
+            if (_beforeHookTestResult is null)
             {
-                beforeHookTestResult = hookData.Context.Result.Clone();
-            });
+                return;
+            }
 
-            context.ExecutionHooks.AfterEverySetUp.AddHandler(hookData =>
+            var oneTimeSetUpTestResult =
+                hookData.Context.Result.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
+            var outcomeMatchStatement = oneTimeSetUpTestResult.Outcome switch
             {
-                Assert.That(beforeHookTestResult, Is.Not.Null, "BeforeEverySetUp was not called before AfterEverySetUp.");
+                { Status: TestStatus.Failed } when
+                    hookData.Context.Test.FullName.Contains("4Failed") => OutcomeMatched,
+                { Status: TestStatus.Passed } when
+                    hookData.Context.Test.FullName.Contains("4Passed") => OutcomeMatched,
+                { Status: TestStatus.Skipped } when
+                    hookData.Context.Test.FullName.Contains("4Ignored") => OutcomeMatched,
+                { Status: TestStatus.Inconclusive } when
+                    hookData.Context.Test.FullName.Contains("4Inconclusive") => OutcomeMatched,
+                { Status: TestStatus.Warning } when
+                    hookData.Context.Test.FullName.Contains("4Warning") => OutcomeMatched,
+                _ => OutcomeMismatch
+            };
 
-                TestContext.ResultAdapter oneTimeSetUpTestResult =
-                    hookData.Context.Result.CalculateDeltaWithPrevious(beforeHookTestResult, hookData.Exception);
-
-                string outcomeMatchStatement = oneTimeSetUpTestResult.Outcome switch
-                {
-                    { Status: TestStatus.Failed } when
-                        hookData.Context.Test.FullName.Contains("4Failed") => OutcomeMatched,
-                    { Status: TestStatus.Passed } when
-                        hookData.Context.Test.FullName.Contains("4Passed") => OutcomeMatched,
-                    { Status: TestStatus.Skipped } when
-                        hookData.Context.Test.FullName.Contains("4Ignored") => OutcomeMatched,
-                    { Status: TestStatus.Inconclusive } when
-                        hookData.Context.Test.FullName.Contains("4Inconclusive") => OutcomeMatched,
-                    { Status: TestStatus.Warning } when
-                        hookData.Context.Test.FullName.Contains("4Warning") => OutcomeMatched,
-                    _ => OutcomeMismatch
-                };
-
-                TestLog.LogMessage($"{outcomeMatchStatement}: {hookData.Context.Test.FullName} -> {hookData.Context.Result.Outcome}");
-            });
+            TestLog.LogMessage(
+                $"{outcomeMatchStatement}: {hookData.Context.Test.FullName} -> {hookData.Context.Result.Outcome}");
         }
     }
 
