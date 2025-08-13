@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.ExecutionHooks.Common;
+using NUnit.Framework.Tests.ExecutionHooks.TestAttributes;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ThreadingTests

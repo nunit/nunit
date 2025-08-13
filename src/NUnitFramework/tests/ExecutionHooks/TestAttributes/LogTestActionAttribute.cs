@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Tests.ExecutionHooks.Common
+namespace NUnit.Framework.Tests.ExecutionHooks.TestAttributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     internal sealed class LogTestActionAttribute : Attribute, ITestAction

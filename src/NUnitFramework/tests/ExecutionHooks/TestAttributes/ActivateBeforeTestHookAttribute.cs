@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Tests.ExecutionHooks.Common
+namespace NUnit.Framework.Tests.ExecutionHooks.TestAttributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     internal sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute
