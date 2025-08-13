@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -7,6 +8,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
     internal class TestExecutionContextHookCreationTests
     {
+        [AttributeUsage(AttributeTargets.Method)]
         private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
         {
             public override void BeforeTestHook(TestExecutionContext context)
