@@ -6,12 +6,12 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.ExecutionHooks.TestAttributes;
 using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Tests.ExecutionHooks.ThreadingTests
+namespace NUnit.Framework.Tests.ExecutionHooks.Threading
 {
     internal class SynchronousHookInvocationTests
     {
         [Explicit($"This test should only be run as part of the {nameof(SynchronousHookInvocation_HookExecutesInSameThreadAsTest)} test")]
-        public class SynchronousHookInvocationTests_TestUnderTest
+        public class SynchronousHookInvocationTestsTestUnderTest
         {
             [SetUp]
             public void Setup()
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ThreadingTests
         {
             TestLog.Clear();
 
-            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTests_TestUnderTest), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTestsTestUnderTest), TestFilter.Explicit);
             workItem.Execute();
 
             Assert.Multiple(() =>
