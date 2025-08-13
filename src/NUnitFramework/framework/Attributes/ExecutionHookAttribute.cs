@@ -36,7 +36,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void AfterEverySetUpHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             ThrowNeedsOverride();
         }
@@ -48,7 +48,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void BeforeTestHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             ThrowNeedsOverride();
         }
@@ -60,7 +60,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void AfterTestHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             ThrowNeedsOverride();
         }
@@ -72,7 +72,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void BeforeEveryTearDownHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             ThrowNeedsOverride();
         }
@@ -84,7 +84,7 @@ namespace NUnit.Framework
         /// <param name="context">The current <see cref="TestExecutionContext"/> for the test.</param>
         public virtual void AfterEveryTearDownHook(TestExecutionContext context)
         {
-            // Just to verify our logic for detecing overridden methods works correctly.
+            // Just to verify our logic for detecting overridden methods works correctly.
             // This method should never be called.
             ThrowNeedsOverride();
         }
