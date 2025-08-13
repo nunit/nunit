@@ -44,8 +44,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
                 nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteTestUnderTest.TearDown),
                 nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteTestUnderTest.OneTimeTearDown)
             ]));
-
-            TestLog.Logs.Clear();
         }
     }
 }
