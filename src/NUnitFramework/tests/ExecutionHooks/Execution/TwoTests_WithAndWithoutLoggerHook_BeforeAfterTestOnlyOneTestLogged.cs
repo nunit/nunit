@@ -12,16 +12,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         public class TestUnderTest
         {
             [Test, ActivateTestHook, Order(1)]
-            public void TestWithHookLogging()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TestWithHookLogging() => TestLog.LogCurrentMethod();
 
             [Test, Order(2)]
-            public void TestWithoutHookLogging()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TestWithoutHookLogging() => TestLog.LogCurrentMethod();
         }
 
         [Test]

@@ -11,45 +11,26 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         private abstract class TestUnderTestBase
         {
             [OneTimeSetUp]
-            public void OneTimeSetUpBase()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUpBase() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void SetupBase()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void SetupBase() => TestLog.LogCurrentMethod();
 
             [TearDown]
-            public void TearDownBase()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TearDownBase() => TestLog.LogCurrentMethod();
 
             [OneTimeTearDown]
-            public void OneTimeTearDownBase()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeTearDownBase() => TestLog.LogCurrentMethod();
         }
 
-        [TestFixture]
         [Explicit($"This test should only be run as part of the {nameof(TestProceedsAfterAllAfterTestHooksExecute)} test")]
         private sealed class TestUnderTest : TestUnderTestBase
         {
             [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void Setup()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void Setup() => TestLog.LogCurrentMethod();
 
             [Test]
             [ActivateAllSynchronousTestHooks]
@@ -68,16 +49,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             }
 
             [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TearDown() => TestLog.LogCurrentMethod();
 
             [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]

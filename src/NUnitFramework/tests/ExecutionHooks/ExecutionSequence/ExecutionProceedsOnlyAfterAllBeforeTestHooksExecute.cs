@@ -16,10 +16,7 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
         [ActivateBeforeTestHook]
         [ActivateBeforeTestHook]
         [ActivateLongRunningBeforeTestHook]
-        public void SomeTest()
-        {
-            TestLog.LogCurrentMethod();
-        }
+        public void SomeTest() => TestLog.LogCurrentMethod();
     }
 
     [Test]

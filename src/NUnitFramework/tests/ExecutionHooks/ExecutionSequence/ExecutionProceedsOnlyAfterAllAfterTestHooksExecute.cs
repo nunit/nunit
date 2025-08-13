@@ -16,22 +16,13 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             [ActivateAfterTestHook]
             [ActivateAfterTestHook]
             [ActivateAfterTestHookThrowingException]
-            public void TestPasses()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TestPasses() => TestLog.LogCurrentMethod();
 
             [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TearDown() => TestLog.LogCurrentMethod();
 
             [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]

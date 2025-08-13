@@ -14,42 +14,24 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         public class TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks
         {
             [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void SetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void SetUp() => TestLog.LogCurrentMethod();
 
             [Test]
             [ActivateMethodLevelBeforeTestHooks]
             [ActivateMethodLevelAfterTestHooks]
-            public void EmptyTestWithHooks()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void EmptyTestWithHooks() => TestLog.LogCurrentMethod();
 
             [Test]
-            public void EmptyTestWithoutHooks()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void EmptyTestWithoutHooks() => TestLog.LogCurrentMethod();
+
+            [TearDown]
+            public void TearDown() => TestLog.LogCurrentMethod();
+
+            [OneTimeTearDown]
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]

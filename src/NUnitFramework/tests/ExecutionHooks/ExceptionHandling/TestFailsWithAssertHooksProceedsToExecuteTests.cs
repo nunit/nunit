@@ -12,28 +12,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public class FailingTestWithTestHookOnMethod
         {
             [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void SetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void SetUp() => TestLog.LogCurrentMethod();
 
             [Test]
             [ActivateBeforeTestHook]
@@ -43,6 +25,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
                 TestLog.LogCurrentMethod();
                 Assert.Fail("Some failure in test");
             }
+
+            [TearDown]
+            public void TearDown() => TestLog.LogCurrentMethod();
+
+            [OneTimeTearDown]
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]

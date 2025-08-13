@@ -9,16 +9,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
     public class TestActionHooksTests
     {
         [Explicit($"This test should only be run as part of the {nameof(TestActionHooksCalledBeforeAndAfterTestAction)} test")]
-        [TestFixture]
         [LogTestAction]
         [TestActionLoggingExecutionHooks]
         public class TestClassWithTestAction
         {
             [Test]
-            public void TestUnderTest()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void TestUnderTest() => TestLog.LogCurrentMethod();
         }
 
         [Test]

@@ -11,33 +11,19 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Threading
     internal class SynchronousHookInvocationTests
     {
         [Explicit($"This test should only be run as part of the {nameof(SynchronousHookInvocation_HookExecutesInSameThreadAsTest)} test")]
-        public class SynchronousHookInvocationTestsTestUnderTest
+        private class SynchronousHookInvocationTestsTestUnderTest
         {
             [SetUp]
-            public void Setup()
-            {
-                TestExecutionContext.CurrentContext
-                                    .CurrentTest.Properties
-                                    .Add("TestThreadId", Environment.CurrentManagedThreadId);
-            }
+            public void Setup() => TestExecutionContext.CurrentContext.CurrentTest.Properties.Add("TestThreadId", Environment.CurrentManagedThreadId);
 
             [Test, ActivateSynchronousTestHook]
-            public void TestPasses_WithAssertPass()
-            {
-                Assert.Pass("Test passed.");
-            }
+            public void TestPasses_WithAssertPass() => Assert.Pass("Test passed.");
 
             [Test, ActivateSynchronousTestHook]
-            public void TestFails_WithAssertFail()
-            {
-                Assert.Fail("Test failed with Assert.Fail");
-            }
+            public void TestFails_WithAssertFail() => Assert.Fail("Test failed with Assert.Fail");
 
             [Test, ActivateSynchronousTestHook]
-            public void TestFails_WithException()
-            {
-                throw new Exception("Test failed with Exception");
-            }
+            public void TestFails_WithException() => throw new Exception("Test failed with Exception");
         }
 
         [Test]

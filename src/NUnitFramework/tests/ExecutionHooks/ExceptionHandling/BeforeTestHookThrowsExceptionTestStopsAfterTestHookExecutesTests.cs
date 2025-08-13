@@ -12,28 +12,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public class TestWithTestHooksOnMethodAndErrorOnBeforeTestHook
         {
             [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void SetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void SetUp() => TestLog.LogCurrentMethod();
 
             [Test]
             [ActivateBeforeTestHookThrowingException]
@@ -42,6 +24,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
             {
                 TestLog.LogCurrentMethod();
             }
+
+            [TearDown]
+            public void TearDown() => TestLog.LogCurrentMethod();
+
+            [OneTimeTearDown]
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]

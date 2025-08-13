@@ -12,38 +12,23 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         public class TestWithNormalAndLongRunningTestHooks
         {
             [OneTimeSetUp]
-            public void OneTimeSetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
 
             [SetUp]
-            public void SetUp()
-            {
-                TestLog.LogCurrentMethod();
-            }
-
-            [TearDown]
-            public void TearDown()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void SetUp() => TestLog.LogCurrentMethod();
 
             [Test]
             [ActivateBeforeTestHook]
             [ActivateLongRunningBeforeTestHook]
             [ActivateAfterTestHook]
             [ActivateLongRunningAfterTestHook]
-            public void EmptyTest()
-            {
-                TestLog.LogCurrentMethod();
-            }
+            public void EmptyTest() => TestLog.LogCurrentMethod();
+
+            [TearDown]
+            public void TearDown() => TestLog.LogCurrentMethod();
+
+            [OneTimeTearDown]
+            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
         }
 
         [Test]
