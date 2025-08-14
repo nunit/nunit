@@ -1,35 +1,35 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.TestAttributes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     internal sealed class TestActionLoggingExecutionHooksAttribute : ExecutionHookAttribute
     {
-        public override void BeforeTestActionBeforeTestHook(TestExecutionContext context)
+        public override void BeforeTestActionBeforeTestHook(HookData hookData)
         {
             TestLog.LogCurrentMethod(
-                $"{nameof(BeforeTestActionBeforeTestHook)}({(context.CurrentTest.IsSuite ? "Suite" : "Test")})");
+                $"{nameof(BeforeTestActionBeforeTestHook)}({(hookData.Context.Test.IsSuite ? "Suite" : "Test")})");
         }
 
-        public override void BeforeTestActionAfterTestHook(TestExecutionContext context)
+        public override void BeforeTestActionAfterTestHook(HookData hookData)
         {
             TestLog.LogCurrentMethod(
-                $"{nameof(BeforeTestActionAfterTestHook)}({(context.CurrentTest.IsSuite ? "Suite" : "Test")})");
+                $"{nameof(BeforeTestActionAfterTestHook)}({(hookData.Context.Test.IsSuite ? "Suite" : "Test")})");
         }
 
-        public override void AfterTestActionBeforeTestHook(TestExecutionContext context)
+        public override void AfterTestActionBeforeTestHook(HookData hookData)
         {
             TestLog.LogCurrentMethod(
-                $"{nameof(AfterTestActionBeforeTestHook)}({(context.CurrentTest.IsSuite ? "Suite" : "Test")})");
+                $"{nameof(AfterTestActionBeforeTestHook)}({(hookData.Context.Test.IsSuite ? "Suite" : "Test")})");
         }
 
-        public override void AfterTestActionAfterTestHook(TestExecutionContext context)
+        public override void AfterTestActionAfterTestHook(HookData hookData)
         {
             TestLog.LogCurrentMethod(
-                $"{nameof(AfterTestActionAfterTestHook)}({(context.CurrentTest.IsSuite ? "Suite" : "Test")})");
+                $"{nameof(AfterTestActionAfterTestHook)}({(hookData.Context.Test.IsSuite ? "Suite" : "Test")})");
         }
     }
 }

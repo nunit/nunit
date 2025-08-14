@@ -29,8 +29,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Threading
         [Test]
         public void SynchronousHookInvocation_HookExecutesInSameThreadAsTest()
         {
-            TestLog.Clear();
-
             var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTestsTestUnderTest), TestFilter.Explicit);
             workItem.Execute();
 
