@@ -56,9 +56,14 @@ namespace NUnit.Framework.Api
             Log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            string suiteName = assemblyPath.Equals("<Unknown>")
-                ? AssemblyHelper.GetAssemblyName(assembly).FullName
+            string? suiteName = string.IsNullOrEmpty(assemblyPath) || assemblyPath.Equals("<Unknown>")
+                ? AssemblyHelper.GetAssemblyName(assembly).Name
                 : assemblyPath;
+
+            if (string.IsNullOrEmpty(suiteName))
+            {
+                suiteName = "<Unnamed>";
+            }
 
             return Build(assembly, suiteName, options);
         }
