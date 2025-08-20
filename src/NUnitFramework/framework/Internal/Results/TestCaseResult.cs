@@ -75,6 +75,21 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override IEnumerable<ITestResult> Children => Array.Empty<ITestResult>();
 
+        /// <inheritdoc />
+        public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
+        {
+            var deltaResult = new TestCaseResult(this)
+            {
+                StartTime = StartTime,
+                EndTime = EndTime,
+                Duration = Duration
+            };
+
+            CalculateDeltaWithPrevious(deltaResult, previous, exception);
+
+            return deltaResult;
+        }
+
         /// <summary>
         /// <inheritdoc cref="TestResult.Clone"/>
         /// </summary>

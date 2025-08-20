@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -166,6 +167,20 @@ namespace NUnit.Framework.Tests
             public override bool HasChildren => false;
 
             public override IEnumerable<ITestResult> Children => Enumerable.Empty<ITestResult>();
+
+            public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception)
+            {
+                FakeTestResult deltaResult = new FakeTestResult(Test)
+                {
+                    StartTime = StartTime,
+                    EndTime = EndTime,
+                    Duration = Duration
+                };
+
+                CalculateDeltaWithPrevious(deltaResult, previous, exception);
+
+                return deltaResult;
+            }
 
             public override TestResult Clone()
             {

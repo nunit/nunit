@@ -14,12 +14,18 @@ namespace NUnit.Framework.Tests.Internal.Results
         private TestCaseResult _previousResult;
         private TestCaseResult _currentResult;
 
+        private TestSuiteResult _previousSuiteResult;
+        private TestSuiteResult _currentSuiteResult;
+
         [SetUp]
         public void SetUp()
         {
             var test = new TestMethod(new MethodWrapper(typeof(CalculateDeltaWithPreviousTests), nameof(SetUp)));
             _previousResult = (TestCaseResult)test.MakeTestResult();
             _currentResult = (TestCaseResult)test.MakeTestResult();
+
+            _previousSuiteResult = new TestSuiteResult(new TestSuite("PreviousSuite"));
+            _currentSuiteResult = new TestSuiteResult(new TestSuite("CurrentSuite"));
         }
 
         [Test]
@@ -210,6 +216,65 @@ namespace NUnit.Framework.Tests.Internal.Results
             Assert.Multiple(() =>
             {
                 Assert.That(delta.ResultState.Status, Is.EqualTo(TestStatus.Warning));
+                Assert.That(delta.ResultState.Label, Is.Empty);
+            });
+        }
+
+        private class FakeTestSuiteResult(
+            int passedCount,
+            int failedCount,
+            int warningCount,
+            int skipCount,
+            int inconclusiveCount)
+            : TestResult(new TestMethod(new MethodWrapper(typeof(CalculateDeltaWithPreviousTests), nameof(SetUp))))
+        {
+            public override int TotalCount => FailCount + WarningCount + PassCount + SkipCount + InconclusiveCount;
+            public override int FailCount => failedCount;
+            public override int WarningCount => warningCount;
+            public override int PassCount => passedCount;
+            public override int SkipCount => skipCount;
+            public override int InconclusiveCount => inconclusiveCount;
+
+            public override bool HasChildren => false;
+            public override IEnumerable<ITestResult> Children => [];
+
+            public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
+                => throw new NotImplementedException();
+
+            public override TestResult Clone()
+                => throw new NotImplementedException();
+        }
+
+        [Test]
+        public void CalculateDeltaWithPrevious_SuiteResultDelta_ReturnsCorrectCounts()
+        {
+            _previousSuiteResult.SetResult(new ResultState(TestStatus.Passed));
+            _previousSuiteResult.AddResult(new FakeTestSuiteResult(
+                passedCount: 1,
+                failedCount: 2,
+                warningCount: 3,
+                skipCount: 4,
+                inconclusiveCount: 5));
+
+            _currentSuiteResult.SetResult(new ResultState(TestStatus.Failed));
+            _currentSuiteResult.AddResult(new FakeTestSuiteResult(
+                passedCount: 10,
+                failedCount: 10,
+                warningCount: 10,
+                skipCount: 10,
+                inconclusiveCount: 10));
+
+            var delta = _currentSuiteResult.CalculateDeltaWithPrevious(_previousSuiteResult);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(delta.TotalCount, Is.EqualTo(35));
+                Assert.That(delta.PassCount, Is.EqualTo(9));
+                Assert.That(delta.FailCount, Is.EqualTo(8));
+                Assert.That(delta.WarningCount, Is.EqualTo(7));
+                Assert.That(delta.SkipCount, Is.EqualTo(6));
+                Assert.That(delta.InconclusiveCount, Is.EqualTo(5));
+                Assert.That(delta.ResultState, Is.EqualTo(ResultState.Failure));
                 Assert.That(delta.ResultState.Label, Is.Empty);
             });
         }

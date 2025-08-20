@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal
 {
@@ -253,5 +254,32 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
+        {
+            var deltaResult = new TestSuiteResult(this)
+            {
+                StartTime = StartTime,
+                EndTime = EndTime,
+                Duration = Duration,
+
+                _passCount = PassCount - previous.PassCount,
+                _failCount = FailCount - previous.FailCount,
+                _warningCount = WarningCount - previous.WarningCount,
+                _skipCount = SkipCount - previous.SkipCount,
+                _inconclusiveCount = InconclusiveCount - previous.InconclusiveCount,
+                _totalCount = TotalCount - previous.TotalCount
+            };
+
+            // We dont consider children in the delta result for now
+            while (deltaResult._children.TryDequeue(out _))
+            {
+            }
+
+            CalculateDeltaWithPrevious(deltaResult, previous, exception);
+
+            return deltaResult;
+        }
     }
 }
