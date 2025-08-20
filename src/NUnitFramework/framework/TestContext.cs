@@ -724,7 +724,7 @@ namespace NUnit.Framework
             /// </summary>
             public ResultAdapter CalculateDeltaWithPrevious(ResultAdapter previous, Exception? exception)
             {
-                return new ResultAdapter(_result.CalculateDeltaWithPrevious(previous._result, exception));
+                return new ResultAdapter(_result.CalculateDeltaResult(previous._result, exception));
             }
         }
 

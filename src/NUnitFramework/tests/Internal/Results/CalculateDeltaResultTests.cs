@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.Internal.Results
 {
     [TestFixture]
-    public class CalculateDeltaWithPreviousTests
+    public class CalculateDeltaResultTests
     {
         private TestCaseResult _previousResult;
         private TestCaseResult _currentResult;
@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            var test = new TestMethod(new MethodWrapper(typeof(CalculateDeltaWithPreviousTests), nameof(SetUp)));
+            var test = new TestMethod(new MethodWrapper(typeof(CalculateDeltaResultTests), nameof(SetUp)));
             _previousResult = (TestCaseResult)test.MakeTestResult();
             _currentResult = (TestCaseResult)test.MakeTestResult();
 
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _previousResult.SetResult(ResultState.Success);
             _currentResult.SetResult(ResultState.Success);
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.That(delta.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(delta.ResultState.Label, Is.Empty);
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _previousResult.SetResult(ResultState.Success);
             _currentResult.SetResult(ResultState.Failure, "Test failed");
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Tests.Internal.Results
                     {
                         _previousResult.SetResult(new ResultState(previousState));
                         _currentResult.SetResult(new ResultState(currentState));
-                        var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+                        var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
                         Assert.Multiple(() =>
                         {
@@ -111,7 +111,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             {
                 _previousResult.SetResult(new ResultState(state));
                 _currentResult.SetResult(new ResultState(state));
-                var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+                var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
                 Assert.Multiple(() =>
                 {
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _previousResult.AssertCount = 2;
             _currentResult.AssertCount = 5;
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _currentResult.OutWriter.Write("Previous output");
             _currentResult.OutWriter.Write("New output");
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _previousResult.OutWriter.Write("Previous output");
             _currentResult.OutWriter.Write("Previous output");
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             _currentResult.RecordAssertion(assertion1);
             _currentResult.RecordAssertion(assertion2);
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -196,7 +196,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         {
             var exception = new InvalidOperationException("Test exception");
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult, exception);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult, exception);
 
             Assert.Multiple(() =>
             {
@@ -211,7 +211,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         {
             _currentResult.RecordAssertion(AssertionStatus.Warning, "Warning message");
 
-            var delta = _currentResult.CalculateDeltaWithPrevious(_previousResult);
+            var delta = _currentResult.CalculateDeltaResult(_previousResult);
 
             Assert.Multiple(() =>
             {
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             int warningCount,
             int skipCount,
             int inconclusiveCount)
-            : TestResult(new TestMethod(new MethodWrapper(typeof(CalculateDeltaWithPreviousTests), nameof(SetUp))))
+            : TestResult(new TestMethod(new MethodWrapper(typeof(CalculateDeltaResultTests), nameof(SetUp))))
         {
             public override int TotalCount => FailCount + WarningCount + PassCount + SkipCount + InconclusiveCount;
             public override int FailCount => failedCount;
@@ -238,7 +238,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             public override bool HasChildren => false;
             public override IEnumerable<ITestResult> Children => [];
 
-            public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
+            protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
                 => throw new NotImplementedException();
 
             public override TestResult Clone()
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Tests.Internal.Results
                 skipCount: 10,
                 inconclusiveCount: 10));
 
-            var delta = _currentSuiteResult.CalculateDeltaWithPrevious(_previousSuiteResult);
+            var delta = _currentSuiteResult.CalculateDeltaResult(_previousSuiteResult);
 
             Assert.Multiple(() =>
             {

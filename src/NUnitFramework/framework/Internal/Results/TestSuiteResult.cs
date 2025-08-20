@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         /// <inheritdoc />
-        public override TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
+        protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
         {
             var deltaResult = new TestSuiteResult(this)
             {
@@ -272,12 +272,13 @@ namespace NUnit.Framework.Internal
                 _totalCount = TotalCount - previous.TotalCount
             };
 
-            // We dont consider children in the delta result for now
+            // We don't consider children in the delta result for now.
+            // Therefore, we delete all the children from the delta result.
             while (deltaResult._children.TryDequeue(out _))
             {
             }
 
-            CalculateDeltaWithPrevious(deltaResult, previous, exception);
+            CalculateDeltaResult(deltaResult, previous, exception);
 
             return deltaResult;
         }
