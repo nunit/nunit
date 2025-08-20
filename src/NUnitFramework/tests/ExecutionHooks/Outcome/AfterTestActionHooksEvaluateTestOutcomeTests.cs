@@ -10,38 +10,18 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
 public class AfterTestActionHooksEvaluateTestOutcomeTests
 {
-    public class TestActionOutcomeLogger : NUnitAttribute, IApplyToContext
+    public abstract class TestActionOutcomeLogger : ExecutionHookAttribute
     {
         internal static readonly string OutcomeMatched = "Outcome Matched";
         internal static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
         private TestContext.ResultAdapter? _beforeHookTestResult;
-        private readonly BeforeOrAfterTest _beforeOrAfterTest;
 
-        public TestActionOutcomeLogger(BeforeOrAfterTest beforeOrAfterTest)
-        {
-            _beforeOrAfterTest = beforeOrAfterTest;
-        }
-
-        public void ApplyToContext(TestExecutionContext context)
-        {
-            if (_beforeOrAfterTest == BeforeOrAfterTest.BeforeTest)
-            {
-                context.ExecutionHooks.AddBeforeTestActionBeforeTestHandler(BeforeTestActionHook);
-                context.ExecutionHooks.AddAfterTestActionBeforeTestHandler(AfterTestActionHook);
-            }
-            else
-            {
-                context.ExecutionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionHook);
-                context.ExecutionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionHook);
-            }
-        }
-
-        public void BeforeTestActionHook(HookData hookData)
+        protected void BeforeTestActionHook(HookData hookData)
         {
             _beforeHookTestResult = hookData.Context.Result.Clone();
         }
 
-        public void AfterTestActionHook(HookData hookData)
+        protected void AfterTestActionHook(HookData hookData)
         {
             Assert.That(_beforeHookTestResult, Is.Not.Null, "BeforeTestAction was not called before AfterTestAction.");
             Assert.That(hookData.Context.Test.MethodName, Is.Not.Null, "Hook was not called on a method.");
@@ -65,6 +45,20 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
             TestLog.LogMessage(
                 $"{outcomeMatchStatement}: {hookData.Context.Test.MethodName} -> {hookData.Context.Result.Outcome}");
         }
+    }
+
+    public sealed class TestActionOutcomeBeforeTestLoggerAttribute : TestActionOutcomeLogger
+    {
+        public override void BeforeTestActionBeforeTestHook(HookData hookData) => BeforeTestActionHook(hookData);
+
+        public override void AfterTestActionBeforeTestHook(HookData hookData) => AfterTestActionHook(hookData);
+    }
+
+    public sealed class TestActionOutcomeAfterTestLoggerAttribute : TestActionOutcomeLogger
+    {
+        public override void BeforeTestActionAfterTestHook(HookData hookData) => BeforeTestActionHook(hookData);
+
+        public override void AfterTestActionAfterTestHook(HookData hookData) => AfterTestActionHook(hookData);
     }
 
     public enum FailingReason
@@ -153,7 +147,7 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
     }
 
     [Explicit($"This test should only be run as part of the {nameof(AfterTestActionHooksEvaluateTestOutcomeTests)} test")]
-    [TestActionOutcomeLogger(BeforeOrAfterTest.BeforeTest)]
+    [TestActionOutcomeBeforeTestLogger]
     [TestFixture]
     public class TestsUnderTestsWithMixedOutcome_ForBeforeTest
     {
@@ -204,7 +198,7 @@ public class AfterTestActionHooksEvaluateTestOutcomeTests
     }
 
     [Explicit($"This test should only be run as part of the {nameof(AfterTestActionHooksEvaluateTestOutcomeTests)} test")]
-    [TestActionOutcomeLogger(BeforeOrAfterTest.AfterTest)]
+    [TestActionOutcomeAfterTestLogger]
     [TestFixture]
     public class TestsUnderTestsWithMixedOutcome_ForAfterTest
     {
