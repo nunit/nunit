@@ -437,10 +437,19 @@ namespace NUnit.Framework.Internal
         /// <param name="previous">The previous TestResult to compare against.</param>
         /// <param name="exception">An optional exception to consider when calculating the delta.</param>
         /// <returns>A new TestResult representing the delta between the current and previous TestResults.</returns>
-        public TestResult CalculateDeltaWithPrevious(TestResult previous, Exception? exception = null)
-        {
-            var deltaResult = Clone();
+        protected internal abstract TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null);
 
+        /// <summary>
+        /// Contains the core logic for calculating delta results for all TestResult types
+        /// such as <see cref="TestCaseResult"/> and <see cref="TestSuiteResult"/>.
+        /// Type specific logic should be implemented in
+        /// <see cref="CalculateDeltaResult(TestResult, Exception?)"/> of the derived classes.
+        /// </summary>
+        /// <param name="deltaResult">An empty TestResult to store the delta result.</param>
+        /// <param name="previous">The previous TestResult to compare against.</param>
+        /// <param name="exception">An optional exception to consider when calculating the delta.</param>
+        protected void CalculateDeltaResult(TestResult deltaResult, TestResult previous, Exception? exception = null)
+        {
             // Calculate the delta for ResultState
             if (ResultState != previous.ResultState)
             {
@@ -471,8 +480,6 @@ namespace NUnit.Framework.Internal
                 // Warnings needs to be treated differently.
                 deltaResult.RecordTestCompletion();
             }
-
-            return deltaResult;
         }
 
         /// <summary>

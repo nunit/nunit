@@ -102,7 +102,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately before</b> the AfterTest(ITest test) method of a <see cref="ITestAction"></see> is executed
+        /// Method that is called <b>immediately after</b> the BeforeTest(ITest test) method of a <see cref="ITestAction"></see> is executed
         /// </summary>
         /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
         public virtual void BeforeTestActionAfterTestHook(HookData hookData)
@@ -113,7 +113,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Method that is called <b>immediately after</b> the BeforeTest(ITest test) method of a <see cref="ITestAction"></see> is executed
+        /// Method that is called <b>immediately before</b> the AfterTest(ITest test) method of a <see cref="ITestAction"></see> is executed
         /// </summary>
         /// <param name="hookData">The current <see cref="HookData"/> for the test.</param>
         public virtual void AfterTestActionBeforeTestHook(HookData hookData)
@@ -205,23 +205,23 @@ namespace NUnit.Framework
                 executionHooks.AddBeforeTestActionBeforeTestHandler(BeforeTestActionBeforeTestHook);
             }
 
-            if (BeforeTestActionAfterTestHook != base.BeforeTestActionAfterTestHook)
-            {
-                // Only add the BeforeTestActionAfterTestHook if it has been overridden
-                executionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
-            }
-
             if (AfterTestActionBeforeTestHook != base.AfterTestActionBeforeTestHook)
             {
                 // Only add the AfterTestActionBeforeTestHook if it has been overridden
                 executionHooks.AddAfterTestActionBeforeTestHandler(AfterTestActionBeforeTestHook);
             }
 
+            if (BeforeTestActionAfterTestHook != base.BeforeTestActionAfterTestHook)
+            {
+                // Only add the BeforeTestActionAfterTestHook if it has been overridden
+                context.ExecutionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
+            }
+
             if (AfterTestActionAfterTestHook != base.AfterTestActionAfterTestHook)
             {
                 // Only add the AfterTestActionAfterTestHook if it has been overridden
-                executionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
-            }
+		executionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
+	    }
         }
     }
 }
