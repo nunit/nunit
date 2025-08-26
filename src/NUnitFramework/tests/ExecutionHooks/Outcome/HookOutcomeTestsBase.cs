@@ -33,10 +33,10 @@ public abstract class HookOutcomeTestsBase(Type testClassToCheckHookOutcome)
             }
 
             string outcomeMatchStatement;
-            var oneTimeSetUpTestResult =
+            var hookedMethodTestResult =
                 hookData.Context.Result.CalculateDeltaWithPrevious(_beforeHookTestResult, hookData.Exception);
             var expectedOutcome = hookData.Context.Test.Properties.Get(OutcomePropertyKey);
-            if (expectedOutcome is not null && (ResultState)expectedOutcome == oneTimeSetUpTestResult.Outcome)
+            if (expectedOutcome is not null && (ResultState)expectedOutcome == hookedMethodTestResult.Outcome)
             {
                 outcomeMatchStatement = OutcomeMatched;
             }
