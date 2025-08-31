@@ -1134,6 +1134,66 @@ namespace NUnit.Framework.Tests.Constraints
                 // Assert.Throws<NotSupportedException>(() => Assert.That("abc", new EqualStringConstraint("abcd").Within(1)));
                 Assert.Pass("EqualStringConstraint does not support Tolerance, so this test is not applicable.");
             }
+
+            [Test]
+            public void CompareSameObjects_WithNewModifier_UsingPropertiesComparer()
+            {
+                // Arrange
+                var item1 = new Type2
+                {
+                    Data = "value"
+                };
+                var item2 = new Type2
+                {
+                    Data = "value"
+                };
+
+                Assert.That(item1, Is.EqualTo(item2).UsingPropertiesComparer());
+            }
+
+            [Test]
+            public void CompareDifferentObjects_WithNewModifier_UsingPropertiesComparer()
+            {
+                // Arrange
+                var item1 = new Type1
+                {
+                    Data = "value"
+                };
+                var item2 = new Type2
+                {
+                    Data = "value"
+                };
+
+                Assert.That(item1, Is.EqualTo(item2).UsingPropertiesComparer(x => x.AllowDifferentTypes()));
+            }
+
+            [Test]
+            public void CompareDifferentObjects_WithNewModifierAndInheritance_UsingPropertiesComparer()
+            {
+                // Arrange
+                var item1 = new Type1
+                {
+                    Data = "value"
+                };
+                var item2 = new Type3
+                {
+                    Data = "value"
+                };
+
+                Assert.That(item1, Is.EqualTo(item2).UsingPropertiesComparer(x => x.AllowDifferentTypes()));
+            }
+
+            private class Type1
+            {
+                public object? Data { get; set; }
+            }
+
+            private class Type2 : Type1
+            {
+                public new string? Data { get; set; }
+            }
+
+            private class Type3 : Type2;
         }
 
         #endregion
