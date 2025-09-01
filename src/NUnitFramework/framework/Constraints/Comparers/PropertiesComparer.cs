@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -167,7 +166,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             // If the property is declared in the current type, use it
                             property.DeclaringType == type
                             // Use the one declared in the most derived type (longest inheritance chain)
-                            || property.DeclaringType.TypeAndBaseTypes().Count() > existing.DeclaringType.TypeAndBaseTypes().Count())
+                            || existing.DeclaringType!.IsAssignableFrom(property.DeclaringType))
                         {
                             properties[property.Name] = property;
                         }
