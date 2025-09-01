@@ -160,7 +160,8 @@ namespace NUnit.Framework.Constraints.Comparers
                     if (properties.TryGetValue(property.Name, out var existing))
                     {
                         // If the existing property is declared in the current type, keep the existing one
-                        if (existing.DeclaringType == type) continue;
+                        if (existing.DeclaringType == type)
+                            continue;
 
                         if (
                             // If the property is declared in the current type, use it
