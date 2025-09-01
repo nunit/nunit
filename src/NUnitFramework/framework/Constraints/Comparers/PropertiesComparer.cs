@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            PropertyInfo[] xProperties = GetComparableProperties(xType);
+            PropertyInfo[] xProperties = GetPropertiesToCompare(xType);
             HashSet<string> xPropertyNames = new HashSet<string>(xProperties.Select(p => p.Name));
 
             PropertyInfo[] yProperties = xProperties;
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (xType != yType)
             {
-                yProperties = GetComparableProperties(yType);
+                yProperties = GetPropertiesToCompare(yType);
                 yPropertyNames = new HashSet<string>(yProperties.Select(p => p.Name));
                 allPropertyNames = new HashSet<string>(xPropertyNames.Concat(yPropertyNames));
                 UseProperties(yType, yPropertyNames);
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             return EqualMethodResult.ComparedEqual;
 
-            PropertyInfo[] GetComparableProperties(Type type)
+            PropertyInfo[] GetPropertiesToCompare(Type type)
             {
                 var properties = new Dictionary<string, PropertyInfo>();
                 foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
