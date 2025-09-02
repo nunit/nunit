@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            PropertyInfo[] xProperties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] xProperties = GetPropertiesToCompare(xType);
             HashSet<string> xPropertyNames = new HashSet<string>(xProperties.Select(p => p.Name));
 
             PropertyInfo[] yProperties = xProperties;
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (xType != yType)
             {
-                yProperties = yType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                yProperties = GetPropertiesToCompare(yType);
                 yPropertyNames = new HashSet<string>(yProperties.Select(p => p.Name));
                 allPropertyNames = new HashSet<string>(xPropertyNames.Concat(yPropertyNames));
                 UseProperties(yType, yPropertyNames);
@@ -149,6 +149,36 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             return EqualMethodResult.ComparedEqual;
+
+            PropertyInfo[] GetPropertiesToCompare(Type type)
+            {
+                var properties = new Dictionary<string, PropertyInfo>();
+                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    // If there's a property with the same name (in case of new keyword), let's decide which one to use
+                    if (properties.TryGetValue(property.Name, out var existing))
+                    {
+                        // If the existing property is declared in the current type, keep the existing one
+                        if (existing.DeclaringType == type)
+                            continue;
+
+                        if (
+                            // If the property is declared in the current type, use it
+                            property.DeclaringType == type
+                            // Use the one declared in the most derived type (longest inheritance chain)
+                            || existing.DeclaringType!.IsAssignableFrom(property.DeclaringType))
+                        {
+                            properties[property.Name] = property;
+                        }
+                    }
+                    else
+                    {
+                        properties[property.Name] = property;
+                    }
+                }
+
+                return properties.Values.ToArray();
+            }
 
             void UseProperties(Type type, HashSet<string> propertyNames)
             {
