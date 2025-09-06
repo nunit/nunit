@@ -224,7 +224,6 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             ITestResult result = TestBuilder.RunTest(suite, null);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
-
         }
 
         [Test]

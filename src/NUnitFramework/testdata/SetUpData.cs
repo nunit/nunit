@@ -10,14 +10,21 @@ namespace NUnit.TestData.SetUpData
     {
         public bool WasSetUpCalled;
         public bool WasTearDownCalled;
+        public bool WasTestCalled;
         public bool ThrowInBaseSetUp;
+        public bool AssumeFailureInSetUp;
+        public bool AssertFailureInSetUp;
 
         [SetUp]
         public virtual void Init()
         {
             WasSetUpCalled = true;
             if (ThrowInBaseSetUp)
-                throw (new Exception("Exception in base setup"));
+                throw new Exception("Exception in base setup");
+            if (AssumeFailureInSetUp)
+                Assume.That("1", Is.EqualTo("2"), "Assume");
+            if (AssertFailureInSetUp)
+                Assert.That("1", Is.EqualTo("2"), "Assert");
         }
 
         [TearDown]
@@ -29,6 +36,7 @@ namespace NUnit.TestData.SetUpData
         [Test]
         public void Success()
         {
+            WasTestCalled = true;
         }
     }
 
