@@ -409,7 +409,7 @@ namespace NUnit.Framework
         public class TestAdapter
         {
             private readonly Test _test;
-            private readonly MethodInfoAdapter? _methodInfoAdapter;
+            private MethodInfoAdapter? _methodInfoAdapter;
 
             #region Constructor
 
@@ -420,7 +420,6 @@ namespace NUnit.Framework
             public TestAdapter(Test test)
             {
                 _test = test;
-                _methodInfoAdapter = _test.Method is null ? null : new MethodInfoAdapter(_test.Method);
             }
 
             #endregion
@@ -449,24 +448,21 @@ namespace NUnit.Framework
             public string? DisplayName => _test.TypeInfo?.GetDisplayName();
 
             /// <summary>
-            /// The name of the method representing the test.
-            /// </summary>
-            public string? MethodName => _methodInfoAdapter?.Name;
-
-            /// <summary>
-            /// The declaring type of the method representing the test.
-            /// </summary>
-            public Type? MethodDeclaringType => _methodInfoAdapter?.DeclaringType;
-
-            /// <summary>
-            /// The parameters of the method representing the test.
-            /// </summary>
-            public IParameterInfo[]? MethodParameters => _methodInfoAdapter?.Parameters;
-
-            /// <summary>
             /// The method representing the test.
             /// </summary>
+            [Obsolete("Use MethodInfo property instead. This property will be removed in a future version of NUnit.")]
             public IMethodInfo? Method => (_test as TestMethod)?.Method;
+
+            /// <summary>
+            /// Gets information about the actual the test method
+            /// </summary>
+            public MethodInfoAdapter? MethodInfo =>
+                _methodInfoAdapter ??= _test.Method is null ? null : new MethodInfoAdapter(_test.Method);
+
+            /// <summary>
+            /// The name of the method representing the test.
+            /// </summary>
+            public string? MethodName => MethodInfo?.Name;
 
             /// <summary>
             /// Gets the underlying Type.
@@ -600,7 +596,7 @@ namespace NUnit.Framework
             /// <summary>
             /// Gets the parameters of the method.
             /// </summary>
-            public IParameterInfo[] Parameters => _methodInfo.GetParameters();
+            public IEnumerable<ParameterInfo> GetParameters() => _methodInfo.GetParameters().Select(x => x.ParameterInfo);
         }
 
         #endregion
