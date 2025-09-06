@@ -44,6 +44,21 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="latest">The latest result.</param>
+        /// <param name="previous">The previous result.</param>
+        private TestSuiteResult(TestSuiteResult latest, TestResult previous) : base(latest, previous)
+        {
+            _passCount = latest._passCount - previous.PassCount;
+            _failCount = latest._failCount - previous.FailCount;
+            _warningCount = latest._warningCount - previous.WarningCount;
+            _skipCount = latest._skipCount - previous.SkipCount;
+            _inconclusiveCount = latest._inconclusiveCount - previous.InconclusiveCount;
+            _totalCount = latest._totalCount - previous.TotalCount;
+        }
+
+        /// <summary>
         /// <inheritdoc cref="TestResult.Clone"/>
         /// </summary>
         public override TestResult Clone()
@@ -258,25 +273,7 @@ namespace NUnit.Framework.Internal
         /// <inheritdoc />
         protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
         {
-            var deltaResult = new TestSuiteResult(this)
-            {
-                StartTime = StartTime,
-                EndTime = EndTime,
-                Duration = Duration,
-
-                _passCount = PassCount - previous.PassCount,
-                _failCount = FailCount - previous.FailCount,
-                _warningCount = WarningCount - previous.WarningCount,
-                _skipCount = SkipCount - previous.SkipCount,
-                _inconclusiveCount = InconclusiveCount - previous.InconclusiveCount,
-                _totalCount = TotalCount - previous.TotalCount
-            };
-
-            // We don't consider children in the delta result for now.
-            // Therefore, we delete all the children from the delta result.
-            while (deltaResult._children.TryDequeue(out _))
-            {
-            }
+            var deltaResult = new TestSuiteResult(this, previous);
 
             CalculateDeltaResult(deltaResult, previous, exception);
 

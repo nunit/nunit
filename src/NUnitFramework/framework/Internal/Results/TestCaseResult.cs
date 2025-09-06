@@ -27,6 +27,15 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="latest">The latest result.</param>
+        /// <param name="previous">The previous result.</param>
+        private TestCaseResult(TestCaseResult latest, TestResult previous) : base(latest, previous)
+        {
+        }
+
         #region Overrides
 
         /// <summary>
@@ -78,12 +87,7 @@ namespace NUnit.Framework.Internal
         /// <inheritdoc />
         protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
         {
-            var deltaResult = new TestCaseResult(this)
-            {
-                StartTime = StartTime,
-                EndTime = EndTime,
-                Duration = Duration
-            };
+            var deltaResult = new TestCaseResult(this, previous);
 
             CalculateDeltaResult(deltaResult, previous, exception);
 

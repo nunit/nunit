@@ -109,6 +109,39 @@ namespace NUnit.Framework.Internal
             _testAttachments = new List<TestAttachment>(other._testAttachments);
         }
 
+        /// <summary>
+        /// Creates a new TestResult that is a delta between the latest and a previous TestResult.
+        /// </summary>
+        /// <param name="latest">The latest result.</param>
+        /// <param name="previous">The previous result.</param>
+        protected TestResult(TestResult latest, TestResult previous)
+        {
+            Test = latest.Test;
+            if (latest.ResultState == previous.ResultState)
+            {
+                _resultState = ResultState.Success;
+                _message = string.Empty;
+                _stackTrace = null;
+            }
+            else
+            {
+                _resultState = latest._resultState;
+                _message = latest._message;
+                _stackTrace = latest._stackTrace;
+            }
+
+            _duration = latest._duration - previous._duration;
+            StartTime = previous.EndTime;
+            EndTime = latest.EndTime;
+
+            _output = new StringBuilder(latest._output.ToString(previous._output.Length, latest._output.Length - previous._output.Length));
+            OutWriter = TextWriter.Synchronized(new StringWriter(_output));
+
+            InternalAssertCount = latest.InternalAssertCount - previous.InternalAssertCount;
+            _assertionResults = new List<AssertionResult>(latest._assertionResults.Except(previous._assertionResults));
+            _testAttachments = new List<TestAttachment>(latest._testAttachments.Except(previous._testAttachments));
+        }
+
         #endregion
 
         #region ITestResult Members
@@ -450,26 +483,6 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">An optional exception to consider when calculating the delta.</param>
         protected void CalculateDeltaResult(TestResult deltaResult, TestResult previous, Exception? exception = null)
         {
-            // Calculate the delta for ResultState
-            if (ResultState != previous.ResultState)
-            {
-                deltaResult.SetResult(ResultState, Message, StackTrace);
-            }
-            else
-            {
-                deltaResult.SetResult(ResultState.Success);
-            }
-
-            // Calculate the delta for AssertCount
-            deltaResult.AssertCount = AssertCount - previous.AssertCount;
-
-            // Calculate the delta for AssertionResults
-            deltaResult.AssertionResults.Clear();
-            foreach (var assertion in AssertionResults.Except(previous.AssertionResults))
-            {
-                deltaResult.RecordAssertion(assertion);
-            }
-
             // consider the exception and warnings
             if (exception is not null)
             {

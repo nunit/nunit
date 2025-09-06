@@ -138,7 +138,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         }
 
         [Test]
-        public void CalculateDeltaWithPrevious_OutputIncreased_ReturnsIncreasedContent()
+        public void CalculateDeltaWithPrevious_OutputIncreased_ReturnsNewContent()
         {
             _previousResult.OutWriter.Write("Previous output");
             _currentResult.OutWriter.Write("Previous output");
@@ -148,14 +148,14 @@ namespace NUnit.Framework.Tests.Internal.Results
 
             Assert.Multiple(() =>
             {
-                Assert.That(delta.Output, Is.EqualTo("Previous output" + "New output"));
+                Assert.That(delta.Output, Is.EqualTo("New output"));
                 Assert.That(delta.ResultState, Is.EqualTo(ResultState.Success));
                 Assert.That(delta.ResultState.Label, Is.Empty);
             });
         }
 
         [Test]
-        public void CalculateDeltaWithPrevious_OutputUnchanged_ReturnsOldOutput()
+        public void CalculateDeltaWithPrevious_OutputUnchanged_ReturnsEmpty()
         {
             _previousResult.OutWriter.Write("Previous output");
             _currentResult.OutWriter.Write("Previous output");
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Tests.Internal.Results
 
             Assert.Multiple(() =>
             {
-                Assert.That(delta.Output, Is.EqualTo("Previous output"));
+                Assert.That(delta.Output, Is.Empty);
                 Assert.That(delta.ResultState, Is.EqualTo(ResultState.Success));
                 Assert.That(delta.ResultState.Label, Is.Empty);
             });
