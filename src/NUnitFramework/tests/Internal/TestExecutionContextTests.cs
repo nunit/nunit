@@ -327,7 +327,7 @@ namespace NUnit.Framework.Tests.Internal
         public void CanAccessResultState()
         {
             // This is copied in setup because it can change if any test fails
-            Assert.That(_fixtureResult, Is.EqualTo(ResultState.Success));
+            Assert.That(_fixtureResult, Is.EqualTo(ResultState.Inconclusive));
             Assert.That(_setupContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
