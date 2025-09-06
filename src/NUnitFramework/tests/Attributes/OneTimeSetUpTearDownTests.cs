@@ -21,6 +21,7 @@ namespace NUnit.Framework.Tests.Attributes
             TestBuilder.RunTestFixture(fixture);
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1), "SetUp");
+            Assert.That(fixture.TestCount, Is.EqualTo(2), "Test");
             Assert.That(fixture.TearDownCount, Is.EqualTo(1), "TearDown");
         }
 
@@ -134,6 +135,7 @@ namespace NUnit.Framework.Tests.Attributes
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.StackTrace, Is.Not.Null);
             Assert.That(result.StackTrace, Does.Contain($"{nameof(SetUpAndTearDownFixture)}.{nameof(SetUpAndTearDownFixture.Init)}"));
 
@@ -145,6 +147,31 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1));
+            Assert.That(fixture.TestCount, Is.EqualTo(0));
+            Assert.That(fixture.TearDownCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void AssumeFailureSetUpPropogatesToTestResult()
+        {
+            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+            fixture.AssumeFailureInSetUp = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            Assert.That(result.StackTrace, Is.Not.Null);
+            Assert.That(result.StackTrace, Does.Contain($"{nameof(SetUpAndTearDownFixture)}.{nameof(SetUpAndTearDownFixture.Init)}"));
+
+            Assert.That(result.HasChildren, Is.True);
+            foreach (var childResult in result.Children)
+            {
+                Assert.That(childResult.ResultState.Site, Is.EqualTo(FailureSite.Parent));
+                Assert.That(childResult.StackTrace, Is.EqualTo(result.StackTrace));
+            }
+
+            Assert.That(fixture.SetUpCount, Is.EqualTo(1));
+            Assert.That(fixture.TestCount, Is.EqualTo(0));
             Assert.That(fixture.TearDownCount, Is.EqualTo(1));
         }
 
