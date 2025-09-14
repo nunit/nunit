@@ -29,8 +29,8 @@ namespace NUnit.Framework.Internal.Commands
 
             // If the BeforeTest method fails, we don't run the test
             // An failing Assume sets the Status to Inconclusive, but with a FailureSite of SetUp
-            if (context.CurrentResult.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped &&
-                context.CurrentResult.ResultState.Site != FailureSite.SetUp)
+            if ((context.CurrentResult.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
+                (context.CurrentResult.ResultState.Site != FailureSite.SetUp))
             {
                 context.CurrentResult = innerCommand.Execute(context);
             }
