@@ -68,10 +68,6 @@ namespace NUnit.Framework.Internal.Execution
                         default:
                         case RunState.Runnable:
                         case RunState.Explicit:
-                            // Assume success, since the result will otherwise
-                            // default to inconclusive.
-                            Result.SetResult(ResultState.Success);
-
                             if (Children.Count > 0)
                             {
                                 InitializeSetUpAndTearDownCommands();
@@ -80,20 +76,17 @@ namespace NUnit.Framework.Internal.Execution
 
                                 if (!CheckForCancellation())
                                 {
-                                    switch (Result.ResultState.Status)
+                                    if ((Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
+                                        (Result.ResultState.Site != FailureSite.SetUp))
                                     {
-                                        case TestStatus.Passed:
-                                        case TestStatus.Warning:
-                                            RunChildren();
-                                            return;
+                                        RunChildren();
+                                        return;
                                         // Just return: completion event will take care
                                         // of OneTimeTearDown when all tests are done.
-
-                                        case TestStatus.Skipped:
-                                        case TestStatus.Inconclusive:
-                                        case TestStatus.Failed:
-                                            SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
-                                            break;
+                                    }
+                                    else
+                                    {
+                                        SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
                                     }
                                 }
 

@@ -219,7 +219,11 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void CanRunTestFixtureWithNoTests()
         {
-            TestAssert.IsRunnable(typeof(FixtureWithNoTests));
+            TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithNoTests));
+            Assert.That(suite, Is.Not.Null, "Unable to construct fixture");
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            ITestResult result = TestBuilder.RunTest(suite, null);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
 
         [Test]

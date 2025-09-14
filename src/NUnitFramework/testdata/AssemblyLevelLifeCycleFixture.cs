@@ -189,7 +189,7 @@ namespace NUnit.TestData.LifeCycleTests
 
             [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 
-            [TestFixtureSource(""FixtureUnderTest"")]
+            [TestFixtureSource(""FixtureArgs"")]
             public class FixtureUnderTest
             {
                 private readonly int _initialValue;

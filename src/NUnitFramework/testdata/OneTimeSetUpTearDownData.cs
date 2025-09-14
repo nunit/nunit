@@ -12,7 +12,9 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         public int SetUpCount = 0;
         public int TearDownCount = 0;
+        public int TestCount = 0;
         public bool ThrowInBaseSetUp = false;
+        public bool AssumeFailureInSetUp = false;
 
         [OneTimeSetUp]
         public virtual void Init()
@@ -20,6 +22,8 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
             SetUpCount++;
             if (ThrowInBaseSetUp)
                 throw new Exception("Error in base OneTimeSetUp");
+            if (AssumeFailureInSetUp)
+                Assume.That("1", Is.EqualTo("2"), "Assume");
         }
 
         [OneTimeTearDown]
@@ -31,11 +35,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [Test]
         public void Success()
         {
+            TestCount++;
         }
 
         [Test]
         public void EvenMoreSuccess()
         {
+            TestCount++;
         }
     }
 

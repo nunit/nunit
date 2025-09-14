@@ -28,8 +28,60 @@ namespace NUnit.Framework.Tests.Internal
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.That(fixture.WasSetUpCalled, Is.True);
-            Assert.That(fixture.WasTearDownCalled, Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(fixture.WasSetUpCalled, Is.True);
+                Assert.That(fixture.WasTestCalled, Is.True);
+                Assert.That(fixture.WasTearDownCalled, Is.True);
+            }
+        }
+
+        [Test]
+        public void CheckTestIsNotCalledWhenSetupThrowsException()
+        {
+            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+            fixture.ThrowInBaseSetUp = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "Result State");
+                Assert.That(fixture.WasSetUpCalled, Is.True);
+                Assert.That(fixture.WasTestCalled, Is.False);
+                Assert.That(fixture.WasTearDownCalled, Is.True);
+            }
+        }
+
+        [Test]
+        public void CheckTestIsNotCalledWhenSetupAssertFailure()
+        {
+            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+            fixture.AssertFailureInSetUp = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "Result State");
+                Assert.That(fixture.WasSetUpCalled, Is.True);
+                Assert.That(fixture.WasTestCalled, Is.False);
+                Assert.That(fixture.WasTearDownCalled, Is.True);
+            }
+        }
+
+        [Test]
+        public void CheckTestIsNotCalledWhenSetupAssumeFailure()
+        {
+            SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
+            fixture.AssumeFailureInSetUp = true;
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive), "Result State");
+                Assert.That(fixture.WasSetUpCalled, Is.True);
+                Assert.That(fixture.WasTestCalled, Is.False);
+                Assert.That(fixture.WasTearDownCalled, Is.True);
+            }
         }
 
         [Test]
@@ -86,12 +138,17 @@ namespace NUnit.Framework.Tests.Internal
         {
             DerivedClassWithSeparateSetUp fixture = new DerivedClassWithSeparateSetUp();
             fixture.ThrowInBaseSetUp = true;
-            TestBuilder.RunTestFixture(fixture);
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.That(fixture.WasSetUpCalled, Is.True, "Base SetUp Called");
-            Assert.That(fixture.WasTearDownCalled, Is.True, "Base TearDown Called");
-            Assert.That(fixture.WasDerivedSetUpCalled, Is.False, "Derived SetUp Called");
-            Assert.That(fixture.WasDerivedTearDownCalled, Is.False, "Derived TearDown Called");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "Result State");
+                Assert.That(fixture.WasSetUpCalled, Is.True, "Base SetUp Called");
+                Assert.That(fixture.WasTestCalled, Is.False, "Base Test Called");
+                Assert.That(fixture.WasTearDownCalled, Is.True, "Base TearDown Called");
+                Assert.That(fixture.WasDerivedSetUpCalled, Is.False, "Derived SetUp Called");
+                Assert.That(fixture.WasDerivedTearDownCalled, Is.False, "Derived TearDown Called");
+            }
         }
 
         [Test]
