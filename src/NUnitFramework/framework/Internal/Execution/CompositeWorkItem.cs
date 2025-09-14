@@ -76,8 +76,8 @@ namespace NUnit.Framework.Internal.Execution
 
                                 if (!CheckForCancellation())
                                 {
-                                    if (Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped &&
-                                        Result.ResultState.Site != FailureSite.SetUp)
+                                    if ((Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
+                                        (Result.ResultState.Site != FailureSite.SetUp))
                                     {
                                         RunChildren();
                                         return;
