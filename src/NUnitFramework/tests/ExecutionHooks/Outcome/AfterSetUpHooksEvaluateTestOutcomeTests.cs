@@ -41,7 +41,7 @@ public class AfterSetUpHooksEvaluateTestOutcomeTests
                 { Status: TestStatus.Skipped } when
                     hookData.Context.Test.FullName.Contains("4Ignored") => OutcomeMatched,
                 { Status: TestStatus.Inconclusive } when
-                    hookData.Context.Test.FullName.Contains("4Passed") => OutcomeMatched,
+                    hookData.Context.Test.FullName.Contains("4Inconclusive") => OutcomeMatched,
                 { Status: TestStatus.Warning } when
                     hookData.Context.Test.FullName.Contains("4Warning") => OutcomeMatched,
                 _ => OutcomeMismatch
@@ -58,7 +58,7 @@ public class AfterSetUpHooksEvaluateTestOutcomeTests
         Exception4Failed,
         IgnoreAssertion4Ignored,
         IgnoreException4Ignored,
-        Inconclusive4Passed,
+        Inconclusive4Inconclusive,
         Warning4Warning, // Warn counts on OneTimeSetUp level as passed and on SetUp level as warning!
         None4Passed
     }
@@ -99,7 +99,7 @@ public class AfterSetUpHooksEvaluateTestOutcomeTests
                     break;
                 case FailingReason.IgnoreException4Ignored:
                     throw new IgnoreException("SetUp ignored by IgnoreException.");
-                case FailingReason.Inconclusive4Passed:
+                case FailingReason.Inconclusive4Inconclusive:
                     Assert.Inconclusive("SetUp ignored by Assert.Inconclusive.");
                     break;
                 case FailingReason.Warning4Warning:
