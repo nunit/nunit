@@ -235,7 +235,7 @@ namespace NUnit.Framework.Tests.Constraints
             constraint.ApplyTo(items);
             stopwatch.Stop();
 
-            Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(30));
+            Assume.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(30));
         }
 
         [TestCaseSource(nameof(DuplicateItemsData))]

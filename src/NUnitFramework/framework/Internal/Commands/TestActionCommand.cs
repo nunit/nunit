@@ -20,14 +20,46 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            BeforeTest = _ =>
+            BeforeTest = context =>
             {
-                action.BeforeTest(Test);
+                if (context.ExecutionHooksEnabled)
+                {
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
+
+                        action.BeforeTest(Test);
+                    }
+                    finally
+                    {
+                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
+                    }
+                }
+                else
+                {
+                    action.BeforeTest(Test);
+                }
             };
 
-            AfterTest = _ =>
+            AfterTest = context =>
             {
-                action.AfterTest(Test);
+                if (context.ExecutionHooksEnabled)
+                {
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
+
+                        action.AfterTest(Test);
+                    }
+                    finally
+                    {
+                        context.ExecutionHooks.OnAfterTestActionAfterTest(context);
+                    }
+                }
+                else
+                {
+                    action.AfterTest(Test);
+                }
             };
         }
     }
