@@ -179,5 +179,32 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(fixture.Count, Is.EqualTo(nTries));
             });
         }
+
+        [Test]
+        public void RepeatFullOutputTest()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseFixture), nameof(RepeatOutputTestCaseFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine +
+                                                  "2" + Environment.NewLine));
+        }
+
+        [Test]
+        public void RepeatFullOutputTestWithFailures()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithFailuresFixture), nameof(RepeatOutputTestCaseWithFailuresFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failed assertion.");
+            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
+
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine +
+                                                  "2" + Environment.NewLine +
+                                                  "3" + Environment.NewLine +
+                                                  "4" + Environment.NewLine));
+        }
     }
 }

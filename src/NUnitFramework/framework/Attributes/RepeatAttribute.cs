@@ -9,6 +9,7 @@
 // #2 requires infrastructure for dynamic test cases first
 
 using System;
+using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -92,6 +93,7 @@ namespace NUnit.Framework
             {
                 int count = _repeatCount;
                 TestResult? overallResult = null;
+                StringBuilder totalOutput = new();
 
                 while (count-- > 0)
                 {
@@ -116,6 +118,9 @@ namespace NUnit.Framework
                             break;
                     }
 
+                    // Remember the output from all runs
+                    totalOutput.Append(context.CurrentResult.Output);
+
                     // Clear result for repeat
                     if (count > 0)
                     {
@@ -128,6 +133,9 @@ namespace NUnit.Framework
                 {
                     context.CurrentResult = overallResult;
                 }
+
+                // Ensure output contains all output from all runs
+                context.CurrentResult.Output = totalOutput.ToString();
 
                 return context.CurrentResult;
             }

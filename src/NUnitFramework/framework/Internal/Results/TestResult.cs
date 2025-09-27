@@ -290,6 +290,14 @@ namespace NUnit.Framework.Internal
                     return _output.ToString();
                 }
             }
+            internal set
+            {
+                lock (OutWriter)
+                {
+                    _output.Clear();
+                    _output.Append(value);
+                }
+            }
         }
 
         /// <summary>
