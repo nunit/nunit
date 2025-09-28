@@ -197,14 +197,43 @@ namespace NUnit.Framework.Tests.Attributes
             ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithFailuresFixture), nameof(RepeatOutputTestCaseWithFailuresFixture.PrintTest));
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failed assertion.");
+
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine));
+
+            Assert.That(result.AssertCount, Is.EqualTo(2), "Expected 1 assert per run");
+
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failing assertions in second rus");
             Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
+
+            Assert.That(result.Message, Does.Not.StartWith("Multiple failures or warnings in test").And
+                                            .Contain("Expected: not equal to 2 and not equal to 3").And
+                                            .Contain("But was:  2"));
+        }
+
+        [Test]
+        public void RepeatFullOutputTestWithMultipleFailures()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithMultipleFailuresFixture), nameof(RepeatOutputTestCaseWithFailuresFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
 
             Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
                                                   "1" + Environment.NewLine +
                                                   "2" + Environment.NewLine +
                                                   "3" + Environment.NewLine +
                                                   "4" + Environment.NewLine));
+
+            Assert.That(result.AssertCount, Is.EqualTo(5), "Expected 1 assert per run");
+
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(2), "Expected two failing assertions in five runs");
+            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
+            Assert.That(result.AssertionResults[1].Status, Is.EqualTo(AssertionStatus.Failed));
+
+            Assert.That(result.Message, Does.StartWith("Multiple failures or warnings in test").And
+                                            .Contain("Expected: not equal to 2 and not equal to 3").And
+                                            .Contain("But was:  2").And
+                                            .Contain("But was:  3"));
         }
     }
 }

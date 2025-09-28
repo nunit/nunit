@@ -335,9 +335,20 @@ namespace NUnit.TestData.RepeatingTests
         }
     }
 
-    public class RepeatOutputTestCaseWithFailuresFixture : RepeatingTestsFixtureBase
+    public class RepeatOutputTestCaseWithMultipleFailuresFixture : RepeatingTestsFixtureBase
     {
         [Repeat(5, StopOnFailure = false)]
+        [Test]
+        public void PrintTest()
+        {
+            Console.WriteLine(Count++);
+            Assert.That(Count, Is.Not.EqualTo(2).And.Not.EqualTo(3));
+        }
+    }
+
+    public class RepeatOutputTestCaseWithFailuresFixture : RepeatingTestsFixtureBase
+    {
+        [Repeat(5, StopOnFailure = true)]
         [Test]
         public void PrintTest()
         {
