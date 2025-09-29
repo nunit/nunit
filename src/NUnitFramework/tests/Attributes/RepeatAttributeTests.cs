@@ -203,7 +203,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.AssertCount, Is.EqualTo(2), "Expected 1 assert per run");
 
-            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failing assertions in second rus");
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failing assertions in second run");
             Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
 
             Assert.That(result.Message, Does.Not.StartWith("Multiple failures or warnings in test").And
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void RepeatFullOutputTestWithMultipleFailures()
         {
-            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithMultipleFailuresFixture), nameof(RepeatOutputTestCaseWithFailuresFixture.PrintTest));
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithMultipleFailuresFixture), nameof(RepeatOutputTestCaseWithMultipleFailuresFixture.PrintTest));
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
 
