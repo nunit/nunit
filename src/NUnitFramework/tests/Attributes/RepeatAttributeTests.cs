@@ -140,8 +140,8 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(RepeatWithoutStopFailsEveryTimeFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopWithIgnoreAttributeFixture), "Skipped:Ignored(Child)", 0)]
         [TestCase(typeof(RepeatWithoutStopIgnoredOnFirstTryFixture), "Skipped:Ignored(Child)", 3)]
-        [TestCase(typeof(RepeatWithoutStopIgnoredOnSecondTryFixture), "Skipped:Ignored(Child)", 3)]
-        [TestCase(typeof(RepeatWithoutStopIgnoredOnThirdTryFixture), "Skipped:Ignored(Child)", 3)]
+        [TestCase(typeof(RepeatWithoutStopIgnoredOnSecondTryFixture), "Failed(Child)", 3)]
+        [TestCase(typeof(RepeatWithoutStopIgnoredOnThirdTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopErrorOnFirstTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopErrorOnSecondTryFixture), "Failed(Child)", 3)]
         [TestCase(typeof(RepeatWithoutStopErrorOnThirdTryFixture), "Failed(Child)", 3)]
@@ -178,6 +178,62 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
                 Assert.That(fixture.Count, Is.EqualTo(nTries));
             });
+        }
+
+        [Test]
+        public void RepeatFullOutputTest()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseFixture), nameof(RepeatOutputTestCaseFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine +
+                                                  "2" + Environment.NewLine));
+        }
+
+        [Test]
+        public void RepeatFullOutputTestWithFailures()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithFailuresFixture), nameof(RepeatOutputTestCaseWithFailuresFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine));
+
+            Assert.That(result.AssertCount, Is.EqualTo(2), "Expected 1 assert per run");
+
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Expected one failing assertions in second run");
+            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
+
+            Assert.That(result.Message, Does.Not.StartWith("Multiple failures or warnings in test").And
+                                            .Contain("Expected: not equal to 2 and not equal to 3").And
+                                            .Contain("But was:  2"));
+        }
+
+        [Test]
+        public void RepeatFullOutputTestWithMultipleFailures()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(RepeatOutputTestCaseWithMultipleFailuresFixture), nameof(RepeatOutputTestCaseWithMultipleFailuresFixture.PrintTest));
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+
+            Assert.That(result.Output, Is.EqualTo("0" + Environment.NewLine +
+                                                  "1" + Environment.NewLine +
+                                                  "2" + Environment.NewLine +
+                                                  "3" + Environment.NewLine +
+                                                  "4" + Environment.NewLine));
+
+            Assert.That(result.AssertCount, Is.EqualTo(5), "Expected 1 assert per run");
+
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(2), "Expected two failing assertions in five runs");
+            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Failed));
+            Assert.That(result.AssertionResults[1].Status, Is.EqualTo(AssertionStatus.Failed));
+
+            Assert.That(result.Message, Does.StartWith("Multiple failures or warnings in test").And
+                                            .Contain("Expected: not equal to 2 and not equal to 3").And
+                                            .Contain("But was:  2").And
+                                            .Contain("But was:  3"));
         }
     }
 }

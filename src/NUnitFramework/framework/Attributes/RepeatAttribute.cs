@@ -9,6 +9,7 @@
 // #2 requires infrastructure for dynamic test cases first
 
 using System;
+using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -90,11 +91,18 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
-                int count = _repeatCount;
-                TestResult? overallResult = null;
+                TestResult overallResult = context.CurrentTest.MakeTestResult();
+                StringBuilder totalOutput = new();
 
-                while (count-- > 0)
+                for (int count = 0; count < _repeatCount; count++)
                 {
+                    if (count != 0)
+                    {
+                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                    }
+
+                    context.CurrentResult = context.CurrentTest.MakeTestResult();
+
                     try
                     {
                         context.CurrentResult = innerCommand.Execute(context);
@@ -103,31 +111,32 @@ namespace NUnit.Framework
                     // and we want to look at restructuring the API in the future.
                     catch (Exception ex)
                     {
-                        if (context.CurrentResult is null)
-                            context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
+                    }
+
+                    // Update overall result
+                    foreach (var assertionResult in context.CurrentResult.AssertionResults)
+                        overallResult.RecordAssertion(assertionResult);
+                    overallResult.AssertCount += context.CurrentResult.AssertCount;
+
+                    overallResult.OutWriter.Write(context.CurrentResult.Output);
+
+                    if (context.CurrentResult.ResultState != ResultState.Success ||
+                        count == 0)
+                    {
+                        overallResult.SetResult(context.CurrentResult.ResultState);
                     }
 
                     if (context.CurrentResult.ResultState != ResultState.Success)
                     {
-                        // If any repeat fails, the whole test is considered failed
-                        overallResult = context.CurrentResult;
                         if (_stopOnFailure)
                             break;
                     }
-
-                    // Clear result for repeat
-                    if (count > 0)
-                    {
-                        context.CurrentResult = context.CurrentTest.MakeTestResult();
-                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
-                    }
                 }
 
-                if (overallResult is not null)
-                {
-                    context.CurrentResult = overallResult;
-                }
+                if (overallResult.AssertionResults.Count > 0)
+                    overallResult.RecordTestCompletion();
+                context.CurrentResult = overallResult;
 
                 return context.CurrentResult;
             }
