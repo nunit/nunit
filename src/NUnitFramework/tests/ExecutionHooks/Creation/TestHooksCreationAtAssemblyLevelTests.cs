@@ -25,6 +25,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         }
 
         [TestFixture]
+        [Explicit($"This test should only be run as part of the {nameof(BeforeTestHookAdded)} and {nameof(AfterTestHookAdded)} tests")]
         private class SomeEmptyTest
         {
             [Test]

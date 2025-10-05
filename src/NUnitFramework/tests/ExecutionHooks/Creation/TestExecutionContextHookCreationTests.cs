@@ -16,6 +16,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             }
         }
 
+        [Explicit($"This test should only be run as part of the {nameof(WhenNoHooksAreProvidedNoInstanceOfHooksAreCreated)} test")]
         private class SomeEmptyTestWithNoHooks
         {
             [Test]
@@ -24,6 +25,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             }
         }
 
+        [Explicit($"This test should only be run as part of the {nameof(WhenHooksAreProvidedInstanceOfHooksAreCreated)} test")]
         private class SomeEmptyTestWithHooks
         {
             [Test]
@@ -37,7 +39,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         public void WhenNoHooksAreProvidedNoInstanceOfHooksAreCreated()
         {
             var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTestWithNoHooks), nameof(SomeEmptyTestWithNoHooks.EmptyTest));
-            var work = TestBuilder.CreateWorkItem(test);
+            var work = TestBuilder.CreateWorkItem(test, TestFilter.Explicit);
             work.Execute();
 
             Assert.That(work.Context.ExecutionHooksEnabled, Is.False);

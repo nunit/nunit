@@ -5,7 +5,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
     internal class ExecutionHooksConstructorTests
     {
         [Test]
-        public void CopyCtor_CreateNewExecutionHook_InvocationListShouldBeEmpty()
+        public void CreateNewExecutionHook_InvocationListShouldBeEmpty()
         {
             var executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
 
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         public void CopyCtor_CallMultipleTimes_ShallNotIncreaseInvocationList()
         {
             var executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks();
-            executionHooks.AfterTest.AddHandler((context) => { });
+            executionHooks.AddAfterTestHandler(_ => { });
 
             executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(executionHooks);
             executionHooks = new NUnit.Framework.Internal.ExecutionHooks.ExecutionHooks(executionHooks);

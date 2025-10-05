@@ -26,6 +26,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 
         [ActivateBeforeTestHooks]
         [ActivateAfterTestHooks]
+        [Explicit($"This test should only be run as part of the {nameof(TestHooksAdded)} test")]
         private class SomeEmptyTest
         {
             [Test]
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void TestHooksAdded()
         {
-            var work = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest));
+            var work = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest), TestFilter.Explicit);
             work.Execute();
 
             Assert.That(work.Context.ExecutionHooks.BeforeTest, Has.Count.EqualTo(1));
