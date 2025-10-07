@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -22,44 +24,50 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = context =>
             {
-                if (context.ExecutionHooksEnabled)
+                Action beforeTestMethod = context.ExecutionHooksEnabled ?
+                    RunBeforeTestWithHooks : RunBeforeTest;
+
+                beforeTestMethod();
+
+                void RunBeforeTestWithHooks()
                 {
                     try
                     {
                         context.ExecutionHooks.OnBeforeTestActionBeforeTest(context);
 
-                        action.BeforeTest(Test);
+                        RunBeforeTest();
                     }
                     finally
                     {
                         context.ExecutionHooks.OnAfterTestActionBeforeTest(context);
                     }
                 }
-                else
-                {
-                    action.BeforeTest(Test);
-                }
+
+                void RunBeforeTest() => action.BeforeTest(Test);
             };
 
             AfterTest = context =>
             {
-                if (context.ExecutionHooksEnabled)
+                Action afterTestMethod = context.ExecutionHooksEnabled ?
+                    RunAfterTestWithHooks : RunAfterTest;
+
+                afterTestMethod();
+
+                void RunAfterTestWithHooks()
                 {
                     try
                     {
                         context.ExecutionHooks.OnBeforeTestActionAfterTest(context);
 
-                        action.AfterTest(Test);
+                        RunAfterTest();
                     }
                     finally
                     {
                         context.ExecutionHooks.OnAfterTestActionAfterTest(context);
                     }
                 }
-                else
-                {
-                    action.AfterTest(Test);
-                }
+
+                void RunAfterTest() => action.AfterTest(Test);
             };
         }
     }
