@@ -31,7 +31,12 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 
             Assert.That(prover.WasInsideExecute, Is.False);
 
-            hookDelegatingTestCommandCommand.Execute(TestExecutionContext.CurrentContext);
+            TestExecutionContext currentContext = TestExecutionContext.CurrentContext;
+
+            // Emulate what the engine does in order to enable execution hooks
+            _ = currentContext.GetOrCreateExecutionHooks();
+
+            hookDelegatingTestCommandCommand.Execute(currentContext);
 
             Assert.That(prover.WasInsideExecute, Is.True);
         }

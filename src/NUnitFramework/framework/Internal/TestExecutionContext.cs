@@ -406,7 +406,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Hook Extension to support high level test extensions.
         /// </summary>
-        public ExecutionHooks.ExecutionHooks ExecutionHooks => _executionHooks ??= new ExecutionHooks.ExecutionHooks();
+        public ExecutionHooks.ExecutionHooks ExecutionHooks =>
+            _executionHooks ?? throw new InvalidOperationException("Execution hooks have not been enabled for this context.");
 
         /// <summary>
         /// Property indicating whether execution hooks are enabled.
@@ -416,6 +417,11 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Instance Methods
+
+        /// <summary>
+        /// Get or Create if necessary the Hook Extension instance to support high level test extensions.
+        /// </summary>
+        internal ExecutionHooks.ExecutionHooks GetOrCreateExecutionHooks() => _executionHooks ??= new ExecutionHooks.ExecutionHooks();
 
         /// <summary>
         /// Record any changes in the environment made by

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.Framework
 {
@@ -148,64 +149,66 @@ namespace NUnit.Framework
         /// <inheritdoc />
         public void ApplyToContext(TestExecutionContext context)
         {
+            ExecutionHooks executionHooks = context.GetOrCreateExecutionHooks();
+
             if (BeforeEverySetUpHook != base.BeforeEverySetUpHook)
             {
                 // Only add the BeforeEverySetUpHook if it has been overridden
-                context.ExecutionHooks.AddBeforeEverySetUpHandler(BeforeEverySetUpHook);
+                executionHooks.AddBeforeEverySetUpHandler(BeforeEverySetUpHook);
             }
 
             if (AfterEverySetUpHook != base.AfterEverySetUpHook)
             {
                 // Only add the AfterEverySetUpHook if it has been overridden
-                context.ExecutionHooks.AddAfterEverySetUpHandler(AfterEverySetUpHook);
+                executionHooks.AddAfterEverySetUpHandler(AfterEverySetUpHook);
             }
 
             if (BeforeTestHook != base.BeforeTestHook)
             {
                 // Only add the BeforeTestHook if it has been overridden
-                context.ExecutionHooks.AddBeforeTestHandler(BeforeTestHook);
+                executionHooks.AddBeforeTestHandler(BeforeTestHook);
             }
 
             if (AfterTestHook != base.AfterTestHook)
             {
                 // Only add the AfterTestHook if it has been overridden
-                context.ExecutionHooks.AddAfterTestHandler(AfterTestHook);
+                executionHooks.AddAfterTestHandler(AfterTestHook);
             }
 
             if (BeforeEveryTearDownHook != base.BeforeEveryTearDownHook)
             {
                 // Only add the BeforeEveryTearDownHook if it has been overridden
-                context.ExecutionHooks.AddBeforeEveryTearDownHandler(BeforeEveryTearDownHook);
+                executionHooks.AddBeforeEveryTearDownHandler(BeforeEveryTearDownHook);
             }
 
             if (AfterEveryTearDownHook != base.AfterEveryTearDownHook)
             {
                 // Only add the AfterEveryTearDownHook if it has been overridden
-                context.ExecutionHooks.AddAfterEveryTearDownHandler(AfterEveryTearDownHook);
+                executionHooks.AddAfterEveryTearDownHandler(AfterEveryTearDownHook);
             }
 
             if (BeforeTestActionBeforeTestHook != base.BeforeTestActionBeforeTestHook)
             {
                 // Only add the BeforeTestActionBeforeTestHook if it has been overridden
-                context.ExecutionHooks.AddBeforeTestActionBeforeTestHandler(BeforeTestActionBeforeTestHook);
+                executionHooks.AddBeforeTestActionBeforeTestHandler(BeforeTestActionBeforeTestHook);
             }
 
             if (BeforeTestActionAfterTestHook != base.BeforeTestActionAfterTestHook)
             {
                 // Only add the BeforeTestActionAfterTestHook if it has been overridden
-                context.ExecutionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
+                executionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
             }
 
             if (AfterTestActionBeforeTestHook != base.AfterTestActionBeforeTestHook)
             {
                 // Only add the AfterTestActionBeforeTestHook if it has been overridden
-                context.ExecutionHooks.AddAfterTestActionBeforeTestHandler(AfterTestActionBeforeTestHook);
+                executionHooks.AddAfterTestActionBeforeTestHandler(AfterTestActionBeforeTestHook);
             }
 
             if (AfterTestActionAfterTestHook != base.AfterTestActionAfterTestHook)
             {
                 // Only add the AfterTestActionAfterTestHook if it has been overridden
-                context.ExecutionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
+                executionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
             }
         }
     }

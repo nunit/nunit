@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Internal.Commands
 {
     internal sealed class HookDelegatingTestCommand : DelegatingTestCommand
@@ -21,17 +19,18 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>The result of the test execution.</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
+            Assume.That(context.ExecutionHooksEnabled, Is.True, "This command should only have been created if Execution hooks were enabled");
+
             try
             {
                 context.ExecutionHooks.OnBeforeTest(context);
                 innerCommand.Execute(context);
             }
-            catch (Exception)
+            finally
             {
                 context.ExecutionHooks.OnAfterTest(context);
-                throw;
             }
-            context.ExecutionHooks.OnAfterTest(context);
+
             return context.CurrentResult;
         }
     }
