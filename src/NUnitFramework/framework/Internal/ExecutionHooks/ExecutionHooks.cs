@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnBeforeTestActionBeforeTest(TestExecutionContext context, IMethodInfo hookedMethod)
         {
-	    BeforeTestActionBeforeTest.InvokeHandlers(new HookData(context, hookedMethod));
+            BeforeTestActionBeforeTest.InvokeHandlers(new HookData(context, hookedMethod));
         }
 
         internal void OnAfterTestActionBeforeTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)

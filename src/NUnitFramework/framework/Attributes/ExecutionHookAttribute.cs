@@ -220,8 +220,8 @@ namespace NUnit.Framework
             if (AfterTestActionAfterTestHook != base.AfterTestActionAfterTestHook)
             {
                 // Only add the AfterTestActionAfterTestHook if it has been overridden
-		executionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
-	    }
+                executionHooks.AddAfterTestActionAfterTestHandler(AfterTestActionAfterTestHook);
+            }
         }
     }
 }
