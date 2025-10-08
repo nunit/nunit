@@ -30,6 +30,7 @@ jobs:
         dotnet-version: |
             6.0.x
             8.0.x
+            10.0.x
         
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
@@ -74,6 +75,7 @@ jobs:
         dotnet-version: |
             6.0.x
             8.0.x
+            10.0.x
 
     - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
@@ -109,6 +111,7 @@ jobs:
         dotnet-version: |
             6.0.x
             8.0.x
+            10.0.x
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
