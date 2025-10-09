@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         internal AfterHooks AfterTest { get; } = new();
         internal BeforeHooks BeforeEveryTearDown { get; } = new();
         internal AfterHooks AfterEveryTearDown { get; } = new();
-        internal BeforeHooks BeforeTestActionBeforeTest { get; set; } = new();
-        internal AfterHooks AfterTestActionBeforeTest { get; set; } = new();
-        internal BeforeHooks BeforeTestActionAfterTest { get; set; } = new();
-        internal AfterHooks AfterTestActionAfterTest { get; set; } = new();
+        internal BeforeHooks BeforeTestActionBeforeTest { get; } = new();
+        internal AfterHooks AfterTestActionBeforeTest { get; } = new();
+        internal BeforeHooks BeforeTestActionAfterTest { get; } = new();
+        internal AfterHooks AfterTestActionAfterTest { get; } = new();
 
         /// <summary>
         /// Adds a hook action to be invoked before every setup method is executed.

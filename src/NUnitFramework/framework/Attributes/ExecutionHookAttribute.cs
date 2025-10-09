@@ -214,7 +214,7 @@ namespace NUnit.Framework
             if (BeforeTestActionAfterTestHook != base.BeforeTestActionAfterTestHook)
             {
                 // Only add the BeforeTestActionAfterTestHook if it has been overridden
-                context.ExecutionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
+                executionHooks.AddBeforeTestActionAfterTestHandler(BeforeTestActionAfterTestHook);
             }
 
             if (AfterTestActionAfterTestHook != base.AfterTestActionAfterTestHook)
