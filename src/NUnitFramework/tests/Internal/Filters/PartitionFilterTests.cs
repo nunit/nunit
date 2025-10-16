@@ -106,5 +106,24 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.DoesNotThrow(() => _filter.ComputePartitionNumber(_testFixtureWithWithLongTestCaseNames.Tests[0]));
             Assert.DoesNotThrow(() => _filter.ComputePartitionNumber(_testFixtureWithWithLongTestCaseNames.Tests[1]));
         }
+
+        [TestCase("1/1n")]
+        [TestCase("1")]
+        public void TryCreateFailure(string input)
+        {
+            Assert.That(PartitionFilter.TryCreate(input, out var filter), Is.False);
+        }
+
+        [TestCase("1/2")]
+        [TestCase(" 1/2")]
+        [TestCase("1/2 ")]
+        public void TryCreateSuccess(string input)
+        {
+            var result = PartitionFilter.TryCreate(input, out var filter);
+
+            Assert.That(result, Is.True);
+            Assert.That(filter!.PartitionNumber, Is.EqualTo(1));
+            Assert.That(filter.PartitionCount, Is.EqualTo(2));
+        }
     }
 }

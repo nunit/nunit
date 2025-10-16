@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -50,7 +51,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="value">The partition value (eg, 1/10 to indicate partition 1 of 10)</param>
         /// <param name="partitionFilter">The created PartitionFilter if the parsing succeeded</param>
         /// <returns>True on successful parsing, or False if there is an error</returns>
-        public static bool TryCreate(string value, out PartitionFilter? partitionFilter)
+        public static bool TryCreate(string value, [NotNullWhen(true)] out PartitionFilter? partitionFilter)
         {
             // Split our numberWithCount into two parts, such that "1/10" becomes PartitionNumber 1, PartitionCount 10
             string[] parts = value.Split('/');
