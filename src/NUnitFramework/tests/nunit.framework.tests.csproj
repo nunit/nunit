@@ -12,6 +12,11 @@
         <Title>NUnit Framework Tests</Title>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <!-- This should be in an NUnit.Framework.proprties file -->
+        <InterceptorsNamespaces>$(InterceptorsNamespaces);NUnit.V5.Intercepts</InterceptorsNamespaces>
+    </PropertyGroup>
+
     <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     </ItemGroup>
