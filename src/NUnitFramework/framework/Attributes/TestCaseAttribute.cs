@@ -299,6 +299,11 @@ namespace NUnit.Framework
 
         private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
         {
+            return GetParametersForTestCase(this, method, Arguments, TypeArgs);
+        }
+
+        internal static TestCaseParameters GetParametersForTestCase(ITestCaseData item, IMethodInfo method, object?[] Arguments, Type[]? TypeArgs)
+        {
             TestCaseParameters parms;
 
             try
@@ -307,10 +312,19 @@ namespace NUnit.Framework
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
 
-                parms = new TestCaseParameters(this)
+                parms = new TestCaseParameters(item)
                 {
-                    TypeArgs = TypeArgs
+                    TypeArgs = TypeArgs,
                 };
+
+                if (item is TestCaseData tcd)
+                {
+                    parms.ArgDisplayNames = tcd.ArgDisplayNames;
+                }
+
+                // Return early if the test case is not runnable
+                //if (parms.RunState != RunState.Runnable)
+                //    return parms;
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
                 if (parms.HasExpectedResult

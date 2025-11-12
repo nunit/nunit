@@ -386,6 +386,24 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(rhs, Is.EqualTo(lhs));
         }
 
+#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        [TestCaseSource(nameof(ParamsArraySoleArgumentSourceMatchingTypes))]
+#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        public void HandlesParamsArrayAsSoleArgument(params string[] array)
+        {
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
+        }
+
+        private static IEnumerable ParamsArraySoleArgumentSourceMatchingTypes
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b");
+                yield return new string[] { "a", "b" };
+            }
+        }
+
         private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
 
         [TestCaseSource(nameof(ZeroTestCasesSource))]
@@ -440,8 +458,9 @@ namespace NUnit.Framework.Tests.Attributes
                 var expectedName = (string?)test.Properties.Get("ExpectedTestName");
                 Assert.That(expectedName, Is.Not.Null);
 
-                yield return new TestCaseData(test, expectedName)
+                var d = new TestCaseData(test, expectedName)
                     .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
+                yield return d;
             }
         }
 

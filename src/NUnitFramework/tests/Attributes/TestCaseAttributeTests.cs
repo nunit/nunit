@@ -182,6 +182,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase("a", "b")]
+        [TestCase(arg: new[] { "a", "b" })]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
             Assert.That(array[0], Is.EqualTo("a"));
