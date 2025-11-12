@@ -12,7 +12,7 @@
         <Title>NUnit Framework Tests</Title>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     </ItemGroup>
 
@@ -22,7 +22,7 @@
         <PackageReference Include="NUnit.Analyzers" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.ValueTuple" />
     </ItemGroup>
@@ -36,7 +36,7 @@
         <ProjectReference Include="..\nunitlite-runner\nunitlite-runner.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <Reference Include="System.Web" />
     </ItemGroup>
 

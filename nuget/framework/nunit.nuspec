@@ -35,7 +35,7 @@
         <dependencies>
             <group targetFramework="net462">
                 <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
-                <dependency id="System.ValueTuple" version="4.5.0" exclude="Build,Analyzers" />
+                <dependency id="System.ValueTuple" version="4.4.0" exclude="Build,Analyzers" />
             </group>
             <group targetFramework="net6.0" />
             <group targetFramework="net8.0" />
