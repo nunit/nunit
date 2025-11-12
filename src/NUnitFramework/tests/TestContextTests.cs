@@ -161,13 +161,29 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessItsOwnMethodName()
         {
-            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCanAccessItsOwnMethodName"));
+            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+
+            var methodInfo = TestContext.CurrentContext.Test.MethodInfo;
+            Assert.That(methodInfo, Is.Not.Null);
+            Assert.That(methodInfo.Name, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+            Assert.That(methodInfo.DeclaringType, Is.EqualTo(typeof(TestContextTests)));
+            Assert.That(methodInfo.GetParameters(), Is.Empty);
         }
 
         [TestCase(5)]
-        public void TestCaseCanAccessItsOwnMethodName(int x)
+        public void TestCanAccessItsOwnMethodName(int x)
         {
-            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCaseCanAccessItsOwnMethodName"));
+            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+
+            var methodInfo = TestContext.CurrentContext.Test.MethodInfo;
+            Assert.That(methodInfo, Is.Not.Null);
+            Assert.That(methodInfo.Name, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+            Assert.That(methodInfo.DeclaringType, Is.EqualTo(typeof(TestContextTests)));
+
+            var parameters = methodInfo.GetParameters().ToArray();
+            Assert.That(parameters, Has.Length.EqualTo(1));
+            Assert.That(parameters[0].ParameterType, Is.EqualTo(typeof(int)));
+            Assert.That(parameters[0].Name, Is.EqualTo("x"));
         }
 
         #endregion

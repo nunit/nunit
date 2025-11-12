@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -37,8 +39,35 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void BeforeTest(Interfaces.ITest test)
         {
-            BeforeTestWasRun = true;
-            _action.BeforeTest(test);
+            var context = TestExecutionContext.CurrentContext;
+
+            Action beforeTestMethod = context.ExecutionHooksEnabled ?
+                RunBeforeTestWithHooks : RunBeforeTest;
+
+            beforeTestMethod();
+
+            void RunBeforeTestWithHooks()
+            {
+                var hookedMethodInfo = new MethodWrapper(_action.GetType(), nameof(ITestAction.BeforeTest));
+                try
+                {
+                    context.ExecutionHooks.OnBeforeTestActionBeforeTest(context, hookedMethodInfo);
+
+                    RunBeforeTest();
+                }
+                catch (Exception ex)
+                {
+                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo, ex);
+                    throw;
+                }
+                context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo);
+            }
+
+            void RunBeforeTest()
+            {
+                BeforeTestWasRun = true;
+                _action.BeforeTest(test);
+            }
         }
 
         /// <summary>
@@ -48,8 +77,34 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to which the action applies</param>
         public void AfterTest(Interfaces.ITest test)
         {
-            if (BeforeTestWasRun)
-                _action.AfterTest(test);
+            var context = TestExecutionContext.CurrentContext;
+            Action afterTestMethod = context.ExecutionHooksEnabled ?
+                RunAfterTestWithHooks : RunAfterTest;
+
+            afterTestMethod();
+
+            void RunAfterTest()
+            {
+                if (BeforeTestWasRun)
+                    _action.AfterTest(test);
+            }
+
+            void RunAfterTestWithHooks()
+            {
+                var hookedMethodInfo = new MethodWrapper(_action.GetType(), nameof(ITestAction.AfterTest));
+                try
+                {
+                    context.ExecutionHooks.OnBeforeTestActionAfterTest(context, hookedMethodInfo);
+
+                    RunAfterTest();
+                }
+                catch (Exception ex)
+                {
+                    context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo, ex);
+                    throw;
+                }
+                context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo);
+            }
         }
     }
 }

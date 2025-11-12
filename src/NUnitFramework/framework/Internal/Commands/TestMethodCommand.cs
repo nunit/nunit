@@ -27,6 +27,11 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
+        /// The test method.
+        /// </summary>
+        internal TestMethod TestMethod => _testMethod;
+
+        /// <summary>
         /// Runs the test, saving a TestResult in the execution context, as
         /// well as returning it. If the test has an expected result, it
         /// is asserts on that value. Since failed tests and errors throw

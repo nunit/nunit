@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Internal
 {
@@ -25,6 +26,44 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The TestSuite to which the result applies</param>
         public TestSuiteResult(TestSuite suite) : base(suite)
         {
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="other">The TestSuite from which the result shall be copied</param>
+        private TestSuiteResult(TestSuiteResult other) : base(other)
+        {
+            _passCount = other._passCount;
+            _failCount = other._failCount;
+            _warningCount = other._warningCount;
+            _skipCount = other._skipCount;
+            _inconclusiveCount = other._inconclusiveCount;
+            _totalCount = other._totalCount;
+            _children = new ConcurrentQueue<ITestResult>(other._children);
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="latest">The latest result.</param>
+        /// <param name="previous">The previous result.</param>
+        private TestSuiteResult(TestSuiteResult latest, TestResult previous) : base(latest, previous)
+        {
+            _passCount = latest._passCount - previous.PassCount;
+            _failCount = latest._failCount - previous.FailCount;
+            _warningCount = latest._warningCount - previous.WarningCount;
+            _skipCount = latest._skipCount - previous.SkipCount;
+            _inconclusiveCount = latest._inconclusiveCount - previous.InconclusiveCount;
+            _totalCount = latest._totalCount - previous.TotalCount;
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult.Clone"/>
+        /// </summary>
+        public override TestResult Clone()
+        {
+            return new TestSuiteResult(this);
         }
 
         #region Overrides
@@ -230,5 +269,15 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        /// <inheritdoc />
+        protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
+        {
+            var deltaResult = new TestSuiteResult(this, previous);
+
+            CalculateDeltaResult(deltaResult, previous, exception);
+
+            return deltaResult;
+        }
     }
 }
