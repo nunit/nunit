@@ -21,13 +21,13 @@ There is a single Visual Studio solution, `nunit.sln`, which resides in the NUni
 
 NUnit framework can be built from this solution using a .NET 6-capable IDE such as:
 
-- [Visual Studio 2022](https://www.visualstudio.com/vs/) or newer (Windows)
+- [Visual Studio 2026](https://www.visualstudio.com/vs/) or newer (Windows)
 - [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
 - [Visual Studio Code](https://code.visualstudio.com/)
    - Compile using the [build script](#script-build) instead if using VS Code (see below for details).
 - [Jetbrains Rider](https://www.jetbrains.com/rider/)
 
-On all platforms, you will need to install [.NET 6.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
+On all platforms, you will need to install [the latest stable SDK](https://www.microsoft.com/net/download/windows). 
 
 On Mac or Linux, you will need to install [Mono](https://www.mono-project.com/download/), an open source implementation of Microsoft's .NET Framework. Mono version 6.12.0 Stable (6.12.0.122) has been validated to build the NUnit solution on GNU/Linux Debian 10 'buster'.
 
@@ -61,7 +61,7 @@ You should then be able to run the unit tests directly from within your developm
 
 Unfortunately, there are currently some known issues with building and running tests locally.
 
-#### Tests will not run within Rider or Visual Studio ([#3008](https://github.com/nunit/nunit/issues/3008))
+#### Tests will not run within Rider ([#3008](https://github.com/nunit/nunit/issues/3008))
 
 You can run NUnit Lite in a similar way to above, but from the development IDE after a successful build. 
 
