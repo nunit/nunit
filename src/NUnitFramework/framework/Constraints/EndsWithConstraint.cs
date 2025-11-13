@@ -9,8 +9,9 @@ namespace NUnit.Framework.Constraints
     /// EndsWithConstraint can test whether a string ends
     /// with an expected substring.
     /// </summary>
-    public class EndsWithConstraint : StringComparisonConstraint
+    public class EndsWithConstraint : StringConstraint
     {
+        private StringComparison? _comparisonType;
         private CultureInfo? _cultureInfo;
 
         /// <summary>
@@ -20,6 +21,21 @@ namespace NUnit.Framework.Constraints
         public EndsWithConstraint(string expected) : base(expected)
         {
             descriptionText = "String ending with";
+        }
+
+        /// <summary>
+        /// Modify the constraint to ignore case in matching.
+        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
+        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
+        public override StringConstraint IgnoreCase
+        {
+            get
+            {
+                Using(StringComparison.CurrentCultureIgnoreCase);
+                return base.IgnoreCase;
+            }
         }
 
         /// <summary>
@@ -43,10 +59,25 @@ namespace NUnit.Framework.Constraints
         /// Modify the constraint to the specified comparison.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="cultureInfo"/> was already set.</exception>
-        public StringComparisonConstraint Using(CultureInfo cultureInfo)
+        /// than <paramref name="comparisonType"/> was already set.</exception>
+        public EndsWithConstraint Using(StringComparison comparisonType)
         {
-            if (_cultureInfo is null)
+            if (_comparisonType is null && _cultureInfo is null)
+                _comparisonType = comparisonType;
+            else if (_comparisonType != comparisonType)
+                throw new InvalidOperationException("A different comparison type was already set.");
+
+            return this;
+        }
+
+        /// <summary>
+        /// Modify the constraint to the specified comparison.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
+        /// than <paramref name="cultureInfo"/> was already set.</exception>
+        public EndsWithConstraint Using(CultureInfo cultureInfo)
+        {
+            if (_cultureInfo is null && _comparisonType is null)
                 _cultureInfo = cultureInfo;
             else if (_cultureInfo != cultureInfo)
                 throw new InvalidOperationException("A different culture info was already set.");
