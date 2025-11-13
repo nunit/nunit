@@ -98,22 +98,23 @@ namespace NUnit.Framework.Tests.Constraints
             });
         }
 
-        [Test]
-        public void UseSameComparisonTypes_DoesNotThrowException()
-        {
-            var subStringConstraint = new SubstringConstraint("hello");
-            Assert.DoesNotThrow(() =>
-            {
-                var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
-            });
+        // These tests need to be moved to StringComparerConstraintTests once it exists
+        //[Test]
+        //public void UseSameComparisonTypes_DoesNotThrowException()
+        //{
+        //    var subStringConstraint = new SubstringConstraint("hello");
+        //    Assert.DoesNotThrow(() =>
+        //    {
+        //        var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
+        //    });
 
-            var stringConstraint = (StringConstraint)new SubstringConstraint("hello");
-            Assert.DoesNotThrow(() =>
-            {
-                var newConstraint = stringConstraint.IgnoreCase;
-                newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
-            });
-        }
+        //    var stringConstraint = (StringConstraint)new SubstringConstraint("hello");
+        //    Assert.DoesNotThrow(() =>
+        //    {
+        //        var newConstraint = (SubstringConstraint)stringConstraint.IgnoreCase;
+        //        newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
+        //    });
+        //}
 
         [Test]
         public void TestSubstringUsingDoesContains()

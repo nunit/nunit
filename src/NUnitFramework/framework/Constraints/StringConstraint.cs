@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -38,15 +37,6 @@ namespace NUnit.Framework.Constraints
         // Disregarding naming convention for back-compat
         protected string descriptionText = string.Empty;
 #pragma warning restore IDE1006
-
-        /// <summary>
-        /// Description of this constraint
-        /// </summary>
-#pragma warning disable IDE1006
-        // ReSharper disable once InconsistentNaming
-        // Disregarding naming convention for back-compat
-        protected StringComparison? comparisonType;
-#pragma warning disable IDE1006
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -89,7 +79,6 @@ namespace NUnit.Framework.Constraints
             get
             {
                 caseInsensitive = true;
-                Using(StringComparison.CurrentCultureIgnoreCase);
                 return this;
             }
         }
@@ -112,20 +101,5 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The string to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected abstract bool Matches(string? actual);
-
-        /// <summary>
-        /// Modify the constraint to the specified comparison.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="stringComparison"/> was already set.</exception>
-        public StringConstraint Using(StringComparison stringComparison)
-        {
-            if (comparisonType is null)
-                comparisonType = stringComparison;
-            else if (comparisonType != stringComparison)
-                throw new InvalidOperationException("A different comparison type was already set.");
-
-            return this;
-        }
     }
 }

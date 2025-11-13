@@ -1,16 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// SubstringConstraint can test whether a string contains
     /// the expected substring.
     /// </summary>
-    public class SubstringConstraint : StringConstraint
+    public class SubstringConstraint : StringComparisonConstraint
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
@@ -30,8 +27,7 @@ namespace NUnit.Framework.Constraints
             if (actual is null)
                 return false;
 
-            var actualComparison = comparisonType ?? StringComparison.CurrentCulture;
-            return actual.IndexOf(expected, actualComparison) >= 0;
+            return actual.IndexOf(expected, DetermineComparisonType()) >= 0;
         }
     }
 }
