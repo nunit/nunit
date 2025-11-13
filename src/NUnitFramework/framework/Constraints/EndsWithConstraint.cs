@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
                 return actual is not null && actual.EndsWith(expected, caseInsensitive, _cultureInfo);
             }
 
-            return actual is not null && actual.EndsWith(expected, DetermineComparisonType());
+            return actual is not null && actual.EndsWith(expected, _comparisonType ?? StringComparison.CurrentCulture);
         }
 
         /// <summary>

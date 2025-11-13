@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
                 return actual is not null && actual.StartsWith(expected, caseInsensitive, _cultureInfo);
             }
 
-            return actual is not null && actual.StartsWith(expected, DetermineComparisonType());
+            return actual is not null && actual.StartsWith(expected, _comparisonType ?? StringComparison.CurrentCulture);
         }
 
         /// <summary>
