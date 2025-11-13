@@ -19,7 +19,7 @@ The development process for making code changes and submitting Pull Requests (PR
 
 There is a single Visual Studio solution, `nunit.sln`, which resides in the NUnit repository root.
 
-NUnit framework can be built from this solution using a .NET 6-capable IDE such as:
+NUnit framework can be built from this solution using a .NET-capable IDE such as:
 
 - [Visual Studio 2026](https://www.visualstudio.com/vs/) or newer (Windows)
 - [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
