@@ -173,7 +173,7 @@ namespace NUnit.Framework
                             if (itcd.RunState == RunState.Runnable)
                             {
                                 var typeArgs = (item as TestCaseData)?.TypeArgs;
-                                parms = TestCaseAttribute.GetParametersForTestCase(itcd, method, itcd.Arguments, typeArgs);
+                                parms = TestCaseParameters.Create(itcd, method, itcd.Arguments, typeArgs);
                             }
                             else
                             {
