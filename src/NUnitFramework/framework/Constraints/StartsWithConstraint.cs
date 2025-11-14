@@ -4,7 +4,8 @@ using System;
 using System.Globalization;
 
 namespace NUnit.Framework.Constraints
-{ /// <summary>
+{
+    /// <summary>
     /// StartsWithConstraint can test whether a string starts
     /// with an expected substring.
     /// </summary>
@@ -55,7 +56,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to the specified comparison.
+        /// Modify the constraint to use the specified comparison.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when a comparison type different
         /// than <paramref name="comparisonType"/> was already set.</exception>
@@ -70,10 +71,8 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to the specified comparison.
+        /// Modify the constraint to use the specified culture info.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="cultureInfo"/> was already set.</exception>
         public StartsWithConstraint Using(CultureInfo cultureInfo)
         {
             if (_cultureInfo is null)
