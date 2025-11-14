@@ -532,21 +532,19 @@ namespace NUnit.Framework
             /// The returned values include the name of the level they are found at.
             /// </summary>
             /// <returns></returns>
-            private IList<PropertyValueHierarchyItem> PropertyValues(string property)
+            private IEnumerable<PropertyValueHierarchyItem> PropertyValues(string property)
             {
-                var values = new List<PropertyValueHierarchyItem>();
                 ITest? test = _test;
                 do
                 {
                     if (test.Properties.TryGet(property, out IList? propValues))
                     {
-                        values.Add(new PropertyValueHierarchyItem(test.Name, propValues));
+                        yield return new PropertyValueHierarchyItem(test.Name, propValues);
                     }
 
                     test = test.Parent;
                 }
                 while (test is not null);
-                return values;
             }
 
             /// <summary>
@@ -555,14 +553,8 @@ namespace NUnit.Framework
             /// <param name="property">Name of property</param>
             public IEnumerable<object> AllPropertyValues(string property)
             {
-                var list = new List<object>();
-                var props = PropertyValues(property);
-                foreach (var item in props)
-                {
-                    list.AddRange((IEnumerable<object>)item.Values);
-                }
-
-                return list.Distinct();
+                return PropertyValues(property).SelectMany(x => (IEnumerable<object>)x.Values)
+                                               .Distinct();
             }
 
             /// <summary>
