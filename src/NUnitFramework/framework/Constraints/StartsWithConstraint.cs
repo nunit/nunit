@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// than <paramref name="comparisonType"/> was already set.</exception>
         public StartsWithConstraint Using(StringComparison comparisonType)
         {
-            if (_comparisonType is null && _cultureInfo is null)
+            if (_comparisonType is null)
                 _comparisonType = comparisonType;
             else if (_comparisonType != comparisonType)
                 throw new InvalidOperationException("A different comparison type was already set.");
@@ -76,10 +76,8 @@ namespace NUnit.Framework.Constraints
         /// than <paramref name="cultureInfo"/> was already set.</exception>
         public StartsWithConstraint Using(CultureInfo cultureInfo)
         {
-            if (_cultureInfo is null && _comparisonType is null)
+            if (_cultureInfo is null)
                 _cultureInfo = cultureInfo;
-            else if (_cultureInfo != cultureInfo)
-                throw new InvalidOperationException("A different culture info was already set.");
 
             return this;
         }
