@@ -168,7 +168,11 @@ namespace NUnit.Framework.Tests.Constraints
                 () => ImmutableArray.Create(data),
                 () => ImmutableList.Create(data),
                 () => ImmutableQueue.Create(data),
-                () => ImmutableStack.Create(data.Reverse().ToArray()),
+                () =>
+                {
+                    data.Reverse();
+                    return ImmutableStack.Create(data.ToArray());
+                },
                 () => new List<int>(data),
                 () => data
             };
