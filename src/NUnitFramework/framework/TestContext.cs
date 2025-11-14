@@ -538,8 +538,11 @@ namespace NUnit.Framework
                 ITest? test = _test;
                 do
                 {
-                    var propValues = test.Properties[property];
-                    values.Add(new PropertyValueHierarchyItem(test.Name, propValues));
+                    if (test.Properties.TryGet(property, out IList? propValues))
+                    {
+                        values.Add(new PropertyValueHierarchyItem(test.Name, propValues));
+                    }
+
                     test = test.Parent;
                 }
                 while (test is not null);

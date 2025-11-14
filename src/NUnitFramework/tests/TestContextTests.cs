@@ -545,4 +545,42 @@ namespace NUnit.Framework.Tests
             Assert.That(itemList, Has.Count.EqualTo(3 + 1 + 2));
         }
     }
+
+    [Parallelizable(ParallelScope.All)]
+    public class ParallelCategories
+    {
+        [SetUp]
+        public void Setup()
+        {
+            var categories = TestContext.CurrentContext.Test.AllCategories();
+            Assert.That(categories, Is.Not.Empty);
+        }
+
+        [TestCase("hello01")]
+        [TestCase("hello02")]
+        [TestCase("hello03")]
+        [TestCase("hello04")]
+        [TestCase("hello05")]
+        [TestCase("hello06")]
+        [TestCase("hello07")]
+        [TestCase("hello08")]
+        [TestCase("hello09")]
+        [TestCase("hello10")]
+        [TestCase("hello11")]
+        [TestCase("hello12")]
+        [TestCase("hello13")]
+        [TestCase("hello14")]
+        [TestCase("hello15")]
+        [TestCase("hello16")]
+        [TestCase("hello17")]
+        [TestCase("hello18")]
+        [TestCase("hello19")]
+        [TestCase("hello20")]
+        [Category("ThreadSafe")]
+        [Repeat(10)]
+        public void Test1(string parameter)
+        {
+            Assert.That(parameter, Does.StartWith("hello"));
+        }
+    }
 }
