@@ -39,30 +39,24 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess, Is.True);
         }
 
-        [TestCase(" ss ", "ß", StringComparison.CurrentCulture)]
-        [TestCase(" SS ", "ß", StringComparison.CurrentCulture)]
-        [TestCase(" ss ", "s", StringComparison.CurrentCulture)]
-        [TestCase(" SS ", "s", StringComparison.CurrentCulture)]
-        [TestCase(" ss ", "ß", StringComparison.CurrentCultureIgnoreCase)]
-        [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase)]
-        [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase)]
-        [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase)]
-        [TestCase(" ss ", "ß", StringComparison.InvariantCulture)]
-        [TestCase(" SS ", "ß", StringComparison.InvariantCulture)]
-        [TestCase(" ss ", "s", StringComparison.InvariantCulture)]
-        [TestCase(" SS ", "s", StringComparison.InvariantCulture)]
-        [TestCase(" ss ", "ß", StringComparison.InvariantCultureIgnoreCase)]
-        [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase)]
-        [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase)]
-        [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase)]
-        [TestCase(" ss ", "ß", StringComparison.Ordinal)]
-        [TestCase(" SS ", "ß", StringComparison.Ordinal)]
-        [TestCase(" ss ", "s", StringComparison.Ordinal)]
-        [TestCase(" SS ", "s", StringComparison.Ordinal)]
-        [TestCase(" ss ", "ß", StringComparison.OrdinalIgnoreCase)]
-        [TestCase(" SS ", "ß", StringComparison.OrdinalIgnoreCase)]
-        [TestCase(" ss ", "s", StringComparison.OrdinalIgnoreCase)]
-        [TestCase(" SS ", "s", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" ss", "ß", StringComparison.CurrentCulture)]
+        [TestCase(" ss", "s", StringComparison.CurrentCulture)]
+        [TestCase(" SS", "s", StringComparison.CurrentCulture)]
+        [TestCase(" ss", "ß", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" ss", "s", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" SS", "s", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase(" ss", "ß", StringComparison.InvariantCulture)]
+        [TestCase(" ss", "s", StringComparison.InvariantCulture)]
+        [TestCase(" SS", "s", StringComparison.InvariantCulture)]
+        [TestCase(" ss", "ß", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" ss", "s", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" SS", "s", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase(" ss", "ß", StringComparison.Ordinal)]
+        [TestCase(" ss", "s", StringComparison.Ordinal)]
+        [TestCase(" SS", "s", StringComparison.Ordinal)]
+        [TestCase(" ss", "ß", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" ss", "s", StringComparison.OrdinalIgnoreCase)]
+        [TestCase(" SS", "s", StringComparison.OrdinalIgnoreCase)]
         public void SpecifyComparisonType(string actual, string expected, StringComparison comparison)
         {
             // Get platform-specific StringComparison behavior
@@ -75,23 +69,17 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actual, constraint);
         }
 
-        [TestCase(" ss ", "ß", true)]
-        [TestCase(" SS ", "ß", true)]
-        [TestCase(" ss ", "s", true)]
-        [TestCase(" SS ", "s", true)]
-        [TestCase(" ss ", "ß", false)]
-        [TestCase(" SS ", "ß", false)]
-        [TestCase(" ss ", "s", false)]
-        [TestCase(" SS ", "s", false)]
-        public void SpecifyCultureInfo(string actual, string expected, bool ignoreCase)
+        [TestCase(" ss", "ß")]
+        [TestCase(" ß", "ß")]
+        [TestCase(" ss", "s")]
+        [TestCase(" SS", "s")]
+        public void SpecifyCultureInfo(string actual, string expected)
         {
-            var cultureInfo = new CultureInfo("fr-FR");
+            var cultureInfo = new CultureInfo("de-DE");
             // Get platform-specific StringComparison behavior
-            var shouldSucceed = actual.EndsWith(expected, ignoreCase, cultureInfo);
+            var shouldSucceed = actual.EndsWith(expected, false, cultureInfo);
 
             Constraint constraint = Does.EndWith(expected).Using(cultureInfo);
-            if (ignoreCase)
-                constraint = ((EndsWithConstraint)constraint).IgnoreCase;
             if (!shouldSucceed)
                 constraint = new NotConstraint(constraint);
 
@@ -182,6 +170,24 @@ namespace NUnit.Framework.Tests.Constraints
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
             Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [TestCase("ss", "ß")]
+        [TestCase("ß", "ß")]
+        [TestCase("ss", "s")]
+        [TestCase("SS", "s")]
+        public void SpecifyCultureInfo(string actual, string expected)
+        {
+            var cultureInfo = new CultureInfo("de-DE");
+            // Get platform-specific StringComparison behavior
+            var shouldSucceed = actual.EndsWith(expected, true, cultureInfo);
+
+            Constraint constraint = Does.EndWith(expected).Using(cultureInfo).IgnoreCase;
+
+            if (!shouldSucceed)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
         }
     }
 }
