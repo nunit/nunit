@@ -387,20 +387,67 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
-        [TestCaseSource(nameof(ParamsArraySoleArgumentSourceMatchingTypes))]
-#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
-            Assert.That(array[0], Is.EqualTo("a"));
-            Assert.That(array[1], Is.EqualTo("b"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(array[0], Is.EqualTo("a"));
+                Assert.That(array[1], Is.EqualTo("b"));
+            });
         }
 
-        private static IEnumerable ParamsArraySoleArgumentSourceMatchingTypes
+        [TestCaseSource(nameof(ParamsArrayOneStringArgument))]
+        public void HandlesParamsArrayWithOneItemAsSoleArgument(params string[] array)
+        {
+            Assert.That(array[0], Is.EqualTo("a"));
+        }
+
+        [TestCaseSource(nameof(ParamsArrayFourStringArguments))]
+        public void HandlesParamsArrayAsLastArgument(string s1, string s2, params object[] array)
+        {
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
+            Assert.That(array[1], Is.EqualTo("d"));
+        }
+
+        [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
+        public void HandlesParamsArrayWithNoItemsAsLastArgument(string s1, string s2, params string[] array)
+        {
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array, Is.Empty);
+        }
+#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+
+        private static IEnumerable ParamsArrayOneStringArgument
+        {
+            get
+            {
+                yield return new TestCaseData("a");
+                yield return new TestCaseData(["a"]).SetArgDisplayNames("new TestCaseData([\"a\"])");
+                yield return new string[] { "a" };
+            }
+        }
+
+        private static IEnumerable ParamsArrayTwoStringArguments
         {
             get
             {
                 yield return new TestCaseData("a", "b");
+                yield return new TestCaseData(["a", "b"]).SetArgDisplayNames("new TestCaseData([\"a\", \"b\"])");
                 yield return new string[] { "a", "b" };
+            }
+        }
+
+        private static IEnumerable ParamsArrayFourStringArguments
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b", "c", "d");
+                yield return new TestCaseData(["a", "b", "c", "d"]).SetArgDisplayNames("new TestCaseData([\"a\", \"b\", \"c\", \"d\"])");
+                yield return new string[] { "a", "b", "c", "d" };
             }
         }
 
