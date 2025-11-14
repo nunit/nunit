@@ -168,8 +168,17 @@ namespace NUnit.Framework
                         if (item is ITestCaseData itcd)
                         {
                             // 2. User provided an ITestCaseData and we just use it.
-                            var typeArgs = (item as TestCaseData)?.TypeArgs;
-                            parms = TestCaseAttribute.GetParametersForTestCase(itcd, method, itcd.Arguments, typeArgs);
+                            // Only adjust the arguments if the test is runnable
+                            // If the test is not runnable, we leave it alone to preserve
+                            if (itcd.RunState == RunState.Runnable)
+                            {
+                                var typeArgs = (item as TestCaseData)?.TypeArgs;
+                                parms = TestCaseAttribute.GetParametersForTestCase(itcd, method, itcd.Arguments, typeArgs);
+                            }
+                            else
+                            {
+                                parms = new TestCaseParameters(itcd);
+                            }
                         }
                         else
                         {
