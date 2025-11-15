@@ -119,22 +119,21 @@ namespace NUnit.Framework.Tests.Constraints
             });
         }
 
-        //[Test]
-        //public void UseSameComparisonTypes_DoesNotThrowException()
-        //{
-        //    var endsWithConstraint = new EndsWithConstraint("hello");
-        //    Assert.DoesNotThrow(() =>
-        //    {
-        //        var newConstraint = endsWithConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
-        //    });
+        [Test]
+        public void UseSameComparisonTypes_DoesNotThrowException()
+        {
+            var endsWithConstraint = new EndsWithConstraint("hello");
+            Assert.DoesNotThrow(() =>
+            {
+                var newConstraint = endsWithConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
+            });
 
-        //    var stringConstraint = (StringConstraint)new EndsWithConstraint("hello");
-        //    Assert.DoesNotThrow(() =>
-        //    {
-        //        var newConstraint = (EndsWithConstraint)stringConstraint.IgnoreCase;
-        //        newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
-        //    });
-        //}
+            Assert.DoesNotThrow(() =>
+            {
+                var newConstraint = endsWithConstraint.IgnoreCase;
+                newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
+            });
+        }
     }
 
     [TestFixture]

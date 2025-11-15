@@ -20,21 +20,6 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to ignore case in matching.
-        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
-        public override StringConstraint IgnoreCase
-        {
-            get
-            {
-                Using(StringComparison.CurrentCultureIgnoreCase);
-                return base.IgnoreCase;
-            }
-        }
-
-        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
