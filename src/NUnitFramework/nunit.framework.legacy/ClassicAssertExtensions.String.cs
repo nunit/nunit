@@ -6,7 +6,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for StringAssert methods on Assert
     /// </summary>
-    public static class ClassicStringAssertExtensions
+    public static partial class ClassicAssertExtensions
     {
         extension(Assert)
         {

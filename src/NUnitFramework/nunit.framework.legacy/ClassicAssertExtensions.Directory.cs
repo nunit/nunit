@@ -8,7 +8,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for DirectoryAssert methods on Assert
     /// </summary>
-    public static class ClassicDirectoryAssertExtensions
+    public static partial class ClassicAssertExtensions
     {
         extension(Assert)
         {

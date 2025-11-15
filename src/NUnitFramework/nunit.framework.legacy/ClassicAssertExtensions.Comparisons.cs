@@ -8,7 +8,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for comparison assertions (Greater, Less, etc.)
     /// </summary>
-    public static class ClassicAssertComparisonExtensions
+    public static partial class ClassicAssertExtensions
     {
         extension(Assert)
         {

@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for CollectionAssert methods on Assert
     /// </summary>
-    public static class ClassicCollectionAssertExtensions
+    public static partial class ClassicAssertExtensions
     {
         extension(Assert)
         {
