@@ -131,7 +131,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.DoesNotThrow(() =>
             {
                 var newConstraint = endsWithConstraint.IgnoreCase;
-                newConstraint = newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
+                newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
             });
         }
     }
