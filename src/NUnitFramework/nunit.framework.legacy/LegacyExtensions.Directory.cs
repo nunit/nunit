@@ -14,61 +14,67 @@ namespace NUnit.Framework
         {
             #region AreEqual - DirectoryInfo
 
-            public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.AreEqual(expected, actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.AreEqual(DirectoryInfo, DirectoryInfo)"/>
             public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual)
                 => Legacy.DirectoryAssert.AreEqual(expected, actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.AreEqual(DirectoryInfo, DirectoryInfo, string, object[])"/>
+                public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.AreEqual(expected, actual, message, args);
 
             #endregion
 
             #region AreNotEqual - DirectoryInfo
 
-            public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.AreNotEqual(expected, actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.AreNotEqual(DirectoryInfo, DirectoryInfo)"/>
             public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual)
                 => Legacy.DirectoryAssert.AreNotEqual(expected, actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.AreNotEqual(DirectoryInfo, DirectoryInfo, string, object[])"/>
+                public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.AreNotEqual(expected, actual, message, args);
 
             #endregion
 
             #region Exists - DirectoryInfo
 
-            public static void Exists(DirectoryInfo actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.Exists(actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.Exists(DirectoryInfo)"/>
             public static void Exists(DirectoryInfo actual)
                 => Legacy.DirectoryAssert.Exists(actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.Exists(DirectoryInfo, string, object[])"/>
+                public static void Exists(DirectoryInfo actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.Exists(actual, message, args);
 
             #endregion
 
             #region Exists - String path
 
-            public static void DirectoryExists(string actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.Exists(actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.Exists(string)"/>
             public static void DirectoryExists(string actual)
                 => Legacy.DirectoryAssert.Exists(actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.Exists(string, string, object[])"/>
+                public static void DirectoryExists(string actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.Exists(actual, message, args);
 
             #endregion
 
             #region DoesNotExist - DirectoryInfo
 
-            public static void DoesNotExist(DirectoryInfo actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.DoesNotExist(actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.DoesNotExist(DirectoryInfo)"/>
             public static void DoesNotExist(DirectoryInfo actual)
                 => Legacy.DirectoryAssert.DoesNotExist(actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.DoesNotExist(DirectoryInfo, string, object[])"/>
+                public static void DoesNotExist(DirectoryInfo actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.DoesNotExist(actual, message, args);
 
             #endregion
 
             #region DoesNotExist - String path
 
-            public static void DirectoryDoesNotExist(string actual, string? message = null, params object?[]? args)
-                => Legacy.DirectoryAssert.DoesNotExist(actual, message ?? string.Empty, args);
-
+                /// <inheritdoc cref="Legacy.DirectoryAssert.DoesNotExist(string)"/>
             public static void DirectoryDoesNotExist(string actual)
                 => Legacy.DirectoryAssert.DoesNotExist(actual);
+                /// <inheritdoc cref="Legacy.DirectoryAssert.DoesNotExist(string, string, object[])"/>
+                public static void DirectoryDoesNotExist(string actual, string message, params object?[]? args)
+                    => Legacy.DirectoryAssert.DoesNotExist(actual, message, args);
 
             #endregion
         }

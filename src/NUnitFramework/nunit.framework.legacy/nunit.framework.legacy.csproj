@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework.Legacy</RootNamespace>
-    <LangVersion>latest</LangVersion>
-    <NoWarn>CS1591;IDE0005</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
