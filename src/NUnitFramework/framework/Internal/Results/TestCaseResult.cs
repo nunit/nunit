@@ -19,6 +19,23 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="other">A <see cref="TestCaseResult"/> from which the values shall be copied.</param>
+        private TestCaseResult(TestCaseResult other) : base(other)
+        {
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult"/>
+        /// </summary>
+        /// <param name="latest">The latest result.</param>
+        /// <param name="previous">The previous result.</param>
+        private TestCaseResult(TestCaseResult latest, TestResult previous) : base(latest, previous)
+        {
+        }
+
         #region Overrides
 
         /// <summary>
@@ -66,6 +83,24 @@ namespace NUnit.Framework.Internal
         /// Gets the collection of child results.
         /// </summary>
         public override IEnumerable<ITestResult> Children => Array.Empty<ITestResult>();
+
+        /// <inheritdoc />
+        protected internal override TestResult CalculateDeltaResult(TestResult previous, Exception? exception = null)
+        {
+            var deltaResult = new TestCaseResult(this, previous);
+
+            CalculateDeltaResult(deltaResult, previous, exception);
+
+            return deltaResult;
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="TestResult.Clone"/>
+        /// </summary>
+        public override TestResult Clone()
+        {
+            return new TestCaseResult(this);
+        }
 
         #endregion
     }

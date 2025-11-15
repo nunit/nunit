@@ -409,6 +409,7 @@ namespace NUnit.Framework
         public class TestAdapter
         {
             private readonly Test _test;
+            private MethodInfoAdapter? _methodInfoAdapter;
 
             #region Constructor
 
@@ -447,14 +448,21 @@ namespace NUnit.Framework
             public string? DisplayName => _test.TypeInfo?.GetDisplayName();
 
             /// <summary>
-            /// The name of the method representing the test.
-            /// </summary>
-            public string? MethodName => (_test as TestMethod)?.Method.Name;
-
-            /// <summary>
             /// The method representing the test.
             /// </summary>
+            [Obsolete("Use MethodInfo property instead. This property will be removed in a future version of NUnit.")]
             public IMethodInfo? Method => (_test as TestMethod)?.Method;
+
+            /// <summary>
+            /// Gets information about the actual the test method
+            /// </summary>
+            public MethodInfoAdapter? MethodInfo =>
+                _methodInfoAdapter ??= _test.Method is null ? null : new MethodInfoAdapter(_test.Method);
+
+            /// <summary>
+            /// The name of the method representing the test.
+            /// </summary>
+            public string? MethodName => MethodInfo?.Name;
 
             /// <summary>
             /// Gets the underlying Type.
@@ -492,6 +500,11 @@ namespace NUnit.Framework
             public ITest? Parent => _test.Parent;
 
             /// <summary>
+            /// Returns true if this is a TestSuite
+            /// </summary>
+            public bool IsSuite => _test.IsSuite;
+
+            /// <summary>
             /// Returns all properties in the hierarchy
             /// Utility method for getting all properties in the hierarchy, with their included name, level and values.
             /// </summary>
@@ -519,18 +532,19 @@ namespace NUnit.Framework
             /// The returned values include the name of the level they are found at.
             /// </summary>
             /// <returns></returns>
-            private IList<PropertyValueHierarchyItem> PropertyValues(string property)
+            private IEnumerable<PropertyValueHierarchyItem> PropertyValues(string property)
             {
-                var values = new List<PropertyValueHierarchyItem>();
                 ITest? test = _test;
                 do
                 {
-                    var propValues = test.Properties[property];
-                    values.Add(new PropertyValueHierarchyItem(test.Name, propValues));
+                    if (test.Properties.TryGet(property, out IList? propValues))
+                    {
+                        yield return new PropertyValueHierarchyItem(test.Name, propValues);
+                    }
+
                     test = test.Parent;
                 }
                 while (test is not null);
-                return values;
             }
 
             /// <summary>
@@ -539,14 +553,8 @@ namespace NUnit.Framework
             /// <param name="property">Name of property</param>
             public IEnumerable<object> AllPropertyValues(string property)
             {
-                var list = new List<object>();
-                var props = PropertyValues(property);
-                foreach (var item in props)
-                {
-                    list.AddRange((IEnumerable<object>)item.Values);
-                }
-
-                return list.Distinct();
+                return PropertyValues(property).SelectMany(x => (IEnumerable<object>)x.Values)
+                                               .Distinct();
             }
 
             /// <summary>
@@ -555,6 +563,35 @@ namespace NUnit.Framework
             public IEnumerable<string> AllCategories() => AllPropertyValues("Category").Select(o => (string)o).ToList();
 
             #endregion
+        }
+
+        #endregion
+
+        #region Nested MethodInfoAdapter Class
+
+        /// <summary>
+        /// Useful when exposing IMethodInfo data without needing to expose the entire IMethodInfo interface
+        /// and the possibility to invoke it.
+        /// </summary>
+        /// <param name="methodInfo">The <see cref="IMethodInfo"/> to be wrapped.</param>
+        public class MethodInfoAdapter(IMethodInfo methodInfo)
+        {
+            private readonly IMethodInfo _methodInfo = methodInfo;
+
+            /// <summary>
+            /// Gets the name of the method.
+            /// </summary>
+            public string Name => _methodInfo.Name;
+
+            /// <summary>
+            /// Gets the declaring type of the method.
+            /// </summary>
+            public Type? DeclaringType => _methodInfo.MethodInfo.DeclaringType;
+
+            /// <summary>
+            /// Gets the parameters of the method.
+            /// </summary>
+            public IEnumerable<ParameterInfo> GetParameters() => _methodInfo.GetParameters().Select(x => x.ParameterInfo);
         }
 
         #endregion
@@ -702,6 +739,25 @@ namespace NUnit.Framework
             public int InconclusiveCount => _result.InconclusiveCount;
 
             #endregion
+
+            /// <summary>
+            /// Create a clone of the current instance.
+            /// </summary>
+            /// <returns></returns>
+            public ResultAdapter Clone()
+            {
+                return new ResultAdapter(_result.Clone());
+            }
+
+            /// <summary>
+            /// Calculates the delta between the current TestResult and a previous TestResult.
+            /// This method should be used in the context of execution hooks if you need to
+            /// get the test result for a hooked method.
+            /// </summary>
+            public ResultAdapter CalculateDeltaWithPrevious(ResultAdapter previous, Exception? exception)
+            {
+                return new ResultAdapter(_result.CalculateDeltaResult(previous._result, exception));
+            }
         }
 
         #endregion

@@ -69,6 +69,8 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
+        private ExecutionHooks.ExecutionHooks? _executionHooks;
+
         #endregion
 
         #region Constructors
@@ -102,7 +104,10 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
-
+            if (other._executionHooks is not null)
+            {
+                _executionHooks = new ExecutionHooks.ExecutionHooks(other._executionHooks);
+            }
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -398,9 +403,25 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public int CurrentRepeatCount { get; set; }
 
+        /// <summary>
+        /// Hook Extension to support high level test extensions.
+        /// </summary>
+        public ExecutionHooks.ExecutionHooks ExecutionHooks =>
+            _executionHooks ?? throw new InvalidOperationException("Execution hooks have not been enabled for this context.");
+
+        /// <summary>
+        /// Property indicating whether execution hooks are enabled.
+        /// </summary>
+        internal bool ExecutionHooksEnabled => _executionHooks is not null;
+
         #endregion
 
         #region Instance Methods
+
+        /// <summary>
+        /// Get or Create if necessary the Hook Extension instance to support high level test extensions.
+        /// </summary>
+        internal ExecutionHooks.ExecutionHooks GetOrCreateExecutionHooks() => _executionHooks ??= new ExecutionHooks.ExecutionHooks();
 
         /// <summary>
         /// Record any changes in the environment made by

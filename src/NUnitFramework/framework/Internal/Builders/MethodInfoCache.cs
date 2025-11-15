@@ -37,8 +37,8 @@ namespace NUnit.Framework.Internal.Builders
 
                 // inherited
                 RepeatTestAttributes = method.GetCustomAttributes<IRepeatTest>(true);
-                WrapTestMethodAttributes = method.GetCustomAttributes<IWrapTestMethod>(true);
-                WrapSetupTearDownAttributes = method.GetCustomAttributes<IWrapSetUpTearDown>(true);
+                WrapTestMethodAttributes = GetCustomAttributeFromChain<IWrapTestMethod>(method, true);
+                WrapSetupTearDownAttributes = GetCustomAttributeFromChain<IWrapSetUpTearDown>(method, true);
                 ApplyToContextAttributes = method.GetCustomAttributes<IApplyToContext>(true);
 
                 // non-inherited
@@ -56,6 +56,20 @@ namespace NUnit.Framework.Internal.Builders
             public ITestAction[] TestActionAttributes { get; }
             public IWrapSetUpTearDown[] WrapSetupTearDownAttributes { get; }
             public IApplyToContext[] ApplyToContextAttributes { get; }
+
+            private T[] GetCustomAttributeFromChain<T>(IMethodInfo method, bool inherit)
+                where T : class
+            {
+                var attributes = method.GetCustomAttributes<T>(inherit);
+                if (attributes.Length == 0)
+                {
+                    attributes = method.TypeInfo.GetCustomAttributes<T>(inherit);
+                    if (attributes.Length == 0)
+                        attributes = method.TypeInfo.Type.Assembly.GetAttributes<T>(inherit);
+                }
+
+                return attributes;
+            }
         }
     }
 }

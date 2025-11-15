@@ -6,7 +6,7 @@
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <IsTestProject>false</IsTestProject>
-    <NoWarn/>
+    <NoWarn />
   </PropertyGroup>
 
   <PropertyGroup>

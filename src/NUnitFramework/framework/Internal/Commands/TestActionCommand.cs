@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -20,14 +22,58 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            BeforeTest = _ =>
+            BeforeTest = context =>
             {
-                action.BeforeTest(Test);
+                Action beforeTestMethod = context.ExecutionHooksEnabled ?
+                    RunBeforeTestWithHooks : RunBeforeTest;
+
+                beforeTestMethod();
+
+                void RunBeforeTestWithHooks()
+                {
+                    var hookedMethodInfo = new MethodWrapper(action.GetType(), nameof(ITestAction.BeforeTest));
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context, hookedMethodInfo);
+
+                        RunBeforeTest();
+                    }
+                    catch (Exception ex)
+                    {
+                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo, ex);
+                        throw;
+                    }
+                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo);
+                }
+
+                void RunBeforeTest() => action.BeforeTest(Test);
             };
 
-            AfterTest = _ =>
+            AfterTest = context =>
             {
-                action.AfterTest(Test);
+                Action afterTestMethod = context.ExecutionHooksEnabled ?
+                    RunAfterTestWithHooks : RunAfterTest;
+
+                afterTestMethod();
+
+                void RunAfterTestWithHooks()
+                {
+                    var hookedMethodInfo = new MethodWrapper(action.GetType(), nameof(ITestAction.AfterTest));
+                    try
+                    {
+                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context, hookedMethodInfo);
+
+                        RunAfterTest();
+                    }
+                    catch (Exception ex)
+                    {
+                        context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo, ex);
+                        throw;
+                    }
+                    context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo);
+                }
+
+                void RunAfterTest() => action.AfterTest(Test);
             };
         }
     }

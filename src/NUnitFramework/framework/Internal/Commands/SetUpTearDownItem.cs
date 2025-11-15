@@ -49,10 +49,13 @@ namespace NUnit.Framework.Internal.Commands
         {
             _setUpWasRun = true;
 
+            Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled ?
+                RunSetUpMethodWithHooks : RunSetUpOrTearDownMethod;
+
             try
             {
                 foreach (IMethodInfo setUpMethod in _setUpMethods)
-                    RunSetUpOrTearDownMethod(context, setUpMethod);
+                    runMethod(context, setUpMethod);
             }
             catch (Exception ex)
             {
@@ -72,14 +75,18 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
+                    Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled ?
+                        RunTearDownMethodWithHooks : RunSetUpOrTearDownMethod;
+
                     // Count of assertion results so far
                     var oldCount = context.CurrentResult.AssertionResults.Count;
 
                     // Even though we are only running one level at a time, we
                     // run the teardowns in reverse order to provide consistency.
                     var index = _tearDownMethods.Count;
+
                     while (--index >= 0)
-                        RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+                        runMethod(context, _tearDownMethods[index]);
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
@@ -91,6 +98,36 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.RecordException(ex, FailureSite.TearDown);
                 }
             }
+        }
+
+        private void RunSetUpMethodWithHooks(TestExecutionContext context, IMethodInfo setUpMethod)
+        {
+            try
+            {
+                context.ExecutionHooks.OnBeforeEverySetUp(context, setUpMethod);
+                RunSetUpOrTearDownMethod(context, setUpMethod);
+            }
+            catch (Exception ex)
+            {
+                context.ExecutionHooks.OnAfterEverySetUp(context, setUpMethod, ex);
+                throw;
+            }
+            context.ExecutionHooks.OnAfterEverySetUp(context, setUpMethod);
+        }
+
+        private void RunTearDownMethodWithHooks(TestExecutionContext context, IMethodInfo tearDownMethod)
+        {
+            try
+            {
+                context.ExecutionHooks.OnBeforeEveryTearDown(context, tearDownMethod);
+                RunSetUpOrTearDownMethod(context, tearDownMethod);
+            }
+            catch (Exception ex)
+            {
+                context.ExecutionHooks.OnAfterEveryTearDown(context, tearDownMethod, ex);
+                throw;
+            }
+            context.ExecutionHooks.OnAfterEveryTearDown(context, tearDownMethod);
         }
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)

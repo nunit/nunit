@@ -161,13 +161,29 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestCanAccessItsOwnMethodName()
         {
-            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCanAccessItsOwnMethodName"));
+            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+
+            var methodInfo = TestContext.CurrentContext.Test.MethodInfo;
+            Assert.That(methodInfo, Is.Not.Null);
+            Assert.That(methodInfo.Name, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+            Assert.That(methodInfo.DeclaringType, Is.EqualTo(typeof(TestContextTests)));
+            Assert.That(methodInfo.GetParameters(), Is.Empty);
         }
 
         [TestCase(5)]
-        public void TestCaseCanAccessItsOwnMethodName(int x)
+        public void TestCanAccessItsOwnMethodName(int x)
         {
-            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo("TestCaseCanAccessItsOwnMethodName"));
+            Assert.That(TestContext.CurrentContext.Test.MethodName, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+
+            var methodInfo = TestContext.CurrentContext.Test.MethodInfo;
+            Assert.That(methodInfo, Is.Not.Null);
+            Assert.That(methodInfo.Name, Is.EqualTo(nameof(TestCanAccessItsOwnMethodName)));
+            Assert.That(methodInfo.DeclaringType, Is.EqualTo(typeof(TestContextTests)));
+
+            var parameters = methodInfo.GetParameters().ToArray();
+            Assert.That(parameters, Has.Length.EqualTo(1));
+            Assert.That(parameters[0].ParameterType, Is.EqualTo(typeof(int)));
+            Assert.That(parameters[0].Name, Is.EqualTo("x"));
         }
 
         #endregion
@@ -527,6 +543,44 @@ namespace NUnit.Framework.Tests
             Assert.That(test.AllCategories().ToList(), Has.Count.EqualTo(1));
             var itemList = test.PropertyHierarchy();
             Assert.That(itemList, Has.Count.EqualTo(3 + 1 + 2));
+        }
+    }
+
+    [Parallelizable(ParallelScope.All)]
+    public class ParallelCategories
+    {
+        [SetUp]
+        public void Setup()
+        {
+            var categories = TestContext.CurrentContext.Test.AllCategories();
+            Assert.That(categories, Is.Not.Empty);
+        }
+
+        [TestCase("hello01")]
+        [TestCase("hello02")]
+        [TestCase("hello03")]
+        [TestCase("hello04")]
+        [TestCase("hello05")]
+        [TestCase("hello06")]
+        [TestCase("hello07")]
+        [TestCase("hello08")]
+        [TestCase("hello09")]
+        [TestCase("hello10")]
+        [TestCase("hello11")]
+        [TestCase("hello12")]
+        [TestCase("hello13")]
+        [TestCase("hello14")]
+        [TestCase("hello15")]
+        [TestCase("hello16")]
+        [TestCase("hello17")]
+        [TestCase("hello18")]
+        [TestCase("hello19")]
+        [TestCase("hello20")]
+        [Category("ThreadSafe")]
+        [Repeat(10)]
+        public void Test1(string parameter)
+        {
+            Assert.That(parameter, Does.StartWith("hello"));
         }
     }
 }
