@@ -8,7 +8,7 @@ All extension methods provide 1:1 mapping with their corresponding ClassicAssert
 
 ---
 
-## Core Assertions (LegacyExtensions.cs)
+## Core Assertions (ClassicExtensions.cs)
 
 ### AreEqual
 
@@ -120,7 +120,7 @@ All extension methods provide 1:1 mapping with their corresponding ClassicAssert
 
 ---
 
-## Numeric Assertions (LegacyExtensions.Numeric.cs)
+## Numeric Assertions (ClassicExtensions.Numeric.cs)
 
 ### Zero
 
@@ -160,7 +160,7 @@ For each numeric type (int, uint, long, ulong, decimal, double, float):
 
 ---
 
-## Comparison Assertions (LegacyExtensions.Comparisons.cs)
+## Comparison Assertions (ClassicExtensions.Comparisons.cs)
 
 ### Greater
 
@@ -200,7 +200,7 @@ For each comparable type (int, uint, long, ulong, decimal, double, float, ICompa
 
 ---
 
-## Type Assertions (LegacyExtensions.Types.cs)
+## Type Assertions (ClassicExtensions.Types.cs)
 
 ### IsAssignableFrom
 
@@ -240,7 +240,7 @@ For each comparable type (int, uint, long, ulong, decimal, double, float, ICompa
 
 ---
 
-## Collection Assertions (LegacyExtensions.Collection.cs)
+## Collection Assertions (ClassicExtensions.Collection.cs)
 
 ### AllItemsAreInstancesOfType
 
@@ -323,7 +323,7 @@ For each comparable type (int, uint, long, ulong, decimal, double, float, ICompa
 
 ---
 
-## String Assertions (LegacyExtensions.String.cs)
+## String Assertions (ClassicExtensions.String.cs)
 
 ### StringContains
 
@@ -397,7 +397,7 @@ For each comparable type (int, uint, long, ulong, decimal, double, float, ICompa
 
 ---
 
-## File Assertions (LegacyExtensions.File.cs)
+## File Assertions (ClassicExtensions.File.cs)
 
 ### AreEqual (Streams)
 
@@ -471,7 +471,7 @@ For each comparable type (int, uint, long, ulong, decimal, double, float, ICompa
 
 ---
 
-## Directory Assertions (LegacyExtensions.Directory.cs)
+## Directory Assertions (ClassicExtensions.Directory.cs)
 
 ### AreEqual
 
@@ -532,7 +532,7 @@ All extension methods use `/// <inheritdoc cref="..."/>` to inherit their docume
 ### Design Principles
 
 1. **1:1 Mapping**: Each ClassicAssert overload has exactly one corresponding extension method
-2. **No Optional Parameters**: Separate overloads are used instead of optional parameters
+2. **No Optional Parameters**: Separate overloads are used instead of optional parameters, as in the Classic Asserts.
 3. **Type Safety**: Extension methods preserve all type constraints and signatures from the original methods
 4. **Naming Conflicts**: Where method names would conflict (e.g., string Contains vs. collection Contains), prefixes are added for clarity
 

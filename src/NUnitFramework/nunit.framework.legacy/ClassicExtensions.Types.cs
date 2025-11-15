@@ -8,7 +8,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for type assertions
     /// </summary>
-    public static class LegacyAssertTypeExtensions
+    public static class ClassicAssertTypeExtensions
     {
         extension(Assert)
         {

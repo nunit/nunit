@@ -6,7 +6,7 @@ namespace NUnit.Framework
     /// <summary>
     /// C#14 static extension methods for numeric assertions
     /// </summary>
-    public static class LegacyAssertNumericExtensions
+    public static class ClassicAssertNumericExtensions
     {
         extension(Assert)
         {

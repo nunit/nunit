@@ -6,9 +6,9 @@ using System.Collections;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// C#14 static extension methods to expose legacy Assert methods on NUnit.Framework.Assert
+    /// C#14 static extension methods to expose classic Assert methods on NUnit.Framework.Assert
     /// </summary>
-    public static class LegacyAssertExtensions
+    public static class ClassicAssertExtensions
     {
         extension(Assert)
         {
