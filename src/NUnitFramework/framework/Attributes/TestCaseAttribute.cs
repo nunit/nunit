@@ -4,11 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -298,7 +296,23 @@ namespace NUnit.Framework
         #region Helper Methods
 
         private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
-            => TestCaseParameters.Create(this, method, Arguments, TypeArgs);
+        {
+            try
+            {
+                var parms = new TestCaseParameters(this)
+                {
+                    TypeArgs = TypeArgs,
+                };
+
+                parms.AdjustArgumentsForMethod(method);
+
+                return parms;
+            }
+            catch (Exception ex)
+            {
+                return new TestCaseParameters(ex);
+            }
+        }
 
         #endregion
 

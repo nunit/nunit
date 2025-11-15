@@ -90,134 +90,113 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public Type[]? TypeArgs { get; set; } = null;
 
-        internal static TestCaseParameters Create(ITestCaseData item, IMethodInfo method, object?[] arguments, Type[]? typeArgs)
+        internal void AdjustArgumentsForMethod(IMethodInfo method)
         {
-            TestCaseParameters parms;
+            IParameterInfo[] parameters = method.GetParameters();
+            int argsNeeded = parameters.Length;
+            int argsProvided = Arguments.Length;
 
-            try
+            // Special handling for ExpectedResult (see if it needs to be converted into method return type)
+            if (HasExpectedResult
+                && ParamAttributeTypeConversions.TryConvert(ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
             {
-                IParameterInfo[] parameters = method.GetParameters();
-                int argsNeeded = parameters.Length;
-                int argsProvided = arguments.Length;
+                ExpectedResult = expectedResultInTargetType;
+            }
 
-                parms = new TestCaseParameters(item)
+            // Special handling for CancellationToken
+            if (parameters.LastParameterAcceptsCancellationToken() &&
+               (!Arguments.LastArgumentIsCancellationToken()))
+            {
+                // Implict CancellationToken argument
+                argsProvided++;
+            }
+
+            // Special handling for params arguments
+            if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
+            {
+                IParameterInfo lastParameter = parameters[argsNeeded - 1];
+                Type lastParameterType = lastParameter.ParameterType;
+                Type elementType = lastParameterType.GetElementType()!;
+
+                if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
                 {
-                    TypeArgs = typeArgs,
-                };
-
-                if (item is TestCaseData tcd)
-                {
-                    parms.ArgDisplayNames = tcd.ArgDisplayNames;
-                }
-
-                // Special handling for ExpectedResult (see if it needs to be converted into method return type)
-                if (parms.HasExpectedResult
-                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
-                {
-                    parms.ExpectedResult = expectedResultInTargetType;
-                }
-
-                // Special handling for CancellationToken
-                if (parameters.LastParameterAcceptsCancellationToken() &&
-                   (!arguments.LastArgumentIsCancellationToken()))
-                {
-                    // Implict CancellationToken argument
-                    argsProvided++;
-                }
-
-                // Special handling for params arguments
-                if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-                {
-                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType()!;
-
-                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
+                    if (argsProvided == argsNeeded)
                     {
-                        if (argsProvided == argsNeeded)
+                        if (!lastParameterType.IsInstanceOfType(Arguments[argsProvided - 1]))
                         {
-                            if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
-                            {
-                                Array array = Array.CreateInstance(elementType, 1);
-                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
-                                parms.Arguments[argsProvided - 1] = array;
-                            }
-                        }
-                        else
-                        {
-                            object?[] newArglist = new object?[argsNeeded];
-                            for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                                newArglist[i] = parms.Arguments[i];
-
-                            int length = argsProvided - argsNeeded + 1;
-                            Array array = Array.CreateInstance(elementType, length);
-                            for (int i = 0; i < length; i++)
-                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
-
-                            newArglist[argsNeeded - 1] = array;
-                            parms.Arguments = newArglist;
-                            argsProvided = argsNeeded;
+                            Array array = Array.CreateInstance(elementType, 1);
+                            array.SetValue(Arguments[argsProvided - 1], 0);
+                            Arguments[argsProvided - 1] = array;
                         }
                     }
-                }
-
-                // Special handling for optional parameters
-                if (argsProvided < argsNeeded)
-                {
-                    var newArgList = new object?[parameters.Length];
-                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
-
-                    //Fill with Type.Missing for remaining required parameters where optional
-                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
+                    else
                     {
-                        if (parameters[i].IsOptional)
-                        {
-                            newArgList[i] = Type.Missing;
-                        }
-                        else
-                        {
-                            if (i < parms.Arguments.Length)
-                                newArgList[i] = parms.Arguments[i];
-                            else
-                                throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
-                        }
-                    }
-                    parms.Arguments = newArgList;
-                }
+                        object?[] newArglist = new object?[argsNeeded];
+                        for (int i = 0; i < argsNeeded && i < argsProvided; i++)
+                            newArglist[i] = Arguments[i];
 
-                // Special handling when sole argument is an object[]
-                if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                {
-                    if (argsProvided > 1 ||
-                        argsProvided == 1 && parms.Arguments[0]?.GetType() != typeof(object[]))
-                    {
-                        parms.Arguments = new object[] { parms.Arguments };
-                    }
-                }
+                        int length = argsProvided - argsNeeded + 1;
+                        Array array = Array.CreateInstance(elementType, length);
+                        for (int i = 0; i < length; i++)
+                            array.SetValue(Arguments[argsNeeded + i - 1], i);
 
-                if (argsProvided == argsNeeded)
-                {
-                    // Performs several special conversions allowed by NUnit in order to
-                    // permit arguments with types that cannot be used in the constructor
-                    // of an Attribute such as TestCaseAttribute or to simplify their use.
-                    //PerformSpecialConversions(parms.Arguments, parameters);
-                    for (int i = 0; i < parms.Arguments.Length; i++)
-                    {
-                        object? arg = parms.Arguments[i];
-                        Type targetType = parameters[i].ParameterType;
-                        if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
-                        {
-                            parms.Arguments[i] = argAsTargetType;
-                        }
+                        newArglist[argsNeeded - 1] = array;
+                        Arguments = newArglist;
+                        argsProvided = argsNeeded;
                     }
                 }
             }
-            catch (Exception ex)
+
+            // Special handling for optional parameters
+            if (argsProvided < argsNeeded)
             {
-                parms = new TestCaseParameters(ex);
+                var newArgList = new object?[parameters.Length];
+                Array.Copy(Arguments, newArgList, Arguments.Length);
+
+                //Fill with Type.Missing for remaining required parameters where optional
+                for (var i = Arguments.Length; i < parameters.Length; i++)
+                {
+                    if (parameters[i].IsOptional)
+                    {
+                        newArgList[i] = Type.Missing;
+                    }
+                    else
+                    {
+                        if (i < Arguments.Length)
+                            newArgList[i] = Arguments[i];
+                        else
+                            throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
+                    }
+                }
+                Arguments = newArgList;
             }
 
-            return parms;
+            // Special handling when sole argument is an object[]
+            if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
+            {
+                if (argsProvided > 1 ||
+                    argsProvided == 1 && Arguments[0]?.GetType() != typeof(object[]))
+                {
+                    Arguments = new object[] { Arguments };
+                }
+            }
+
+            if (argsProvided == argsNeeded)
+            {
+                // Performs several special conversions allowed by NUnit in order to
+                // permit arguments with types that cannot be used in the constructor
+                // of an Attribute such as TestCaseAttribute or to simplify their use.
+                //PerformSpecialConversions(parms.Arguments, parameters);
+                for (int i = 0; i < Arguments.Length; i++)
+                {
+                    object? arg = Arguments[i];
+                    Type targetType = parameters[i].ParameterType;
+                    if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
+                    {
+                        Arguments[i] = argAsTargetType;
+                    }
+                }
+            }
         }
     }
 }

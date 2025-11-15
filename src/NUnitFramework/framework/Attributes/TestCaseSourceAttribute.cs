@@ -143,6 +143,7 @@ namespace NUnit.Framework
 
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
+            var methodName = method.Name;
             List<ITestCaseData> data = new();
 
             try
@@ -153,66 +154,6 @@ namespace NUnit.Framework
                 {
                     foreach (object? item in source)
                     {
-                        // 1. Source is null. This is really an error but if we
-                        //    throw an exception we simply get an invalid fixture
-                        //    without good info as to what caused it. Passing a
-                        //    single null argument will cause an error to be
-                        //    reported at the test level, in most cases.
-                        if (item is null)
-                        {
-                            data.Add(new TestCaseParameters([null]));
-                            continue;
-                        }
-
-                        TestCaseParameters parms;
-                        if (item is ITestCaseData itcd)
-                        {
-                            // 2. User provided an ITestCaseData and we just use it.
-                            // Only adjust the arguments if the test is runnable
-                            // If the test is not runnable, we leave it alone to preserve
-                            if (itcd.RunState == RunState.Runnable)
-                            {
-                                var typeArgs = (item as TestCaseData)?.TypeArgs;
-                                parms = TestCaseParameters.Create(itcd, method, itcd.Arguments, typeArgs);
-                            }
-                            else
-                            {
-                                parms = new TestCaseParameters(itcd);
-                            }
-                        }
-                        else
-                        {
-                            object?[]? args = null;
-                            var parameters = method.GetParameters();
-                            var argsNeeded = parameters.Length;
-
-                            // 4. An array was passed, it may be an object[]
-                            //    or possibly some other kind of array, which
-                            //    TestCaseSource can accept.
-                            if (item is Array array)
-                            {
-                                // If array has the same number of elements as parameters
-                                // and it does not fit exactly into single existing parameter
-                                // we believe that this array contains arguments, not is a bare
-                                // argument itself.
-                                if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
-                                {
-                                    args = new object?[array.Length];
-                                    for (var i = 0; i < array.Length; i++)
-                                        args[i] = array.GetValue(i);
-                                }
-                            }
-
-                            if (args is null)
-                            {
-                                args = new[] { item };
-                            }
-                            parms = new TestCaseParameters(args);
-                        }
-
-                        //var testCaseData = item as TestCaseData;
-                        //var parms = TestCaseAttribute.GetParametersForTestCase(testCaseData, method, testCaseData.Arguments, null);
-/*
                         // First handle two easy cases:
                         // 1. Source is null. This is really an error but if we
                         //    throw an exception we simply get an invalid fixture
@@ -224,85 +165,49 @@ namespace NUnit.Framework
                             ? new TestCaseParameters(new object?[] { null })
                             : item as ITestCaseData;
 
-                        object?[]? args = parms?.Arguments;
-                        var parameters = method.GetParameters();
-                        var argsNeeded = parameters.Length;
-
-                        if (parms is null)
+                        try
                         {
-                            // 3. An array was passed, it may be an object[]
-                            //    or possibly some other kind of array, which
-                            //    TestCaseSource can accept.
-                            if (item is Array array)
+                            if (parms is null)
                             {
-                                // If array has the same number of elements as parameters
-                                // and it does not fit exactly into single existing parameter
-                                // we believe that this array contains arguments, not is a bare
-                                // argument itself.
-                                if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
+                                object?[]? args = null;
+
+                                // 3. An array was passed, it may be an object[]
+                                //    or possibly some other kind of array, which
+                                //    TestCaseSource can accept.
+                                if (item is Array array)
                                 {
-                                    args = new object?[array.Length];
-                                    for (var i = 0; i < array.Length; i++)
-                                        args[i] = array.GetValue(i);
-                                }
-                            }
-
-                            if (args is null)
-                            {
-                                args = new[] { item };
-                            }
-                        }
-
-                        // 4. Finally, we have a set of arguments to be used
-                        // We must now check for special cases to build the final argument list.
-                        var argsProvided = args.Length;
-
-                        // Special handling for CancellationToken
-                        if (parameters.LastParameterAcceptsCancellationToken() &&
-                           (!args.LastArgumentIsCancellationToken()))
-                        {
-                            // Implict CancellationToken argument
-                            argsProvided++;
-                        }
-
-                        // Special handling for params arguments
-                        if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-                        {
-                            IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                            Type lastParameterType = lastParameter.ParameterType;
-                            Type elementType = lastParameterType.GetElementType()!;
-
-                            if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
-                            {
-                                if (argsProvided == argsNeeded)
-                                {
-                                    if (!lastParameterType.IsInstanceOfType(args[argsProvided - 1]))
+                                    // If array has the same number of elements as parameters
+                                    // and it does not fit exactly into single existing parameter
+                                    // we believe that this array contains arguments, not is a bare
+                                    // argument itself.
+                                    var parameters = method.GetParameters();
+                                    var argsNeeded = parameters.Length;
+                                    if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
                                     {
-                                        Array array = Array.CreateInstance(elementType, 1);
-                                        array.SetValue(args[argsProvided - 1], 0);
-                                        args[argsProvided - 1] = array;
+                                        args = new object?[array.Length];
+                                        for (var i = 0; i < array.Length; i++)
+                                            args[i] = array.GetValue(i);
                                     }
                                 }
-                                else
+
+                                if (args is null)
                                 {
-                                    object?[] newArglist = new object?[argsNeeded];
-                                    for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                                        newArglist[i] = args[i];
-
-                                    int length = argsProvided - argsNeeded + 1;
-                                    Array array = Array.CreateInstance(elementType, length);
-                                    for (int i = 0; i < length; i++)
-                                        array.SetValue(args[argsNeeded + i - 1], i);
-
-                                    newArglist[argsNeeded - 1] = array;
-                                    //parms.Arguments = newArglist;
-                                    argsProvided = argsNeeded;
+                                    args = new[] { item };
                                 }
+
+                                parms = new TestCaseParameters(args);
+                            }
+
+                            if (parms.RunState == RunState.Runnable && parms is TestCaseParameters tcParms)
+                            {
+                                tcParms.AdjustArgumentsForMethod(method);
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            parms = new TestCaseParameters(ex);
+                        }
 
-                        parms = new TestCaseParameters(args);
-*/
                         if (Category is not null)
                         {
                             foreach (string cat in Category.Tokenize(','))
