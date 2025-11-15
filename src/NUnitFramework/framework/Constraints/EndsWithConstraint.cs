@@ -11,9 +11,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EndsWithConstraint : StringConstraint
     {
-        private StringComparison? _comparisonType;
-        private CultureInfo? _cultureInfo;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EndsWithConstraint"/> class.
         /// </summary>
@@ -24,61 +21,32 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to ignore case in matching.
-        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
+        /// Determines whether the actual string value ends with the expected substring,
+        /// using string comparison specified by the constraint.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
-        public override StringConstraint IgnoreCase
-        {
-            get
-            {
-                Using(StringComparison.CurrentCultureIgnoreCase);
-                return base.IgnoreCase;
-            }
-        }
-
-        /// <summary>
-        /// Test whether the constraint is matched by the actual value.
-        /// This is a template method, which calls the IsMatch method
-        /// of the derived class.
-        /// </summary>
-        /// <param name="actual"></param>
+        /// <param name="actual">The string value to test.</param>
         /// <returns></returns>
         protected override bool Matches(string? actual)
         {
-            if (_cultureInfo is not null)
+            return actual is not null && actual.EndsWith(expected, comparisonType ?? StringComparison.CurrentCulture);
+        }
+
+        /// <summary>
+        /// Determines whether the actual string value ends with the expected substring,
+        /// using the specified <see cref="CultureInfo"/> and case sensitivity specified by the constraint.
+        /// If <paramref name="cultureInfo"/> is not null, the comparison uses culture-specific rules;
+        /// otherwise, it falls back to the default string comparison logic.
+        /// </summary>
+        /// <param name="actual">The string value to test.</param>
+        /// <param name="cultureInfo">The culture information to use for the comparison.</param>
+        /// <returns></returns>
+        protected override bool Matches(string? actual, CultureInfo cultureInfo)
+        {
+            if (cultureInfo is not null)
             {
-                return actual is not null && actual.EndsWith(expected, caseInsensitive, _cultureInfo);
+                return actual is not null && actual.EndsWith(expected, caseInsensitive, cultureInfo);
             }
-
-            return actual is not null && actual.EndsWith(expected, _comparisonType ?? StringComparison.CurrentCulture);
-        }
-
-        /// <summary>
-        /// Modify the constraint to use the specified comparison.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="comparisonType"/> was already set.</exception>
-        public EndsWithConstraint Using(StringComparison comparisonType)
-        {
-            if (_comparisonType is null)
-                _comparisonType = comparisonType;
-            else if (_comparisonType != comparisonType)
-                throw new InvalidOperationException("A different comparison type was already set.");
-
-            return this;
-        }
-
-        /// <summary>
-        /// Modify the constraint to use the specified culture info.
-        /// </summary>
-        public EndsWithConstraint Using(CultureInfo cultureInfo)
-        {
-            if (_cultureInfo is null)
-                _cultureInfo = cultureInfo;
-
-            return this;
+            return Matches(actual);
         }
     }
 }
