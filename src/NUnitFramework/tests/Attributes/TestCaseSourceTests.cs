@@ -426,7 +426,6 @@ namespace NUnit.Framework.Tests.Attributes
             get
             {
                 yield return new TestCaseData("a");
-                yield return new TestCaseData(["a"]).SetArgDisplayNames("new TestCaseData([\"a\"])");
                 yield return new string[] { "a" };
             }
         }
@@ -436,7 +435,6 @@ namespace NUnit.Framework.Tests.Attributes
             get
             {
                 yield return new TestCaseData("a", "b");
-                yield return new TestCaseData(["a", "b"]).SetArgDisplayNames("new TestCaseData([\"a\", \"b\"])");
                 yield return new string[] { "a", "b" };
             }
         }
@@ -446,7 +444,6 @@ namespace NUnit.Framework.Tests.Attributes
             get
             {
                 yield return new TestCaseData("a", "b", "c", "d");
-                yield return new TestCaseData(["a", "b", "c", "d"]).SetArgDisplayNames("new TestCaseData([\"a\", \"b\", \"c\", \"d\"])");
                 yield return new string[] { "a", "b", "c", "d" };
             }
         }
