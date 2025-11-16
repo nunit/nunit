@@ -13,6 +13,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class StringConstraint : Constraint
     {
+        #region Static and Instance Fields
+
         /// <summary>
         /// The expected value
         /// </summary>
@@ -50,24 +52,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private CultureInfo? _cultureInfo;
 
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                string desc = $"{descriptionText} {MsgUtils.FormatValue(expected)}";
-                if (caseInsensitive)
-                    desc += ", ignoring case";
-                if (_comparisonType is not null)
-                    desc += $", with comparison type {_comparisonType}";
-                if (_cultureInfo is not null)
-                    desc += $", with culture: {_cultureInfo.Name}";
-                return desc;
-            }
-        }
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Constructs a StringConstraint without an expected value
@@ -87,6 +74,10 @@ namespace NUnit.Framework.Constraints
             this.expected = expected;
         }
 
+        #endregion
+
+        #region Constraint Modifiers
+
         /// <summary>
         /// Modify the constraint to ignore case in matching.
         /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
@@ -97,7 +88,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                Using(StringComparison.CurrentCultureIgnoreCase);
+                Using(GetIgnoreCaseEquivalent(_comparisonType));
                 caseInsensitive = true;
                 return this;
             }
@@ -113,7 +104,7 @@ namespace NUnit.Framework.Constraints
             if (_cultureInfo is not null)
                 throw new InvalidOperationException("Cannot set comparison type when culture has already been set.");
 
-            if (_comparisonType is not null && _comparisonType != comparisonType)
+            if (_comparisonType is not null && GetComparisonBase(_comparisonType.Value) != GetComparisonBase(comparisonType))
                 throw new InvalidOperationException("A different comparison type was already set.");
 
             _comparisonType = comparisonType;
@@ -137,25 +128,9 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given value
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo<TActual>(TActual actual)
-        {
-            var stringValue = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: true);
+        #endregion
 
-            bool result;
-            if (_cultureInfo is not null)
-                result = Matches(stringValue, _cultureInfo);
-            else if (_comparisonType is not null)
-                result = Matches(stringValue, _comparisonType.Value);
-            else
-                result = Matches(stringValue);
-
-            return new ConstraintResult(this, actual, result);
-        }
+        #region Protected Methods
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given string
@@ -185,5 +160,80 @@ namespace NUnit.Framework.Constraints
         {
             return Matches(actual);
         }
+
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            var stringValue = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: true);
+
+            bool result;
+            if (_cultureInfo is not null)
+                result = Matches(stringValue, _cultureInfo);
+            else if (_comparisonType is not null)
+                result = Matches(stringValue, _comparisonType.Value);
+            else
+                result = Matches(stringValue);
+
+            return new ConstraintResult(this, actual, result);
+        }
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                string desc = $"{descriptionText} {MsgUtils.FormatValue(expected)}";
+                if (caseInsensitive)
+                    desc += ", ignoring case";
+                if (_comparisonType is not null)
+                    desc += $", with comparison type {_comparisonType}";
+                if (_cultureInfo is not null)
+                    desc += $", with culture: {_cultureInfo.Name}";
+                return desc;
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static StringComparison GetIgnoreCaseEquivalent(StringComparison? currentComparison)
+        {
+            return currentComparison switch
+            {
+                null => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.CurrentCulture => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.InvariantCulture => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.Ordinal => StringComparison.OrdinalIgnoreCase,
+                StringComparison.OrdinalIgnoreCase => StringComparison.OrdinalIgnoreCase,
+                _ => throw new InvalidOperationException($"Unsupported StringComparison value: {currentComparison}")
+
+            };
+        }
+
+        private static StringComparison GetComparisonBase(StringComparison comparison)
+        {
+            return comparison switch
+            {
+                StringComparison.CurrentCulture or StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCulture,
+                StringComparison.InvariantCulture or StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCulture,
+                StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase => StringComparison.Ordinal,
+                _ => comparison
+            };
+        }
+
+        #endregion
     }
 }
