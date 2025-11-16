@@ -1,6 +1,6 @@
 # Building NUnit
 
-NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories, https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
+NUnit consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories, https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
 
 ## Source Code
 
@@ -17,7 +17,7 @@ The development process for making code changes and submitting Pull Requests (PR
 
 ## Solution Build
 
-There is a single Visual Studio solution, `nunit.sln`, which resides in the NUnit repository root.
+There is a single Visual Studio solution, `nunit.slnx`, which resides in the NUnit repository root.
 
 NUnit framework can be built from this solution using a .NET-capable IDE such as:
 
@@ -36,7 +36,7 @@ A solution build places all of its output in a common `bin` directory under the 
 As the NUnit solution targets multiple frameworks, a single build will generate files for each targeted framework. For example, a debug build <sup>[2]</sup> produces the following directory structure:
 
 ```
- (directory with nunit.sln)
+ (directory with nunit.slnx)
     bin\
        Debug\
           net8.0

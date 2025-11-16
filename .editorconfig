@@ -12,7 +12,7 @@ indent_style = space
 insert_final_newline = true
 charset = utf-8
 
-[*.{sln,*proj,props}]
+[*.{sln,slnx,*proj,props}]
 charset = utf-8-bom
 indent_style = space
 indent_size = 2
