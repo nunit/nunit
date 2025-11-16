@@ -167,7 +167,11 @@ namespace NUnit.Framework
 
                         try
                         {
-                            if (parms is null)
+                            if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
+                            {
+                                tcParms.AdjustArgumentsForMethod(method);
+                            }
+                            else
                             {
                                 object?[]? args = null;
 
@@ -182,7 +186,7 @@ namespace NUnit.Framework
                                     // argument itself.
                                     var parameters = method.GetParameters();
                                     var argsNeeded = parameters.Length;
-                                    if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
+                                    if (argsNeeded > 0 && argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType())
                                     {
                                         args = new object?[array.Length];
                                         for (var i = 0; i < array.Length; i++)
@@ -196,11 +200,6 @@ namespace NUnit.Framework
                                 }
 
                                 parms = new TestCaseParameters(args);
-                            }
-
-                            if (parms.RunState == RunState.Runnable && parms is TestCaseParameters tcParms)
-                            {
-                                tcParms.AdjustArgumentsForMethod(method);
                             }
                         }
                         catch (Exception ex)
