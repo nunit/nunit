@@ -87,51 +87,19 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void UseDifferentComparisonTypes_ThrowsException()
-        {
-            var endsWithConstraint = (EndsWithConstraint)TheConstraint;
-
-            Assert.Multiple(() =>
-            {
-                // Invoke Using method before IgnoreCase
-                Assert.That(() => endsWithConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => endsWithConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => endsWithConstraint.Using(StringComparison.InvariantCultureIgnoreCase).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => endsWithConstraint.Using(StringComparison.Ordinal).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => endsWithConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-
-                // Invoke IgnoreCase before Using method
-                Assert.That(() => ((SubstringConstraint)endsWithConstraint.IgnoreCase).Using(StringComparison.CurrentCulture),
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => ((SubstringConstraint)endsWithConstraint.IgnoreCase).Using(StringComparison.InvariantCulture),
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => ((SubstringConstraint)endsWithConstraint.IgnoreCase).Using(StringComparison.InvariantCultureIgnoreCase),
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => ((SubstringConstraint)endsWithConstraint.IgnoreCase).Using(StringComparison.Ordinal).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-                Assert.That(() => ((SubstringConstraint)endsWithConstraint.IgnoreCase).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
-                    Throws.TypeOf<InvalidOperationException>());
-            });
-        }
-
-        [Test]
-        public void UseSameComparisonTypes_DoesNotThrowException()
+        public void MultipleUsingModifiers_ThrowsException()
         {
             var endsWithConstraint = new EndsWithConstraint("hello");
-            Assert.DoesNotThrow(() =>
+            Assert.Multiple(() =>
             {
-                var newConstraint = endsWithConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
-            });
-
-            Assert.DoesNotThrow(() =>
-            {
-                var newConstraint = endsWithConstraint.IgnoreCase;
-                newConstraint.Using(StringComparison.CurrentCultureIgnoreCase);
+                Assert.That(() => endsWithConstraint.Using(StringComparison.Ordinal).Using(CultureInfo.InvariantCulture),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => endsWithConstraint.Using(CultureInfo.InvariantCulture).Using(StringComparison.Ordinal),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => endsWithConstraint.Using(StringComparison.Ordinal).Using(StringComparison.OrdinalIgnoreCase),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => endsWithConstraint.Using(CultureInfo.InvariantCulture).Using(CultureInfo.CurrentCulture),
+                    Throws.TypeOf<InvalidOperationException>());
             });
         }
     }
@@ -180,12 +148,17 @@ namespace NUnit.Framework.Tests.Constraints
             // Get platform-specific StringComparison behavior
             var shouldSucceed = actual.EndsWith(expected, true, cultureInfo);
 
-            Constraint constraint = Does.EndWith(expected).Using(cultureInfo).IgnoreCase;
+            Constraint constraint1 = Does.EndWith(expected).Using(cultureInfo).IgnoreCase;
+            Constraint constraint2 = Does.EndWith(expected).IgnoreCase.Using(cultureInfo);
 
             if (!shouldSucceed)
-                constraint = new NotConstraint(constraint);
+            {
+                constraint1 = new NotConstraint(constraint1);
+                constraint2 = new NotConstraint(constraint2);
+            }
 
-            Assert.That(actual, constraint);
+            Assert.That(actual, constraint1);
+            Assert.That(actual, constraint2);
         }
     }
 }
