@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework.Legacy</RootNamespace>
+    <NoWarn/>
   </PropertyGroup>
 
   <ItemGroup>
