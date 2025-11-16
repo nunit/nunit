@@ -80,15 +80,11 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Modify the constraint to ignore case in matching.
-        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
         public virtual StringConstraint IgnoreCase
         {
             get
             {
-                Using(GetIgnoreCaseEquivalent(_comparisonType));
                 caseInsensitive = true;
                 return this;
             }
@@ -101,11 +97,8 @@ namespace NUnit.Framework.Constraints
         /// or when a culture info was already set.</exception>
         public virtual StringConstraint Using(StringComparison comparisonType)
         {
-            if (_cultureInfo is not null)
-                throw new InvalidOperationException("Cannot set comparison type when culture has already been set.");
-
-            if (_comparisonType is not null && GetComparisonBase(_comparisonType.Value) != GetComparisonBase(comparisonType))
-                throw new InvalidOperationException("A different comparison type was already set.");
+            if (_comparisonType is not null || _cultureInfo is not null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
 
             _comparisonType = comparisonType;
             return this;
@@ -118,11 +111,8 @@ namespace NUnit.Framework.Constraints
         /// or when a comparison type was already set.</exception>
         public virtual StringConstraint Using(CultureInfo culture)
         {
-            if (_comparisonType is not null)
-                throw new InvalidOperationException("Cannot set culture when comparison type has already been set.");
-
-            if (_cultureInfo is not null && !_cultureInfo.Equals(culture))
-                throw new InvalidOperationException("A different culture was already set.");
+            if (_comparisonType is not null || _cultureInfo is not null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
 
             _cultureInfo = culture;
             return this;
@@ -177,7 +167,7 @@ namespace NUnit.Framework.Constraints
             if (_cultureInfo is not null)
                 result = Matches(stringValue, _cultureInfo);
             else if (_comparisonType is not null)
-                result = Matches(stringValue, _comparisonType.Value);
+                result = Matches(stringValue, caseInsensitive ? _comparisonType.Value : GetIgnoreCaseEquivalent(_comparisonType.Value));
             else
                 result = Matches(stringValue);
 
@@ -220,17 +210,6 @@ namespace NUnit.Framework.Constraints
                 StringComparison.OrdinalIgnoreCase => StringComparison.OrdinalIgnoreCase,
                 _ => throw new InvalidOperationException($"Unsupported StringComparison value: {currentComparison}")
 
-            };
-        }
-
-        private static StringComparison GetComparisonBase(StringComparison comparison)
-        {
-            return comparison switch
-            {
-                StringComparison.CurrentCulture or StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCulture,
-                StringComparison.InvariantCulture or StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCulture,
-                StringComparison.Ordinal or StringComparison.OrdinalIgnoreCase => StringComparison.Ordinal,
-                _ => comparison
             };
         }
 
