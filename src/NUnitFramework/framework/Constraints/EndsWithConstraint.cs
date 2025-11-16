@@ -21,14 +21,25 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Determines whether the actual string value ends with the expected substring,
-        /// using string comparison specified by the constraint.
+        /// Determines whether the actual string value ends with the expected substring.
         /// </summary>
         /// <param name="actual">The string value to test.</param>
         /// <returns></returns>
         protected override bool Matches(string? actual)
         {
-            return actual is not null && actual.EndsWith(expected, comparisonType ?? StringComparison.CurrentCulture);
+            return actual is not null && actual.EndsWith(expected);
+        }
+
+        /// <summary>
+        /// Determines whether the actual string value ends with the expected substring,
+        /// using the specified string comparison.
+        /// </summary>
+        /// <param name="actual">The string value to test.</param>
+        /// <param name="stringComparison">The string comparison to use.</param>
+        /// <returns></returns>
+        protected override bool Matches(string? actual, StringComparison stringComparison)
+        {
+            return actual is not null && actual.EndsWith(expected, stringComparison);
         }
 
         /// <summary>
@@ -42,11 +53,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string? actual, CultureInfo cultureInfo)
         {
-            if (cultureInfo is not null)
-            {
-                return actual is not null && actual.EndsWith(expected, caseInsensitive, cultureInfo);
-            }
-            return Matches(actual);
+            return actual is not null && actual.EndsWith(expected, caseInsensitive, cultureInfo);
         }
     }
 }

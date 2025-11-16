@@ -43,20 +43,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The comparison type to use for string comparisons
         /// </summary>
-#pragma warning disable IDE1006
-        // ReSharper disable once InconsistentNaming
-        // Disregarding naming convention for back-compat
-        protected StringComparison? comparisonType;
-#pragma warning restore IDE1006
+        private StringComparison? _comparisonType;
 
         /// <summary>
         /// The culture info to use for string comparisons
         /// </summary>
-#pragma warning disable IDE1006
-        // ReSharper disable once InconsistentNaming
-        // Disregarding naming convention for back-compat
-        protected CultureInfo? cultureInfo;
-#pragma warning restore IDE1006
+        private CultureInfo? _cultureInfo;
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -69,6 +61,10 @@ namespace NUnit.Framework.Constraints
                 string desc = $"{descriptionText} {MsgUtils.FormatValue(expected)}";
                 if (caseInsensitive)
                     desc += ", ignoring case";
+                if (_comparisonType is not null)
+                    desc += $", with comparison type {_comparisonType}";
+                if (_cultureInfo is not null)
+                    desc += $", with culture: {_cultureInfo.Name}";
                 return desc;
             }
         }
@@ -110,24 +106,34 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Modify the constraint to use the specified comparison.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="strComparison"/> was already set.</exception>
-        public virtual StringConstraint Using(StringComparison strComparison)
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type was already set
+        /// or when a culture info was already set.</exception>
+        public virtual StringConstraint Using(StringComparison comparisonType)
         {
-            if (comparisonType is null)
-                comparisonType = strComparison;
-            else if (comparisonType != strComparison)
+            if (_cultureInfo is not null)
+                throw new InvalidOperationException("Cannot set comparison type when culture has already been set.");
+
+            if (_comparisonType is not null && _comparisonType != comparisonType)
                 throw new InvalidOperationException("A different comparison type was already set.");
 
+            _comparisonType = comparisonType;
             return this;
         }
 
         /// <summary>
         /// Modify the constraint to use the specified culture info.
         /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a culture info was already set
+        /// or when a comparison type was already set.</exception>
         public virtual StringConstraint Using(CultureInfo culture)
         {
-            cultureInfo ??= culture;
+            if (_comparisonType is not null)
+                throw new InvalidOperationException("Cannot set culture when comparison type has already been set.");
+
+            if (_cultureInfo is not null && !_cultureInfo.Equals(culture))
+                throw new InvalidOperationException("A different culture was already set.");
+
+            _cultureInfo = culture;
             return this;
         }
 
@@ -140,7 +146,15 @@ namespace NUnit.Framework.Constraints
         {
             var stringValue = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: true);
 
-            return new ConstraintResult(this, actual, cultureInfo is not null ? Matches(stringValue, cultureInfo) : Matches(stringValue));
+            bool result;
+            if (_cultureInfo is not null)
+                result = Matches(stringValue, _cultureInfo);
+            else if (_comparisonType is not null)
+                result = Matches(stringValue, _comparisonType.Value);
+            else
+                result = Matches(stringValue);
+
+            return new ConstraintResult(this, actual, result);
         }
 
         /// <summary>
@@ -149,6 +163,17 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The string to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected abstract bool Matches(string? actual);
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given string with a specific string comparison
+        /// </summary>
+        /// <param name="actual">The string to be tested</param>
+        /// <param name="stringComparison">The string comparison type to be used</param>
+        /// <returns>True for success, false for failure</returns>
+        protected virtual bool Matches(string? actual, StringComparison stringComparison)
+        {
+            return Matches(actual);
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given string with a specific culture
