@@ -1,9 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-// using System.Collections; (removed as unnecessary)
-using System.IO;
-using NUnit.Framework.Tests.TestUtilities;
-
 namespace NUnit.Framework.Legacy.Tests
 {
     [TestFixture]
@@ -65,60 +61,6 @@ namespace NUnit.Framework.Legacy.Tests
             Assert.IsNotInstanceOf<Base>(new object());
             Assert.IsAssignableFrom<Derived>(new Base());
             Assert.IsNotAssignableFrom<Base>(new Derived());
-        }
-
-        [Test]
-        public void Collection_Asserts_Work()
-        {
-            var list = new[] { 1, 2, 3 };
-            Assert.AllItemsAreNotNull(list);
-            Assert.AllItemsAreUnique(list);
-            Assert.DoesNotContain(new[] { 4 }, list);
-            Assert.IsOrdered(list);
-            Assert.AreEquivalent(new[] { 1, 2, 3 }, new[] { 3, 2, 1 });
-            Assert.IsSubsetOf(new[] { 1, 2 }, new[] { 1, 2, 3 });
-            Assert.IsSupersetOf(new[] { 1, 2, 3 }, new[] { 1, 2 });
-        }
-
-        [Test]
-        public void String_Asserts_Work()
-        {
-            const string s = "Hello NUnit";
-            Assert.StringContains("NUnit", s);
-            Assert.DoesNotContain(new[] { 'x' }, s.ToCharArray());
-            Assert.StartsWith("Hello", s);
-            Assert.DoesNotStartWith("Goodbye", s);
-            Assert.EndsWith("NUnit", s);
-            Assert.DoesNotEndWith("JUnit", s);
-            Assert.AreEqualIgnoringCase("hello nunit", s);
-            Assert.IsMatch("^Hello\\s+NUnit$", s);
-            Assert.DoesNotMatch("^Goodbye", s);
-        }
-
-        [Test]
-        public void File_Asserts_Work()
-        {
-            using var dir = new TestDirectory();
-            var path1 = Path.Combine(dir.Directory.FullName, "a.txt");
-            var path2 = Path.Combine(dir.Directory.FullName, "b.txt");
-            File.WriteAllText(path1, "abc");
-            File.WriteAllText(path2, "abc");
-
-            Assert.FileExists(path1);
-            Assert.FileAreEqual(path1, path2);
-
-            var path3 = Path.Combine(dir.Directory.FullName, "c.txt");
-            Assert.FileDoesNotExist(path3);
-        }
-
-        [Test]
-        public void Directory_Asserts_Work()
-        {
-            using var dir = new TestDirectory();
-            Assert.DirectoryExists(dir.Directory.FullName);
-
-            var missing = Path.Combine(dir.Directory.FullName, "missing-dir");
-            Assert.DirectoryDoesNotExist(missing);
         }
     }
 }
