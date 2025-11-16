@@ -167,7 +167,9 @@ namespace NUnit.Framework.Constraints
             if (_cultureInfo is not null)
                 result = Matches(stringValue, _cultureInfo);
             else if (_comparisonType is not null)
-                result = Matches(stringValue, caseInsensitive ? _comparisonType.Value : GetIgnoreCaseEquivalent(_comparisonType.Value));
+                result = Matches(stringValue, caseInsensitive ? GetIgnoreCaseEquivalent(_comparisonType.Value) : _comparisonType.Value);
+            else if (caseInsensitive)
+                result = Matches(stringValue, StringComparison.CurrentCultureIgnoreCase);
             else
                 result = Matches(stringValue);
 
