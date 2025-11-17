@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -419,7 +420,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(s2, Is.EqualTo("b"));
             Assert.That(array, Is.Empty);
         }
-#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
 
         [TestCaseSource(nameof(OptionalArgumentsTestCasesSource))]
         public string[] HandlesOptionalArguments(string s1 = "a", string s2 = "b", string s3 = "c")
@@ -427,6 +427,14 @@ namespace NUnit.Framework.Tests.Attributes
             return [s1, s2, s3];
         }
 
+        [TestCaseSource(nameof(OneArg)), CancelAfter(5000)]
+        public void HandlesCancellationTokenAsLastArgument(int _, CancellationToken cancellationToken)
+        {
+            Assert.That(cancellationToken, Is.Not.Default);
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         private static IEnumerable ParamsArrayOneStringArgument
         {
             get
@@ -776,6 +784,7 @@ namespace NUnit.Framework.Tests.Attributes
             yield return new object[] { inject1, inject2, inject3 };
         }
 
+        private static readonly object[] OneArg = [new TestCaseData(12)];
         private static readonly object[] FourArgs = new object[]
         {
             new TestCaseData(12, 3, 4, 0),
