@@ -92,6 +92,8 @@ namespace NUnit.Framework.Internal
 
         internal void AdjustArgumentsForMethod(IMethodInfo method)
         {
+            var methodName = method.Name;
+
             IParameterInfo[] parameters = method.GetParameters();
             int argsNeeded = parameters.Length;
             int argsProvided = Arguments.Length;
@@ -115,11 +117,12 @@ namespace NUnit.Framework.Internal
             if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
             {
                 IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                Type lastParameterType = lastParameter.ParameterType;
-                Type elementType = lastParameterType.GetElementType()!;
 
-                if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
+                if (parameters.LastParameterIsParamsArray())
                 {
+                    Type lastParameterType = lastParameter.ParameterType;
+                    Type elementType = lastParameterType.GetElementType()!;
+
                     if (argsProvided == argsNeeded)
                     {
                         if (!lastParameterType.IsInstanceOfType(Arguments[argsProvided - 1]))
@@ -165,7 +168,7 @@ namespace NUnit.Framework.Internal
                         if (i < Arguments.Length)
                             newArgList[i] = Arguments[i];
                         else
-                            throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
+                            throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but only {argsProvided} were supplied");
                     }
                 }
                 Arguments = newArgList;

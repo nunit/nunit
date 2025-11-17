@@ -425,7 +425,10 @@ namespace NUnit.Framework.Tests.Attributes
         {
             get
             {
-                yield return new TestCaseData("a");
+                yield return new TestCaseData("a").SetArgDisplayNames("new TestCaseData(\"a\")");
+#if NET6_0_OR_GREATER
+                yield return new TestCaseData<string>("a").SetArgDisplayNames("new TestCaseData<string>(\"a\")");
+#endif
                 yield return new string[] { "a" };
             }
         }
@@ -434,7 +437,10 @@ namespace NUnit.Framework.Tests.Attributes
         {
             get
             {
-                yield return new TestCaseData("a", "b");
+                yield return new TestCaseData("a", "b").SetArgDisplayNames("new TestCaseData(\"a\", \"b\")");
+#if NET6_0_OR_GREATER
+                yield return new TestCaseData<string, string>("a", "b").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\")");
+#endif
                 yield return new string[] { "a", "b" };
             }
         }
@@ -443,7 +449,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             get
             {
-                yield return new TestCaseData("a", "b", "c", "d");
+                yield return new TestCaseData("a", "b", "c", "d").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\", \"d\")");
                 yield return new string[] { "a", "b", "c", "d" };
             }
         }

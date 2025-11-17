@@ -167,11 +167,7 @@ namespace NUnit.Framework
 
                         try
                         {
-                            if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
-                            {
-                                tcParms.AdjustArgumentsForMethod(method);
-                            }
-                            else
+                            if (parms is null)
                             {
                                 object?[]? args = null;
 
@@ -186,12 +182,15 @@ namespace NUnit.Framework
                                     // argument itself.
                                     var parameters = method.GetParameters();
                                     var argsNeeded = parameters.Length;
-                                    if (argsNeeded > 0 && argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType())
+                                    if (argsNeeded > 0 && (parameters.LastParameterIsParamsArray()
+                                        || argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType()))
                                     {
                                         args = new object?[array.Length];
                                         for (var i = 0; i < array.Length; i++)
                                             args[i] = array.GetValue(i);
                                     }
+
+                                    //args = (object[])array;
                                 }
 
                                 if (args is null)
@@ -200,6 +199,11 @@ namespace NUnit.Framework
                                 }
 
                                 parms = new TestCaseParameters(args);
+                            }
+
+                            if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
+                            {
+                                tcParms.AdjustArgumentsForMethod(method);
                             }
                         }
                         catch (Exception ex)
