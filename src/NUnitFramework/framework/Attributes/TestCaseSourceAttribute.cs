@@ -143,7 +143,6 @@ namespace NUnit.Framework
 
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
-            var methodName = method.Name;
             List<ITestCaseData> data = new();
 
             try
@@ -189,8 +188,6 @@ namespace NUnit.Framework
                                         for (var i = 0; i < array.Length; i++)
                                             args[i] = array.GetValue(i);
                                     }
-
-                                    //args = (object[])array;
                                 }
 
                                 if (args is null)

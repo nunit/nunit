@@ -92,8 +92,6 @@ namespace NUnit.Framework.Internal
 
         internal void AdjustArgumentsForMethod(IMethodInfo method)
         {
-            var methodName = method.Name;
-
             IParameterInfo[] parameters = method.GetParameters();
             int argsNeeded = parameters.Length;
             int argsProvided = Arguments.Length;
