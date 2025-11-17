@@ -421,6 +421,12 @@ namespace NUnit.Framework.Tests.Attributes
         }
 #pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
 
+        [TestCaseSource(nameof(OptionalArgumentsTestCasesSource))]
+        public string[] HandlesOptionalArguments(string s1 = "a", string s2 = "b", string s3 = "c")
+        {
+            return [s1, s2, s3];
+        }
+
         private static IEnumerable ParamsArrayOneStringArgument
         {
             get
@@ -447,6 +453,28 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 yield return new TestCaseData("a", "b", "c", "d").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\", \"d\")");
                 yield return new string[] { "a", "b", "c", "d" };
+            }
+        }
+
+        private static IEnumerable OptionalArgumentsTestCasesSource
+        {
+            get
+            {
+                yield return new TestCaseData()
+                    .SetArgDisplayNames("new TestCaseData()")
+                    .Returns(new[] { "a", "b", "c" });
+
+                yield return new TestCaseData("x")
+                    .SetArgDisplayNames("new TestCaseData(\"x\")")
+                    .Returns(new[] { "x", "b", "c" });
+
+                yield return new TestCaseData("x", "y")
+                    .SetArgDisplayNames("new TestCaseData(\"x\", \"y\")")
+                    .Returns(new[] { "x", "y", "c" });
+
+                yield return new TestCaseData("x", "y", "z")
+                    .SetArgDisplayNames("new TestCaseData(\"x\", \"y\", \"z\")")
+                    .Returns(new[] { "x", "y", "z" });
             }
         }
 
