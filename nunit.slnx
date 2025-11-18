@@ -1,0 +1,60 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path=".runsettings" />
+    <File Path="build.cake" />
+    <File Path="build.cmd" />
+    <File Path="build.ps1" />
+    <File Path="BUILDING.md" />
+    <File Path="CHANGES.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="global.json" />
+    <File Path="LICENSE.txt" />
+    <File Path="NOTICES.md" />
+    <File Path="NuGet.config" />
+    <File Path="NUnit.sln.DotSettings" />
+    <File Path="README.md" />
+    <File Path="src/NUnitFramework/Directory.Build.props" />
+    <File Path="src/NUnitFramework/Directory.Packages.props" />
+    <File Path="src/NUnitFramework/StyleCop.Analyzers.globalconfig" />
+    <File Path="THIRD_PARTY_NOTICES.md" />
+    <File Path="THIRD_PARTY_NOTICES_DEV.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.config-macos/">
+    <File Path=".config-macos/dotnet-tools.json" />
+  </Folder>
+  <Folder Name="/Solution Items/.config/">
+    <File Path=".config/dotnet-tools.json" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/NUnit.CI.yml" />
+    <File Path=".github/workflows/NUnit.Myget.Publish.yml" />
+    <File Path=".github/workflows/NUnit.Nuget.Publish.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/nuget/" />
+  <Folder Name="/Solution Items/nuget/framework/">
+    <File Path="nuget/framework/nunit.nuspec" />
+    <File Path="nuget/framework/NUnit.props" />
+  </Folder>
+  <Folder Name="/Solution Items/nuget/nunitlite/">
+    <File Path="nuget/nunitlite/nunitlite.nuspec" />
+  </Folder>
+  <Project Path="CakeScripts.Tests/CakeScripts.Tests.csproj" />
+  <Project Path="CakeScripts/CakeScripts.csproj" />
+  <Project Path="src/NUnitFramework/benchmarks/nunit.framework.benchmarks/nunit.framework.benchmarks.csproj" />
+  <Project Path="src/NUnitFramework/framework/nunit.framework.csproj" />
+  <Project Path="src/NUnitFramework/mock-assembly/mock-assembly.csproj" />
+  <Project Path="src/NUnitFramework/nunit.framework.legacy.tests/nunit.framework.legacy.tests.csproj" />
+  <Project Path="src/NUnitFramework/nunit.framework.legacy/nunit.framework.legacy.csproj" />
+  <Project Path="src/NUnitFramework/nunitlite-runner/nunitlite-runner.csproj" />
+  <Project Path="src/NUnitFramework/nunitlite.tests/nunitlite.tests.csproj" />
+  <Project Path="src/NUnitFramework/nunitlite/nunitlite.csproj" />
+  <Project Path="src/NUnitFramework/slow-tests/slow-nunit-tests.csproj" />
+  <Project Path="src/NUnitFramework/testdata.fsharp/nunit.testdata.fsharp.fsproj" />
+  <Project Path="src/NUnitFramework/testdata/nunit.testdata.csproj" />
+  <Project Path="src/NUnitFramework/tests/nunit.framework.tests.csproj" />
+  <Project Path="src/NUnitFramework/windows-tests/windows-tests.csproj" />
+</Solution>
