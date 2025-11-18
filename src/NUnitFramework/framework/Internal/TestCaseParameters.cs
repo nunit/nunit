@@ -187,7 +187,6 @@ namespace NUnit.Framework.Internal
                 // Performs several special conversions allowed by NUnit in order to
                 // permit arguments with types that cannot be used in the constructor
                 // of an Attribute such as TestCaseAttribute or to simplify their use.
-                //PerformSpecialConversions(parms.Arguments, parameters);
                 for (int i = 0; i < Arguments.Length; i++)
                 {
                     object? arg = Arguments[i];
