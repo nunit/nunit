@@ -115,7 +115,6 @@ namespace NUnit.Framework
         /// <param name="suite">The suite to which the tests will be added.</param>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
-            var methodName = method.Name;
 
             int count = 0;
 
