@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
             if (parameters.LastParameterAcceptsCancellationToken() &&
                (!Arguments.LastArgumentIsCancellationToken()))
             {
-                // Implict CancellationToken argument
+                // Implicit CancellationToken argument
                 argsProvided++;
             }
 
