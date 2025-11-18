@@ -189,7 +189,7 @@ namespace NUnit.Framework.Constraints
                     desc += ", ignoring case";
                 if (_comparisonType is not null)
                     desc += $", with comparison type {_comparisonType}";
-                if (_cultureInfo is not null)
+                else if (_cultureInfo is not null)
                     desc += $", with culture: {_cultureInfo.Name}";
                 return desc;
             }
