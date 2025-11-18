@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal
                 var newArgList = new object?[parameters.Length];
                 Array.Copy(Arguments, newArgList, Arguments.Length);
 
-                //Fill with Type.Missing for remaining required parameters where optional
+                // Fill with Type.Missing for remaining parameters that are optional
                 for (var i = Arguments.Length; i < parameters.Length; i++)
                 {
                     if (parameters[i].IsOptional)
