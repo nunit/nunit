@@ -21,16 +21,24 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Modify the constraint to the specified comparison.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
+        /// than <paramref name="comparisonType"/> was already set.</exception>
+        public new SubstringConstraint Using(StringComparison comparisonType)
+        {
+            // This method is needed because of binary backward compatibility.
+            return (SubstringConstraint)base.Using(comparisonType);
+        }
+
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual)
         {
-            if (actual is null)
-                return false;
-
-            return actual.IndexOf(expected) >= 0;
+            return actual is not null && actual.IndexOf(expected) >= 0;
         }
 
         /// <summary>
@@ -42,10 +50,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual, StringComparison stringComparison)
         {
-            if (actual is null)
-                return false;
-
-            return actual.IndexOf(expected, stringComparison) >= 0;
+            return actual is not null && actual.IndexOf(expected, stringComparison) >= 0;
         }
 
         /// <summary>
@@ -57,10 +62,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual, CultureInfo cultureInfo)
         {
-            if (actual is null)
-                return false;
-
-            return cultureInfo.CompareInfo.IndexOf(actual, expected, caseInsensitive ? CompareOptions.IgnoreCase : CompareOptions.None) >= 0;
+            return actual is not null && cultureInfo.CompareInfo.IndexOf(actual, expected,
+                caseInsensitive ? CompareOptions.IgnoreCase : CompareOptions.None) >= 0;
         }
     }
 }
