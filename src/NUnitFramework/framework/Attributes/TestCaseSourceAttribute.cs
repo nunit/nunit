@@ -115,7 +115,6 @@ namespace NUnit.Framework
         /// <param name="suite">The suite to which the tests will be added.</param>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
-
             int count = 0;
 
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
@@ -142,7 +141,6 @@ namespace NUnit.Framework
 
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
-            var methodName = method.Name;
             List<ITestCaseData> data = new();
 
             try
@@ -168,11 +166,6 @@ namespace NUnit.Framework
                         {
                             if (parms is null)
                             {
-                                if (method.MethodInfo.Name.Contains("HandlesParamsArray"))
-                                {
-                                    _ = 0;
-                                }
-
                                 object?[]? args = null;
 
                                 // 3. An array was passed, it may be an object[]
