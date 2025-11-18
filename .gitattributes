@@ -9,7 +9,6 @@
 *.DotSettings text eol=lf
 
 # MonoDevelop on Linux uses CRLF for these files
-*.sln	text	eol=crlf
 packages/repositories.config	text	eol=crlf
 
 # Allows checking out and developing in Windows

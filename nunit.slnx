@@ -1,14 +1,4 @@
 <Solution>
-  <Folder Name="/.config/">
-    <File Path=".config-macos/dotnet-tools.json" />
-    <File Path=".config/dotnet-tools.json" />
-  </Folder>
-  <Folder Name="/.github/" />
-  <Folder Name="/.github/workflows/">
-    <File Path=".github/workflows/NUnit.CI.yml" />
-    <File Path=".github/workflows/NUnit.Myget.Publish.yml" />
-    <File Path=".github/workflows/NUnit.Nuget.Publish.yml" />
-  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -32,10 +22,17 @@
     <File Path="THIRD_PARTY_NOTICES.md" />
     <File Path="THIRD_PARTY_NOTICES_DEV.md" />
   </Folder>
+  <Folder Name="/Solution Items/.config-macos/">
+    <File Path=".config-macos/dotnet-tools.json" />
+  </Folder>
+  <Folder Name="/Solution Items/.config/">
+    <File Path=".config/dotnet-tools.json" />
+  </Folder>
   <Folder Name="/Solution Items/.github/" />
   <Folder Name="/Solution Items/.github/workflows/">
     <File Path=".github/workflows/NUnit.CI.yml" />
     <File Path=".github/workflows/NUnit.Myget.Publish.yml" />
+    <File Path=".github/workflows/NUnit.Nuget.Publish.yml" />
   </Folder>
   <Folder Name="/Solution Items/nuget/" />
   <Folder Name="/Solution Items/nuget/framework/">
