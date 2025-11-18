@@ -569,9 +569,8 @@ namespace NUnit.Framework.Tests.Attributes
                 var expectedName = (string?)test.Properties.Get("ExpectedTestName");
                 Assert.That(expectedName, Is.Not.Null);
 
-                var d = new TestCaseData(test, expectedName)
+                yield return new TestCaseData(test, expectedName)
                     .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
-                yield return d;
             }
         }
 
