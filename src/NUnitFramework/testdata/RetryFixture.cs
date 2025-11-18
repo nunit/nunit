@@ -203,4 +203,26 @@ namespace NUnit.TestData.RepeatingTests
             }
         }
     }
+
+    public class RetryWithRetryExceptionFixture : RepeatingTestsFixtureBase
+    {
+        [Test]
+        [Retry(3, typeof(TimeoutException), typeof(OperationCanceledException))]
+        public void RetriesOnAllowedException()
+        {
+            Count = TestContext.CurrentContext.CurrentRepeatCount;
+            if (Count == 0)
+                throw new TimeoutException("forcing a retry on allowed TimeoutException");
+            else if (Count == 1)
+                throw new OperationCanceledException("forcing a retry on allowed OperationCanceledException");
+        }
+
+        [Test]
+        [Retry(3, typeof(Exception))]
+        public void RetriesButEventuallyFails()
+        {
+            Count = TestContext.CurrentContext.CurrentRepeatCount;
+            throw new NullReferenceException("Failure due to badly written test");
+        }
+    }
 }

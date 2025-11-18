@@ -15,14 +15,26 @@ namespace NUnit.Framework
     public class RetryAttribute : NUnitAttribute, IRepeatTest
     {
         private readonly int _tryCount;
+        private readonly Type[] _retryExceptions;
 
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
         /// </summary>
         /// <param name="tryCount">The maximum number of times the test should be run if it fails</param>
         public RetryAttribute(int tryCount)
+            : this(tryCount, Array.Empty<Type>())
+        {
+        }
+
+        /// <summary>
+        /// Construct a <see cref="RetryAttribute" />
+        /// </summary>
+        /// <param name="tryCount">The maximum number of times the test should be run if it fails.</param>
+        /// <param name="retryExceptions">A list of exception types, that trigger a retry when thrown.</param>
+        public RetryAttribute(int tryCount, params Type[] retryExceptions)
         {
             _tryCount = tryCount;
+            _retryExceptions = retryExceptions ?? Array.Empty<Type>();
         }
 
         #region IRepeatTest Members
@@ -34,7 +46,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RetryCommand(command, _tryCount);
+            return new RetryCommand(command, _tryCount, _retryExceptions);
         }
 
         #endregion
@@ -47,16 +59,29 @@ namespace NUnit.Framework
         public class RetryCommand : DelegatingTestCommand
         {
             private readonly int _tryCount;
+            private readonly Type[] _retryExceptions;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RetryCommand"/> class.
             /// </summary>
             /// <param name="innerCommand">The inner command.</param>
-            /// <param name="tryCount">The maximum number of repetitions</param>
+            /// <param name="tryCount">The maximum number of repetitions.</param>
             public RetryCommand(TestCommand innerCommand, int tryCount)
+                : this(innerCommand, tryCount, Array.Empty<Type>())
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RetryCommand"/> class.
+            /// </summary>
+            /// <param name="innerCommand">The inner command.</param>
+            /// <param name="tryCount">The maximum number of repetitions.</param>
+            /// <param name="retryExceptions">A list of exception types, that trigger a retry when thrown.</param>
+            public RetryCommand(TestCommand innerCommand, int tryCount, Type[] retryExceptions)
                 : base(innerCommand)
             {
                 _tryCount = tryCount;
+                _retryExceptions = retryExceptions;
             }
 
             /// <summary>
@@ -70,21 +95,34 @@ namespace NUnit.Framework
 
                 while (count-- > 0)
                 {
+                    Exception? caughtException = null;
+
                     try
                     {
                         context.CurrentResult = innerCommand.Execute(context);
                     }
-                    // Commands are supposed to catch exceptions, but some don't
-                    // and we want to look at restructuring the API in the future.
                     catch (Exception ex)
                     {
+                        caughtException = ex.Unwrap();
+
                         if (context.CurrentResult is null)
                             context.CurrentResult = context.CurrentTest.MakeTestResult();
-                        context.CurrentResult.RecordException(ex);
                     }
 
-                    if (context.CurrentResult.ResultState != ResultState.Failure)
+                    if (caughtException is not null and not ResultStateException)
+                    {
+                        if (count == 0 || IsRetryException(caughtException) is false)
+                        {
+                            context.CurrentResult.RecordException(caughtException);
+                            break;
+                        }
+                    }
+
+                    if (context.CurrentResult.ResultState != ResultState.Failure &&
+                        IsRetryException(context.CurrentResult.RecordedException) is false)
+                    {
                         break;
+                    }
 
                     // Clear result for retry
                     if (count > 0)
@@ -95,6 +133,23 @@ namespace NUnit.Framework
                 }
 
                 return context.CurrentResult;
+            }
+
+            private bool IsRetryException(Exception? ex)
+            {
+                if (ex is null)
+                    return false;
+
+                Type exceptionType = ex.GetType();
+                foreach (var retryException in _retryExceptions)
+                {
+                    if (retryException.IsAssignableFrom(exceptionType))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 

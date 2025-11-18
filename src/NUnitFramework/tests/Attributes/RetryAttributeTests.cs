@@ -99,5 +99,25 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
             Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
         }
+
+        [Test]
+        public void RetryOnAllowedException()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryWithRetryExceptionFixture));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesOnAllowedException");
+
+            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
+        }
+
+        [Test]
+        public void RetryOnAllowedExceptionTooManyRetries()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryWithRetryExceptionFixture));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesButEventuallyFails");
+
+            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.That(1, Is.EqualTo(result.FailCount), "expected that the test failed final retry");
+        }
     }
 }
