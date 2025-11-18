@@ -143,6 +143,7 @@ namespace NUnit.Framework
 
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
+            var methodName = method.Name;
             List<ITestCaseData> data = new();
 
             try
@@ -168,6 +169,11 @@ namespace NUnit.Framework
                         {
                             if (parms is null)
                             {
+                                if (method.MethodInfo.Name.Contains("HandlesParamsArray"))
+                                {
+                                    _ = 0;
+                                }
+
                                 object?[]? args = null;
 
                                 // 3. An array was passed, it may be an object[]
@@ -187,6 +193,12 @@ namespace NUnit.Framework
                                         args = new object?[array.Length];
                                         for (var i = 0; i < array.Length; i++)
                                             args[i] = array.GetValue(i);
+
+                                        if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object))
+                                        {
+                                            // wrap the raw array so that it can be passed as expected
+                                            args = [args];
+                                        }
                                     }
                                 }
 

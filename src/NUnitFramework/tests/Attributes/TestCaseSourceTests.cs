@@ -186,6 +186,22 @@ namespace NUnit.Framework.Tests.Attributes
             return n / d;
         }
 
+        [Test, TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoObject(object array)
+        {
+            var args = array as Array;
+
+            Assert.That(args, Is.Not.Null);
+            Assert.That(args, Has.Length.EqualTo(3));
+            Assert.That(args, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [Test, TestCaseSource(nameof(ExplicitNullValue))]
+        public void TestMayReceiveExplicitNullValue(object item)
+        {
+            Assert.That(item, Is.Null);
+        }
+
         [Test]
         [TestCaseSource(nameof(MyData))]
         [TestCaseSource(nameof(MoreData), Category = "Extra")]
@@ -388,6 +404,19 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        [TestCaseSource(nameof(ExplicitNullValue))]
+        public void HandlesParamsArrayWithExplicitNullArgument(params string[] array)
+        {
+            Assert.That(array, Has.Length.EqualTo(1));
+            Assert.That(array, Is.EqualTo(ExplicitNullValue));
+        }
+
+        [TestCaseSource(nameof(ExplicitEmptyValue))]
+        public void HandlesParamsArrayWithExplicitEmptyArgument(params string[] array)
+        {
+            Assert.That(array, Is.Empty);
+        }
+
         [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
@@ -778,6 +807,11 @@ namespace NUnit.Framework.Tests.Attributes
             new[] { 12, 4 },
             new[] { 12, 6, 2 }
         };
+        private static readonly object[] SingleDimensionArray = [
+            new[] { 12, 6, 2 }
+        ];
+        private static readonly object?[] ExplicitNullValue = [null];
+        private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
 
         private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
