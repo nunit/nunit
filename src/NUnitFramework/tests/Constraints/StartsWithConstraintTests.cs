@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Globalization;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -37,6 +39,70 @@ namespace NUnit.Framework.Tests.Constraints
             var result = constraint.ApplyTo("re\u0301sume\u0301");
             Assert.That(result.IsSuccess, Is.True);
         }
+
+        [TestCase("ss ", "ß", StringComparison.CurrentCulture)]
+        [TestCase("ss ", "s", StringComparison.CurrentCulture)]
+        [TestCase("SS ", "s", StringComparison.CurrentCulture)]
+        [TestCase("ss ", "ß", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase("ss ", "s", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase("SS ", "s", StringComparison.CurrentCultureIgnoreCase)]
+        [TestCase("ss ", "ß", StringComparison.InvariantCulture)]
+        [TestCase("ss ", "s", StringComparison.InvariantCulture)]
+        [TestCase("SS ", "s", StringComparison.InvariantCulture)]
+        [TestCase("ss ", "ß", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase("ss ", "s", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase("SS ", "s", StringComparison.InvariantCultureIgnoreCase)]
+        [TestCase("ss ", "ß", StringComparison.Ordinal)]
+        [TestCase("ss ", "s", StringComparison.Ordinal)]
+        [TestCase("SS ", "s", StringComparison.Ordinal)]
+        [TestCase("ss ", "ß", StringComparison.OrdinalIgnoreCase)]
+        [TestCase("ss ", "s", StringComparison.OrdinalIgnoreCase)]
+        [TestCase("SS ", "s", StringComparison.OrdinalIgnoreCase)]
+        public void SpecifyComparisonType(string actual, string expected, StringComparison comparison)
+        {
+            // Get platform-specific StringComparison behavior
+            var shouldSucceed = actual.StartsWith(expected, comparison);
+
+            Constraint constraint = Does.StartWith(expected).Using(comparison);
+            if (!shouldSucceed)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
+        }
+
+        [TestCase("ss ", "ß")]
+        [TestCase("ß ", "ß")]
+        [TestCase("ss ", "s")]
+        [TestCase("SS ", "s")]
+        public void SpecifyCultureInfo(string actual, string expected)
+        {
+            var cultureInfo = new CultureInfo("de-DE");
+            // Get platform-specific StringComparison behavior
+            var shouldSucceed = actual.StartsWith(expected, false, cultureInfo);
+
+            Constraint constraint = Does.StartWith(expected).Using(cultureInfo);
+            if (!shouldSucceed)
+                constraint = new NotConstraint(constraint);
+
+            Assert.That(actual, constraint);
+        }
+
+        [Test]
+        public void MultipleUsingModifiers_ThrowsException()
+        {
+            var startsWithConstraint = new StartsWithConstraint("hello");
+            Assert.Multiple(() =>
+            {
+                Assert.That(() => startsWithConstraint.Using(StringComparison.Ordinal).Using(CultureInfo.InvariantCulture),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => startsWithConstraint.Using(CultureInfo.InvariantCulture).Using(StringComparison.Ordinal),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => startsWithConstraint.Using(StringComparison.Ordinal).Using(StringComparison.OrdinalIgnoreCase),
+                    Throws.TypeOf<InvalidOperationException>());
+                Assert.That(() => startsWithConstraint.Using(CultureInfo.InvariantCulture).Using(CultureInfo.CurrentCulture),
+                    Throws.TypeOf<InvalidOperationException>());
+            });
+        }
     }
 
     [TestFixture]
@@ -67,10 +133,33 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void RespectsCulture()
         {
-            var constraint = new EndsWithConstraint("r\u00E9sum\u00E9").IgnoreCase;
+            var constraint = new StartsWithConstraint("r\u00E9sum\u00E9").IgnoreCase;
 
             var result = constraint.ApplyTo("re\u0301sume\u0301");
             Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [TestCase("ss ", "ß")]
+        [TestCase("ß ", "ß")]
+        [TestCase("ss ", "s")]
+        [TestCase("SS ", "s")]
+        public void SpecifyCultureInfo(string actual, string expected)
+        {
+            var cultureInfo = new CultureInfo("de-DE");
+            // Get platform-specific StringComparison behavior
+            var shouldSucceed = actual.StartsWith(expected, true, cultureInfo);
+
+            Constraint constraint1 = Does.StartWith(expected).Using(cultureInfo).IgnoreCase;
+            Constraint constraint2 = Does.StartWith(expected).IgnoreCase.Using(cultureInfo);
+
+            if (!shouldSucceed)
+            {
+                constraint1 = new NotConstraint(constraint1);
+                constraint2 = new NotConstraint(constraint2);
+            }
+
+            Assert.That(actual, constraint1);
+            Assert.That(actual, constraint2);
         }
     }
 }

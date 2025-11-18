@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
 
 namespace NUnit.Framework.Constraints
 {
@@ -10,8 +11,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SubstringConstraint : StringConstraint
     {
-        private StringComparison? _comparisonType;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
@@ -22,47 +21,49 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Modify the constraint to ignore case in matching.
-        /// This will call Using(StringComparison.CurrentCultureIgnoreCase).
+        /// Modify the constraint to the specified comparison.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <see cref="StringComparison.CurrentCultureIgnoreCase"/> was already set.</exception>
-        public override StringConstraint IgnoreCase
+        /// than <paramref name="comparisonType"/> was already set.</exception>
+        public new SubstringConstraint Using(StringComparison comparisonType)
         {
-            get
-            {
-                Using(StringComparison.CurrentCultureIgnoreCase);
-                return base.IgnoreCase;
-            }
+            // This method is needed because of binary backward compatibility.
+            return (SubstringConstraint)base.Using(comparisonType);
         }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value
+        /// Test whether the constraint is satisfied by a given value.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string? actual)
         {
-            if (actual is null)
-                return false;
-
-            var actualComparison = _comparisonType ?? StringComparison.CurrentCulture;
-            return actual.IndexOf(expected, actualComparison) >= 0;
+            return actual is not null && actual.IndexOf(expected) >= 0;
         }
 
         /// <summary>
-        /// Modify the constraint to the specified comparison.
+        /// Test whether the constraint is satisfied by a given value
+        /// using the specified string comparison.
         /// </summary>
-        /// <exception cref="InvalidOperationException">Thrown when a comparison type different
-        /// than <paramref name="comparisonType"/> was already set.</exception>
-        public SubstringConstraint Using(StringComparison comparisonType)
+        /// <param name="actual">The value to be tested</param>
+        /// <param name="stringComparison">The string comparison to use</param>
+        /// <returns>True for success, false for failure</returns>
+        protected override bool Matches(string? actual, StringComparison stringComparison)
         {
-            if (_comparisonType is null)
-                _comparisonType = comparisonType;
-            else if (_comparisonType != comparisonType)
-                throw new InvalidOperationException("A different comparison type was already set.");
+            return actual is not null && actual.IndexOf(expected, stringComparison) >= 0;
+        }
 
-            return this;
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// using the specified culture.
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <param name="cultureInfo">The culture info to use for comparison</param>
+        /// <returns>True for success, false for failure</returns>
+        protected override bool Matches(string? actual, CultureInfo cultureInfo)
+        {
+            return actual is not null && cultureInfo.CompareInfo.IndexOf(actual, expected,
+                caseInsensitive ? CompareOptions.IgnoreCase : CompareOptions.None) >= 0;
         }
     }
 }

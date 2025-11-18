@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
 
 namespace NUnit.Framework.Constraints
 {
@@ -20,16 +21,39 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Test whether the constraint is matched by the actual value.
-        /// This is a template method, which calls the IsMatch method
-        /// of the derived class.
+        /// Determines whether the actual string value starts with the expected substring.
         /// </summary>
-        /// <param name="actual"></param>
+        /// <param name="actual">The string value to test.</param>
         /// <returns></returns>
         protected override bool Matches(string? actual)
         {
-            var stringComparison = caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            return actual is not null && actual.StartsWith(expected);
+        }
+
+        /// <summary>
+        /// Determines whether the actual string value starts with the expected substring,
+        /// using the specified string comparison.
+        /// </summary>
+        /// <param name="actual">The string value to test.</param>
+        /// <param name="stringComparison">The string comparison to use.</param>
+        /// <returns></returns>
+        protected override bool Matches(string? actual, StringComparison stringComparison)
+        {
             return actual is not null && actual.StartsWith(expected, stringComparison);
+        }
+
+        /// <summary>
+        /// Determines whether the actual string value starts with the expected substring,
+        /// using the specified <see cref="CultureInfo"/> and case sensitivity specified by the constraint.
+        /// If <paramref name="cultureInfo"/> is not null, the comparison uses culture-specific rules;
+        /// otherwise, it falls back to the default string comparison logic.
+        /// </summary>
+        /// <param name="actual">The string value to test.</param>
+        /// <param name="cultureInfo">The culture information to use for the comparison.</param>
+        /// <returns></returns>
+        protected override bool Matches(string? actual, CultureInfo cultureInfo)
+        {
+            return actual is not null && actual.StartsWith(expected, caseInsensitive, cultureInfo);
         }
     }
 }

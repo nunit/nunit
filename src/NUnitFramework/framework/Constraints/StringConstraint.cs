@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Globalization;
+using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -11,6 +13,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class StringConstraint : Constraint
     {
+        #region Static and Instance Fields
+
         /// <summary>
         /// The expected value
         /// </summary>
@@ -39,19 +43,18 @@ namespace NUnit.Framework.Constraints
 #pragma warning restore IDE1006
 
         /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
+        /// The comparison type to use for string comparisons
         /// </summary>
-        public override string Description
-        {
-            get
-            {
-                string desc = $"{descriptionText} {MsgUtils.FormatValue(expected)}";
-                if (caseInsensitive)
-                    desc += ", ignoring case";
-                return desc;
-            }
-        }
+        private StringComparison? _comparisonType;
+
+        /// <summary>
+        /// The culture info to use for string comparisons
+        /// </summary>
+        private CultureInfo? _cultureInfo;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Constructs a StringConstraint without an expected value
@@ -71,6 +74,10 @@ namespace NUnit.Framework.Constraints
             this.expected = expected;
         }
 
+        #endregion
+
+        #region Constraint Modifiers
+
         /// <summary>
         /// Modify the constraint to ignore case in matching.
         /// </summary>
@@ -84,6 +91,70 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Modify the constraint to use the specified comparison.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a comparison type was already set
+        /// or when a culture info was already set.</exception>
+        public virtual StringConstraint Using(StringComparison comparisonType)
+        {
+            if (_comparisonType is not null || _cultureInfo is not null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
+
+            _comparisonType = comparisonType;
+            return this;
+        }
+
+        /// <summary>
+        /// Modify the constraint to use the specified culture info.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown when a culture info was already set
+        /// or when a comparison type was already set.</exception>
+        public virtual StringConstraint Using(CultureInfo culture)
+        {
+            if (_comparisonType is not null || _cultureInfo is not null)
+                throw new InvalidOperationException("Only one Using modifier may be used");
+
+            _cultureInfo = culture;
+            return this;
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given string
+        /// </summary>
+        /// <param name="actual">The string to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        protected abstract bool Matches(string? actual);
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given string with a specific string comparison
+        /// </summary>
+        /// <param name="actual">The string to be tested</param>
+        /// <param name="stringComparison">The string comparison type to be used</param>
+        /// <returns>True for success, false for failure</returns>
+        protected virtual bool Matches(string? actual, StringComparison stringComparison)
+        {
+            return Matches(actual);
+        }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given string with a specific culture
+        /// </summary>
+        /// <param name="actual">The string to be tested</param>
+        /// <param name="cultureInfo">The culture info to use for comparison</param>
+        /// <returns>True for success, false for failure</returns>
+        protected virtual bool Matches(string? actual, CultureInfo cultureInfo)
+        {
+            return Matches(actual);
+        }
+
+        #endregion
+
+        #region Public Methods
+        /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
@@ -92,14 +163,58 @@ namespace NUnit.Framework.Constraints
         {
             var stringValue = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: true);
 
-            return new ConstraintResult(this, actual, Matches(stringValue));
+            bool result;
+            if (_cultureInfo is not null)
+                result = Matches(stringValue, _cultureInfo);
+            else if (_comparisonType is not null)
+                result = Matches(stringValue, caseInsensitive ? GetIgnoreCaseEquivalent(_comparisonType.Value) : _comparisonType.Value);
+            else if (caseInsensitive)
+                result = Matches(stringValue, StringComparison.CurrentCultureIgnoreCase);
+            else
+                result = Matches(stringValue);
+
+            return new ConstraintResult(this, actual, result);
         }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given string
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
         /// </summary>
-        /// <param name="actual">The string to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        protected abstract bool Matches(string? actual);
+        public override string Description
+        {
+            get
+            {
+                string desc = $"{descriptionText} {MsgUtils.FormatValue(expected)}";
+                if (caseInsensitive)
+                    desc += ", ignoring case";
+                if (_comparisonType is not null)
+                    desc += $", with comparison type {_comparisonType}";
+                else if (_cultureInfo is not null)
+                    desc += $", with culture: {_cultureInfo.Name}";
+                return desc;
+            }
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private static StringComparison GetIgnoreCaseEquivalent(StringComparison? currentComparison)
+        {
+            return currentComparison switch
+            {
+                null => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.CurrentCulture => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.InvariantCulture => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.Ordinal => StringComparison.OrdinalIgnoreCase,
+                StringComparison.OrdinalIgnoreCase => StringComparison.OrdinalIgnoreCase,
+                _ => throw new InvalidOperationException($"Unsupported StringComparison value: {currentComparison}")
+
+            };
+        }
+
+        #endregion
     }
 }
