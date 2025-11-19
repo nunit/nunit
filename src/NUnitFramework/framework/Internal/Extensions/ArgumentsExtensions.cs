@@ -25,6 +25,14 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         /// <summary>
+        /// Checks if the parameter is a 'params' array.
+        /// </summary>
+        public static bool ParameterIsParamsArray(this IParameterInfo lastParameter)
+        {
+            return lastParameter.ParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false);
+        }
+
+        /// <summary>
         /// Checks if the last parameter in a parameter list is a 'params' array.
         /// </summary>
         public static bool LastParameterIsParamsArray(this IParameterInfo[] parameters)
@@ -34,8 +42,7 @@ namespace NUnit.Framework.Internal.Extensions
                 return false;
             }
 
-            var lastParameter = parameters[parameters.Length - 1];
-            return lastParameter.ParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false);
+            return parameters[parameters.Length - 1].ParameterIsParamsArray();
         }
     }
 }

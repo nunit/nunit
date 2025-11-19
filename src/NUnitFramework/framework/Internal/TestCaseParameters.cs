@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal
             {
                 IParameterInfo lastParameter = parameters[argsNeeded - 1];
 
-                if (parameters.LastParameterIsParamsArray())
+                if (lastParameter.ParameterIsParamsArray())
                 {
                     Type lastParameterType = lastParameter.ParameterType;
                     Type elementType = lastParameterType.GetElementType()!;
