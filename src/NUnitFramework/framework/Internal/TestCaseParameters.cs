@@ -163,10 +163,7 @@ namespace NUnit.Framework.Internal
                     }
                     else
                     {
-                        if (i < Arguments.Length)
-                            newArgList[i] = Arguments[i];
-                        else
-                            throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but only {argsProvided} were supplied");
+                        throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but only {argsProvided} were supplied");
                     }
                 }
                 Arguments = newArgList;
