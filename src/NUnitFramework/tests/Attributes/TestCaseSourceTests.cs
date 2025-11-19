@@ -417,13 +417,14 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(array, Is.Empty);
         }
 
-        [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
+        [TestCaseSource(nameof(ParamsArrayThreeStringArguments))]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(array[0], Is.EqualTo("a"));
                 Assert.That(array[1], Is.EqualTo("b"));
+                Assert.That(array[2], Is.EqualTo("c"));
             });
         }
 
@@ -481,6 +482,17 @@ namespace NUnit.Framework.Tests.Attributes
                 yield return new TestCaseData("a", "b").SetArgDisplayNames("new TestCaseData(\"a\", \"b\")");
                 yield return new TestCaseData<string>("a", "b").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\")");
                 yield return new string[] { "a", "b" };
+            }
+        }
+
+
+        private static IEnumerable ParamsArrayThreeStringArguments
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b", "c").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\")");
+                yield return new TestCaseData<string>("a", "b", "c").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\", \"c\")");
+                yield return new string[] { "a", "b", "c" };
             }
         }
 
