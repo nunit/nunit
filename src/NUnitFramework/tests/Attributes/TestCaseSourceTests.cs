@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -18,16 +19,16 @@ namespace NUnit.Framework.Tests.Attributes
     {
         #region Tests With Static and Instance Members as Source
 
-        [Test, TestCaseSource(nameof(StaticProperty))]
+        [TestCaseSource(nameof(StaticProperty))]
         public void SourceCanBeStaticProperty(string source)
         {
             Assert.That(source, Is.EqualTo("StaticProperty"));
         }
 
-        [Test, TestCaseSource(nameof(InheritedStaticProperty))]
+        [TestCaseSource(nameof(InheritedStaticProperty))]
         public void TestSourceCanBeInheritedStaticProperty(bool source)
         {
-            Assert.That(source, Is.EqualTo(true));
+            Assert.That(source, Is.True);
         }
 
         private static IEnumerable StaticProperty =>
@@ -36,7 +37,7 @@ namespace NUnit.Framework.Tests.Attributes
                 new object[] { "StaticProperty" }
             };
 
-        [Test, TestCaseSource(nameof(StaticAsyncMethod))]
+        [TestCaseSource(nameof(StaticAsyncMethod))]
         public void SourceCanBeStaticAsyncMethod(string source)
         {
             Assert.That(source, Is.EqualTo("StaticAsyncMethod"));
@@ -48,13 +49,13 @@ namespace NUnit.Framework.Tests.Attributes
             return Task.FromResult((IEnumerable?)result);
         }
 
-        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
+        [TestCaseSource(nameof(StaticAsyncEnumerableMethod))]
         public void SourceCanBeStaticAsyncEnumerableMethod(string source)
         {
             Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethod"));
         }
 
-        [Test, TestCaseSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
+        [TestCaseSource(nameof(StaticAsyncEnumerableMethodReturningTask))]
         public void SourceCanBeStaticAsyncEnumerableMethodReturningTask(string source)
         {
             Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
@@ -80,7 +81,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(ResultState.NotRunnable, Is.EqualTo(result.Children.ToArray()[0].ResultState));
         }
 
-        [Test, TestCaseSource(nameof(StaticMethod))]
+        [TestCaseSource(nameof(StaticMethod))]
         public void SourceCanBeStaticMethod(string source)
         {
             Assert.That(source, Is.EqualTo("StaticMethod"));
@@ -103,7 +104,7 @@ namespace NUnit.Framework.Tests.Attributes
             return new object[] { new object[] { "InstanceMethod" } };
         }
 
-        [Test, TestCaseSource(nameof(StaticField))]
+        [TestCaseSource(nameof(StaticField))]
         public void SourceCanBeStaticField(string source)
         {
             Assert.That(source, Is.EqualTo("StaticField"));
@@ -125,7 +126,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         #region Test With IEnumerable Class as Source
 
-        [Test, TestCaseSource(typeof(DataSourceClass))]
+        [TestCaseSource(typeof(DataSourceClass))]
         public void SourceCanBeInstanceOfIEnumerable(string source)
         {
             Assert.That(source, Is.EqualTo("DataSourceClass"));
@@ -145,7 +146,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         #endregion
 
-        [Test, TestCaseSource(nameof(MyData))]
+        [TestCaseSource(nameof(MyData))]
         public void SourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
@@ -157,13 +158,13 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, TestCaseSource(nameof(MyIntData))]
+        [TestCaseSource(nameof(MyIntData))]
         public void SourceMayReturnArgumentsAsIntArray(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, TestCaseSource(nameof(MyArrayData))]
+        [TestCaseSource(nameof(MyArrayData))]
         public void SourceMayReturnArrayForArray(int[] array)
         {
             Assert.Multiple(() =>
@@ -173,19 +174,34 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-        [Test, TestCaseSource(nameof(EvenNumbers))]
+        [TestCaseSource(nameof(EvenNumbers))]
         public void SourceMayReturnSinglePrimitiveArgumentAlone(int n)
         {
             Assert.That(n % 2, Is.EqualTo(0));
         }
 
-        [Test, TestCaseSource(nameof(Params))]
+        [TestCaseSource(nameof(Params))]
         public int SourceMayReturnArgumentsAsParamSet(int n, int d)
         {
             return n / d;
         }
 
-        [Test]
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoObject(object array)
+        {
+            var args = array as Array;
+
+            Assert.That(args, Is.Not.Null);
+            Assert.That(args, Has.Length.EqualTo(3));
+            Assert.That(args, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(ExplicitNullValue))]
+        public void TestMayReceiveExplicitNullValue(object item)
+        {
+            Assert.That(item, Is.Null);
+        }
+
         [TestCaseSource(nameof(MyData))]
         [TestCaseSource(nameof(MoreData), Category = "Extra")]
         [TestCase(12, 2, 6)]
@@ -194,7 +210,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, TestCaseSource(nameof(FourArgs))]
+        [TestCaseSource(nameof(FourArgs))]
         public void TestWithFourArguments(int n, int d, int q, int r)
         {
             Assert.Multiple(() =>
@@ -204,19 +220,19 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheData))]
+        [Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheData))]
         public void SourceMayBeInAnotherClass(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheDataWithParameters), new object[] { 100, 4, 25 })]
+        [Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheDataWithParameters), new object[] { 100, 4, 25 })]
         public void SourceInAnotherClassPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, Category("Top"), TestCaseSource(nameof(StaticMethodDataWithParameters), new object[] { 8000, 8, 1000 })]
+        [Category("Top"), TestCaseSource(nameof(StaticMethodDataWithParameters), new object[] { 8000, 8, 1000 })]
         public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
@@ -270,7 +286,7 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-        [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), nameof(DivideDataProviderWithReturnValue.TestCases))]
+        [TestCaseSource(typeof(DivideDataProviderWithReturnValue), nameof(DivideDataProviderWithReturnValue.TestCases))]
         public int SourceMayBeInAnotherClassWithReturn(int n, int d)
         {
             return n / d;
@@ -386,6 +402,130 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(rhs, Is.EqualTo(lhs));
         }
 
+#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+        [TestCaseSource(nameof(ExplicitNullValue))]
+        public void HandlesParamsArrayWithExplicitNullArgument(params string[] array)
+        {
+            Assert.That(array, Has.Length.EqualTo(1));
+            Assert.That(array, Is.EqualTo(ExplicitNullValue));
+        }
+
+        [TestCaseSource(nameof(ExplicitEmptyValue))]
+        public void HandlesParamsArrayWithExplicitEmptyArgument(params string[] array)
+        {
+            Assert.That(array, Is.Empty);
+        }
+
+        [TestCaseSource(nameof(ParamsArrayThreeStringArguments))]
+        public void HandlesParamsArrayAsSoleArgument(params string[] array)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(array[0], Is.EqualTo("a"));
+                Assert.That(array[1], Is.EqualTo("b"));
+                Assert.That(array[2], Is.EqualTo("c"));
+            });
+        }
+
+        [TestCaseSource(nameof(ParamsArrayOneStringArgument))]
+        public void HandlesParamsArrayWithOneItemAsSoleArgument(params string[] array)
+        {
+            Assert.That(array[0], Is.EqualTo("a"));
+        }
+
+        [TestCaseSource(nameof(ParamsArrayFourStringArguments))]
+        public void HandlesParamsArrayAsLastArgument(string s1, string s2, params object[] array)
+        {
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
+            Assert.That(array[1], Is.EqualTo("d"));
+        }
+
+        [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
+        public void HandlesParamsArrayWithNoItemsAsLastArgument(string s1, string s2, params string[] array)
+        {
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array, Is.Empty);
+        }
+
+        [TestCaseSource(nameof(OptionalArgumentsTestCasesSource))]
+        public string[] HandlesOptionalArguments(string s1 = "a", string s2 = "b", string s3 = "c")
+        {
+            return [s1, s2, s3];
+        }
+
+        [TestCaseSource(nameof(OneArg)), CancelAfter(5000)]
+        public void HandlesCancellationTokenAsLastArgument(int _, CancellationToken cancellationToken)
+        {
+            Assert.That(cancellationToken, Is.Not.Default);
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
+#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
+
+        private static IEnumerable ParamsArrayOneStringArgument
+        {
+            get
+            {
+                yield return new TestCaseData("a").SetArgDisplayNames("new TestCaseData(\"a\")");
+                yield return new TestCaseData<string>("a").SetArgDisplayNames("new TestCaseData<string>(\"a\")");
+                yield return new string[] { "a" };
+            }
+        }
+
+        private static IEnumerable ParamsArrayTwoStringArguments
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b").SetArgDisplayNames("new TestCaseData(\"a\", \"b\")");
+                yield return new TestCaseData<string>("a", "b").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\")");
+                yield return new string[] { "a", "b" };
+            }
+        }
+
+        private static IEnumerable ParamsArrayThreeStringArguments
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b", "c").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\")");
+                yield return new TestCaseData<string>("a", "b", "c").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\", \"c\")");
+                yield return new string[] { "a", "b", "c" };
+            }
+        }
+
+        private static IEnumerable ParamsArrayFourStringArguments
+        {
+            get
+            {
+                yield return new TestCaseData("a", "b", "c", "d").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\", \"d\")");
+                yield return new string[] { "a", "b", "c", "d" };
+            }
+        }
+
+        private static IEnumerable OptionalArgumentsTestCasesSource
+        {
+            get
+            {
+                yield return new TestCaseData()
+                    .SetArgDisplayNames("new TestCaseData()")
+                    .Returns(new[] { "a", "b", "c" });
+
+                yield return new TestCaseData("x")
+                    .SetArgDisplayNames("new TestCaseData(\"x\")")
+                    .Returns(new[] { "x", "b", "c" });
+
+                yield return new TestCaseData("x", "y")
+                    .SetArgDisplayNames("new TestCaseData(\"x\", \"y\")")
+                    .Returns(new[] { "x", "y", "c" });
+
+                yield return new TestCaseData("x", "y", "z")
+                    .SetArgDisplayNames("new TestCaseData(\"x\", \"y\", \"z\")")
+                    .Returns(new[] { "x", "y", "z" });
+            }
+        }
+
         private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
 
         [TestCaseSource(nameof(ZeroTestCasesSource))]
@@ -409,7 +549,7 @@ namespace NUnit.Framework.Tests.Attributes
                 new[] { "B" })
         };
 
-        [Test, TestCaseSource(nameof(TestCases))]
+        [TestCaseSource(nameof(TestCases))]
         public void MethodTakingTwoStringArrays(string[] a, string[] b)
         {
             Assert.Multiple(() =>
@@ -425,7 +565,10 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(args.Length == 1 && args[0] == "1");
         }
 
-        private static readonly string[][] SingleMemberArrayAsArgument = { new[] { "1" } };
+        private static readonly string[][] SingleMemberArrayAsArgument =
+        [
+            ["1"]
+        ];
 
         #region Test name tests
 
@@ -487,7 +630,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
         {
-            yield return new TestCaseData("2") { TypeArgs = new[] { typeof(long) } };
+            yield return new TestCaseData("2") { TypeArgs = [typeof(long)] };
         }
 
         [TestCaseSource(nameof(GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases))]
@@ -498,12 +641,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             yield return new TestCaseData(2)
             {
-                TypeArgs = new[] { typeof(long) },
+                TypeArgs = [typeof(long)],
                 ExpectedResult = typeof(long)
             };
             yield return new TestCaseData(2L)
             {
-                TypeArgs = new[] { typeof(long) },
+                TypeArgs = [typeof(long)],
                 ExpectedResult = typeof(long)
             };
             yield return new TestCaseData(2)
@@ -514,7 +657,6 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 ExpectedResult = typeof(long)
             };
-#if NET6_0_OR_GREATER
             yield return new TestCaseData<long>(2)
             {
                 ExpectedResult = typeof(long)
@@ -527,7 +669,6 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 ExpectedResult = typeof(int)
             };
-#endif
         }
 
         [Test]
@@ -568,7 +709,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             yield return new TestCaseData(new DerivedIntConverter(), 2)
             {
-                TypeArgs = new[] { typeof(IntConverter), typeof(int) }
+                TypeArgs = [typeof(IntConverter), typeof(int)]
             };
 #if NET6_0_OR_GREATER
             yield return new TestCaseData<IntConverter, int>(new DerivedIntConverter(), 2);
@@ -661,47 +802,54 @@ namespace NUnit.Framework.Tests.Attributes
 #endif
 
         #region Sources used by the tests
-        private static readonly object[] MyData = new object[]
-        {
+        private static readonly object[] MyData =
+        [
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
             new object[] { 12, 6, 2 }
-        };
-        private static readonly object[] MyIntData = new object[]
-        {
+        ];
+        private static readonly object[] MyIntData =
+        [
             new[] { 12, 3, 4 },
             new[] { 12, 4, 3 },
             new[] { 12, 6, 2 }
-        };
-        private static readonly object[] MyArrayData = new object[]
-        {
+        ];
+        private static readonly object[] MyArrayData =
+        [
             new[] { 12 },
             new[] { 12, 4 },
             new[] { 12, 6, 2 }
-        };
+        ];
+        private static readonly object[] SingleDimensionArray =
+        [
+            new[] { 12, 6, 2 }
+        ];
+        private static readonly object?[] ExplicitNullValue = [null];
+        private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
 
         private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
             yield return new object[] { inject1, inject2, inject3 };
         }
 
-        private static readonly object[] FourArgs = new object[]
-        {
+        private static readonly object[] OneArg = [new TestCaseData(12)];
+        private static readonly object[] FourArgs =
+        [
             new TestCaseData(12, 3, 4, 0),
             new TestCaseData(12, 4, 3, 0),
             new TestCaseData(12, 5, 2, 2)
-        };
-        private static readonly int[] EvenNumbers = new[] { 2, 4, 6, 8 };
-        private static readonly object[] MoreData = new object[]
-        {
+        ];
+        private static readonly int[] EvenNumbers = [2, 4, 6, 8];
+        private static readonly object[] MoreData =
+        [
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 }
-        };
-        private static readonly object[] Params = new object[]
-        {
+        ];
+        private static readonly object[] Params =
+        [
             new TestCaseData(24, 3).Returns(8),
             new TestCaseData(24, 2).Returns(12)
-        };
+        ];
 
         private class DivideDataProvider
         {

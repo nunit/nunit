@@ -142,13 +142,14 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(a, Is.Null);
         }
 
-        [TestCase(new object[] { 1, "two", 3.0 })]
-        [TestCase(new object[] { "zip" })]
+        [TestCase([1, "two", 3.0])]
+        [TestCase(["zip"])]
         public void CanPassObjectArrayAsFirstArgument(object[] a)
         {
+            Assert.That(a, Is.Not.Null.And.Not.Empty);
         }
 
-        [TestCase(new object[] { "a", "b" })]
+        [TestCase(["a", "b"])]
         public void CanPassArrayAsArgument(object[] array)
         {
             Assert.That(array[0], Is.EqualTo("a"));
@@ -169,7 +170,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(array[1], Is.EqualTo("b"));
         }
 
-        [TestCase(new object?[] { null })]
+        [TestCase([null])]
         public void NullArgumentsAreCoalescedInObjectArray(object?[] array)
         {
             Assert.That(array, Is.EqualTo(new object?[] { null }));
@@ -182,6 +183,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase("a", "b")]
+        [TestCase(arg: new[] { "a", "b" })]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
             Assert.That(array[0], Is.EqualTo("a"));
@@ -224,7 +226,7 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
         public string[] HandlesOptionalArguments(string s1, string s2 = "b", string s3 = "c")
         {
-            return new[] { s1, s2, s3 };
+            return [s1, s2, s3];
         }
 
         [TestCase(ExpectedResult = new[] { "a", "b" })]
@@ -232,7 +234,7 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y" })]
         public string[] HandlesAllOptionalArguments(string s1 = "a", string s2 = "b")
         {
-            return new[] { s1, s2 };
+            return [s1, s2];
         }
 
 #pragma warning disable NUnit1004 // The TestCaseAttribute provided too many arguments
@@ -749,24 +751,24 @@ namespace NUnit.Framework.Tests.Attributes
 
         #endregion
 
-        [TestCase(TypeArgs = new[] { typeof(int) })]
+        [TestCase(TypeArgs = [typeof(int)])]
         public void ExplicitTypeArgsWithoutParameters<T>()
         {
             Assert.That(typeof(T), Is.EqualTo(typeof(int)));
         }
 
-        [TestCase("2", TypeArgs = new[] { typeof(long) })]
+        [TestCase("2", TypeArgs = [typeof(long)])]
         public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
         {
             Assert.That(typeof(T), Is.EqualTo(typeof(long)));
             Assert.That(input, Is.EqualTo("2"));
         }
 
-        [TestCase(2, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
-        [TestCase(2L, TypeArgs = new[] { typeof(long) }, ExpectedResult = typeof(long))]
+        [TestCase(2, TypeArgs = [typeof(long)], ExpectedResult = typeof(long))]
+        [TestCase(2L, TypeArgs = [typeof(long)], ExpectedResult = typeof(long))]
         [TestCase(2, ExpectedResult = typeof(int))]
         [TestCase(2L, ExpectedResult = typeof(long))]
-        [TestCase(2, TypeArgs = new[] { typeof(double) }, ExpectedResult = typeof(double))]
+        [TestCase(2, TypeArgs = [typeof(double)], ExpectedResult = typeof(double))]
         public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T _)
             => typeof(T);
 
@@ -866,7 +868,7 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-        [TestCase(2, TypeArgs = new[] { typeof(long) })]
+        [TestCase(2, TypeArgs = [typeof(long)])]
         public void ExplicitTypeArgsWithGenericConstraintSatisfied<T>(int input)
             where T : IConvertible
         {

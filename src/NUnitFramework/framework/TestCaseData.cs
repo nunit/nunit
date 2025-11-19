@@ -20,7 +20,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object?[]? args)
-            : base(args ?? new object?[] { null })
+            : base(args ?? [null])
         {
         }
 
@@ -29,7 +29,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestCaseData(object? arg)
-            : base(new[] { arg })
+            : base([arg])
         {
         }
 
@@ -39,7 +39,7 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object? arg1, object? arg2)
-            : base(new[] { arg1, arg2 })
+            : base([arg1, arg2])
         {
         }
 
@@ -50,7 +50,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object? arg1, object? arg2, object? arg3)
-            : base(new[] { arg1, arg2, arg3 })
+            : base([arg1, arg2, arg3])
         {
         }
 
@@ -195,20 +195,36 @@ namespace NUnit.Framework
         #endregion
     }
 
-#if NET6_0_OR_GREATER // Although this compiles for .NET Framework, it fails at runtime with a NotSupportedException : Generic types are not valid.
-
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
     public class TestCaseData<T> : TestCaseData
     {
         /// <summary>
-        /// Construct a TestCaseData with a list of arguments.
+        /// Construct a TestCaseData with a single argument.
         /// </summary>
         public TestCaseData(T argument)
-            : base(new object?[] { argument })
+            : base([argument])
         {
-            TypeArgs = new[] { typeof(T) };
+            TypeArgs = [typeof(T)];
+        }
+
+        /// <summary>
+        /// Construct a TestCaseData with two arguments.
+        /// </summary>
+        public TestCaseData(T argument1, T argument2)
+            : base([argument1, argument2])
+        {
+            TypeArgs = [typeof(T)];
+        }
+
+        /// <summary>
+        /// Construct a TestCaseData with three arguments.
+        /// </summary>
+        public TestCaseData(T argument1, T argument2, T argument3)
+            : base([argument1, argument2, argument3])
+        {
+            TypeArgs = [typeof(T)];
         }
     }
 
@@ -221,9 +237,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
         public TestCaseData(T1 argument1, T2 argument2)
-            : base(new object?[] { argument1, argument2 })
+            : base([argument1, argument2])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2) };
+            TypeArgs = [typeof(T1), typeof(T2)];
         }
     }
 
@@ -236,9 +252,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
         public TestCaseData(T1 argument1, T2 argument2, T3 argument3)
-            : base(new object?[] { argument1, argument2, argument3 })
+            : base([argument1, argument2, argument3])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
     }
 
@@ -251,9 +267,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
         public TestCaseData(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
-            : base(new object?[] { argument1, argument2, argument3, argument4 })
+            : base([argument1, argument2, argument3, argument4])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
     }
 
@@ -266,10 +282,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
         public TestCaseData(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
-            : base(new object?[] { argument1, argument2, argument3, argument4, argument5 })
+            : base([argument1, argument2, argument3, argument4, argument5])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
     }
-#endif
 }

@@ -68,9 +68,10 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(string sourceName, object?[]? methodParams)
         {
-            MethodParams = methodParams;
             SourceName = sourceName;
+            MethodParams = methodParams;
         }
+
         /// <summary>
         /// Construct with a Type
         /// </summary>
@@ -88,6 +89,7 @@ namespace NUnit.Framework
         /// If the source name is a field or property has no effect.
         /// </summary>
         public object?[]? MethodParams { get; }
+
         /// <summary>
         /// The name of a the method, property or field to be used as a source
         /// </summary>
@@ -159,38 +161,52 @@ namespace NUnit.Framework
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
                         ITestCaseData? parms = item is null
-                            ? new TestCaseParameters(new object?[] { null })
+                            ? new TestCaseParameters([null])
                             : item as ITestCaseData;
 
-                        if (parms is null)
+                        try
                         {
-                            object?[]? args = null;
-
-                            // 3. An array was passed, it may be an object[]
-                            //    or possibly some other kind of array, which
-                            //    TestCaseSource can accept.
-                            if (item is Array array)
+                            if (parms is null)
                             {
-                                // If array has the same number of elements as parameters
-                                // and it does not fit exactly into single existing parameter
-                                // we believe that this array contains arguments, not is a bare
-                                // argument itself.
-                                var parameters = method.GetParameters();
-                                var argsNeeded = parameters.Length;
-                                if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
+                                object?[]? args = null;
+
+                                // 3. An array was passed, it may be an object[]
+                                //    or possibly some other kind of array, which
+                                //    TestCaseSource can accept.
+                                if (item is Array array)
                                 {
-                                    args = new object?[array.Length];
-                                    for (var i = 0; i < array.Length; i++)
-                                        args[i] = array.GetValue(i);
+                                    // If array has the same number of elements as parameters
+                                    // and it does not fit exactly into single existing parameter
+                                    // we believe that this array contains arguments, not is a bare
+                                    // argument itself.
+                                    var parameters = method.GetParameters();
+                                    var argsNeeded = parameters.Length;
+                                    if (argsNeeded > 0 && (parameters.LastParameterIsParamsArray()
+                                        || argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType()))
+                                    {
+                                        args = new object?[array.Length];
+                                        for (var i = 0; i < array.Length; i++)
+                                            args[i] = array.GetValue(i);
+
+                                        if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object))
+                                        {
+                                            // wrap the raw array so that it can be passed as expected
+                                            args = [args];
+                                        }
+                                    }
                                 }
+
+                                parms = new TestCaseParameters(args ?? [item]);
                             }
 
-                            if (args is null)
+                            if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
                             {
-                                args = new[] { item };
+                                tcParms.AdjustArgumentsForMethod(method);
                             }
-
-                            parms = new TestCaseParameters(args);
+                        }
+                        catch (Exception ex)
+                        {
+                            parms = new TestCaseParameters(ex);
                         }
 
                         if (Category is not null)

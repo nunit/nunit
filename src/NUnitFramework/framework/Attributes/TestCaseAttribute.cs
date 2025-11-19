@@ -4,11 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -28,12 +26,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
-
-            if (arguments is null)
-                Arguments = new object?[] { null };
-            else
-                Arguments = arguments;
-
+            Arguments = arguments is null ? [null] : arguments;
             Properties = new PropertyBag();
         }
 
@@ -44,24 +37,24 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg };
+            Arguments = [arg];
             Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a TestCaseAttribute with a two arguments
+        /// Construct a TestCaseAttribute with two arguments
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg1, arg2 };
+            Arguments = [arg1, arg2];
             Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a TestCaseAttribute with a three arguments
+        /// Construct a TestCaseAttribute with three arguments
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
@@ -69,7 +62,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg1, arg2, arg3 };
+            Arguments = [arg1, arg2, arg3];
             Properties = new PropertyBag();
         }
 
@@ -299,134 +292,23 @@ namespace NUnit.Framework
 
         private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
         {
-            TestCaseParameters parms;
-
             try
             {
-                IParameterInfo[] parameters = method.GetParameters();
-                int argsNeeded = parameters.Length;
-                int argsProvided = Arguments.Length;
-
-                parms = new TestCaseParameters(this)
+                var parms = new TestCaseParameters(this)
                 {
-                    TypeArgs = TypeArgs
+                    TypeArgs = TypeArgs,
                 };
 
-                // Special handling for ExpectedResult (see if it needs to be converted into method return type)
-                if (parms.HasExpectedResult
-                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
-                {
-                    parms.ExpectedResult = expectedResultInTargetType;
-                }
+                parms.AdjustArgumentsForMethod(method);
 
-                // Special handling for CancellationToken
-                if (parameters.LastParameterAcceptsCancellationToken() &&
-                   (!Arguments.LastArgumentIsCancellationToken()))
-                {
-                    // Implict CancellationToken argument
-                    argsProvided++;
-                }
-
-                // Special handling for params arguments
-                if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-                {
-                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType()!;
-
-                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
-                    {
-                        if (argsProvided == argsNeeded)
-                        {
-                            if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
-                            {
-                                Array array = Array.CreateInstance(elementType, 1);
-                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
-                                parms.Arguments[argsProvided - 1] = array;
-                            }
-                        }
-                        else
-                        {
-                            object?[] newArglist = new object?[argsNeeded];
-                            for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                                newArglist[i] = parms.Arguments[i];
-
-                            int length = argsProvided - argsNeeded + 1;
-                            Array array = Array.CreateInstance(elementType, length);
-                            for (int i = 0; i < length; i++)
-                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
-
-                            newArglist[argsNeeded - 1] = array;
-                            parms.Arguments = newArglist;
-                            argsProvided = argsNeeded;
-                        }
-                    }
-                }
-
-                // Special handling for optional parameters
-                if (argsProvided < argsNeeded)
-                {
-                    var newArgList = new object?[parameters.Length];
-                    Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
-
-                    //Fill with Type.Missing for remaining required parameters where optional
-                    for (var i = parms.Arguments.Length; i < parameters.Length; i++)
-                    {
-                        if (parameters[i].IsOptional)
-                        {
-                            newArgList[i] = Type.Missing;
-                        }
-                        else
-                        {
-                            if (i < parms.Arguments.Length)
-                                newArgList[i] = parms.Arguments[i];
-                            else
-                                throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
-                        }
-                    }
-                    parms.Arguments = newArgList;
-                }
-
-                // Special handling when sole argument is an object[]
-                if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                {
-                    if (argsProvided > 1 ||
-                        argsProvided == 1 && parms.Arguments[0]?.GetType() != typeof(object[]))
-                    {
-                        parms.Arguments = new object[] { parms.Arguments };
-                    }
-                }
-
-                if (argsProvided == argsNeeded)
-                    PerformSpecialConversions(parms.Arguments, parameters);
+                return parms;
             }
             catch (Exception ex)
             {
-                parms = new TestCaseParameters(ex);
-            }
-
-            return parms;
-        }
-
-        /// <summary>
-        /// Performs several special conversions allowed by NUnit in order to
-        /// permit arguments with types that cannot be used in the constructor
-        /// of an Attribute such as TestCaseAttribute or to simplify their use.
-        /// </summary>
-        /// <param name="arglist">The arguments to be converted</param>
-        /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object?[] arglist, IParameterInfo[] parameters)
-        {
-            for (int i = 0; i < arglist.Length; i++)
-            {
-                object? arg = arglist[i];
-                Type targetType = parameters[i].ParameterType;
-                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
-                {
-                    arglist[i] = argAsTargetType;
-                }
+                return new TestCaseParameters(ex);
             }
         }
+
         #endregion
 
         #region ITestBuilder Members
@@ -491,9 +373,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T argument)
-            : base(new object?[] { argument })
+            : base([argument])
         {
-            TypeArgs = new[] { typeof(T) };
+            TypeArgs = [typeof(T)];
         }
     }
 
@@ -507,9 +389,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2)
-            : base(new object?[] { argument1, argument2 })
+            : base([argument1, argument2])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2) };
+            TypeArgs = [typeof(T1), typeof(T2)];
         }
     }
 
@@ -523,9 +405,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3)
-            : base(new object?[] { argument1, argument2, argument3 })
+            : base([argument1, argument2, argument3])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
     }
 
@@ -539,9 +421,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
-            : base(new object?[] { argument1, argument2, argument3, argument4 })
+            : base([argument1, argument2, argument3, argument4])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
     }
 
@@ -555,9 +437,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
-            : base(new object?[] { argument1, argument2, argument3, argument4, argument5 })
+            : base([argument1, argument2, argument3, argument4, argument5])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
     }
 
