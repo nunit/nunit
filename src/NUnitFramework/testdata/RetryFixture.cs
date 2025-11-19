@@ -207,7 +207,7 @@ namespace NUnit.TestData.RepeatingTests
     public class RetryWithRetryExceptionFixture : RepeatingTestsFixtureBase
     {
         [Test]
-        [Retry(3, typeof(TimeoutException), typeof(OperationCanceledException))]
+        [Retry(tryCount: 3, RetryExceptions = [typeof(TimeoutException), typeof(OperationCanceledException)])]
         public void RetriesOnAllowedException()
         {
             Count = TestContext.CurrentContext.CurrentRepeatCount;
@@ -218,7 +218,7 @@ namespace NUnit.TestData.RepeatingTests
         }
 
         [Test]
-        [Retry(3, typeof(Exception))]
+        [Retry(tryCount: 3, RetryExceptions = [typeof(Exception)])]
         public void RetriesButEventuallyFails()
         {
             Count = TestContext.CurrentContext.CurrentRepeatCount;
