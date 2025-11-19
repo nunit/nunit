@@ -485,7 +485,6 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-
         private static IEnumerable ParamsArrayThreeStringArguments
         {
             get
