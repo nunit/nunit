@@ -175,7 +175,7 @@ namespace NUnit.Framework.Internal
                 if (argsProvided > 1 ||
                     argsProvided == 1 && Arguments[0]?.GetType() != typeof(object[]))
                 {
-                    Arguments = new object[] { Arguments };
+                    Arguments = [Arguments];
                 }
             }
 

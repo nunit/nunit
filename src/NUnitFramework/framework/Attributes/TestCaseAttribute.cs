@@ -26,12 +26,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
-
-            if (arguments is null)
-                Arguments = new object?[] { null };
-            else
-                Arguments = arguments;
-
+            Arguments = arguments is null ? [null] : arguments;
             Properties = new PropertyBag();
         }
 
@@ -42,24 +37,24 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg };
+            Arguments = [arg];
             Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a TestCaseAttribute with a two arguments
+        /// Construct a TestCaseAttribute with two arguments
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg1, arg2 };
+            Arguments = [arg1, arg2];
             Properties = new PropertyBag();
         }
 
         /// <summary>
-        /// Construct a TestCaseAttribute with a three arguments
+        /// Construct a TestCaseAttribute with three arguments
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
@@ -67,7 +62,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new[] { arg1, arg2, arg3 };
+            Arguments = [arg1, arg2, arg3];
             Properties = new PropertyBag();
         }
 
@@ -378,9 +373,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T argument)
-            : base(new object?[] { argument })
+            : base([argument])
         {
-            TypeArgs = new[] { typeof(T) };
+            TypeArgs = [typeof(T)];
         }
     }
 
@@ -394,9 +389,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2)
-            : base(new object?[] { argument1, argument2 })
+            : base([argument1, argument2])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2) };
+            TypeArgs = [typeof(T1), typeof(T2)];
         }
     }
 
@@ -410,9 +405,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3)
-            : base(new object?[] { argument1, argument2, argument3 })
+            : base([argument1, argument2, argument3])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
     }
 
@@ -426,9 +421,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
-            : base(new object?[] { argument1, argument2, argument3, argument4 })
+            : base([argument1, argument2, argument3, argument4])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
     }
 
@@ -442,9 +437,9 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a list of arguments.
         /// </summary>
         public TestCaseAttribute(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
-            : base(new object?[] { argument1, argument2, argument3, argument4, argument5 })
+            : base([argument1, argument2, argument3, argument4, argument5])
         {
-            TypeArgs = new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+            TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
     }
 

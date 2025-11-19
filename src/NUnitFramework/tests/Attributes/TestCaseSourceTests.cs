@@ -565,7 +565,10 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(args.Length == 1 && args[0] == "1");
         }
 
-        private static readonly string[][] SingleMemberArrayAsArgument = { new[] { "1" } };
+        private static readonly string[][] SingleMemberArrayAsArgument =
+        [
+            ["1"]
+        ];
 
         #region Test name tests
 
@@ -627,7 +630,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
         {
-            yield return new TestCaseData("2") { TypeArgs = new[] { typeof(long) } };
+            yield return new TestCaseData("2") { TypeArgs = [typeof(long)] };
         }
 
         [TestCaseSource(nameof(GenericMethodAndParameterWithExplicitOrImplicitTypingTestCases))]
@@ -706,7 +709,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             yield return new TestCaseData(new DerivedIntConverter(), 2)
             {
-                TypeArgs = new[] { typeof(IntConverter), typeof(int) }
+                TypeArgs = [typeof(IntConverter), typeof(int)]
             };
 #if NET6_0_OR_GREATER
             yield return new TestCaseData<IntConverter, int>(new DerivedIntConverter(), 2);

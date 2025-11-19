@@ -68,9 +68,10 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(string sourceName, object?[]? methodParams)
         {
-            MethodParams = methodParams;
             SourceName = sourceName;
+            MethodParams = methodParams;
         }
+
         /// <summary>
         /// Construct with a Type
         /// </summary>
@@ -88,6 +89,7 @@ namespace NUnit.Framework
         /// If the source name is a field or property has no effect.
         /// </summary>
         public object?[]? MethodParams { get; }
+
         /// <summary>
         /// The name of a the method, property or field to be used as a source
         /// </summary>
@@ -159,7 +161,7 @@ namespace NUnit.Framework
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
                         ITestCaseData? parms = item is null
-                            ? new TestCaseParameters(new object?[] { null })
+                            ? new TestCaseParameters([null])
                             : item as ITestCaseData;
 
                         try
@@ -194,12 +196,7 @@ namespace NUnit.Framework
                                     }
                                 }
 
-                                if (args is null)
-                                {
-                                    args = new[] { item };
-                                }
-
-                                parms = new TestCaseParameters(args);
+                                parms = new TestCaseParameters(args ?? [item]);
                             }
 
                             if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
