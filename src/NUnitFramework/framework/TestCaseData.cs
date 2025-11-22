@@ -74,8 +74,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
         /// <remarks>
-        /// Consider using <see cref="SetArgDisplayNames"/>for setting argument values in the test name.
-        /// <see cref="SetArgDisplayNames"/> allows you to specify the display names for parameters directly without
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/>for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
         /// needing to use tokens like {m}.
         /// </remarks>
         public TestCaseData SetName(string? name)
@@ -97,6 +97,35 @@ namespace NUnit.Framework
         public TestCaseData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public TestCaseData SetArgDisplayNames(params object?[]? displayNames)
+        {
+            if (displayNames is null)
+            {
+                ArgDisplayNames = null;
+            }
+            else
+            {
+                var formattedNames = new string[displayNames.Length];
+                for (int i = 0; i < displayNames.Length; i++)
+                {
+                    formattedNames[i] = Constraints.MsgUtils.FormatValue(displayNames[i]);
+                }
+                ArgDisplayNames = formattedNames;
+            }
             return this;
         }
 

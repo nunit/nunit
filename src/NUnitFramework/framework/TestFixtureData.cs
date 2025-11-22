@@ -78,6 +78,28 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        public TestFixtureData SetArgDisplayNames(params object?[]? displayNames)
+        {
+            if (displayNames is null)
+            {
+                ArgDisplayNames = null;
+            }
+            else
+            {
+                var formattedNames = new string[displayNames.Length];
+                for (int i = 0; i < displayNames.Length; i++)
+                {
+                    formattedNames[i] = Constraints.MsgUtils.FormatValue(displayNames[i]);
+                }
+                ArgDisplayNames = formattedNames;
+            }
+            return this;
+        }
+
+        /// <summary>
         /// Marks the test fixture as explicit.
         /// </summary>
         public TestFixtureData Explicit()
