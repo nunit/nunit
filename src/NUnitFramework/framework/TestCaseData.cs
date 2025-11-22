@@ -74,7 +74,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
         /// <remarks>
-        /// Consider using <see cref="SetArgDisplayNames(string[])"/>for setting argument values in the test name.
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
         /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
         /// needing to use tokens like {m}.
         /// </remarks>
