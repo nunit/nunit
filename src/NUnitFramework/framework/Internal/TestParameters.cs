@@ -82,8 +82,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object?[] Arguments { get; internal set; }
 
-        private string? _testName;
-
         /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
@@ -91,11 +89,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string? TestName
         {
-            get => _testName;
+            get;
             set
             {
-                Guard.OperationValid(ArgDisplayNames is null || value is null, "TestName cannot be set when argument display names are set.");
-                _testName = value;
+                Guard.OperationValid(ArgDisplayNames is null || value is null,
+                    "TestName cannot be set when argument display names are set.");
+                field = value;
             }
         }
 
@@ -126,18 +125,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object?[] OriginalArguments { get; protected internal set; }
 
-        private string[]? _argDisplayNames;
-
         /// <summary>
         /// The list of display names to use as the parameters in the test name.
         /// </summary>
         internal string[]? ArgDisplayNames
         {
-            get => _argDisplayNames;
+            get;
             set
             {
-                Guard.OperationValid(TestName is null || value is null, "Argument display names cannot be set when TestName is set.");
-                _argDisplayNames = value;
+                Guard.OperationValid(TestName is null || value is null,
+                    "Argument display names cannot be set when TestName is set.");
+                field = value;
             }
         }
     }
