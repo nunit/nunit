@@ -144,6 +144,11 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
+        /// <summary>
+        /// The last exception recorded in this result.
+        /// </summary>
+        internal Exception? RecordedException { get; set; }
+
         #region ITestResult Members
 
         /// <summary>
@@ -576,7 +581,9 @@ namespace NUnit.Framework.Internal
         /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
-            var result = new ExceptionResult(ex, site);
+            RecordedException = ValidateAndUnwrap(ex);
+
+            var result = new ExceptionResult(RecordedException, site);
 
             if (ex is NUnitException { InnerException: ResultStateException } or ResultStateException)
             {
@@ -630,8 +637,6 @@ namespace NUnit.Framework.Internal
 
             public ExceptionResult(Exception ex, FailureSite site)
             {
-                ex = ValidateAndUnwrap(ex);
-
                 if (ex is ResultStateException exception)
                 {
                     ResultState = exception.ResultState.WithSite(site);
