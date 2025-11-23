@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -83,19 +84,9 @@ namespace NUnit.Framework
         /// </summary>
         public TestFixtureData SetArgDisplayNames(params object?[]? displayNames)
         {
-            if (displayNames is null)
-            {
-                ArgDisplayNames = null;
-            }
-            else
-            {
-                var formattedNames = new string[displayNames.Length];
-                for (int i = 0; i < displayNames.Length; i++)
-                {
-                    formattedNames[i] = Constraints.MsgUtils.FormatValue(displayNames[i]);
-                }
-                ArgDisplayNames = formattedNames;
-            }
+            ArgDisplayNames = displayNames is null
+                ? null
+                : Array.ConvertAll(displayNames, Constraints.MsgUtils.FormatValue);
             return this;
         }
 
