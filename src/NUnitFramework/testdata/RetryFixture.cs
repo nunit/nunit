@@ -218,6 +218,17 @@ namespace NUnit.TestData.RepeatingTests
         }
 
         [Test]
+        [Retry(tryCount: 3, RetryExceptions = [typeof(TimeoutException)])]
+        public void OnlyRetriesOnAllowedException()
+        {
+            Count = TestContext.CurrentContext.CurrentRepeatCount;
+            if (Count == 0)
+                throw new TimeoutException("forcing a retry on allowed TimeoutException");
+            else if (Count == 1)
+                throw new OperationCanceledException("forcing a retry on allowed OperationCanceledException");
+        }
+
+        [Test]
         [Retry(tryCount: 3, RetryExceptions = [typeof(Exception)])]
         public void RetriesButEventuallyFails()
         {
