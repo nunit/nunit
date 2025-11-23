@@ -139,5 +139,80 @@ namespace NUnit.Framework.Tests.Internal
             var fixtureData = new TestCaseData(42).SetArgDisplayNames("42");
             Assert.That(() => fixtureData.SetName("Name"), Throws.InvalidOperationException);
         }
+
+        [Test]
+        public static void ArgDisplayNamesCanBeSetWithObjects()
+        {
+            var caseData = new TestCaseData(42).SetArgDisplayNames(42);
+            Assert.That(caseData.ArgDisplayNames, Is.EqualTo(new[] { "42" }));
+
+            var fixtureData = new TestFixtureData(42).SetArgDisplayNames(42);
+            Assert.That(fixtureData.ArgDisplayNames, Is.EqualTo(new[] { "42" }));
+        }
+
+        [Test]
+        public static void ArgDisplayNamesCanBeSetWithMultipleObjects()
+        {
+            var caseData = new TestCaseData(42, "test", 3.14).SetArgDisplayNames(42, "test", 3.14);
+            Assert.That(caseData.ArgDisplayNames, Has.Length.EqualTo(3));
+            Assert.That(caseData.ArgDisplayNames![0], Is.EqualTo("42"));
+            Assert.That(caseData.ArgDisplayNames![1], Is.EqualTo("\"test\""));
+            Assert.That(caseData.ArgDisplayNames![2], Does.StartWith("3.14").And.EndsWith("d"));
+
+            var fixtureData = new TestFixtureData(42, "test", 3.14).SetArgDisplayNames(42, "test", 3.14);
+            Assert.That(fixtureData.ArgDisplayNames, Has.Length.EqualTo(3));
+            Assert.That(fixtureData.ArgDisplayNames![0], Is.EqualTo("42"));
+            Assert.That(fixtureData.ArgDisplayNames![1], Is.EqualTo("\"test\""));
+            Assert.That(fixtureData.ArgDisplayNames![2], Does.StartWith("3.14").And.EndsWith("d"));
+        }
+
+        [Test]
+        public static void ArgDisplayNamesWithObjectsFormatsCorrectly()
+        {
+            // Test with byte to verify special formatting (e.g., byte.MaxValue)
+            var caseData = new TestCaseData(255).SetArgDisplayNames((byte)255);
+            Assert.That(caseData.ArgDisplayNames, Has.Length.EqualTo(1));
+            Assert.That(caseData.ArgDisplayNames![0], Is.EqualTo("255"));
+
+            // Test with null value
+            var caseDataWithNull = new TestCaseData((object?)null).SetArgDisplayNames((object?)null);
+            Assert.That(caseDataWithNull.ArgDisplayNames, Is.EqualTo(new[] { "null" }));
+
+            var fixtureData = new TestFixtureData(255).SetArgDisplayNames((byte)255);
+            Assert.That(fixtureData.ArgDisplayNames, Has.Length.EqualTo(1));
+            Assert.That(fixtureData.ArgDisplayNames![0], Is.EqualTo("255"));
+        }
+
+        [Test]
+        public static void ArgDisplayNamesWithObjectsCanBeReset()
+        {
+            var caseData = new TestCaseData(42).SetArgDisplayNames(42);
+            caseData.SetArgDisplayNames((object[]?)null);
+            Assert.That(caseData.ArgDisplayNames, Is.Null);
+
+            var fixtureData = new TestFixtureData(42).SetArgDisplayNames(42);
+            fixtureData.SetArgDisplayNames((object[]?)null);
+            Assert.That(fixtureData.ArgDisplayNames, Is.Null);
+        }
+
+        [Test]
+        public static void SettingArgDisplayNamesWithObjectsAfterSettingNameThrowsInvalidOperationException()
+        {
+            var caseData = new TestCaseData(42).SetName("Name");
+            Assert.That(() => caseData.SetArgDisplayNames(42), Throws.InvalidOperationException);
+
+            var fixtureData = new TestCaseData(42).SetName("Name");
+            Assert.That(() => fixtureData.SetArgDisplayNames(42), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public static void SettingNameAfterSettingArgDisplayNamesWithObjectsThrowsInvalidOperationException()
+        {
+            var caseData = new TestCaseData(42).SetArgDisplayNames(42);
+            Assert.That(() => caseData.SetName("Name"), Throws.InvalidOperationException);
+
+            var fixtureData = new TestCaseData(42).SetArgDisplayNames(42);
+            Assert.That(() => fixtureData.SetName("Name"), Throws.InvalidOperationException);
+        }
     }
 }
