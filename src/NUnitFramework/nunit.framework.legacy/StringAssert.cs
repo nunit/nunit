@@ -292,5 +292,101 @@ namespace NUnit.Framework.Legacy
             DoesNotMatch(pattern, actual, string.Empty, null);
         }
         #endregion
+
+        #region IsNullOrEmpty
+
+        /// <summary>
+        /// Asserts that a string is either null or empty.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Arguments used in formatting the message</param>
+        public static void IsNullOrEmpty(string? actual, string message, params object?[]? args)
+        {
+            Framework.Assert.That(actual, Is.Null.Or.Empty, () => ConvertMessageWithArgs(message, args));
+        }
+
+        /// <summary>
+        /// Asserts that a string is either null or empty.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        public static void IsNullOrEmpty(string? actual)
+        {
+            IsNullOrEmpty(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #region IsNotNullOrEmpty
+
+        /// <summary>
+        /// Asserts that a string is neither null nor empty.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Arguments used in formatting the message</param>
+        public static void IsNotNullOrEmpty(string? actual, string message, params object?[]? args)
+        {
+            Framework.Assert.That(actual, Is.Not.Null.And.Not.Empty, () => ConvertMessageWithArgs(message, args));
+        }
+
+        /// <summary>
+        /// Asserts that a string is neither null nor empty.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        public static void IsNotNullOrEmpty(string? actual)
+        {
+            IsNotNullOrEmpty(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #region IsNullOrWhiteSpace
+
+        /// <summary>
+        /// Asserts that a string is either null, empty or consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Arguments used in formatting the message</param>
+        public static void IsNullOrWhiteSpace(string? actual, string message, params object?[]? args)
+        {
+            Framework.Assert.That(actual, Is.WhiteSpace, () => ConvertMessageWithArgs(message, args));
+        }
+
+        /// <summary>
+        /// Asserts that a string is either null, empty or consists only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        public static void IsNullOrWhiteSpace(string? actual)
+        {
+            IsNullOrWhiteSpace(actual, string.Empty, null);
+        }
+
+        #endregion
+
+        #region IsNotNullOrWhiteSpace
+
+        /// <summary>
+        /// Asserts that a string is not null, not empty and does not consist only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Arguments used in formatting the message</param>
+        public static void IsNotNullOrWhiteSpace(string? actual, string message, params object?[]? args)
+        {
+            Framework.Assert.That(actual, Is.Not.WhiteSpace, () => ConvertMessageWithArgs(message, args));
+        }
+
+        /// <summary>
+        /// Asserts that a string is not null, not empty and does not consist only of white-space characters.
+        /// </summary>
+        /// <param name="actual">The string to be examined</param>
+        public static void IsNotNullOrWhiteSpace(string? actual)
+        {
+            IsNotNullOrWhiteSpace(actual, string.Empty, null);
+        }
+
+        #endregion
     }
 }
