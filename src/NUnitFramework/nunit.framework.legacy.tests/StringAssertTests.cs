@@ -228,39 +228,39 @@ namespace NUnit.Framework.Legacy.Tests
 
         #endregion
 
-        #region IsNotNullOrEmpty Tests
+        #region IsNotNullNorEmpty Tests
 
         [Test]
-        public void IsNotNullOrEmpty()
+        public void IsNotNullNorEmpty()
         {
-            StringAssert.IsNotNullOrEmpty("Hello");
+            StringAssert.IsNotNullNorEmpty("Hello");
         }
 
         [Test]
-        public void IsNotNullOrEmpty_Whitespace()
+        public void IsNotNullNorEmpty_Whitespace()
         {
-            StringAssert.IsNotNullOrEmpty(" ");
-            StringAssert.IsNotNullOrEmpty("  ");
-            StringAssert.IsNotNullOrEmpty("\t");
+            StringAssert.IsNotNullNorEmpty(" ");
+            StringAssert.IsNotNullNorEmpty("  ");
+            StringAssert.IsNotNullNorEmpty("\t");
         }
 
         [Test]
-        public void IsNotNullOrEmptyFails_Null()
+        public void IsNotNullNorEmptyFails_Null()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not null and not <empty>" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "null" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullOrEmpty(null));
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullNorEmpty(null));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
-        public void IsNotNullOrEmptyFails_Empty()
+        public void IsNotNullNorEmptyFails_Empty()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not null and not <empty>" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "<string.Empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullOrEmpty(string.Empty));
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullNorEmpty(string.Empty));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
@@ -313,49 +313,49 @@ namespace NUnit.Framework.Legacy.Tests
 
         #endregion
 
-        #region IsNotNullOrWhiteSpace Tests
+        #region IsNotNullNorWhiteSpace Tests
 
         [Test]
-        public void IsNotNullOrWhiteSpace()
+        public void IsNotNullNorWhiteSpace()
         {
-            StringAssert.IsNotNullOrWhiteSpace("Hello");
+            StringAssert.IsNotNullNorWhiteSpace("Hello");
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpace_WithWhitespace()
+        public void IsNotNullNorWhiteSpace_WithWhitespace()
         {
-            StringAssert.IsNotNullOrWhiteSpace("Hello World");
-            StringAssert.IsNotNullOrWhiteSpace(" Hello");
-            StringAssert.IsNotNullOrWhiteSpace("Hello ");
+            StringAssert.IsNotNullNorWhiteSpace("Hello World");
+            StringAssert.IsNotNullNorWhiteSpace(" Hello");
+            StringAssert.IsNotNullNorWhiteSpace("Hello ");
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Null()
+        public void IsNotNullNorWhiteSpaceFails_Null()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "null" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullOrWhiteSpace(null));
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullNorWhiteSpace(null));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Empty()
+        public void IsNotNullNorWhiteSpaceFails_Empty()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "<string.Empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullOrWhiteSpace(string.Empty));
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullNorWhiteSpace(string.Empty));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Whitespace()
+        public void IsNotNullNorWhiteSpaceFails_Whitespace()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\" \"" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullOrWhiteSpace(" "));
+            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsNotNullNorWhiteSpace(" "));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
