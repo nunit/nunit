@@ -1,51 +1,28 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.ExecutionHooks.TestAttributes;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
     internal class TestThrowsExceptionHooksProceedsToExecuteTests
     {
-        [Explicit(
-            $"This test should only be run as part of the {nameof(TestThrowsException_HooksProceedsToExecute)} test")]
-        public class TestWithTestHooksOnMethod
-        {
-            [OneTimeSetUp]
-            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
-
-            [SetUp]
-            public void SetUp() => TestLog.LogCurrentMethod();
-
-            [Test]
-            [ActivateBeforeTestHook]
-            [ActivateAfterTestHook]
-            public void EmptyTest() => TestLog.LogCurrentMethod();
-
-            [TearDown]
-            public void TearDown() => TestLog.LogCurrentMethod();
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
-        }
-
         [Test]
         public void TestThrowsException_HooksProceedsToExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestWithTestHooksOnMethod), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestWithTestHooksOnMethod.OneTimeSetUp),
-                nameof(TestWithTestHooksOnMethod.SetUp),
-                nameof(ActivateBeforeTestHookAttribute),
-                nameof(TestWithTestHooksOnMethod.EmptyTest),
-                nameof(ActivateAfterTestHookAttribute),
-                nameof(TestWithTestHooksOnMethod.TearDown),
-                nameof(TestWithTestHooksOnMethod.OneTimeTearDown)
+                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeSetUp),
+                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.SetUp),
+                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
+                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.EmptyTest),
+                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
+                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.TearDown),
+                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeTearDown)
             ]));
         }
     }

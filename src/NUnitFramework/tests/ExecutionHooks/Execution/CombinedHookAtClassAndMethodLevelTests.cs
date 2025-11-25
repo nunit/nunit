@@ -1,75 +1,48 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.ExecutionHooks.TestAttributes;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
     internal class CombinedHookAtClassAndMethodLevelTests
     {
-        [Explicit($"This test should only be run as part of the {nameof(ExecutionProceedsAfterBothTestHookCompletes)} test")]
-        [ActivateClassLevelBeforeTestHooks]
-        [ActivateClassLevelAfterTestHooks]
-        public class TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks
-        {
-            [OneTimeSetUp]
-            public void OneTimeSetUp() => TestLog.LogCurrentMethod();
-
-            [SetUp]
-            public void SetUp() => TestLog.LogCurrentMethod();
-
-            [Test]
-            [ActivateMethodLevelBeforeTestHooks]
-            [ActivateMethodLevelAfterTestHooks]
-            public void EmptyTestWithHooks() => TestLog.LogCurrentMethod();
-
-            [Test]
-            public void EmptyTestWithoutHooks() => TestLog.LogCurrentMethod();
-
-            [TearDown]
-            public void TearDown() => TestLog.LogCurrentMethod();
-
-            [OneTimeTearDown]
-            public void OneTimeTearDown() => TestLog.LogCurrentMethod();
-        }
-
         [Test]
         public void ExecutionProceedsAfterBothTestHookCompletes()
         {
             var workItem =
-                TestBuilder.CreateWorkItem(typeof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks),
+                TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture),
                     TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.OneTimeSetUp),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeSetUp),
 
                 // Test with hooks starts
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.SetUp),
-                nameof(ActivateClassLevelBeforeTestHooksAttribute),
-                nameof(ActivateMethodLevelBeforeTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
+                nameof(TestData.ExecutionHooks.ActivateClassLevelBeforeTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.ActivateMethodLevelBeforeTestHooksAttribute),
 
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.EmptyTestWithHooks),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithHooks),
 
-                nameof(ActivateMethodLevelAfterTestHooksAttribute),
-                nameof(ActivateClassLevelAfterTestHooksAttribute),
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.TearDown),
+                nameof(TestData.ExecutionHooks.ActivateMethodLevelAfterTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.ActivateClassLevelAfterTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
                 // Test with hooks ends
 
                 // Test without hooks starts
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.SetUp),
-                nameof(ActivateClassLevelBeforeTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
+                nameof(TestData.ExecutionHooks.ActivateClassLevelBeforeTestHooksAttribute),
 
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.EmptyTestWithoutHooks),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithoutHooks),
 
-                nameof(ActivateClassLevelAfterTestHooksAttribute),
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.TearDown),
+                nameof(TestData.ExecutionHooks.ActivateClassLevelAfterTestHooksAttribute),
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
                 // Test without hooks ends
 
-                nameof(TestClassWithTestHooksOneTestWithoutAndOneWithMethodTestHooks.OneTimeTearDown)
+                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeTearDown)
             ]));
         }
     }

@@ -25,20 +25,10 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             }
         }
 
-        [TestFixture]
-        [Explicit($"This test should only be run as part of the {nameof(BeforeTestHookAdded)} and {nameof(AfterTestHookAdded)} tests")]
-        private class SomeEmptyTest
-        {
-            [Test]
-            public void EmptyTest()
-            {
-            }
-        }
-
         [Test]
         public void BeforeTestHookAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture), nameof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
@@ -52,7 +42,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void AfterTestHookAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(SomeEmptyTest), nameof(SomeEmptyTest.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture), nameof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
