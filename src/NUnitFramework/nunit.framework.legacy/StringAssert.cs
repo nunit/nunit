@@ -314,7 +314,7 @@ namespace NUnit.Framework.Legacy
 
         #endregion
 
-        #region IsNotNullOrEmpty
+        #region IsNotNullNorEmpty
 
         /// <summary>
         /// Asserts that a string is neither null nor empty.
@@ -356,7 +356,7 @@ namespace NUnit.Framework.Legacy
 
         #endregion
 
-        #region IsNotNullOrWhiteSpace
+        #region IsNotNullNorWhiteSpace
 
         /// <summary>
         /// Asserts that a string is not null, not empty and does not consist only of white-space characters.

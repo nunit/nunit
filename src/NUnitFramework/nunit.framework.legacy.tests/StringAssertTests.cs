@@ -228,16 +228,16 @@ namespace NUnit.Framework.Legacy.Tests
 
         #endregion
 
-        #region IsNotNullOrEmpty Tests
+        #region IsNotNullNorEmpty Tests
 
         [Test]
-        public void IsNotNullOrEmpty()
+        public void IsNotNullNorEmpty()
         {
             StringAssert.IsNotNullNorEmpty("Hello");
         }
 
         [Test]
-        public void IsNotNullOrEmpty_Whitespace()
+        public void IsNotNullNorEmpty_Whitespace()
         {
             StringAssert.IsNotNullNorEmpty(" ");
             StringAssert.IsNotNullNorEmpty("  ");
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
-        public void IsNotNullOrEmptyFails_Null()
+        public void IsNotNullNorEmptyFails_Null()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not null and not <empty>" + Environment.NewLine +
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
-        public void IsNotNullOrEmptyFails_Empty()
+        public void IsNotNullNorEmptyFails_Empty()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not null and not <empty>" + Environment.NewLine +
@@ -313,16 +313,16 @@ namespace NUnit.Framework.Legacy.Tests
 
         #endregion
 
-        #region IsNotNullOrWhiteSpace Tests
+        #region IsNotNullNorWhiteSpace Tests
 
         [Test]
-        public void IsNotNullOrWhiteSpace()
+        public void IsNotNullNorWhiteSpace()
         {
             StringAssert.IsNotNullNorWhiteSpace("Hello");
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpace_WithWhitespace()
+        public void IsNotNullNorWhiteSpace_WithWhitespace()
         {
             StringAssert.IsNotNullNorWhiteSpace("Hello World");
             StringAssert.IsNotNullNorWhiteSpace(" Hello");
@@ -330,7 +330,7 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Null()
+        public void IsNotNullNorWhiteSpaceFails_Null()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
@@ -340,7 +340,7 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Empty()
+        public void IsNotNullNorWhiteSpaceFails_Empty()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
@@ -350,7 +350,7 @@ namespace NUnit.Framework.Legacy.Tests
         }
 
         [Test]
-        public void IsNotNullOrWhiteSpaceFails_Whitespace()
+        public void IsNotNullNorWhiteSpaceFails_Whitespace()
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "not white-space" + Environment.NewLine +
