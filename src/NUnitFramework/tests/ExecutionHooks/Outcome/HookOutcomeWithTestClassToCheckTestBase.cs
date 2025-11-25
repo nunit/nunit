@@ -6,7 +6,7 @@ using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
-public abstract class HookOutcomeWithTestClassToCheckTestBase(Type testClassToCheckHookOutcome) : HookOutcomeTestsBase()
+public abstract class HookOutcomeWithTestClassToCheckTestBase(Type testClassToCheckHookOutcome) : HookOutcomeTestsBase
 {
     private static readonly string OutcomeMismatch = "Outcome Mismatch!!!";
 

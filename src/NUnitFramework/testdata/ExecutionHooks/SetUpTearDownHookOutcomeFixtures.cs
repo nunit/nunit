@@ -13,6 +13,7 @@ namespace NUnit.TestData.ExecutionHooks
         public override void AfterEverySetUpHook(HookData hookData) => AfterHook(hookData);
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Class)]
     public sealed class TearDownHookOutcomeLoggerHookAttribute : OutcomeLoggerBaseAttribute
     {
         public override void BeforeEveryTearDownHook(HookData hookData) => BeforeHook(hookData);
@@ -21,11 +22,11 @@ namespace NUnit.TestData.ExecutionHooks
     }
 
     [SetUpHookOutcomeLoggerHook]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class SetUpHookOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class SetUpHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [SetUp]
-        public void SetUp() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void SetUp() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
 
         [Test]
         public void SomeTest()
@@ -34,11 +35,11 @@ namespace NUnit.TestData.ExecutionHooks
     }
 
     [TearDownHookOutcomeLoggerHook]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class TearDownHookOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class TearDownHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [TearDown]
-        public void TearDown() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void TearDown() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
 
         [Test]
         public void SomeTest()

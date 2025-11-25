@@ -14,10 +14,10 @@ namespace NUnit.TestData.ExecutionHooks
     }
 
     [TestHookOutcomeLoggerHook]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class TestHookOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class TestHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [Test]
-        public void SomeTest() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void SomeTest() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
     }
 }

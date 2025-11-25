@@ -63,20 +63,20 @@ namespace NUnit.TestData.ExecutionHooks
 
     [AfterTestActionHooksOutcomeLoggerHook]
     [LogTestAction]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class AfterTestActionHooksOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class AfterTestActionHooksOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [Test]
-        public void SomeTest() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void SomeTest() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
     }
 
     [BeforeTestActionHooksOutcomeLoggerHook]
     [LogTestAction]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class BeforeTestActionHooksOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class BeforeTestActionHooksOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [Test]
-        public void SomeTest() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void SomeTest() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
     }
 
     [LogTestAction]

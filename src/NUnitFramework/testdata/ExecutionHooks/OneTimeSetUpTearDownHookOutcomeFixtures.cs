@@ -22,11 +22,11 @@ namespace NUnit.TestData.ExecutionHooks
     }
 
     [OneTimeSetUpHookOutcomeLoggerHook]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class OneTimeSetUpHookOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class OneTimeSetUpHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [OneTimeSetUp]
-        public void OneTimeSetUp() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void OneTimeSetUp() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
 
         [Test]
         public void SomeTest()
@@ -35,11 +35,11 @@ namespace NUnit.TestData.ExecutionHooks
     }
 
     [OneTimeTearDownHookOutcomeLoggerHook]
-    [TestFixtureSource(typeof(FailingReasonExecutor), nameof(FailingReasonExecutor.GetReasonsToFail))]
-    public class OneTimeTearDownHookOutcomeFixture(FailingReason failingReason)
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class OneTimeTearDownHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
     {
         [OneTimeTearDown]
-        public void OneTimeTearDown() => FailingReasonExecutor.ExecuteFailingReason(failingReason);
+        public void OneTimeTearDown() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
 
         [Test]
         public void SomeTest()
