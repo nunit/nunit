@@ -5,7 +5,7 @@ using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.TestAttributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     internal sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(HookData hookData)

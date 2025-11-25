@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHooks;
 
@@ -10,22 +8,6 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
     internal class TestHooksCreationAtAssemblyLevelTests
     {
-        [AttributeUsage(AttributeTargets.Assembly)]
-        private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
-        {
-            public override void BeforeTestHook(HookData context)
-            {
-            }
-        }
-
-        [AttributeUsage(AttributeTargets.Assembly)]
-        private sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
-        {
-            public override void AfterTestHook(HookData context)
-            {
-            }
-        }
-
         [Test]
         public void BeforeTestHookAdded()
         {
@@ -33,7 +15,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
-            var hookAttribute = new ActivateBeforeTestHooksAttribute();
+            var hookAttribute = new ActivateBeforeTestHookAttribute();
             hookAttribute.ApplyToContext(context);
 
             var work = TestBuilder.CreateWorkItem(test, context);
@@ -47,7 +29,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
-            var hookAttribute = new ActivateAfterTestHooksAttribute();
+            var hookAttribute = new ActivateAfterTestHookAttribute();
             hookAttribute.ApplyToContext(context);
 
             var work = TestBuilder.CreateWorkItem(test, context);
