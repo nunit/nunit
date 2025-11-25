@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -74,6 +75,18 @@ namespace NUnit.Framework
         public TestFixtureData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        public TestFixtureData SetArgDisplayNames(params object?[]? displayNames)
+        {
+            ArgDisplayNames = displayNames is null
+                ? null
+                : Array.ConvertAll(displayNames, Constraints.MsgUtils.FormatValue);
             return this;
         }
 

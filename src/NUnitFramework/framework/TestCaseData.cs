@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -74,8 +75,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
         /// <remarks>
-        /// Consider using <see cref="SetArgDisplayNames"/>for setting argument values in the test name.
-        /// <see cref="SetArgDisplayNames"/> allows you to specify the display names for parameters directly without
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
         /// needing to use tokens like {m}.
         /// </remarks>
         public TestCaseData SetName(string? name)
@@ -97,6 +98,25 @@ namespace NUnit.Framework
         public TestCaseData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public TestCaseData SetArgDisplayNames(params object?[]? displayNames)
+        {
+            ArgDisplayNames = displayNames is null
+                ? null
+                : Array.ConvertAll(displayNames, Constraints.MsgUtils.FormatValue);
             return this;
         }
 
