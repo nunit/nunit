@@ -310,10 +310,7 @@ namespace NUnit.Framework.Legacy
         /// Asserts that a string is either null or empty.
         /// </summary>
         /// <param name="actual">The string to be examined</param>
-        public static void IsNullOrEmpty(string? actual)
-        {
-            IsNullOrEmpty(actual, string.Empty, null);
-        }
+        public static void IsNullOrEmpty(string? actual) => IsNullOrEmpty(actual, string.Empty, null);
 
         #endregion
 
@@ -325,7 +322,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The string to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Arguments used in formatting the message</param>
-        public static void IsNotNullOrEmpty(string? actual, string message, params object?[]? args)
+        public static void IsNotNullNorEmpty(string? actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Null.And.Not.Empty, () => ConvertMessageWithArgs(message, args));
         }
@@ -334,10 +331,7 @@ namespace NUnit.Framework.Legacy
         /// Asserts that a string is neither null nor empty.
         /// </summary>
         /// <param name="actual">The string to be examined</param>
-        public static void IsNotNullOrEmpty(string? actual)
-        {
-            IsNotNullOrEmpty(actual, string.Empty, null);
-        }
+        public static void IsNotNullNorEmpty(string? actual) => IsNotNullNorEmpty(actual, string.Empty, null);
 
         #endregion
 
@@ -358,10 +352,7 @@ namespace NUnit.Framework.Legacy
         /// Asserts that a string is either null, empty or consists only of white-space characters.
         /// </summary>
         /// <param name="actual">The string to be examined</param>
-        public static void IsNullOrWhiteSpace(string? actual)
-        {
-            IsNullOrWhiteSpace(actual, string.Empty, null);
-        }
+        public static void IsNullOrWhiteSpace(string? actual) => IsNullOrWhiteSpace(actual, string.Empty, null);
 
         #endregion
 
@@ -373,7 +364,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The string to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Arguments used in formatting the message</param>
-        public static void IsNotNullOrWhiteSpace(string? actual, string message, params object?[]? args)
+        public static void IsNotNullNorWhiteSpace(string? actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.WhiteSpace, () => ConvertMessageWithArgs(message, args));
         }
@@ -382,10 +373,7 @@ namespace NUnit.Framework.Legacy
         /// Asserts that a string is not null, not empty and does not consist only of white-space characters.
         /// </summary>
         /// <param name="actual">The string to be examined</param>
-        public static void IsNotNullOrWhiteSpace(string? actual)
-        {
-            IsNotNullOrWhiteSpace(actual, string.Empty, null);
-        }
+        public static void IsNotNullNorWhiteSpace(string? actual) => IsNotNullNorWhiteSpace(actual, string.Empty, null);
 
         #endregion
     }
