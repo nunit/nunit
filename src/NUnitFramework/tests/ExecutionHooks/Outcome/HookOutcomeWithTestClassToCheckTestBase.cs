@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHooks;
 
@@ -14,7 +13,7 @@ public abstract class HookOutcomeWithTestClassToCheckTestBase(Type testClassToCh
     protected void CheckHookOutcomes()
     {
         var numberOfFailingReasons = Enum.GetNames(typeof(FailingReason)).Length;
-        var workItem = TestBuilder.CreateWorkItem(testClassToCheckHookOutcome, TestFilter.Explicit);
+        var workItem = TestBuilder.CreateWorkItem(testClassToCheckHookOutcome);
         var numberOfFixtures = workItem.Test.Tests.Count;
         Assert.That(numberOfFixtures, Is.EqualTo(numberOfFailingReasons));
         var numberOfTestsPerFixture = workItem.Test.Tests[0].Tests.Count;

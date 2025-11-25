@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHooks;
 
@@ -11,7 +10,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         [Test]
         public void TestProceedsAfterAllAfterTestHooksExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionSequenceWithAllPossibleHooksFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionSequenceWithAllPossibleHooksFixture));
             workItem.Execute();
             var currentTestLogs = TestLog.Logs(workItem.Test);
 

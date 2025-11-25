@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.ExecutionHooks;
 
@@ -12,7 +11,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Threading
         [Test]
         public void SynchronousHookInvocation_HookExecutesInSameThreadAsTest()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTestsFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(SynchronousHookInvocationTestsFixture));
             workItem.Execute();
 
             Assert.Multiple(() =>
