@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void WhenNoHooksAreProvidedNoInstanceOfHooksAreCreated()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestExecutionContextHookCreationNoHooksFixture), nameof(TestData.ExecutionHooks.TestExecutionContextHookCreationNoHooksFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestExecutionContextHookCreationNoHooksFixture), nameof(TestExecutionContextHookCreationNoHooksFixture.EmptyTest));
             var work = TestBuilder.CreateWorkItem(test, TestFilter.Explicit);
             work.Execute();
 
@@ -20,7 +21,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void WhenHooksAreProvidedInstanceOfHooksAreCreated()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestExecutionContextHookCreationWithHooksFixture), nameof(TestData.ExecutionHooks.TestExecutionContextHookCreationWithHooksFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestExecutionContextHookCreationWithHooksFixture), nameof(TestExecutionContextHookCreationWithHooksFixture.EmptyTest));
             var work = TestBuilder.CreateWorkItem(test);
             work.Execute();
 

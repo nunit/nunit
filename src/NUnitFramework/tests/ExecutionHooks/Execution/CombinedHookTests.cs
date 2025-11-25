@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
@@ -11,25 +12,25 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         public void ExecutionProceedsAfterBothTestHookCompletes()
         {
             var workItem =
-                TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.CombinedHookTestsFixture), TestFilter.Explicit);
+                TestBuilder.CreateWorkItem(typeof(CombinedHookTestsFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.CombinedHookTestsFixture.OneTimeSetUp),
-                nameof(TestData.ExecutionHooks.CombinedHookTestsFixture.SetUp),
+                nameof(CombinedHookTestsFixture.OneTimeSetUp),
+                nameof(CombinedHookTestsFixture.SetUp),
 
-                nameof(TestData.ExecutionHooks.ActivateLongRunningBeforeTestHookAttribute),
-                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
+                nameof(ActivateLongRunningBeforeTestHookAttribute),
+                nameof(ActivateBeforeTestHookAttribute),
 
-                nameof(TestData.ExecutionHooks.CombinedHookTestsFixture.EmptyTest),
+                nameof(CombinedHookTestsFixture.EmptyTest),
 
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.ActivateLongRunningAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateLongRunningAfterTestHookAttribute),
 
-                nameof(TestData.ExecutionHooks.CombinedHookTestsFixture.TearDown),
-                nameof(TestData.ExecutionHooks.CombinedHookTestsFixture.OneTimeTearDown)
+                nameof(CombinedHookTestsFixture.TearDown),
+                nameof(CombinedHookTestsFixture.OneTimeTearDown)
             ]));
         }
     }

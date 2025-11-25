@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
@@ -10,19 +11,19 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         [Test]
         public void TestFailsWithAssert_HooksProceedsToExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestFailsWithAssertHooksProceedsToExecuteFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture.OneTimeSetUp),
-                nameof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture.EmptyTest),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture.TearDown),
-                nameof(TestData.ExecutionHooks.TestFailsWithAssertHooksProceedsToExecuteFixture.OneTimeTearDown)
+                nameof(TestFailsWithAssertHooksProceedsToExecuteFixture.OneTimeSetUp),
+                nameof(TestFailsWithAssertHooksProceedsToExecuteFixture.SetUp),
+                nameof(ActivateBeforeTestHookAttribute),
+                nameof(TestFailsWithAssertHooksProceedsToExecuteFixture.EmptyTest),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(TestFailsWithAssertHooksProceedsToExecuteFixture.TearDown),
+                nameof(TestFailsWithAssertHooksProceedsToExecuteFixture.OneTimeTearDown)
             ]));
         }
     }

@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void TestHooksAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestHooksCreationAtMethodLevelFixture), nameof(TestData.ExecutionHooks.TestHooksCreationAtMethodLevelFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestHooksCreationAtMethodLevelFixture), nameof(TestHooksCreationAtMethodLevelFixture.EmptyTest));
             var work = TestBuilder.CreateWorkItem(test, TestFilter.Explicit);
             work.Execute();
 

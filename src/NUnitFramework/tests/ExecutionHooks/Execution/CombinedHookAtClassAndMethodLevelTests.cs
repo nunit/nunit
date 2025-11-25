@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
@@ -11,38 +12,45 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         public void ExecutionProceedsAfterBothTestHookCompletes()
         {
             var workItem =
-                TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture),
+                TestBuilder.CreateWorkItem(typeof(CombinedHookAtClassAndMethodLevelTestsFixture),
                     TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeSetUp),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeSetUp),
 
                 // Test with hooks starts
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateClassLevelBeforeTestHooksAttribute),
-                nameof(TestData.ExecutionHooks.ActivateMethodLevelBeforeTestHooksAttribute),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
 
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithHooks),
+                // Class-level before hook
+                nameof(ActivateBeforeTestHookAttribute),
+                // Method-level before hook
+                nameof(ActivateBeforeTestHookAttribute),
 
-                nameof(TestData.ExecutionHooks.ActivateMethodLevelAfterTestHooksAttribute),
-                nameof(TestData.ExecutionHooks.ActivateClassLevelAfterTestHooksAttribute),
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithHooks),
+
+                // Method-level after hook
+                nameof(ActivateAfterTestHookAttribute),
+                // Class-level after hook
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
                 // Test with hooks ends
 
                 // Test without hooks starts
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateClassLevelBeforeTestHooksAttribute),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
+                // Class-level before hook
+                nameof(ActivateBeforeTestHookAttribute),
 
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithoutHooks),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithoutHooks),
 
-                nameof(TestData.ExecutionHooks.ActivateClassLevelAfterTestHooksAttribute),
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
+                // Class-level after
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
                 // Test without hooks ends
 
-                nameof(TestData.ExecutionHooks.CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeTearDown)
+                nameof(CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeTearDown)
             ]));
         }
     }

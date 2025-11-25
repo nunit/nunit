@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
@@ -10,19 +11,19 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         [Test]
         public void TestThrowsException_HooksProceedsToExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestThrowsExceptionHooksProceedsToExecuteFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeSetUp),
-                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.EmptyTest),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.TearDown),
-                nameof(TestData.ExecutionHooks.TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeTearDown)
+                nameof(TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeSetUp),
+                nameof(TestThrowsExceptionHooksProceedsToExecuteFixture.SetUp),
+                nameof(ActivateBeforeTestHookAttribute),
+                nameof(TestThrowsExceptionHooksProceedsToExecuteFixture.EmptyTest),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(TestThrowsExceptionHooksProceedsToExecuteFixture.TearDown),
+                nameof(TestThrowsExceptionHooksProceedsToExecuteFixture.OneTimeTearDown)
             ]));
         }
     }

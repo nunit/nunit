@@ -25,4 +25,29 @@ namespace NUnit.TestData.ExecutionHooks
         [OneTimeTearDown]
         public void OneTimeTearDown() => TestLog.LogCurrentMethod();
     }
+
+    [ActivateBeforeTestHook]
+    [ActivateAfterTestHook]
+    public class CombinedHookAtClassAndMethodLevelTestsFixture
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp() => TestLog.LogCurrentMethod();
+
+        [SetUp]
+        public void SetUp() => TestLog.LogCurrentMethod();
+
+        [Test]
+        [ActivateBeforeTestHook]
+        [ActivateAfterTestHook]
+        public void EmptyTestWithHooks() => TestLog.LogCurrentMethod();
+
+        [Test]
+        public void EmptyTestWithoutHooks() => TestLog.LogCurrentMethod();
+
+        [TearDown]
+        public void TearDown() => TestLog.LogCurrentMethod();
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown() => TestLog.LogCurrentMethod();
+    }
 }

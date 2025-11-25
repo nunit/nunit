@@ -9,31 +9,21 @@ using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData.ExecutionHooks
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
-    {
-        public override void AfterTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
-    {
-        public override void AfterTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
-            throw new InvalidOperationException("Exception from AfterTestHook");
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute
     {
         public override void BeforeTestHook(HookData hookData)
         {
             TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
+    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
+    {
+        public override void AfterTestHook(HookData hookData)
+        {
+            TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
         }
     }
 
@@ -44,6 +34,16 @@ namespace NUnit.TestData.ExecutionHooks
         {
             TestLog.LogMessage(nameof(ActivateBeforeTestHookThrowingExceptionAttribute));
             throw new InvalidOperationException("Exception from BeforeTestHook");
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public sealed class ActivateAfterTestHookThrowingExceptionAttribute : ExecutionHookAttribute
+    {
+        public override void AfterTestHook(HookData hookData)
+        {
+            TestLog.LogMessage(nameof(ActivateAfterTestHookThrowingExceptionAttribute));
+            throw new InvalidOperationException("Exception from AfterTestHook");
         }
     }
 
@@ -134,42 +134,6 @@ namespace NUnit.TestData.ExecutionHooks
             TestExecutionContext.CurrentContext
                 .CurrentTest.Properties
                 .Add("AfterTestHook_ThreadId", Environment.CurrentManagedThreadId);
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ActivateClassLevelBeforeTestHooksAttribute : ExecutionHookAttribute
-    {
-        public override void BeforeTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateClassLevelBeforeTestHooksAttribute));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class ActivateClassLevelAfterTestHooksAttribute : ExecutionHookAttribute
-    {
-        public override void AfterTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateClassLevelAfterTestHooksAttribute));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateMethodLevelBeforeTestHooksAttribute : ExecutionHookAttribute
-    {
-        public override void BeforeTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateMethodLevelBeforeTestHooksAttribute));
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class ActivateMethodLevelAfterTestHooksAttribute : ExecutionHookAttribute
-    {
-        public override void AfterTestHook(HookData hookData)
-        {
-            TestLog.LogMessage(nameof(ActivateMethodLevelAfterTestHooksAttribute));
         }
     }
 

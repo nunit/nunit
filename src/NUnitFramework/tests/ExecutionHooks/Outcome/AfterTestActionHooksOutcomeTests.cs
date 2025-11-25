@@ -4,7 +4,13 @@ using System;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Outcome;
 
-[TestFixture(typeof(TestData.ExecutionHooks.AfterTestActionHooksOutcomeFixture))]
-public class AfterTestActionHooksOutcomeTests(Type testClassToCheckHookOutcome) : HookOutcomeTestsBase(testClassToCheckHookOutcome)
+[TestFixture(typeof(AfterTestActionWithFailures))]
+public class AfterTestActionHooksOutcomeTests(Type testClassToCheckHookOutcome)
+    : HookOutcomeWithTestClassToCheckTestBase(testClassToCheckHookOutcome)
 {
+    [Test]
+    public void AfterTestActionHook_CheckHookOutcomes()
+    {
+        CheckHookOutcomes();
+    }
 }

@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 {
@@ -10,28 +11,28 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         [Test]
         public void TestActionHooksCalledBeforeAndAfterTestAction()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestActionHooksFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestActionHooksFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
                 "BeforeTestActionBeforeTestHook(Suite)",
-                $"{nameof(TestData.ExecutionHooks.LogTestActionAttribute.BeforeTest)}(Suite)",
+                $"{nameof(LogTestActionAttribute.BeforeTest)}(Suite)",
                 "AfterTestActionBeforeTestHook(Suite)",
 
                 "BeforeTestActionBeforeTestHook(Test)",
-                $"{nameof(TestData.ExecutionHooks.LogTestActionAttribute.BeforeTest)}(Test)",
+                $"{nameof(LogTestActionAttribute.BeforeTest)}(Test)",
                 "AfterTestActionBeforeTestHook(Test)",
 
-                nameof(TestData.ExecutionHooks.TestActionHooksFixture.TestUnderTest),
+                nameof(TestActionHooksFixture.TestUnderTest),
 
                 "BeforeTestActionAfterTestHook(Test)",
-                $"{nameof(TestData.ExecutionHooks.LogTestActionAttribute.AfterTest)}(Test)",
+                $"{nameof(LogTestActionAttribute.AfterTest)}(Test)",
                 "AfterTestActionAfterTestHook(Test)",
 
                 "BeforeTestActionAfterTestHook(Suite)",
-                $"{nameof(TestData.ExecutionHooks.LogTestActionAttribute.AfterTest)}(Suite)",
+                $"{nameof(LogTestActionAttribute.AfterTest)}(Suite)",
                 "AfterTestActionAfterTestHook(Suite)"
             ]));
         }

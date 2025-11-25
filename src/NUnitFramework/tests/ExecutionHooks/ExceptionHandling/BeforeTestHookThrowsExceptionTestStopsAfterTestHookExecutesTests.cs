@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
 {
@@ -10,18 +11,18 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         [Test]
         public void BeforeTestHookThrowsException_TestStops_AfterTestHookExecutes()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeSetUp),
-                nameof(TestData.ExecutionHooks.BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookThrowingExceptionAttribute),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.TearDown),
-                nameof(TestData.ExecutionHooks.BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeTearDown)
+                nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeSetUp),
+                nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.SetUp),
+                nameof(ActivateBeforeTestHookThrowingExceptionAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.TearDown),
+                nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeTearDown)
             ]));
         }
     }

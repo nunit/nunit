@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void TestHooksAdded()
         {
-            var work = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestHooksCreationAtClassLevelFixture), TestFilter.Explicit);
+            var work = TestBuilder.CreateWorkItem(typeof(TestHooksCreationAtClassLevelFixture));
             work.Execute();
 
             Assert.That(work.Context.ExecutionHooks.BeforeTest, Has.Count.EqualTo(1));

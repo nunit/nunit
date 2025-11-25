@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 {
@@ -10,57 +11,57 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         [Test]
         public void TestProceedsAfterAllAfterTestHooksExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionSequenceWithAllPossibleHooksFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.OneTimeSetUpBase),
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.OneTimeSetUp),
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.OneTimeSetUpBase),
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.OneTimeSetUp),
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEverySetUpHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.SetupBase),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEverySetUpHook,
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.SetupBase),
+                HookIdentifiers.AfterEverySetUpHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEverySetUpHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.Setup),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEverySetUpHook,
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.Setup),
+                HookIdentifiers.AfterEverySetUpHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeTestHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.TestPasses),
-                TestData.ExecutionHooks.HookIdentifiers.AfterTestHook,
+                HookIdentifiers.BeforeTestHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.TestPasses),
+                HookIdentifiers.AfterTestHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEveryTearDownHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.TearDown),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEveryTearDownHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.TearDown),
+                HookIdentifiers.AfterEveryTearDownHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEveryTearDownHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.TearDownBase),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEveryTearDownHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.TearDownBase),
+                HookIdentifiers.AfterEveryTearDownHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEverySetUpHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.SetupBase),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEverySetUpHook,
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.SetupBase),
+                HookIdentifiers.AfterEverySetUpHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEverySetUpHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.Setup),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEverySetUpHook,
+                HookIdentifiers.BeforeEverySetUpHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.Setup),
+                HookIdentifiers.AfterEverySetUpHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeTestHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.TestFails),
-                TestData.ExecutionHooks.HookIdentifiers.AfterTestHook,
+                HookIdentifiers.BeforeTestHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.TestFails),
+                HookIdentifiers.AfterTestHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEveryTearDownHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.TearDown),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEveryTearDownHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.TearDown),
+                HookIdentifiers.AfterEveryTearDownHook,
 
-                TestData.ExecutionHooks.HookIdentifiers.BeforeEveryTearDownHook,
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.TearDownBase),
-                TestData.ExecutionHooks.HookIdentifiers.AfterEveryTearDownHook,
+                HookIdentifiers.BeforeEveryTearDownHook,
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.TearDownBase),
+                HookIdentifiers.AfterEveryTearDownHook,
 
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixture.OneTimeTearDown),
-                nameof(TestData.ExecutionHooks.ExecutionSequenceWithAllPossibleHooksFixtureBase.OneTimeTearDownBase),
+                nameof(ExecutionSequenceWithAllPossibleHooksFixture.OneTimeTearDown),
+                nameof(ExecutionSequenceWithAllPossibleHooksFixtureBase.OneTimeTearDownBase),
             ]));
         }
     }

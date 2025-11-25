@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
 {
@@ -10,20 +11,20 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
         [Test]
         public void TestProceedsAfterAllAfterTestHooksExecute()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TestPasses),
+                nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TestPasses),
 
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookThrowingExceptionAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookThrowingExceptionAttribute),
 
-                nameof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TearDown),
-                nameof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.OneTimeTearDown)
+                nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TearDown),
+                nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.OneTimeTearDown)
             ]));
         }
     }

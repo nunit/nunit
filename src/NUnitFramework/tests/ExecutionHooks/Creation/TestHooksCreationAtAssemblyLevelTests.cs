@@ -4,6 +4,7 @@ using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
@@ -28,7 +29,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void BeforeTestHookAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture), nameof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestHooksCreationAtAssemblyLevelFixture), nameof(TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void AfterTestHookAdded()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture), nameof(TestData.ExecutionHooks.TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestHooksCreationAtAssemblyLevelFixture), nameof(TestHooksCreationAtAssemblyLevelFixture.EmptyTest));
             var context = new TestExecutionContext();
 
             // Simulate "assembly-level"

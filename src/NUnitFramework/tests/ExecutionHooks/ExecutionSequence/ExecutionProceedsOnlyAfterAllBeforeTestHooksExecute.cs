@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence;
 
@@ -10,17 +11,17 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
     [Test]
     public void CheckThatLongRunningBeforeTestHooksCompleteBeforeTest()
     {
-        var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture), TestFilter.Explicit);
+        var workItem = TestBuilder.CreateWorkItem(typeof(ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture), TestFilter.Explicit);
         workItem.Execute();
-        var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+        var currentTestLogs = TestLog.Logs(workItem.Test);
 
         Assert.That(currentTestLogs, Is.Not.Empty);
         Assert.That(currentTestLogs, Is.EqualTo([
-            nameof(TestData.ExecutionHooks.ActivateLongRunningBeforeTestHookAttribute),
-            nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-            nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-            nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-            nameof(TestData.ExecutionHooks.ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture.SomeTest)
+            nameof(ActivateLongRunningBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture.SomeTest)
         ]));
     }
 }

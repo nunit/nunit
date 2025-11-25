@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
@@ -10,18 +11,18 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         [Test]
         public void ExecutionProceedsAfterTheAfterTestHookCompletes()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.AfterTestHookTestsFixture), TestFilter.Explicit);
+            var workItem = TestBuilder.CreateWorkItem(typeof(AfterTestHookTestFixture), TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.AfterTestHookTestsFixture.OneTimeSetUp),
-                nameof(TestData.ExecutionHooks.AfterTestHookTestsFixture.SetUp),
-                nameof(TestData.ExecutionHooks.AfterTestHookTestsFixture.EmptyTest),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.AfterTestHookTestsFixture.TearDown),
-                nameof(TestData.ExecutionHooks.AfterTestHookTestsFixture.OneTimeTearDown)
+                nameof(AfterTestHookTestFixture.OneTimeSetUp),
+                nameof(AfterTestHookTestFixture.SetUp),
+                nameof(AfterTestHookTestFixture.EmptyTest),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(AfterTestHookTestFixture.TearDown),
+                nameof(AfterTestHookTestFixture.OneTimeTearDown)
             ]));
         }
     }

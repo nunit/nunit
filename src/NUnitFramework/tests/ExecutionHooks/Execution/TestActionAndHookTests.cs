@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Execution
 {
@@ -10,22 +11,22 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         [Test]
         public void ExecutionProceedsAfterTheAfterTestHookCompletes2()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestData.ExecutionHooks.TestActionAndHookTestsFixture),
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestActionAndHookTestsFixture),
                 TestFilter.Explicit);
             workItem.Execute();
-            var currentTestLogs = TestData.ExecutionHooks.TestLog.Logs(workItem.Test);
+            var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestData.ExecutionHooks.TestActionAndHookTestsFixture.OneTimeSetUp),
-                TestData.ExecutionHooks.SimpleTestActionAttribute.LogStringForBeforeTest,
-                nameof(TestData.ExecutionHooks.TestActionAndHookTestsFixture.SetUp),
-                nameof(TestData.ExecutionHooks.ActivateBeforeTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestActionAndHookTestsFixture.EmptyTest),
-                nameof(TestData.ExecutionHooks.ActivateAfterTestHookAttribute),
-                nameof(TestData.ExecutionHooks.TestActionAndHookTestsFixture.TearDown),
-                TestData.ExecutionHooks.SimpleTestActionAttribute.LogStringForAfterTest,
-                nameof(TestData.ExecutionHooks.TestActionAndHookTestsFixture.OneTimeTearDown)
+                nameof(TestActionAndHookTestsFixture.OneTimeSetUp),
+                SimpleTestActionAttribute.LogStringForBeforeTest,
+                nameof(TestActionAndHookTestsFixture.SetUp),
+                nameof(ActivateBeforeTestHookAttribute),
+                nameof(TestActionAndHookTestsFixture.EmptyTest),
+                nameof(ActivateAfterTestHookAttribute),
+                nameof(TestActionAndHookTestsFixture.TearDown),
+                SimpleTestActionAttribute.LogStringForAfterTest,
+                nameof(TestActionAndHookTestsFixture.OneTimeTearDown)
             ]));
         }
     }
