@@ -10,21 +10,21 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
         [Test]
         public void ExecutionProceedsAfterTheAfterTestHookCompletes2()
         {
-            var workItem = TestBuilder.CreateWorkItem(typeof(TestActionAndHookTestsFixture));
+            var workItem = TestBuilder.CreateWorkItem(typeof(TestActionAndHookCombinationFixture));
             workItem.Execute();
             var currentTestLogs = TestLog.Logs(workItem.Test);
 
             Assert.That(currentTestLogs, Is.Not.Empty);
             Assert.That(currentTestLogs, Is.EqualTo([
-                nameof(TestActionAndHookTestsFixture.OneTimeSetUp),
+                nameof(TestActionAndHookCombinationFixture.OneTimeSetUp),
                 SimpleTestActionAttribute.LogStringForBeforeTest,
-                nameof(TestActionAndHookTestsFixture.SetUp),
+                nameof(TestActionAndHookCombinationFixture.SetUp),
                 nameof(ActivateBeforeTestHookAttribute),
-                nameof(TestActionAndHookTestsFixture.EmptyTest),
+                nameof(TestActionAndHookCombinationFixture.EmptyTest),
                 nameof(ActivateAfterTestHookAttribute),
-                nameof(TestActionAndHookTestsFixture.TearDown),
+                nameof(TestActionAndHookCombinationFixture.TearDown),
                 SimpleTestActionAttribute.LogStringForAfterTest,
-                nameof(TestActionAndHookTestsFixture.OneTimeTearDown)
+                nameof(TestActionAndHookCombinationFixture.OneTimeTearDown)
             ]));
         }
     }

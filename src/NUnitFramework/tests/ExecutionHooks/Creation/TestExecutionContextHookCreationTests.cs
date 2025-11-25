@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void WhenNoHooksAreProvidedNoInstanceOfHooksAreCreated()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestExecutionContextHookCreationNoHooksFixture), nameof(TestExecutionContextHookCreationNoHooksFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestHooksCreationNoHooksFixture), nameof(TestHooksCreationNoHooksFixture.EmptyTest));
             var work = TestBuilder.CreateWorkItem(test);
             work.Execute();
 
@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Creation
         [Test]
         public void WhenHooksAreProvidedInstanceOfHooksAreCreated()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TestExecutionContextHookCreationWithHooksFixture), nameof(TestExecutionContextHookCreationWithHooksFixture.EmptyTest));
+            var test = TestBuilder.MakeTestFromMethod(typeof(TestHooksCreationWithHooksFixture), nameof(TestHooksCreationWithHooksFixture.EmptyTest));
             var work = TestBuilder.CreateWorkItem(test);
             work.Execute();
 

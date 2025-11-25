@@ -1,11 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework;
 using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData.ExecutionHooks
 {
-    [System.AttributeUsage(System.AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class TestHookOutcomeLoggerHookAttribute : OutcomeLoggerBaseAttribute
     {
         public override void BeforeTestHook(HookData hookData) => BeforeHook(hookData);

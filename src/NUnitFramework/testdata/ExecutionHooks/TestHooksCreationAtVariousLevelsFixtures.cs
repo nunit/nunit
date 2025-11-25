@@ -4,6 +4,23 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.ExecutionHooks
 {
+    public class TestHooksCreationNoHooksFixture
+    {
+        [Test]
+        public void EmptyTest()
+        {
+        }
+    }
+
+    public class TestHooksCreationWithHooksFixture
+    {
+        [Test]
+        [ActivateBeforeTestHook]
+        public void EmptyTest()
+        {
+        }
+    }
+
     [TestFixture]
     public class TestHooksCreationAtAssemblyLevelFixture
     {

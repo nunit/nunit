@@ -50,4 +50,78 @@ namespace NUnit.TestData.ExecutionHooks
         [OneTimeTearDown]
         public void OneTimeTearDown() => TestLog.LogCurrentMethod();
     }
+
+    public class OneTestWithLoggingHooksAndOneWithoutFixture
+    {
+        [Test, ActivateTestHook, Order(1)]
+        public void TestWithHookLogging() => TestLog.LogCurrentMethod();
+
+        [Test, Order(2)]
+        public void TestWithoutHookLogging() => TestLog.LogCurrentMethod();
+    }
+
+    public class TestThrowsExceptionHooksProceedsToExecuteFixture
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp() => TestLog.LogCurrentMethod();
+
+        [SetUp]
+        public void SetUp() => TestLog.LogCurrentMethod();
+
+        [Test]
+        [ActivateBeforeTestHook]
+        [ActivateAfterTestHook]
+        public void EmptyTest() => TestLog.LogCurrentMethod();
+
+        [TearDown]
+        public void TearDown() => TestLog.LogCurrentMethod();
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown() => TestLog.LogCurrentMethod();
+    }
+
+    public class TestFailsWithAssertHooksProceedsToExecuteFixture
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp() => TestLog.LogCurrentMethod();
+
+        [SetUp]
+        public void SetUp() => TestLog.LogCurrentMethod();
+
+        [Test]
+        [ActivateBeforeTestHook]
+        [ActivateAfterTestHook]
+        public void EmptyTest()
+        {
+            TestLog.LogCurrentMethod();
+            Assert.Fail("Some failure in test");
+        }
+
+        [TearDown]
+        public void TearDown() => TestLog.LogCurrentMethod();
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown() => TestLog.LogCurrentMethod();
+    }
+
+    [SimpleTestAction]
+    public class TestActionAndHookCombinationFixture
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp() => TestLog.LogCurrentMethod();
+
+        [SetUp]
+        public void SetUp() => TestLog.LogCurrentMethod();
+
+        [Test]
+        [ActivateBeforeTestHook]
+        [ActivateAfterTestHook]
+        public void EmptyTest() => TestLog.LogCurrentMethod();
+
+        [TearDown]
+        public void TearDown() => TestLog.LogCurrentMethod();
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown() => TestLog.LogCurrentMethod();
+    }
 }
