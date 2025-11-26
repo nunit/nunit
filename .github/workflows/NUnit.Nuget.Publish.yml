@@ -12,7 +12,8 @@ jobs:
   build-windows:
     name: Windows Build
     runs-on: windows-latest
-
+    permissions:
+      id-token: write
     steps:
     - name: ⤵️ Checkout Source
       uses: actions/checkout@v4
@@ -53,9 +54,14 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
 
+    - name: NuGet login
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     - name: Publish nupkg and snupkg to Nuget.org
       run: |
           foreach($file in (Get-ChildItem package -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.PUBLISH_NUGET_ORG }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+              dotnet nuget push $file --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
- 
