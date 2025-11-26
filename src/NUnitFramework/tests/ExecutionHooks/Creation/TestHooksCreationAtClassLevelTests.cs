@@ -1,45 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.ExecutionHooks;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.ExecutionHooks;
 
 namespace NUnit.Framework.Tests.ExecutionHooks.Creation
 {
     internal class TestHooksCreationAtClassLevelTests
     {
-        [AttributeUsage(AttributeTargets.Class)]
-        private sealed class ActivateBeforeTestHooksAttribute : ExecutionHookAttribute
-        {
-            public override void BeforeTestHook(HookData context)
-            {
-            }
-        }
-
-        [AttributeUsage(AttributeTargets.Class)]
-        private sealed class ActivateAfterTestHooksAttribute : ExecutionHookAttribute
-        {
-            public override void AfterTestHook(HookData context)
-            {
-            }
-        }
-
-        [ActivateBeforeTestHooks]
-        [ActivateAfterTestHooks]
-        [Explicit($"This test should only be run as part of the {nameof(TestHooksAdded)} test")]
-        private class SomeEmptyTest
-        {
-            [Test]
-            public void EmptyTest()
-            {
-            }
-        }
-
         [Test]
         public void TestHooksAdded()
         {
-            var work = TestBuilder.CreateWorkItem(typeof(SomeEmptyTest), TestFilter.Explicit);
+            var work = TestBuilder.CreateWorkItem(typeof(TestHooksCreationAtClassLevelFixture));
             work.Execute();
 
             Assert.That(work.Context.ExecutionHooks.BeforeTest, Has.Count.EqualTo(1));

@@ -1,0 +1,24 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
+using System;
+using NUnit.Framework;
+using NUnit.Framework.Internal.ExecutionHooks;
+
+namespace NUnit.TestData.ExecutionHooks
+{
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class TestHookOutcomeLoggerHookAttribute : OutcomeLoggerBaseAttribute
+    {
+        public override void BeforeTestHook(HookData hookData) => BeforeHook(hookData);
+
+        public override void AfterTestHook(HookData hookData) => AfterHook(hookData);
+    }
+
+    [TestHookOutcomeLoggerHook]
+    [TestFixtureSource(typeof(HookOutcomeTestsBase), nameof(HookOutcomeTestsBase.GetReasonsToFail))]
+    public class TestHookOutcomeFixture(HookOutcomeTestsBase.FailingReason failingReason)
+    {
+        [Test]
+        public void SomeTest() => HookOutcomeTestsBase.ExecuteFailingReason(failingReason);
+    }
+}
