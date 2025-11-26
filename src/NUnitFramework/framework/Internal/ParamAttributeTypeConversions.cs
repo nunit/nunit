@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
             return GetData(data, targetType);
         }
 
-        private static IEnumerable GetData(object?[] data, Type targetType)
+        private static object?[] GetData(object?[] data, Type targetType)
         {
             for (int i = 0; i < data.Length; i++)
             {
@@ -88,22 +88,10 @@ namespace NUnit.Framework.Internal
                 return Reflect.IsAssignableFromNull(targetType);
             }
 
-            bool convert = false;
             var underlyingTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+            var valueType = value.GetType();
 
-            if (underlyingTargetType == typeof(short) || underlyingTargetType == typeof(byte) || underlyingTargetType == typeof(sbyte)
-                || underlyingTargetType == typeof(long) || underlyingTargetType == typeof(double))
-            {
-                convert = value is int;
-            }
-            else if (underlyingTargetType == typeof(decimal))
-            {
-                convert = value is double || value is string || value is int;
-            }
-            else if (underlyingTargetType == typeof(DateTime))
-            {
-                convert = value is string;
-            }
+            bool convert = Reflect.HasNUnitConversion(valueType, underlyingTargetType);
 
             if (convert)
             {
@@ -112,7 +100,7 @@ namespace NUnit.Framework.Internal
             }
 
             var converter = TypeDescriptor.GetConverter(underlyingTargetType);
-            if (converter.CanConvertFrom(value.GetType()))
+            if (converter.CanConvertFrom(valueType))
             {
                 convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
                 return convertedValue is not null;
