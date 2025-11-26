@@ -62,6 +62,23 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
 
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithParamsArrayNoParameters))]
+        [TestCase(nameof(OptionalTestParametersFixture.MethodWithParamsArrayNullParameter))]
+        public void ParametrizedTestCaseTestsWithParams(string methodName)
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(optionalTestParametersFixtureType, methodName);
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var testCase in suite.Tests)
+                {
+                    Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+                    var result = TestBuilder.RunTest((Test)testCase);
+                    Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                }
+            }
+        }
+
         private readonly Type _testNameFixtureType = typeof(TestNameFixture);
 
         [TestCase(nameof(TestNameFixture.ImplicitNull), RunState.Runnable)]

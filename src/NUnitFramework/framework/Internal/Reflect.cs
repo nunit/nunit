@@ -90,16 +90,16 @@ namespace NUnit.Framework.Internal
 
             if (parameterInfos.Length > 0)
             {
-                arguments = PopulateOptionalArgsAndParamsArray(arguments, parameterInfos);
+                arguments = PopulateOptionalArgsAndParamsArray(null, ctor, arguments, parameterInfos);
             }
 
             return ctor.Invoke(arguments);
         }
 
-        internal static object?[] PopulateOptionalArgsAndParamsArray(object?[] arguments, ParameterInfo[] parameterInfos)
+        internal static object?[] PopulateOptionalArgsAndParamsArray(Type[]? typeArgs, MethodBase method, object?[] arguments, ParameterInfo[] parameterInfos)
         {
-            ParameterInfo parameterInfo = parameterInfos.Last();
-            var hasParamsArray = parameterInfo.ParameterIsParamsArray();
+            ParameterInfo lastParameter = parameterInfos.Last();
+            var hasParamsArray = lastParameter.ParameterIsParamsArray();
 
             if (arguments.Length < parameterInfos.Length)
             {
@@ -135,37 +135,85 @@ namespace NUnit.Framework.Internal
 
             if (hasParamsArray)
             {
-                if (arguments.Length == parameterInfos.Length
-                    && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
+                int paramsOffset = parameterInfos.Length - 1;
+                if (arguments.Length == parameterInfos.Length)
                 {
-                    // Don't convert arguments as there was already an array we could use.
-                }
-                else
-                {
-                    var elementType = parameterInfo.ParameterType.GetElementType()!;
-                    var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
-
-                    int paramsOffset = parameterInfos.Length - 1;
-                    for (int i = 0; i < paramArray.Length; i++)
+                    object? lastArgument = arguments[paramsOffset];
+                    if (lastArgument is null || lastArgument.GetType().IsArray)
                     {
-                        var arg = arguments[i + paramsOffset];
-                        var argType = arg?.GetType();
+                        // Don't convert argument if there was already an array we could use.
+                        return arguments;
+                    }
+                }
 
-                        // Only assign if we can convert the value to the element type
-                        if (!argType.CanImplicitlyConvertTo(elementType))
-                        {
-                            var sourceType = argType is null ? "null" : argType.FullName;
-                            throw new InvalidCastException($"Cannot convert {sourceType} to '{elementType}'");
-                        }
+                var elementType = DetermineParamsElementType(method, typeArgs, arguments, parameterInfos.Length, lastParameter.ParameterType.GetElementType()!);
+                var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
 
-                        paramArray.SetValue(arg, i);
+                for (int i = 0; i < paramArray.Length; i++)
+                {
+                    var arg = arguments[i + paramsOffset];
+                    var argType = arg?.GetType();
+
+                    // Only assign if we can convert the value to the element type
+                    if (!argType.CanImplicitlyConvertTo(elementType))
+                    {
+                        var sourceType = argType is null ? "null" : argType.FullName;
+                        throw new InvalidCastException($"Cannot convert {sourceType} to '{elementType}'");
                     }
 
-                    arguments = arguments.Take(paramsOffset).Concat([paramArray]).ToArray();
+                    // Do we have to the the conversion explicitly?
+                    paramArray.SetValue(arg, i);
                 }
+
+                arguments = arguments.Take(paramsOffset).Concat([paramArray]).ToArray();
             }
 
             return arguments;
+        }
+
+        private static Type DetermineParamsElementType(MethodBase method, Type[]? typeArgs, object?[] arguments, int argsNeeded, Type elementType)
+        {
+            if (elementType.ContainsGenericParameters)
+            {
+                // Is the type specified?
+                if (typeArgs is not null)
+                {
+                    Type[] genericParameters = method.GetGenericArguments();
+                    for (int i = 0; i < genericParameters.Length; i++)
+                    {
+                        if (genericParameters[i] == elementType)
+                        {
+                            elementType = typeArgs[i];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Try to infer the type from the provided arguments
+                    elementType = DetermineBestElementType(arguments, argsNeeded - 1);
+                }
+            }
+
+            return elementType;
+        }
+
+        private static Type DetermineBestElementType(object?[] arguments, int index)
+        {
+            if (arguments.Length <= index)
+                return typeof(object);
+            Type bestType = arguments[index]?.GetType() ?? typeof(object);
+
+            for (int i = index + 1; i < arguments.Length; i++)
+            {
+                Type currentType = arguments[i]?.GetType() ?? typeof(object);
+                if (!TypeHelper.TryGetBestCommonType(bestType, currentType, out bestType))
+                {
+                    throw new InvalidOperationException("Cannot determine a common type for params array");
+                }
+            }
+
+            return bestType;
         }
 
         /// <summary>
@@ -239,19 +287,55 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-        // §6.1.2 (Implicit numeric conversions) of the specification
-        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new()
+        /// <summary>
+        /// Implicit numeric conversions
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions#implicit-numeric-conversions
+        /// </summary>
+        private static readonly Dictionary<Type, HashSet<Type>> BuiltInNumericalConversions = new()
         {
-            { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
-            { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(ulong), new List<Type> { typeof(byte), typeof(ushort), typeof(uint), typeof(char) } },
-            { typeof(long), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(char) } },
-            { typeof(uint), new List<Type> { typeof(byte), typeof(ushort), typeof(char) } },
-            { typeof(int), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(char) } },
-            { typeof(ushort), new List<Type> { typeof(byte), typeof(char) } },
-            { typeof(short), new List<Type> { typeof(byte) } }
+            [typeof(sbyte)] = [typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(byte)] = [typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(short)] = [typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(ushort)] = [typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(int)] = [typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(uint)] = [typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nuint)],
+            [typeof(nint)] = [typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(nuint)] = [typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(long)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(ulong)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(float)] = [typeof(double)],
         };
+
+        /// <summary>
+        /// Implicit numeric conversions for conversion from int literal
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions#implicit-numeric-conversions
+        /// </summary>
+        private static readonly HashSet<Type> ImplicitConversionFromIntLiteral =
+            [typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong), typeof(nuint)];
+
+        /// <summary>
+        /// The compiler allows implicit assigning an integer literal to a smaller type,
+        /// but it doesn't allow assigning a variable of type integer to a smaller type without an explicit cast.
+        /// </summary>
+        internal static bool HasImplicitConversionFromIntLiteral(Type fromType, Type toType)
+        {
+            return fromType == typeof(int) && ImplicitConversionFromIntLiteral.Contains(toType);
+        }
+
+        /// <summary>
+        /// Conversion allowed by NUnit
+        /// </summary>
+        private static readonly Dictionary<Type, HashSet<Type>> NUnitConversions = new()
+        {
+            [typeof(int)] = [typeof(sbyte), typeof(byte), typeof(short), typeof(long), typeof(double), typeof(decimal)],
+            [typeof(string)] = [typeof(decimal), typeof(DateTime)],
+            [typeof(double)] = [typeof(decimal)],
+        };
+
+        internal static bool HasNUnitConversion(Type fromType, Type toType)
+        {
+            return NUnitConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
+        }
 
         /// <summary>
         /// Determines whether the current type can be implicitly converted to the specified type.
@@ -271,7 +355,7 @@ namespace NUnit.Framework.Internal
             // Allow assigning instances of T to Nullable<T>
             to = Nullable.GetUnderlyingType(to) ?? to;
 
-            if (ConvertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
+            if (BuiltInNumericalConversions.TryGetValue(from, out var types) && types.Contains(to))
                 return true;
 
             return from

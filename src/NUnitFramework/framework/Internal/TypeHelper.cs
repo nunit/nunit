@@ -359,6 +359,23 @@ namespace NUnit.Framework.Internal
             if (type1.IsAssignableFrom(type2)) { bestCommonType = type1; return true; }
             if (type2.IsAssignableFrom(type1)) { bestCommonType = type2; return true; }
 
+            if (!type1.IsValueType && !type2.IsValueType)
+            {
+                // Both are reference types - find common base class
+                Type? testType = type1;
+                while (testType is not null && !testType.IsAssignableFrom(type2))
+                {
+                    testType = testType.BaseType;
+                }
+
+                // Dotnet finds common base class, but doesn't fall back to object.
+                if (testType is not null && testType != typeof(object))
+                {
+                    bestCommonType = testType;
+                    return true;
+                }
+            }
+
             bestCommonType = typeof(object);
             return false;
 #pragma warning restore SA1501 // Statement should not be on a single line
