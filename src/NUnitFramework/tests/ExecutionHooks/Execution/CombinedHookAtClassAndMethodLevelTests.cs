@@ -18,34 +18,23 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
             Assert.That(currentTestLogs, Is.EqualTo([
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeSetUp),
 
-                // Test with hooks starts
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
 
-                // Class-level before hook
-                nameof(ActivateBeforeTestHookAttribute),
-                // Method-level before hook
-                nameof(ActivateBeforeTestHookAttribute),
+                nameof(ActivateBeforeTestHookAtClassLevelAttribute),
+                nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
 
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithHooks),
 
-                // Method-level after hook
-                nameof(ActivateAfterTestHookAttribute),
-                // Class-level after hook
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
+                nameof(ActivateAfterTestHookAtClassLevelAttribute),
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
-                // Test with hooks ends
 
-                // Test without hooks starts
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.SetUp),
-                // Class-level before hook
-                nameof(ActivateBeforeTestHookAttribute),
-
+                nameof(ActivateBeforeTestHookAtClassLevelAttribute),
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.EmptyTestWithoutHooks),
 
-                // Class-level after
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtClassLevelAttribute),
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.TearDown),
-                // Test without hooks ends
 
                 nameof(CombinedHookAtClassAndMethodLevelTestsFixture.OneTimeTearDown)
             ]));

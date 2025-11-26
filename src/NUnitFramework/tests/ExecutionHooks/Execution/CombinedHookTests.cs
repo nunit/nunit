@@ -20,11 +20,11 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
                 nameof(CombinedHookTestsFixture.SetUp),
 
                 nameof(ActivateLongRunningBeforeTestHookAttribute),
-                nameof(ActivateBeforeTestHookAttribute),
+                nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
 
                 nameof(CombinedHookTestsFixture.EmptyTest),
 
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
                 nameof(ActivateLongRunningAfterTestHookAttribute),
 
                 nameof(CombinedHookTestsFixture.TearDown),

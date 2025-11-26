@@ -17,9 +17,9 @@ public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecute
         Assert.That(currentTestLogs, Is.Not.Empty);
         Assert.That(currentTestLogs, Is.EqualTo([
             nameof(ActivateLongRunningBeforeTestHookAttribute),
-            nameof(ActivateBeforeTestHookAttribute),
-            nameof(ActivateBeforeTestHookAttribute),
-            nameof(ActivateBeforeTestHookAttribute),
+            nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
+            nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
+            nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
             nameof(ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture.SomeTest)
         ]));
     }

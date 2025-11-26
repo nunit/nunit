@@ -19,7 +19,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
                 nameof(AfterTestHookTestFixture.OneTimeSetUp),
                 nameof(AfterTestHookTestFixture.SetUp),
                 nameof(AfterTestHookTestFixture.EmptyTest),
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
                 nameof(AfterTestHookTestFixture.TearDown),
                 nameof(AfterTestHookTestFixture.OneTimeTearDown)
             ]));

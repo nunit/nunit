@@ -9,21 +9,39 @@ using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData.ExecutionHooks
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class ActivateBeforeTestHookAttribute : ExecutionHookAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public sealed class ActivateBeforeTestHookAtClassLevelAttribute : ExecutionHookAttribute
     {
         public override void BeforeTestHook(HookData hookData)
         {
-            TestLog.LogMessage(nameof(ActivateBeforeTestHookAttribute));
+            TestLog.LogMessage(nameof(ActivateBeforeTestHookAtClassLevelAttribute));
         }
     }
 
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class ActivateAfterTestHookAttribute : ExecutionHookAttribute
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public sealed class ActivateBeforeTestHookAtMethodLevelAttribute : ExecutionHookAttribute
+    {
+        public override void BeforeTestHook(HookData hookData)
+        {
+            TestLog.LogMessage(nameof(ActivateBeforeTestHookAtMethodLevelAttribute));
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public sealed class ActivateAfterTestHookAtClassLevelAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(HookData hookData)
         {
-            TestLog.LogMessage(nameof(ActivateAfterTestHookAttribute));
+            TestLog.LogMessage(nameof(ActivateAfterTestHookAtClassLevelAttribute));
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public sealed class ActivateAfterTestHookAtMethodLevelAttribute : ExecutionHookAttribute
+    {
+        public override void AfterTestHook(HookData hookData)
+        {
+            TestLog.LogMessage(nameof(ActivateAfterTestHookAtMethodLevelAttribute));
         }
     }
 

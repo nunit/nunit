@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
                 nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeSetUp),
                 nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.SetUp),
                 nameof(ActivateBeforeTestHookThrowingExceptionAttribute),
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
                 nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.TearDown),
                 nameof(BeforeTestHookThrowsExceptionTestStopsAfterTestHookExecutesFixture.OneTimeTearDown)
             ]));

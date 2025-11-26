@@ -15,7 +15,7 @@ namespace NUnit.TestData.ExecutionHooks
     public class TestHooksCreationWithHooksFixture
     {
         [Test]
-        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
         public void EmptyTest()
         {
         }
@@ -30,8 +30,8 @@ namespace NUnit.TestData.ExecutionHooks
         }
     }
 
-    [ActivateBeforeTestHook]
-    [ActivateAfterTestHook]
+    [ActivateBeforeTestHookAtClassLevel]
+    [ActivateAfterTestHookAtClassLevel]
     public class TestHooksCreationAtClassLevelFixture
     {
         [Test]
@@ -43,8 +43,8 @@ namespace NUnit.TestData.ExecutionHooks
     public class TestHooksCreationAtMethodLevelFixture
     {
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTest()
         {
         }

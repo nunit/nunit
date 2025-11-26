@@ -17,9 +17,9 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExecutionSequence
             Assert.That(currentTestLogs, Is.EqualTo([
                 nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TestPasses),
 
-                nameof(ActivateAfterTestHookAttribute),
-                nameof(ActivateAfterTestHookAttribute),
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
                 nameof(ActivateAfterTestHookThrowingExceptionAttribute),
 
                 nameof(ExecutionProceedsOnlyAfterAllAfterTestHooksExecuteFixture.TearDown),

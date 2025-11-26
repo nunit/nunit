@@ -19,9 +19,9 @@ namespace NUnit.Framework.Tests.ExecutionHooks.Execution
                 nameof(TestActionAndHookCombinationFixture.OneTimeSetUp),
                 SimpleTestActionAttribute.LogStringForBeforeTest,
                 nameof(TestActionAndHookCombinationFixture.SetUp),
-                nameof(ActivateBeforeTestHookAttribute),
+                nameof(ActivateBeforeTestHookAtMethodLevelAttribute),
                 nameof(TestActionAndHookCombinationFixture.EmptyTest),
-                nameof(ActivateAfterTestHookAttribute),
+                nameof(ActivateAfterTestHookAtMethodLevelAttribute),
                 nameof(TestActionAndHookCombinationFixture.TearDown),
                 SimpleTestActionAttribute.LogStringForAfterTest,
                 nameof(TestActionAndHookCombinationFixture.OneTimeTearDown)

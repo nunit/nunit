@@ -13,9 +13,9 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
         [ActivateLongRunningBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateAfterTestHookAtMethodLevel]
         [ActivateLongRunningAfterTestHook]
         public void EmptyTest() => TestLog.LogCurrentMethod();
 
@@ -26,8 +26,8 @@ namespace NUnit.TestData.ExecutionHooks
         public void OneTimeTearDown() => TestLog.LogCurrentMethod();
     }
 
-    [ActivateBeforeTestHook]
-    [ActivateAfterTestHook]
+    [ActivateBeforeTestHookAtClassLevel]
+    [ActivateAfterTestHookAtClassLevel]
     public class CombinedHookAtClassAndMethodLevelTestsFixture
     {
         [OneTimeSetUp]
@@ -37,8 +37,8 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTestWithHooks() => TestLog.LogCurrentMethod();
 
         [Test]
@@ -69,8 +69,8 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTest() => TestLog.LogCurrentMethod();
 
         [TearDown]
@@ -89,8 +89,8 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTest()
         {
             TestLog.LogCurrentMethod();
@@ -114,8 +114,8 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateAfterTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTest() => TestLog.LogCurrentMethod();
 
         [TearDown]

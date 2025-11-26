@@ -13,7 +13,7 @@ namespace NUnit.TestData.ExecutionHooks
         public void SetUp() => TestLog.LogCurrentMethod();
 
         [Test]
-        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
         public void EmptyTest() => TestLog.LogCurrentMethod();
 
         [TearDown]
@@ -33,7 +33,7 @@ namespace NUnit.TestData.ExecutionHooks
 
         [Test]
         [ActivateBeforeTestHookThrowingException]
-        [ActivateAfterTestHook]
+        [ActivateAfterTestHookAtMethodLevel]
         public void EmptyTest()
         {
             TestLog.LogCurrentMethod();
@@ -49,9 +49,9 @@ namespace NUnit.TestData.ExecutionHooks
     public class ExecutionProceedsOnlyAfterAllBeforeTestHooksExecuteFixture
     {
         [Test]
-        [ActivateBeforeTestHook]
-        [ActivateBeforeTestHook]
-        [ActivateBeforeTestHook]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateBeforeTestHookAtMethodLevel]
+        [ActivateBeforeTestHookAtMethodLevel]
         [ActivateLongRunningBeforeTestHook]
         public void SomeTest() => TestLog.LogCurrentMethod();
     }
