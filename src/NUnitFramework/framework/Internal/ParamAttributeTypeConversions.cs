@@ -48,9 +48,21 @@ namespace NUnit.Framework.Internal
             [typeof(float)] = [typeof(double)],
         };
 
+        private static readonly Dictionary<Type, HashSet<Type>> NUnitConversions = new()
+        {
+            [typeof(int)] = [typeof(sbyte), typeof(byte), typeof(short), typeof(long), typeof(double), typeof(decimal)],
+            [typeof(string)] = [typeof(decimal), typeof(DateTime)],
+            [typeof(double)] = [typeof(decimal)],
+        };
+
         public static bool HasImplicitConversion(Type fromType, Type toType)
         {
             return BuiltInNumericalConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
+        }
+
+        public static bool HasNUnitConversion(Type fromType, Type toType)
+        {
+            return NUnitConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
         }
 
         /// <summary>
@@ -113,25 +125,13 @@ namespace NUnit.Framework.Internal
                 return Reflect.IsAssignableFromNull(targetType);
             }
 
-            bool convert = false;
             var underlyingTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+            var valueType = value.GetType();
 
-            if (underlyingTargetType == typeof(short) || underlyingTargetType == typeof(byte) || underlyingTargetType == typeof(sbyte)
-                || underlyingTargetType == typeof(long) || underlyingTargetType == typeof(double))
-            {
-                convert = value is int;
-            }
-            else if (underlyingTargetType == typeof(decimal))
-            {
-                convert = value is double || value is string || value is int;
-            }
-            else if (underlyingTargetType == typeof(DateTime))
-            {
-                convert = value is string;
-            }
+            bool convert = HasNUnitConversion(valueType, underlyingTargetType);
 
-            if (convert is false)
-                convert = HasImplicitConversion(value.GetType(), underlyingTargetType);
+            //if (convert is false)
+            //    convert = HasImplicitConversion(valueType, underlyingTargetType);
 
             if (convert)
             {
