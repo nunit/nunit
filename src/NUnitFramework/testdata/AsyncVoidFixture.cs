@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests
     [TestFixture]
     public static class AsyncVoidFixture
     {
-        public const string Message = "Exception from  inside async void method.";
+        public const string Message = "Exception from inside async void method.";
 
         [TearDown]
         public static void TearDown()

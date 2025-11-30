@@ -222,22 +222,25 @@ namespace NUnit.Framework.Api
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
-            UnexpectedExceptionHander("AppDomain.UnhandledException", (Exception)args.ExceptionObject);
+            UnexpectedExceptionHandler("AppDomain.UnhandledException", (Exception)args.ExceptionObject);
         }
 
         private static void OnUnobservedException(object? sender, UnobservedTaskExceptionEventArgs args)
         {
-            UnexpectedExceptionHander("TaskScheduler.UnobservedTaskException", args.Exception);
+            UnexpectedExceptionHandler("TaskScheduler.UnobservedTaskException", args.Exception);
             args.SetObserved();
         }
 
-        private static void UnexpectedExceptionHander(string originator, Exception e)
+        private static void UnexpectedExceptionHandler(string originator, Exception e)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
 
             Log.Error($"Unexpected exception from {originator} in test {context.CurrentTest.FullName}: {e.Message}");
-            context.CurrentResult.RecordException(e, FailureSite.Test);
-            context.CurrentResult.RecordTestCompletion();
+            lock (context)
+            {
+                context.CurrentResult.RecordException(e, FailureSite.Test);
+                context.CurrentResult.RecordTestCompletion();
+            }
         }
 
         /// <summary>

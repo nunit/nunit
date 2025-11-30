@@ -75,8 +75,11 @@ namespace NUnit.Framework.Internal
                     TestExecutionContext context = _executionContext;
 
                     Log.Error($"Unexpected exception from SynchronizationContext in test {context.CurrentTest.FullName}: {e.Message}");
-                    context.CurrentResult.RecordException(e, FailureSite.Test);
-                    context.CurrentResult.RecordTestCompletion();
+                    lock (context)
+                    {
+                        context.CurrentResult.RecordException(e, FailureSite.Test);
+                        context.CurrentResult.RecordTestCompletion();
+                    }
                 }
             }
 
