@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
+using System.Threading.Tasks;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -206,12 +207,40 @@ namespace NUnit.Framework.Api
                 throw new InvalidOperationException("Loaded test didn't result in a WorkItem");
 
             TopLevelWorkItem.InitializeContext(context);
+
+            // Set exception handlers of last resort in case users start tasks but don't await them
+            TaskScheduler.UnobservedTaskException += OnUnobservedException;
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
             TopLevelWorkItem.Completed += OnRunCompleted;
 
             // Needs to be set for StopRun
             Context = context;
 
             WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
+        {
+            UnexpectedExceptionHandler("AppDomain.UnhandledException", (Exception)args.ExceptionObject);
+        }
+
+        private static void OnUnobservedException(object? sender, UnobservedTaskExceptionEventArgs args)
+        {
+            UnexpectedExceptionHandler("TaskScheduler.UnobservedTaskException", args.Exception);
+            args.SetObserved();
+        }
+
+        private static void UnexpectedExceptionHandler(string originator, Exception e)
+        {
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+
+            Log.Error($"Unexpected exception from {originator} in test {context.CurrentTest.FullName}: {e.Message}");
+            lock (context)
+            {
+                context.CurrentResult.RecordException(e, FailureSite.Test);
+                context.CurrentResult.RecordTestCompletion();
+            }
         }
 
         /// <summary>
@@ -357,6 +386,10 @@ namespace NUnit.Framework.Api
 
             if (_savedErr is not null)
                 Console.SetError(_savedErr);
+
+            // Unhook exception handlers of last resort
+            AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
+            TaskScheduler.UnobservedTaskException -= OnUnobservedException;
 
             _runComplete.Set();
         }
