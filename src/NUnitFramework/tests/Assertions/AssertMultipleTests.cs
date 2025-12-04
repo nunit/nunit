@@ -81,8 +81,8 @@ namespace NUnit.Framework.Tests.Assertions
 
         [TestCase(nameof(AM.ExceptionThrown), 0, "Simulated Error")]
         [TestCase(nameof(AM.ExceptionThrownAfterWarning), 0, "WARNING", "Simulated Error")]
-        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2", "Simulated Error")]
-        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures_EnterScope), 2, "Failure 1", "Failure 2", "Simulated Error")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2", "Simulated Error", ExcludePlatform = "Mono")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures_EnterScope), 2, "Failure 1", "Failure 2", "Simulated Error", ExcludePlatform = "Mono")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Error, asserts, assertionMessages);

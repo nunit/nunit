@@ -317,11 +317,24 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
+        private static bool _exceptionActiveCheckingPossible = true;
+
         private static bool IsExceptionActive()
         {
+            if (!_exceptionActiveCheckingPossible)
+                return false;
+
+            try
+            {
 #pragma warning disable CS0618 // Type or member is obsolete
-            return System.Runtime.InteropServices.Marshal.GetExceptionCode() != 0;
+                return System.Runtime.InteropServices.Marshal.GetExceptionCode() != 0;
 #pragma warning restore CS0618 // Type or member is obsolete
+            }
+            catch (PlatformNotSupportedException)
+            {
+                _exceptionActiveCheckingPossible = false;
+                return false;
+            }
         }
 
         internal static string ExtendedMessage(string methodName, string message, string actualExpression, string constraintExpression)
