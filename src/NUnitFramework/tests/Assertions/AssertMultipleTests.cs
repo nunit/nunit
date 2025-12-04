@@ -49,8 +49,6 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.TwoAsserts_BothAssertsFail_Async), 2, "RealPart", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async), 3, "Expected: 5", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async_EnterScope), 3, "Expected: 5", "ImaginaryPart")]
-        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2")]
-        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures_EnterScope), 2, "Failure 1", "Failure 2")]
         public void AssertMultipleFails(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Failure, asserts, assertionMessages);
@@ -83,6 +81,8 @@ namespace NUnit.Framework.Tests.Assertions
 
         [TestCase(nameof(AM.ExceptionThrown), 0, "Simulated Error")]
         [TestCase(nameof(AM.ExceptionThrownAfterWarning), 0, "WARNING", "Simulated Error")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures), 2, "Failure 1", "Failure 2", "Simulated Error")]
+        [TestCase(nameof(AM.ExceptionThrownAfterTwoFailures_EnterScope), 2, "Failure 1", "Failure 2", "Simulated Error")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Error, asserts, assertionMessages);

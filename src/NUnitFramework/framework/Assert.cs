@@ -303,7 +303,11 @@ namespace NUnit.Framework
                     _context.CurrentResult.RecordTestCompletion();
                     if (assertionCount > _assertionCountWhenEnteringScope)
                     {
-                        throw new MultipleAssertException(_context.CurrentResult);
+                        // We are at the end of the outermost multiple assert scope and there were failures recorded.
+                        // Throw MultipleAssertException to exit current test
+                        // unless we are in the middle of handling another exception we don't want to loose.
+                        if (!IsExceptionActive())
+                            throw new MultipleAssertException(_context.CurrentResult);
                     }
                 }
             }
@@ -312,6 +316,13 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
+
+        private static bool IsExceptionActive()
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            return System.Runtime.InteropServices.Marshal.GetExceptionCode() != 0;
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
 
         internal static string ExtendedMessage(string methodName, string message, string actualExpression, string constraintExpression)
         {
