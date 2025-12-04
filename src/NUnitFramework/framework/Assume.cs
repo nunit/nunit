@@ -296,7 +296,7 @@ namespace NUnit.Framework
 
         private static void CheckMultipleAssertLevel()
         {
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+            if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assume.That may not be used in a multiple assertion block.");
         }
 

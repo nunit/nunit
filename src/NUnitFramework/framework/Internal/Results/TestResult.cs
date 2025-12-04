@@ -351,6 +351,25 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of failed assertions.
+        /// </summary>
+        public int AssertionResultCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _assertionResults.Count;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets a list of assertion results associated with the test.
         /// </summary>
         public IList<AssertionResult> AssertionResults => _assertionResults;
@@ -493,7 +512,7 @@ namespace NUnit.Framework.Internal
             {
                 deltaResult.RecordException(exception);
             }
-            else if (deltaResult.AssertionResults.Count > 0)
+            else if (deltaResult.AssertionResultCount > 0)
             {
                 // Warnings needs to be treated differently.
                 deltaResult.RecordTestCompletion();
@@ -672,7 +691,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void RecordTestCompletion()
         {
-            switch (_assertionResults.Count)
+            switch (AssertionResultCount)
             {
                 case 0:
                     SetResult(ResultState.Success);
@@ -697,7 +716,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void RecordAssertion(AssertionResult assertion)
         {
-            _assertionResults.Add(assertion);
+            RwLock.EnterWriteLock();
+            try
+            {
+                _assertionResults.Add(assertion);
+            }
+            finally
+            {
+                RwLock.ExitWriteLock();
+            }
         }
 
         /// <summary>

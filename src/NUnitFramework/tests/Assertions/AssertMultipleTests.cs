@@ -29,6 +29,7 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async_EnterScope), 3)]
         [TestCase(nameof(AM.ScopeReleasedTwice), 2)]
+        [TestCase(nameof(AM.MultithreadedAssertMultipleSuccess), 1000)]
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             CheckResult(methodName, ResultState.Success, asserts);
@@ -55,6 +56,23 @@ namespace NUnit.Framework.Tests.Assertions
             CheckResult(methodName, ResultState.Failure, asserts, assertionMessages);
         }
 
+        [Test]
+        public void AssertMultipleFailsUndeterministic()
+        {
+            // We know this test fails, but due to the nature of multithreading,
+            // the number of assertions and the number of failures is nondeterministic.
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), nameof(AM.MultithreadedAssertMultipleFailure));
+
+            Assert.Multiple(() =>
+            {
+                // ResultState should be Failure, but Parallel.For aggregates exceptions.
+                // It therefore sometimes returns Error instead of Failure.
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "TestStatus");
+                Assert.That(result.AssertCount, Is.GreaterThan(0), "AssertCount");
+                Assert.That(result.AssertionResults, Is.Not.Empty, "Number of AssertionResults");
+            });
+        }
+
         [TestCase(nameof(AM.ThreeAssertWarns), 0, "WARNING1", "WARNING2", "WARNING3")]
         [TestCase(nameof(AM.ThreeWarnIf_TwoFail), 3, "WARNING1", "WARNING3")]
         [TestCase(nameof(AM.ThreeWarnUnless_TwoFail), 3, "WARNING1", "WARNING3")]
@@ -67,7 +85,7 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.ExceptionThrownAfterWarning), 0, "WARNING", "Simulated Error")]
         public void AssertMultipleErrorTests(string methodName, int asserts, params string[] assertionMessages)
         {
-            _ = CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
+            CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
         }
 
         [TestCase(nameof(AM.AssertPassInBlock), "Assert.Pass")]
@@ -76,7 +94,7 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(AM.AssumptionInBlock), "Assume.That")]
         public void AssertMultiple_InvalidAssertThrowsException(string methodName, string invalidAssert)
         {
-            _ = CheckResult(methodName, ResultState.Error, 0,
+            CheckResult(methodName, ResultState.Error, 0,
                 $"{invalidAssert} may not be used in a multiple assertion block.");
         }
 
@@ -88,10 +106,11 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(result.Message, Contains.Substring(errorMessage));
         }
 
-        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3, "The assertion scope was disposed out of order")]
-        public void OutOfOrderReleaseScope(string methodName, int asserts, string errorMessage)
+        [TestCase(nameof(AM.ScopeReleasedOutOfOrder), 3)]
+        public void OutOfOrderReleaseScope(string methodName, int asserts)
         {
-            _ = CheckResult(methodName, ResultState.Error, asserts, errorMessage);
+            // This now succeeds, Enter and Dispose can be in any order to support multi-threading inside an Assert.
+            CheckResult(methodName, ResultState.Success, asserts);
         }
 
         [Test]
@@ -164,13 +183,13 @@ namespace NUnit.Framework.Tests.Assertions
             }
 
             var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
-            var previousFailureCount = currentResult.AssertionResults.Count;
+            var previousFailureCount = currentResult.AssertionResultCount;
             Assume.That(previousFailureCount, Is.GreaterThan(0));
 
             Assert.Multiple(() => { });
 
             // The assert multiple shouldn't've triggered a failure
-            Assert.That(currentResult.AssertionResults, Has.Count.EqualTo(previousFailureCount));
+            Assert.That(currentResult.AssertionResultCount, Is.EqualTo(previousFailureCount));
 
             // If we get this far, the test is good so we should clean up the context from the intentional failure above
             currentResult.SetResult(ResultState.Inconclusive, string.Empty, null);

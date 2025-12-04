@@ -93,7 +93,7 @@ namespace NUnit.Framework
         public static void Pass(string message)
         {
             // If we are in a multiple assert block, this is an error
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+            if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
             throw new SuccessException(message);
         }
@@ -157,7 +157,7 @@ namespace NUnit.Framework
         public static void Ignore(string message)
         {
             // If we are in a multiple assert block, this is an error
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+            if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
             throw new IgnoreException(message);
@@ -186,7 +186,7 @@ namespace NUnit.Framework
         public static void Inconclusive(string message)
         {
             // If we are in a multiple assert block, this is an error
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+            if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
 
             throw new InconclusiveException(message);
@@ -273,8 +273,11 @@ namespace NUnit.Framework
                 _context = TestExecutionContext.CurrentContext;
                 Guard.OperationValid(_context is not null, "There is no current test execution context.");
 
-                _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResults.Count;
-                _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
+                lock (_context)
+                {
+                    _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResultCount;
+                    _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
+                }
             }
 
             public void Dispose()
@@ -282,18 +285,23 @@ namespace NUnit.Framework
                 if (Interlocked.Exchange(ref _isDisposed, 1) == 1)
                     return; // Already disposed.
 
-                if (TestExecutionContext.CurrentContext != _context ||
-                    _context.MultipleAssertLevel != _multipleAssertLevelInScope)
+                Guard.OperationValid(TestExecutionContext.CurrentContext == _context, "The assertion scope does not belong to this test.");
+
+                int multipleAssertLevel;
+                int assertionCount;
+                int pendingFailures;
+
+                lock (_context)
                 {
-                    throw new InvalidOperationException("The assertion scope was disposed out of order.");
+                    multipleAssertLevel = --_context.MultipleAssertLevel;
+                    assertionCount = _context.CurrentResult.AssertionResultCount;
+                    pendingFailures = _context.CurrentResult.PendingFailures;
                 }
 
-                _context.MultipleAssertLevel--;
-
-                if (_context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
+                if (multipleAssertLevel == 0 && pendingFailures > 0)
                 {
                     _context.CurrentResult.RecordTestCompletion();
-                    if (_context.CurrentResult.AssertionResults.Count > _assertionCountWhenEnteringScope)
+                    if (assertionCount > _assertionCountWhenEnteringScope)
                     {
                         throw new MultipleAssertException(_context.CurrentResult);
                     }
@@ -321,7 +329,7 @@ namespace NUnit.Framework
             result.RecordTestCompletion();
 
             // If multiple asserts disabled, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+            if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert is false)
             {
                 throw new AssertionException(result.Message);
             }
