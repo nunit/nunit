@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -12,6 +11,8 @@ namespace NUnit.Framework.Internal
     {
         private const string ShutdownTimeoutMessage =
             "Work posted to the synchronization context did not complete within ten seconds. Consider explicitly waiting for the work to complete.";
+        private const string ShutdownMessage =
+            "This SingleThreadedTestSynchronizationContext has been shut down.";
 
         private readonly TimeSpan _shutdownTimeout;
         private readonly Queue<ScheduledWork> _queue = new();
@@ -74,7 +75,7 @@ namespace NUnit.Framework.Internal
                         goto case Status.ShutDown;
 
                     case Status.ShutDown:
-                        throw ErrorAndGetExceptionForShutdownTimeout();
+                        throw ErrorAndGetExceptionForShutdown();
                 }
 
                 _queue.Enqueue(work);
@@ -155,12 +156,17 @@ namespace NUnit.Framework.Internal
         }
 
         private static Exception ErrorAndGetExceptionForShutdownTimeout()
+            => ErrorAndGetExceptionFor(ShutdownTimeoutMessage);
+
+        private static Exception ErrorAndGetExceptionForShutdown()
+            => ErrorAndGetExceptionFor(ShutdownMessage);
+
+        private static Exception ErrorAndGetExceptionFor(string message)
         {
-            var testExecutionContext = TestExecutionContext.CurrentContext;
+            Exception ex = new InvalidOperationException(message);
+            TestExecutionContext.CurrentContext.CurrentResult.RecordException(ex);
 
-            testExecutionContext?.CurrentResult.RecordAssertion(AssertionStatus.Error, ShutdownTimeoutMessage);
-
-            return new InvalidOperationException(ShutdownTimeoutMessage);
+            return ex;
         }
 
         public void Dispose()
