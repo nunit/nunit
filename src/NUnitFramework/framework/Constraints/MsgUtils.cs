@@ -313,10 +313,7 @@ namespace NUnit.Framework.Constraints
                 return null;
 
             Type valueType = value.GetType();
-            if (!isTuple(valueType))
-                return null;
-
-            return FormatTuple(value, true, getValue);
+            return !isTuple(valueType) ? null : FormatTuple(value, true, getValue);
         }
 
         private static string FormatTuple(object value, bool printParentheses, Func<Type, string, object, object?> getValue)

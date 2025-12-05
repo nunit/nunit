@@ -106,7 +106,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string GetDisplayName()
         {
-            return TypeHelper.GetDisplayName(Type);
+            return Type.GetDisplayName();
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string GetDisplayName(object?[]? args)
         {
-            return TypeHelper.GetDisplayName(Type, args);
+            return Type.GetDisplayName(args);
         }
 
         /// <summary>

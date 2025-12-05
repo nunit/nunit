@@ -122,7 +122,25 @@ namespace NUnit.Framework
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
             {
                 count++;
-                yield return _builder.BuildTestMethod(method, suite, parms);
+
+                // Clone the parameters to ensure each test method gets its own independent copy
+                // This is necessary because ConvertArgumentList will modify the Arguments array
+                object?[] clonedArgs = new object?[parms.Arguments.Length];
+                Array.Copy(parms.Arguments, clonedArgs, parms.Arguments.Length);
+
+                var clonedParms = new TestCaseParameters(clonedArgs)
+                {
+                    ExpectedResult = parms.ExpectedResult,
+                    HasExpectedResult = parms.HasExpectedResult,
+                    RunState = parms.RunState,
+                    Properties = parms.Properties,
+                    TestName = parms.TestName,
+                    TypeArgs = parms.TypeArgs,
+                    OriginalArguments = parms.OriginalArguments,
+                    ArgDisplayNames = parms.ArgDisplayNames
+                };
+
+                yield return _builder.BuildTestMethod(method, suite, clonedParms);
             }
 
             // If count > 0, error messages will be shown for each case

@@ -25,8 +25,8 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            bool xOverridesEqualsObject = TypeHelper.OverridesEqualsObject(xType);
-            bool yOverridesEqualsObject = TypeHelper.OverridesEqualsObject(yType);
+            bool xOverridesEqualsObject = xType.OverridesEqualsObject();
+            bool yOverridesEqualsObject = yType.OverridesEqualsObject();
 
             if (xOverridesEqualsObject || yOverridesEqualsObject)
             {

@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 CheckTestMethodAttributes(testMethod, metadata);
 
-                CheckTestMethodSignature(testMethod, metadata, parms);
+                parms = CheckTestMethodSignature(testMethod, metadata, parms);
 
                 if (parms is null || parms.Arguments.Length == 0)
                     testMethod.ApplyAttributesToTest(method.MethodInfo);
@@ -131,13 +131,19 @@ namespace NUnit.Framework.Internal.Builders
         /// The return value is no longer used internally, but is retained
         /// for testing purposes.
         /// </remarks>
-        private static bool CheckTestMethodSignature(TestMethod testMethod, MethodInfoCache.TestMethodMetadata metadata, TestCaseParameters? parms)
+        private static TestCaseParameters? CheckTestMethodSignature(TestMethod testMethod, MethodInfoCache.TestMethodMetadata metadata, TestCaseParameters? parms)
         {
             if (testMethod.Method.IsAbstract)
-                return MarkAsNotRunnable(testMethod, "Method is abstract");
+            {
+                MarkAsNotRunnable(testMethod, "Method is abstract");
+                return parms;
+            }
 
             if (!testMethod.Method.IsPublic)
-                return MarkAsNotRunnable(testMethod, "Method is not public");
+            {
+                MarkAsNotRunnable(testMethod, "Method is not public");
+                return parms;
+            }
 
             IParameterInfo[] parameters = metadata.Parameters;
             int minArgsNeeded = 0;
@@ -157,14 +163,13 @@ namespace NUnit.Framework.Internal.Builders
             {
                 testMethod.Parms = parms;
                 testMethod.RunState = parms.RunState;
-
                 arglist = parms.Arguments;
 
                 if (arglist is not null)
                     argsProvided = arglist.Length;
 
                 if (testMethod.RunState != RunState.Runnable)
-                    return false;
+                    return parms;
             }
 
             var returnType = testMethod.Method.ReturnType.Type;
@@ -172,30 +177,39 @@ namespace NUnit.Framework.Internal.Builders
             if (metadata.IsAsyncOperation)
             {
                 if (returnType == typeof(void))
-                    return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
+                {
+                    MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
+                    return parms;
+                }
 
                 var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
                 if (!voidResult && (parms is null || !parms.HasExpectedResult))
                 {
-                    return MarkAsNotRunnable(testMethod,
+                    MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a void result when no result is expected");
+                    return parms;
                 }
 
                 if (voidResult && parms is not null && parms.HasExpectedResult)
                 {
-                    return MarkAsNotRunnable(testMethod,
+                    MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
+                    return parms;
                 }
             }
             else if (metadata.IsVoidOrUnit)
             {
                 if (parms is not null && parms.HasExpectedResult)
-                    return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
+                {
+                    MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
+                    return parms;
+                }
             }
             else if (parms is null || !parms.HasExpectedResult)
             {
-                return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+                MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+                return parms;
             }
 
             if (parameters.LastParameterAcceptsCancellationToken() &&
@@ -206,16 +220,28 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             if (argsProvided > 0 && maxArgsNeeded == 0)
-                return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
+            {
+                MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
+                return parms;
+            }
 
             if (argsProvided == 0 && minArgsNeeded > 0)
-                return MarkAsNotRunnable(testMethod, "No arguments were provided");
+            {
+                MarkAsNotRunnable(testMethod, "No arguments were provided");
+                return parms;
+            }
 
             if (argsProvided < minArgsNeeded)
-                return MarkAsNotRunnable(testMethod, $"Not enough arguments provided, provide at least {minArgsNeeded} arguments.");
+            {
+                MarkAsNotRunnable(testMethod, $"Not enough arguments provided, provide at least {minArgsNeeded} arguments.");
+                return parms;
+            }
 
             if (argsProvided > maxArgsNeeded)
-                return MarkAsNotRunnable(testMethod, $"Too many arguments provided, provide at most {maxArgsNeeded} arguments.");
+            {
+                MarkAsNotRunnable(testMethod, $"Too many arguments provided, provide at most {maxArgsNeeded} arguments.");
+                return parms;
+            }
 
             if (testMethod.Method.IsGenericMethodDefinition)
             {
@@ -224,7 +250,8 @@ namespace NUnit.Framework.Internal.Builders
                 if (typeArguments is null && (
                     arglist is null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out typeArguments)))
                 {
-                    return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
+                    MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
+                    return parms;
                 }
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
@@ -232,12 +259,19 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             if (parms is not null && parms.TestName is not null && string.IsNullOrWhiteSpace(parms.TestName))
-                return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
+            {
+                MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
+                return parms;
+            }
 
             if (arglist is not null && parameters is not null)
-                TypeHelper.ConvertArgumentList(arglist, parameters);
+            {
+                // Convert the arguments for this specific test method
+                // Since we cloned parms earlier, this only affects this test method's copy
+                parms!.Arguments = TypeHelper.ConvertArgumentList(arglist, parameters);
+            }
 
-            return true;
+            return parms;
         }
 
         private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)

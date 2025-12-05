@@ -53,35 +53,35 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void NonGenericEnumerableHasNoTypeArgument()
         {
-            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(NonGenericEnumerable));
+            var actual = typeof(NonGenericEnumerable).FindPrimaryEnumerableInterfaceGenericTypeArgument();
             Assert.That(actual, Is.Null);
         }
 
         [Test]
         public void SimpleEnumerableHasIntTypeArgument()
         {
-            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(SimpleEnumerable));
+            var actual = typeof(SimpleEnumerable).FindPrimaryEnumerableInterfaceGenericTypeArgument();
             Assert.That(actual, Is.EqualTo(typeof(int)));
         }
 
         [Test]
         public void NestedEnumerableHasIntTypeArgument()
         {
-            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(NestedEnumerable));
+            var actual = typeof(NestedEnumerable).FindPrimaryEnumerableInterfaceGenericTypeArgument();
             Assert.That(actual, Is.EqualTo(typeof(int)));
         }
 
         [Test]
         public void MultipleNestedEnumerableHasIntTypeArgument()
         {
-            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(MultipleNestedEnumerable));
+            var actual = typeof(MultipleNestedEnumerable).FindPrimaryEnumerableInterfaceGenericTypeArgument();
             Assert.That(actual, Is.EqualTo(typeof(int)));
         }
 
         [Test]
         public void MultipleDifferentNestedEnumerableHasNoTypeArgument()
         {
-            var actual = TypeHelper.FindPrimaryEnumerableInterfaceGenericTypeArgument(typeof(MultipleDifferentNestedEnumerable));
+            var actual = typeof(MultipleDifferentNestedEnumerable).FindPrimaryEnumerableInterfaceGenericTypeArgument();
             Assert.That(actual, Is.Null);
         }
 

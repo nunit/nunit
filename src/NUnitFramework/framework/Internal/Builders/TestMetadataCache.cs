@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
 
-                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
+                foreach (Type interfaceType in type.GetDeclaredInterfaces())
                     actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false));
 
                 actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false));
