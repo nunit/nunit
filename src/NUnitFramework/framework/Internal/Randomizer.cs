@@ -2,7 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace NUnit.Framework.Internal
 {
@@ -45,15 +48,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static int InitialSeed
         {
-            get => _initialSeed;
+            get;
             set
             {
-                _initialSeed = value;
+                field = value;
                 // Setting or resetting the initial seed creates seed generator
-                _seedGenerator = new Random(_initialSeed);
+                _seedGenerator = new Random(field);
             }
         }
-        private static int _initialSeed;
 
         // Lookup Dictionary used to find randomizers for each member
         private static readonly Dictionary<MemberInfo, Randomizer> Randomizers;
@@ -399,7 +401,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool NextBool(double probability)
         {
-            Guard.ArgumentInRange(probability >= 0.0 && probability <= 1.0, "Probability must be from 0.0 to 1.0", nameof(probability));
+            Guard.ArgumentInRange(probability is >= 0.0 and <= 1.0, "Probability must be from 0.0 to 1.0", nameof(probability));
 
             return NextDouble() < probability;
         }
@@ -420,6 +422,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Returns a random double within a specified range.
+        /// Maximum value must be greater than or equal to minimum.
         /// </summary>
         public double NextDouble(double min, double max)
         {
@@ -492,34 +495,127 @@ namespace NUnit.Framework.Internal
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
-        private const int MaxStackAllocSize = 256;
 
         /// <summary>
-        /// Generate a random string based on the characters from the input string.
+        /// Returns a random string of the specified length using characters from the specified set.
         /// </summary>
-        /// <param name="outputLength">desired length of output string.</param>
-        /// <param name="allowedChars">string representing the set of characters from which to construct the resulting string</param>
-        /// <returns>A random string of arbitrary length</returns>
+        /// <param name="outputLength">The desired length of the string in char units</param>
+        /// <param name="allowedChars">The characters to use in building the string</param>
+        /// <returns>A random string</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown if allowedChars contains surrogate characters that would create invalid UTF-16 strings,
+        /// or if the requested outputLength cannot be satisfied with the provided characters
+        /// </exception>
         public string GetString(int outputLength, string allowedChars)
         {
-            if (outputLength < 0)
-                throw new ArgumentOutOfRangeException(nameof(outputLength));
-#if NET6_0_OR_GREATER
-            return string.Create(outputLength, allowedChars, FillSpan);
-
-            void FillSpan(Span<char> data, string allowedChars)
+            // Fast path: Check if allowedChars contains any surrogates
+            bool hasSurrogates = false;
+            foreach (var c in allowedChars)
             {
+                if (char.IsSurrogate(c))
+                {
+                    hasSurrogates = true;
+                    break;
+                }
+            }
+
+            if (hasSurrogates)
+            {
+                return GetStringSafe(outputLength, allowedChars);
+            }
+
+#if NET6_0_OR_GREATER
+            return GetStringUnsafeSpan(outputLength, allowedChars);
+#else
+            return GetStringUnsafeArray(outputLength, allowedChars);
+#endif
+        }
+
+#if NET6_0_OR_GREATER
+        private string GetStringUnsafeSpan(int outputLength, string allowedChars)
+        {
+            // Use stackalloc for small strings, heap for large ones
+            const int maxStackLimit = 256; // Reasonable stack limit
+
+            if (outputLength <= maxStackLimit)
+            {
+                Span<char> data = stackalloc char[outputLength];
                 for (int i = 0; i < data.Length; i++)
                     data[i] = allowedChars[Next(0, allowedChars.Length)];
+                return new string(data);
             }
-#else
-            var data = new char[outputLength];
 
+            // Fall back to array for very large strings
+            return GetStringUnsafeArray(outputLength, allowedChars);
+        }
+#endif
+
+        private string GetStringUnsafeArray(int outputLength, string allowedChars)
+        {
+            var data = new char[outputLength];
             for (int i = 0; i < data.Length; i++)
                 data[i] = allowedChars[Next(0, allowedChars.Length)];
-
             return new string(data);
-#endif
+        }
+
+        /// <summary>
+        /// Safe path for strings with surrogates - treats text elements atomically
+        /// </summary>
+        private string GetStringSafe(int outputLength, string allowedChars)
+        {
+            if (outputLength == 0)
+            {
+                return string.Empty;
+            }
+
+            // Build list of text elements (atomic Unicode units)
+            var elements = new List<string>();
+            var enumerator = StringInfo.GetTextElementEnumerator(allowedChars);
+            while (enumerator.MoveNext())
+            {
+                elements.Add(enumerator.GetTextElement());
+            }
+
+            if (elements.Count == 0)
+            {
+                throw new ArgumentException("allowedChars must contain at least one text element", nameof(allowedChars));
+            }
+
+            // Pre-categorize elements by length for efficient lookup
+            var singleCharElements = elements.Where(element => element.Length == 1).ToList();
+
+            // Worst case: all elements are surrogate pairs (2 chars each)
+            var sb = new StringBuilder(outputLength * 2);
+            int remaining = outputLength;
+
+            while (remaining > 0)
+            {
+                string next;
+
+                // Special case: only 1 char remaining
+                if (remaining == 1)
+                {
+                    if (singleCharElements.Count == 0)
+                    {
+                        throw new ArgumentException(
+                            $"Cannot compose a string of length {outputLength} from the supplied characters. " +
+                            "The allowedChars contains only multi-char elements (like emojis) and the requested " +
+                            "length would require splitting them, which would create invalid UTF-16.",
+                            nameof(outputLength));
+                    }
+                    next = singleCharElements[Next(0, singleCharElements.Count)];
+                }
+                else
+                {
+                    // Can pick any element
+                    next = elements[Next(0, elements.Count)];
+                }
+
+                sb.Append(next);
+                remaining -= next.Length;
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
