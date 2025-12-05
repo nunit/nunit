@@ -191,6 +191,20 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public CollectionItemsEqualConstraint UsingPropertiesComparer<T>(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<T>());
+            return this;
+        }
+
+        /// <summary>
         /// Compares two collection members for equality
         /// </summary>
         protected bool ItemsEqual(object? x, object? y)

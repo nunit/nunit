@@ -240,6 +240,11 @@ namespace NUnit.Framework.Tests.Assertions
                                     .UsingPropertiesComparer(c => c.Using(x => x.Name)));
             Assert.That(persons, Has.Some.EqualTo(new Person { Name = kassidy })
                                     .UsingPropertiesComparer(c => c.Excluding(x => x.Age)));
+
+            // Untyped.
+            object wanted = new { Name = kassidy };
+            Assert.That(persons, Does.Contain(wanted)
+                                     .UsingPropertiesComparer<Person>(c => c.AllowDifferentTypes().Using(x => x.Name)));
         }
 
         private sealed class Person

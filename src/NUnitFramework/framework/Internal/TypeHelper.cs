@@ -439,6 +439,9 @@ namespace NUnit.Framework.Internal
 
         internal static bool HasCompilerGeneratedEquals(this Type type)
         {
+            if (type.GetCustomAttribute<CompilerGeneratedAttribute>() is not null)
+                return true;
+
             var equalsMethod = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
                 null, [type], null);
 

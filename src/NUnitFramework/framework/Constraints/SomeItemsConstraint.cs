@@ -168,6 +168,20 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public SomeItemsConstraint UsingPropertiesComparer<T>(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
+        {
+            CheckPrecondition(nameof(UsingPropertiesComparer));
+            _equalConstraint.UsingPropertiesComparer(configure);
+            return this;
+        }
+
         [MemberNotNull(nameof(_equalConstraint))]
         private void CheckPrecondition(string argument)
         {
