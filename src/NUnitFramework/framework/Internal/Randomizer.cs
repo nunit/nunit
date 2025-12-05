@@ -503,8 +503,8 @@ namespace NUnit.Framework.Internal
         /// <param name="allowedChars">The characters to use in building the string</param>
         /// <returns>A random string</returns>
         /// <exception cref="ArgumentException">
-        /// Thrown if allowedChars contains surrogate characters that would create invalid UTF-16 strings,
-        /// or if the requested outputLength cannot be satisfied with the provided characters
+        /// Thrown if the requested outputLength cannot be satisfied with the provided characters
+        /// (e.g., requesting an odd length when allowedChars contains only surrogate pairs)
         /// </exception>
         public string GetString(int outputLength, string allowedChars)
         {
