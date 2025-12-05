@@ -10,10 +10,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal static class TupleComparer
     {
-        private static bool IsCorrectType(Type type)
-        {
-            return TypeHelper.IsTuple(type);
-        }
+        private static bool IsCorrectType(Type type) => type.IsTuple();
 
         private static object? GetValue(Type type, string propertyName, object obj)
         {

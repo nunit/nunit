@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
                 return dictionary.Contains(Expected);
             }
 
-            throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a {ContainsKeyMethodName} or {ContainsMethodName}(TKey) method.");
+            throw new ArgumentException($"The {actual.GetType().GetDisplayName()} value must have a {ContainsKeyMethodName} or {ContainsMethodName}(TKey) method.");
         }
 
         /// <summary>
