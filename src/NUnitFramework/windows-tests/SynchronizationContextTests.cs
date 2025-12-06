@@ -71,11 +71,11 @@ namespace NUnit.Windows.Tests
 
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
         // to ensure that the message pump is shut down on the correct thread.
-        public static readonly IEnumerable<Type> KnownSynchronizationContextTypes = new[]
-        {
+        public static readonly IEnumerable<Type> KnownSynchronizationContextTypes =
+        [
             typeof(System.Windows.Forms.WindowsFormsSynchronizationContext),
             typeof(System.Windows.Threading.DispatcherSynchronizationContext)
-        };
+        ];
 
         private static SynchronizationContext CreateSynchronizationContext(Type knownSynchronizationContextType)
         {
@@ -126,7 +126,7 @@ namespace NUnit.Windows.Tests
             {
                 apiAdapter.Execute(() =>
                 {
-                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
+                    AssertSynchronizationContext(knownSynchronizationContextType);
                     return Task.CompletedTask;
                 });
             }
@@ -145,11 +145,20 @@ namespace NUnit.Windows.Tests
                 apiAdapter.Execute(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
+                    AssertSynchronizationContext(knownSynchronizationContextType);
+
                     await Task.Yield();
-                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
+                    AssertSynchronizationContext(knownSynchronizationContextType);
                 });
             }
+        }
+
+        private static void AssertSynchronizationContext(Type knownSynchronizationContextType)
+        {
+            var context = SynchronizationContext.Current;
+            if (context is SafeIndirectSynchronizationContext indirectSynchronizationContext)
+                context = indirectSynchronizationContext.ActualSynchronizationContext;
+            Assert.That(context, Is.TypeOf(knownSynchronizationContextType));
         }
     }
 }
