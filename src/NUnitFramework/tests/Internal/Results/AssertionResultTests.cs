@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         [Test]
         public void SuiteResult_AssertionResults()
         {
-            Assert.That(SuiteResult.AssertionResults, Is.Empty);
+            Assert.That(SuiteResult.AssertionResultCount, Is.Zero);
         }
 
         [Test]

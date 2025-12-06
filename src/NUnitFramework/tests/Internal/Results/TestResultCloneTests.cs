@@ -52,11 +52,11 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(clone.InconclusiveCount, Is.EqualTo(original.InconclusiveCount));
                 Assert.That(clone.AssertCount, Is.EqualTo(original.AssertCount));
 
-                Assert.That(clone.AssertionResults, Is.Not.Zero);
+                Assert.That(clone.AssertionResults, Is.Not.Null);
                 Assert.That(clone.AssertionResults, Is.Not.SameAs(original.AssertionResults));
                 Assert.That(clone.AssertionResults, Is.EqualTo(original.AssertionResults));
 
-                Assert.That(clone.TestAttachments, Is.Not.Zero);
+                Assert.That(clone.TestAttachments, Is.Not.Null);
                 Assert.That(clone.TestAttachments, Is.Not.SameAs(original.TestAttachments));
                 Assert.That(clone.TestAttachments, Is.EqualTo(original.TestAttachments));
             });

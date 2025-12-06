@@ -351,9 +351,28 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of failed assertions.
+        /// </summary>
+        public int AssertionResultCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _assertionResults.Count;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets a list of assertion results associated with the test.
         /// </summary>
-        public IList<AssertionResult> AssertionResults => _assertionResults;
+        public IList<AssertionResult> AssertionResults => _assertionResults.AsReadOnly();
 
         #endregion
 
@@ -447,12 +466,40 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a count of pending failures (from Multiple Assert)
         /// </summary>
-        public int PendingFailures => _assertionResults.Count(static ar => ar.Status == AssertionStatus.Failed);
+        public int PendingFailures
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _assertionResults.Count(static ar => ar.Status == AssertionStatus.Failed);
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the worst assertion status (highest enum) in all the assertion results
         /// </summary>
-        public AssertionStatus WorstAssertionStatus => _assertionResults.Aggregate(static (ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
+        public AssertionStatus WorstAssertionStatus
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _assertionResults.Aggregate(static (ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
 
         #endregion
 
@@ -493,7 +540,7 @@ namespace NUnit.Framework.Internal
             {
                 deltaResult.RecordException(exception);
             }
-            else if (deltaResult.AssertionResults.Count > 0)
+            else if (deltaResult.AssertionResultCount > 0)
             {
                 // Warnings needs to be treated differently.
                 deltaResult.RecordTestCompletion();
@@ -672,23 +719,49 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void RecordTestCompletion()
         {
-            switch (_assertionResults.Count)
+            RwLock.EnterUpgradeableReadLock();
+
+            try
             {
-                case 0:
-                    SetResult(ResultState.Success);
-                    break;
-                case 1:
-                    AssertionResult assertionResult = AssertionResults[0];
-                    SetResult(
-                        AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
-                        assertionResult.Message,
-                        assertionResult.StackTrace);
-                    break;
-                default:
-                    SetResult(
-                        AssertionStatusToResultState(WorstAssertionStatus),
-                        CreateLegacyFailureMessage());
-                    break;
+                switch (_assertionResults.Count)
+                {
+                    case 0:
+                        SetResult(ResultState.Success);
+                        break;
+                    case 1:
+                        AssertionResult assertionResult = _assertionResults[0];
+                        SetResult(
+                            AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
+                            assertionResult.Message,
+                            assertionResult.StackTrace);
+                        break;
+                    default:
+                        SetResult(
+                            AssertionStatusToResultState(WorstAssertionStatus),
+                            CreateLegacyFailureMessage());
+                        break;
+                }
+            }
+            finally
+            {
+                RwLock.ExitUpgradeableReadLock();
+            }
+        }
+
+        /// <summary>
+        /// Used in one particular case clear intentional failure result.
+        /// </summary>
+        internal void ClearResult()
+        {
+            RwLock.EnterWriteLock();
+            try
+            {
+                _assertionResults.Clear();
+                SetResult(ResultState.Inconclusive);
+            }
+            finally
+            {
+                RwLock.ExitWriteLock();
             }
         }
 
@@ -697,7 +770,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void RecordAssertion(AssertionResult assertion)
         {
-            _assertionResults.Add(assertion);
+            RwLock.EnterWriteLock();
+            try
+            {
+                _assertionResults.Add(assertion);
+            }
+            finally
+            {
+                RwLock.ExitWriteLock();
+            }
         }
 
         /// <summary>

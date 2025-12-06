@@ -176,6 +176,10 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a list of AssertionResults associated with the test
         /// </summary>
+        /// <remarks>
+        /// The return type is historic, but this is a read-only collection.
+        /// Any attempts to modify it will result in a runtime exception.
+        /// </remarks>
         IList<AssertionResult> AssertionResults
         {
             get;

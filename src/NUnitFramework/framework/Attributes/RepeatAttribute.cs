@@ -134,7 +134,7 @@ namespace NUnit.Framework
                     }
                 }
 
-                if (overallResult.AssertionResults.Count > 0)
+                if (overallResult.AssertionResultCount > 0)
                     overallResult.RecordTestCompletion();
                 context.CurrentResult = overallResult;
 

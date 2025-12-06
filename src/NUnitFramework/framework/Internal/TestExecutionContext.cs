@@ -320,6 +320,11 @@ namespace NUnit.Framework.Internal
         internal int MultipleAssertLevel { get; set; }
 
         /// <summary>
+        /// Gets a value indicating that we are currently inside a multiple assert scope.
+        /// </summary>
+        internal bool IsInsideMultipleAssert => MultipleAssertLevel > 0;
+
+        /// <summary>
         /// Gets or sets wether asserts in multiple assert block should throw first-change exceptions under debugger.
         /// </summary>
         internal bool ThrowOnEachFailureUnderDebugger { get; set; }

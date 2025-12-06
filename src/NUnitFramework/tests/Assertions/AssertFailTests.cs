@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Catch(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResultCount, Is.Zero);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Throws<AssertionException>(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResultCount, Is.Zero);
         }
     }
 }
