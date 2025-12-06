@@ -192,8 +192,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(currentResult.AssertionResultCount, Is.EqualTo(previousFailureCount));
 
             // If we get this far, the test is good so we should clean up the context from the intentional failure above
-            currentResult.SetResult(ResultState.Inconclusive, string.Empty, null);
-            currentResult.AssertionResults.Clear();
+            currentResult.ClearResult();
         }
     }
 
