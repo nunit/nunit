@@ -105,6 +105,18 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(new XY(5, 12), Is.AnyOf(new XY(3, 4), new XY(5, 12)).UsingPropertiesComparer());
         }
 
+        [Test]
+        public void ValidMemberUsingPropertiesComparerConfiguration()
+        {
+            Assert.That(new XY(5, 12),
+                        Is.AnyOf(new XY(3, 4), new XY(5, 9))
+                          .UsingPropertiesComparer<XY>(x => x.Excluding(x => x.Y)));
+
+            Assert.That(new XY(5, 12),
+                        Is.AnyOf(new XY(3, 4), new XY(5, 9))
+                          .UsingPropertiesComparer(x => x.Excluding(nameof(XY.Y))));
+        }
+
         private sealed class XY
         {
             public XY(int x, int y)

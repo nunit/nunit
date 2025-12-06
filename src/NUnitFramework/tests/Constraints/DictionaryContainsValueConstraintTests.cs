@@ -103,6 +103,8 @@ namespace NUnit.Framework.Tests.Constraints
             var value = new XY(5, 12);
             Assert.That(dictionary, Does.Not.ContainValue(value));
             Assert.That(dictionary, Does.ContainValue(value).UsingPropertiesComparer());
+            Assert.That(dictionary, Does.ContainValue(new XY(9, 12)).UsingPropertiesComparer<XY>(c => c.Excluding(x => x.X)));
+            Assert.That(dictionary, Does.ContainValue(new XY(3, 9)).UsingPropertiesComparer(c => c.Using(nameof(XY.X))));
         }
 
         [Test]
