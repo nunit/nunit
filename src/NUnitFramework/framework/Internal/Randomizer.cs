@@ -501,7 +501,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="outputLength">The desired length of the string in char units</param>
         /// <param name="allowedChars">The characters to use in building the string</param>
-        /// <returns>A random string</returns>
+        /// <returns>A random string.</returns>
         /// <exception cref="ArgumentException">
         /// Thrown if the requested outputLength cannot be satisfied with the provided characters
         /// (e.g., requesting an odd length when allowedChars contains only surrogate pairs)
