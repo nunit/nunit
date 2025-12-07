@@ -374,13 +374,11 @@ namespace NUnit.Framework.Internal
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
 
-            // Clone the array to avoid modifying the original when the same TestCaseData is used by multiple test methods
-            object?[] convertedArgs = new object?[arglist.Length];
-            Array.Copy(arglist, convertedArgs, arglist.Length);
+            object?[]? convertedArgs = null;
 
-            for (int i = 0; i < convertedArgs.Length; i++)
+            for (int i = 0; i < arglist.Length; i++)
             {
-                object? arg = convertedArgs[i];
+                object? arg = arglist[i];
 
                 if (arg is IConvertible)
                 {
@@ -392,23 +390,27 @@ namespace NUnit.Framework.Internal
                     {
                         if (targetType == typeof(double) || targetType == typeof(float))
                             convert = arg is int or long or short or byte or sbyte;
-                        else
-                            if (targetType == typeof(long))
+                        else if (targetType == typeof(long))
                             convert = arg is int or short or byte or sbyte;
-                        else
-                                if (targetType == typeof(short))
-                            convert = arg is byte or sbyte;
+                        else if (targetType == typeof(short))
+                                convert = arg is byte or sbyte;
                     }
 
                     if (convert)
                     {
-                        convertedArgs[i] = Convert.ChangeType(arg, targetType,
-                            System.Globalization.CultureInfo.InvariantCulture);
+                        // Clone the array on first conversion to avoid modifying the original when the same TestCaseData is used by multiple test methods
+                        if (convertedArgs is null)
+                        {
+                            convertedArgs = new object?[arglist.Length];
+                            Array.Copy(arglist, convertedArgs, arglist.Length);
+                        }
+
+                        convertedArgs[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
             }
 
-            return convertedArgs;
+            return convertedArgs ?? arglist;
         }
 
         private static string GetTypeNameWithoutGenerics(string fullTypeName)
