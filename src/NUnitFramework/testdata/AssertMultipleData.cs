@@ -534,6 +534,21 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
             scope.Dispose();
         }
+
+        [Test]
+        public void MultithreadedAssertMultipleSuccess()
+        {
+            int x = 1;
+            Parallel.For(0, 1000, i => Assert.Multiple(() => Assert.That(x, Is.EqualTo(1))));
+        }
+
+        [Test]
+        public void MultithreadedAssertMultipleFailure()
+        {
+            int x = 1;
+            Parallel.For(0, 1000,
+                i => Assert.Multiple(() => Assert.That(i % 500 == 0 ? i : x, Is.EqualTo(1), i.ToString())));
+        }
     }
 
     internal class ComplexNumber

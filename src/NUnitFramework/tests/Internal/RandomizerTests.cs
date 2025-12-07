@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
@@ -620,6 +621,105 @@ namespace NUnit.Framework.Tests.Internal
         public void RandomStringsAreUnique(int outputLength, string allowedChars)
         {
             UniqueValues.Check(() => _randomizer.GetString(outputLength, allowedChars), 10, 10);
+        }
+
+        [Test]
+        [Description("Verify DefaultStringChars contains no surrogates")]
+        public void DefaultStringCharsHasNoSurrogates()
+        {
+            foreach (char c in Randomizer.DefaultStringChars)
+            {
+                Assert.That(char.IsSurrogate(c), Is.False, $"Found surrogate in DefaultStringChars: {(int)c:X4}");
+            }
+        }
+
+        [Test]
+        [Description("GetString with emoji (surrogate pair) should produce valid UTF-16")]
+        public void GetStringWithEmoji_ProducesValidUtf16()
+        {
+            string allowedChars = "😀😁😂";  // Three emoji, each is a surrogate pair
+            string result = _randomizer.GetString(10, allowedChars);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Length, Is.EqualTo(10));
+            Assert.That(IsValidUtf16(result), Is.True);
+        }
+
+        [Test]
+        [Description("GetString with emoji should compose valid result of requested length")]
+        public void GetStringWithEmoji_ValidLength()
+        {
+            string allowedChars = "😀";  // Single emoji (surrogate pair = 2 chars)
+            string result = _randomizer.GetString(6, allowedChars);  // 3 emoji = 6 chars
+
+            Assert.That(result.Length, Is.EqualTo(6));
+            // Should consist of 3 emoji
+            var enumerator = StringInfo.GetTextElementEnumerator(result);
+            int count = 0;
+            while (enumerator.MoveNext())
+                count++;
+            Assert.That(count, Is.EqualTo(3));
+        }
+
+        [Test]
+        [Description("GetString with odd length and only surrogates should throw")]
+        public void GetStringWithOddLengthAndOnlySurrogates_Throws()
+        {
+            string allowedChars = "😀";  // Only surrogate pair (length 2)
+
+            Assert.That(
+                () => _randomizer.GetString(5, allowedChars),
+                Throws.ArgumentException.With.Message.Contains("Cannot compose"));
+        }
+
+        [Test]
+        [Description("GetString with even length and surrogates should succeed")]
+        public void GetStringWithEvenLengthAndSurrogates_Succeeds()
+        {
+            string allowedChars = "😀";  // Surrogate pair
+            string result = _randomizer.GetString(4, allowedChars);  // 2 emoji = 4 chars
+
+            Assert.That(result.Length, Is.EqualTo(4));
+            var enumerator = StringInfo.GetTextElementEnumerator(result);
+            int count = 0;
+            while (enumerator.MoveNext())
+                count++;
+            Assert.That(count, Is.EqualTo(2));
+        }
+
+        [Test]
+        [Description("GetString with mixed regular and surrogate chars")]
+        public void GetStringWithMixedRegularAndSurrogatePairs_ValidUtf16()
+        {
+            string allowedChars = "abc😀";  // Mix of regular chars and emoji
+            string result = _randomizer.GetString(20, allowedChars);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(IsValidUtf16(result), Is.True);
+        }
+
+        private static bool IsValidUtf16(string text)
+        {
+            // Check that all surrogates are properly paired
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+
+                if (char.IsHighSurrogate(c))
+                {
+                    // High surrogate must be followed by low surrogate
+                    if (i + 1 >= text.Length || !char.IsLowSurrogate(text[i + 1]))
+                        return false;
+                    i++; // Skip the low surrogate
+                }
+                else if (char.IsLowSurrogate(c))
+                {
+                    // Low surrogate without preceding high surrogate is invalid
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #endregion

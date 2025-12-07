@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 
@@ -75,6 +76,60 @@ namespace NUnit.Framework.Tests
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
                 return Task.FromResult<object?>(null);
             });
+        }
+    }
+
+    [TestFixture]
+    internal sealed class LostSynchronizationContext
+    {
+        private SynchronizationContext? _originalSynchronizationContext;
+        private TestSynchronizationContext _testSynchronizationContext;
+
+        [OneTimeSetUp]
+        public void SetContext()
+        {
+            _originalSynchronizationContext = SynchronizationContext.Current;
+            _testSynchronizationContext = new TestSynchronizationContext();
+            SynchronizationContext.SetSynchronizationContext(_testSynchronizationContext);
+        }
+
+        [OneTimeTearDown]
+        public void ResetContext()
+        {
+            SynchronizationContext.SetSynchronizationContext(_originalSynchronizationContext);
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext));
+        }
+
+        [Test]
+        public void VerifySynchronized()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext));
+        }
+
+        private static SynchronizationContext? ActualSynchronizationContext()
+        {
+            SynchronizationContext? context = SynchronizationContext.Current;
+            if (context is SafeIndirectSynchronizationContext indirectSynchronizationContext)
+                context = indirectSynchronizationContext.ActualSynchronizationContext;
+            else if (context is SafeSynchronizationContext)
+                context = null;
+
+            return context;
+        }
+
+        public class TestSynchronizationContext : SynchronizationContext
+        {
         }
     }
 }

@@ -181,6 +181,20 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public AnyOfConstraint UsingPropertiesComparer<T>(Func<PropertiesComparerConfiguration<T>, PropertiesComparerConfiguration<T>> configure)
+        {
+            _comparer.CompareProperties = true;
+            _comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<T>());
+            return this;
+        }
+
         #endregion
     }
 }

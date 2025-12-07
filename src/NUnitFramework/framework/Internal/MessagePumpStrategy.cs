@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
 
         public static MessagePumpStrategy FromCurrentSynchronizationContext()
         {
-            var context = SynchronizationContext.Current;
+            var context = GetActiveSynchronizationContext();
 
             if (context is SingleThreadedTestSynchronizationContext)
                 return SingleThreadedTestMessagePumpStrategy.Instance;
@@ -51,12 +51,14 @@ namespace NUnit.Framework.Internal
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
-                if (!IsApplicable(SynchronizationContext.Current))
+                SynchronizationContext? context = GetActiveSynchronizationContext();
+
+                if (!IsApplicable(context))
                     return null;
 
                 if (_instance is null)
                 {
-                    var applicationType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true)!;
+                    var applicationType = context.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true)!;
 
                     var applicationRun = (Action)applicationType
                         .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
@@ -74,6 +76,9 @@ namespace NUnit.Framework.Internal
 
             private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
+                if (context is SafeIndirectSynchronizationContext safeIndirectSynchronizationContext)
+                    context = safeIndirectSynchronizationContext.ActualSynchronizationContext;
+
                 return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
             }
 
@@ -126,7 +131,7 @@ namespace NUnit.Framework.Internal
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
-                SynchronizationContext? context = SynchronizationContext.Current;
+                SynchronizationContext? context = GetActiveSynchronizationContext();
 
                 if (!IsApplicable(context))
                     return null;
@@ -155,6 +160,9 @@ namespace NUnit.Framework.Internal
 
             private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
+                if (context is SafeIndirectSynchronizationContext safeIndirectSynchronizationContext)
+                    context = safeIndirectSynchronizationContext.ActualSynchronizationContext;
+
                 return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
             }
 
@@ -194,7 +202,7 @@ namespace NUnit.Framework.Internal
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
-                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext
+                var context = GetActiveSynchronizationContext() as SingleThreadedTestSynchronizationContext
                     ?? throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
                 if (awaiter.IsCompleted)
@@ -227,6 +235,16 @@ namespace NUnit.Framework.Internal
                 else
                     context.Post(_ => continuation.Invoke(), state: continuation);
             });
+        }
+
+        private static SynchronizationContext? GetActiveSynchronizationContext()
+        {
+            var context = SynchronizationContext.Current;
+
+            if (context is SafeIndirectSynchronizationContext safeIndirectContext)
+                context = safeIndirectContext.ActualSynchronizationContext;
+
+            return context;
         }
     }
 }

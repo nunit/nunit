@@ -24,12 +24,24 @@ namespace NUnit.Framework.Internal
             var previousState = SandboxedThreadState.Capture();
             try
             {
+                var synchronizationContext = SynchronizationContext.Current;
+
                 var executionContext = ExecutionContext.Capture()
                     ?? throw new InvalidOperationException("Execution context flow must not be suppressed.");
 
-                using (executionContext as IDisposable)
+                using (executionContext)
                 {
-                    ExecutionContext.Run(executionContext, callback, state);
+                    ExecutionContext.Run(executionContext, s =>
+                    {
+                        // For NET Framework, we need to set the current context inside the execution context
+                        // For NET Core we can set it outside the execution context
+
+                        // Set up a SynchronizationContext to catch posted exceptions
+                        SynchronizationContext.SetSynchronizationContext(
+                            SafeSynchronizationContext.Create(synchronizationContext, TestExecutionContext.CurrentContext));
+
+                        callback(s);
+                    }, state);
                 }
             }
             finally

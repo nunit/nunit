@@ -47,7 +47,8 @@ namespace NUnit.Framework.Internal
                 Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
-                if (context is null || context.GetType() == typeof(SynchronizationContext))
+                if (context is null || context.GetType() == typeof(SynchronizationContext) ||
+                    context.GetType() == typeof(SafeSynchronizationContext))
                 {
                     var singleThreadedContext = new SingleThreadedTestSynchronizationContext(
                         shutdownTimeout: TimeSpan.FromSeconds(10));
