@@ -16,7 +16,6 @@ namespace NUnit.Framework.Internal
     public static class TypeHelper
     {
         private const int StringMax = 40;
-        private const string ThreeDots = "...";
 
         /// <param name="type">The type to evaluate.</param>
         extension(Type type)
@@ -25,7 +24,6 @@ namespace NUnit.Framework.Internal
             /// Determines whether the specified type represents a ValueTuple.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
-</returns>
             public bool IsValueTuple()
             {
                 return type.IsTupleInternal("System.ValueTuple");
@@ -35,7 +33,6 @@ namespace NUnit.Framework.Internal
             /// Determines whether the specified type represents a Tuple.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="Tuple"/>; otherwise, <see langword="false"/>.</returns>
-</returns>
             public bool IsTuple()
             {
                 return type.IsTupleInternal("System.Tuple");
