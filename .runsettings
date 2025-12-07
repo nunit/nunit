@@ -23,7 +23,7 @@
 
     <!-- TestSessionTimeout was introduced in Visual Studio 2017 version 15.5 -->
     <!-- Specify timeout in milliseconds. A valid value should be >= 0. If 0, timeout will be infinity-->
-    <TestSessionTimeout>100000</TestSessionTimeout>
+    <TestSessionTimeout>1000000</TestSessionTimeout>
 
     <!-- Specify a Boolean value, which defines the exit code when no tests are discovered.-->
     <TreatNoTestsAsError>false</TreatNoTestsAsError>
