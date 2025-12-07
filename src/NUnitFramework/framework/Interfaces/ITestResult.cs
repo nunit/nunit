@@ -174,6 +174,14 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
+        /// Gets the number of failed assertions.
+        /// </summary>
+        public int AssertionResultCount
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets a list of AssertionResults associated with the test
         /// </summary>
         /// <remarks>

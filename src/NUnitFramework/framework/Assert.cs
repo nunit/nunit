@@ -259,12 +259,10 @@ namespace NUnit.Framework
         {
             return new AssertionScope();
         }
-
-        private sealed class AssertionScope : IDisposable
+        private sealed class AssertionScope : IAssertionScope
         {
             private readonly TestExecutionContext _context;
             private readonly int _assertionCountWhenEnteringScope;
-            private readonly int _multipleAssertLevelInScope;
 
             private int _isDisposed;
 
@@ -276,9 +274,14 @@ namespace NUnit.Framework
                 lock (_context)
                 {
                     _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResultCount;
-                    _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
+                    ++_context.MultipleAssertLevel;
                 }
             }
+
+            /// <summary>
+            /// Gets a count of pending failures (from Multiple Assert)
+            /// </summary>
+            public bool HasFailuresInScope => _context.CurrentResult.AssertionResultCount > _assertionCountWhenEnteringScope;
 
             public void Dispose()
             {

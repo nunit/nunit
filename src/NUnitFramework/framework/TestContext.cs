@@ -140,6 +140,11 @@ namespace NUnit.Framework
         /// </summary>
         public CancellationToken CancellationToken => _testExecutionContext.CancellationToken;
 
+        /// <summary>
+        /// Gets a value indicating that we are currently inside a multiple assert scope.
+        /// </summary>
+        public bool IsInsideMultipleAssert => _testExecutionContext.IsInsideMultipleAssert;
+
         #endregion
 
         #region Static Methods
@@ -689,6 +694,11 @@ namespace NUnit.Framework
             /// up to this point in its execution.
             /// </summary>
             public ResultState Outcome => _result.ResultState;
+
+            /// <summary>
+            /// Gets the number of failed assertions.
+            /// </summary>
+            public int AssertionResultCount => _result.AssertionResultCount;
 
             /// <summary>
             /// Gets a list of the assertion results generated
