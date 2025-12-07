@@ -290,10 +290,13 @@ namespace NUnit.Framework.Internal
 
             internal bool HasCompilerGeneratedEquals()
             {
+                if (type.HasAttribute<CompilerGeneratedAttribute>(false))
+                    return true;
+
                 var equalsMethod = type.GetMethod(nameof(type.Equals), BindingFlags.Instance | BindingFlags.Public,
                     null, [type], null);
 
-                return equalsMethod?.GetCustomAttribute<CompilerGeneratedAttribute>() is not null;
+                return equalsMethod?.HasAttribute<CompilerGeneratedAttribute>(false) is true;
             }
 
             internal bool OverridesEqualsObject()
