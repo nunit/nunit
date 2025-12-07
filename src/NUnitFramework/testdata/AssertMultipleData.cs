@@ -3,6 +3,8 @@
 using System;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using NUnit.Framework.Interfaces;
+
 #pragma warning disable IDE0053 // Use expression body for lambda expression
 
 namespace NUnit.TestData.AssertMultipleData
@@ -563,7 +565,7 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.That(currentContext.IsInsideMultipleAssert, Is.False, "IsInsideMultipleAssert is False");
             Assert.That(currentContext.Result.AssertionResultCount, Is.Zero, "No assertions yet recorded");
 
-            using (var scope = Assert.EnterMultipleAssertionScope())
+            using (var scope = (IAssertionScope)Assert.EnterMultipleScope())
             {
                 Assert.That(currentContext.IsInsideMultipleAssert, Is.True, "IsInsideMultipleAssert is True");
 
