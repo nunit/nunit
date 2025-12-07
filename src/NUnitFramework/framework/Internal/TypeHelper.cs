@@ -180,16 +180,14 @@ namespace NUnit.Framework.Internal
                     {
                         for (int j = 0; j < arglist.Length; j++)
                         {
-                            if (parameters[j].ParameterType.Equals(typeParameters[i]))
+                            if (parameters[j].ParameterType.Equals(typeParameters[i]) &&
+                                !TryGetBestCommonType(
+                                    typeArgs[i],
+                                    arglist[j]?.GetType(),
+                                    out typeArgs[i]))
                             {
-                                if (!TryGetBestCommonType(
-                                        typeArgs[i],
-                                        arglist[j]?.GetType(),
-                                        out typeArgs[i]))
-                                {
-                                    typeArgs[i] = null;
-                                    break;
-                                }
+                                typeArgs[i] = null;
+                                break;
                             }
                         }
 

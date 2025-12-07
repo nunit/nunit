@@ -124,7 +124,7 @@ namespace NUnit.Framework
                 count++;
 
                 // Clone the parameters to ensure each test method gets its own independent copy
-                // This is necessary because ConvertArgumentList will modify the Arguments array
+                // This prevents issues when the same TestCaseData is reused across multiple test methods
                 object?[] clonedArgs = new object?[parms.Arguments.Length];
                 Array.Copy(parms.Arguments, clonedArgs, parms.Arguments.Length);
 

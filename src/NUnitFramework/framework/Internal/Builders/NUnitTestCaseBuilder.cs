@@ -260,7 +260,7 @@ namespace NUnit.Framework.Internal.Builders
             if (arglist is not null && parameters is not null)
             {
                 // Convert the arguments for this specific test method
-                // Since we cloned parms earlier, this only affects this test method's copy
+                // ConvertArgumentList returns a new array, so we update parms.Arguments
                 parms!.Arguments = TypeHelper.ConvertArgumentList(arglist, parameters);
             }
         }
