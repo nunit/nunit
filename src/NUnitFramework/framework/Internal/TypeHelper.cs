@@ -34,7 +34,8 @@ namespace NUnit.Framework.Internal
             /// <summary>
             /// Determines whether the specified type represents a Tuple.
             /// </summary>
-            /// <returns><c>true</c> if the type is a Tuple; otherwise, <c>false</c>.</returns>
+            /// <returns><see langword="true"/> if the type is a <see cref="Tuple"/>; otherwise, <see langword="false"/>.</returns>
+</returns>
             public bool IsTuple()
             {
                 return type.IsTupleInternal("System.Tuple");
