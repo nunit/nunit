@@ -260,11 +260,22 @@ namespace NUnit.Framework
             return new AssertionScope();
         }
 
-        private sealed class AssertionScope : IDisposable
+        /// <summary>
+        /// Enters a multiple assert scope.
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported when the returned IDisposable is disposed.
+        /// </summary>
+        /// <returns>An <see cref="IAssertionScope"/> which when disposed leaves the multiple assertion scope.</returns>
+        public static IAssertionScope EnterMultipleAssertionScope()
+        {
+            return new AssertionScope();
+        }
+
+        private sealed class AssertionScope : IAssertionScope
         {
             private readonly TestExecutionContext _context;
             private readonly int _assertionCountWhenEnteringScope;
-            private readonly int _multipleAssertLevelInScope;
 
             private int _isDisposed;
 
@@ -276,9 +287,14 @@ namespace NUnit.Framework
                 lock (_context)
                 {
                     _assertionCountWhenEnteringScope = _context.CurrentResult.AssertionResultCount;
-                    _multipleAssertLevelInScope = ++_context.MultipleAssertLevel;
+                    ++_context.MultipleAssertLevel;
                 }
             }
+
+            /// <summary>
+            /// Gets a count of pending failures (from Multiple Assert)
+            /// </summary>
+            public bool HasFailuresInScope => _context.CurrentResult.AssertionResultCount > _assertionCountWhenEnteringScope;
 
             public void Dispose()
             {

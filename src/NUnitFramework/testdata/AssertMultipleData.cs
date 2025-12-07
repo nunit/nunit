@@ -549,6 +549,51 @@ namespace NUnit.TestData.AssertMultipleData
             Parallel.For(0, 1000,
                 i => Assert.Multiple(() => Assert.That(i % 500 == 0 ? i : x, Is.EqualTo(1), i.ToString())));
         }
+
+        public const string TypesAreNotEqualMessage = "Types are not equal";
+        public const string ValuesAreNotEqualMessage = "Values are not equal";
+
+        [TestCaseSource(nameof(DetectFailuresInsideMultipleTestCases))]
+        public void CanDetectFailuresInsideMultiple<T1, T2>(T1 arg1, T2 arg2, string expectedError)
+            where T1 : notnull
+            where T2 : notnull
+        {
+            TestContext currentContext = TestContext.CurrentContext;
+
+            Assert.That(currentContext.IsInsideMultipleAssert, Is.False, "IsInsideMultipleAssert is False");
+            Assert.That(currentContext.Result.AssertionResultCount, Is.Zero, "No assertions yet recorded");
+
+            using (var scope = Assert.EnterMultipleAssertionScope())
+            {
+                Assert.That(currentContext.IsInsideMultipleAssert, Is.True, "IsInsideMultipleAssert is True");
+
+                Assert.That(arg1.GetType(), Is.EqualTo(arg2.GetType()), TypesAreNotEqualMessage);
+                if (scope.HasFailuresInScope is false)
+                {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+                    // We verified the types are the same, so this is now safe
+                    Assert.That(arg1, Is.EqualTo(arg2).UsingPropertiesComparer(), ValuesAreNotEqualMessage);
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+                }
+                else
+                {
+                    Assert.That(currentContext.Result.AssertionResultCount, Is.EqualTo(1), "One assertion recorded");
+                }
+            }
+        }
+
+        private static readonly object[] DetectFailuresInsideMultipleTestCases =
+        [
+            new object[] { 1, 1, string.Empty },
+            new object[] { 1, 2, ValuesAreNotEqualMessage },
+            new object[] { "test", "test", string.Empty },
+            new object[] { "test", "Test", ValuesAreNotEqualMessage },
+            new object[] { 1, "1", TypesAreNotEqualMessage },
+            new object[] { 2.0, 2, TypesAreNotEqualMessage },
+            new object[] { new ComplexNumber(1.0, 2.0), 1.2, TypesAreNotEqualMessage },
+            new object[] { new ComplexNumber(1.0, 2.0), new ComplexNumber(1.0, 2.0), string.Empty },
+            new object[] { new ComplexNumber(1.0, 2.0), new ComplexNumber(2.0, 1.0), ValuesAreNotEqualMessage },
+        ];
     }
 
     internal class ComplexNumber
@@ -559,7 +604,7 @@ namespace NUnit.TestData.AssertMultipleData
             ImaginaryPart = imaginaryPart;
         }
 
-        public double RealPart;
-        public double ImaginaryPart;
+        public double RealPart { get; }
+        public double ImaginaryPart { get; }
     }
 }

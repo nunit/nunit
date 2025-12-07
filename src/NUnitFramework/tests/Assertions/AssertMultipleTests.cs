@@ -7,6 +7,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.AssertMultipleData;
 using NUnit.Framework.Tests.TestUtilities;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
+using System.Linq;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -193,6 +194,36 @@ namespace NUnit.Framework.Tests.Assertions
 
             // If we get this far, the test is good so we should clean up the context from the intentional failure above
             currentResult.ClearResult();
+        }
+
+        [Test]
+        public void CanDetectFailuresInCurrentScope()
+        {
+            Test test = TestBuilder.MakeTestFromMethod(typeof(AssertMultipleFixture), nameof(AM.CanDetectFailuresInsideMultiple));
+
+            Assert.That(test.HasChildren, Is.True, "Test.HasChildren");
+            ParameterizedMethodSuite suite = (ParameterizedMethodSuite)test;
+
+            object instance = new AssertMultipleFixture();
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var testcase in suite.Tests.Cast<Test>())
+                {
+                    ITestResult result = TestBuilder.RunTest(testcase, instance);
+
+                    if (result.ResultState.Status == TestStatus.Passed)
+                    {
+                        Assert.That(result.AssertionResultCount, Is.Zero, $"ResultState for {testcase.Name}");
+                    }
+                    else
+                    {
+                        Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), $"ResultState for {testcase.Name}");
+                        Assert.That(result.AssertionResultCount, Is.EqualTo(1));
+                        string? expectedMessage = (string?)testcase.Arguments[2];
+                        Assert.That(result.Message, Does.Contain(expectedMessage), $"Message for {testcase.Name}");
+                    }
+                }
+            }
         }
     }
 
