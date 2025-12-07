@@ -24,7 +24,8 @@ namespace NUnit.Framework.Internal
             /// <summary>
             /// Determines whether the specified type represents a ValueTuple.
             /// </summary>
-            /// <returns><c>true</c> if the type is a ValueTuple; otherwise, <c>false</c>.</returns>
+            /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
+</returns>
             public bool IsValueTuple()
             {
                 return type.IsTupleInternal("System.ValueTuple");
