@@ -222,16 +222,6 @@ namespace NUnit.Framework.Tests.Internal
             bool IReflectionInfo.IsDefined<T>(bool inherit) => parameterInfo.IsDefined(typeof(T), inherit);
         }
 
-        private class FloatComparer : IComparer<float>
-        {
-            public static readonly FloatComparer Instance = new FloatComparer();
-
-            public int Compare(float x, float y)
-            {
-                return x.CompareTo(y);
-            }
-        }
-
         #endregion
     }
 }
