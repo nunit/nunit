@@ -161,13 +161,13 @@ namespace NUnit.Framework.Tests.Internal
             // test methods to receive already-converted values.
 
             // Create test parameters using reflection from real methods
-            var methodA = typeof(TestMethods).GetMethod(nameof(TestMethods.TestA));
-            var methodB = typeof(TestMethods).GetMethod(nameof(TestMethods.TestB));
+            var methodA = typeof(TestMethods).GetMethod(nameof(TestMethods.TestA))!;
+            var methodB = typeof(TestMethods).GetMethod(nameof(TestMethods.TestB))!;
 
-            var paramA = methodA!.GetParameters()
+            var paramA = methodA.GetParameters()
                 .Select(p => new RuntimeParameterInfo(p))
                 .ToArray();
-            var paramB = methodB!.GetParameters()
+            var paramB = methodB.GetParameters()
                 .Select(p => new RuntimeParameterInfo(p))
                 .ToArray();
 
