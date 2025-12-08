@@ -260,15 +260,14 @@ namespace NUnit.Framework.Internal.Builders
             if (arglist is not null && parameters is not null)
             {
                 // Convert the arguments for this specific test method
-                // ConvertArgumentList returns a new array, so we update parms.Arguments
-                parms!.Arguments = TypeHelper.ConvertArgumentList(arglist, parameters);
+                // ConvertArgumentList modifies the parameters array, but we should be working on clones.
+                TypeHelper.ConvertArgumentList(arglist, parameters);
             }
         }
 
-        private static bool MarkAsNotRunnable(TestMethod testMethod, string reason)
+        private static void MarkAsNotRunnable(TestMethod testMethod, string reason)
         {
             testMethod.MakeInvalid(reason);
-            return false;
         }
 
         #endregion

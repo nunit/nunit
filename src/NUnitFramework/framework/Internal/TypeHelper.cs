@@ -371,11 +371,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="arglist">An array of args to be converted</param>
         /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
-        public static object?[] ConvertArgumentList(object?[] arglist, IParameterInfo[] parameters)
+        public static void ConvertArgumentList(object?[] arglist, IParameterInfo[] parameters)
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
-
-            object?[]? convertedArgs = null;
 
             for (int i = 0; i < arglist.Length; i++)
             {
@@ -394,24 +392,15 @@ namespace NUnit.Framework.Internal
                         else if (targetType == typeof(long))
                             convert = arg is int or short or byte or sbyte;
                         else if (targetType == typeof(short))
-                                convert = arg is byte or sbyte;
+                            convert = arg is byte or sbyte;
                     }
 
                     if (convert)
                     {
-                        // Clone the array on first conversion to avoid modifying the original when the same TestCaseData is used by multiple test methods
-                        if (convertedArgs is null)
-                        {
-                            convertedArgs = new object?[arglist.Length];
-                            Array.Copy(arglist, convertedArgs, arglist.Length);
-                        }
-
-                        convertedArgs[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                        arglist[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
             }
-
-            return convertedArgs ?? arglist;
         }
 
         private static string GetTypeNameWithoutGenerics(string fullTypeName)
