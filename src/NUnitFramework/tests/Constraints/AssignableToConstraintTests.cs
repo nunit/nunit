@@ -1,24 +1,34 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Constraints;
-using static NUnit.Framework.Tests.Constraints.AssignableToConstraintReferenceTypeTests;
 
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
-    public class AssignableToConstraintValueTypeTests : AssignableToConstraintTests<int, long>
+    public static class AssignableToConstraintTests
     {
-    }
+        [TestFixture(TypeArgs = [typeof(int), typeof(long)])]
+        [TestFixture(TypeArgs = [typeof(int), typeof(int)])]
+        [TestFixture(TypeArgs = [typeof(float), typeof(double)])]
+        [TestFixture(TypeArgs = [typeof(D2), typeof(D1)], Description = "Direct inheritance")]
+        [TestFixture(TypeArgs = [typeof(D3), typeof(D1)], Description = "Implicit cast")]
+        public class SuccessTests<TFrom, TTo> : AssignableToConstraintTests<TFrom, TTo>
+            where TFrom : new()
+            where TTo : new()
+        {
+        }
 
-    [TestFixture]
-    public class AssignableToConstraintReferenceTypeTests : AssignableToConstraintTests<D2, D1>
-    {
         public class D1
         {
         }
 
         public class D2 : D1
         {
+        }
+
+        public class D3
+        {
+            public static implicit operator D1(D3 _) => new D1();
         }
     }
 
