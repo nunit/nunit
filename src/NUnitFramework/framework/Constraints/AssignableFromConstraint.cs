@@ -1,12 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// AssignableFromConstraint is used to test that an object
-    /// can be assigned from a given Type.
+    /// can be assigned from an instance of a given Type.
     /// </summary>
     public class AssignableFromConstraint : TypeConstraint
     {
@@ -25,7 +26,22 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
         protected override bool Matches(object? actual)
         {
-            return actual is not null && actual.GetType().IsAssignableFrom(expectedType);
+            if (expectedType is null || actual is null)
+            {
+                return false;
+            }
+
+            if (expectedType == actualType)
+            {
+                return true;
+            }
+
+            if (actual.GetType().IsAssignableFrom(expectedType))
+            {
+                return true;
+            }
+
+            return Reflect.CanImplicitlyConvertTo(expectedType, actual.GetType());
         }
     }
 }
