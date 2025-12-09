@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.ComponentModel;
 
 namespace NUnit.Framework.Constraints
 {
@@ -25,7 +26,18 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
         protected override bool Matches(object? actual)
         {
-            return expectedType is not null && actual is not null && expectedType.IsInstanceOfType(actual);
+            if (expectedType is null || actual is null)
+            {
+                return false;
+            }
+
+            if (expectedType.IsValueType || actual.GetType().IsValueType)
+            {
+                var descriptor = TypeDescriptor.GetConverter(expectedType);
+                return descriptor.CanConvertTo(actual.GetType());
+            }
+
+            return expectedType.IsInstanceOfType(actual);
         }
     }
 }
