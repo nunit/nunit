@@ -175,7 +175,7 @@ namespace NUnit.Framework.Tests.Internal
 
             // Convert for TestA (should convert int to float)
             object?[] argsForTestA = (object?[])originalArgs.Clone();
-            argsForTestA = TypeHelper.ConvertArgumentList(argsForTestA, paramA);
+            TypeHelper.ConvertArgumentList(argsForTestA, paramA);
             using (Assert.EnterMultipleScope())
             {
                 // Verify TestA received the float conversion
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Tests.Internal
 
                 // Convert for TestB using fresh original args (should NOT convert, int is already int)
                 object?[] argsForTestB = (object?[])originalArgs.Clone();
-                argsForTestB = TypeHelper.ConvertArgumentList(argsForTestB, paramB);
+                TypeHelper.ConvertArgumentList(argsForTestB, paramB);
 
                 // Verify TestB receives int (not float from previous conversion)
                 Assert.That(argsForTestB[1], Is.TypeOf<int>(), "TestB argument should be int type");

@@ -123,24 +123,7 @@ namespace NUnit.Framework
             {
                 count++;
 
-                // Clone the parameters to ensure each test method gets its own independent copy
-                // This prevents issues when the same TestCaseData is reused across multiple test methods
-                object?[] clonedArgs = new object?[parms.Arguments.Length];
-                Array.Copy(parms.Arguments, clonedArgs, parms.Arguments.Length);
-
-                var clonedParms = new TestCaseParameters(clonedArgs)
-                {
-                    ExpectedResult = parms.ExpectedResult,
-                    HasExpectedResult = parms.HasExpectedResult,
-                    RunState = parms.RunState,
-                    Properties = parms.Properties,
-                    TestName = parms.TestName,
-                    TypeArgs = parms.TypeArgs,
-                    OriginalArguments = parms.OriginalArguments,
-                    ArgDisplayNames = parms.ArgDisplayNames
-                };
-
-                yield return _builder.BuildTestMethod(method, suite, clonedParms);
+                yield return _builder.BuildTestMethod(method, suite, parms);
             }
 
             // If count > 0, error messages will be shown for each case
@@ -215,6 +198,17 @@ namespace NUnit.Framework
                                 }
 
                                 parms = new TestCaseParameters(args ?? [item]);
+                            }
+                            else if (parms is TestCaseParameters testCaseParams)
+                            {
+                                // Clone the user supplied structure to avoid contamination
+                                parms = new TestCaseParameters(testCaseParams);
+                            }
+                            else
+                            {
+                                // It's some other implementation of ITestCaseData
+                                // Clone into TestCaseParameters to ensure we have copies of the array we might modify.
+                                parms = new TestCaseParameters(parms);
                             }
 
                             if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
