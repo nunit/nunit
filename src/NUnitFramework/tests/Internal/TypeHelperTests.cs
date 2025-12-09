@@ -155,8 +155,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void ConvertArgumentList_WithMultipleTestMethodsUsingSameTestCaseData()
         {
-            // Regression test for Issue #3125
-            // When the same TestCaseData is used by multiple test methods with different parameter types,
+            // When the same test data is used by multiple test methods with different parameter types,
             // the argument conversion should not mutate the original array, which would cause subsequent
             // test methods to receive already-converted values.
 
@@ -171,7 +170,7 @@ namespace NUnit.Framework.Tests.Internal
                 .Select(p => new RuntimeParameterInfo(p))
                 .ToArray();
 
-            // Original arguments from TestCaseData
+            // Original arguments 
             object?[] originalArgs = new object?[] { string.Empty, 0 };
 
             // Convert for TestA (should convert int to float)
