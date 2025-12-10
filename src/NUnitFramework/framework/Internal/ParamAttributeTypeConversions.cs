@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -28,6 +29,42 @@ namespace NUnit.Framework.Internal
     /// </summary>
     internal static class ParamAttributeTypeConversions
     {
+        /// <summary>
+        /// Set of implicit conversion for built-in numeric types.
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions#implicit-numeric-conversions
+        /// </summary>
+        private static readonly Dictionary<Type, HashSet<Type>> BuiltInNumericalConversions = new()
+        {
+            [typeof(sbyte)] = [typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(byte)] = [typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(short)] = [typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(ushort)] = [typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(int)] = [typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(uint)] = [typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nuint)],
+            [typeof(nint)] = [typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(nuint)] = [typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(long)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(ulong)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(float)] = [typeof(double)],
+        };
+
+        private static readonly Dictionary<Type, HashSet<Type>> NUnitConversions = new()
+        {
+            [typeof(int)] = [typeof(sbyte), typeof(byte), typeof(short), typeof(long), typeof(double), typeof(decimal)],
+            [typeof(string)] = [typeof(decimal), typeof(DateTime)],
+            [typeof(double)] = [typeof(decimal)],
+        };
+
+        public static bool HasImplicitConversion(Type fromType, Type toType)
+        {
+            return BuiltInNumericalConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
+        }
+
+        public static bool HasNUnitConversion(Type fromType, Type toType)
+        {
+            return NUnitConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
+        }
+
         /// <summary>
         /// Converts an array of objects to the <paramref name="targetType"/>, if it is supported.
         /// </summary>
@@ -88,22 +125,13 @@ namespace NUnit.Framework.Internal
                 return Reflect.IsAssignableFromNull(targetType);
             }
 
-            bool convert = false;
             var underlyingTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+            var valueType = value.GetType();
 
-            if (underlyingTargetType == typeof(short) || underlyingTargetType == typeof(byte) || underlyingTargetType == typeof(sbyte)
-                || underlyingTargetType == typeof(long) || underlyingTargetType == typeof(double))
-            {
-                convert = value is int;
-            }
-            else if (underlyingTargetType == typeof(decimal))
-            {
-                convert = value is double || value is string || value is int;
-            }
-            else if (underlyingTargetType == typeof(DateTime))
-            {
-                convert = value is string;
-            }
+            bool convert = HasNUnitConversion(valueType, underlyingTargetType);
+
+            //if (convert is false)
+            //    convert = HasImplicitConversion(valueType, underlyingTargetType);
 
             if (convert)
             {

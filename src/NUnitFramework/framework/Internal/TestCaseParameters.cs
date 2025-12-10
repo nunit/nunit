@@ -130,16 +130,25 @@ namespace NUnit.Framework.Internal
 
                 if (lastParameter.ParameterIsParamsArray())
                 {
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType()!;
+                    Type elementType = DetermineParamsElementType(method, argsNeeded, lastParameter.ParameterType.GetElementType()!);
 
                     if (argsProvided == argsNeeded)
                     {
-                        if (!lastParameterType.IsInstanceOfType(Arguments[argsProvided - 1]))
+                        object? lastArgument = Arguments[argsProvided - 1];
+                        if (lastArgument is not null)
                         {
-                            Array array = Array.CreateInstance(elementType, 1);
-                            array.SetValue(Arguments[argsProvided - 1], 0);
-                            Arguments[argsProvided - 1] = array;
+                            Type lastArgumentType = lastArgument.GetType();
+                            if (lastArgumentType.IsArray)
+                            {
+                                // Last argument is already an array, hopefully its type matches.
+                                // If not, it is a user error.
+                            }
+                            else
+                            {
+                                Array array = CreateParamsArray(method, argsNeeded, argsProvided, elementType);
+                                array.SetValue(lastArgument, 0);
+                                Arguments[argsProvided - 1] = array;
+                            }
                         }
                     }
                     else
@@ -148,10 +157,7 @@ namespace NUnit.Framework.Internal
                         for (int i = 0; i < argsNeeded && i < argsProvided; i++)
                             newArglist[i] = Arguments[i];
 
-                        int length = argsProvided - argsNeeded + 1;
-                        Array array = Array.CreateInstance(elementType, length);
-                        for (int i = 0; i < length; i++)
-                            array.SetValue(Arguments[argsNeeded + i - 1], i);
+                        Array array = CreateParamsArray(method, argsNeeded, argsProvided, elementType);
 
                         newArglist[argsNeeded - 1] = array;
                         Arguments = newArglist;
@@ -206,6 +212,97 @@ namespace NUnit.Framework.Internal
                     }
                 }
             }
+        }
+
+        private Array CreateParamsArray(IMethodInfo method, int argsNeeded, int argsProvided, Type elementType)
+        {
+            int length = argsProvided - argsNeeded + 1;
+            Array array = Array.CreateInstance(elementType, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                object? value = Arguments[argsNeeded + i - 1];
+                if (elementType != typeof(object) &&
+                    value is not null &&
+                    !elementType.IsAssignableFrom(value.GetType()))
+                {
+                    value = ParamAttributeTypeConversions.Convert(value, elementType);
+                }
+                array.SetValue(value, i);
+            }
+
+            return array;
+        }
+
+        private Type DetermineParamsElementType(IMethodInfo method, int argsNeeded, Type elementType)
+        {
+            if (elementType.ContainsGenericParameters)
+            {
+                // Is the type specified?
+                if (TypeArgs is not null)
+                {
+                    Type[] genericParameters = method.GetGenericArguments();
+                    for (int i = 0; i < genericParameters.Length; i++)
+                    {
+                        if (genericParameters[i] == elementType)
+                        {
+                            elementType = TypeArgs[i];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Try to infer the type from the provided arguments
+                    elementType = DetermineBestElementType(Arguments, argsNeeded - 1);
+                }
+            }
+
+            return elementType;
+        }
+
+        private static Type DetermineBestElementType(object?[] arguments, int index)
+        {
+            if (arguments.Length <= index)
+                return typeof(object);
+            Type bestType = arguments[index]?.GetType() ?? typeof(object);
+
+            for (int i = index + 1; i < arguments.Length; i++)
+            {
+                Type currentType = arguments[i]?.GetType() ?? typeof(object);
+                if (bestType.IsAssignableFrom(currentType))
+                    continue;
+                if (currentType.IsAssignableFrom(bestType))
+                    bestType = currentType;
+
+                bestType = TestCaseParameters.GetMoreSpecificType(bestType, currentType);
+            }
+
+            return bestType;
+        }
+
+        private static Type GetMoreSpecificType(Type bestType, Type currentType)
+        {
+            if (bestType.IsValueType || currentType.IsValueType)
+            {
+                // But check for nunit supported conversions:
+                if (ParamAttributeTypeConversions.HasNUnitConversion(bestType, currentType))
+                    return currentType;
+                else if (ParamAttributeTypeConversions.HasNUnitConversion(currentType, bestType))
+                    return bestType;
+
+                // One is a value type - no common subtype other than object
+                return typeof(object);
+            }
+
+            // Both are reference types - find common base class
+            Type? testType = bestType;
+            while (testType is not null && !testType.IsAssignableFrom(currentType))
+            {
+                testType = testType.BaseType;
+            }
+
+            return testType ?? typeof(object);
         }
     }
 }
