@@ -106,7 +106,7 @@ namespace NUnit.Framework.Constraints
             {
                 hasSucceeded = equatable.Equals(_expected);
             }
-            else if (TypeHelper.OverridesEqualsObject(actual.GetType()))
+            else if (actual.GetType().OverridesEqualsObject())
             {
                 hasSucceeded = actual.Equals(_expected);
             }

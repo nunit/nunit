@@ -57,6 +57,20 @@ namespace NUnit.Framework.Internal
                 Properties[key] = data.Properties[key];
         }
 
+        /// <summary>
+        /// Construct a ParameterSet from an TestParameters instance.
+        /// </summary>
+        /// <param name="data"></param>
+        public TestParameters(TestParameters data)
+            : this(data.RunState, data.Arguments)
+        {
+            TestName = data.TestName;
+            ArgDisplayNames = data.ArgDisplayNames;
+
+            foreach (string key in data.Properties.Keys)
+                Properties[key] = data.Properties[key];
+        }
+
         private TestParameters(RunState runState, object?[] args)
         {
             RunState = runState;

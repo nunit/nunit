@@ -58,6 +58,18 @@ namespace NUnit.Framework.Internal
                 ExpectedResult = data.ExpectedResult;
         }
 
+        /// <summary>
+        /// Construct a ParameterSet from an TestCaseParameters instance.
+        /// </summary>
+        /// <param name="data"></param>
+        public TestCaseParameters(TestCaseParameters data) : base(data)
+        {
+            if (data.HasExpectedResult)
+                ExpectedResult = data.ExpectedResult;
+
+            TypeArgs = data.TypeArgs;
+        }
+
         #endregion
 
         #region ITestCaseData Members

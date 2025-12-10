@@ -2,6 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -49,7 +52,7 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(typeof(C<,>.D<,>), ExpectedResult = "TypeHelperTests+C<T1,T2>+D<T3,T4>")]
         public string GetDisplayNameTests(Type type)
         {
-            return TypeHelper.GetDisplayName(type);
+            return type.GetDisplayName();
         }
 
         public class C<T1, T2>
@@ -96,7 +99,7 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(typeof(DtoClass), ExpectedResult = false)]
         [TestCase(typeof(ClassWithPrimaryConstructor), ExpectedResult = false)]
         [TestCase(typeof(ClassWithOverriddenEquals), ExpectedResult = false)]
-        public bool HasCompilerGeneratedEqualsTests(Type type) => TypeHelper.HasCompilerGeneratedEquals(type);
+        public bool HasCompilerGeneratedEqualsTests(Type type) => type.HasCompilerGeneratedEquals();
 
         private class DtoClass
         {
@@ -143,6 +146,79 @@ namespace NUnit.Framework.Tests.Internal
             {
                 return Name.ToUpperInvariant().GetHashCode();
             }
+        }
+
+        #endregion
+
+        #region ConvertArgumentList
+
+        [Test]
+        public void ConvertArgumentList_WithMultipleTestMethodsUsingSameTestCaseData()
+        {
+            // When the same test data is used by multiple test methods with different parameter types,
+            // the argument conversion should not mutate the original array, which would cause subsequent
+            // test methods to receive already-converted values.
+
+            // Create test parameters using reflection from real methods
+            var methodA = typeof(TestMethods).GetMethod(nameof(TestMethods.TestA))!;
+            var methodB = typeof(TestMethods).GetMethod(nameof(TestMethods.TestB))!;
+
+            var paramA = methodA.GetParameters()
+                .Select(p => new RuntimeParameterInfo(p))
+                .ToArray();
+            var paramB = methodB.GetParameters()
+                .Select(p => new RuntimeParameterInfo(p))
+                .ToArray();
+
+            // Original arguments
+            object?[] originalArgs = new object?[] { string.Empty, 0 };
+
+            // Convert for TestA (should convert int to float)
+            object?[] argsForTestA = (object?[])originalArgs.Clone();
+            TypeHelper.ConvertArgumentList(argsForTestA, paramA);
+            using (Assert.EnterMultipleScope())
+            {
+                // Verify TestA received the float conversion
+                Assert.That(argsForTestA[1], Is.TypeOf<float>(), "TestA argument should be float type");
+                Assert.That((float)argsForTestA[1]!, Is.EqualTo(0.0f), "TestA should receive converted float");
+
+                // Convert for TestB using fresh original args (should NOT convert, int is already int)
+                object?[] argsForTestB = (object?[])originalArgs.Clone();
+                TypeHelper.ConvertArgumentList(argsForTestB, paramB);
+
+                // Verify TestB receives int (not float from previous conversion)
+                Assert.That(argsForTestB[1], Is.TypeOf<int>(), "TestB argument should be int type");
+                Assert.That((int)argsForTestB[1]!, Is.EqualTo(0), "TestB should receive original int value");
+            }
+        }
+
+        private static class TestMethods
+        {
+            public static void TestA(string a, float b)
+            {
+            }
+
+            public static void TestB(string a, int b)
+            {
+            }
+        }
+
+        private class RuntimeParameterInfo(ParameterInfo parameterInfo) : IParameterInfo
+        {
+            public Type ParameterType => parameterInfo.ParameterType;
+
+            public string Name => parameterInfo.Name ?? "param";
+
+            public bool IsOptional => parameterInfo.IsOptional;
+
+            public IMethodInfo Method => throw new NotImplementedException();
+
+            public System.Reflection.ParameterInfo ParameterInfo => parameterInfo;
+
+            T[] IReflectionInfo.GetCustomAttributes<T>(bool inherit) =>
+                parameterInfo.GetCustomAttributes(typeof(T), inherit).OfType<T>().ToArray();
+
+            bool IReflectionInfo.IsDefined<T>(bool inherit) => parameterInfo.IsDefined(typeof(T), inherit);
         }
 
         #endregion

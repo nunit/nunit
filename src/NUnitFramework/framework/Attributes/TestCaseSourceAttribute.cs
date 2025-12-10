@@ -122,6 +122,7 @@ namespace NUnit.Framework
             foreach (TestCaseParameters parms in GetTestCasesFor(method))
             {
                 count++;
+
                 yield return _builder.BuildTestMethod(method, suite, parms);
             }
 
@@ -197,6 +198,17 @@ namespace NUnit.Framework
                                 }
 
                                 parms = new TestCaseParameters(args ?? [item]);
+                            }
+                            else if (parms is TestCaseParameters testCaseParams)
+                            {
+                                // Clone the user supplied structure to avoid contamination
+                                parms = new TestCaseParameters(testCaseParams);
+                            }
+                            else
+                            {
+                                // It's some other implementation of ITestCaseData
+                                // Clone into TestCaseParameters to ensure we have copies of the array we might modify.
+                                parms = new TestCaseParameters(parms);
                             }
 
                             if (parms is TestCaseParameters tcParms && parms.RunState == RunState.Runnable)
