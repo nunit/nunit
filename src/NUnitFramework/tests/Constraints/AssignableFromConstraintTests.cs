@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Constraints
                 StringRepresentation = $"<assignablefrom {typeof(TFrom)}>";
             }
 
-            private static readonly object[] SuccessData = [new TTo(), new object()];
+            private static readonly object[] SuccessData = [new TTo(), new TFrom(), new object()];
             private static readonly object[] FailureData = [new TestCaseData(new B(), "<" + typeof(B).FullName + ">")];
         }
     }

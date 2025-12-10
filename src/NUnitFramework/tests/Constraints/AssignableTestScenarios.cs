@@ -9,7 +9,6 @@ namespace NUnit.Framework.Tests.Constraints
         public static IEnumerable<TestFixtureData> GetAssignableTestScenarios()
         {
             yield return new TestFixtureData() { TypeArgs = [typeof(int), typeof(long)] };
-            yield return new TestFixtureData() { TypeArgs = [typeof(int), typeof(int)] };
             yield return new TestFixtureData() { TypeArgs = [typeof(float), typeof(double)] };
             yield return new TestFixtureData() { TypeArgs = [typeof(D2), typeof(D1)] };
             yield return new TestFixtureData() { TypeArgs = [typeof(D3), typeof(D1)] };

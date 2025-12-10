@@ -6,7 +6,7 @@ using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
-    public class AssignableToConstraintTests
+    public static class AssignableToConstraintTests
     {
         [TestFixtureSource(typeof(AssignableTestScenarios), nameof(GetAssignableTestScenarios))]
         public class ConstraintValidation<TFrom, TTo> : ConstraintTestBase
