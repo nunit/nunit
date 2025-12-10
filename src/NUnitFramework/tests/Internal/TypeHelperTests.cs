@@ -170,7 +170,7 @@ namespace NUnit.Framework.Tests.Internal
                 .Select(p => new RuntimeParameterInfo(p))
                 .ToArray();
 
-            // Original arguments 
+            // Original arguments
             object?[] originalArgs = new object?[] { string.Empty, 0 };
 
             // Convert for TestA (should convert int to float)
