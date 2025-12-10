@@ -36,12 +36,7 @@ namespace NUnit.Framework.Constraints
                 return true;
             }
 
-            if (actual.GetType().IsAssignableTo(expectedType))
-            {
-                return true;
-            }
-
-            return Reflect.CanImplicitlyConvertTo(actual.GetType(), expectedType);
+            return actual.GetType().CanImplicitlyConvertTo(expectedType);
         }
     }
 }
