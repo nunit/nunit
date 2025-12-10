@@ -138,13 +138,6 @@ namespace NUnit.Framework.Internal
                                 Arguments[argsProvided - 1] = array;
                             }
                         }
-                        else
-                        {
-                            // Should we replace with empty array or an array with one null object or leave as is?
-                            Array array = Array.CreateInstance(elementType, 1);
-                            array.SetValue(null, 0);
-                            Arguments[argsProvided - 1] = array;
-                        }
                     }
                     else
                     {
