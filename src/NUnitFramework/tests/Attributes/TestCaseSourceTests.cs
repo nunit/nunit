@@ -402,12 +402,10 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(rhs, Is.EqualTo(lhs));
         }
 
-        [TestCase(typeof(string), null, TypeArgs = [typeof(string)])] // Params array is null becomes [null]?
-        public void GenericParams<T>(Type t, params T?[] x)
+        [TestCase(typeof(string), null, TypeArgs = [typeof(string)])]
+        public void GenericParams<T>(Type t, params T?[]? x)
         {
-            Assert.That(x, Is.Not.Null);
-            Assert.That(x, Has.Length.EqualTo(1));
-            Assert.That(x[0], Is.Null);
+            Assert.That(x, Is.Null);
             Assert.That(typeof(T), Is.EqualTo(t));
         }
 
@@ -435,10 +433,9 @@ namespace NUnit.Framework.Tests.Attributes
 
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         [TestCaseSource(nameof(ExplicitNullValue))]
-        public void HandlesParamsArrayWithExplicitNullArgument(params string[] array)
+        public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
         {
-            Assert.That(array, Has.Length.EqualTo(1));
-            Assert.That(array, Is.EqualTo(ExplicitNullValue));
+            Assert.That(array, Is.Null);
         }
 
         [TestCaseSource(nameof(ExplicitEmptyValue))]
