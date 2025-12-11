@@ -26,17 +26,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
         protected override bool Matches(object? actual)
         {
-            if (expectedType is null || actual is null)
-            {
-                return false;
-            }
-
-            if (expectedType == actualType)
-            {
-                return true;
-            }
-
-            return actual.GetType().CanImplicitlyConvertTo(expectedType);
+            return expectedType is null ? actualType is null : actualType.CanImplicitlyConvertTo(expectedType);
         }
     }
 }

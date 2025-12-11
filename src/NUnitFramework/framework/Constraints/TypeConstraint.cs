@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected Type expectedType;
+        protected Type? expectedType;
 
         /// <summary>
         /// The type of the actual argument to which the constraint was applied
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="type">The expected type for the constraint</param>
         /// <param name="descriptionPrefix">Prefix used in forming the constraint description</param>
-        protected TypeConstraint(Type type, string descriptionPrefix)
+        protected TypeConstraint(Type? type, string descriptionPrefix)
             : base(type)
         {
             expectedType = type;
