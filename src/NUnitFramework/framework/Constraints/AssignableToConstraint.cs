@@ -1,12 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// AssignableToConstraint is used to test that an object
-    /// can be assigned to a given Type.
+    /// can be assigned to an instance of a given Type.
     /// </summary>
     public class AssignableToConstraint : TypeConstraint
     {
@@ -25,7 +26,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
         protected override bool Matches(object? actual)
         {
-            return expectedType is not null && actual is not null && expectedType.IsInstanceOfType(actual);
+            return expectedType is null ? actualType is null : actualType.CanImplicitlyConvertTo(expectedType);
         }
     }
 }
