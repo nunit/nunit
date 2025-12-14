@@ -221,6 +221,9 @@ namespace NUnit.Framework.Internal
                 return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
+            // Allow assigning instances of T to Nullable<T>
+            to = Nullable.GetUnderlyingType(to) ?? to;
+
             if (ConvertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
                 return true;
 
