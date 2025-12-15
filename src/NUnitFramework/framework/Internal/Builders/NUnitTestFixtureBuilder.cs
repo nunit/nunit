@@ -92,14 +92,13 @@ namespace NUnit.Framework.Internal.Builders
                     }
 
                     typeArgs = new Type[cnt];
-                    for (int i = 0; i < cnt; i++)
-                        typeArgs[i] = (Type)arguments[i]!;
 
                     if (cnt > 0)
                     {
+                        Array.Copy(arguments, typeArgs, cnt);
+
                         object?[] args = new object?[arguments.Length - cnt];
-                        for (int i = 0; i < args.Length; i++)
-                            args[i] = arguments[cnt + i];
+                        Array.Copy(arguments, cnt, args, 0, args.Length);
 
                         arguments = args;
                     }
