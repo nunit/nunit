@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.TestFixtureSourceData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TestFixtureSourceData;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.Multiple(() =>
             {
                 Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
-                Assert.That(suite.Tests[0].Tests, Has.Count.EqualTo(GenericFixtureSource.Source.Length));
+                Assert.That(suite.Tests[0].Tests, Has.Count.EqualTo(GenericFixtureSource.SourceTypes.Length));
             });
         }
 
@@ -225,6 +225,26 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
                 Assert.That(suite.Tests[0].Tests, Has.Count.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
             });
+        }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithExplicitTypeArgs()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithExplicitTypeArgs<>));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite is ParameterizedFixtureSuite);
+            });
+            Assert.That(suite.Tests, Has.Count.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
+                Assert.That(suite.Tests[0].Tests, Has.Count.EqualTo(GenericFixtureSource.SourceValues.Length));
+            });
+
+            var result = TestBuilder.RunTest(suite);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
         [Test]

@@ -79,6 +79,9 @@ namespace NUnit.Framework.Internal.Builders
                 Type[]? typeArgs = testFixtureData.TypeArgs;
                 if (typeArgs is null || typeArgs.Length == 0)
                 {
+                    // Check for Type arguments at start of argument list
+                    // from which to infer and construct the generic type
+
                     int cnt = 0;
                     foreach (object? o in arguments)
                     {
