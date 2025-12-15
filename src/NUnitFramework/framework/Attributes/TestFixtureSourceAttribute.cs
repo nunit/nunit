@@ -76,7 +76,7 @@ namespace NUnit.Framework
         public string? Category { get; set; }
 
         /// <summary>
-        /// Type arguments used to create a generic fixture instance
+        /// Type arguments used to create a generic fixture instance.
         /// </summary>
         public Type[]? TypeArgs { get; set; }
 
