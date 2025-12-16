@@ -420,15 +420,20 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     public class GenericFixtureSource
     {
-        public static readonly Type[] Source = new Type[]
-        {
+        public static readonly Type[] SourceTypes = [
             typeof(short),
             typeof(int),
             typeof(long)
-        };
+        ];
+
+        public static readonly object[] SourceValues = [
+            (short)1,
+            1,
+            (long)1
+        ];
     }
 
-    [TestFixtureSource(typeof(GenericFixtureSource), nameof(GenericFixtureSource.Source))]
+    [TestFixtureSource(typeof(GenericFixtureSource), nameof(GenericFixtureSource.SourceTypes))]
     public class GenericFixtureSourceWithProperArgsProvided<T>
     {
         [Test]
@@ -497,6 +502,23 @@ namespace NUnit.TestData.TestFixtureSourceData
         public void SomeTest()
         {
             Assert.That(!EqualityComparer<T>.Default.Equals(_arg, default(T)), "constructor argument was not injected");
+        }
+    }
+
+    [TestFixtureSource(typeof(GenericFixtureSource), nameof(GenericFixtureSource.SourceValues), TypeArgs = [typeof(long)])]
+    public class GenericFixtureSourceWithExplicitTypeArgs<T>
+    {
+        private readonly T _arg;
+
+        public GenericFixtureSourceWithExplicitTypeArgs(T arg)
+        {
+            _arg = arg;
+        }
+
+        [Test]
+        public void SomeTest()
+        {
+            Assert.That(_arg, Is.TypeOf<long>());
         }
     }
 

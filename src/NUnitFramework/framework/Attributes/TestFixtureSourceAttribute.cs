@@ -75,6 +75,11 @@ namespace NUnit.Framework
         /// </summary>
         public string? Category { get; set; }
 
+        /// <summary>
+        /// Type arguments used to create a generic fixture instance.
+        /// </summary>
+        public Type[]? TypeArgs { get; set; }
+
         #endregion
 
         #region IFixtureBuilder Members
@@ -151,7 +156,10 @@ namespace NUnit.Framework
                                 args = new[] { item };
                             }
 
-                            parms = new TestFixtureParameters(args);
+                            parms = new TestFixtureParameters(args)
+                            {
+                                TypeArgs = TypeArgs
+                            };
                         }
 
                         if (Category is not null)
