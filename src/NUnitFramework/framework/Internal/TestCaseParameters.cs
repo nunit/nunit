@@ -286,9 +286,9 @@ namespace NUnit.Framework.Internal
             if (bestType.IsValueType || currentType.IsValueType)
             {
                 // But check for nunit supported conversions:
-                if (ParamAttributeTypeConversions.HasNUnitConversion(bestType, currentType))
+                if (Reflect.HasNUnitConversion(bestType, currentType))
                     return currentType;
-                else if (ParamAttributeTypeConversions.HasNUnitConversion(currentType, bestType))
+                else if (Reflect.HasNUnitConversion(currentType, bestType))
                     return bestType;
 
                 // One is a value type - no common subtype other than object

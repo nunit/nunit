@@ -192,19 +192,55 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-        // §6.1.2 (Implicit numeric conversions) of the specification
-        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new()
+        /// <summary>
+        /// Implicit numeric conversions
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions#implicit-numeric-conversions
+        /// </summary>
+        private static readonly Dictionary<Type, HashSet<Type>> BuiltInNumericalConversions = new()
         {
-            { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
-            { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(ulong), new List<Type> { typeof(byte), typeof(ushort), typeof(uint), typeof(char) } },
-            { typeof(long), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(char) } },
-            { typeof(uint), new List<Type> { typeof(byte), typeof(ushort), typeof(char) } },
-            { typeof(int), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(char) } },
-            { typeof(ushort), new List<Type> { typeof(byte), typeof(char) } },
-            { typeof(short), new List<Type> { typeof(byte) } }
+            [typeof(sbyte)] = [typeof(short), typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(byte)] = [typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(short)] = [typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(ushort)] = [typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nint), typeof(nuint)],
+            [typeof(int)] = [typeof(long), typeof(float), typeof(double), typeof(decimal), typeof(nint)],
+            [typeof(uint)] = [typeof(long), typeof(ulong), typeof(float), typeof(double), typeof(decimal), typeof(nuint)],
+            [typeof(nint)] = [typeof(long), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(nuint)] = [typeof(ulong), typeof(float), typeof(double), typeof(decimal)],
+            [typeof(long)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(ulong)] = [typeof(float), typeof(double), typeof(decimal)],
+            [typeof(float)] = [typeof(double)],
         };
+
+        /// <summary>
+        /// Implicit numeric conversions for conversion from int literal
+        /// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/numeric-conversions#implicit-numeric-conversions
+        /// </summary>
+        private static readonly HashSet<Type> ImplicitConversionFromIntLiteral =
+            [typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(uint), typeof(ulong), typeof(nuint)];
+
+        /// <summary>
+        /// The compiler allows implicit assigning an integer literal to a smaller type,
+        /// but it doesn't allow assigning a variable of type integer to a smaller type without an explicit cast.
+        /// </summary>
+        internal static bool HasImplicitConversionFromIntLiteral(Type fromType, Type toType)
+        {
+            return fromType == typeof(int) && ImplicitConversionFromIntLiteral.Contains(toType);
+        }
+
+        /// <summary>
+        /// Conversion allowed by NUnit
+        /// </summary>
+        private static readonly Dictionary<Type, HashSet<Type>> NUnitConversions = new()
+        {
+            [typeof(int)] = [typeof(sbyte), typeof(byte), typeof(short), typeof(long), typeof(double), typeof(decimal)],
+            [typeof(string)] = [typeof(decimal), typeof(DateTime)],
+            [typeof(double)] = [typeof(decimal)],
+        };
+
+        internal static bool HasNUnitConversion(Type fromType, Type toType)
+        {
+            return NUnitConversions.TryGetValue(fromType, out var convertibleTypes) && convertibleTypes.Contains(toType);
+        }
 
         /// <summary>
         /// Determines whether the current type can be implicitly converted to the specified type.
@@ -224,7 +260,7 @@ namespace NUnit.Framework.Internal
             // Allow assigning instances of T to Nullable<T>
             to = Nullable.GetUnderlyingType(to) ?? to;
 
-            if (ConvertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
+            if (BuiltInNumericalConversions.TryGetValue(from, out var types) && types.Contains(to))
                 return true;
 
             return from
