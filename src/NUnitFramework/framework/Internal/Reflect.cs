@@ -90,7 +90,25 @@ namespace NUnit.Framework.Internal
             if (parameterInfos.Length > 0)
             {
                 ParameterInfo parameterInfo = parameterInfos.Last();
-                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
+                var hasParamsArray = parameterInfo.HasAttribute<ParamArrayAttribute>(false);
+
+                if (arguments.Length < parameterInfos.Length)
+                {
+                    // Add the optional args at the call-side where we haven't passed enough explicitly
+                    var endIdx = hasParamsArray ? parameterInfos.Length + 1 : parameterInfos.Length;
+
+                    var newArgs = new object?[endIdx];
+                    Array.Copy(arguments, newArgs, arguments.Length);
+
+                    for (var i = arguments.Length; i < endIdx && parameterInfos[i].IsOptional; i++)
+                    {
+                        newArgs[i] = parameterInfos[i].DefaultValue;
+                    }
+
+                    arguments = newArgs;
+                }
+
+                if (hasParamsArray)
                 {
                     if (arguments.Length == parameterInfos.Length
                         && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
@@ -159,6 +177,11 @@ namespace NUnit.Framework.Internal
             }
 
             var requiredParamsCount = pinfos.Count(o => !o.IsOptional);
+            if (hasParamsArgument)
+            {
+                requiredParamsCount--;
+            }
+
             if (ptypes.Length < requiredParamsCount || (!hasParamsArgument && ptypes.Length > pinfos.Length))
                 return false;
 

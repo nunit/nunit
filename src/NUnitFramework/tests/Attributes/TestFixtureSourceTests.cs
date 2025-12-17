@@ -89,6 +89,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(TestFixtureSourceMayUseOptionalArguments));
 
+            Assert.That(suite.Tests, Has.Count.EqualTo(2));
             Assert.Multiple(() =>
             {
                 Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
