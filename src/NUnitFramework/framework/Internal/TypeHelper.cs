@@ -355,9 +355,24 @@ namespace NUnit.Framework.Internal
                 if (type1 == typeof(sbyte)) { bestCommonType = type1; return true; }
                 if (type2 == typeof(sbyte)) { bestCommonType = type2; return true; }
             }
+            else
+            {
+                if (type1.IsAssignableFrom(type2)) { bestCommonType = type1; return true; }
+                if (type2.IsAssignableFrom(type1)) { bestCommonType = type2; return true; }
 
-            if (type1.IsAssignableFrom(type2)) { bestCommonType = type1; return true; }
-            if (type2.IsAssignableFrom(type1)) { bestCommonType = type2; return true; }
+                // Both are reference types - find common base class
+                Type? testType = type1;
+                while (testType is not null && !testType.IsAssignableFrom(type2))
+                {
+                    testType = testType.BaseType;
+                }
+
+                if (testType is not null)
+                {
+                    bestCommonType = testType;
+                    return true;
+                }
+            }
 
             bestCommonType = typeof(object);
             return false;
