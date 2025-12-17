@@ -329,6 +329,31 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixtureSource(nameof(MyData))]
+    public class TestFixtureSourceMayUseOptionalAndParamsArguments
+    {
+        public TestFixtureSourceMayUseOptionalAndParamsArguments(int arg1, int arg2 = 42, params int[] args)
+        {
+            Parameters = [arg1, arg2, .. args];
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.That(Parameters, Is.Not.Null);
+            Assert.That(Parameters, Is.All.Not.Default);
+        }
+
+        private static IEnumerable MyData()
+        {
+            yield return new object[] { 1 };
+            yield return new object[] { 1, 2 };
+            yield return new object[] { 1, 2, 3, 4, 5 };
+        }
+    }
+
+    [TestFixtureSource(nameof(MyData))]
     public class TestFixtureSourceInvalidValuesForOptionalArguments
     {
         public TestFixtureSourceInvalidValuesForOptionalArguments(int arg1, int arg2 = 42)
