@@ -85,6 +85,36 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void CanSpecifyParametrizedTestFixturesWithOptionalArgs()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(TestFixtureSourceMayUseOptionalArguments));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[1].RunState, Is.EqualTo(RunState.Runnable));
+            });
+
+            var result = TestBuilder.RunTest(suite);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+        }
+
+        [Test]
+        public void CanWarnAboutParametrizedTestFixturesWithInvalidOptionalArgs()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(TestFixtureSourceInvalidValuesForOptionalArguments));
+
+            Assert.That(suite.Tests, Has.Count.EqualTo(3));
+
+            foreach (var fixture in suite.Tests)
+            {
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(fixture.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("No suitable constructor was found"));
+            }
+        }
+
+        [Test]
         public void CanMarkIndividualFixturesExplicit()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayBeExplicit));

@@ -157,11 +157,10 @@ namespace NUnit.Framework.Internal
                 if (ptypes.Length < pinfos.Length - 1)
                     return false;
             }
-            else
-            {
-                if (pinfos.Length != ptypes.Length)
-                    return false;
-            }
+
+            var requiredParamsCount = pinfos.Count(o => !o.IsOptional);
+            if (ptypes.Length < requiredParamsCount || (!hasParamsArgument && ptypes.Length > pinfos.Length))
+                return false;
 
             for (int i = 0; i < pinfos.Length; i++)
             {
@@ -186,7 +185,7 @@ namespace NUnit.Framework.Internal
                     }
                 }
 
-                if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
+                if (ptypes.Length > i && !ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }
             return true;
