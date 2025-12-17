@@ -415,7 +415,7 @@ namespace NUnit.Framework.Tests.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericParams));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(3 * 2 + 4));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(4 * 2 + 4));
 
             var testObject = new TestCaseSourceAttributeFixture();
 

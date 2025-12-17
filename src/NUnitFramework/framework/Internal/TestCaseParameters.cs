@@ -270,39 +270,10 @@ namespace NUnit.Framework.Internal
             for (int i = index + 1; i < arguments.Length; i++)
             {
                 Type currentType = arguments[i]?.GetType() ?? typeof(object);
-                if (bestType.IsAssignableFrom(currentType))
-                    continue;
-                if (currentType.IsAssignableFrom(bestType))
-                    bestType = currentType;
-
-                bestType = TestCaseParameters.GetMoreSpecificType(bestType, currentType);
+                TypeHelper.TryGetBestCommonType(bestType, currentType, out bestType);
             }
 
             return bestType;
-        }
-
-        private static Type GetMoreSpecificType(Type bestType, Type currentType)
-        {
-            if (bestType.IsValueType || currentType.IsValueType)
-            {
-                // But check for nunit supported conversions:
-                if (Reflect.HasNUnitConversion(bestType, currentType))
-                    return currentType;
-                else if (Reflect.HasNUnitConversion(currentType, bestType))
-                    return bestType;
-
-                // One is a value type - no common subtype other than object
-                return typeof(object);
-            }
-
-            // Both are reference types - find common base class
-            Type? testType = bestType;
-            while (testType is not null && !testType.IsAssignableFrom(currentType))
-            {
-                testType = testType.BaseType;
-            }
-
-            return testType ?? typeof(object);
         }
     }
 }

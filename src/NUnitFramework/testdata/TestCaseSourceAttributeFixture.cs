@@ -244,6 +244,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [TestCaseSource(nameof(DoubleTestData))]
         [TestCaseSource(nameof(StringTestData))]
         [TestCaseSource(nameof(TypedTestData))]
+        [TestCaseSource(nameof(BaseClassData))]
         [TestCase(typeof(double), 4, 5.5, 6)] // Infers 'double'
         [TestCase(typeof(double), 7, 8, 9, TypeArgs = [typeof(double)])] // Will convert to specified type.
         [TestCase(typeof(double), 7, TypeArgs = [typeof(double)])] // Use different path
@@ -270,6 +271,24 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             yield return new TestCaseData([typeof(double)]) { TypeArgs = [typeof(double)] };
             yield return new TestCaseData([typeof(string)]) { TypeArgs = [typeof(string)] };
+        }
+
+        private static IEnumerable<object[]> BaseClassData()
+        {
+            yield return new object[] { typeof(D1), new D1(), new D2(), new D3(), };
+            yield return new object[] { typeof(D1), new D2(), new D3() };
+        }
+
+        private class D1
+        {
+        }
+
+        private class D2 : D1
+        {
+        }
+
+        private class D3 : D1
+        {
         }
     }
 }
