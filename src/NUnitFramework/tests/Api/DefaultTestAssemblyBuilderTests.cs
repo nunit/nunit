@@ -36,6 +36,7 @@ namespace NUnit.Framework.Tests.Api
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture", ExpectedResult = MockTestFixture.Tests)]
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.FixtureWithTestCases", ExpectedResult = MockTestFixture.Tests + FixtureWithTestCases.Tests)]
         [TestCase("NUnit.Tests.Singletons.OneTestCase", ExpectedResult = OneTestCase.Tests)]
+        [TestCase("NUnit.Tests.GenericFixture", ExpectedResult = GenericFixtureConstants.Tests)]
         // Method filters
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", ExpectedResult = 1)]
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", "NUnit.Tests.Singletons.OneTestCase.TestCase", ExpectedResult = 2)]

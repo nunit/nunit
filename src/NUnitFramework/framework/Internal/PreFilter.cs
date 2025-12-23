@@ -140,41 +140,43 @@ namespace NUnit.Framework.Internal
 
             public bool Match(Type type)
             {
-                return MatchElementType(type) ||
+                string typeName = TypeFullNameWithoutGenericArgs(type);
+
+                return MatchElementType(typeName) ||
                        MatchSetUpFixture(type);
             }
 
-            private bool MatchElementType(Type type)
+            private bool MatchElementType(string typeName)
             {
                 switch (_elementType)
                 {
                     default:
                     case FilterElementType.Unknown:
-                        return MatchUnknownElement(type);
+                        return MatchUnknownElement(typeName);
                     case FilterElementType.Fixture:
-                        return MatchFixtureElement(type);
+                        return MatchFixtureElement(typeName);
                     case FilterElementType.Namespace:
-                        return MatchNamespaceElement(type);
+                        return MatchNamespaceElement(typeName);
                     case FilterElementType.Method:
-                        return MatchMethodElement(type);
+                        return MatchMethodElement(typeName);
                 }
             }
 
-            private bool MatchUnknownElement(Type type)
+            private bool MatchUnknownElement(string typeName)
             {
-                if (MatchFixtureElement(type))
+                if (MatchFixtureElement(typeName))
                 {
                     _elementType = FilterElementType.Fixture;
                     return true;
                 }
 
-                if (MatchNamespaceElement(type))
+                if (MatchNamespaceElement(typeName))
                 {
                     _elementType = FilterElementType.Namespace;
                     return true;
                 }
 
-                if (MatchMethodElement(type))
+                if (MatchMethodElement(typeName))
                 {
                     _elementType = FilterElementType.Method;
                     return true;
@@ -183,19 +185,28 @@ namespace NUnit.Framework.Internal
                 return false;
             }
 
-            private bool MatchFixtureElement(Type type)
+            private bool MatchFixtureElement(string typeName)
             {
-                return type.FullName == Text;
+                return typeName == Text;
             }
 
-            private bool MatchNamespaceElement(Type type)
+            private bool MatchNamespaceElement(string typeName)
             {
-                return type.FullName?.StartsWith(Text + ".") is true;
+                return typeName.StartsWith(Text + ".") is true;
             }
 
-            private bool MatchMethodElement(Type type)
+            private bool MatchMethodElement(string typeName)
             {
-                return type.FullName == ClassName;
+                return typeName == ClassName;
+            }
+
+            private static string TypeFullNameWithoutGenericArgs(Type type)
+            {
+                string fullName = type.FullName ?? string.Empty;
+                int genericMarker = fullName.IndexOf('`');
+                return genericMarker > 0
+                    ? fullName.Substring(0, genericMarker)
+                    : fullName;
             }
 
             private bool MatchSetUpFixture(Type type)
