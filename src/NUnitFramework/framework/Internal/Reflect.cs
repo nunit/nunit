@@ -90,7 +90,25 @@ namespace NUnit.Framework.Internal
             if (parameterInfos.Length > 0)
             {
                 ParameterInfo parameterInfo = parameterInfos.Last();
-                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
+                var hasParamsArray = parameterInfo.HasAttribute<ParamArrayAttribute>(false);
+
+                if (arguments.Length < parameterInfos.Length)
+                {
+                    // Add the optional args at the call-side where we haven't passed enough explicitly
+                    var endIdx = hasParamsArray ? parameterInfos.Length - 1 : parameterInfos.Length;
+
+                    var newArgs = new object?[endIdx];
+                    Array.Copy(arguments, newArgs, arguments.Length);
+
+                    for (var i = arguments.Length; i < endIdx && parameterInfos[i].IsOptional; i++)
+                    {
+                        newArgs[i] = parameterInfos[i].DefaultValue;
+                    }
+
+                    arguments = newArgs;
+                }
+
+                if (hasParamsArray)
                 {
                     if (arguments.Length == parameterInfos.Length
                         && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
@@ -106,7 +124,7 @@ namespace NUnit.Framework.Internal
                         }
 
                         int paramsOffset = parameterInfos.Length - 1;
-                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - parameterInfos.Length + 1);
+                        var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
                         for (int i = 0; i < paramArray.Length; i++)
                         {
                             paramArray.SetValue(arguments[i + paramsOffset], i);
@@ -151,17 +169,15 @@ namespace NUnit.Framework.Internal
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
             bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
+            var requiredParamsCount = pinfos.Count(o => !o.IsOptional);
 
             if (hasParamsArgument)
             {
-                if (ptypes.Length < pinfos.Length - 1)
-                    return false;
+                requiredParamsCount--;
             }
-            else
-            {
-                if (pinfos.Length != ptypes.Length)
-                    return false;
-            }
+
+            if (ptypes.Length < requiredParamsCount || (!hasParamsArgument && ptypes.Length > pinfos.Length))
+                return false;
 
             for (int i = 0; i < pinfos.Length; i++)
             {
@@ -186,7 +202,7 @@ namespace NUnit.Framework.Internal
                     }
                 }
 
-                if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
+                if (ptypes.Length > i && !ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }
             return true;
