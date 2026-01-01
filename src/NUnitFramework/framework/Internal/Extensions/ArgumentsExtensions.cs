@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
@@ -25,11 +26,27 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         /// <summary>
+        /// Checks if the last type of a parameter list has a type <see cref="CancellationToken"/>
+        /// </summary>
+        public static bool LastParameterAcceptsCancellationToken(this ParameterInfo[] parameters)
+        {
+            return parameters.Length > 0 && parameters[parameters.Length - 1].ParameterType == typeof(CancellationToken);
+        }
+
+        /// <summary>
         /// Checks if the parameter is a 'params' array.
         /// </summary>
         public static bool ParameterIsParamsArray(this IParameterInfo lastParameter)
         {
             return lastParameter.ParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false);
+        }
+
+        /// <summary>
+        /// Checks if the parameter is a 'params' array.
+        /// </summary>
+        public static bool ParameterIsParamsArray(this ParameterInfo lastParameter)
+        {
+            return lastParameter.ParameterType.IsArray && lastParameter.HasAttribute<ParamArrayAttribute>(false);
         }
 
         /// <summary>
