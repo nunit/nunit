@@ -142,15 +142,13 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    Type elementType = parameterInfo.ParameterType.GetElementType()!;
+                    var elementType = parameterInfo.ParameterType.GetElementType()!;
+                    var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
 
                     int paramsOffset = parameterInfos.Length - 1;
-                    var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
-                    for (int i = 0; i < paramArray.Length; i++)
-                    {
-                        paramArray.SetValue(arguments[i + paramsOffset], i);
-                    }
-                    arguments = arguments.Take(parameterInfos.Length - 1).Concat([paramArray]).ToArray();
+                    Array.Copy(arguments, paramsOffset, paramArray, 0, paramArray.Length);
+
+                    arguments = arguments.Take(paramsOffset).Concat([paramArray]).ToArray();
                 }
             }
 
