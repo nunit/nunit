@@ -146,7 +146,20 @@ namespace NUnit.Framework.Internal
                     var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
 
                     int paramsOffset = parameterInfos.Length - 1;
-                    Array.Copy(arguments, paramsOffset, paramArray, 0, paramArray.Length);
+                    for (int i = 0; i < paramArray.Length; i++)
+                    {
+                        var arg = arguments[i + paramsOffset];
+                        var argType = arg?.GetType();
+
+                        //Only assign if we can convert the value to the element type
+                        if (!argType.CanImplicitlyConvertTo(elementType))
+                        {
+                            var sourceType = argType is null ? "null" : argType.FullName;
+                            throw new InvalidCastException($"Cannot convert {sourceType} to '{elementType}'");
+                        }
+
+                        paramArray.SetValue(arg, i);
+                    }
 
                     arguments = arguments.Take(paramsOffset).Concat([paramArray]).ToArray();
                 }
