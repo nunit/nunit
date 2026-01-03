@@ -464,7 +464,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCaseSource(nameof(OneArg)), CancelAfter(5000)]
-        public void HandlesCancellationTokenWithDefaultArgumentAsLastArgument(int _, CancellationToken cancellationToken = default)
+        public void HandlesCancellationTokenWithDefaultValueAsLastArgument(int _, CancellationToken cancellationToken = default)
         {
             Assert.That(cancellationToken, Is.Not.Default);
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
