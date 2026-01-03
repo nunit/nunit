@@ -103,19 +103,31 @@ namespace NUnit.Framework.Internal
 
             if (arguments.Length < parameterInfos.Length)
             {
-                var hasCancellationToken = parameterInfos.LastParameterAcceptsCancellationToken() &&
-                    !arguments.LastArgumentIsCancellationToken();
-
                 // Add the optional args at the call-side where we haven't passed enough explicitly
                 // Also ignore if a cancellation token is implicitly expected
-                var endIdx = (hasParamsArray || hasCancellationToken) ? parameterInfos.Length - 1 : parameterInfos.Length;
+                var endIdx = parameterInfos.Length;
+                if (hasParamsArray)
+                {
+                    endIdx--;
+                }
+                else if (parameterInfos.LastParameterAcceptsCancellationToken() && !arguments.LastArgumentIsCancellationToken())
+                {
+                    endIdx--;
+                }
 
                 var newArgs = new object?[endIdx];
                 Array.Copy(arguments, newArgs, arguments.Length);
 
-                for (var i = arguments.Length; i < endIdx && parameterInfos[i].IsOptional; i++)
+                for (var i = arguments.Length; i < endIdx; i++)
                 {
-                    newArgs[i] = Type.Missing;
+                    if (parameterInfos[i].IsOptional)
+                    {
+                        newArgs[i] = Type.Missing;
+                    }
+                    else
+                    {
+                        throw new TargetParameterCountException($"Method requires {parameterInfos.Length} arguments but only {arguments.Length} were supplied");
+                    }
                 }
 
                 arguments = newArgs;
@@ -130,11 +142,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    Type? elementType = parameterInfo.ParameterType.GetElementType();
-                    if (elementType is null)
-                    {
-                        throw new InvalidTestFixtureException("Params argument did not have an element type");
-                    }
+                    Type elementType = parameterInfo.ParameterType.GetElementType()!;
 
                     int paramsOffset = parameterInfos.Length - 1;
                     var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
