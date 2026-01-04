@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         internal static object?[] PopulateOptionalArgsAndParamsArray(object?[] arguments, ParameterInfo[] parameterInfos)
         {
             ParameterInfo parameterInfo = parameterInfos.Last();
-            var hasParamsArray = parameterInfo.HasAttribute<ParamArrayAttribute>(false);
+            var hasParamsArray = parameterInfo.ParameterIsParamsArray();
 
             if (arguments.Length < parameterInfos.Length)
             {
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal
                         var arg = arguments[i + paramsOffset];
                         var argType = arg?.GetType();
 
-                        //Only assign if we can convert the value to the element type
+                        // Only assign if we can convert the value to the element type
                         if (!argType.CanImplicitlyConvertTo(elementType))
                         {
                             var sourceType = argType is null ? "null" : argType.FullName;
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].ParameterIsParamsArray();
             var requiredParamsCount = pinfos.Count(o => !o.IsOptional);
 
             if (hasParamsArgument)

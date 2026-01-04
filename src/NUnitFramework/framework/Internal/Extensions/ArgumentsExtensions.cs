@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Extensions
         /// </summary>
         public static bool ParameterIsParamsArray(this IParameterInfo lastParameter)
         {
-            return lastParameter.ParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false);
+            return lastParameter.ParameterType.IsArray && lastParameter.ParameterInfo.ParameterIsParamsArray();
         }
 
         /// <summary>
