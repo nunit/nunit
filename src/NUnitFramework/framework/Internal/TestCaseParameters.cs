@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal
             }
 
             // Special handling when sole argument is an object[]
-            if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
+            if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object[]))
             {
                 if (argsProvided > 1 ||
                     argsProvided == 1 && Arguments[0]?.GetType() != typeof(object[]))
