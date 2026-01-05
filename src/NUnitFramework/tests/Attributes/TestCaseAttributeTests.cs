@@ -221,6 +221,34 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(array[0], Is.EqualTo("c"));
         }
 
+        [TestCase(1, 2)]
+        [TestCase(1L, 2L)]
+        public static void HandlesImplicitlyConvertibleParamsValues(params long[] a)
+        {
+            Assert.That(a, Is.EqualTo([1L, 2L]));
+        }
+
+        [Test]
+        public static void IncompatibleParamsValuesFail()
+        {
+            const string methodName = nameof(TestCaseAttributeFixture.IncompatibleValueToParamsArray);
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName);
+
+            var testCases = suite.Tests;
+
+            Assert.That(testCases, Has.Count.EqualTo(2));
+
+            for (var i = 0; i < testCases.Count; i++)
+            {
+                Assert.Multiple(() =>
+                {
+                    Assert.That(testCases[i].RunState, Is.EqualTo(RunState.NotRunnable));
+                    Assert.That(testCases[i].Properties[PropertyNames.SkipReason][0], Does.Contain("Cannot convert"));
+                });
+            }
+        }
+
         [TestCase("x", ExpectedResult = new[] { "x", "b", "c" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]

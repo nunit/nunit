@@ -128,5 +128,11 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public static void MethodWithoutTypeArgsWithIncompatibleParameters(string _)
         {
         }
+
+        [TestCase(1, null)]
+        [TestCase(1, "A")]
+        public static void IncompatibleValueToParamsArray(params long[] a)
+        {
+        }
     }
 }

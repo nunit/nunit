@@ -278,7 +278,6 @@ namespace NUnit.TestData.TestFixtureSourceData
         };
     }
 
-    [TestFixture]
     [TestFixtureSource(nameof(MyData))]
     public class TestFixtureSourceMayUseParamsArguments
     {
@@ -301,6 +300,80 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new object[] { 1, 2, 3 };
             yield return new object[] { };
             yield return new object[] { new int[] { 1, 2, 3, 4 } };
+        }
+    }
+
+    [TestFixtureSource(nameof(MyOptionalData))]
+    public class TestFixtureSourceMayUseOptionalArguments
+    {
+        public TestFixtureSourceMayUseOptionalArguments(int arg1, int arg2 = 42)
+        {
+            Parameters = [arg1, arg2];
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.That(Parameters, Is.Not.Null);
+            Assert.That(Parameters[0], Is.EqualTo(1));
+            Assert.That(Parameters[1], Is.EqualTo(2).Or.EqualTo(42));
+        }
+
+        private static IEnumerable MyOptionalData()
+        {
+            yield return new object[] { 1 };
+            yield return new object[] { 1, 2 };
+        }
+    }
+
+    [TestFixtureSource(nameof(MyData))]
+    public class TestFixtureSourceMayUseOptionalAndParamsArguments
+    {
+        public TestFixtureSourceMayUseOptionalAndParamsArguments(int arg1, int arg2 = 42, params int[] args)
+        {
+            Parameters = [arg1, arg2, .. args];
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.That(Parameters, Is.Not.Null);
+            Assert.That(Parameters, Is.All.Not.Default);
+        }
+
+        private static IEnumerable MyData()
+        {
+            yield return new object[] { 1 };
+            yield return new object[] { 1, 2 };
+            yield return new object[] { 1, 2, 3, 4, 5 };
+        }
+    }
+
+    [TestFixtureSource(nameof(MyData))]
+    public class TestFixtureSourceInvalidValuesForOptionalArguments
+    {
+        public TestFixtureSourceInvalidValuesForOptionalArguments(int arg1, int arg2 = 42)
+        {
+            Parameters = [arg1, arg2];
+        }
+
+        public int[] Parameters { get; }
+
+        [Test]
+        public void Test()
+        {
+            Assert.Pass();
+        }
+
+        private static IEnumerable MyData()
+        {
+            yield return new object[] { };
+            yield return new object[] { 1, 2, 3 };
+            yield return new object[] { 1.3, 3.7 };
         }
     }
 

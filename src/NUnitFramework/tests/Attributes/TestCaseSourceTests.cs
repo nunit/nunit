@@ -463,6 +463,13 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
+        [TestCaseSource(nameof(OneArg)), CancelAfter(5000)]
+        public void HandlesCancellationTokenWithDefaultValueAsLastArgument(int _, CancellationToken cancellationToken = default)
+        {
+            Assert.That(cancellationToken, Is.Not.Default);
+            Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
+        }
+
 #pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
 
         private static IEnumerable ParamsArrayOneStringArgument

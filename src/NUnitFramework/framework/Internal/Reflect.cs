@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -89,34 +90,82 @@ namespace NUnit.Framework.Internal
 
             if (parameterInfos.Length > 0)
             {
-                ParameterInfo parameterInfo = parameterInfos.Last();
-                if (parameterInfo.HasAttribute<ParamArrayAttribute>(false))
-                {
-                    if (arguments.Length == parameterInfos.Length
-                        && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
-                    {
-                        // Don't convert arguments as there was already an array we could use.
-                    }
-                    else
-                    {
-                        Type? elementType = parameterInfo.ParameterType.GetElementType();
-                        if (elementType is null)
-                        {
-                            throw new InvalidTestFixtureException(type.FullName + " params argument did not have an element type");
-                        }
-
-                        int paramsOffset = parameterInfos.Length - 1;
-                        var paramArray = Array.CreateInstance(elementType, argTypes.Length - parameterInfos.Length + 1);
-                        for (int i = 0; i < paramArray.Length; i++)
-                        {
-                            paramArray.SetValue(arguments[i + paramsOffset], i);
-                        }
-                        arguments = arguments.Take(parameterInfos.Length - 1).Concat(new object[] { paramArray }).ToArray();
-                    }
-                }
+                arguments = PopulateOptionalArgsAndParamsArray(arguments, parameterInfos);
             }
 
             return ctor.Invoke(arguments);
+        }
+
+        internal static object?[] PopulateOptionalArgsAndParamsArray(object?[] arguments, ParameterInfo[] parameterInfos)
+        {
+            ParameterInfo parameterInfo = parameterInfos.Last();
+            var hasParamsArray = parameterInfo.ParameterIsParamsArray();
+
+            if (arguments.Length < parameterInfos.Length)
+            {
+                // Add the optional args at the call-side where we haven't passed enough explicitly
+                // Also ignore if a cancellation token is implicitly expected
+                var endIdx = parameterInfos.Length;
+                if (hasParamsArray)
+                {
+                    endIdx--;
+                }
+                else if (parameterInfos.LastParameterAcceptsCancellationToken() && !arguments.LastArgumentIsCancellationToken())
+                {
+                    endIdx--;
+                }
+
+                var newArgs = new object?[endIdx];
+                Array.Copy(arguments, newArgs, arguments.Length);
+
+                for (var i = arguments.Length; i < endIdx; i++)
+                {
+                    if (parameterInfos[i].IsOptional)
+                    {
+                        newArgs[i] = Type.Missing;
+                    }
+                    else
+                    {
+                        throw new TargetParameterCountException($"Method requires {parameterInfos.Length} arguments but only {arguments.Length} were supplied");
+                    }
+                }
+
+                arguments = newArgs;
+            }
+
+            if (hasParamsArray)
+            {
+                if (arguments.Length == parameterInfos.Length
+                    && parameterInfo.ParameterType.IsAssignableFrom(arguments[parameterInfos.Length - 1]?.GetType()))
+                {
+                    // Don't convert arguments as there was already an array we could use.
+                }
+                else
+                {
+                    var elementType = parameterInfo.ParameterType.GetElementType()!;
+                    var paramArray = Array.CreateInstance(elementType, arguments.Length - parameterInfos.Length + 1);
+
+                    int paramsOffset = parameterInfos.Length - 1;
+                    for (int i = 0; i < paramArray.Length; i++)
+                    {
+                        var arg = arguments[i + paramsOffset];
+                        var argType = arg?.GetType();
+
+                        // Only assign if we can convert the value to the element type
+                        if (!argType.CanImplicitlyConvertTo(elementType))
+                        {
+                            var sourceType = argType is null ? "null" : argType.FullName;
+                            throw new InvalidCastException($"Cannot convert {sourceType} to '{elementType}'");
+                        }
+
+                        paramArray.SetValue(arg, i);
+                    }
+
+                    arguments = arguments.Take(paramsOffset).Concat([paramArray]).ToArray();
+                }
+            }
+
+            return arguments;
         }
 
         /// <summary>
@@ -150,18 +199,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
-            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].HasAttribute<ParamArrayAttribute>(false);
+            bool hasParamsArgument = pinfos.Length > 0 && pinfos[pinfos.Length - 1].ParameterIsParamsArray();
+            var requiredParamsCount = pinfos.Count(o => !o.IsOptional);
 
             if (hasParamsArgument)
             {
-                if (ptypes.Length < pinfos.Length - 1)
-                    return false;
+                requiredParamsCount--;
             }
-            else
-            {
-                if (pinfos.Length != ptypes.Length)
-                    return false;
-            }
+
+            if (ptypes.Length < requiredParamsCount || (!hasParamsArgument && ptypes.Length > pinfos.Length))
+                return false;
 
             for (int i = 0; i < pinfos.Length; i++)
             {
@@ -186,7 +233,7 @@ namespace NUnit.Framework.Internal
                     }
                 }
 
-                if (!ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
+                if (ptypes.Length > i && !ptypes[i].CanImplicitlyConvertTo(pinfos[i].ParameterType))
                     return false;
             }
             return true;

@@ -3,7 +3,6 @@
 using System;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -104,7 +103,7 @@ namespace NUnit.Framework.Internal
 
         internal void AdjustArgumentsForMethod(IMethodInfo method)
         {
-            IParameterInfo[] parameters = method.GetParameters();
+            ParameterInfo[] parameters = method.MethodInfo.GetParameters();
             int argsNeeded = parameters.Length;
             int argsProvided = Arguments.Length;
 
@@ -115,74 +114,15 @@ namespace NUnit.Framework.Internal
                 ExpectedResult = expectedResultInTargetType;
             }
 
-            // Special handling for CancellationToken
-            if (parameters.LastParameterAcceptsCancellationToken() &&
-               (!Arguments.LastArgumentIsCancellationToken()))
+            if (parameters.Length > 0)
             {
-                // Implicit CancellationToken argument
-                argsProvided++;
-            }
-
-            // Special handling for params arguments
-            if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
-            {
-                IParameterInfo lastParameter = parameters[argsNeeded - 1];
-
-                if (lastParameter.ParameterIsParamsArray())
-                {
-                    Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType()!;
-
-                    if (argsProvided == argsNeeded)
-                    {
-                        if (!lastParameterType.IsInstanceOfType(Arguments[argsProvided - 1]))
-                        {
-                            Array array = Array.CreateInstance(elementType, 1);
-                            array.SetValue(Arguments[argsProvided - 1], 0);
-                            Arguments[argsProvided - 1] = array;
-                        }
-                    }
-                    else
-                    {
-                        object?[] newArglist = new object?[argsNeeded];
-                        for (int i = 0; i < argsNeeded && i < argsProvided; i++)
-                            newArglist[i] = Arguments[i];
-
-                        int length = argsProvided - argsNeeded + 1;
-                        Array array = Array.CreateInstance(elementType, length);
-                        for (int i = 0; i < length; i++)
-                            array.SetValue(Arguments[argsNeeded + i - 1], i);
-
-                        newArglist[argsNeeded - 1] = array;
-                        Arguments = newArglist;
-                        argsProvided = argsNeeded;
-                    }
-                }
-            }
-
-            // Special handling for optional parameters
-            if (argsProvided < argsNeeded)
-            {
-                var newArgList = new object?[parameters.Length];
-                Array.Copy(Arguments, newArgList, Arguments.Length);
-
-                // Fill with Type.Missing for remaining parameters that are optional
-                for (var i = Arguments.Length; i < parameters.Length; i++)
-                {
-                    if (parameters[i].IsOptional)
-                    {
-                        newArgList[i] = Type.Missing;
-                    }
-                    else
-                    {
-                        throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but only {argsProvided} were supplied");
-                    }
-                }
-                Arguments = newArgList;
+                // Special handling for params and optional arguments
+                Arguments = Reflect.PopulateOptionalArgsAndParamsArray(Arguments, parameters);
+                argsProvided = argsNeeded;
             }
 
             // Special handling when sole argument is an object[]
-            if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
+            if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object[]))
             {
                 if (argsProvided > 1 ||
                     argsProvided == 1 && Arguments[0]?.GetType() != typeof(object[]))

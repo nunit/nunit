@@ -8,21 +8,21 @@ namespace NUnit.Framework.Internal
 #endif
 
     /// <summary>
-    /// InvalidTestFixtureException is thrown when an appropriate test
+    /// InvalidDataSourceException is thrown when an appropriate test
     /// fixture constructor using the provided arguments cannot be found.
     /// </summary>
     [Serializable]
     public class InvalidDataSourceException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// Initializes a new instance of the <see cref="InvalidDataSourceException"/> class.
         /// </summary>
         public InvalidDataSourceException() : base()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// Initializes a new instance of the <see cref="InvalidDataSourceException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         public InvalidDataSourceException(string message) : base(message)
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
+        /// Initializes a new instance of the <see cref="InvalidDataSourceException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="inner">The inner.</param>
