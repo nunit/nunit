@@ -112,9 +112,9 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeedValue))
+            if (settings.TryGetValue<int>(FrameworkPackageSettings.RandomSeed, out var randomSeedValue))
             {
-                Randomizer.InitialSeed = (int)randomSeedValue;
+                Randomizer.InitialSeed = randomSeedValue;
             }
 
             LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assemblyNameOrPath, settings));
@@ -131,9 +131,9 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
+            if (settings.TryGetValue<int>(FrameworkPackageSettings.RandomSeed, out var randomSeed))
             {
-                Randomizer.InitialSeed = (int)randomSeed;
+                Randomizer.InitialSeed = randomSeed;
             }
 
             LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assembly, settings));
@@ -286,8 +286,8 @@ namespace NUnit.Framework.Api
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
 
             // Queue and pump events, unless settings have SynchronousEvents == false
-            if (!Settings.TryGetValue(FrameworkPackageSettings.SynchronousEvents, out var synchronousEvents) ||
-                !(bool)synchronousEvents)
+            if (!Settings.TryGetValue<bool>(FrameworkPackageSettings.SynchronousEvents, out var synchronousEvents) ||
+                !synchronousEvents)
             {
                 QueuingEventListener queue = new QueuingEventListener();
                 context.Listener = queue;
@@ -297,8 +297,8 @@ namespace NUnit.Framework.Api
             }
 
             if (!Debugger.IsAttached &&
-                Settings.TryGetValue(FrameworkPackageSettings.DebugTests, out var debugTests) &&
-                (bool)debugTests)
+                Settings.TryGetValue<bool>(FrameworkPackageSettings.DebugTests, out var debugTests) &&
+                debugTests)
             {
                 try
                 {
@@ -318,8 +318,8 @@ namespace NUnit.Framework.Api
             }
 
 #if NETFRAMEWORK
-            if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
-                (bool)pauseBeforeRun)
+            if (Settings.TryGetValue<bool>(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
+                pauseBeforeRun)
             {
                 PauseBeforeRun();
             }
@@ -338,16 +338,16 @@ namespace NUnit.Framework.Api
             var context = new TestExecutionContext();
 
             // Apply package settings to the context
-            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
-                context.TestCaseTimeout = (int)timeout;
-            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
-                context.CurrentCulture = new CultureInfo((string)culture, false);
-            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
-                context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
-            if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
-                context.StopOnError = (bool)stopOnError;
-            if (Settings.TryGetValue(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, out var throwOnEachFailure))
-                context.ThrowOnEachFailureUnderDebugger = (bool)throwOnEachFailure;
+            if (Settings.TryGetValue<int>(FrameworkPackageSettings.DefaultTimeout, out var timeout))
+                context.TestCaseTimeout = timeout;
+            if (Settings.TryGetValue<string>(FrameworkPackageSettings.DefaultCulture, out var culture))
+                context.CurrentCulture = new CultureInfo(culture, false);
+            if (Settings.TryGetValue<string>(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
+                context.CurrentUICulture = new CultureInfo(uiCulture, false);
+            if (Settings.TryGetValue<bool>(FrameworkPackageSettings.StopOnError, out var stopOnError))
+                context.StopOnError = stopOnError;
+            if (Settings.TryGetValue<bool>(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, out var throwOnEachFailure))
+                context.ThrowOnEachFailureUnderDebugger = throwOnEachFailure;
 
             // Apply attributes to the context
 
@@ -356,8 +356,8 @@ namespace NUnit.Framework.Api
 
             int levelOfParallelism = GetLevelOfParallelism(loadedTest);
 
-            if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
-                (bool)runOnMainThread)
+            if (Settings.TryGetValue<bool>(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
+                runOnMainThread)
             {
                 context.Dispatcher = new MainThreadWorkItemDispatcher();
             }
@@ -412,8 +412,8 @@ namespace NUnit.Framework.Api
 
         private int GetLevelOfParallelism(ITest loadedTest)
         {
-            return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
-                ? (int)numberOfTestWorkers
+            return Settings.TryGetValue<int>(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
+                ? numberOfTestWorkers
                 : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 

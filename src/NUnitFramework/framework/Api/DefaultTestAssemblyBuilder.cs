@@ -9,6 +9,7 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Api
 {
@@ -102,15 +103,15 @@ namespace NUnit.Framework.Api
 
             try
             {
-                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object? defaultTestNamePattern))
-                    TestNameGenerator.DefaultTestNamePattern = (string)defaultTestNamePattern;
+                if (options.TryGetValue<string>(FrameworkPackageSettings.DefaultTestNamePattern, out var defaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern;
 
-                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object? workDirectory))
-                    TestContext.DefaultWorkDirectory = workDirectory as string;
+                if (options.TryGetValue<string>(FrameworkPackageSettings.WorkDirectory, out var workDirectory))
+                    TestContext.DefaultWorkDirectory = workDirectory;
                 else
                     TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
-                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object? testParametersObject) &&
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out var testParametersObject) &&
                     testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
                     foreach (var parameter in testParametersDictionary)
@@ -121,9 +122,8 @@ namespace NUnit.Framework.Api
                     // This cannot be changed without breaking backwards compatibility with old runners.
                     // Deserializes the way old runners understand.
 
-                    if (options.TryGetValue(FrameworkPackageSettings.TestParameters, out var testParameters))
+                    if (options.TryGetValue<string?>(FrameworkPackageSettings.TestParameters, out var parametersString))
                     {
-                        var parametersString = (string?)testParameters;
                         if (!string.IsNullOrEmpty(parametersString))
                         {
                             foreach (var param in parametersString!.Tokenize(';'))

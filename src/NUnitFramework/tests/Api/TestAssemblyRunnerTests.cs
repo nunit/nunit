@@ -80,6 +80,58 @@ namespace NUnit.Framework.Tests.Api
             });
         }
 
+        [Test]
+        public void Load_ValidTypeCoercedSettings_ReturnsRunnableSuite()
+        {
+            var settings = new Dictionary<string, object>
+            {
+                { FrameworkPackageSettings.NumberOfTestWorkers, "2" },
+                { FrameworkPackageSettings.DefaultTimeout, "1000" },
+                { FrameworkPackageSettings.DebugTests, "true" },
+                { FrameworkPackageSettings.PauseBeforeRun, "false" },
+                { FrameworkPackageSettings.InternalTraceLevel, "Off" },
+                { FrameworkPackageSettings.StopOnError, "true" },
+                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "false" },
+                { FrameworkPackageSettings.SynchronousEvents, "true" },
+                { FrameworkPackageSettings.RandomSeed, "12345" },
+                { FrameworkPackageSettings.RunOnMainThread, "true" },
+                { FrameworkPackageSettings.DefaultCulture, "en-US" },
+                { FrameworkPackageSettings.DefaultUICulture, "en-US" }
+            };
+            var result = LoadMockAssembly(settings);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsSuite);
+                Assert.That(result, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Name, Is.EqualTo(MockAssemblyFile));
+                Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable));
+                Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+            });
+        }
+
+        [Test]
+        public void Load_InvalidTypeCoercedSettings_ThrowsException()
+        {
+            var settings = new Dictionary<string, object>
+            {
+                { FrameworkPackageSettings.NumberOfTestWorkers, "x" },
+                { FrameworkPackageSettings.DefaultTimeout, "x" },
+                { FrameworkPackageSettings.DebugTests, "x" },
+                { FrameworkPackageSettings.PauseBeforeRun, "x" },
+                { FrameworkPackageSettings.InternalTraceLevel, "x" },
+                { FrameworkPackageSettings.StopOnError, "x" },
+                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "x" },
+                { FrameworkPackageSettings.SynchronousEvents, "x" },
+                { FrameworkPackageSettings.RandomSeed, "x" },
+                { FrameworkPackageSettings.RunOnMainThread, "x" },
+                { FrameworkPackageSettings.DefaultCulture, "x" },
+                { FrameworkPackageSettings.DefaultUICulture, "x" }
+            };
+
+            Assert.That(() => LoadMockAssembly(settings), Throws.Exception.TypeOf<InvalidCastException>());
+        }
+
         [Test, SetUICulture("en-US")]
         public void Load_FileNotFound_ReturnsNonRunnableSuite()
         {
