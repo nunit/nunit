@@ -143,7 +143,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Name, Is.EqualTo(MissingFile));
                 Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
-                Assert.That(result.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.TestCaseCount, Is.Zero);
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
                     Does.StartWith(CouldNotLoadMsg));
             });
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Name, Is.EqualTo(BadFile));
                 Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
-                Assert.That(result.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.TestCaseCount, Is.Zero);
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
                     Does.StartWith(CouldNotLoadMsg).And.Contains(BadFile));
             });
@@ -222,14 +222,14 @@ namespace NUnit.Framework.Tests.Api
         public void CountTestCases_FileNotFound_ReturnsZero()
         {
             _runner.Load(MissingFile, EmptySettings);
-            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
+            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.Zero);
         }
 
         [Test]
         public void CountTestCases_BadFile_ReturnsZero()
         {
             _runner.Load(BadFile, EmptySettings);
-            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
+            Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.Zero);
         }
 
         #endregion
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Tests.Api
         {
             _runner.Load(MissingFile, EmptySettings);
             var explorer = _runner.ExploreTests(TestFilter.Empty);
-            Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
+            Assert.That(explorer.TestCaseCount, Is.Zero);
         }
 
         [Test]
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Tests.Api
         {
             _runner.Load(BadFile, EmptySettings);
             var explorer = _runner.ExploreTests(TestFilter.Empty);
-            Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
+            Assert.That(explorer.TestCaseCount, Is.Zero);
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result.Test.IsSuite);
                 Assert.That(result.Test, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-                Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.Test.TestCaseCount, Is.Zero);
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
                 Assert.That(result.Message, Does.StartWith(CouldNotLoadMsg));
             });
@@ -452,7 +452,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result.Test.IsSuite);
                 Assert.That(result.Test, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-                Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.Test.TestCaseCount, Is.Zero);
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
                 Assert.That(result.Message, Does.StartWith(CouldNotLoadMsg));
             });
@@ -524,7 +524,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.Test.IsSuite);
                 Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
                 Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(_runner.Result.Test.TestCaseCount, Is.Zero);
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
                 Assert.That(_runner.Result.Message, Does.StartWith(CouldNotLoadMsg));
             });
@@ -543,7 +543,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.Test.IsSuite);
                 Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
                 Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(_runner.Result.Test.TestCaseCount, Is.Zero);
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
                 Assert.That(_runner.Result.Message, Does.StartWith(CouldNotLoadMsg));
             });
