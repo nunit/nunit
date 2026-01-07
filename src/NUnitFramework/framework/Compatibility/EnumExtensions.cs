@@ -1,8 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-
+#if NETFRAMEWORK
 namespace System
 {
-#if NETFRAMEWORK
     /// <summary>
     /// Provides a polyfill for the generic Enum.Parse{T} method which is available in.
     /// .NET Core and newer .NET versions but missing in .NET Framework.
@@ -14,9 +13,10 @@ namespace System
         /// enumerated constants to an equivalent enumerated object.
         /// </summary>
         /// <typeparam name="T">The enum type to which to convert.</typeparam>
+        /// <param name="_">Unused instance to enable extension syntax.</param>
         /// <param name="value">The string representation of the enumeration name or underlying value.</param>
         /// <returns>An object of type T whose value is represented by value.</returns>
-        public static T Parse<T>(string value)
+        public static T Parse<T>(this Enum _, string value)
             where T : struct
         {
             return (T)System.Enum.Parse(typeof(T), value);
@@ -27,14 +27,18 @@ namespace System
         /// whether the operation is case-insensitive.
         /// </summary>
         /// <typeparam name="T">The enum type to which to convert.</typeparam>
+        /// <param name="_">Unused instance to enable extension syntax.</param>
         /// <param name="value">The string representation of the enumeration name or underlying value.</param>
         /// <param name="ignoreCase">true to ignore case; false to regard case.</param>
         /// <returns>An object of type T whose value is represented by value.</returns>
-        public static T Parse<T>(string value, bool ignoreCase)
+        public static T Parse<T>(this Enum _, string value, bool ignoreCase)
             where T : struct
         {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException($"{typeof(T)} is not an enum");
+
             return (T)System.Enum.Parse(typeof(T), value, ignoreCase);
         }
     }
-#endif
 }
+#endif
