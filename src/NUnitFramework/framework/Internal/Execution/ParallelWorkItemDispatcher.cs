@@ -20,6 +20,7 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Stack<WorkItem> _savedWorkItems = new();
 
         private readonly List<CompositeWorkItem> _activeWorkItems = new();
+        private readonly object _activeWorkItemsLock = new();
 
         #region Events
 
@@ -223,8 +224,6 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
         }
-
-        private readonly object _activeWorkItemsLock = new();
 
         /// <summary>
         /// Create a copy of the list of active work items
