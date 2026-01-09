@@ -326,7 +326,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        [NoTests(Framework.Interfaces.TestStatus.Passed)]
+        [TestFixture, NoTests(Framework.Interfaces.TestStatus.Passed)]
         public class FixtureOverridesDefaultStatus
         {
             [TestCaseSource(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute), nameof(EmptyData))]

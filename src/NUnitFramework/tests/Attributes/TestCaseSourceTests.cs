@@ -751,15 +751,28 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void EmptyTestCaseSourceSetsResultOnParent()
+        public void EmptyTestCaseSource_OverridesResultFromParent()
         {
-            var suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus),
-                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.NoMethodLevelOverride));
+            var fixture = TestBuilder.MakeFixture(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus));
 
-            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
 
-            var result = TestBuilder.RunTest(suite);
+            var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.WithMethodLevelOverride)) as Test;
+            var result = TestBuilder.RunTest(test!);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+        }
+
+        [Test]
+        public void EmptyTestCaseSource_SetsResultOnParent()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus));
+
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+            var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.NoMethodLevelOverride)) as Test;
+            var result = TestBuilder.RunTest(test!);
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
