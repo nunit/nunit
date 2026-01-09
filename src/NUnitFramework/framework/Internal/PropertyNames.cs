@@ -119,6 +119,11 @@ namespace NUnit.Framework.Internal
         /// The optional Order the test will run in
         /// </summary>
         public const string Order = "Order";
+
+        /// <summary>
+        /// The default status for a test with no runnable children
+        /// </summary>
+        public const string NoTestsStatus = "NoTestStatus";
         #endregion
     }
 }

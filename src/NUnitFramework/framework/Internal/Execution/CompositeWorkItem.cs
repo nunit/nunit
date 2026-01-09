@@ -96,9 +96,20 @@ namespace NUnit.Framework.Internal.Execution
                                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                                     PerformOneTimeTearDown();
                             }
-                            else if (Test.TestType == "Theory")
+                            else
                             {
-                                Result.SetResult(ResultState.Failure, "No test cases were provided");
+                                if (Test.TestType == "Theory")
+                                {
+                                    Result.SetResult(ResultState.Failure, "No test cases were provided");
+                                }
+                                else
+                                {
+                                    var defaultStatus = Test.Properties.Get(PropertyNames.NoTestsStatus);
+                                    if (defaultStatus is TestStatus status)
+                                    {
+                                        Result.SetResult(new(status), "No test cases were provided");
+                                    }
+                                }
                             }
 
                             break;

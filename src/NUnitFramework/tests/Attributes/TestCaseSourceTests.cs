@@ -750,6 +750,51 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(a, Is.TypeOf<DerivedIntConverter>());
         }
 
+        [Test]
+        public void EmptyTestCaseSourceSetsResultOnParent()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus),
+                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.NoMethodLevelOverride));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(suite);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
+        [Test]
+        public void EmptyTestCaseSource_ExplicitlySetsResultOnMethod()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus),
+                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus.MethodSetsPassed));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(suite);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
+        [Test]
+        public void EmptyTestCaseSource_UsesDefaultResultOnMethod()
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus),
+                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus.MethodDoesntSpecify));
+
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+
+            var result = TestBuilder.RunTest(suite);
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+        }
+
         public class IntConverter : IComparer<int>
         {
             public int Compare(int x, int y) => x - y;
