@@ -188,7 +188,7 @@ namespace NUnit.Framework.Internal.Execution
             // Currently, we only track CompositeWorkItems - this could be expanded
             if (work is CompositeWorkItem composite)
             {
-                lock (_activeWorkItems)
+                lock (_activeWorkItemsLock)
                 {
                     _activeWorkItems.Add(composite);
                     composite.Completed += OnWorkItemCompletion;
@@ -321,7 +321,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             if (sender is CompositeWorkItem work)
             {
-                lock (_activeWorkItems)
+                lock (_activeWorkItemsLock)
                 {
                     _activeWorkItems.Remove(work);
                     work.Completed -= OnWorkItemCompletion;
