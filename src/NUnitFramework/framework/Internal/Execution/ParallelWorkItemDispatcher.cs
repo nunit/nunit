@@ -224,6 +224,17 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+        private readonly object _activeWorkItemsLock = new();
+
+        /// <summary>
+        /// Create a copy of the list of active work items
+        /// </summary>
+        private CompositeWorkItem[] SnapshotActiveWorkItems()
+        {
+            lock (_activeWorkItemsLock)
+                return _activeWorkItems.ToArray();
+        }
+
         /// <summary>
         /// Cancel the ongoing run completely.
         /// If no run is in process, the call has no effect.
@@ -238,23 +249,17 @@ namespace NUnit.Framework.Internal.Execution
             foreach (var shift in Shifts)
                 shift.Cancel(force);
 
-            if (force)
+            if (!force)
+                return;
+
+            SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
+
+            // Notify termination of any remaining in-process suites
+
+            foreach (var work in SnapshotActiveWorkItems())
             {
-                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
-
-                // Notify termination of any remaining in-process suites
-                lock (_activeWorkItems)
-                {
-                    int index = _activeWorkItems.Count;
-
-                    while (index > 0)
-                    {
-                        var work = _activeWorkItems[--index];
-
-                        if (work.State == WorkItemState.Running)
-                            new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
-                    }
-                }
+                if (work.State == WorkItemState.Running)
+                    new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
             }
         }
 
