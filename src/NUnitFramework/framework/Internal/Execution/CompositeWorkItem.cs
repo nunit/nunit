@@ -6,6 +6,7 @@ using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -102,10 +103,10 @@ namespace NUnit.Framework.Internal.Execution
                                 {
                                     Result.SetResult(ResultState.Failure, "No test cases were provided");
                                 }
-                                else
+                                else if (Test.TestType == "ParameterizedMethodSuite" || Test.TestType == "ParameterizedMethod")
                                 {
-                                    var defaultStatus = Test.Properties.Get(PropertyNames.NoTestsStatus);
-                                    if (defaultStatus is TestStatus status)
+                                    var properties = Test.PropertyValues(PropertyNames.NoTests).ToList();
+                                    if (properties.Count > 0 && properties[0].Values[0] is TestStatus status)
                                     {
                                         Result.SetResult(new(status), "No test cases were provided");
                                     }

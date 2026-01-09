@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The default status for a test with no runnable children
         /// </summary>
-        public const string NoTestsStatus = "NoTestStatus";
+        public const string NoTests = "NoTests";
         #endregion
     }
 }
