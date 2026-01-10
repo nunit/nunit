@@ -254,10 +254,10 @@ namespace NUnit.Framework.Internal.Execution
             SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
 
             // Notify termination of any remaining in-process suites
-
-            foreach (var work in SnapshotActiveWorkItems())
+            var snapShotActiveWorkItems = SnapshotActiveWorkItems();
+            foreach (var work in snapShotActiveWorkItems)
             {
-                if (work.State == WorkItemState.Running)
+               if (work.State == WorkItemState.Running)
                     new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
             }
         }

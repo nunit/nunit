@@ -536,6 +536,12 @@ namespace NUnit.Framework.Tests.Api
 
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
 
+            // Write out status for debugging
+            TestContext.Out.WriteLine($"No of started suites  {_suiteStartedCount}:");
+            TestContext.Out.WriteLine($"No of finished suites {_suiteFinishedCount}:");
+            TestContext.Out.WriteLine($"No of started tests   {_testStartedCount}:");
+            TestContext.Out.WriteLine($"No of finished tests  {_testFinishedCount}:");
+
             // Use Assert.Multiple so we can see everything that went wrong at one time
             Assert.Multiple(() =>
             {
