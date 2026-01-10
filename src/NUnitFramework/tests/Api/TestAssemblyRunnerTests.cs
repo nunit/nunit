@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -12,9 +13,9 @@ using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 
-#if THREAD_ABORT
-using System.Text;
-#endif
+//#if THREAD_ABORT
+//using System.Text;
+//#endif
 
 namespace NUnit.Framework.Tests.Api
 {
@@ -502,7 +503,7 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
+// #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
 
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
@@ -532,7 +533,7 @@ namespace NUnit.Framework.Tests.Api
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
-            
+
             _runner.StopRun(force);
 
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
@@ -570,7 +571,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             });
         }
-#endif
+//#endif
 
         #endregion
 
