@@ -306,20 +306,20 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
     }
 
-    public static class TestCaseSourceAttributeFixture_NoTestsAttribute
+    public static class TestCaseSource_NoTestsAttribute
     {
         public static TestCaseData[] EmptyData => [];
 
         public class MethodSetsDefaultStatus
         {
-            [TestCaseSource(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute), nameof(EmptyData))]
+            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
             [NoTests(Framework.Interfaces.TestStatus.Passed)]
             public static void MethodSetsPassed(int actual, int expected)
             {
                 Assert.That(actual, Is.EqualTo(expected));
             }
 
-            [TestCaseSource(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute), nameof(EmptyData))]
+            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
             public static void MethodDoesntSpecify(int actual, int expected)
             {
                 Assert.That(actual, Is.EqualTo(expected));
@@ -329,13 +329,13 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [TestFixture, NoTests(Framework.Interfaces.TestStatus.Passed)]
         public class FixtureOverridesDefaultStatus
         {
-            [TestCaseSource(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute), nameof(EmptyData))]
+            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
             public static void NoMethodLevelOverride(int actual, int expected)
             {
                 Assert.That(actual, Is.EqualTo(expected));
             }
 
-            [TestCaseSource(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute), nameof(EmptyData))]
+            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
             [NoTests(Framework.Interfaces.TestStatus.Inconclusive)]
             public static void WithMethodLevelOverride(int actual, int expected)
             {

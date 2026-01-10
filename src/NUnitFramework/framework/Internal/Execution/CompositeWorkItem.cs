@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal.Execution
                                 {
                                     Result.SetResult(ResultState.Failure, "No test cases were provided");
                                 }
-                                else if (Test.TestType == "ParameterizedMethodSuite" || Test.TestType == "ParameterizedMethod")
+                                else if (Test.TestType == "ParameterizedMethodSuite" || Test.TestType == "ParameterizedMethod" || Test.TestType == "ParameterizedFixture")
                                 {
                                     var properties = Test.PropertyValues(PropertyNames.NoTests).ToList();
                                     if (properties.Count > 0 && properties[0].Values[0] is TestStatus status)

@@ -1,14 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Collections;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework;
+using NUnit.Framework.Attributes;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.TestUtilities;
 
 namespace NUnit.TestData.TestFixtureSourceData
@@ -718,5 +719,25 @@ public class TextFixtureSourceWithParallelizableAttribute
     public void Test()
     {
         Thread.Sleep(1000);
+    }
+}
+
+public static class TestFixtureSource_NoTestsAttribute
+{
+    public static string[] EmptyData => [];
+
+    [TestFixtureSource(typeof(TestFixtureSource_NoTestsAttribute), nameof(EmptyData))]
+    public class FixtureSetsDefaultStatus(string arg)
+    {
+        [Test]
+        public void Test() { }
+    }
+
+    [NoTests(TestStatus.Passed)]
+    [TestFixtureSource(typeof(TestFixtureSource_NoTestsAttribute), nameof(EmptyData))]
+    public class FixtureOverridesDefaultStatus(string arg)
+    {
+        [Test]
+        public void Test() { }
     }
 }

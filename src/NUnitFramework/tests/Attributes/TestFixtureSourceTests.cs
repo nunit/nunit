@@ -315,5 +315,34 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[2].Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.All));
             });
         }
+
+        public class NoTestsCompatibility
+        {
+            [Test]
+            public void EmptySource_UsesDefaultStatus()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TestFixtureSource_NoTestsAttribute.FixtureSetsDefaultStatus));
+
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var result = TestBuilder.RunTest(fixture);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            }
+
+            [Test]
+            public void EmptySource_SetsResultExplicitly()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TestFixtureSource_NoTestsAttribute.FixtureOverridesDefaultStatus));
+
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var result = TestBuilder.RunTest(fixture);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            }
+        }
     }
 }
