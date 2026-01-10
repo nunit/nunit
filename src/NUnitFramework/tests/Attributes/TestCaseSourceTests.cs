@@ -750,62 +750,65 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(a, Is.TypeOf<DerivedIntConverter>());
         }
 
-        [Test]
-        public void EmptyTestCaseSource_OverridesResultFromParent()
+        public class NoTestsCompatibility
         {
-            var fixture = TestBuilder.MakeFixture(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus));
+            [Test]
+            public void EmptySource_OverridesResultFromParent()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TestCaseSource_NoTestsAttribute.FixtureOverridesDefaultStatus));
 
-            Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
 
-            var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.WithMethodLevelOverride)) as Test;
-            var result = TestBuilder.RunTest(test!);
+                var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSource_NoTestsAttribute.FixtureOverridesDefaultStatus.WithMethodLevelOverride)) as Test;
+                var result = TestBuilder.RunTest(test!);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
-        }
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            }
 
-        [Test]
-        public void EmptyTestCaseSource_SetsResultOnParent()
-        {
-            var fixture = TestBuilder.MakeFixture(typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus));
+            [Test]
+            public void EmptySource_SetsResultOnParent()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TestCaseSource_NoTestsAttribute.FixtureOverridesDefaultStatus));
 
-            Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
 
-            var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.FixtureOverridesDefaultStatus.NoMethodLevelOverride)) as Test;
-            var result = TestBuilder.RunTest(test!);
+                var test = fixture.Tests.Single(x => x.Name == nameof(TestCaseSource_NoTestsAttribute.FixtureOverridesDefaultStatus.NoMethodLevelOverride)) as Test;
+                var result = TestBuilder.RunTest(test!);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-        }
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            }
 
-        [Test]
-        public void EmptyTestCaseSource_ExplicitlySetsResultOnMethod()
-        {
-            var suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus),
-                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus.MethodSetsPassed));
+            [Test]
+            public void EmptySource_ExplicitlySetsResultOnMethod()
+            {
+                var suite = TestBuilder.MakeParameterizedMethodSuite(
+                    typeof(TestCaseSource_NoTestsAttribute.MethodSetsDefaultStatus),
+                    nameof(TestCaseSource_NoTestsAttribute.MethodSetsDefaultStatus.MethodSetsPassed));
 
-            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
 
-            var result = TestBuilder.RunTest(suite);
+                var result = TestBuilder.RunTest(suite);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-        }
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            }
 
-        [Test]
-        public void EmptyTestCaseSource_UsesDefaultResultOnMethod()
-        {
-            var suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus),
-                nameof(TestCaseSourceAttributeFixture_NoTestsAttribute.MethodSetsDefaultStatus.MethodDoesntSpecify));
+            [Test]
+            public void EmptySource_UsesDefaultResultOnMethod()
+            {
+                var suite = TestBuilder.MakeParameterizedMethodSuite(
+                    typeof(TestCaseSource_NoTestsAttribute.MethodSetsDefaultStatus),
+                    nameof(TestCaseSource_NoTestsAttribute.MethodSetsDefaultStatus.MethodDoesntSpecify));
 
-            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
 
-            var result = TestBuilder.RunTest(suite);
+                var result = TestBuilder.RunTest(suite);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            }
         }
 
         public class IntConverter : IComparer<int>
