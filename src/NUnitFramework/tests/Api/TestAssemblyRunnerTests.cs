@@ -11,6 +11,7 @@ using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
+
 #if THREAD_ABORT
 using System.Text;
 #endif
@@ -531,7 +532,7 @@ namespace NUnit.Framework.Tests.Api
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
-
+            Thread.Sleep(100);
             _runner.StopRun(force);
 
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
@@ -578,7 +579,7 @@ namespace NUnit.Framework.Tests.Api
         void ITestListener.TestStarted(ITest test)
         {
             _activeTests.Add(test.Name, true);
-
+            TestContext.Out.WriteLine($"Added {(test.IsSuite ? "Suite" : "Test")} {test.Name} {test.FullName}");
             if (test.IsSuite)
                 _suiteStartedCount++;
             else
@@ -588,7 +589,7 @@ namespace NUnit.Framework.Tests.Api
         void ITestListener.TestFinished(ITestResult result)
         {
             _activeTests.Remove(result.Test.Name);
-
+            TestContext.Out.WriteLine($"Removed {(result.Test.IsSuite ? "Suite" : "Test")} {result.Test.Name} {result.Test.FullName}");
             if (result.Test.IsSuite)
             {
                 _suiteFinishedCount++;
