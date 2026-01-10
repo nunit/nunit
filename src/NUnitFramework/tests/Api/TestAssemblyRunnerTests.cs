@@ -532,7 +532,7 @@ namespace NUnit.Framework.Tests.Api
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
-            Thread.Sleep(100);
+            
             _runner.StopRun(force);
 
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
