@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -20,6 +21,7 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Stack<WorkItem> _savedWorkItems = new();
 
         private readonly List<CompositeWorkItem> _activeWorkItems = new();
+        private readonly object _activeWorkItemsLock = new();
 
         #region Events
 
@@ -188,7 +190,7 @@ namespace NUnit.Framework.Internal.Execution
             // Currently, we only track CompositeWorkItems - this could be expanded
             if (work is CompositeWorkItem composite)
             {
-                lock (_activeWorkItems)
+                lock (_activeWorkItemsLock)
                 {
                     _activeWorkItems.Add(composite);
                     composite.Completed += OnWorkItemCompletion;
@@ -225,6 +227,15 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
+        /// Create a copy of the list of active work items
+        /// </summary>
+        private CompositeWorkItem[] SnapshotActiveWorkItems()
+        {
+            lock (_activeWorkItemsLock)
+                return _activeWorkItems.ToArray();
+        }
+
+        /// <summary>
         /// Cancel the ongoing run completely.
         /// If no run is in process, the call has no effect.
         /// </summary>
@@ -238,23 +249,19 @@ namespace NUnit.Framework.Internal.Execution
             foreach (var shift in Shifts)
                 shift.Cancel(force);
 
-            if (force)
+            if (!force)
+                return;
+
+            SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
+
+            // Notify termination of any remaining in-process suites
+            // Note this must be done in reserve order to match the stack-like behavior
+            // That way tests are marked cancelled before suites before assemblies.
+            IEnumerable<CompositeWorkItem> snapShotActiveWorkItems = SnapshotActiveWorkItems();
+            foreach (var work in snapShotActiveWorkItems.Reverse())
             {
-                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
-
-                // Notify termination of any remaining in-process suites
-                lock (_activeWorkItems)
-                {
-                    int index = _activeWorkItems.Count;
-
-                    while (index > 0)
-                    {
-                        var work = _activeWorkItems[--index];
-
-                        if (work.State == WorkItemState.Running)
-                            new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
-                    }
-                }
+                if (work.State == WorkItemState.Running)
+                    new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
             }
         }
 
@@ -316,7 +323,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             if (sender is CompositeWorkItem work)
             {
-                lock (_activeWorkItems)
+                lock (_activeWorkItemsLock)
                 {
                     _activeWorkItems.Remove(work);
                     work.Completed -= OnWorkItemCompletion;

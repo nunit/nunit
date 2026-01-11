@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -11,9 +12,10 @@ using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
-#if THREAD_ABORT
-using System.Text;
-#endif
+
+//#if THREAD_ABORT
+//using System.Text;
+//#endif
 
 namespace NUnit.Framework.Tests.Api
 {
@@ -501,7 +503,7 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
+// #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
 
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
@@ -536,6 +538,12 @@ namespace NUnit.Framework.Tests.Api
 
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
 
+            // Write out status for debugging
+            TestContext.Out.WriteLine($"No of started suites  {_suiteStartedCount}:");
+            TestContext.Out.WriteLine($"No of finished suites {_suiteFinishedCount}:");
+            TestContext.Out.WriteLine($"No of started tests   {_testStartedCount}:");
+            TestContext.Out.WriteLine($"No of finished tests  {_testFinishedCount}:");
+
             // Use Assert.Multiple so we can see everything that went wrong at one time
             Assert.Multiple(() =>
             {
@@ -563,7 +571,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             });
         }
-#endif
+//#endif
 
         #endregion
 
@@ -572,7 +580,7 @@ namespace NUnit.Framework.Tests.Api
         void ITestListener.TestStarted(ITest test)
         {
             _activeTests.Add(test.Name, true);
-
+            TestContext.Out.WriteLine($"Added {(test.IsSuite ? "Suite" : "Test")} {test.Name} {test.FullName}");
             if (test.IsSuite)
                 _suiteStartedCount++;
             else
@@ -582,7 +590,7 @@ namespace NUnit.Framework.Tests.Api
         void ITestListener.TestFinished(ITestResult result)
         {
             _activeTests.Remove(result.Test.Name);
-
+            TestContext.Out.WriteLine($"Removed {(result.Test.IsSuite ? "Suite" : "Test")} {result.Test.Name} {result.Test.FullName}");
             if (result.Test.IsSuite)
             {
                 _suiteFinishedCount++;
