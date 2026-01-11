@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -254,10 +255,12 @@ namespace NUnit.Framework.Internal.Execution
             SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
 
             // Notify termination of any remaining in-process suites
-            var snapShotActiveWorkItems = SnapshotActiveWorkItems();
-            foreach (var work in snapShotActiveWorkItems)
+            // Note this must be done in reserve order to match the stack-like behavior
+            // That way tests are marked cancelled before suites before assemblies.
+            IEnumerable<CompositeWorkItem> snapShotActiveWorkItems = SnapshotActiveWorkItems();
+            foreach (var work in snapShotActiveWorkItems.Reverse())
             {
-               if (work.State == WorkItemState.Running)
+                if (work.State == WorkItemState.Running)
                     new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
             }
         }
