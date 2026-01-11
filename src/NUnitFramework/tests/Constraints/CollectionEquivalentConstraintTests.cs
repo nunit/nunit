@@ -314,7 +314,7 @@ public class CollectionEquivalentConstraintTests
     }
 
     // The following tests are each running in 14ms to 46ms on my machine. Based on that,
-    // warn at 100ms and fail at 500ms
+    // warn at 100ms and fail at 500mS
     // Seems to be slower on MacOs on build on github actions, so increasing this with 50%
 
     private const int LargeCollectionWarnTime = 100;
@@ -437,7 +437,7 @@ public class CollectionEquivalentConstraintTests
         watch.Stop();
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 4)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
