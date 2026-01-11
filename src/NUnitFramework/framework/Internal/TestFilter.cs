@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestFilter FromXml(TNode? node)
         {
-            Guard.ArgumentNotNull(node, nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             static bool IsRegex(TNode node) => node.Attributes["re"] == "1";
 

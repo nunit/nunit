@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.IO;
 using System.Xml;
 
@@ -21,8 +22,8 @@ namespace NUnit.Framework.Interfaces
         /// <param name="testName">FullName of test that produced the output</param>
         public TestOutput(string text, string stream, string? testId, string? testName)
         {
-            Guard.ArgumentNotNull(text, nameof(text));
-            Guard.ArgumentNotNull(stream, nameof(stream));
+            ArgumentNullException.ThrowIfNull(text);
+            ArgumentNullException.ThrowIfNull(stream);
 
             Text = text;
             Stream = stream;

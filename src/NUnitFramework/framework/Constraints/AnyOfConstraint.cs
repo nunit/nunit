@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">Collection of expected values</param>
         public AnyOfConstraint(ICollection expected) : base(expected)
         {
-            Guard.ArgumentNotNull(expected, nameof(expected));
+            ArgumentNullException.ThrowIfNull(expected);
             Guard.ArgumentValid(expected.Count > 0,
                 $"{nameof(AnyOfConstraint)} requires non-empty expected collection!", nameof(expected));
 

@@ -159,8 +159,7 @@ namespace NUnit.Framework.Constraints
         /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
         private string DefaultDescription(string comparisonText)
         {
-            if (comparisonText is null)
-                throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
+            ArgumentNullException.ThrowIfNull(comparisonText);
 
             StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));

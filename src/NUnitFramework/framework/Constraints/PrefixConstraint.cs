@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
         protected PrefixConstraint(IResolveConstraint baseConstraint, string descriptionPrefix)
             : base(baseConstraint)
         {
-            Guard.ArgumentNotNull(baseConstraint, nameof(baseConstraint));
+            ArgumentNullException.ThrowIfNull(baseConstraint);
 
             BaseConstraint = baseConstraint.Resolve();
             DescriptionPrefix = descriptionPrefix;

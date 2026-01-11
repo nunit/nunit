@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override void Post(SendOrPostCallback d, object? state)
         {
-            Guard.ArgumentNotNull(d, nameof(d));
+            ArgumentNullException.ThrowIfNull(d);
 
             AddWork(new ScheduledWork(d, state, finished: null));
         }
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override void Send(SendOrPostCallback d, object? state)
         {
-            Guard.ArgumentNotNull(d, nameof(d));
+            ArgumentNullException.ThrowIfNull(d);
 
             if (SynchronizationContext.Current == this)
             {

@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the expected attribute is present, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentNotNull(actual, nameof(actual));
+            ArgumentNullException.ThrowIfNull(actual);
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
             result.Status = attrs.Length > 0

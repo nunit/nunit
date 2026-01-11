@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
@@ -21,8 +22,8 @@ namespace NUnit.Framework.Interfaces
         /// <param name="testId">ID of the test that produced the message</param>
         public TestMessage(string destination, string text, string? testId)
         {
-            Guard.ArgumentNotNull(destination, nameof(destination));
-            Guard.ArgumentNotNull(text, nameof(text));
+            ArgumentNullException.ThrowIfNull(destination);
+            ArgumentNullException.ThrowIfNull(text);
 
             Destination = destination;
             Message = text;

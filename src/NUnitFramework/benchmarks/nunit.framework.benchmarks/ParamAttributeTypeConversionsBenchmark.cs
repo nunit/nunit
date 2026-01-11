@@ -121,8 +121,8 @@ internal static class ParamAttributeTypeConversions_Original
     /// </summary>
     public static IEnumerable ConvertData(object?[] data, Type targetType)
     {
-        Guard.ArgumentNotNull(data, nameof(data));
-        Guard.ArgumentNotNull(targetType, nameof(targetType));
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(targetType);
         return GetData(data, targetType);
     }
 
@@ -236,8 +236,8 @@ internal static class ParamAttributeTypeConversions_WithTuples
     /// </summary>
     public static IEnumerable ConvertData(object?[] data, Type targetType)
     {
-        Guard.ArgumentNotNull(data, nameof(data));
-        Guard.ArgumentNotNull(targetType, nameof(targetType));
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(targetType);
         return GetData(data, targetType);
     }
 

@@ -357,7 +357,7 @@ namespace NUnit.Framework.Internal
         /// <param name="reason">The reason the test is not runnable</param>
         public void MakeInvalid(Exception exception, string reason)
         {
-            Guard.ArgumentNotNull(exception, nameof(exception));
+            ArgumentNullException.ThrowIfNull(exception);
             Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
 
             MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));

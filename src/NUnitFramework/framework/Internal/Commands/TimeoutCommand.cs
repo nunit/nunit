@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if THREAD_ABORT
+using System;
 using System.Threading;
 #else
 using System;
@@ -38,7 +39,7 @@ namespace NUnit.Framework.Internal.Commands
 
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
-            Guard.ArgumentNotNull(debugger, nameof(debugger));
+            ArgumentNullException.ThrowIfNull(debugger);
 
 #if THREAD_ABORT
             BeforeTest = _ =>

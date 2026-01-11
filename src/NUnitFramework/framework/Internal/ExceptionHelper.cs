@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined message string.</returns>
         public static string BuildMessage(Exception exception, bool excludeExceptionNames = false)
         {
-            Guard.ArgumentNotNull(exception, nameof(exception));
+            ArgumentNullException.ThrowIfNull(exception);
 
             StringBuilder sb = new StringBuilder();
             if (!excludeExceptionNames)
@@ -157,7 +157,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static Exception? RecordException(Delegate parameterlessDelegate, string parameterName)
         {
-            Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
+            ArgumentNullException.ThrowIfNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
                 parameterlessDelegate.GetType().GetMethod("Invoke")?.GetParameters().Length == 0,
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal
 
         internal static async Task<Exception?> RecordExceptionAsync<T>(Func<Task<T>> parameterlessDelegate, string parameterName)
         {
-            Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
+            ArgumentNullException.ThrowIfNull(parameterlessDelegate, parameterName);
 
             using (new TestExecutionContext.IsolatedContext())
             {
