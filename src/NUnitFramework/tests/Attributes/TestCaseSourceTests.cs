@@ -402,12 +402,59 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(rhs, Is.EqualTo(lhs));
         }
 
+        [TestCase(typeof(string), null, TypeArgs = [typeof(string)])]
+        public void GenericParams<T>(Type t, params T?[]? x)
+        {
+            Assert.That(x, Is.Null);
+            Assert.That(typeof(T), Is.EqualTo(t));
+        }
+
+        [Test]
+        public void CanRunGenericParamsArray()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericParamsSuccess));
+
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3 * 2 + 1 * 3 + 4));
+
+            var testObject = new TestCaseSourceAttributeFixture();
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var testCase in suite.Tests.Cast<Test>())
+                {
+                    Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable), testCase.Name);
+
+                    ITestResult result = TestBuilder.RunTest(testCase, testObject);
+                    Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+                }
+            }
+        }
+
+        [Test]
+        public void CanNotRunGenericParamsArray()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericParamsNotRunnable));
+
+            Assert.That(suite.TestCaseCount, Is.EqualTo(2));
+
+            var testObject = new TestCaseSourceAttributeFixture();
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var testCase in suite.Tests.Cast<Test>())
+                {
+                    Assert.That(testCase.RunState, Is.EqualTo(RunState.NotRunnable), testCase.Name);
+                }
+            }
+        }
+
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         [TestCaseSource(nameof(ExplicitNullValue))]
-        public void HandlesParamsArrayWithExplicitNullArgument(params string[] array)
+        public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
         {
-            Assert.That(array, Has.Length.EqualTo(1));
-            Assert.That(array, Is.EqualTo(ExplicitNullValue));
+            Assert.That(array, Is.Null);
         }
 
         [TestCaseSource(nameof(ExplicitEmptyValue))]
@@ -831,7 +878,7 @@ namespace NUnit.Framework.Tests.Attributes
         [
             new[] { 12, 6, 2 }
         ];
-        private static readonly object?[] ExplicitNullValue = [null];
+        private static readonly string?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
 
         private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
