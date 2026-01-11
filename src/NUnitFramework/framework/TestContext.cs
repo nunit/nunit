@@ -369,7 +369,7 @@ namespace NUnit.Framework
         /// <param name="description">Optional description of attachment</param>
         public static void AddTestAttachment(string filePath, string? description = null)
         {
-            Guard.ArgumentNotNull(filePath, nameof(filePath));
+            ArgumentNullException.ThrowIfNull(filePath);
             Guard.ArgumentValid(filePath.IndexOfAny(Path.GetInvalidPathChars()) == -1,
                 $"Test attachment file path contains invalid path characters. {filePath}", nameof(filePath));
 

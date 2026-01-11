@@ -136,7 +136,7 @@ namespace NUnit.Framework
             get => Properties.Get(PropertyNames.Description) as string;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 Properties.Set(PropertyNames.Description, value);
             }
         }
@@ -150,7 +150,7 @@ namespace NUnit.Framework
             get => Properties.Get(PropertyNames.Author) as string;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 Properties.Set(PropertyNames.Author, value);
             }
         }
@@ -164,7 +164,7 @@ namespace NUnit.Framework
             get => _testOf;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 _testOf = value;
                 Properties.Set(PropertyNames.TestOf, value.FullName());
             }
@@ -180,7 +180,7 @@ namespace NUnit.Framework
             get => IgnoreReason;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 IgnoreReason = value;
             }
         }
@@ -207,7 +207,7 @@ namespace NUnit.Framework
             get => Properties.Get(PropertyNames.SkipReason) as string;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 Properties.Set(PropertyNames.SkipReason, value);
             }
         }
@@ -223,7 +223,7 @@ namespace NUnit.Framework
             get => Reason;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
                 _originalRunState = RunState;
                 RunState = RunState.Ignored;
                 Reason = value;
@@ -257,7 +257,7 @@ namespace NUnit.Framework
             get => Properties.Get(PropertyNames.Category) as string;
             set
             {
-                Guard.ArgumentNotNull(value, nameof(value));
+                ArgumentNullException.ThrowIfNull(value);
 
                 foreach (string cat in value.Tokenize(','))
                     Properties.Add(PropertyNames.Category, cat);

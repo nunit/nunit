@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
 
         public static TResult? Await<TResult>(TestExecutionContext? context, Func<object?> invoke)
         {
-            Guard.ArgumentNotNull(invoke, nameof(invoke));
+            ArgumentNullException.ThrowIfNull(invoke);
 
             using (InitializeExecutionEnvironment(context))
             {

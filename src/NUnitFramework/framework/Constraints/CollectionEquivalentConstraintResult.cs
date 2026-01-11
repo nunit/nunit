@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>Provides a <see cref="ConstraintResult"/> for the <see cref="CollectionEquivalentConstraint"/>.</summary>
@@ -20,7 +22,7 @@ namespace NUnit.Framework.Constraints
             bool isSuccess)
             : base(constraint, actual, isSuccess)
         {
-            Guard.ArgumentNotNull(tallyResult, nameof(tallyResult));
+            ArgumentNullException.ThrowIfNull(tallyResult);
 
             _tallyResult = tallyResult;
         }

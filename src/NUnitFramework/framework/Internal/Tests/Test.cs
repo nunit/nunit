@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal
 
         private Test(string? pathName, string name, ITypeInfo? typeInfo, IMethodInfo? method)
         {
-            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
+            ArgumentException.ThrowIfNullOrEmpty(name);
 
             Id = GetNextId();
             Name = name;
@@ -344,7 +344,7 @@ namespace NUnit.Framework.Internal
         /// <param name="reason">The reason the test is not runnable</param>
         public void MakeInvalid(string reason)
         {
-            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
+            ArgumentException.ThrowIfNullOrEmpty(reason);
 
             RunState = RunState.NotRunnable;
             Properties.Add(PropertyNames.SkipReason, reason);
@@ -357,8 +357,8 @@ namespace NUnit.Framework.Internal
         /// <param name="reason">The reason the test is not runnable</param>
         public void MakeInvalid(Exception exception, string reason)
         {
-            Guard.ArgumentNotNull(exception, nameof(exception));
-            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
+            ArgumentNullException.ThrowIfNull(exception);
+            ArgumentException.ThrowIfNullOrEmpty(reason);
 
             MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));
             Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));

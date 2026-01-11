@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="builder">The builder.</param>
         public ConstraintExpression(ConstraintBuilder builder)
         {
-            Guard.ArgumentNotNull(builder, nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
             this.builder = builder;
         }
 

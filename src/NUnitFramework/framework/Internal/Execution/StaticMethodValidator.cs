@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="failMessage">The error message to output in case the validation fails.</param>
         public StaticMethodValidator(string failMessage)
         {
-            Guard.ArgumentNotNullOrEmpty(failMessage, nameof(failMessage));
+            ArgumentException.ThrowIfNullOrEmpty(failMessage);
 
             _failMessage = failMessage;
         }

@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             // TODO: Use an error result for null
-            Guard.ArgumentNotNull(actual, nameof(actual));
+            ArgumentNullException.ThrowIfNull(actual);
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             PropertyInfo? property = Reflect.GetUltimateShadowingProperty(typeof(TActual), _name, bindingFlags);

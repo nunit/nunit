@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsTypeGeneric(Type type)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.GetGenericArguments().Length > 0;
         }
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string GetGenericTypeName(Type type)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (IsTypeGeneric(type))
             {

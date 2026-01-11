@@ -57,7 +57,7 @@ namespace NUnit.Framework.Tests
         /// </summary>
         public void SkipOnAffectedPlatform(Action action)
         {
-            Guard.ArgumentNotNull(action, nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             if (!CurrentPlatformIsInconsistent)
                 action.Invoke();
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Tests
         /// </summary>
         public void IgnoreOnAffectedPlatform(Action action)
         {
-            Guard.ArgumentNotNull(action, nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             if (CurrentPlatformIsInconsistent)
                 Assert.Ignore(_message);

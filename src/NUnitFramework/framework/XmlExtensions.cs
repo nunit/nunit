@@ -31,8 +31,7 @@ namespace NUnit.Framework
         /// </summary>
         internal static void WriteCDataSafe(this XmlWriter writer, string text)
         {
-            if (text is null)
-                throw new ArgumentNullException(nameof(text));
+            ArgumentNullException.ThrowIfNull(text);
 
             text = EscapeInvalidXmlCharacters(text);
 

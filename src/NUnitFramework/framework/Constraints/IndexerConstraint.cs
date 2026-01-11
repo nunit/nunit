@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The value to be tested</param>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentNotNull(actual, nameof(actual));
+            ArgumentNullException.ThrowIfNull(actual);
 
             object? indexedValue;
             var actualType = actual as Type ?? actual.GetType();

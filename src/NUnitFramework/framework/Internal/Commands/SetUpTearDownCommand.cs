@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.OperationValid(Test.TypeInfo is not null, "TestMethod must have a non-null TypeInfo");
-            Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
+            ArgumentNullException.ThrowIfNull(setUpTearDown);
 
             BeforeTest = setUpTearDown.RunSetUp;
 

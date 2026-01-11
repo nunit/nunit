@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public TypeWrapper(Type type)
         {
-            Guard.ArgumentNotNull(type, nameof(Type));
+            ArgumentNullException.ThrowIfNull(type);
 
             Type = type;
         }

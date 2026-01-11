@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestSuite, "OneTimeTearDownCommand may only apply to a TestSuite", nameof(innerCommand));
-            Guard.ArgumentNotNull(setUpTearDownItem, nameof(setUpTearDownItem));
+            ArgumentNullException.ThrowIfNull(setUpTearDownItem);
 
             AfterTest = setUpTearDownItem.RunTearDown;
         }

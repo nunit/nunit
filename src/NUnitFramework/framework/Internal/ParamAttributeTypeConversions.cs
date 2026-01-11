@@ -33,8 +33,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static IEnumerable ConvertData(object?[] data, Type targetType)
         {
-            Guard.ArgumentNotNull(data, nameof(data));
-            Guard.ArgumentNotNull(targetType, nameof(targetType));
+            ArgumentNullException.ThrowIfNull(data);
+            ArgumentNullException.ThrowIfNull(targetType);
             return GetData(data, targetType);
         }
 

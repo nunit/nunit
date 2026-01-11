@@ -671,7 +671,7 @@ namespace NUnit.Framework.Internal
 
         private static Exception ValidateAndUnwrap(Exception ex)
         {
-            Guard.ArgumentNotNull(ex, nameof(ex));
+            ArgumentNullException.ThrowIfNull(ex);
 
             return ex.Unwrap();
         }

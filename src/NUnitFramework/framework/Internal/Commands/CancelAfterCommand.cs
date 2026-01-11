@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Commands
 
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "CancelAfterCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
-            Guard.ArgumentNotNull(debugger, nameof(debugger));
+            ArgumentNullException.ThrowIfNull(debugger);
         }
 
         /// <summary>

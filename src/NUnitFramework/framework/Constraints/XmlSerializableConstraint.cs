@@ -24,8 +24,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (actual is null)
-                throw new ArgumentNullException(nameof(actual));
+            ArgumentNullException.ThrowIfNull(actual);
 
             MemoryStream stream = new MemoryStream();
 

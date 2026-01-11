@@ -340,7 +340,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A <see cref="ConstraintResult"/>.</returns>
         public static ConstraintResult InvokeApplyTo(IConstraint constraint, Type actualType, object? actual)
         {
-            Guard.ArgumentNotNull(constraint, nameof(constraint));
+            ArgumentNullException.ThrowIfNull(constraint);
 
             Guard.ArgumentValid(actual is null
                 ? IsAssignableFromNull(actualType)
@@ -371,8 +371,8 @@ namespace NUnit.Framework.Internal
         /// <returns>A <see cref="ConstraintResult"/>.</returns>
         public static ConstraintResult InvokeApplyToEnumerable(IEnumerableConstraint constraint, object actual, Type itemType)
         {
-            Guard.ArgumentNotNull(constraint, nameof(constraint));
-            Guard.ArgumentNotNull(actual, nameof(actual));
+            ArgumentNullException.ThrowIfNull(constraint);
+            ArgumentNullException.ThrowIfNull(actual);
 
             Type actualType = actual.GetType();
 
@@ -412,8 +412,8 @@ namespace NUnit.Framework.Internal
         /// <param name="bindingFlags">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         public static PropertyInfo? GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
-            Guard.ArgumentNotNull(name, nameof(name));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(name);
 
             if ((bindingFlags & BindingFlags.DeclaredOnly) != 0)
             {
@@ -450,7 +450,7 @@ namespace NUnit.Framework.Internal
 
         internal static bool IsAssignableFromNull(Type type)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
             return !type.IsValueType || IsNullable(type);
         }
 
@@ -573,7 +573,7 @@ namespace NUnit.Framework.Internal
 
         internal static bool IsFSharpOption(this Type type, [NotNullWhen(true)] out Type? someType)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsGenericType
                 && type.GetGenericTypeDefinition().FullName == "Microsoft.FSharp.Core.FSharpOption`1")
@@ -588,7 +588,7 @@ namespace NUnit.Framework.Internal
 
         internal static bool IsVoidOrUnit(Type type)
         {
-            Guard.ArgumentNotNull(type, nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
         }

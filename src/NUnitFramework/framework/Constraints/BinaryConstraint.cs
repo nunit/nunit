@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -25,10 +27,10 @@ namespace NUnit.Framework.Constraints
         protected BinaryConstraint(IConstraint left, IConstraint right)
             : base(left, right)
         {
-            Guard.ArgumentNotNull(left, nameof(left));
+            ArgumentNullException.ThrowIfNull(left);
             Left = left;
 
-            Guard.ArgumentNotNull(right, nameof(right));
+            ArgumentNullException.ThrowIfNull(right);
             Right = right;
         }
     }
