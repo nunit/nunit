@@ -105,8 +105,7 @@ namespace NUnit.Framework.Constraints
 
         private ConstraintResult CheckString(string actual)
         {
-            if (string.IsNullOrEmpty(actual))
-                throw new ArgumentException("The actual value cannot be an empty string", nameof(actual));
+            ArgumentException.ThrowIfNullOrEmpty(actual);
 
             var fileInfo = new FileInfo(actual);
             if (_ignoreDirectories && !_ignoreFiles)
