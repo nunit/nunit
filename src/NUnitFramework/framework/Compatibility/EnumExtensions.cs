@@ -11,7 +11,7 @@ namespace System
         extension(Enum)
         {
             /// <summary>
-            /// Converts the string representation of the name or numeric value of one or more.
+            /// Converts the string representation of the name or numeric value of one or more
             /// enumerated constants to an equivalent enumerated object.
             /// </summary>
             /// <typeparam name="T">The enum type to which to convert.</typeparam>
