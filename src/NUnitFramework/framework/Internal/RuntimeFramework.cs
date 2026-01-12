@@ -384,7 +384,7 @@ namespace NUnit.Framework.Internal
             if (s.ToLowerInvariant() == "net")
                 s = "NetFramework";
 
-            return (RuntimeType)Enum.Parse(typeof(RuntimeType), s, true);
+            return Enum.Parse<RuntimeType>(s, true);
         }
 
         private static bool IsRuntimeTypeName(string name) =>
