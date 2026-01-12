@@ -112,7 +112,7 @@ namespace NUnit.Framework.Api
 
             if (Settings.TryGetValue(FrameworkPackageSettings.InternalTraceLevel, out var traceLevelValue))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)traceLevelValue, true);
+                var traceLevel = Enum.Parse<InternalTraceLevel>((string)traceLevelValue, true);
 
                 if (Settings.TryGetValue(FrameworkPackageSettings.InternalTraceWriter, out var textWriterValue))
                 {
