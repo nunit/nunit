@@ -3,7 +3,7 @@
 namespace System
 {
     /// <summary>
-    /// Provides a polyfill for the generic Enum.Parse{T} method which is available in.
+    /// Provides a polyfill for the generic Enum.Parse{T} method which is available in
     /// .NET Core and newer .NET versions but missing in .NET Framework.
     /// </summary>
     internal static partial class EnumExtensions
