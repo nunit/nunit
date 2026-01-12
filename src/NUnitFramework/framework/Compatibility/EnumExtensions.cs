@@ -24,7 +24,7 @@ namespace System
             }
             /// <summary>
             /// Converts the string representation of the name or numeric value of one or more
-            /// enumerated constants to an equivalent enumerated object. A parameter specifies.
+            /// enumerated constants to an equivalent enumerated object. A parameter specifies
             /// whether the operation is case-insensitive.
             /// </summary>
             /// <typeparam name="T">The enum type to which to convert.</typeparam>
