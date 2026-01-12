@@ -39,7 +39,6 @@ namespace System
 
                 return (T)System.Enum.Parse(typeof(T), value, ignoreCase);
             }
-
         }
     }
 }
