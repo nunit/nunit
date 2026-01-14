@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
             if (parameters.Length > 0)
             {
                 // Special handling for params and optional arguments
-                Arguments = Reflect.PopulateOptionalArgsAndParamsArray(TypeArgs, method.MethodInfo, Arguments, parameters);
+                Arguments = Reflect.PopulateOptionalArgsAndParamsArray(method.MethodInfo, TypeArgs, Arguments, parameters);
                 argsProvided = argsNeeded;
             }
 

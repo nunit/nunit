@@ -90,13 +90,13 @@ namespace NUnit.Framework.Internal
 
             if (parameterInfos.Length > 0)
             {
-                arguments = PopulateOptionalArgsAndParamsArray(null, ctor, arguments, parameterInfos);
+                arguments = PopulateOptionalArgsAndParamsArray(ctor, null, arguments, parameterInfos);
             }
 
             return ctor.Invoke(arguments);
         }
 
-        internal static object?[] PopulateOptionalArgsAndParamsArray(Type[]? typeArgs, MethodBase method, object?[] arguments, ParameterInfo[] parameterInfos)
+        internal static object?[] PopulateOptionalArgsAndParamsArray(MethodBase method, Type[]? typeArgs, object?[] arguments, ParameterInfo[] parameterInfos)
         {
             ParameterInfo lastParameter = parameterInfos.Last();
             var hasParamsArray = lastParameter.ParameterIsParamsArray();
