@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.Builders
@@ -33,7 +34,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="rootSuite">The root suite.</param>
         public NamespaceTreeBuilder(TestSuite rootSuite)
         {
-            Guard.ArgumentNotNull(rootSuite, nameof(rootSuite));
+            ArgumentNullException.ThrowIfNull(rootSuite);
             RootSuite = _globalInsertionPoint = rootSuite;
         }
 
@@ -93,7 +94,7 @@ namespace NUnit.Framework.Internal.Builders
 
         private TestSuite GetNamespaceSuite(string ns)
         {
-            Guard.ArgumentNotNull(ns, nameof(ns));
+            ArgumentNullException.ThrowIfNull(ns);
 
             if (ns == string.Empty)
                 return _globalInsertionPoint;

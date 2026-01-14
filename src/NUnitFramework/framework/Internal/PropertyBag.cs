@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -28,7 +29,7 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value</param>
         public void Add(string key, object value)
         {
-            Guard.ArgumentNotNull(value, "value");
+            ArgumentNullException.ThrowIfNull(value);
 
             if (!_inner.TryGetValue(key, out var list))
             {
@@ -47,8 +48,8 @@ namespace NUnit.Framework.Internal
         public void Set(string key, object value)
         {
             // Guard against mystery exceptions later!
-            Guard.ArgumentNotNull(key, nameof(key));
-            Guard.ArgumentNotNull(value, nameof(value));
+            ArgumentNullException.ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(value);
 
             IList list = new List<object>();
             list.Add(value);

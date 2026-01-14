@@ -352,7 +352,7 @@ namespace NUnit.Framework.Interfaces
 
         private static List<TNode> ApplySelection(List<TNode> nodeList, string xpath)
         {
-            Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
+            ArgumentException.ThrowIfNullOrEmpty(xpath);
             if (xpath[0] == '/')
                 throw new ArgumentException("XPath expressions starting with '/' are not supported", nameof(xpath));
             if (xpath.IndexOf("//", StringComparison.Ordinal) >= 0)

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +36,7 @@ namespace NUnit.Framework.Constraints
         public ExactCountConstraint(int expectedCount, IConstraint itemConstraint)
             : base(itemConstraint)
         {
-            Guard.ArgumentNotNull(itemConstraint, nameof(itemConstraint));
+            ArgumentNullException.ThrowIfNull(itemConstraint);
 
             _itemConstraint = itemConstraint.Resolve();
             _expectedCount = expectedCount;

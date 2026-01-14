@@ -353,8 +353,8 @@ namespace NUnit.Framework.Internal.Execution
             IMethodInfo[] tearDownMethods,
             IMethodValidator? methodValidator = null)
         {
-            Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
-            Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
+            ArgumentNullException.ThrowIfNull(setUpMethods);
+            ArgumentNullException.ThrowIfNull(tearDownMethods);
 
             var list = new List<SetUpTearDownItem>();
 

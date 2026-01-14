@@ -102,8 +102,8 @@ namespace NUnit.Framework.Internal
             /// </param>
             public ComparableStep(TStep value, Func<T, TStep, T> apply)
             {
-                if (apply is null)
-                    throw new ArgumentNullException(nameof(apply));
+                ArgumentNullException.ThrowIfNull(apply);
+
                 _step = value;
                 _apply = apply;
             }
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override bool TryCreateStep(object value, [NotNullWhen(true)] out ValueGenerator.Step? step)
         {
-            Guard.ArgumentNotNull(value, nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             step = null;
             return false;
         }

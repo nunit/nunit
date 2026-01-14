@@ -84,8 +84,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (actual is null)
-                throw new ArgumentNullException(nameof(actual), "The actual value must be a non-null string" + ErrorSubstring);
+            ArgumentNullException.ThrowIfNull(actual);
 
             if (actual is string stringValue)
             {
@@ -106,8 +105,7 @@ namespace NUnit.Framework.Constraints
 
         private ConstraintResult CheckString(string actual)
         {
-            if (string.IsNullOrEmpty(actual))
-                throw new ArgumentException("The actual value cannot be an empty string", nameof(actual));
+            ArgumentException.ThrowIfNullOrEmpty(actual);
 
             var fileInfo = new FileInfo(actual);
             if (_ignoreDirectories && !_ignoreFiles)

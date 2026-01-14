@@ -15,38 +15,6 @@ namespace NUnit.Framework
     internal static class Guard
     {
         /// <summary>
-        /// Throws an exception if an argument is null
-        /// </summary>
-        /// <param name="value">The value to be tested</param>
-        /// <param name="name">The name of the argument</param>
-        public static void ArgumentNotNull([NotNull] object? value, string name)
-        {
-            if (value is null)
-                ThrowArgumentNullException(name);
-
-            [DoesNotReturn]
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static void ThrowArgumentNullException(string name) => throw new ArgumentNullException(name, "Argument " + name + " must not be null");
-        }
-
-        /// <summary>
-        /// Throws an exception if a string argument is null or empty
-        /// </summary>
-        /// <param name="value">The value to be tested</param>
-        /// <param name="name">The name of the argument</param>
-        public static void ArgumentNotNullOrEmpty([NotNull] string? value, string name)
-        {
-            ArgumentNotNull(value, name);
-
-            if (value == string.Empty)
-                ThrowArgumentNotNullOrEmpty(name);
-
-            [DoesNotReturn]
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static void ThrowArgumentNotNullOrEmpty(string name) => throw new ArgumentException("Argument " + name + " must not be the empty string", name);
-        }
-
-        /// <summary>
         /// Throws an ArgumentOutOfRangeException if the specified condition is not met.
         /// </summary>
         /// <param name="condition">The condition that must be met</param>

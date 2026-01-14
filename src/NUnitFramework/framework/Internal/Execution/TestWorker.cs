@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="name">The name of this worker</param>
         public TestWorker(WorkItemQueue queue, string name)
         {
-            Guard.ArgumentNotNull(queue, nameof(queue));
+            ArgumentNullException.ThrowIfNull(queue);
 
             WorkQueue = queue;
             Name = name;
