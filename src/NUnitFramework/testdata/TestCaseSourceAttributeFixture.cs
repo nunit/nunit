@@ -240,5 +240,68 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
         #endregion
+
+        [TestCaseSource(nameof(DoubleTestData))]
+        [TestCaseSource(nameof(StringTestData))]
+        [TestCaseSource(nameof(TypedTestData))]
+        [TestCaseSource(nameof(BaseClassData))]
+        [TestCase(typeof(double), 4, 5.5, 6)] // Infers 'double'
+        [TestCase(typeof(double), 7, 8, 9, TypeArgs = [typeof(double)])] // Will convert to specified type.
+        [TestCase(typeof(double), 7, TypeArgs = [typeof(double)])] // Use different path
+        [TestCase(typeof(double), new double[] { 1.1, 2.2 })] // Argument is already an array
+        public void GenericParamsSuccess<T>(Type t, params T[] x)
+        {
+            Assert.That(x.Length, Is.GreaterThanOrEqualTo(0));
+            Assert.That(typeof(T), Is.EqualTo(t));
+        }
+
+        private static IEnumerable<object[]> DoubleTestData()
+        {
+            yield return new object[] { typeof(double), 1.0 };
+            yield return new object[] { typeof(double), 1, 2.2, 3.3 };
+        }
+
+        private static IEnumerable<object[]> StringTestData()
+        {
+            yield return new object[] { typeof(string), "1" };
+            yield return new object[] { typeof(string), "1", "2", "3" };
+        }
+
+        private static IEnumerable<TestCaseData> TypedTestData()
+        {
+            yield return new TestCaseData([typeof(double)]) { TypeArgs = [typeof(double)] };
+            yield return new TestCaseData([typeof(string)]) { TypeArgs = [typeof(string)] };
+        }
+
+        private static IEnumerable<TestCaseData> BaseClassData()
+        {
+            yield return new TestCaseData(typeof(D1), new D1(), new D2(), new D3());
+            yield return new TestCaseData(typeof(D1), new D2(), new D3());
+            yield return new TestCaseData(typeof(object), new D2(), string.Empty) { TypeArgs = [typeof(object)] };
+        }
+
+        [TestCaseSource(nameof(NoCommonBaseClassData))]
+        public void GenericParamsNotRunnable<T>(params T[] x)
+        {
+            Assert.Fail("Should not be runnable");
+        }
+
+        private static IEnumerable<TestCaseData> NoCommonBaseClassData()
+        {
+            yield return new TestCaseData(1, "1");
+            yield return new TestCaseData(new D2(), string.Empty);
+        }
+
+        private class D1
+        {
+        }
+
+        private class D2 : D1
+        {
+        }
+
+        private class D3 : D1
+        {
+        }
     }
 }

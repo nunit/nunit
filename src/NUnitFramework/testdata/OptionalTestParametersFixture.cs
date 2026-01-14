@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.TestData
@@ -45,5 +46,41 @@ namespace NUnit.TestData
         public void MethodWithAllOptionalParams3(int x = 0, int y = 1)
         {
         }
+
+        [TestCase()]
+        [TestCaseSource(nameof(EmptyArray))]
+        [TestCaseSource(nameof(TestCaseDataWithEmptyArray))]
+        public static void MethodWithParamsArrayNoParameters(params int[] a)
+        {
+            Assert.That(a, Is.Not.Null.And.Empty);
+        }
+
+        private static readonly IEnumerable<int[]> EmptyArray =
+        [
+            [],
+        ];
+
+        private static readonly IEnumerable<TestCaseData> TestCaseDataWithEmptyArray =
+        [
+            new TestCaseData([]),
+        ];
+
+        [TestCase(null)]
+        [TestCaseSource(nameof(NullArray))]
+        [TestCaseSource(nameof(TestCaseDataWithNullArray))]
+        public static void MethodWithParamsArrayNullParameter(params int[]? a)
+        {
+            Assert.That(a, Is.Null);
+        }
+
+        private static readonly IEnumerable<int[]?> NullArray =
+        [
+            null,
+        ];
+
+        private static readonly IEnumerable<TestCaseData> TestCaseDataWithNullArray =
+        [
+            new TestCaseData(null),
+        ];
     }
 }
