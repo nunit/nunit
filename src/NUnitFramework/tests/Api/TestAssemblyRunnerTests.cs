@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
-        public void Load_ValidTypeCoercedSettings_ReturnsRunnableSuite()
+        public void Load_ParseableSettings_ReturnsRunnableSuite()
         {
             var settings = new Dictionary<string, object>
             {
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
-        public void Load_InvalidTypeCoercedSettings_ThrowsException()
+        public void Load_UnparseableSettings_ThrowsException()
         {
             var settings = new Dictionary<string, object>
             {
@@ -139,6 +139,28 @@ namespace NUnit.Framework.Tests.Api
             };
 
             Assert.That(() => LoadMockAssembly(settings), Throws.Exception.TypeOf<FormatException>());
+        }
+
+        [Test]
+        public void Load_InvalidTypeSettings_ThrowsException()
+        {
+            var settings = new Dictionary<string, object>
+            {
+                { FrameworkPackageSettings.NumberOfTestWorkers, new() },
+                { FrameworkPackageSettings.DefaultTimeout, new() },
+                { FrameworkPackageSettings.DebugTests, new() },
+                { FrameworkPackageSettings.PauseBeforeRun, new() },
+                { FrameworkPackageSettings.InternalTraceLevel, new() },
+                { FrameworkPackageSettings.StopOnError, new() },
+                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, new() },
+                { FrameworkPackageSettings.SynchronousEvents, new() },
+                { FrameworkPackageSettings.RandomSeed, new() },
+                { FrameworkPackageSettings.RunOnMainThread, new() },
+                { FrameworkPackageSettings.DefaultCulture, new() },
+                { FrameworkPackageSettings.DefaultUICulture, new() }
+            };
+
+            Assert.That(() => LoadMockAssembly(settings), Throws.Exception.TypeOf<ArgumentException>());
         }
 
         [Test, SetUICulture("en-US")]

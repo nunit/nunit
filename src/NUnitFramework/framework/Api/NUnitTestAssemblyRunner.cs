@@ -114,7 +114,7 @@ namespace NUnit.Framework.Api
 
             if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
             {
-                Randomizer.InitialSeed = Convert.ToInt32(randomSeed);
+                Randomizer.InitialSeed = ConvertSetting<int>(randomSeed);
             }
 
             LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assemblyNameOrPath, settings));
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Api
 
             if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
             {
-                Randomizer.InitialSeed = Convert.ToInt32(randomSeed);
+                Randomizer.InitialSeed = ConvertSetting<int>(randomSeed);
             }
 
             LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assembly, settings));
@@ -272,6 +272,38 @@ namespace NUnit.Framework.Api
         #endregion
 
         #region Helper Methods
+        /// <summary>
+        /// Attempt to return a setting value of the underlying type, parsing from a string if neccessary.
+        /// </summary>
+        /// <typeparam name="T">The target type to return.</typeparam>
+        /// <param name="value">The setting value to convert.</param>
+        /// <returns>The requested setting value.</returns>
+        /// <exception cref="ArgumentException">Thrown when parsing is not supported for the requested type.</exception>
+        /// <exception cref="FormatException">Thrown when parsing failed to convert the input value to the requested type.</exception>
+        private static T ConvertSetting<T>(object value)
+        {
+            if (value is T variable)
+                return variable;
+
+            if (value is string && typeof(T) != typeof(string))
+            {
+                // Try to find a Parse method, such as may be from the IParsable interface
+                var parseMethod = typeof(T).GetMethod("Parse", [typeof(string), typeof(IFormatProvider)]);
+                if (parseMethod is not null)
+                {
+                    try
+                    {
+                        return (T)parseMethod.Invoke(null, [value, CultureInfo.InvariantCulture])!;
+                    }
+                    catch (TargetInvocationException tie) when (tie.InnerException is FormatException)
+                    {
+                        throw tie.InnerException!;
+                    }
+                }
+            }
+
+            throw new ArgumentException($"Cannot convert setting value '{value}' to type {typeof(T)}");
+        }
 
         /// <summary>
         /// Initiate the test run.
@@ -287,7 +319,7 @@ namespace NUnit.Framework.Api
 
             // Queue and pump events, unless settings have SynchronousEvents == false
             if (!Settings.TryGetValue(FrameworkPackageSettings.SynchronousEvents, out var synchronousEvents) ||
-                !Convert.ToBoolean(synchronousEvents))
+                !ConvertSetting<bool>(synchronousEvents))
             {
                 QueuingEventListener queue = new QueuingEventListener();
                 context.Listener = queue;
@@ -298,7 +330,7 @@ namespace NUnit.Framework.Api
 
             if (!Debugger.IsAttached &&
                 Settings.TryGetValue(FrameworkPackageSettings.DebugTests, out var debugTests) &&
-                Convert.ToBoolean(debugTests))
+                ConvertSetting<bool>(debugTests))
             {
                 try
                 {
@@ -319,7 +351,7 @@ namespace NUnit.Framework.Api
 
 #if NETFRAMEWORK
             if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
-                Convert.ToBoolean(pauseBeforeRun))
+                ConvertSetting<bool>(pauseBeforeRun))
             {
                 PauseBeforeRun();
             }
@@ -339,15 +371,15 @@ namespace NUnit.Framework.Api
 
             // Apply package settings to the context
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
-                context.TestCaseTimeout = Convert.ToInt32(timeout);
+                context.TestCaseTimeout = ConvertSetting<int>(timeout);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
                 context.CurrentCulture = new CultureInfo((string)culture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
                 context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
-                context.StopOnError = Convert.ToBoolean(stopOnError);
+                context.StopOnError = ConvertSetting<bool>(stopOnError);
             if (Settings.TryGetValue(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, out var throwOnEachFailure))
-                context.ThrowOnEachFailureUnderDebugger = Convert.ToBoolean(throwOnEachFailure);
+                context.ThrowOnEachFailureUnderDebugger = ConvertSetting<bool>(throwOnEachFailure);
 
             // Apply attributes to the context
 
@@ -357,7 +389,7 @@ namespace NUnit.Framework.Api
             int levelOfParallelism = GetLevelOfParallelism(loadedTest);
 
             if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
-                Convert.ToBoolean(runOnMainThread))
+                ConvertSetting<bool>(runOnMainThread))
             {
                 context.Dispatcher = new MainThreadWorkItemDispatcher();
             }
@@ -413,8 +445,8 @@ namespace NUnit.Framework.Api
         private int GetLevelOfParallelism(ITest loadedTest)
         {
             return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
-                ? Convert.ToInt32(numberOfTestWorkers)
-                : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+                ? ConvertSetting<int>(numberOfTestWorkers)
+                : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, DefaultLevelOfParallelism);
         }
 
 #if NETFRAMEWORK
