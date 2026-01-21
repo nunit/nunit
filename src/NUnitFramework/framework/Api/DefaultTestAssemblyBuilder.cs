@@ -200,7 +200,7 @@ namespace NUnit.Framework.Api
             return fixtures;
         }
 
-        private IList<Type> GetCandidateFixtureTypes(Assembly assembly, PreFilter filter)
+        private static IList<Type> GetCandidateFixtureTypes(Assembly assembly, PreFilter filter)
         {
             var result = new List<Type>();
 
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyNameOrPath, IList<Test> fixtures)
+        private static TestSuite BuildTestAssembly(Assembly assembly, string assemblyNameOrPath, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyNameOrPath);
 

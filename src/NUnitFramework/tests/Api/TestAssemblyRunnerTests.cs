@@ -29,6 +29,21 @@ namespace NUnit.Framework.Tests.Api
         private const string InvalidFilterElementMessage = "Invalid filter element: {0}";
 
         private static readonly IDictionary<string, object> EmptySettings = new Dictionary<string, object>();
+        private static readonly IDictionary<string, object> ParsableSettings = new Dictionary<string, object>
+            {
+                { FrameworkPackageSettings.NumberOfTestWorkers, "2" },
+                { FrameworkPackageSettings.DefaultTimeout, "1000" },
+                { FrameworkPackageSettings.DebugTests, "true" },
+                { FrameworkPackageSettings.PauseBeforeRun, "false" },
+                { FrameworkPackageSettings.InternalTraceLevel, "Off" },
+                { FrameworkPackageSettings.StopOnError, "false" },
+                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "false" },
+                { FrameworkPackageSettings.SynchronousEvents, "true" },
+                { FrameworkPackageSettings.RandomSeed, "12345" },
+                { FrameworkPackageSettings.RunOnMainThread, "true" },
+                { FrameworkPackageSettings.DefaultCulture, "en-US" },
+                { FrameworkPackageSettings.DefaultUICulture, "en-US" }
+            };
 
         private ITestAssemblyRunner _runner;
 
@@ -59,7 +74,7 @@ namespace NUnit.Framework.Tests.Api
             _skipCount = 0;
             _inconclusiveCount = 0;
 
-            _activeTests = new Dictionary<string, bool>();
+            _activeTests = [];
         }
 
         #region Load
@@ -82,25 +97,9 @@ namespace NUnit.Framework.Tests.Api
         [Test]
         public void Load_ParseableSettings_ReturnsRunnableSuite()
         {
-            var settings = new Dictionary<string, object>
-            {
-                { FrameworkPackageSettings.NumberOfTestWorkers, "2" },
-                { FrameworkPackageSettings.DefaultTimeout, "1000" },
-                { FrameworkPackageSettings.DebugTests, "true" },
-                { FrameworkPackageSettings.PauseBeforeRun, "false" },
-                { FrameworkPackageSettings.InternalTraceLevel, "Off" },
-                { FrameworkPackageSettings.StopOnError, "true" },
-                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "false" },
-                { FrameworkPackageSettings.SynchronousEvents, "true" },
-                { FrameworkPackageSettings.RandomSeed, "12345" },
-                { FrameworkPackageSettings.RunOnMainThread, "true" },
-                { FrameworkPackageSettings.DefaultCulture, "en-US" },
-                { FrameworkPackageSettings.DefaultUICulture, "en-US" }
-            };
-
             ITest[] suites = [
-                _runner.Load(GetMockAssembly(), settings),
-                LoadMockAssembly(settings)
+                _runner.Load(GetMockAssembly(), ParsableSettings),
+                LoadMockAssembly(ParsableSettings)
             ];
 
             foreach (var result in suites)
@@ -375,20 +374,15 @@ namespace NUnit.Framework.Tests.Api
         {
             LoadMockAssembly();
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
+            AssertValidSuiteRun(result);
+        }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.Test.IsSuite);
-                Assert.That(result.Test, Is.TypeOf<TestAssembly>());
-                Assert.That(result.Test.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
-                Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Passed));
-                Assert.That(result.FailCount, Is.EqualTo(MockAssembly.Failed));
-                Assert.That(result.WarningCount, Is.EqualTo(MockAssembly.Warnings));
-                Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
-                Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
-            });
+        [Test]
+        public void Run_AfterLoad_ParsableSettings_ReturnsRunnableSuite()
+        {
+            LoadMockAssembly(ParsableSettings);
+            var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
+            AssertValidSuiteRun(result);
         }
 
         [Test]
@@ -500,19 +494,17 @@ namespace NUnit.Framework.Tests.Api
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.That(_runner.Result, Is.Not.Null, "No result returned");
-            Assert.Multiple(() =>
-            {
-                Assert.That(_runner.Result.Test.IsSuite);
-                Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
-                Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.Runnable));
-                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
-                Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Passed));
-                Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.Failed));
-                Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
-                Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
-            });
+            AssertValidSuiteRun(_runner.Result);
+        }
+
+        [Test]
+        public void RunAsync_AfterLoad_ParsableSettings_ReturnsRunnableSuite()
+        {
+            LoadMockAssembly(ParsableSettings);
+            _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
+            _runner.WaitForCompletion(Timeout.Infinite);
+
+            AssertValidSuiteRun(_runner.Result);
         }
 
         [Test]
@@ -652,7 +644,39 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             });
         }
-//#endif
+        //#endif
+
+        #endregion
+
+        #region ConvertSetting
+
+        [Test]
+        public void CanConvertBool()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<bool>("true"), Is.True);
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<bool>("False"), Is.False);
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<bool>(true), Is.True);
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<bool>(false), Is.False);
+            });
+        }
+
+        [Test]
+        public void CanConvertInt()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<int>("42"), Is.EqualTo(42));
+                Assert.That(NUnitTestAssemblyRunner.ConvertSetting<int>(42), Is.EqualTo(42));
+            });
+        }
+
+        [Test]
+        public void PassesThroughString()
+        {
+            Assert.That(NUnitTestAssemblyRunner.ConvertSetting<string>("NUnit"), Is.EqualTo("NUnit"));
+        }
 
         #endregion
 
@@ -750,6 +774,24 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(childResult!.Output, Is.EqualTo(
                 "Parameter X = 5" + Environment.NewLine +
                 "Parameter Y = 7" + Environment.NewLine));
+        }
+
+        private static void AssertValidSuiteRun(ITestResult? result)
+        {
+            Assert.That(result, Is.Not.Null, "No result returned");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Test.IsSuite);
+                Assert.That(result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Test.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Passed));
+                Assert.That(result.FailCount, Is.EqualTo(MockAssembly.Failed));
+                Assert.That(result.WarningCount, Is.EqualTo(MockAssembly.Warnings));
+                Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
+                Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            });
         }
 
         #endregion

@@ -14,6 +14,7 @@ using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -280,25 +281,21 @@ namespace NUnit.Framework.Api
         /// <returns>The requested setting value.</returns>
         /// <exception cref="ArgumentException">Thrown when parsing is not supported for the requested type.</exception>
         /// <exception cref="FormatException">Thrown when parsing failed to convert the input value to the requested type.</exception>
-        private static T ConvertSetting<T>(object value)
+        internal static T ConvertSetting<T>(object value)
         {
             if (value is T variable)
                 return variable;
 
-            if (value is string && typeof(T) != typeof(string))
+            if (value is string s)
             {
-                // Try to find a Parse method, such as may be from the IParsable interface
-                var parseMethod = typeof(T).GetMethod("Parse", [typeof(string), typeof(IFormatProvider)]);
-                if (parseMethod is not null)
+                var converter = TypeDescriptor.GetConverter(typeof(T));
+                try
                 {
-                    try
-                    {
-                        return (T)parseMethod.Invoke(null, [value, CultureInfo.InvariantCulture])!;
-                    }
-                    catch (TargetInvocationException tie) when (tie.InnerException is FormatException)
-                    {
-                        throw tie.InnerException!;
-                    }
+                    return (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, s)!;
+                }
+                catch (Exception ex) when (ex.InnerException is FormatException fe)
+                {
+                    throw fe;
                 }
             }
 
