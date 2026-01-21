@@ -370,9 +370,9 @@ namespace NUnit.Framework.Api
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
                 context.TestCaseTimeout = ConvertSetting<int>(timeout);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
-                context.CurrentCulture = new CultureInfo(ConvertSettng<string>(culture), false);
+                context.CurrentCulture = new CultureInfo(ConvertSetting<string>(culture), false);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
-                context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
+                context.CurrentUICulture = new CultureInfo(ConvertSetting<string>(uiCulture), false);
             if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
                 context.StopOnError = ConvertSetting<bool>(stopOnError);
             if (Settings.TryGetValue(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, out var throwOnEachFailure))

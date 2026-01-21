@@ -32,15 +32,15 @@ namespace NUnit.Framework.Tests.Api
         private static readonly IDictionary<string, object> ParsableSettings = new Dictionary<string, object>
             {
                 { FrameworkPackageSettings.NumberOfTestWorkers, "2" },
-                { FrameworkPackageSettings.DefaultTimeout, "1000" },
-                { FrameworkPackageSettings.DebugTests, "true" },
+                { FrameworkPackageSettings.DefaultTimeout, "0" },
+                { FrameworkPackageSettings.DebugTests, "false" },
                 { FrameworkPackageSettings.PauseBeforeRun, "false" },
                 { FrameworkPackageSettings.InternalTraceLevel, "Off" },
                 { FrameworkPackageSettings.StopOnError, "false" },
                 { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "false" },
                 { FrameworkPackageSettings.SynchronousEvents, "true" },
                 { FrameworkPackageSettings.RandomSeed, "12345" },
-                { FrameworkPackageSettings.RunOnMainThread, "true" },
+                { FrameworkPackageSettings.RunOnMainThread, "false" },
                 { FrameworkPackageSettings.DefaultCulture, "en-US" },
                 { FrameworkPackageSettings.DefaultUICulture, "en-US" }
             };
