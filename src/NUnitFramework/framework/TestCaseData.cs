@@ -281,8 +281,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// var testCase = new TestCaseData&lt;T&gt;(arg)
+        ///     .SetArgDisplayNames("argDisplayName");
         /// </code>
         /// </example>
         public new TestCaseData<T> SetArgDisplayNames(params string[]? displayNames)
@@ -298,8 +298,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// var testCase = new TestCaseData&lt;T&gt;(arg)
+        ///     .SetArgDisplayNames(testData.Name);
         /// </code>
         /// </example>
         public new TestCaseData<T> SetArgDisplayNames(params object?[]? displayNames)
@@ -436,7 +436,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
+        /// var testCase = new TestCaseData&lt;string, int&gt;(arg1, arg2)
         ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
         /// </code>
         /// </example>
@@ -453,8 +453,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// var testCase = new TestCaseData&lt;string, int&gt;(arg1, arg2)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender);
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2> SetArgDisplayNames(params object?[]? displayNames)
@@ -591,8 +591,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// var testCase = new TestCaseData&lt;string, int, float&gt;(arg1, arg2, arg3)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName", "arg3DisplayName");
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2, T3> SetArgDisplayNames(params string[]? displayNames)
@@ -608,7 +608,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
+        /// var testCase = new TestCaseData&lt;string, int, float&gt;(arg1, arg2, arg3)
         ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
         /// </code>
         /// </example>
@@ -746,8 +746,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// var testCase = new TestCaseData&lt;string, int, float, decimal&gt;(arg1, arg2, arg3, arg4)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName", "arg3DisplayName", "arg4DisplayName");
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2, T3, T4> SetArgDisplayNames(params string[]? displayNames)
@@ -763,8 +763,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// var testCase = new TestCaseData&lt;string, int, float, decimal&gt;(arg1, arg2, arg3, arg4)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age, testData.Salary);
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2, T3, T4> SetArgDisplayNames(params object?[]? displayNames)
@@ -901,8 +901,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// var testCase = new TestCaseData&lt;string, int, float, decimal, FileAccess&gt;(arg1, arg2, arg3, arg4, arg5)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName", "arg3DisplayName", "arg4DisplayName", "arg5DisplayName");
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2, T3, T4, T5> SetArgDisplayNames(params string[]? displayNames)
@@ -918,8 +918,8 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         /// <example>
         /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// var testCase = new TestCaseData&lt;string, int, float, decimal, FileAccess&gt;(arg1, arg2, arg3, arg4, arg5)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age, testData.Salary, testData.FileAccess);
         /// </code>
         /// </example>
         public new TestCaseData<T1, T2, T3, T4, T5> SetArgDisplayNames(params object?[]? displayNames)
