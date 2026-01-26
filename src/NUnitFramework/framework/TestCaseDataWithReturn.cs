@@ -49,7 +49,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseDataWithReturn</returns>
-        public TestCaseDataWithReturn<T, TReturn> Returns(object? result)
+        public TestCaseDataWithReturn<T, TReturn> Returns(TReturn result)
         {
             ExpectedResult = result;
             return this;
@@ -216,7 +216,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseDataWithReturn</returns>
-        public TestCaseDataWithReturn<T1, T2, TReturn> Returns(object? result)
+        public TestCaseDataWithReturn<T1, T2, TReturn> Returns(TReturn result)
         {
             ExpectedResult = result;
             return this;
@@ -383,7 +383,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseDataWithReturn</returns>
-        public TestCaseDataWithReturn<T1, T2, T3, TReturn> Returns(object? result)
+        public TestCaseDataWithReturn<T1, T2, T3, TReturn> Returns(TReturn result)
         {
             ExpectedResult = result;
             return this;
@@ -550,7 +550,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseDataWithReturn</returns>
-        public TestCaseDataWithReturn<T1, T2, T3, T4, TReturn> Returns(object? result)
+        public TestCaseDataWithReturn<T1, T2, T3, T4, TReturn> Returns(TReturn result)
         {
             ExpectedResult = result;
             return this;
@@ -717,7 +717,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseDataWithReturn</returns>
-        public TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn> Returns(object? result)
+        public TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn> Returns(TReturn result)
         {
             ExpectedResult = result;
             return this;
