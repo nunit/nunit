@@ -976,6 +976,915 @@ namespace NUnit.Framework.Tests.Attributes
         private static readonly object[] GenericNullableSource = [0, 1L, 2UL, 3F, 4D];
 
         #endregion
+
+        #region TestCaseData<T..> Fluent Instance Modifiers
+
+        [Test]
+        public void TestCaseData_T_Returns_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const int returnValue = 10;
+
+            // Act
+            TestCaseData<int> result = sut.Returns(returnValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ExpectedResult, Is.EqualTo(returnValue));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetName_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string name = "Altered Test Name";
+
+            // Act
+            TestCaseData<int> result = sut.SetName(name);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.TestName, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetArgDisplayNames_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string argDisplayName = "Argument Number 1";
+
+            // Act
+            TestCaseData<int> result = sut.SetArgDisplayNames(argDisplayName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([argDisplayName]));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetArgDisplayNames_object_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            object argName = new int[] { 3, 4, 5 };
+
+            string expectedFormattedArgName =
+                Framework.Constraints.MsgUtils.FormatValue(argName);
+
+            // Act
+            TestCaseData<int> result = sut.SetArgDisplayNames(argName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([expectedFormattedArgName]));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetDescription_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string description = "Altered Test Description";
+
+            // Act
+            TestCaseData<int> result = sut.SetDescription(description);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Description), Is.EqualTo(description));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetCategory_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string category = "Altered Test Category";
+
+            // Act
+            TestCaseData<int> result = sut.SetCategory(category);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Category), Is.EqualTo(category));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetProperty_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string propertyName = "Custom Property Name";
+            const string propertyValue = "Custom Property Value";
+
+            // Act
+            TestCaseData<int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetProperty_int_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string propertyName = "Custom Property Name";
+            const int propertyValue = 42;
+
+            // Act
+            TestCaseData<int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T_SetProperty_double_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string propertyName = "Custom Property Name";
+            const double propertyValue = Math.PI;
+
+            // Act
+            TestCaseData<int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T_Explicit_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            // Act
+            TestCaseData<int> result = sut.Explicit();
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void TestCaseData_T_Explicit_reason_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int>(5);
+
+            const string reason = "Reason test is explicit";
+
+            // Act
+            TestCaseData<int> result = sut.Explicit(reason);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
+        }
+
+                [Test]
+        public void TestCaseData_T1_T2_Returns_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const int returnValue = 10;
+
+            // Act
+            TestCaseData<int, int> result = sut.Returns(returnValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ExpectedResult, Is.EqualTo(returnValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetName_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string name = "Altered Test Name";
+
+            // Act
+            TestCaseData<int, int> result = sut.SetName(name);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.TestName, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetArgDisplayNames_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string argDisplayName = "Argument Number 1";
+
+            // Act
+            TestCaseData<int, int> result = sut.SetArgDisplayNames(argDisplayName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([argDisplayName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetArgDisplayNames_object_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            object argName = new int[] { 3, 4, 5 };
+
+            string expectedFormattedArgName =
+                Framework.Constraints.MsgUtils.FormatValue(argName);
+
+            // Act
+            TestCaseData<int, int> result = sut.SetArgDisplayNames(argName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([expectedFormattedArgName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetDescription_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string description = "Altered Test Description";
+
+            // Act
+            TestCaseData<int, int> result = sut.SetDescription(description);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Description), Is.EqualTo(description));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetCategory_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string category = "Altered Test Category";
+
+            // Act
+            TestCaseData<int, int> result = sut.SetCategory(category);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Category), Is.EqualTo(category));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetProperty_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string propertyName = "Custom Property Name";
+            const string propertyValue = "Custom Property Value";
+
+            // Act
+            TestCaseData<int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetProperty_int_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string propertyName = "Custom Property Name";
+            const int propertyValue = 42;
+
+            // Act
+            TestCaseData<int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_SetProperty_double_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string propertyName = "Custom Property Name";
+            const double propertyValue = Math.PI;
+
+            // Act
+            TestCaseData<int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_Explicit_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            // Act
+            TestCaseData<int, int> result = sut.Explicit();
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_Explicit_reason_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int>(5, 6);
+
+            const string reason = "Reason test is explicit";
+
+            // Act
+            TestCaseData<int, int> result = sut.Explicit(reason);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
+        }
+
+                [Test]
+        public void TestCaseData_T1_T2_T3_Returns_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const int returnValue = 10;
+
+            // Act
+            TestCaseData<int, int, int> result = sut.Returns(returnValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ExpectedResult, Is.EqualTo(returnValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetName_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string name = "Altered Test Name";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetName(name);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.TestName, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetArgDisplayNames_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string argDisplayName = "Argument Number 1";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetArgDisplayNames(argDisplayName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([argDisplayName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetArgDisplayNames_object_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            object argName = new int[] { 3, 4, 5 };
+
+            string expectedFormattedArgName =
+                Framework.Constraints.MsgUtils.FormatValue(argName);
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetArgDisplayNames(argName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([expectedFormattedArgName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetDescription_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string description = "Altered Test Description";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetDescription(description);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Description), Is.EqualTo(description));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetCategory_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string category = "Altered Test Category";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetCategory(category);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Category), Is.EqualTo(category));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetProperty_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string propertyName = "Custom Property Name";
+            const string propertyValue = "Custom Property Value";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetProperty_int_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string propertyName = "Custom Property Name";
+            const int propertyValue = 42;
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_SetProperty_double_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string propertyName = "Custom Property Name";
+            const double propertyValue = Math.PI;
+
+            // Act
+            TestCaseData<int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_Explicit_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            // Act
+            TestCaseData<int, int, int> result = sut.Explicit();
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_Explicit_reason_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int>(5, 6, 7);
+
+            const string reason = "Reason test is explicit";
+
+            // Act
+            TestCaseData<int, int, int> result = sut.Explicit(reason);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_Returns_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const int returnValue = 10;
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.Returns(returnValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ExpectedResult, Is.EqualTo(returnValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetName_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string name = "Altered Test Name";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetName(name);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.TestName, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetArgDisplayNames_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string argDisplayName = "Argument Number 1";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetArgDisplayNames(argDisplayName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([argDisplayName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetArgDisplayNames_object_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            object argName = new int[] { 3, 4, 5 };
+
+            string expectedFormattedArgName =
+                Framework.Constraints.MsgUtils.FormatValue(argName);
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetArgDisplayNames(argName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([expectedFormattedArgName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetDescription_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string description = "Altered Test Description";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetDescription(description);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Description), Is.EqualTo(description));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetCategory_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string category = "Altered Test Category";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetCategory(category);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Category), Is.EqualTo(category));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetProperty_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string propertyName = "Custom Property Name";
+            const string propertyValue = "Custom Property Value";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetProperty_int_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string propertyName = "Custom Property Name";
+            const int propertyValue = 42;
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_SetProperty_double_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string propertyName = "Custom Property Name";
+            const double propertyValue = Math.PI;
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_Explicit_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.Explicit();
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_Explicit_reason_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int>(5, 6, 7, 8);
+
+            const string reason = "Reason test is explicit";
+
+            // Act
+            TestCaseData<int, int, int, int> result = sut.Explicit(reason);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_Returns_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const int returnValue = 10;
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.Returns(returnValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ExpectedResult, Is.EqualTo(returnValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetName_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string name = "Altered Test Name";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetName(name);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.TestName, Is.EqualTo(name));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetArgDisplayNames_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string argDisplayName = "Argument Number 1";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetArgDisplayNames(argDisplayName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([argDisplayName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetArgDisplayNames_object_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            object argName = new int[] { 3, 4, 5 };
+
+            string expectedFormattedArgName =
+                Framework.Constraints.MsgUtils.FormatValue(argName);
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetArgDisplayNames(argName);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.ArgDisplayNames, Is.EqualTo([expectedFormattedArgName]));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetDescription_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string description = "Altered Test Description";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetDescription(description);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Description), Is.EqualTo(description));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetCategory_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string category = "Altered Test Category";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetCategory(category);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(PropertyNames.Category), Is.EqualTo(category));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetProperty_string_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string propertyName = "Custom Property Name";
+            const string propertyValue = "Custom Property Value";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetProperty_int_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string propertyName = "Custom Property Name";
+            const int propertyValue = 42;
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_SetProperty_double_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string propertyName = "Custom Property Name";
+            const double propertyValue = Math.PI;
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.SetProperty(propertyName, propertyValue);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.Properties.Get(propertyName), Is.EqualTo(propertyValue));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_Explicit_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.Explicit();
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+        }
+
+        [Test]
+        public void TestCaseData_T1_T2_T3_T4_T5_Explicit_reason_should_return_correct_object_with_correct_type()
+        {
+            // Arrange
+            var sut = new TestCaseData<int, int, int, int, int>(5, 6, 7, 8, 9);
+
+            const string reason = "Reason test is explicit";
+
+            // Act
+            TestCaseData<int, int, int, int, int> result = sut.Explicit(reason);
+
+            // Assert
+            Assert.That(result, Is.SameAs(sut));
+            Assert.That(sut.RunState, Is.EqualTo(RunState.Explicit));
+            Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
+        }
+
+        #endregion
     }
 
     public class TestSourceMayBeInherited
