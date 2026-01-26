@@ -246,6 +246,146 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T)];
         }
+
+        #region Fluent Instance Modifiers
+
+        /// <summary>
+        /// Sets the expected result for the test
+        /// </summary>
+        /// <param name="result">The expected result</param>
+        /// <returns>A modified TestCaseData</returns>
+        public new TestCaseData<T> Returns(object? result)
+        {
+            base.Returns(result);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the test case
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
+        public new TestCaseData<T> SetName(string? name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
+        public new TestCaseData<T> SetArgDisplayNames(params string[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public new TestCaseData<T> SetArgDisplayNames(params object?[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the description for the test case
+        /// being constructed.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>The modified TestCaseData instance.</returns>
+        public new TestCaseData<T> SetDescription(string description)
+        {
+            base.SetDescription(description);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a category to the test
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public new TestCaseData<T> SetCategory(string category)
+        {
+            base.SetCategory(category);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T> SetProperty(string propName, string propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T> SetProperty(string propName, int propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T> SetProperty(string propName, double propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public new TestCaseData<T> Explicit()
+        {
+            base.Explicit();
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public new TestCaseData<T> Explicit(string reason)
+        {
+            base.Explicit(reason);
+            return this;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -261,6 +401,146 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2)];
         }
+
+        #region Fluent Instance Modifiers
+
+        /// <summary>
+        /// Sets the expected result for the test
+        /// </summary>
+        /// <param name="result">The expected result</param>
+        /// <returns>A modified TestCaseData</returns>
+        public new TestCaseData<T1, T2> Returns(object? result)
+        {
+            base.Returns(result);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the test case
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
+        public new TestCaseData<T1, T2> SetName(string? name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2> SetArgDisplayNames(params string[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2> SetArgDisplayNames(params object?[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the description for the test case
+        /// being constructed.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>The modified TestCaseData instance.</returns>
+        public new TestCaseData<T1, T2> SetDescription(string description)
+        {
+            base.SetDescription(description);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a category to the test
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2> SetCategory(string category)
+        {
+            base.SetCategory(category);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2> SetProperty(string propName, string propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2> SetProperty(string propName, int propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2> SetProperty(string propName, double propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public new TestCaseData<T1, T2> Explicit()
+        {
+            base.Explicit();
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public new TestCaseData<T1, T2> Explicit(string reason)
+        {
+            base.Explicit(reason);
+            return this;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -276,6 +556,146 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
+
+        #region Fluent Instance Modifiers
+
+        /// <summary>
+        /// Sets the expected result for the test
+        /// </summary>
+        /// <param name="result">The expected result</param>
+        /// <returns>A modified TestCaseData</returns>
+        public new TestCaseData<T1, T2, T3> Returns(object? result)
+        {
+            base.Returns(result);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the test case
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
+        public new TestCaseData<T1, T2, T3> SetName(string? name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3> SetArgDisplayNames(params string[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3> SetArgDisplayNames(params object?[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the description for the test case
+        /// being constructed.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>The modified TestCaseData instance.</returns>
+        public new TestCaseData<T1, T2, T3> SetDescription(string description)
+        {
+            base.SetDescription(description);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a category to the test
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3> SetCategory(string category)
+        {
+            base.SetCategory(category);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3> SetProperty(string propName, string propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3> SetProperty(string propName, int propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3> SetProperty(string propName, double propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3> Explicit()
+        {
+            base.Explicit();
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3> Explicit(string reason)
+        {
+            base.Explicit(reason);
+            return this;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -291,6 +711,146 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
+
+        #region Fluent Instance Modifiers
+
+        /// <summary>
+        /// Sets the expected result for the test
+        /// </summary>
+        /// <param name="result">The expected result</param>
+        /// <returns>A modified TestCaseData</returns>
+        public new TestCaseData<T1, T2, T3, T4> Returns(object? result)
+        {
+            base.Returns(result);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the test case
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
+        public new TestCaseData<T1, T2, T3, T4> SetName(string? name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3, T4> SetArgDisplayNames(params string[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3, T4> SetArgDisplayNames(params object?[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the description for the test case
+        /// being constructed.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>The modified TestCaseData instance.</returns>
+        public new TestCaseData<T1, T2, T3, T4> SetDescription(string description)
+        {
+            base.SetDescription(description);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a category to the test
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4> SetCategory(string category)
+        {
+            base.SetCategory(category);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4> SetProperty(string propName, string propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4> SetProperty(string propName, int propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4> SetProperty(string propName, double propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3, T4> Explicit()
+        {
+            base.Explicit();
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3, T4> Explicit(string reason)
+        {
+            base.Explicit(reason);
+            return this;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -306,5 +866,145 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
+
+        #region Fluent Instance Modifiers
+
+        /// <summary>
+        /// Sets the expected result for the test
+        /// </summary>
+        /// <param name="result">The expected result</param>
+        /// <returns>A modified TestCaseData</returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> Returns(object? result)
+        {
+            base.Returns(result);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the name of the test case
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <remarks>
+        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
+        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
+        /// needing to use tokens like {m}.
+        /// </remarks>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetName(string? name)
+        {
+            base.SetName(name);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetArgDisplayNames(params string[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// Objects are formatted using the same logic as default test names.
+        /// </summary>
+        /// <returns>The modified TestCaseData instance</returns>
+        /// <example>
+        /// <code>
+        /// TestCaseData testCase = new TestCaseData(args)
+        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
+        /// </code>
+        /// </example>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetArgDisplayNames(params object?[]? displayNames)
+        {
+            base.SetArgDisplayNames(displayNames);
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the description for the test case
+        /// being constructed.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns>The modified TestCaseData instance.</returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetDescription(string description)
+        {
+            base.SetDescription(description);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a category to the test
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetCategory(string category)
+        {
+            base.SetCategory(category);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetProperty(string propName, string propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetProperty(string propName, int propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Applies a named property to the test
+        /// </summary>
+        /// <param name="propName"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public new TestCaseData<T1, T2, T3, T4, T5> SetProperty(string propName, double propValue)
+        {
+            base.SetProperty(propName, propValue);
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3, T4, T5> Explicit()
+        {
+            base.Explicit();
+            return this;
+        }
+
+        /// <summary>
+        /// Marks the test case as explicit, specifying the reason.
+        /// </summary>
+        public new TestCaseData<T1, T2, T3, T4, T5> Explicit(string reason)
+        {
+            base.Explicit(reason);
+            return this;
+        }
+
+        #endregion
     }
 }
