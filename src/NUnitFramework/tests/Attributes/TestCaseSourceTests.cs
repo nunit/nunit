@@ -1160,7 +1160,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
         }
 
-                [Test]
+        [Test]
         public void TestCaseData_T1_T2_Returns_should_return_correct_object_with_correct_type()
         {
             // Arrange
@@ -1341,7 +1341,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(sut.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(reason));
         }
 
-                [Test]
+        [Test]
         public void TestCaseData_T1_T2_T3_Returns_should_return_correct_object_with_correct_type()
         {
             // Arrange
