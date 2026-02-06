@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
@@ -27,6 +29,48 @@ namespace NUnit.Framework.Tests
         public void ConsoleWriteLine_WritesToResult()
         {
             Console.WriteLine(SOME_TEXT);
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+        }
+
+        [Test]
+        public void ConsoleWrite_WritesToResult_AdhocContext()
+        {
+            using (ExecutionContext.SuppressFlow())
+            {
+                Task.Run(() =>
+                {
+                    var context = TestExecutionContext.CurrentContext;
+                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
+
+                    var initialOut = context.CurrentResult.Output;
+                    Console.Write("Should not be captured in the ad-hoc context");
+                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
+                }).Wait();
+
+                Console.Write(SOME_TEXT);
+            }
+
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
+        }
+
+        [Test]
+        public void ConsoleWriteLine_WritesToResult_AdhocContext()
+        {
+            using (ExecutionContext.SuppressFlow())
+            {
+                Task.Run(() =>
+                {
+                    var context = TestExecutionContext.CurrentContext;
+                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
+
+                    var initialOut = context.CurrentResult.Output;
+                    Console.WriteLine("Should not be captured in the ad-hoc context");
+                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
+                }).Wait();
+
+                Console.WriteLine(SOME_TEXT);
+            }
+
             Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
         }
 
