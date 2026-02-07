@@ -7,9 +7,9 @@ namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// The TextCapture class intercepts console output and writes it
-    /// to the current execution context, if one is present on the thread.
-    /// If no execution context is found, the output is written to a
-    /// default destination, normally the original destination of the
+    /// to the current execution context, unless it corresponds with an
+    /// ad-hoc test context. In an ad-hoc context, the output is written
+    /// to a default destination, normally the original destination of the
     /// intercepted output.
     /// </summary>
     public class TextCapture : TextWriter

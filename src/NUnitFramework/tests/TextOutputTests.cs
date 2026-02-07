@@ -1,10 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -35,43 +37,55 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleWrite_WritesToResult_AdhocContext()
         {
-            using (ExecutionContext.SuppressFlow())
+            var savedOut = Console.Out;
+            var stdout = new StringWriter();
+            Console.SetOut(new TextCapture(stdout));
+            try
             {
-                Task.Run(() =>
+                using (ExecutionContext.SuppressFlow())
                 {
-                    var context = TestExecutionContext.CurrentContext;
-                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
+                    Task.Run(() => Console.Write("Should be written to stdout")).Wait();
 
-                    var initialOut = context.CurrentResult.Output;
-                    Console.Write("Should not be captured in the ad-hoc context");
-                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
-                }).Wait();
-
-                Console.Write(SOME_TEXT);
+                    Console.Write(SOME_TEXT);
+                }
+            }
+            finally
+            {
+                Console.SetOut(savedOut);
             }
 
-            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
+            Assert.Multiple(() =>
+            {
+                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
+                Assert.That(stdout.ToString(), Is.EqualTo("Should be written to stdout"));
+            });
         }
 
         [Test]
         public void ConsoleWriteLine_WritesToResult_AdhocContext()
         {
-            using (ExecutionContext.SuppressFlow())
+            var savedOut = Console.Out;
+            var stdout = new StringWriter();
+            Console.SetOut(new TextCapture(stdout));
+            try
             {
-                Task.Run(() =>
+                using (ExecutionContext.SuppressFlow())
                 {
-                    var context = TestExecutionContext.CurrentContext;
-                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
+                    Task.Run(() => Console.WriteLine("Should be written to stdout")).Wait();
 
-                    var initialOut = context.CurrentResult.Output;
-                    Console.WriteLine("Should not be captured in the ad-hoc context");
-                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
-                }).Wait();
-
-                Console.WriteLine(SOME_TEXT);
+                    Console.WriteLine(SOME_TEXT);
+                }
+            }
+            finally
+            {
+                Console.SetOut(savedOut);
             }
 
-            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+            Assert.Multiple(() =>
+            {
+                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+                Assert.That(stdout.ToString(), Is.EqualTo("Should be written to stdout" + NL));
+            });
         }
 
         [Test]
