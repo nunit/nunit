@@ -16,6 +16,7 @@ namespace NUnit.Framework.Tests
     {
         private const string SOME_TEXT = "Should go to the result";
         private const string ERROR_TEXT = "Written directly to console";
+        private const string SOME_MORE_TEXT = "Should be written to stdout";
         private static readonly string NL = Environment.NewLine;
 
         private static string CapturedOutput => TestExecutionContext.CurrentContext.CurrentResult.Output;
@@ -44,7 +45,8 @@ namespace NUnit.Framework.Tests
             {
                 using (ExecutionContext.SuppressFlow())
                 {
-                    Task.Run(() => Console.Write("Should be written to stdout")).Wait();
+                    Task.Run(() => Console.Write(SOME_MORE_TEXT))
+                        .Wait();
 
                     Console.Write(SOME_TEXT);
                 }
@@ -57,7 +59,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
-                Assert.That(stdout.ToString(), Is.EqualTo("Should be written to stdout"));
+                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT));
             });
         }
 
@@ -71,7 +73,8 @@ namespace NUnit.Framework.Tests
             {
                 using (ExecutionContext.SuppressFlow())
                 {
-                    Task.Run(() => Console.WriteLine("Should be written to stdout")).Wait();
+                    Task.Run(() => Console.WriteLine(SOME_MORE_TEXT))
+                        .Wait();
 
                     Console.WriteLine(SOME_TEXT);
                 }
@@ -84,7 +87,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
-                Assert.That(stdout.ToString(), Is.EqualTo("Should be written to stdout" + NL));
+                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT + NL));
             });
         }
 
