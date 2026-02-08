@@ -34,42 +34,28 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a single character
         /// </summary>
         /// <param name="value">The char to write</param>
-        public override void Write(char value)
-        {
-            var context = TestExecutionContext.CurrentContext;
-
-            if (context is not TestExecutionContext.AdhocContext)
-                context.CurrentResult.OutWriter.Write(value);
-            else
-                _defaultWriter.Write(value);
-        }
+        public override void Write(char value) => GetWriter().Write(value);
 
         /// <summary>
         /// Writes a string
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void Write(string? value)
-        {
-            var context = TestExecutionContext.CurrentContext;
-
-            if (context is not TestExecutionContext.AdhocContext)
-                context.CurrentResult.OutWriter.Write(value);
-            else
-                _defaultWriter.Write(value);
-        }
+        public override void Write(string? value) => GetWriter().Write(value);
 
         /// <summary>
         /// Writes a string followed by a line terminator
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void WriteLine(string? value)
+        public override void WriteLine(string? value) => GetWriter().WriteLine(value);
+
+        private TextWriter GetWriter()
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context is not TestExecutionContext.AdhocContext)
-                context.CurrentResult.OutWriter.WriteLine(value);
+            if (context is not TestExecutionContext.AdhocContext && context.CurrentResult is not null)
+                return context.CurrentResult.OutWriter;
             else
-                _defaultWriter.WriteLine(value);
+                return _defaultWriter;
         }
     }
 }
