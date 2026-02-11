@@ -118,48 +118,56 @@ namespace NUnit.Framework.Tests.Api
             }
         }
 
-        [Test]
-        public void Load_UnparseableSettings_ThrowsException()
+        [TestCase(FrameworkPackageSettings.NumberOfTestWorkers)]
+        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
+        [TestCase(FrameworkPackageSettings.DebugTests)]
+#if NETFRAMEWORK
+        [TestCase(FrameworkPackageSettings.PauseBeforeRun)]
+#endif
+        [TestCase(FrameworkPackageSettings.StopOnError)]
+        [TestCase(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger)]
+        [TestCase(FrameworkPackageSettings.SynchronousEvents)]
+        [TestCase(FrameworkPackageSettings.RandomSeed)]
+        [TestCase(FrameworkPackageSettings.RunOnMainThread)]
+        public void Load_UnparseableSettings_ThrowsException(string parameter)
         {
             var settings = new Dictionary<string, object>
             {
-                { FrameworkPackageSettings.NumberOfTestWorkers, "x" },
-                { FrameworkPackageSettings.DefaultTimeout, "x" },
-                { FrameworkPackageSettings.DebugTests, "x" },
-                { FrameworkPackageSettings.PauseBeforeRun, "x" },
-                { FrameworkPackageSettings.InternalTraceLevel, "x" },
-                { FrameworkPackageSettings.StopOnError, "x" },
-                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, "x" },
-                { FrameworkPackageSettings.SynchronousEvents, "x" },
-                { FrameworkPackageSettings.RandomSeed, "x" },
-                { FrameworkPackageSettings.RunOnMainThread, "x" },
-                { FrameworkPackageSettings.DefaultCulture, "x" },
-                { FrameworkPackageSettings.DefaultUICulture, "x" }
+                [parameter] = "x",
             };
 
-            Assert.That(() => LoadMockAssembly(settings), Throws.Exception.TypeOf<FormatException>());
+            Assert.That(() =>
+            {
+                _runner.Load(GetMockAssembly(), settings);
+                _runner.Run(TestListener.NULL, TestFilter.Empty);
+            }, Throws.Exception.TypeOf<FormatException>());
         }
 
-        [Test]
-        public void Load_InvalidTypeSettings_ThrowsException()
+        [TestCase(FrameworkPackageSettings.NumberOfTestWorkers)]
+        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
+        [TestCase(FrameworkPackageSettings.DebugTests)]
+#if NETFRAMEWORK
+        [TestCase(FrameworkPackageSettings.PauseBeforeRun)]
+#endif
+        [TestCase(FrameworkPackageSettings.StopOnError)]
+        [TestCase(FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger)]
+        [TestCase(FrameworkPackageSettings.SynchronousEvents)]
+        [TestCase(FrameworkPackageSettings.RandomSeed)]
+        [TestCase(FrameworkPackageSettings.RunOnMainThread)]
+        [TestCase(FrameworkPackageSettings.DefaultCulture)]
+        [TestCase(FrameworkPackageSettings.DefaultUICulture)]
+        public void Load_InvalidTypeSettings_ThrowsException(string parameter)
         {
             var settings = new Dictionary<string, object>
             {
-                { FrameworkPackageSettings.NumberOfTestWorkers, new() },
-                { FrameworkPackageSettings.DefaultTimeout, new() },
-                { FrameworkPackageSettings.DebugTests, new() },
-                { FrameworkPackageSettings.PauseBeforeRun, new() },
-                { FrameworkPackageSettings.InternalTraceLevel, new() },
-                { FrameworkPackageSettings.StopOnError, new() },
-                { FrameworkPackageSettings.ThrowOnEachFailureUnderDebugger, new() },
-                { FrameworkPackageSettings.SynchronousEvents, new() },
-                { FrameworkPackageSettings.RandomSeed, new() },
-                { FrameworkPackageSettings.RunOnMainThread, new() },
-                { FrameworkPackageSettings.DefaultCulture, new() },
-                { FrameworkPackageSettings.DefaultUICulture, new() }
+                [parameter] = new object(),
             };
 
-            Assert.That(() => LoadMockAssembly(settings), Throws.Exception.TypeOf<ArgumentException>());
+            Assert.That(() =>
+            {
+                _runner.Load(GetMockAssembly(), settings);
+                _runner.Run(TestListener.NULL, TestFilter.Empty);
+            }, Throws.Exception.TypeOf<ArgumentException>());
         }
 
         [Test, SetUICulture("en-US")]
