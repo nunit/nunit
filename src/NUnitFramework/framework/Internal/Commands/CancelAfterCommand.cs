@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly IDebugger _debugger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
+        /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
