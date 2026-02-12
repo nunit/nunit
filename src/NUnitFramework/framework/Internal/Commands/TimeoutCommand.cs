@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 #else
 using System;
-using System.Threading.Tasks;
 #endif
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
@@ -93,29 +92,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            try
-            {
-                using (new TestExecutionContext.IsolatedContext())
-                {
-                    var testExecution = Task.Run(() => innerCommand.Execute(TestExecutionContext.CurrentContext));
-                    var timedOut = Task.WaitAny(new Task[] { testExecution }, _timeout) == -1;
-
-                    if (timedOut && !_debugger.IsAttached)
-                    {
-                        context.CurrentResult.SetResult(
-                            ResultState.Failure,
-                            $"Test exceeded Timeout value of {_timeout}ms");
-                    }
-                    else
-                    {
-                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                context.CurrentResult.RecordException(exception, FailureSite.Test);
-            }
+            context.CurrentResult.SetResult(
+                ResultState.Error,
+                $"TargetFramework doesn't support timeout on tests.");
 
             return context.CurrentResult;
         }

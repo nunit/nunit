@@ -1,3 +1,5 @@
+#if NETFRAMEWORK
+
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
@@ -16,10 +18,6 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-#if !NETFRAMEWORK
-#pragma warning disable CS0618 // Type or member is obsolete
-#endif
-
         private sealed class SampleTests
         {
             private const int TimeExceedingTimeout = 500;
@@ -344,13 +342,7 @@ namespace NUnit.Framework.Tests.Attributes
         internal sealed class Issue4723
         {
             [Test]
-#if NETFRAMEWORK
             [Timeout(2_000)] // Ok status will be Passed
-#else
-#pragma warning disable CS0618
-            [Timeout(2_000)] // Ok status will be Passed
-#pragma warning restore CS0618
-#endif
             public async Task Test_Timeout()
             {
                 await Task.Delay(1_000);
@@ -380,3 +372,5 @@ namespace NUnit.Framework.Tests.Attributes
         }
     }
 }
+
+#endif
