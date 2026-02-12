@@ -218,7 +218,15 @@ namespace NUnit.Framework.Api
             // Needs to be set for StopRun
             Context = context;
 
-            WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));
+            try
+            {
+                WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));
+            }
+            catch (Exception)
+            {
+                OnRunCompleted(this, EventArgs.Empty);
+                throw;
+            }
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
