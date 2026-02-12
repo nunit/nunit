@@ -7,9 +7,9 @@ namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
     /// The TextCapture class intercepts console output and writes it
-    /// to the current execution context, if one is present on the thread.
-    /// If no execution context is found, the output is written to a
-    /// default destination, normally the original destination of the
+    /// to the current execution context, unless it corresponds with an
+    /// ad-hoc test context. In an ad-hoc context, the output is written
+    /// to a default destination, normally the original destination of the
     /// intercepted output.
     /// </summary>
     public class TextCapture : TextWriter
@@ -34,42 +34,28 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a single character
         /// </summary>
         /// <param name="value">The char to write</param>
-        public override void Write(char value)
-        {
-            var context = TestExecutionContext.CurrentContext;
-
-            if (context is not null && context.CurrentResult is not null)
-                context.CurrentResult.OutWriter.Write(value);
-            else
-                _defaultWriter.Write(value);
-        }
+        public override void Write(char value) => GetWriter().Write(value);
 
         /// <summary>
         /// Writes a string
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void Write(string? value)
-        {
-            var context = TestExecutionContext.CurrentContext;
-
-            if (context is not null && context.CurrentResult is not null)
-                context.CurrentResult.OutWriter.Write(value);
-            else
-                _defaultWriter.Write(value);
-        }
+        public override void Write(string? value) => GetWriter().Write(value);
 
         /// <summary>
         /// Writes a string followed by a line terminator
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void WriteLine(string? value)
+        public override void WriteLine(string? value) => GetWriter().WriteLine(value);
+
+        private TextWriter GetWriter()
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context is not null && context.CurrentResult is not null)
-                context.CurrentResult.OutWriter.WriteLine(value);
+            if (context is not TestExecutionContext.AdhocContext && context.CurrentResult is not null)
+                return context.CurrentResult.OutWriter;
             else
-                _defaultWriter.WriteLine(value);
+                return _defaultWriter;
         }
     }
 }

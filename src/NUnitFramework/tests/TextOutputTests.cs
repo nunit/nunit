@@ -1,8 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -12,6 +16,7 @@ namespace NUnit.Framework.Tests
     {
         private const string SOME_TEXT = "Should go to the result";
         private const string ERROR_TEXT = "Written directly to console";
+        private const string SOME_MORE_TEXT = "Should be written to stdout";
         private static readonly string NL = Environment.NewLine;
 
         private static string CapturedOutput => TestExecutionContext.CurrentContext.CurrentResult.Output;
@@ -28,6 +33,62 @@ namespace NUnit.Framework.Tests
         {
             Console.WriteLine(SOME_TEXT);
             Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+        }
+
+        [Test]
+        public void ConsoleWrite_WritesToResult_AdhocContext()
+        {
+            var savedOut = Console.Out;
+            var stdout = new StringWriter();
+            Console.SetOut(new TextCapture(stdout));
+            try
+            {
+                using (ExecutionContext.SuppressFlow())
+                {
+                    Task.Run(() => Console.Write(SOME_MORE_TEXT))
+                        .Wait();
+
+                    Console.Write(SOME_TEXT);
+                }
+            }
+            finally
+            {
+                Console.SetOut(savedOut);
+            }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
+                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT));
+            });
+        }
+
+        [Test]
+        public void ConsoleWriteLine_WritesToResult_AdhocContext()
+        {
+            var savedOut = Console.Out;
+            var stdout = new StringWriter();
+            Console.SetOut(new TextCapture(stdout));
+            try
+            {
+                using (ExecutionContext.SuppressFlow())
+                {
+                    Task.Run(() => Console.WriteLine(SOME_MORE_TEXT))
+                        .Wait();
+
+                    Console.WriteLine(SOME_TEXT);
+                }
+            }
+            finally
+            {
+                Console.SetOut(savedOut);
+            }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
+                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT + NL));
+            });
         }
 
         [Test]
