@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using NUnit.Framework.Attributes;
 
 namespace NUnit.TestData.TestCaseSourceAttributeFixture
 {
@@ -303,44 +302,6 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         private class D3 : D1
         {
-        }
-    }
-
-    public static class TestCaseSource_NoTestsAttribute
-    {
-        public static TestCaseData[] EmptyData => [];
-
-        public class MethodSetsDefaultStatus
-        {
-            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
-            [NoTests(Framework.Interfaces.TestStatus.Passed)]
-            public static void MethodSetsPassed(int actual, int expected)
-            {
-                Assert.That(actual, Is.EqualTo(expected));
-            }
-
-            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
-            public static void MethodDoesntSpecify(int actual, int expected)
-            {
-                Assert.That(actual, Is.EqualTo(expected));
-            }
-        }
-
-        [TestFixture, NoTests(Framework.Interfaces.TestStatus.Passed)]
-        public class FixtureOverridesDefaultStatus
-        {
-            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
-            public static void NoMethodLevelOverride(int actual, int expected)
-            {
-                Assert.That(actual, Is.EqualTo(expected));
-            }
-
-            [TestCaseSource(typeof(TestCaseSource_NoTestsAttribute), nameof(EmptyData))]
-            [NoTests(Framework.Interfaces.TestStatus.Inconclusive)]
-            public static void WithMethodLevelOverride(int actual, int expected)
-            {
-                Assert.That(actual, Is.EqualTo(expected));
-            }
         }
     }
 }
