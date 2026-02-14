@@ -976,6 +976,55 @@ namespace NUnit.Framework.Tests.Attributes
         private static readonly object[] GenericNullableSource = [0, 1L, 2UL, 3F, 4D];
 
         #endregion
+
+        #region TestCaseDataWithReturn
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int>> TestCaseDataWithReturn_T_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int>(2).Returns(4);
+        }
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int, int>> TestCaseDataWithReturn_T1_T2_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int, int>(1, 2, expectedReturnValue: 3);
+            yield return new TestCaseDataWithReturn<int, int, int>(2, 3).Returns(5);
+        }
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int, int, int>(1, 2, 3, expectedReturnValue: 6);
+            yield return new TestCaseDataWithReturn<int, int, int, int>(2, 3, 4).Returns(24);
+        }
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int, int, int, int>(1, 2, 3, 4, expectedReturnValue: 10);
+            yield return new TestCaseDataWithReturn<int, int, int, int, int>(2, 3, 4, 5).Returns(14);
+        }
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_T5_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int, int, int, int, int>(1, 2, 3, 4, 5, expectedReturnValue: 55);
+            yield return new TestCaseDataWithReturn<int, int, int, int, int, int>(2, 3, 4, 5, 6).Returns(90);
+        }
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T_Source))]
+        public int TestCaseDataWithReturn_T(int arg) => arg * 2;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T1_T2_Source))]
+        public int TestCaseDataWithReturn_T1_T2(int arg1, int arg2) => arg1 + arg2;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T1_T2_T3_Source))]
+        public int TestCaseDataWithReturn_T1_T2_T3(int arg1, int arg2, int arg3) => arg1 * arg2 * arg3;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T1_T2_T3_T4_Source))]
+        public int TestCaseDataWithReturn_T1_T2_T3_T4(int arg1, int arg2, int arg3, int arg4) => arg1 + arg2 + arg3 + arg4;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T1_T2_T3_T4_T5_Source))]
+        public int TestCaseDataWithReturn_T1_T2_T3_T4_T5(int arg1, int arg2, int arg3, int arg4, int arg5)
+            => arg1 * arg1 + arg2 * arg2 + arg3 * arg3 + arg4 * arg4 + arg5 * arg5;
+
+        #endregion
     }
 
     public class TestSourceMayBeInherited
