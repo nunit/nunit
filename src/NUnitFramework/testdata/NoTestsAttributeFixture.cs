@@ -63,5 +63,41 @@ namespace NUnit.TestData
                 public void Test() { }
             }
         }
+
+        public static class ValueSource
+        {
+            public class MethodSetsDefaultStatus
+            {
+                [Test]
+                [NoTests(TestStatus.Passed)]
+                public static void MethodSetsPassed(
+                    [ValueSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))] int actual)
+                {
+                }
+
+                [Test]
+                public static void MethodDoesntSpecify(
+                    [ValueSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))] int actual)
+                {
+                }
+            }
+
+            [TestFixture, NoTests(TestStatus.Passed)]
+            public class FixtureOverridesDefaultStatus
+            {
+                [Test]
+                public static void NoMethodLevelOverride(
+                    [ValueSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))] int actual)
+                {
+                }
+
+                [Test]
+                [NoTests(TestStatus.Inconclusive)]
+                public static void WithMethodLevelOverride(
+                    [ValueSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))] int actual)
+                {
+                }
+            }
+        }
     }
 }
