@@ -1,11 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
-using TestFixtureSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestFixtureSource;
+using NUnit.TestData.TheoryFixture;
 using TestCaseSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestCaseSource;
+using TestFixtureSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestFixtureSource;
+using TheoryTestData = NUnit.TestData.NoTestsAttributeFixture.Theory;
 using ValueSourceTestData = NUnit.TestData.NoTestsAttributeFixture.ValueSource;
 
 namespace NUnit.Framework.Tests.Attributes
@@ -161,6 +164,63 @@ namespace NUnit.Framework.Tests.Attributes
 
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            }
+        }
+
+        public static class TheoryIncompatibility
+        {
+            [Test]
+            public static void EmptySource_OverridesResultFromParent()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TheoryTestData.FixtureOverridesDefaultStatus));
+
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var test = fixture.Tests.Single(x => x.Name == nameof(TheoryTestData.FixtureOverridesDefaultStatus.WithMethodLevelOverride)) as Test;
+                var result = TestBuilder.RunTest(test!);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            }
+
+            [Test]
+            public static void EmptySource_SetsResultOnParent()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(TheoryTestData.FixtureOverridesDefaultStatus));
+
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var test = fixture.Tests.Single(x => x.Name == nameof(TheoryTestData.FixtureOverridesDefaultStatus.NoMethodLevelOverride)) as Test;
+                var result = TestBuilder.RunTest(test!);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            }
+
+            [Test]
+            public static void EmptySource_ExplicitlySetsResultOnMethod()
+            {
+                var suite = TestBuilder.MakeParameterizedMethodSuite(
+                    typeof(TheoryTestData.MethodSetsDefaultStatus),
+                    nameof(TheoryTestData.MethodSetsDefaultStatus.MethodSetsPassed));
+
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+
+                var result = TestBuilder.RunTest(suite);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            }
+
+            [Test]
+            public static void EmptySource_UsesDefaultResultOnMethod()
+            {
+                var suite = TestBuilder.MakeParameterizedMethodSuite(
+                    typeof(TheoryTestData.MethodSetsDefaultStatus),
+                    nameof(TheoryTestData.MethodSetsDefaultStatus.MethodDoesntSpecify));
+
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+
+                var result = TestBuilder.RunTest(suite);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             }
         }
     }

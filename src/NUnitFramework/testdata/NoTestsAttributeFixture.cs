@@ -99,5 +99,37 @@ namespace NUnit.TestData
                 }
             }
         }
+
+        public static class Theory
+        {
+            public class MethodSetsDefaultStatus
+            {
+                [Theory]
+                [NoTests(TestStatus.Passed)]
+                public static void MethodSetsPassed(int x)
+                {
+                }
+
+                [Theory]
+                public static void MethodDoesntSpecify(int x)
+                {
+                }
+            }
+
+            [TestFixture, NoTests(TestStatus.Passed)]
+            public class FixtureOverridesDefaultStatus
+            {
+                [Theory]
+                public static void NoMethodLevelOverride(int x)
+                {
+                }
+
+                [Theory]
+                [NoTests(TestStatus.Inconclusive)]
+                public static void WithMethodLevelOverride(int x)
+                {
+                }
+            }
+        }
     }
 }
