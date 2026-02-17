@@ -69,9 +69,13 @@ namespace NUnit.Framework.Internal
         #region Overrides
 
         /// <summary>
-        /// Gets the number of test cases that executed
+        /// Gets the total number of test cases enumerated
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Test cases excluded by <see cref="CategoryAttribute"/>
+        /// are excluded from this count.
+        /// </remarks>
         public override int TotalCount
         {
             get
@@ -92,6 +96,13 @@ namespace NUnit.Framework.Internal
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Fail()"/>,
+        /// <see cref="Assert.Fail(string)"/>
+        /// as well as test cases that throw on an
+        /// assertion.
+        /// </remarks>
         public override int FailCount
         {
             get
@@ -112,7 +123,10 @@ namespace NUnit.Framework.Internal
         /// Gets the number of test cases that had warnings
         /// when running the test and all its children.
         /// </summary>
-        public override int PassCount
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Warn(string)"/>.
+        /// </remarks>
         public override int WarningCount
         {
             get
@@ -133,7 +147,14 @@ namespace NUnit.Framework.Internal
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>
-        public override int WarningCount
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Pass()"/>,
+        /// <see cref="Assert.Pass(string)"/>,
+        /// <see cref="Assert.Charlie()"/>,
+        /// as well as test cases that return without an
+        /// assertion.
+        /// </remarks>
         public override int PassCount
         {
             get
@@ -154,6 +175,12 @@ namespace NUnit.Framework.Internal
         /// Gets the number of test cases that were skipped
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Ignore()"/> as well as test
+        /// cases marked with <see cref="ExplicitAttribute"/>,
+        /// unless explicitly executed.
+        /// </remarks>
         public override int SkipCount
         {
             get
@@ -174,6 +201,10 @@ namespace NUnit.Framework.Internal
         /// Gets the number of test cases that were inconclusive
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Inconclusive()"/>.
+        /// </remarks>
         public override int InconclusiveCount
         {
             get
