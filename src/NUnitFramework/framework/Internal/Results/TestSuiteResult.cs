@@ -109,17 +109,18 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the number of test cases that passed
+        /// Gets the number of test cases that had warnings
         /// when running the test and all its children.
         /// </summary>
         public override int PassCount
+        public override int WarningCount
         {
             get
             {
                 RwLock.EnterReadLock();
                 try
                 {
-                    return _passCount;
+                    return _warningCount;
                 }
                 finally
                 {
@@ -133,13 +134,14 @@ namespace NUnit.Framework.Internal
         /// when running the test and all its children.
         /// </summary>
         public override int WarningCount
+        public override int PassCount
         {
             get
             {
                 RwLock.EnterReadLock();
                 try
                 {
-                    return _warningCount;
+                    return _passCount;
                 }
                 finally
                 {
