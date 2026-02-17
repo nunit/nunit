@@ -33,9 +33,11 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(SuiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
                 Assert.That(SuiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
                 Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.InitiatedCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.FailCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.CompletedCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.AssertCount, Is.EqualTo(0));

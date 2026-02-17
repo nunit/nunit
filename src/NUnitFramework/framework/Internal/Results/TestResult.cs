@@ -288,7 +288,55 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the number of test cases executed
+        /// Gets the number of test cases that got initiated
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - SkipCount</c>.
+        /// </remarks>
+        public int InitiatedCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return TotalCount - SkipCount;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that have completed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - (SkipCount + InconclusiveCount)</c>.
+        /// </remarks>
+        public int CompletedCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return TotalCount - (SkipCount + InconclusiveCount);
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the total number of test cases enumerated
         /// when running the test and all its children.
         /// </summary>
         /// <remarks>

@@ -269,9 +269,11 @@ namespace NUnit.Framework.Tests.Internal.Results
             Assert.Multiple(() =>
             {
                 Assert.That(delta.TotalCount, Is.EqualTo(35));
+                Assert.That(delta.InitiatedCount, Is.EqualTo(29));
                 Assert.That(delta.PassCount, Is.EqualTo(9));
                 Assert.That(delta.FailCount, Is.EqualTo(8));
                 Assert.That(delta.WarningCount, Is.EqualTo(7));
+                Assert.That(delta.CompletedCount, Is.EqualTo(24));
                 Assert.That(delta.SkipCount, Is.EqualTo(6));
                 Assert.That(delta.InconclusiveCount, Is.EqualTo(5));
                 Assert.That(delta.ResultState, Is.EqualTo(ResultState.Failure));

@@ -44,10 +44,12 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(clone.Message, Is.EqualTo(original.Message));
                 Assert.That(clone.StackTrace, Is.EqualTo(original.StackTrace));
 
-                Assert.That(clone.FailCount, Is.EqualTo(original.FailCount));
                 Assert.That(clone.TotalCount, Is.EqualTo(original.TotalCount));
-                Assert.That(clone.WarningCount, Is.EqualTo(original.WarningCount));
+                Assert.That(clone.InitiatedCount, Is.EqualTo(original.InitiatedCount));
                 Assert.That(clone.PassCount, Is.EqualTo(original.PassCount));
+                Assert.That(clone.FailCount, Is.EqualTo(original.FailCount));
+                Assert.That(clone.WarningCount, Is.EqualTo(original.WarningCount));
+                Assert.That(clone.CompletedCount, Is.EqualTo(original.CompletedCount));
                 Assert.That(clone.SkipCount, Is.EqualTo(original.SkipCount));
                 Assert.That(clone.InconclusiveCount, Is.EqualTo(original.InconclusiveCount));
                 Assert.That(clone.AssertCount, Is.EqualTo(original.AssertCount));

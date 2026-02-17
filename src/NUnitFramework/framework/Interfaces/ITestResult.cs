@@ -90,6 +90,19 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
+        /// Gets the number of test cases that got initiated
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - SkipCount</c>.
+        /// </remarks>
+        int InitiatedCount
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the number of asserts executed
         /// when running the test and all its children.
         /// </summary>
@@ -140,6 +153,19 @@ namespace NUnit.Framework.Interfaces
         /// assertion.
         /// </remarks>
         int PassCount
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that have completed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - (SkipCount + InconclusiveCount)</c>.
+        /// </remarks>
+        int CompletedCount
         {
             get;
         }

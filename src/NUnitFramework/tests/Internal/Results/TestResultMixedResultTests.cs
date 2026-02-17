@@ -42,9 +42,11 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(SuiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
                 Assert.That(SuiteResult.StackTrace, Is.Null, "There should be no stacktrace");
                 Assert.That(SuiteResult.TotalCount, Is.EqualTo(5));
+                Assert.That(SuiteResult.InitiatedCount, Is.EqualTo(5));
                 Assert.That(SuiteResult.PassCount, Is.EqualTo(2));
                 Assert.That(SuiteResult.FailCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.WarningCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.CompletedCount, Is.EqualTo(4));
                 Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.AssertCount, Is.EqualTo(6));
