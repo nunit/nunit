@@ -174,6 +174,7 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
+
             private set => _resultState = value;
         }
 
@@ -238,6 +239,7 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
+
             private set => _message = value;
         }
 
