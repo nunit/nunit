@@ -93,6 +93,34 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Pass()"/>,
+        /// <see cref="Assert.Pass(string)"/>,
+        /// <see cref="Assert.Charlie()"/>,
+        /// as well as test cases that return without an
+        /// assertion.
+        /// </remarks>
+        public override int PassCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _passCount;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
         /// </summary>
@@ -135,34 +163,6 @@ namespace NUnit.Framework.Internal
                 try
                 {
                     return _warningCount;
-                }
-                finally
-                {
-                    RwLock.ExitReadLock();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the number of test cases that passed
-        /// when running the test and all its children.
-        /// </summary>
-        /// <remarks>
-        /// Count reflects test cases that return with
-        /// <see cref="Assert.Pass()"/>,
-        /// <see cref="Assert.Pass(string)"/>,
-        /// <see cref="Assert.Charlie()"/>,
-        /// as well as test cases that return without an
-        /// assertion.
-        /// </remarks>
-        public override int PassCount
-        {
-            get
-            {
-                RwLock.EnterReadLock();
-                try
-                {
-                    return _passCount;
                 }
                 finally
                 {

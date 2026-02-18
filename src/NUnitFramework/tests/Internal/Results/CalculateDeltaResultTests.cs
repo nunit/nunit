@@ -228,10 +228,10 @@ namespace NUnit.Framework.Tests.Internal.Results
             int inconclusiveCount)
             : TestResult(new TestMethod(new MethodWrapper(typeof(CalculateDeltaResultTests), nameof(SetUp))))
         {
-            public override int TotalCount => FailCount + WarningCount + PassCount + SkipCount + InconclusiveCount;
+            public override int TotalCount => PassCount + FailCount + WarningCount + SkipCount + InconclusiveCount;
+            public override int PassCount => passedCount;
             public override int FailCount => failedCount;
             public override int WarningCount => warningCount;
-            public override int PassCount => passedCount;
             public override int SkipCount => skipCount;
             public override int InconclusiveCount => inconclusiveCount;
 

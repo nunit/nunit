@@ -719,6 +719,12 @@ namespace NUnit.Framework
             public virtual string? StackTrace => _result.StackTrace;
 
             /// <summary>
+            /// Gets the number of test cases that passed
+            /// when running the test and all its children.
+            /// </summary>
+            public int PassCount => _result.PassCount;
+
+            /// <summary>
             /// Gets the number of test cases that failed
             /// when running the test and all its children.
             /// </summary>
@@ -729,12 +735,6 @@ namespace NUnit.Framework
             /// when running the test and all its children.
             /// </summary>
             public int WarningCount => _result.WarningCount;
-
-            /// <summary>
-            /// Gets the number of test cases that passed
-            /// when running the test and all its children.
-            /// </summary>
-            public int PassCount => _result.PassCount;
 
             /// <summary>
             /// Gets the number of test cases that were skipped

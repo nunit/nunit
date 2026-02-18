@@ -346,6 +346,20 @@ namespace NUnit.Framework.Internal
         public abstract int TotalCount { get; }
 
         /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Pass()"/>,
+        /// <see cref="Assert.Pass(string)"/>,
+        /// <see cref="Assert.Charlie()"/>,
+        /// as well as test cases that return without an
+        /// assertion.
+        /// </remarks>
+        public abstract int PassCount { get; }
+
+        /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
         /// </summary>
@@ -367,20 +381,6 @@ namespace NUnit.Framework.Internal
         /// <see cref="Assert.Warn(string)"/>.
         /// </remarks>
         public abstract int WarningCount { get; }
-
-        /// <summary>
-        /// Gets the number of test cases that passed
-        /// when running the test and all its children.
-        /// </summary>
-        /// <remarks>
-        /// Count reflects test cases that return with
-        /// <see cref="Assert.Pass()"/>,
-        /// <see cref="Assert.Pass(string)"/>,
-        /// <see cref="Assert.Charlie()"/>,
-        /// as well as test cases that return without an
-        /// assertion.
-        /// </remarks>
-        public abstract int PassCount { get; }
 
         /// <summary>
         /// Gets the number of test cases that were skipped
@@ -501,8 +501,8 @@ namespace NUnit.Framework.Internal
                 thisNode.AddAttribute("failed", FailCount.ToString());
                 thisNode.AddAttribute("warnings", WarningCount.ToString());
                 thisNode.AddAttribute("completed", CompletedCount.ToString());
-                thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
+                thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
             }
 
             thisNode.AddAttribute("asserts", AssertCount.ToString());

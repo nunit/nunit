@@ -71,10 +71,10 @@ namespace NUnit.Framework.Tests.Api
                     new XAttribute("initiated", 0),
                     new XAttribute("passed", 0),
                     new XAttribute("failed", 0),
-                    new XAttribute("inconclusive", 0),
-                    new XAttribute("skipped", 0),
                     new XAttribute("warnings", 0),
                     new XAttribute("completed", 0),
+                    new XAttribute("skipped", 0),
+                    new XAttribute("inconclusive", 0),
                     new XAttribute("asserts", 0),
                     new XAttribute("random-seed", 0));
 
@@ -88,11 +88,11 @@ namespace NUnit.Framework.Tests.Api
             Assert.Multiple(() =>
             {
                 SchemaTestUtils.AssertValidXml(@"
-                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' initiated='0' passed='0' failed='0' inconclusive='0' skipped='0' warnings='0' completed='0' asserts='0' random-seed='0'>
+                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' skipped='0' inconclusive='0' asserts='0' random-seed='0'>
                       <command-line />
                       <filter />
                       <test-case result='Passed' asserts='0' id='1' name='0' fullname='0' runstate='Runnable' seed='0' />
-                      <test-suite result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' inconclusive='0' skipped='0' id='2' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0' />
+                      <test-suite result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' skipped='0' inconclusive='0' id='2' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0' />
                       <test-case result='Passed' asserts='0' id='3' name='0' fullname='0' runstate='Runnable' seed='0' />
                     </test-run>",
                     "TestResult.xsd");
@@ -118,8 +118,8 @@ namespace NUnit.Framework.Tests.Api
                   failed='0'
                   warnings='0'
                   completed='0'
-                  inconclusive='0'
                   skipped='0'
+                  inconclusive='0'
                   id='0'
                   name='0'
                   fullname='0'
@@ -148,21 +148,21 @@ namespace NUnit.Framework.Tests.Api
         public static void TestResultSchemaDisallowsDuplicateIds()
         {
             SchemaTestUtils.AssertInvalidXml(@"
-                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' initiated='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' initiated='0' passed='0' failed='0' skipped='0' inconclusive='0' asserts='0' random-seed='0'>
                   <command-line />
                   <filter />
-                  <test-suite id='1' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                  <test-suite id='1' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' skipped='0' inconclusive='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
                     <test-case id='0' result='Passed' asserts='0' name='0' fullname='0' runstate='Runnable' seed='0' />
                   </test-suite>
                 </test-run>",
                 "TestResult.xsd");
 
             SchemaTestUtils.AssertInvalidXml(@"
-                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' skipped='0' inconclusive='0' asserts='0' random-seed='0'>
                   <command-line />
                   <filter />
-                  <test-suite id='1' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
-                    <test-suite id='2' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                  <test-suite id='1' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' skipped='0' inconclusive='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                    <test-suite id='2' result='Passed' asserts='0' total='0' initiated='0' passed='0' failed='0' warnings='0' completed='0' skipped='0' inconclusive='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
                       <test-case id='1' result='Passed' asserts='0' name='0' fullname='0' runstate='Runnable' seed='0' />
                     </test-suite>
                   </test-suite>
