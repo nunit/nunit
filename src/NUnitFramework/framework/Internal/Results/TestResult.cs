@@ -496,9 +496,11 @@ namespace NUnit.Framework.Internal
             if (Test is TestSuite)
             {
                 thisNode.AddAttribute("total", TotalCount.ToString());
+                thisNode.AddAttribute("initiated", InitiatedCount.ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
                 thisNode.AddAttribute("failed", FailCount.ToString());
                 thisNode.AddAttribute("warnings", WarningCount.ToString());
+                thisNode.AddAttribute("completed", CompletedCount.ToString());
                 thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
             }

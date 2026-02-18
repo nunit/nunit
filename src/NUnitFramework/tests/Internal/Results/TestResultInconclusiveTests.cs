@@ -96,9 +96,12 @@ namespace NUnit.Framework.Tests.Internal.Results
             {
                 Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Inconclusive"));
                 Assert.That(suiteNode.Attributes["label"], Is.Null);
+                Assert.That(suiteNode.Attributes["total"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["initiated"], Is.EqualTo("1"));
                 Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["completed"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("1"));
                 Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("0"));

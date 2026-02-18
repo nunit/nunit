@@ -25,9 +25,11 @@
           </xs:sequence>
           <xs:attributeGroup ref="TestResultBaseAttributeGroup" />
           <xs:attribute name="total" type="NonnegativeInt32" use="required" />
+          <xs:attribute name="initiated" type="NonnegativeInt32" use="required" />
           <xs:attribute name="passed" type="NonnegativeInt32" use="required" />
           <xs:attribute name="failed" type="NonnegativeInt32" use="required" />
           <xs:attribute name="warnings" type="NonnegativeInt32" use="required" />
+          <xs:attribute name="completed" type="NonnegativeInt32" use="required" />
           <xs:attribute name="inconclusive" type="NonnegativeInt32" use="required" />
           <xs:attribute name="skipped" type="NonnegativeInt32" use="required" />
         </xs:extension>
@@ -164,11 +166,13 @@
       <xs:attribute name="end-time" type="xs:string" />
       <xs:attribute name="duration" type="TestDurationType" />
       <xs:attribute name="total" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="initiated" type="NonnegativeInt32" use="required" />
       <xs:attribute name="passed" type="NonnegativeInt32" use="required" />
       <xs:attribute name="failed" type="NonnegativeInt32" use="required" />
       <xs:attribute name="inconclusive" type="NonnegativeInt32" use="required" />
       <xs:attribute name="skipped" type="NonnegativeInt32" use="required" />
       <xs:attribute name="warnings" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="completed" type="NonnegativeInt32" use="required" />
       <xs:attribute name="asserts" type="NonnegativeInt32" use="required" />
       <xs:attribute name="random-seed" type="xs:int" use="required" />
     </xs:complexType>
