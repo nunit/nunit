@@ -1,11 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.TheoryFixture;
 using TestCaseSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestCaseSource;
 using TestFixtureSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestFixtureSource;
 using TheoryTestData = NUnit.TestData.NoTestsAttributeFixture.Theory;

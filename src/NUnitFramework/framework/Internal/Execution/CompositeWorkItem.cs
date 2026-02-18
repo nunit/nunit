@@ -17,8 +17,6 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CompositeWorkItem : WorkItem
     {
-        //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
-
         private readonly TestSuite _suite;
         private readonly TestSuiteResult _suiteResult;
         private TestCommand? _setupCommand;
@@ -27,7 +25,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children { get; } = new();
+        public List<WorkItem> Children { get; } = [];
 
         /// <summary>
         /// Indicates whether this work item should use a separate dispatcher.
@@ -103,10 +101,11 @@ namespace NUnit.Framework.Internal.Execution
                                 {
                                     Result.SetResult(ResultState.Failure, "No test cases were provided");
                                 }
-                                else //if (Test.TestType == "ParameterizedMethodSuite" || Test.TestType == "ParameterizedMethod" || Test.TestType == "ParameterizedFixture")
+                                else
                                 {
-                                    var properties = Test.PropertyValues(PropertyNames.NoTests).ToList();
-                                    if (properties.Count > 0 && properties[0].Values[0] is TestStatus status)
+                                    var property = Test.PropertyValues(PropertyNames.NoTests).FirstOrDefault();
+                                    if (property is not null
+                                        && property.Values[property.Values.Count - 1] is TestStatus status)
                                     {
                                         Result.SetResult(new(status), "No test cases were provided");
                                     }

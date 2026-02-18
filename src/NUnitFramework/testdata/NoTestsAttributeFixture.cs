@@ -6,6 +6,8 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.TestData
 {
+#pragma warning disable CS9113 // Parameter is unread.
+#pragma warning disable IDE0060 // Remove unused parameter
     public static class NoTestsAttributeFixture
     {
         public static TestCaseData[] EmptyData => [];
@@ -14,8 +16,8 @@ namespace NUnit.TestData
         {
             public class MethodSetsDefaultStatus
             {
+                [NoTests(TestStatus.Passed)]
                 [TestCaseSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))]
-                [NoTests(Framework.Interfaces.TestStatus.Passed)]
                 public static void MethodSetsPassed(int actual, int expected)
                 {
                     Assert.That(actual, Is.EqualTo(expected));
@@ -28,7 +30,8 @@ namespace NUnit.TestData
                 }
             }
 
-            [TestFixture, NoTests(Framework.Interfaces.TestStatus.Passed)]
+            [TestFixture]
+            [NoTests(TestStatus.Passed)]
             public class FixtureOverridesDefaultStatus
             {
                 [TestCaseSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))]
@@ -37,8 +40,8 @@ namespace NUnit.TestData
                     Assert.That(actual, Is.EqualTo(expected));
                 }
 
+                [NoTests(TestStatus.Inconclusive)]
                 [TestCaseSource(typeof(NoTestsAttributeFixture), nameof(EmptyData))]
-                [NoTests(Framework.Interfaces.TestStatus.Inconclusive)]
                 public static void WithMethodLevelOverride(int actual, int expected)
                 {
                     Assert.That(actual, Is.EqualTo(expected));
@@ -52,7 +55,9 @@ namespace NUnit.TestData
             public class FixtureSetsDefaultStatus(string arg)
             {
                 [Test]
-                public void Test() { }
+                public void Test()
+                {
+                }
             }
 
             [NoTests(TestStatus.Passed)]
@@ -60,7 +65,9 @@ namespace NUnit.TestData
             public class FixtureOverridesDefaultStatus(string arg)
             {
                 [Test]
-                public void Test() { }
+                public void Test()
+                {
+                }
             }
         }
 
@@ -82,7 +89,8 @@ namespace NUnit.TestData
                 }
             }
 
-            [TestFixture, NoTests(TestStatus.Passed)]
+            [TestFixture]
+            [NoTests(TestStatus.Passed)]
             public class FixtureOverridesDefaultStatus
             {
                 [Test]
@@ -116,7 +124,8 @@ namespace NUnit.TestData
                 }
             }
 
-            [TestFixture, NoTests(TestStatus.Passed)]
+            [TestFixture]
+            [NoTests(TestStatus.Passed)]
             public class FixtureOverridesDefaultStatus
             {
                 [Theory]
@@ -132,4 +141,6 @@ namespace NUnit.TestData
             }
         }
     }
+#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore CS9113 // Parameter is unread.
 }
