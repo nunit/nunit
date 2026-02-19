@@ -59,8 +59,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(context.ParallelScope, Is.EqualTo(scope & ParallelScope.ContextMask));
         }
 
-        private static readonly ParallelScope[] Scopes = new ParallelScope[]
-        {
+        private static readonly ParallelScope[] Scopes = [
             ParallelScope.None,
             ParallelScope.Self,
             ParallelScope.Fixtures,
@@ -68,7 +67,7 @@ namespace NUnit.Framework.Tests.Attributes
             ParallelScope.All,
             ParallelScope.Self | ParallelScope.Children,
             ParallelScope.Self | ParallelScope.Fixtures
-        };
+        ];
 
         [Test]
         public void MayNotCombineParallelScopeSelfAndParallelScopeNone()

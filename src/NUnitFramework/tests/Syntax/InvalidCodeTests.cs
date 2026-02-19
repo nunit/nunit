@@ -1,4 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+#if NETFRAMEWORK
+using NUnit.Framework.Tests.TestUtilities;
 
 using System;
 using Microsoft.CodeAnalysis.Emit;
@@ -50,7 +52,7 @@ class SomeClass
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
-        private static readonly string Template2 =
+        private const string Template2 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
