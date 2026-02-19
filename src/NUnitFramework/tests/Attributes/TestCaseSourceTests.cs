@@ -196,6 +196,38 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(args, Is.EqualTo(SingleDimensionArray[0]));
         }
 
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoArray(Array array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Length.EqualTo(3));
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIListOfT(IList<int> array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Count.EqualTo(3));
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIEnumerableOfT(IEnumerable<int> array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Exactly(3).Items);
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIEnumerable(IEnumerable array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Exactly(3).Items);
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
         [TestCaseSource(nameof(ExplicitNullValue))]
         public void TestMayReceiveExplicitNullValue(object item)
         {
