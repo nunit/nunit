@@ -4,6 +4,9 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+#if NETFRAMEWORK
+using NUnit.TestData;
+#endif
 using TestCaseSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestCaseSource;
 using TestFixtureSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestFixtureSource;
 using TheoryTestData = NUnit.TestData.NoTestsAttributeFixture.Theory;
@@ -14,6 +17,61 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     internal static class NoTestsAttributeTests
     {
+#if NETFRAMEWORK
+        public static class AssemblyLevelSupport
+        {
+            private static System.Reflection.Assembly _dynamicTestAssembly;
+
+            [OneTimeSetUp]
+            public static void OneTimeSetUp()
+            {
+                _dynamicTestAssembly = TestAssemblyHelper.GenerateInMemoryAssembly(
+                    NoTestsAttributeFixture.AssemblyLevelSupportCode,
+                    [typeof(NoTestsAttributeFixture).Assembly.Location]);
+            }
+
+            [Test]
+            public static void EmptySource_NoFixtureOverride_UsesExpectedStatus()
+            {
+                var testType = _dynamicTestAssembly.GetType("MethodSetsDefaultStatus");
+                Assert.That(testType, Is.Not.Null);
+
+                var fixture = TestBuilder.MakeFixture(testType);
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var methodOverrides = fixture.Tests.Single(x => x.Name == "MethodSetsPassed") as Test;
+                var overrideResult = TestBuilder.RunTest(methodOverrides!);
+                Assert.That(overrideResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(overrideResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+                var methodDoesntOverride = fixture.Tests.Single(x => x.Name == "MethodDoesntSpecify") as Test;
+                var noOverrideResult = TestBuilder.RunTest(methodDoesntOverride!);
+                Assert.That(noOverrideResult.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(noOverrideResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            }
+
+            [Test]
+            public static void EmptySource_WithFixtureOverride_UsesExpectedStatus()
+            {
+                var testType = _dynamicTestAssembly.GetType("FixtureOverridesAssemblyStatus");
+                Assert.That(testType, Is.Not.Null);
+
+                var fixture = TestBuilder.MakeFixture(testType);
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+
+                var methodOverrides = fixture.Tests.Single(x => x.Name == "NoMethodLevelOverride") as Test;
+                var overrideResult = TestBuilder.RunTest(methodOverrides!);
+                Assert.That(overrideResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(overrideResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+                var methodDoesntOverride = fixture.Tests.Single(x => x.Name == "WithMethodLevelOverride") as Test;
+                var noOverrideResult = TestBuilder.RunTest(methodDoesntOverride!);
+                Assert.That(noOverrideResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(noOverrideResult.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
+            }
+        }
+#endif
+
         public static class TestFixtureSourceCompatibility
         {
             [Test]

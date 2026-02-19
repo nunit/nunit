@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework;
-using NUnit.Framework.Attributes;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.TestData
@@ -140,6 +139,49 @@ namespace NUnit.TestData
                 }
             }
         }
+
+        public const string AssemblyLevelSupportCode = @"
+            using NUnit.Framework;
+            using NUnit.Framework.Interfaces;
+            using NUnit.TestData;
+
+            [assembly: NoTests(TestStatus.Failed)]
+
+            [TestFixture]
+            [NoTests(TestStatus.Passed)]
+            public class FixtureOverridesAssemblyStatus
+            {
+                [Test]
+                public static void NoMethodLevelOverride(
+                    [ValueSource(typeof(NoTestsAttributeFixture), ""EmptyData"")] int actual)
+                {
+                }
+
+                [Test]
+                [NoTests(TestStatus.Inconclusive)]
+                public static void WithMethodLevelOverride(
+                    [ValueSource(typeof(NoTestsAttributeFixture), ""EmptyData"")] int actual)
+                {
+                }
+            }
+
+            [TestFixture]
+            public class MethodSetsDefaultStatus
+            {
+                [Test]
+                [NoTests(TestStatus.Passed)]
+                public static void MethodSetsPassed(
+                    [ValueSource(typeof(NoTestsAttributeFixture), ""EmptyData"")] int actual)
+                {
+                }
+
+                [Test]
+                public static void MethodDoesntSpecify(
+                    [ValueSource(typeof(NoTestsAttributeFixture), ""EmptyData"")] int actual)
+                {
+                }
+            }
+            ";
     }
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore CS9113 // Parameter is unread.
