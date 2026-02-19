@@ -184,7 +184,7 @@ namespace NUnit.Framework
                                     var argsNeeded = parameters.Length;
                                     if (argsNeeded > 0 && (parameters.LastParameterIsParamsArray()
                                         || argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType()
-                                        && (argsNeeded > 1 || !parameters[0].ParameterType.IsAssignableFrom(array.GetType()))))
+                                        && (argsNeeded > 1 || array.Length == argsNeeded || !parameters[0].ParameterType.IsAssignableFrom(array.GetType()))))
                                     {
                                         args = new object?[array.Length];
                                         for (var i = 0; i < array.Length; i++)
