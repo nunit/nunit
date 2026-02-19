@@ -174,6 +174,7 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
+
             private set => _resultState = value;
         }
 
@@ -238,6 +239,7 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
+
             private set => _message = value;
         }
 
@@ -286,39 +288,120 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets the number of test cases executed
+        /// Gets the number of test cases that got initiated
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - SkipCount</c>.
+        /// </remarks>
+        public int InitiatedCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return TotalCount - SkipCount;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that have completed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Convenience property for
+        /// <c>TotalCount - (SkipCount + InconclusiveCount)</c>.
+        /// </remarks>
+        public int CompletedCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return TotalCount - (SkipCount + InconclusiveCount);
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the total number of test cases enumerated
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Test cases excluded by <see cref="CategoryAttribute"/>
+        /// are excluded from this count.
+        /// </remarks>
         public abstract int TotalCount { get; }
+
+        /// <summary>
+        /// Gets the number of test cases that passed
+        /// when running the test and all its children.
+        /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Pass()"/>,
+        /// <see cref="Assert.Pass(string)"/>,
+        /// <see cref="Assert.Charlie()"/>,
+        /// as well as test cases that return without an
+        /// assertion.
+        /// </remarks>
+        public abstract int PassCount { get; }
 
         /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Fail()"/>,
+        /// <see cref="Assert.Fail(string)"/>
+        /// as well as test cases that throw on an
+        /// assertion.
+        /// </remarks>
         public abstract int FailCount { get; }
 
         /// <summary>
         /// Gets the number of test cases that had warnings
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Warn(string)"/>.
+        /// </remarks>
         public abstract int WarningCount { get; }
-
-        /// <summary>
-        /// Gets the number of test cases that passed
-        /// when running the test and all its children.
-        /// </summary>
-        public abstract int PassCount { get; }
 
         /// <summary>
         /// Gets the number of test cases that were skipped
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Ignore()"/> as well as test
+        /// cases marked with <see cref="ExplicitAttribute"/>,
+        /// unless explicitly executed.
+        /// </remarks>
         public abstract int SkipCount { get; }
 
         /// <summary>
         /// Gets the number of test cases that were inconclusive
         /// when running the test and all its children.
         /// </summary>
+        /// <remarks>
+        /// Count reflects test cases that return with
+        /// <see cref="Assert.Inconclusive()"/>.
+        /// </remarks>
         public abstract int InconclusiveCount { get; }
 
         /// <summary>
@@ -413,11 +496,13 @@ namespace NUnit.Framework.Internal
             if (Test is TestSuite)
             {
                 thisNode.AddAttribute("total", TotalCount.ToString());
+                thisNode.AddAttribute("initiated", InitiatedCount.ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
                 thisNode.AddAttribute("failed", FailCount.ToString());
                 thisNode.AddAttribute("warnings", WarningCount.ToString());
-                thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
+                thisNode.AddAttribute("completed", CompletedCount.ToString());
                 thisNode.AddAttribute("skipped", SkipCount.ToString());
+                thisNode.AddAttribute("inconclusive", InconclusiveCount.ToString());
             }
 
             thisNode.AddAttribute("asserts", AssertCount.ToString());

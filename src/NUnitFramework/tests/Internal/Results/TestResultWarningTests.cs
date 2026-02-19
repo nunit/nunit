@@ -32,9 +32,11 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.ChildWarning));
                 Assert.That(SuiteResult.Message, Is.EqualTo(TestResult.CHILD_WARNINGS_MESSAGE));
                 Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.InitiatedCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.FailCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.WarningCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.CompletedCount, Is.EqualTo(1));
                 Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
                 Assert.That(SuiteResult.AssertCount, Is.EqualTo(0));
@@ -70,9 +72,12 @@ namespace NUnit.Framework.Tests.Internal.Results
                 Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Warning"));
                 Assert.That(suiteNode.Attributes["label"], Is.EqualTo(null));
                 Assert.That(suiteNode.Attributes["site"], Is.EqualTo("Child"));
+                Assert.That(suiteNode.Attributes["total"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["initiated"], Is.EqualTo("1"));
                 Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["completed"], Is.EqualTo("1"));
                 Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("0"));
                 Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("0"));

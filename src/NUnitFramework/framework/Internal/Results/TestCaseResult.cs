@@ -39,28 +39,28 @@ namespace NUnit.Framework.Internal
         #region Overrides
 
         /// <summary>
-        /// Gets the number of test cases that failed
-        /// when running the test and all its children.
-        /// </summary>
-        public override int FailCount => ResultState.Status == TestStatus.Failed ? 1 : 0;
-
-        /// <summary>
         /// Gets the number of test cases that executed
         /// when running the test and all its children.
         /// </summary>
         public override int TotalCount => 1;
 
         /// <summary>
-        /// Gets the number of test cases that had warnings
-        /// when running the test and all its children.
-        /// </summary>
-        public override int WarningCount => ResultState.Status == TestStatus.Warning ? 1 : 0;
-
-        /// <summary>
         /// Gets the number of test cases that passed
         /// when running the test and all its children.
         /// </summary>
         public override int PassCount => ResultState.Status == TestStatus.Passed ? 1 : 0;
+
+        /// <summary>
+        /// Gets the number of test cases that failed
+        /// when running the test and all its children.
+        /// </summary>
+        public override int FailCount => ResultState.Status == TestStatus.Failed ? 1 : 0;
+
+        /// <summary>
+        /// Gets the number of test cases that had warnings
+        /// when running the test and all its children.
+        /// </summary>
+        public override int WarningCount => ResultState.Status == TestStatus.Warning ? 1 : 0;
 
         /// <summary>
         /// Gets the number of test cases that were skipped

@@ -154,11 +154,11 @@ namespace NUnit.Framework.Tests
 
             public override int TotalCount => 1;
 
+            public override int PassCount => 1;
+
             public override int FailCount => 0;
 
             public override int WarningCount => 0;
-
-            public override int PassCount => 1;
 
             public override int SkipCount => 0;
 
