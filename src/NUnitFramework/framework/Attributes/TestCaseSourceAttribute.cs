@@ -176,23 +176,14 @@ namespace NUnit.Framework
                                 //    TestCaseSource can accept.
                                 if (item is Array array)
                                 {
-                                    // If array has the same number of elements as parameters
-                                    // and it does not fit exactly into single existing parameter
-                                    // we believe that this array contains arguments, not is a bare
-                                    // argument itself.
                                     var parameters = method.GetParameters();
-                                    var argsNeeded = parameters.Length;
-                                    if (argsNeeded > 0 && (parameters.LastParameterIsParamsArray()
-                                        || argsNeeded <= array.Length && parameters[0].ParameterType != array.GetType()
-                                        && (argsNeeded > 1 || array.Length == argsNeeded || !parameters[0].ParameterType.IsAssignableFrom(array.GetType()))))
+                                    if (parameters.ShouldUnpackArrayAsArguments(array))
                                     {
-                                        args = new object?[array.Length];
-                                        for (var i = 0; i < array.Length; i++)
-                                            args[i] = array.GetValue(i);
+                                        args = array.Unpack();
 
-                                        if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object))
+                                        if (parameters.HasSingleParameterOfType(typeof(object)))
                                         {
-                                            // wrap the raw array so that it can be passed as expected
+                                            // re-wrap so the array arrives as a single object argument
                                             args = [args];
                                         }
                                     }
