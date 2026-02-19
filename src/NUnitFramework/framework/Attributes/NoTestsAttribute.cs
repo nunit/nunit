@@ -4,12 +4,12 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework
 {
     /// <summary>
     /// Indicates the default status of a parameterized test method or test fixture containing no executable child tests.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class NoTestsAttribute : PropertyAttribute, IApplyToTest
     {
         /// <summary>
