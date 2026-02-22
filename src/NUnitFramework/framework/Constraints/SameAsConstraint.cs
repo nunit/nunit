@@ -6,24 +6,21 @@ namespace NUnit.Framework.Constraints
     /// SameAsConstraint tests whether an object is identical to
     /// the object passed to its constructor
     /// </summary>
-    public class SameAsConstraint : Constraint
+    public class SameAsConstraint<T>(T? expected) : SameAsConstraint(expected)
     {
-        private readonly object? _expected;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SameAsConstraint"/> class.
-        /// </summary>
-        /// <param name="expected">The expected object.</param>
-        public SameAsConstraint(object? expected) : base(expected)
-        {
-            _expected = expected;
-        }
-
+    /// <summary>
+    /// SameAsConstraint tests whether an object is identical to
+    /// the object passed to its constructor
+    /// </summary>
+    public class SameAsConstraint(object? expected) : Constraint(expected)
+    {
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description => "same as " + MsgUtils.FormatValue(_expected);
+        public override string Description => "same as " + MsgUtils.FormatValue(expected);
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -32,7 +29,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            bool hasSucceeded = ReferenceEquals(_expected, actual);
+            bool hasSucceeded = ReferenceEquals(expected, actual);
 
             return new ConstraintResult(this, actual, hasSucceeded);
         }
