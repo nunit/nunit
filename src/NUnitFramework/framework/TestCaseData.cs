@@ -245,7 +245,7 @@ namespace NUnit.Framework
         public new TSelf Returns(object? result)
         {
             base.Returns(result);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace NUnit.Framework
         public new TSelf SetName(string? name)
         {
             base.SetName(name);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace NUnit.Framework
         public new TSelf SetArgDisplayNames(params string[]? displayNames)
         {
             base.SetArgDisplayNames(displayNames);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace NUnit.Framework
         public new TSelf SetArgDisplayNames(params object?[]? displayNames)
         {
             base.SetArgDisplayNames(displayNames);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace NUnit.Framework
         public new TSelf SetDescription(string description)
         {
             base.SetDescription(description);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace NUnit.Framework
         public new TSelf SetCategory(string category)
         {
             base.SetCategory(category);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -328,7 +328,7 @@ namespace NUnit.Framework
         public new TSelf SetProperty(string propName, string propValue)
         {
             base.SetProperty(propName, propValue);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace NUnit.Framework
         public new TSelf SetProperty(string propName, int propValue)
         {
             base.SetProperty(propName, propValue);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace NUnit.Framework
         public new TSelf SetProperty(string propName, double propValue)
         {
             base.SetProperty(propName, propValue);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace NUnit.Framework
         public new TSelf Explicit()
         {
             base.Explicit();
-            return (TSelf)this;
+            return GetSelf();
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace NUnit.Framework
         public new TSelf Explicit(string reason)
         {
             base.Explicit(reason);
-            return (TSelf)this;
+            return GetSelf();
         }
 
         #endregion
