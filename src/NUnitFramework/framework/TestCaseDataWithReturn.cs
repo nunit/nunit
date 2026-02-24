@@ -1,10 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework
 {
     /// <summary>
     /// Implementations of fluent instance modifier methods for TestCaseData&lt;&gt; generic types.
     /// </summary>
-    public abstract class TestCaseDataWithReturnGenericBase<TSelf, TReturn> : TestCaseData
+    public abstract class TestCaseDataWithReturnGenericBase<TSelf, TReturn> : TestCaseParameters
         where TSelf : TestCaseDataWithReturnGenericBase<TSelf, TReturn>
     {
         /// <summary>
@@ -30,7 +34,7 @@ namespace NUnit.Framework
         /// <returns>A modified TestCaseData</returns>
         public TSelf Returns(TReturn result)
         {
-            base.Returns(result);
+            ExpectedResult = result;
             return GetSelf();
         }
 
@@ -43,9 +47,9 @@ namespace NUnit.Framework
         /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
         /// needing to use tokens like {m}.
         /// </remarks>
-        public new TSelf SetName(string? name)
+        public TSelf SetName(string? name)
         {
-            base.SetName(name);
+            TestName = name;
             return GetSelf();
         }
 
@@ -59,9 +63,9 @@ namespace NUnit.Framework
         ///     .SetArgDisplayNames("argDisplayName");
         /// </code>
         /// </example>
-        public new TSelf SetArgDisplayNames(params string[]? displayNames)
+        public TSelf SetArgDisplayNames(params string[]? displayNames)
         {
-            base.SetArgDisplayNames(displayNames);
+            ArgDisplayNames = displayNames;
             return GetSelf();
         }
 
@@ -76,9 +80,11 @@ namespace NUnit.Framework
         ///     .SetArgDisplayNames(testData.Name);
         /// </code>
         /// </example>
-        public new TSelf SetArgDisplayNames(params object?[]? displayNames)
+        public TSelf SetArgDisplayNames(params object?[]? displayNames)
         {
-            base.SetArgDisplayNames(displayNames);
+            ArgDisplayNames = displayNames is null
+                ? null
+                : Array.ConvertAll(displayNames, Constraints.MsgUtils.FormatValue);
             return GetSelf();
         }
 
@@ -88,9 +94,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="description">The description.</param>
         /// <returns>The modified TestCaseData instance.</returns>
-        public new TSelf SetDescription(string description)
+        public TSelf SetDescription(string description)
         {
-            base.SetDescription(description);
+            Properties.Set(PropertyNames.Description, description);
             return GetSelf();
         }
 
@@ -99,9 +105,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
-        public new TSelf SetCategory(string category)
+        public TSelf SetCategory(string category)
         {
-            base.SetCategory(category);
+            Properties.Add(PropertyNames.Category, category);
             return GetSelf();
         }
 
@@ -111,9 +117,9 @@ namespace NUnit.Framework
         /// <param name="propName"></param>
         /// <param name="propValue"></param>
         /// <returns></returns>
-        public new TSelf SetProperty(string propName, string propValue)
+        public TSelf SetProperty(string propName, string propValue)
         {
-            base.SetProperty(propName, propValue);
+            Properties.Add(propName, propValue);
             return GetSelf();
         }
 
@@ -123,9 +129,9 @@ namespace NUnit.Framework
         /// <param name="propName"></param>
         /// <param name="propValue"></param>
         /// <returns></returns>
-        public new TSelf SetProperty(string propName, int propValue)
+        public TSelf SetProperty(string propName, int propValue)
         {
-            base.SetProperty(propName, propValue);
+            Properties.Add(propName, propValue);
             return GetSelf();
         }
 
@@ -135,27 +141,28 @@ namespace NUnit.Framework
         /// <param name="propName"></param>
         /// <param name="propValue"></param>
         /// <returns></returns>
-        public new TSelf SetProperty(string propName, double propValue)
+        public TSelf SetProperty(string propName, double propValue)
         {
-            base.SetProperty(propName, propValue);
+            Properties.Add(propName, propValue);
             return GetSelf();
         }
 
         /// <summary>
         /// Marks the test case as explicit.
         /// </summary>
-        public new TSelf Explicit()
+        public TSelf Explicit()
         {
-            base.Explicit();
+            RunState = RunState.Explicit;
             return GetSelf();
         }
 
         /// <summary>
         /// Marks the test case as explicit, specifying the reason.
         /// </summary>
-        public new TSelf Explicit(string reason)
+        public TSelf Explicit(string reason)
         {
-            base.Explicit(reason);
+            RunState = RunState.Explicit;
+            Properties.Set(PropertyNames.SkipReason, reason);
             return GetSelf();
         }
 
