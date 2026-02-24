@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Internal.Extensions
 
         public static IEnumerable<TestCaseData> UnsortableCollections => new[]
         {
-            new TestCaseData(null).SetArgDisplayNames("null"),
+            new TestCaseData(arg: null).SetArgDisplayNames("null"),
             new TestCaseData(new ArrayList()).SetArgDisplayNames("ArrayList"),
             new TestCaseData(new Hashtable()).SetArgDisplayNames("Hashtable"),
             new TestCaseData(new Queue()).SetArgDisplayNames("Queue"),
