@@ -59,6 +59,11 @@ namespace NUnit.Framework
         {
         }
 
+        internal TestCaseDataBase(TestCaseParameters data)
+            : base(data)
+        {
+        }
+
         #endregion
 
         #region Conversion Operator
