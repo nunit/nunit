@@ -203,7 +203,9 @@ namespace NUnitLite
 #if NETFRAMEWORK
                 Writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 #else
-                Writer.WriteLine(ColorStyle.Warning, "Ignoring Default timeout");
+                Writer.WriteLine(
+                    ColorStyle.Warning,
+                    $"    Default timeout ({_options.DefaultTimeout}) is only supported on .NET Framework; use CancelAfter on modern .NET.");
 #endif
 
             Writer.WriteLabelLine(
