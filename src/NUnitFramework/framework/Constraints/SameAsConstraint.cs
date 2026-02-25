@@ -7,6 +7,7 @@ namespace NUnit.Framework.Constraints
     /// the object passed to its constructor
     /// </summary>
     public class SameAsConstraint<T>(T? expected) : SameAsConstraint(expected)
+            where T : class?
     {
     }
 

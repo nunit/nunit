@@ -35,16 +35,9 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void SameUsingBoxedValueTypes()
+        public void SameValueTypes()
         {
-            object x = 1;
-            Assert.That(x, Is.SameAs(x));
-        }
-
-        [TestCase(2, TypeArgs = [typeof(int)])]
-        [TestCase(2, TypeArgs = [typeof(int?)])]
-        public void SameValueTypes<T>(T index)
-        {
+            int index = 2;
             var expectedMessage =
                 "  Expected: same as 2" + Environment.NewLine +
                 "  But was:  2" + Environment.NewLine;
@@ -52,15 +45,6 @@ namespace NUnit.Framework.Tests.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
 #pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
-        }
-
-        [Test]
-        public void NullableValueTypesWithDefaultValue()
-        {
-            int? index = default;
-#pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
-            Assert.That(index, Is.SameAs(index));
-#pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
         }
 
         [Test]
