@@ -1,35 +1,31 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using System.Collections.Generic;
-using System.IO;
 
-namespace NUnit.Framework.Tests.Syntax
+namespace NUnit.Framework.Tests.TestUtilities
 {
     internal class TestCompiler
     {
         private readonly List<string> _referencedAssemblies = new();
-        private readonly string? _outputAssembly;
 
-        public TestCompiler() : this(null, null)
+        public TestCompiler() : this(null)
         {
         }
 
-        public TestCompiler(string[]? assemblyNames) : this(assemblyNames, null)
-        {
-        }
-
-        public TestCompiler(string[]? assemblyNames, string? outputName)
+        public TestCompiler(string[]? assemblyNames)
         {
             if (assemblyNames is not null && assemblyNames.Length > 0)
                 _referencedAssemblies.AddRange(assemblyNames);
-
-            _outputAssembly = outputName;
         }
 
-        public EmitResult CompileCode(string code)
+        private EmitResult CompileCode(string code, Stream stream)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
 
@@ -50,9 +46,7 @@ namespace NUnit.Framework.Tests.Syntax
                 references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")));
             }
 
-            var assemblyName = _outputAssembly is not null
-                ? Path.GetFileNameWithoutExtension(_outputAssembly)
-                : Path.GetRandomFileName();
+            var assemblyName = $"InMemoryAssembly_{Guid.NewGuid():N}";
 
             var compilation = CSharpCompilation.Create(
                 assemblyName,
@@ -60,10 +54,44 @@ namespace NUnit.Framework.Tests.Syntax
                 references: references,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            var outputPath = _outputAssembly ?? Path.Combine(Path.GetTempPath(), assemblyName + ".dll");
-
-            using var stream = File.Create(outputPath);
             return compilation.Emit(stream);
+        }
+
+        public EmitResult CompileCode(string code)
+        {
+            using var ms = new MemoryStream();
+            return CompileCode(code, ms);
+        }
+
+        public Assembly GenerateInMemoryAssembly(string code)
+        {
+            using var ms = new MemoryStream();
+            var result = CompileCode(code, ms);
+
+            if (result.Success)
+            {
+                return Assembly.Load(ms.ToArray());
+            }
+
+            var errors = string.Join("\n",
+                result.Diagnostics
+                      .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error)
+                      .Select(diagnostic => diagnostic.ToString()));
+
+            throw new CompileErrorException($"Failed to compile:\n{errors}\nCode: {code}");
+        }
+
+        public class CompileErrorException : Exception
+        {
+            public CompileErrorException()
+            {
+            }
+            public CompileErrorException(string message) : base(message)
+            {
+            }
+            public CompileErrorException(string message, Exception inner) : base(message, inner)
+            {
+            }
         }
     }
 }
