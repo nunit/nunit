@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework
 {
     /// <summary>
@@ -48,6 +50,11 @@ namespace NUnit.Framework
         /// <param name="arg3">The third argument.</param>
         public TestCaseDataWithReturnBase(object? arg1, object? arg2, object? arg3)
             : base([arg1, arg2, arg3])
+        {
+        }
+
+        internal TestCaseDataWithReturnBase(TestCaseParameters data)
+            : base(data)
         {
         }
 
