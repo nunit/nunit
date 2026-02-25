@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if NETFRAMEWORK
-
 using System;
-using System.CodeDom.Compiler;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace NUnit.Framework.Tests.TestUtilities
 {
@@ -13,23 +13,46 @@ namespace NUnit.Framework.Tests.TestUtilities
     {
         public static Assembly GenerateInMemoryAssembly(string code, string[] referencedAssemblies)
         {
-            var options = new CompilerParameters()
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+            var references = referencedAssemblies
+                .Select(path => MetadataReference.CreateFromFile(path))
+                .ToList();
+
+            // Add default runtime references
+            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+
+            if (assemblyPath is not null)
             {
-                GenerateInMemory = true,
-            };
-            options.ReferencedAssemblies.AddRange(referencedAssemblies);
+                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")));
+            }
 
-            var codeProvider = CodeDomProvider.CreateProvider("CSharp");
-            var result = codeProvider.CompileAssemblyFromSource(options, code);
 
-            if (!result.Errors.HasErrors)
-                return result.CompiledAssembly;
+            var assemblyName = $"InMemoryAssembly_{Guid.NewGuid():N}";
 
-            var errors = string.Join(", ", result.Errors
-                                                 .Cast<CompilerError>()
-                                                 .Select(err => err.ToString()).ToArray());
+            var compilation = CSharpCompilation.Create(
+                assemblyName,
+                [syntaxTree],
+                references,
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-            throw new CompileErrorException($"Failed to compile embedded source code: {errors}\nCode: {code}");
+            using (var ms = new MemoryStream())
+            {
+                var result = compilation.Emit(ms);
+
+                if (result.Success)
+                {
+                    ms.Seek(0, SeekOrigin.Begin);
+                    return Assembly.Load(ms.ToArray());
+                }
+
+                var errors = string.Join(", ", result.Diagnostics
+                    .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error)
+                    .Select(diagnostic => diagnostic.ToString()));
+
+                throw new CompileErrorException($"Failed to compile embedded source code:\n{errors}\nCode: {code}");
+            }
         }
     }
 
@@ -46,4 +69,3 @@ namespace NUnit.Framework.Tests.TestUtilities
         }
     }
 }
-#endif

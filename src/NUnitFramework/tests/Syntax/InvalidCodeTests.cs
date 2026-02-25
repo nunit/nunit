@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if !NETCOREAPP
-using System.CodeDom.Compiler;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace NUnit.Framework.Tests.Syntax
 {
@@ -32,10 +31,10 @@ class SomeClass
         {
             string code = Template1.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
-                new[] { "system.dll", "nunit.framework.dll" },
+                [typeof(Assert).Assembly.Location],
                 "test.dll");
-            CompilerResults results = compiler.CompileCode(code);
-            if (results.NativeCompilerReturnValue == 0)
+            EmitResult results = compiler.CompileCode(code);
+            if (results.Success)
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
@@ -62,12 +61,11 @@ class SomeClass
         {
             string code = Template2.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
-                new[] { "system.dll", "nunit.framework.dll" },
+                ["nunit.framework.dll"],
                 "test.dll");
-            CompilerResults results = compiler.CompileCode(code);
-            if (results.NativeCompilerReturnValue == 0)
+            EmitResult results = compiler.CompileCode(code);
+            if (results.Success)
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile as a finished constraint but it did");
         }
     }
 }
-#endif

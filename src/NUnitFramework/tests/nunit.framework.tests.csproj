@@ -41,6 +41,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
         <Compile Include="..\SchemaTestUtils.cs" Link="TestUtilities\SchemaTestUtils.cs" />
         <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />

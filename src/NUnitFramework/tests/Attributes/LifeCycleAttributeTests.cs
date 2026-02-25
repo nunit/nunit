@@ -3,9 +3,7 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETFRAMEWORK
 using NUnit.Framework.Legacy;
-#endif
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 
@@ -229,14 +227,12 @@ namespace NUnit.Framework.Tests.Attributes
 
         #region Assembly level InstancePerTestCase
 
-#if NETFRAMEWORK
-
-        private readonly string[] _referenceAssemblies = new[]
-        {
+        private readonly string[] _referenceAssemblies =
+        [
             typeof(Test).Assembly.Location,
             typeof(BaseLifeCycle).Assembly.Location,
-            typeof(DirectoryAssert).Assembly.Location
-        };
+            typeof(DirectoryAssert).Assembly.Location,
+        ];
 
         [Test]
         public void AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
@@ -397,7 +393,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
-#endif
+
         #endregion
     }
 }
