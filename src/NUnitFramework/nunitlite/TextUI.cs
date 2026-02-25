@@ -200,7 +200,11 @@ namespace NUnitLite
             WriteSectionHeader("Run Settings");
 
             if (_options.DefaultTimeout >= 0)
+#if NETFRAMEWORK
                 Writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
+#else
+                Writer.WriteLine(ColorStyle.Warning, "Ignoring Default timeout");
+#endif
 
             Writer.WriteLabelLine(
                 "    Number of Test Workers: ",
