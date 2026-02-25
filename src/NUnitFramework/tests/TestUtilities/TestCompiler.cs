@@ -43,7 +43,9 @@ namespace NUnit.Framework.Tests.TestUtilities
 
             if (assemblyPath is not null)
             {
-                references.Add(MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")));
+                string runtime = Path.Combine(assemblyPath, "System.Runtime.dll");
+                if (File.Exists(runtime))
+                    references.Add(MetadataReference.CreateFromFile(runtime));
             }
 
             var assemblyName = $"InMemoryAssembly_{Guid.NewGuid():N}";
