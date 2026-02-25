@@ -42,6 +42,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" />
     </ItemGroup>
 
     <ItemGroup>
