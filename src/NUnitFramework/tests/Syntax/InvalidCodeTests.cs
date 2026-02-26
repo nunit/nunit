@@ -1,13 +1,27 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if !NETCOREAPP
-using System.CodeDom.Compiler;
+using System;
+using Microsoft.CodeAnalysis.Emit;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
     public class InvalidCodeTests
     {
+        private static readonly Type[] ReferencedTypes =
+        [
+            typeof(Assert),
+        ];
+
+        private TestCompiler _compiler;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _compiler = new TestCompiler(ReferencedTypes);
+        }
+
         private static readonly string Template1 =
 @"using System;
 using NUnit.Framework;
@@ -31,11 +45,8 @@ class SomeClass
         public void CodeShouldNotCompile(string fragment)
         {
             string code = Template1.Replace("$FRAGMENT$", fragment);
-            TestCompiler compiler = new TestCompiler(
-                new[] { "system.dll", "nunit.framework.dll" },
-                "test.dll");
-            CompilerResults results = compiler.CompileCode(code);
-            if (results.NativeCompilerReturnValue == 0)
+            EmitResult results = _compiler.CompileCode(code);
+            if (results.Success)
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
@@ -61,13 +72,9 @@ class SomeClass
         public void CodeShouldNotCompileAsFinishedConstraint(string fragment)
         {
             string code = Template2.Replace("$FRAGMENT$", fragment);
-            TestCompiler compiler = new TestCompiler(
-                new[] { "system.dll", "nunit.framework.dll" },
-                "test.dll");
-            CompilerResults results = compiler.CompileCode(code);
-            if (results.NativeCompilerReturnValue == 0)
+            EmitResult results = _compiler.CompileCode(code);
+            if (results.Success)
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile as a finished constraint but it did");
         }
     }
 }
-#endif

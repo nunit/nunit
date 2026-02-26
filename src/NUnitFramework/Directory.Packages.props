@@ -7,7 +7,9 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageVersion Include="System.Memory" Version="4.6.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.4.0" />  <!-- Stay on 4.4.0, due to this package also is in the build extensions, and we cant change that  -->
-    <PackageVersion Include="System.Collections.Immutable" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
@@ -31,6 +33,11 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.10.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.9.2" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+  </ItemGroup>
+  <!-- Roslyn Compilation -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
   </ItemGroup>
   <!-- Specific dependencies -->
   <ItemGroup>
