@@ -29,8 +29,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void SameUsingInternedConstStrings()
         {
-            string s1 = "S1";
-            string s2 = "S1";
+            string s1 = string.Intern(new string('A', 2));
+            string s2 = string.Intern(s1);
             Assert.That(s1, Is.SameAs(s2));
         }
 
