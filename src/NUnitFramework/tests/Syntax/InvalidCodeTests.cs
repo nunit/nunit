@@ -17,7 +17,7 @@ namespace NUnit.Framework.Tests.Syntax
         private TestCompiler _compiler;
 
         [OneTimeSetUp]
-        public void SetUp()
+        public void OneTimeSetUp()
         {
             _compiler = new TestCompiler(ReferencedTypes);
         }

@@ -8,7 +8,7 @@
     <PackageVersion Include="System.Memory" Version="4.6.0" />
     <PackageVersion Include="System.ValueTuple" Version="4.4.0" />  <!-- Stay on 4.4.0, due to this package also is in the build extensions, and we cant change that  -->
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net6.0'">
+  <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
   <!-- General Packages -->

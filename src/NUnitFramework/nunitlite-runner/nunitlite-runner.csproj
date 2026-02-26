@@ -12,4 +12,14 @@
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
   </ItemGroup>
 
+  <!-- These packages are needed for running tests that use Microsoft.CodeAnalysis.CSharp (Roslyn)
+       in nunit.framework.tests. For net462, this generates binding redirects. For .NET Core,
+       this ensures the assemblies are in the deps.json for proper runtime resolution. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+    <PackageReference Include="System.Memory" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
 </Project>

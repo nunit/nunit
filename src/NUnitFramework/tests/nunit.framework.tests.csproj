@@ -27,7 +27,7 @@
         <PackageReference Include="System.ValueTuple" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net6.0'">
+    <ItemGroup>
         <PackageReference Include="System.Collections.Immutable" />
     </ItemGroup>
 
