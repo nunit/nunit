@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -13,11 +14,11 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class LifeCycleAttributeTests
     {
-        private readonly string[] _referenceAssemblies =
+        private static readonly Type[] ReferencedTypes =
         [
-            typeof(Test).Assembly.Location,
-            typeof(BaseLifeCycle).Assembly.Location,
-            typeof(DirectoryAssert).Assembly.Location,
+            typeof(Test),
+            typeof(BaseLifeCycle),
+            typeof(DirectoryAssert),
         ];
 
         private TestCompiler _compiler;
@@ -25,7 +26,7 @@ namespace NUnit.Framework.Tests.Attributes
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _compiler = new TestCompiler(_referenceAssemblies);
+            _compiler = new TestCompiler(ReferencedTypes);
         }
 
         [SetUp]

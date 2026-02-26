@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using Microsoft.CodeAnalysis.Emit;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -8,9 +9,9 @@ namespace NUnit.Framework.Tests.Syntax
     [TestFixture]
     public class InvalidCodeTests
     {
-        private static readonly string[] ReferenceAssemblies =
+        private static readonly Type[] ReferencedTypes =
         [
-            typeof(Assert).Assembly.Location
+            typeof(Assert),
         ];
 
         private TestCompiler _compiler;
@@ -18,7 +19,7 @@ namespace NUnit.Framework.Tests.Syntax
         [OneTimeSetUp]
         public void SetUp()
         {
-            _compiler = new TestCompiler(ReferenceAssemblies);
+            _compiler = new TestCompiler(ReferencedTypes);
         }
 
         private static readonly string Template1 =
