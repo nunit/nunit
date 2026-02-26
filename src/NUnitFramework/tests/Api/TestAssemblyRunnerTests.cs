@@ -119,9 +119,9 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [TestCase(FrameworkPackageSettings.NumberOfTestWorkers)]
-        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
         [TestCase(FrameworkPackageSettings.DebugTests)]
 #if NETFRAMEWORK
+        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
         [TestCase(FrameworkPackageSettings.PauseBeforeRun)]
 #endif
         [TestCase(FrameworkPackageSettings.StopOnError)]
@@ -144,9 +144,9 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [TestCase(FrameworkPackageSettings.NumberOfTestWorkers)]
-        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
         [TestCase(FrameworkPackageSettings.DebugTests)]
 #if NETFRAMEWORK
+        [TestCase(FrameworkPackageSettings.DefaultTimeout)]
         [TestCase(FrameworkPackageSettings.PauseBeforeRun)]
 #endif
         [TestCase(FrameworkPackageSettings.StopOnError)]
