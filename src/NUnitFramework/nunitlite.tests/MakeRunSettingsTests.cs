@@ -5,11 +5,14 @@ using NUnit.Framework;
 
 namespace NUnitLite.Tests
 {
+    [TestFixture]
     public class MakeRunSettingsTests
     {
         private static readonly TestCaseData[] SettingsData =
         {
+#if NET462
             new TestCaseData("--timeout=50", "DefaultTimeout", 50),
+#endif
             new TestCaseData("--work=results", "WorkDirectory", Path.GetFullPath("results")),
             new TestCaseData("--seed=1234", "RandomSeed", 1234),
             new TestCaseData("--workers=8", "NumberOfTestWorkers", 8),
