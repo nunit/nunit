@@ -375,8 +375,10 @@ namespace NUnit.Framework.Api
             var context = new TestExecutionContext();
 
             // Apply package settings to the context
+#if NETFRAMEWORK
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
                 context.TestCaseTimeout = ConvertSetting<int>(timeout);
+#endif
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
                 context.CurrentCulture = new CultureInfo(ConvertSetting<string>(culture), false);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))

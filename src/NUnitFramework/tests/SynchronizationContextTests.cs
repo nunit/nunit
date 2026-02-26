@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -79,17 +80,33 @@ namespace NUnit.Framework.Tests
         }
     }
 
-    [TestFixture]
+    [TestFixture(ContextToUse.None)]
+    [TestFixture(ContextToUse.Current)]
+    [TestFixture(ContextToUse.TestContext)]
     internal sealed class LostSynchronizationContext
     {
+        private readonly ContextToUse _contextToUse;
         private SynchronizationContext? _originalSynchronizationContext;
-        private TestSynchronizationContext _testSynchronizationContext;
+        private SynchronizationContext? _testSynchronizationContext;
+
+        public LostSynchronizationContext(ContextToUse contextToUse)
+        {
+            _contextToUse = contextToUse;
+        }
 
         [OneTimeSetUp]
         public void SetContext()
         {
             _originalSynchronizationContext = SynchronizationContext.Current;
-            _testSynchronizationContext = new TestSynchronizationContext();
+
+            _testSynchronizationContext = _contextToUse switch
+            {
+                ContextToUse.None => null,
+                ContextToUse.Current => _originalSynchronizationContext,
+                ContextToUse.TestContext => new TestSynchronizationContext(),
+                _ => throw new NotImplementedException($"Unknown ContextToUse: {_contextToUse}"),
+            };
+
             SynchronizationContext.SetSynchronizationContext(_testSynchronizationContext);
         }
 
@@ -117,6 +134,29 @@ namespace NUnit.Framework.Tests
             Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext));
         }
 
+        [Test]
+        public async Task VerifySynchronizedAsyncYield()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext), "Before await");
+            await Task.Yield();
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext), "After await");
+        }
+
+        [Test]
+        public async Task VerifySynchronizedAsyncDelayContinueOnCapturedContextTrue()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext), "Before await");
+            await Task.Delay(10).ConfigureAwait(continueOnCapturedContext: true);
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext), "After await");
+        }
+
+        [Test]
+        public async Task VerifySynchronizedAsyncDelayContinueOnCapturedContextFalse()
+        {
+            Assert.That(ActualSynchronizationContext(), Is.SameAs(_testSynchronizationContext), "Before await");
+            await Task.Delay(10).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         private static SynchronizationContext? ActualSynchronizationContext()
         {
             SynchronizationContext? context = SynchronizationContext.Current;
@@ -131,5 +171,12 @@ namespace NUnit.Framework.Tests
         public class TestSynchronizationContext : SynchronizationContext
         {
         }
+    }
+
+    internal enum ContextToUse
+    {
+        None,
+        Current,
+        TestContext
     }
 }

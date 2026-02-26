@@ -360,8 +360,10 @@ namespace NUnitLite
             if (options.WorkDirectory is not null)
                 runSettings[FrameworkPackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
 
+#if NETFRAMEWORK
             if (options.DefaultTimeout >= 0)
                 runSettings[FrameworkPackageSettings.DefaultTimeout] = options.DefaultTimeout;
+#endif
 
             if (options.StopOnError)
                 runSettings[FrameworkPackageSettings.StopOnError] = true;

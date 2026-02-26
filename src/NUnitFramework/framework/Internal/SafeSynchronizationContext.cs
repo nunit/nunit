@@ -28,10 +28,10 @@ namespace NUnit.Framework.Internal
         internal TestExecutionContext ExecutionContext { get; }
 
         /// <inheritdoc/>
-        public override void Send(SendOrPostCallback d, object? state) => ExecuteSafely(d, state);
+        public override void Send(SendOrPostCallback d, object? state) => base.Send(s => ExecuteSafely(d, s), state);
 
         /// <inheritdoc/>
-        public override void Post(SendOrPostCallback d, object? state) => ExecuteSafely(d, state);
+        public override void Post(SendOrPostCallback d, object? state) => base.Post(s => ExecuteSafely(d, s), state);
 
         /// <summary>
         /// Executes the delegate safely, catching any exceptions and recording them in the test result.
@@ -40,8 +40,11 @@ namespace NUnit.Framework.Internal
         /// <param name="state"></param>
         protected void ExecuteSafely(SendOrPostCallback d, object? state)
         {
+            SynchronizationContext? savedContext = SynchronizationContext.Current;
+
             try
             {
+                SynchronizationContext.SetSynchronizationContext(this);
                 d(state);
             }
             catch (Exception e)
@@ -54,6 +57,10 @@ namespace NUnit.Framework.Internal
                     context.CurrentResult.RecordException(e, FailureSite.Test);
                     context.CurrentResult.RecordTestCompletion();
                 }
+            }
+            finally
+            {
+                SynchronizationContext.SetSynchronizationContext(savedContext);
             }
         }
 
