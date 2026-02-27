@@ -17,13 +17,13 @@ namespace NUnit.Framework.Tests.Attributes
     {
         public static class AssemblyLevelSupport
         {
-            private static readonly TestCompiler Compiler = new(typeof(NoTestsAttributeFixture).Assembly);
             private static System.Reflection.Assembly _dynamicTestAssembly;
 
             [OneTimeSetUp]
             public static void OneTimeSetUp()
             {
-                _dynamicTestAssembly = Compiler.GenerateInMemoryAssembly(
+                var compiler = new TestCompiler(typeof(NoTestsAttributeFixture).Assembly);
+                _dynamicTestAssembly = compiler.GenerateInMemoryAssembly(
                     NoTestsAttributeFixture.AssemblyLevelSupportCode);
             }
 

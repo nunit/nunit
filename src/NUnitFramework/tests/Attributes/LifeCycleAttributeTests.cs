@@ -12,7 +12,13 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class LifeCycleAttributeTests
     {
-        private readonly TestCompiler _compiler = new(typeof(AssemblyLevelFixtureLifeCycleTest).Assembly);
+        private TestCompiler _compiler;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _compiler = new(typeof(AssemblyLevelFixtureLifeCycleTest).Assembly);
+        }
 
         [SetUp]
         public void SetUp()
