@@ -6,6 +6,15 @@ namespace NUnit.Framework.Constraints
     /// SameAsConstraint tests whether an object is identical to
     /// the object passed to its constructor
     /// </summary>
+    public class SameAsConstraint<T>(T? expected) : SameAsConstraint(expected)
+            where T : class?
+    {
+    }
+
+    /// <summary>
+    /// SameAsConstraint tests whether an object is identical to
+    /// the object passed to its constructor
+    /// </summary>
     public class SameAsConstraint : Constraint
     {
         private readonly object? _expected;

@@ -17,13 +17,21 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void SameFails()
         {
-            Exception ex1 = new Exception("one");
-            Exception ex2 = new Exception("two");
+            var ex1 = new Exception("one");
+            var ex2 = new Exception("two");
             var expectedMessage =
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ex2, Is.SameAs(ex1)));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
+        }
+
+        [Test]
+        public void SameUsingInternedConstStrings()
+        {
+            string s1 = string.Intern(new string('A', 2));
+            string s2 = string.Intern(s1);
+            Assert.That(s1, Is.SameAs(s2));
         }
 
         [Test]
