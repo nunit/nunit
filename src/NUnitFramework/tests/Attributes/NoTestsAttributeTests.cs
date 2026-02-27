@@ -4,9 +4,7 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
-#if NETFRAMEWORK
 using NUnit.TestData;
-#endif
 using TestCaseSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestCaseSource;
 using TestFixtureSourceTestData = NUnit.TestData.NoTestsAttributeFixture.TestFixtureSource;
 using TheoryTestData = NUnit.TestData.NoTestsAttributeFixture.Theory;
@@ -17,17 +15,16 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     internal static class NoTestsAttributeTests
     {
-#if NETFRAMEWORK
         public static class AssemblyLevelSupport
         {
+            private static readonly TestCompiler Compiler = new(typeof(NoTestsAttributeFixture).Assembly);
             private static System.Reflection.Assembly _dynamicTestAssembly;
 
             [OneTimeSetUp]
             public static void OneTimeSetUp()
             {
-                _dynamicTestAssembly = TestAssemblyHelper.GenerateInMemoryAssembly(
-                    NoTestsAttributeFixture.AssemblyLevelSupportCode,
-                    [typeof(NoTestsAttributeFixture).Assembly.Location]);
+                _dynamicTestAssembly = Compiler.GenerateInMemoryAssembly(
+                    NoTestsAttributeFixture.AssemblyLevelSupportCode);
             }
 
             [Test]
@@ -70,7 +67,6 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(noOverrideResult.ResultState.Status, Is.EqualTo(TestStatus.Inconclusive));
             }
         }
-#endif
 
         public static class TestFixtureSourceCompatibility
         {
