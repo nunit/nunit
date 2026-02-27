@@ -1,10 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 
@@ -14,20 +12,7 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class LifeCycleAttributeTests
     {
-        private static readonly Type[] ReferencedTypes =
-        [
-            typeof(Test),
-            typeof(BaseLifeCycle),
-            typeof(DirectoryAssert),
-        ];
-
-        private TestCompiler _compiler;
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _compiler = new TestCompiler(ReferencedTypes);
-        }
+        private readonly TestCompiler _compiler = new(typeof(AssemblyLevelFixtureLifeCycleTest).Assembly);
 
         [SetUp]
         public void SetUp()
