@@ -19,7 +19,7 @@ var ErrorDetail = new List<string>();
 //////////////////////////////////////////////////////////////////////
 
 var version = MinVer(settings=> settings
-    .WithAutoIncrement(MinVerAutoIncrement.Minor)
+    .WithAutoIncrement(MinVerAutoIncrement.Patch)
 );
 
 var packageVersion = version;
