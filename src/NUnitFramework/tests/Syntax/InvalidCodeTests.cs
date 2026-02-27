@@ -7,7 +7,13 @@ namespace NUnit.Framework.Tests.Syntax
     [TestFixture]
     public class InvalidCodeTests
     {
-        private readonly TestCompiler _compiler = new();
+        private TestCompiler _compiler;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _compiler = new();
+        }
 
         private static readonly string Template1 =
 @"using System;
