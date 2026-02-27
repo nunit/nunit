@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -12,8 +10,14 @@ namespace NUnit.Framework
     /// test case. It is derived from TestCaseParameters and adds a
     /// fluent syntax for use in initializing the test case.
     /// </summary>
-    public class TestCaseData : TestCaseParameters
+    public class TestCaseData : TestCaseDataWithReturnBase<TestCaseData, object?>
     {
+        /// <summary>
+        /// Return this reference without a typecast.
+        /// </summary>
+        /// <returns></returns>
+        protected override TestCaseData GetSelf() => this;
+
         #region Constructors
 
         /// <summary>
@@ -55,171 +59,27 @@ namespace NUnit.Framework
         {
         }
 
-        #endregion
-
-        #region Fluent Instance Modifiers
-
-        /// <summary>
-        /// Sets the expected result for the test
-        /// </summary>
-        /// <param name="result">The expected result</param>
-        /// <returns>A modified TestCaseData</returns>
-        public TestCaseData Returns(object? result)
+        internal TestCaseData(TestCaseParameters parameters)
+            : base(parameters)
         {
-            ExpectedResult = result;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the name of the test case
-        /// </summary>
-        /// <returns>The modified TestCaseData instance</returns>
-        /// <remarks>
-        /// Consider using <see cref="SetArgDisplayNames(string[])"/> for setting argument values in the test name.
-        /// <see cref="SetArgDisplayNames(string[])"/> allows you to specify the display names for parameters directly without
-        /// needing to use tokens like {m}.
-        /// </remarks>
-        public TestCaseData SetName(string? name)
-        {
-            TestName = name;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the list of display names to use as the parameters in the test name.
-        /// </summary>
-        /// <returns>The modified TestCaseData instance</returns>
-        /// <example>
-        /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames("arg1DisplayName", "arg2DisplayName");
-        /// </code>
-        /// </example>
-        public TestCaseData SetArgDisplayNames(params string[]? displayNames)
-        {
-            ArgDisplayNames = displayNames;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the list of display names to use as the parameters in the test name.
-        /// Objects are formatted using the same logic as default test names.
-        /// </summary>
-        /// <returns>The modified TestCaseData instance</returns>
-        /// <example>
-        /// <code>
-        /// TestCaseData testCase = new TestCaseData(args)
-        ///     .SetArgDisplayNames(testData.Name, testData.Gender, testData.Age);
-        /// </code>
-        /// </example>
-        public TestCaseData SetArgDisplayNames(params object?[]? displayNames)
-        {
-            ArgDisplayNames = displayNames is null
-                ? null
-                : Array.ConvertAll(displayNames, Constraints.MsgUtils.FormatValue);
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the description for the test case
-        /// being constructed.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <returns>The modified TestCaseData instance.</returns>
-        public TestCaseData SetDescription(string description)
-        {
-            Properties.Set(PropertyNames.Description, description);
-            return this;
-        }
-
-        /// <summary>
-        /// Applies a category to the test
-        /// </summary>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public TestCaseData SetCategory(string category)
-        {
-            Properties.Add(PropertyNames.Category, category);
-            return this;
-        }
-
-        /// <summary>
-        /// Applies a named property to the test
-        /// </summary>
-        /// <param name="propName"></param>
-        /// <param name="propValue"></param>
-        /// <returns></returns>
-        public TestCaseData SetProperty(string propName, string propValue)
-        {
-            Properties.Add(propName, propValue);
-            return this;
-        }
-
-        /// <summary>
-        /// Applies a named property to the test
-        /// </summary>
-        /// <param name="propName"></param>
-        /// <param name="propValue"></param>
-        /// <returns></returns>
-        public TestCaseData SetProperty(string propName, int propValue)
-        {
-            Properties.Add(propName, propValue);
-            return this;
-        }
-
-        /// <summary>
-        /// Applies a named property to the test
-        /// </summary>
-        /// <param name="propName"></param>
-        /// <param name="propValue"></param>
-        /// <returns></returns>
-        public TestCaseData SetProperty(string propName, double propValue)
-        {
-            Properties.Add(propName, propValue);
-            return this;
-        }
-
-        /// <summary>
-        /// Marks the test case as explicit.
-        /// </summary>
-        public TestCaseData Explicit()
-        {
-            RunState = RunState.Explicit;
-            return this;
-        }
-
-        /// <summary>
-        /// Marks the test case as explicit, specifying the reason.
-        /// </summary>
-        public TestCaseData Explicit(string reason)
-        {
-            RunState = RunState.Explicit;
-            Properties.Set(PropertyNames.SkipReason, reason);
-            return this;
-        }
-
-        /// <summary>
-        /// Ignores this TestCase, specifying the reason.
-        /// </summary>
-        /// <param name="reason">The reason.</param>
-        /// <returns></returns>
-        public IgnoredTestCaseData Ignore(string reason)
-        {
-            RunState prevRunState = RunState;
-            RunState = RunState.Ignored;
-            Properties.Set(PropertyNames.SkipReason, reason);
-            var ignoredData = new IgnoredTestCaseData(this, prevRunState);
-            return ignoredData;
         }
 
         #endregion
+
     }
 
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    public class TestCaseData<T> : TestCaseData
+    public sealed class TestCaseData<T> : TestCaseDataBase<TestCaseData<T>>
     {
+        /// <summary>
+        /// Return this pointer without typecasting.
+        /// </summary>
+        protected override TestCaseData<T> GetSelf() => this;
+
+        #region Constructors
+
         /// <summary>
         /// Construct a TestCaseData with a single argument.
         /// </summary>
@@ -246,13 +106,22 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T)];
         }
+
+        #endregion
     }
 
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    public class TestCaseData<T1, T2> : TestCaseData
+    public class TestCaseData<T1, T2> : TestCaseDataBase<TestCaseData<T1, T2>>
     {
+        /// <summary>
+        /// Return this pointer without typecasting.
+        /// </summary>
+        protected override TestCaseData<T1, T2> GetSelf() => this;
+
+        #region Constructors
+
         /// <summary>
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
@@ -261,13 +130,22 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2)];
         }
+
+        #endregion
     }
 
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    public class TestCaseData<T1, T2, T3> : TestCaseData
+    public class TestCaseData<T1, T2, T3> : TestCaseDataBase<TestCaseData<T1, T2, T3>>
     {
+        /// <summary>
+        /// Return this pointer without typecasting.
+        /// </summary>
+        protected override TestCaseData<T1, T2, T3> GetSelf() => this;
+
+        #region Constructors
+
         /// <summary>
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
@@ -276,13 +154,22 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
+
+        #endregion
     }
 
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    public class TestCaseData<T1, T2, T3, T4> : TestCaseData
+    public class TestCaseData<T1, T2, T3, T4> : TestCaseDataBase<TestCaseData<T1, T2, T3, T4>>
     {
+        /// <summary>
+        /// Return this pointer without typecasting.
+        /// </summary>
+        protected override TestCaseData<T1, T2, T3, T4> GetSelf() => this;
+
+        #region Constructors
+
         /// <summary>
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
@@ -291,13 +178,22 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
+
+        #endregion
     }
 
     /// <summary>
     /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
-    public class TestCaseData<T1, T2, T3, T4, T5> : TestCaseData
+    public class TestCaseData<T1, T2, T3, T4, T5> : TestCaseDataBase<TestCaseData<T1, T2, T3, T4, T5>>
     {
+        /// <summary>
+        /// Return this pointer without typecasting.
+        /// </summary>
+        protected override TestCaseData<T1, T2, T3, T4, T5> GetSelf() => this;
+
+        #region Constructors
+
         /// <summary>
         /// Construct a TestCaseData with a list of arguments.
         /// </summary>
@@ -306,5 +202,7 @@ namespace NUnit.Framework
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
+
+        #endregion
     }
 }
