@@ -15,7 +15,7 @@ namespace NUnit.Framework.Tests.Syntax
             _compiler = new TestCompiler();
         }
 
-        private static readonly string Template1 =
+        private const string Template1 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

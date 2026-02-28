@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
@@ -17,12 +18,12 @@ namespace NUnit.Framework.Tests.Attributes
     {
         public static class AssemblyLevelSupport
         {
-            private static System.Reflection.Assembly _dynamicTestAssembly;
+            private static Assembly _dynamicTestAssembly;
 
             [OneTimeSetUp]
             public static void OneTimeSetUp()
             {
-                var compiler = new TestCompiler(typeof(NoTestsAttributeFixture).Assembly);
+                var compiler = new TestCompiler(typeof(NoTestsAttributeFixture));
                 _dynamicTestAssembly = compiler.GenerateInMemoryAssembly(
                     NoTestsAttributeFixture.AssemblyLevelSupportCode);
             }
