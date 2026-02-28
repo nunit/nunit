@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.Syntax
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _compiler = new();
+            _compiler = new TestCompiler();
         }
 
         private static readonly string Template1 =
