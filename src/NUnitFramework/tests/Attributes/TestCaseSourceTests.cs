@@ -228,6 +228,29 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
         }
 
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndIndividualParameters(int[] values, int sum, int sumSquared)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(values.Sum(), Is.EqualTo(sum));
+            Assert.That(values.Select(x => x * x).Sum(), Is.EqualTo(sumSquared));
+        }
+
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndParamsArray(int[] values, params int[] sums)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(sums, Is.Not.Null);
+
+            for (int i = 0; i < sums.Length; i++)
+            {
+                int actual = values.Select(x => Pow(x, i + 1)).Sum();
+                Assert.That(actual, Is.EqualTo(sums[i]));
+            }
+
+            static int Pow(int x, int n) => (int)Math.Pow(x, n);
+        }
+
         [TestCaseSource(nameof(ExplicitNullValue))]
         public void TestMayReceiveExplicitNullValue(object item)
         {
@@ -909,6 +932,10 @@ namespace NUnit.Framework.Tests.Attributes
         private static readonly object[] SingleDimensionArray =
         [
             new[] { 12, 6, 2 }
+        ];
+        private static readonly object[] NestedArray =
+        [
+            new object[] { new int[] { 2, 3, 4 }, 2 + 3 + 4, 2 * 2 + 3 * 3 + 4 * 4 }
         ];
         private static readonly string?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
