@@ -65,10 +65,24 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldUnpackArrayAsArguments_ParamsParameter_AlwaysUnpacks()
+        public void ShouldUnpackArrayAsArguments_ParamsParameter_MatchingType_ReturnsFalse()
         {
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithParamsIntArray)).GetParameters();
-            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.True);
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
+        }
+
+        [Test]
+        public void ShouldnpackArrayAsArguments_MatchingType_ParamsArray_ReturnsFalse()
+        {
+            var parameters = new MethodWrapper(GetType(), nameof(MethodWithIntArrayAndParamsIntArray)).GetParameters();
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
+        }
+
+        [Test]
+        public void ShouldUnpackArrayAsArguments_ParamsParameter_NonMatchingType_ReturnsTrue()
+        {
+            var parameters = new MethodWrapper(GetType(), nameof(MethodWithParamsIntArray)).GetParameters();
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new object[] { 1, 2, 3 }), Is.True);
         }
 
         [Test]
@@ -79,10 +93,10 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldUnpackArrayAsArguments_ArrayShorterThanParamCount_ReturnsFalse()
+        public void ShouldUnpackArrayAsArguments_ArrayShorterThanParamCount_ReturnsTrue()
         {
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithTwoIntParameters)).GetParameters();
-            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1 }), Is.False);
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1 }), Is.True);
         }
 
         [Test]
@@ -163,6 +177,10 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         private void MethodWithIntArrayParameter(int[] array)
+        {
+        }
+
+        private void MethodWithIntArrayAndParamsIntArray(int[] required, params int[] optional)
         {
         }
 

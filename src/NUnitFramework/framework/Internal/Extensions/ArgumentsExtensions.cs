@@ -98,22 +98,25 @@ namespace NUnit.Framework.Internal.Extensions
             /// or the actual argument value itself (e.g. an <c>int[]</c> to be passed to an <see cref="System.Array"/> parameter).</param>
             public bool ShouldUnpackArrayAsArguments(Array array)
             {
-                // A params parameter always absorbs the elements individually
-                if (parameters.LastParameterIsParamsArray())
-                    return true;
-
                 int argsNeeded = parameters.Length;
 
-                // No parameters, or not enough elements to fill them
-                if (argsNeeded == 0 || array.Length < argsNeeded)
+                // No parameters
+                if (argsNeeded == 0)
                     return false;
 
                 Type paramType = parameters[0].ParameterType;
                 Type arrayType = array.GetType();
 
-                // Exact type match: the array IS the argument, not a container
-                if (paramType == arrayType)
+                // If the parameter accepts this array type
+                // directly (e.g. Array, IList<T>, IEnumerable) then the array IS the argument.
+                // But only if we don't need more arguments.
+                // i.e. We expect one argument or one argument plus a params array.
+                if (paramType.IsAssignableFrom(arrayType) && (argsNeeded == 1 || argsNeeded == 2 && parameters.LastParameterIsParamsArray()))
                     return false;
+
+                // A params parameter always absorbs the elements individually
+                if (parameters.LastParameterIsParamsArray())
+                    return true;
 
                 // Multiple parameters: each element maps to one parameter
                 if (argsNeeded > 1)
@@ -126,14 +129,8 @@ namespace NUnit.Framework.Internal.Extensions
                     return false;
 
                 // Classic argument-container pattern: new object[] { actualArg }
-                // When count matches, unpack to extract the wrapped value.
-                if (array.Length == argsNeeded)
-                    return true;
-
-                // More elements than parameters. If the parameter accepts this array type
-                // directly (e.g. Array, IList<T>, IEnumerable) then the array IS the argument.
-                // Otherwise unpack and let the count mismatch produce a clear error.
-                return !paramType.IsAssignableFrom(arrayType);
+                // Unpack and let the count mismatch produce a clear error.
+                return true;
             }
         }
 
