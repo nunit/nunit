@@ -134,5 +134,13 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public static void IncompatibleValueToParamsArray(params long[] a)
         {
         }
+
+        [TestCase(new int[] { 1, 2 }, new int[] { 3, 4 })]
+        [TestCase(new int[] { 5, 6 })]
+        [TestCase]
+        public static void TestWithParamOfArrays(params int[][] arrays)
+        {
+            Assert.That(arrays, Is.Not.Null);
+        }
     }
 }
