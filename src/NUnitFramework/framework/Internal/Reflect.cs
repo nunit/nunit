@@ -147,10 +147,22 @@ namespace NUnit.Framework.Internal
                 if (arguments.Length == parameterInfos.Length)
                 {
                     object? lastArgument = arguments[paramsOffset];
-                    if (lastArgument is null || lastArgument.GetType().IsArray)
+                    if (lastArgument is null)
                     {
-                        // Don't convert argument if there was already an array we could use.
                         return arguments;
+                    }
+
+                    Type lastArgumentType = lastArgument.GetType();
+                    if (lastArgumentType.IsArray)
+                    {
+                        Type parameterType = parameterInfos[paramsOffset].ParameterType;
+                        if (lastArgument.GetType() == parameterType ||
+                            parameterType.GetElementType()!.IsGenericParameter)
+                        {
+                            // Don't convert argument if there was already an array with the correct type we could use.
+                            // Or if it is a generic parameter.
+                            return arguments;
+                        }
                     }
                 }
 
