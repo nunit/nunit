@@ -102,11 +102,19 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldUnpackArrayAsArguments_SingleParam_CountMatches_ReturnsTrue()
+        public void ShouldUnpackArrayAsArguments_SingleParam_NotArray_NotTypeObject_ReturnsTrue()
         {
-            // Classic container pattern: new object[] { actualArg } — count equals argsNeeded
+            // Classic container pattern: new object[] { actualArg }
+            var parameters = new MethodWrapper(GetType(), nameof(MethodWithIntegerParameter)).GetParameters();
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new object[] { 1 }), Is.True);
+        }
+
+        [Test]
+        public void ShouldUnpackArrayAsArguments_SingleParam_TypeObject_ReturnsFalse()
+        {
+            // The method accepts anything, so the array IS the argument, not a container
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithObjectParameter)).GetParameters();
-            Assert.That(parameters.ShouldUnpackArrayAsArguments(new object[] { "hello" }), Is.True);
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new object[] { "hello" }), Is.False);
         }
 
         [Test]

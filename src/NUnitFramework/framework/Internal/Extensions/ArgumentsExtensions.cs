@@ -120,6 +120,11 @@ namespace NUnit.Framework.Internal.Extensions
                     return true;
 
                 // Single parameter from here on.
+
+                // The parameter is of type object, so the array is the argument, not a container.
+                if (paramType == typeof(object))
+                    return false;
+
                 // Classic argument-container pattern: new object[] { actualArg }
                 // When count matches, unpack to extract the wrapped value.
                 if (array.Length == argsNeeded)

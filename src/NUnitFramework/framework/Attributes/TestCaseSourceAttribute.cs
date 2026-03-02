@@ -180,12 +180,6 @@ namespace NUnit.Framework
                                     if (parameters.ShouldUnpackArrayAsArguments(array))
                                     {
                                         args = array.Unpack();
-
-                                        if (parameters.HasSingleParameterOfType(typeof(object)))
-                                        {
-                                            // re-wrap so the array arrives as a single object argument
-                                            args = [args];
-                                        }
                                     }
                                 }
 
