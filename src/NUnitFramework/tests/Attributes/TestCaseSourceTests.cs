@@ -505,6 +505,34 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
+        [Test]
+        public void HandlesTestCaseWithNotEnoughParameters()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.TestWithArrayAndNotEnoughIndividualParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Too many arguments provided, provide at most 2 arguments."));
+            });
+        }
+
+        [Test]
+        public void HandlesTestCaseWithTooManyParameters()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.TestWithArrayAndTooManyIndividualParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Not enough arguments provided, provide at least 4 arguments."));
+            });
+        }
+
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         [TestCaseSource(nameof(ExplicitNullValue))]
         public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
