@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldnpackArrayAsArguments_MatchingType_ParamsArray_ReturnsFalse()
+        public void ShouldUnpackArrayAsArguments_MatchingType_ParamsArray_ReturnsFalse()
         {
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithIntArrayAndParamsIntArray)).GetParameters();
             Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
