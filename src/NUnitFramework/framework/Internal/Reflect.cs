@@ -115,6 +115,18 @@ namespace NUnit.Framework.Internal
                     endIdx--;
                 }
 
+                // We can only supply missing optional arguments if the missing arguments are all optional,
+                // so check that first before copying the array and adding the missing arguments.
+                // Optional parameters cannot be followed by non-optional parameters,
+                // so if we find a non-optional parameter, we know we can't supply any of the missing arguments.
+                for (var i = arguments.Length; i < endIdx; i++)
+                {
+                    if (!parameterInfos[i].IsOptional)
+                    {
+                        return arguments;
+                    }
+                }
+
                 var newArgs = new object?[endIdx];
                 Array.Copy(arguments, newArgs, arguments.Length);
 
@@ -123,10 +135,6 @@ namespace NUnit.Framework.Internal
                     if (parameterInfos[i].IsOptional)
                     {
                         newArgs[i] = Type.Missing;
-                    }
-                    else
-                    {
-                        throw new TargetParameterCountException($"Method requires {parameterInfos.Length} arguments but only {arguments.Length} were supplied");
                     }
                 }
 
