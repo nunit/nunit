@@ -107,6 +107,12 @@ namespace NUnit.Framework.Internal.Extensions
                 Type paramType = parameters[0].ParameterType;
                 Type arrayType = array.GetType();
 
+                // Classic argument-container pattern: new object[] { actualArg }
+                // Except when the parameter is of type object — then the array IS the argument, not a container.
+                // Note that it is impossible to pass a single length object array to a method expecting an object array.
+                if (arrayType == typeof(object[]) && array.Length == 1 && paramType != typeof(object))
+                    return true;
+
                 // If the parameter accepts this array type
                 // directly (e.g. Array, IList<T>, IEnumerable) then the array IS the argument.
                 // But only if we don't need more arguments.

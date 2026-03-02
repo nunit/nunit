@@ -265,6 +265,43 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestObjectArrayGetsUnwrapped(Array array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Length.EqualTo(3));
+        }
+
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestWithObjectRetainsOriginalValue(object arg)
+        {
+            Assert.That(arg, Is.Not.Null);
+            Assert.That(arg.GetType().IsArray, Is.True);
+            if (arg is object[] objectArray)
+            {
+                // We need to unwrap ourselves
+                Assert.That(arg, Has.Length.EqualTo(1));
+                arg = objectArray[0];
+            }
+            Assert.That(arg, Is.TypeOf<int[]>());
+            Assert.That(arg, Has.Length.EqualTo(3));
+        }
+
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestWithObjectArrayRetainsOriginalValue(object[] array)
+        {
+            Assert.That(array, Is.Not.Null);
+            if (array.Length == 1)
+            {
+                object element = array[0];
+                Assert.That(element, Has.Length.EqualTo(3));
+            }
+            else
+            {
+                Assert.That(array, Has.Length.EqualTo(3));
+            }
+        }
+
         [TestCaseSource(nameof(FourArgs))]
         public void TestWithFourArguments(int n, int d, int q, int r)
         {
@@ -967,6 +1004,13 @@ namespace NUnit.Framework.Tests.Attributes
         ];
         private static readonly string?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
+
+        private static readonly int[] IntArray = [5, 7, 12];
+        private static readonly object[] WrappedAndNotWrapped =
+        [
+            new object[] { IntArray },
+            IntArray,
+        ];
 
         private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {

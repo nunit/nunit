@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Extensions
@@ -140,6 +141,22 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
+        public void ShouldUnpackArrayAsArguments_SingleParam_AssignableEnumerable_ReturnsFalse()
+        {
+            // int[] is assignable to IEnumerable — the array IS the argument, pass it directly
+            var parameters = new MethodWrapper(GetType(), nameof(MethodWithEnumerableParameter)).GetParameters();
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
+        }
+
+        [Test]
+        public void ShouldUnpackArrayAsArguments_SingleParam_AssignableEnumerable_WrappedInObjectReturnsTrue()
+        {
+            // object[] is assignable to IEnumerable — Yet this is a special case.
+            var parameters = new MethodWrapper(GetType(), nameof(MethodWithEnumerableParameter)).GetParameters();
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new object[] { new int[] { 1, 2, 3 } }), Is.True);
+        }
+
+        [Test]
         public void ShouldUnpackArrayAsArguments_SingleParam_NonAssignableType_ReturnsTrue()
         {
             // int[] is not assignable to int — unpack (will produce a count-mismatch error downstream)
@@ -185,6 +202,10 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         private void MethodWithArrayParameter(Array array)
+        {
+        }
+
+        private void MethodWithEnumerableParameter(IEnumerable array)
         {
         }
 
