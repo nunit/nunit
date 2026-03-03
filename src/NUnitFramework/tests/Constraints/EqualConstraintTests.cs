@@ -1024,6 +1024,15 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
+            [Test]
+            public void CanMatchUnmanagedNumericsWithRelativeTolerance()
+            {
+                byte testValue = 30;
+
+                Assert.That(testValue, Is.EqualTo(50).Within(50).Percent, "Doesn't work with generic numeric constraints.");
+                Assert.That(testValue, Is.EqualTo((object)50).Within(50).Percent, "Doesn't work with object-based constraints.");
+            }
+
             [TestCase(9500.0f)]
             [TestCase(10000.0f)]
             [TestCase(10500.0f)]

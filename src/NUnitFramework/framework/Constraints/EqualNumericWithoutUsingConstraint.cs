@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
             }
             else if (Numerics.IsNumericType(actual))
             {
-                hasSucceeded = Numerics.AreEqual(actual, _expected, ref _tolerance);
+                hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
             }
             else
             {
@@ -192,7 +192,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
-                        sb.Append(" ");
+                        sb.Append(' ');
                         sb.Append(_tolerance.Mode.ToString());
                     }
                 }
