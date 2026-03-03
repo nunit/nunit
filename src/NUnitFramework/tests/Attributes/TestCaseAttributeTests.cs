@@ -249,6 +249,27 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
+        [Test]
+        public static void ParamsArrayWithZeroOneOrMoreArgument()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.TestWithParamOfArrays));
+
+            var testCases = suite.Tests;
+
+            Assert.That(testCases, Has.Count.EqualTo(3));
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var testCase in testCases)
+                {
+                    Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+                    ITestResult result = TestBuilder.RunTest((Test)testCase, null);
+                    Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+                }
+            }
+        }
+
         [TestCase("x", ExpectedResult = new[] { "x", "b", "c" })]
         [TestCase("x", "y", ExpectedResult = new[] { "x", "y", "c" })]
         [TestCase("x", "y", "z", ExpectedResult = new[] { "x", "y", "z" })]
