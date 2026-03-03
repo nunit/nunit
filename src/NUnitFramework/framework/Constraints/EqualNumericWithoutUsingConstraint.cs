@@ -192,7 +192,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
                     if (_tolerance.Mode != ToleranceMode.Linear)
                     {
-                        sb.Append(" ");
+                        sb.Append(' ');
                         sb.Append(_tolerance.Mode.ToString());
                     }
                 }
