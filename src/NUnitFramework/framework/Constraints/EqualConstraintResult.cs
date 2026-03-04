@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         private readonly bool _caseInsensitive;
         private readonly bool _ignoringWhiteSpace;
         private readonly bool _ignoringLineEndingFormat;
-        private readonly bool _comparingProperties;
+        private readonly bool _comparingPropertiesOrFields;
         private readonly bool _clipStrings;
         private readonly IList<NUnitEqualityComparer.FailurePoint> _failurePoints;
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
             _caseInsensitive = constraint.CaseInsensitive;
             _ignoringWhiteSpace = constraint.IgnoringWhiteSpace;
             _ignoringLineEndingFormat = constraint.IgnoringLineEndingFormat;
-            _comparingProperties = constraint.ComparingProperties;
+            _comparingPropertiesOrFields = constraint.ComparingProperties || constraint.ComparingFields;
             _clipStrings = constraint.ClipStrings;
             _failurePoints = constraint.HasFailurePoints ? constraint.FailurePoints : Array.Empty<NUnitEqualityComparer.FailurePoint>();
         }
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
         {
             _expectedValue = constraint.Arguments[0];
             _tolerance = tolerance;
-            _comparingProperties = false;
+            _comparingPropertiesOrFields = false;
             _caseInsensitive = false;
             _ignoringWhiteSpace = false;
             _ignoringLineEndingFormat = false;
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
         {
             _expectedValue = constraint.Arguments[0];
             _tolerance = Tolerance.Default;
-            _comparingProperties = false;
+            _comparingPropertiesOrFields = false;
             _caseInsensitive = false;
             _ignoringWhiteSpace = false;
             _ignoringLineEndingFormat = false;
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Constraints
         {
             _expectedValue = constraint.Arguments[0];
             _tolerance = Tolerance.Exact;
-            _comparingProperties = false;
+            _comparingPropertiesOrFields = false;
             _caseInsensitive = caseInsensitive;
             _ignoringWhiteSpace = ignoringWhiteSpace;
             _ignoringLineEndingFormat = ignoringLineEndingFormat;
@@ -136,7 +136,7 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
             else if (expected is Stream expectedStream && actual is Stream actualStream)
                 DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
-            else if (_comparingProperties && IsPropertyFailurePoint(depth))
+            else if (_comparingPropertiesOrFields && IsPropertyOrFieldFailurePoint(depth))
                 DisplayPropertyDifferences(writer, expected, actual, depth);
             else if (_tolerance is not null)
                 writer.DisplayDifferences(expected, actual, _tolerance);
@@ -373,7 +373,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private bool IsPropertyFailurePoint(int depth)
+        private bool IsPropertyOrFieldFailurePoint(int depth)
         {
             return _failurePoints.Count > depth &&
                    _failurePoints[depth].PropertyName is not null;

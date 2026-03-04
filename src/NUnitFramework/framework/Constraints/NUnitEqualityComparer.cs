@@ -83,6 +83,14 @@ namespace NUnit.Framework.Constraints
         private PropertiesComparerConfiguration? _comparePropertiesConfiguration;
 
         /// <summary>
+        /// If true, when a class does not implement <see cref="IEquatable{T}"/>
+        /// it will be compared property by fields.
+        /// </summary>
+        private bool _compareFields;
+
+        private FieldsComparerConfiguration? _compareFieldsConfiguration;
+
+        /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
         private List<EqualityAdapter>? _externalComparers;
@@ -144,12 +152,31 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Gets and sets the names of properties to exclude from comparison.
+        /// Gets and sets the the configuration for comparing properties.
         /// </summary>
         public PropertiesComparerConfiguration? ComparePropertiesConfiguration
         {
             get => _comparePropertiesConfiguration;
             set => _comparePropertiesConfiguration = value;
+        }
+
+        /// <summary>
+        /// Gets and sets a flag indicating whether an instance fields
+        /// should be compared when determining equality.
+        /// </summary>
+        public bool CompareFields
+        {
+            get => _compareFields;
+            set => _compareFields = value;
+        }
+
+        /// <summary>
+        /// Gets and sets the the configuration for comparing fields.
+        /// </summary>
+        public FieldsComparerConfiguration? CompareFieldsConfiguration
+        {
+            get => _compareFieldsConfiguration;
+            set => _compareFieldsConfiguration = value;
         }
 
         /// <summary>
@@ -203,7 +230,7 @@ namespace NUnit.Framework.Constraints
             EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
 
             switch (result)
-            {
+            { 
                 case EqualMethodResult.TypesNotSupported:
                     throw new NotSupportedException($"No comparer found for instances of type '{GetType(x)}' and '{GetType(y)}'");
                 case EqualMethodResult.ToleranceNotSupported:
@@ -258,6 +285,10 @@ namespace NUnit.Framework.Constraints
             if (_compareProperties)
             {
                 return PropertiesComparer.Equal(x, y, ref tolerance, state, this);
+            }
+            if (_compareFields)
+            {
+                return FieldsComparer.Equal(x, y, ref tolerance, state, this);
             }
 
             if (tolerance.HasVariance)

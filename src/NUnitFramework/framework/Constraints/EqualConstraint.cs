@@ -95,6 +95,14 @@ namespace NUnit.Framework.Constraints
         public bool ComparingProperties => _comparer.CompareProperties;
 
         /// <summary>
+        /// Gets a value indicating whether to compare separate fields.
+        /// </summary>
+        /// <value>
+        ///   <see langword="true"/> if comparing separate fields; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool ComparingFields => _comparer.CompareFields;
+
+        /// <summary>
         /// Gets a value indicating whether or not to clip strings.
         /// </summary>
         /// <value>
@@ -425,6 +433,7 @@ namespace NUnit.Framework.Constraints
         /// </remarks>
         public EqualConstraint UsingPropertiesComparer()
         {
+            _comparer.CompareFields = false;
             _comparer.CompareProperties = true;
             _comparer.ComparePropertiesConfiguration = null;
             return this;
@@ -440,6 +449,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="configure">Function to configure the <see cref="PropertiesComparerConfiguration"/></param>
         public EqualConstraint UsingPropertiesComparer(Func<PropertiesComparerConfigurationUntyped, PropertiesComparerConfigurationUntyped> configure)
         {
+            _comparer.CompareFields = false;
             _comparer.CompareProperties = true;
             _comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfigurationUntyped());
             return this;
@@ -457,6 +467,37 @@ namespace NUnit.Framework.Constraints
         {
             Comparer.CompareProperties = true;
             Comparer.ComparePropertiesConfiguration = configure(new PropertiesComparerConfiguration<T>());
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance fields.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        public EqualConstraint UsingFieldsComparer()
+        {
+            _comparer.CompareProperties = false;
+            _comparer.CompareFields = true;
+            _comparer.CompareFieldsConfiguration = null;
+            return this;
+        }
+
+        /// <summary>
+        /// Enables comparing of instance properties.
+        /// </summary>
+        /// <remarks>
+        /// This allows comparing classes that don't implement <see cref="IEquatable{T}"/>
+        /// without having to compare each property separately in own code.
+        /// </remarks>
+        /// <param name="configure">Function to configure the <see cref="FieldsComparerConfiguration"/></param>
+        public EqualConstraint UsingFieldsComparer(Func<FieldsComparerConfiguration, FieldsComparerConfiguration> configure)
+        {
+            _comparer.CompareProperties = false;
+            _comparer.CompareFields = true;
+            _comparer.CompareFieldsConfiguration = configure(new FieldsComparerConfiguration());
             return this;
         }
 

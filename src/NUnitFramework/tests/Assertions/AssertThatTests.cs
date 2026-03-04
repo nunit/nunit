@@ -903,9 +903,11 @@ namespace NUnit.Framework.Tests.Assertions
             var d2 = new DistanceRecord(42);
 
             Assert.That(d2, Is.Not.EqualTo(d1), "Record Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingFieldsComparer(), "FieldsComparer");
             Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(), "PropertiesComparer");
 
             Assert.That(d2.Length, Is.EqualTo(d1.Length), "Record Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingFieldsComparer(), "FieldsComparer");
             Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer");
         }
 
@@ -916,9 +918,11 @@ namespace NUnit.Framework.Tests.Assertions
             var d2 = new DistanceStructWithAutoReadOnlyPropery(42);
 
             Assert.That(d2, Is.Not.EqualTo(d1), "ValueType Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingFieldsComparer(), "FieldsComparer");
             Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(), "PropertiesComparer");
 
             Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingFieldsComparer(), "FieldsComparer");
             Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer");
         }
 
@@ -928,7 +932,11 @@ namespace NUnit.Framework.Tests.Assertions
             var d1 = new DistanceStructWithManualReadOnlyPropery(-42);
             var d2 = new DistanceStructWithManualReadOnlyPropery(42);
 
+            Assert.That(d2, Is.Not.EqualTo(d1), "ValueType Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingFieldsComparer(), "FieldsComparer");
+
             Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingFieldsComparer(), "FieldsComparer");
 
             // The PropertiesComparer does not support properties on structs that are not auto read-only
             // because we can't distinguish between properties with a local field and properties that do calculations.
