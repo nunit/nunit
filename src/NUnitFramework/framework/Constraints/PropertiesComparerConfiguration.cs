@@ -26,9 +26,9 @@ namespace NUnit.Framework.Constraints
         internal bool OnlyCompareCommonProperties { get; set; }
 
         /// <summary>
-        /// Gets and sets the option to compare only properties with setters, ignoring calculated properties.
+        /// Gets and sets the option to compare calculated properties which are ignored by default
         /// </summary>
-        internal bool OnlyCompareBackedProperties { get; set; }
+        internal bool CompareDerivedProperties { get; set; }
 
         /// <summary>
         /// Gets and sets the names of properties to exclude from comparison.
@@ -142,12 +142,12 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareBackedProperties"/> property.
+        /// Set the <see cref="PropertiesComparerConfiguration.CompareDerivedProperties"/> property.
         /// </summary>
         /// <returns>Self.</returns>
-        public PropertiesComparerConfigurationUntyped CompareOnlyBackedProperties()
+        public PropertiesComparerConfigurationUntyped AlsoCompareDerivedProperties()
         {
-            OnlyCompareBackedProperties = true;
+            CompareDerivedProperties = true;
             return this;
         }
 
@@ -244,12 +244,12 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareBackedProperties"/> property.
+        /// Set the <see cref="PropertiesComparerConfiguration.CompareDerivedProperties"/> property.
         /// </summary>
         /// <returns>Self.</returns>
         public PropertiesComparerConfiguration<T> CompareOnlyBackedProperties()
         {
-            OnlyCompareBackedProperties = true;
+            CompareDerivedProperties = true;
             return this;
         }
 

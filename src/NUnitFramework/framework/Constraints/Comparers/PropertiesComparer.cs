@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
             }
 
-            PropertyInfo[] xProperties = GetPropertiesToCompare(xType, configuration.OnlyCompareBackedProperties);
+            PropertyInfo[] xProperties = GetPropertiesToCompare(xType, configuration.CompareDerivedProperties);
             HashSet<string> xPropertyNames = new HashSet<string>(xProperties.Select(p => p.Name));
 
             PropertyInfo[] yProperties = xProperties;
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (xType != yType)
             {
-                yProperties = GetPropertiesToCompare(yType, configuration.OnlyCompareBackedProperties);
+                yProperties = GetPropertiesToCompare(yType, configuration.CompareDerivedProperties);
                 yPropertyNames = new HashSet<string>(yProperties.Select(p => p.Name));
                 allPropertyNames = new HashSet<string>(xPropertyNames.Concat(yPropertyNames));
                 UseProperties(yType, yPropertyNames);
@@ -150,13 +150,13 @@ namespace NUnit.Framework.Constraints.Comparers
 
             return EqualMethodResult.ComparedEqual;
 
-            PropertyInfo[] GetPropertiesToCompare(Type type, bool onlyComparedBackedProperties)
+            PropertyInfo[] GetPropertiesToCompare(Type type, bool compareDerivedProperties)
             {
                 HashSet<string> fields = new(type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic).Select(f => f.Name));
                 var properties = new Dictionary<string, PropertyInfo>();
                 foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
-                    if (onlyComparedBackedProperties && !property.CanWrite)
+                    if (!property.CanWrite && !compareDerivedProperties)
                     {
                         // There is one exception, auto read-only properties initialized in the constructor.
                         // We can identify those by checking if they have a compiler generated backing field.
