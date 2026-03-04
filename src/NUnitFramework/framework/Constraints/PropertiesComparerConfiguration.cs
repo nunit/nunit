@@ -26,6 +26,11 @@ namespace NUnit.Framework.Constraints
         internal bool OnlyCompareCommonProperties { get; set; }
 
         /// <summary>
+        /// Gets and sets the option to compare only properties with setters, ignoring calculated properties.
+        /// </summary>
+        internal bool OnlyCompareBackedProperties { get; set; }
+
+        /// <summary>
         /// Gets and sets the names of properties to exclude from comparison.
         /// </summary>
         internal HashSet<string>? PropertyNamesToExclude { get; set; }
@@ -137,6 +142,16 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareBackedProperties"/> property.
+        /// </summary>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfigurationUntyped CompareOnlyBackedProperties()
+        {
+            OnlyCompareBackedProperties = true;
+            return this;
+        }
+
+        /// <summary>
         /// Set the <see cref="PropertiesComparerConfiguration.PropertyNamesToUse"/> property.
         /// </summary>
         /// <remarks>
@@ -226,6 +241,16 @@ namespace NUnit.Framework.Constraints
         {
             OnlyCompareCommonProperties = true;
             return AllowDifferentTypes();
+        }
+
+        /// <summary>
+        /// Set the <see cref="PropertiesComparerConfiguration.OnlyCompareBackedProperties"/> property.
+        /// </summary>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfiguration<T> CompareOnlyBackedProperties()
+        {
+            OnlyCompareBackedProperties = true;
+            return this;
         }
 
         /// <summary>

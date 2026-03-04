@@ -883,6 +883,69 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
+        private sealed class LinkedList
+        {
+            public LinkedList(int value, LinkedList? next = null)
+            {
+                Value = value;
+                Next = next;
+            }
+
+            public int Value { get; }
+
+            public LinkedList? Next { get; set; }
+        }
+
+        [Test]
+        public void RecursiveRecordWithDerivedProperty()
+        {
+            var d1 = new DistanceRecord(-42);
+            var d2 = new DistanceRecord(42);
+
+            Assert.That(d2, Is.Not.EqualTo(d1), "Record Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(c => c.CompareOnlyBackedProperties()), "PropertiesComparer");
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "Record Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(c => c.CompareOnlyBackedProperties()), "PropertiesComparer");
+        }
+
+        [Test]
+        public void RecursiveStructWithReadOnlyAndDerivedProperty()
+        {
+            var d1 = new DistanceStruct(-42);
+            var d2 = new DistanceStruct(42);
+
+            Assert.That(d2, Is.Not.EqualTo(d1), "ValueType Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(c => c.CompareOnlyBackedProperties()), "PropertiesComparer");
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(c => c.CompareOnlyBackedProperties()), "PropertiesComparer");
+        }
+
+        private readonly record struct DistanceRecord(int Metres)
+        {
+            public DistanceRecord Length => new(Math.Abs(Metres));
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
+        private readonly struct DistanceStruct
+        {
+            public DistanceStruct(int metres) => Metres = metres;
+
+            public DistanceRecord Length => new(Math.Abs(Metres));
+
+            public int Metres { get; }
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
         [Test]
         public void AssertRecordsComparingProperties()
         {
@@ -901,19 +964,6 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.That(record1, Is.Not.EqualTo(record2)); // ParentRecord's generated method does not handle collections
             Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
-        }
-
-        private sealed class LinkedList
-        {
-            public LinkedList(int value, LinkedList? next = null)
-            {
-                Value = value;
-                Next = next;
-            }
-
-            public int Value { get; }
-
-            public LinkedList? Next { get; set; }
         }
 
         [Test]
