@@ -910,16 +910,30 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void RecursiveStructWithReadOnlyAndDerivedProperty()
+        public void RecursiveStructWithAutoReadOnlyAndDerivedProperty()
         {
-            var d1 = new DistanceStruct(-42);
-            var d2 = new DistanceStruct(42);
+            var d1 = new DistanceStructWithAutoReadOnlyPropery(-42);
+            var d2 = new DistanceStructWithAutoReadOnlyPropery(42);
 
             Assert.That(d2, Is.Not.EqualTo(d1), "ValueType Equals");
             Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(), "PropertiesComparer");
 
             Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
             Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer");
+        }
+
+        [Test]
+        public void RecursiveStructWithManualReadOnlyAndDerivedProperty()
+        {
+            var d1 = new DistanceStructWithManualReadOnlyPropery(-42);
+            var d2 = new DistanceStructWithManualReadOnlyPropery(42);
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+
+            // The PropertiesComparer does not support properties on structs that are not auto read-only
+            // because we can't distinguish between properties with a local field and properties that do calculations.
+            Assert.That(() => Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer"),
+                        Throws.InstanceOf<NotSupportedException>());
         }
 
         private readonly record struct DistanceRecord(int Metres)
@@ -932,13 +946,29 @@ namespace NUnit.Framework.Tests.Assertions
             }
         }
 
-        private readonly struct DistanceStruct
+        private readonly struct DistanceStructWithAutoReadOnlyPropery
         {
-            public DistanceStruct(int metres) => Metres = metres;
+            public DistanceStructWithAutoReadOnlyPropery(int metres) => Metres = metres;
 
-            public DistanceRecord Length => new(Math.Abs(Metres));
+            public DistanceStructWithAutoReadOnlyPropery Length => new(Math.Abs(Metres));
 
             public int Metres { get; }
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
+        private readonly struct DistanceStructWithManualReadOnlyPropery
+        {
+            private readonly int _metres;
+
+            public DistanceStructWithManualReadOnlyPropery(int metres) => _metres = metres;
+
+            public DistanceStructWithManualReadOnlyPropery Length => new(Math.Abs(Metres));
+
+            public int Metres => _metres;
 
             public override string ToString()
             {
