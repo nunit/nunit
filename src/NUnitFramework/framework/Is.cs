@@ -332,14 +332,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-        public static SameAsConstraint SameAs(object? expected)
-        {
-            return new SameAsConstraint(expected);
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests that two references are the same object
-        /// </summary>
         public static SameAsConstraint<T> SameAs<T>(T? expected)
             where T : class?
         {
