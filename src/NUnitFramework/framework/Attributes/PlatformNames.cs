@@ -191,11 +191,11 @@ namespace NUnit.Framework
         /// <summary>
         /// Platform: "NET"
         /// </summary>
-        public const string DotNET = "NET";
+        public const string NET = "NET";
         /// <summary>
         /// Platform: "NETCore"
         /// </summary>
-        public const string DotNETCore = "NETCore";
+        public const string NETCore = "NETCore";
         /// <summary>
         /// Platform: "SSCLI"
         /// </summary>
@@ -212,5 +212,14 @@ namespace NUnit.Framework
         /// Platform: "MonoTouch"
         /// </summary>
         public const string MonoTouch = "MonoTouch";
+
+        /// <summary>
+        /// Platform: "NET"
+        /// </summary>
+        public const string DotNET = NET;
+        /// <summary>
+        /// Platform: "NETCore"
+        /// </summary>
+        public const string DotNETCore = NETCore;
     }
 }
