@@ -165,28 +165,43 @@ namespace NUnit.Framework
         /// <summary>
         /// Platform: "64-bit"
         /// </summary>
-        public const string _64Bit = "64-bit";
+        public const string X64Bit = "64-bit";
         /// <summary>
         /// Platform: "64-bit-process"
         /// </summary>
-        public const string _64BitProcess = "64-bit-process";
+        public const string X64BitProcess = "64-bit-process";
         /// <summary>
+        /// <para>
         /// Platform: "32-bit"
+        /// </para>
+        /// <para>
+        /// Specifies a 32-bit testing host process, regardless of the word size of the machine.
+        /// </para>
         /// </summary>
-        public const string _32Bit = "32-bit";
+        public const string X32Bit = "32-bit";
         /// <summary>
+        /// <para>
         /// Platform: "32-bit-process"
+        /// </para>
+        /// <para>
+        /// Specifies a 32-bit testing host process, regardless of the word size of the machine.
+        /// </para>
         /// </summary>
-        public const string _32BitProcess = "32-bit-process";
+        public const string X32BitProcess = "32-bit-process";
 
         /// <summary>
+        /// <para>
         /// Platform: "64-bit-os"
+        /// </para>
+        /// <para>
+        /// Specifies a 64-bit machine, regardless of the word size of the testing host process.
+        /// </para>
         /// </summary>
-        public const string _64BitOS = "64-bit-os";
+        public const string X64BitOS = "64-bit-os";
         /// <summary>
         /// Platform: "32-bit-os"
         /// </summary>
-        public const string _32BitOS = "32-bit-os";
+        public const string X32BitOS = "32-bit-os";
 
         /// <summary>
         /// Platform: "NET"
