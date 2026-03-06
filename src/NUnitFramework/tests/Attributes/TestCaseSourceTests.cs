@@ -196,6 +196,61 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(args, Is.EqualTo(SingleDimensionArray[0]));
         }
 
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoArray(Array array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Length.EqualTo(3));
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIListOfT(IList<int> array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Count.EqualTo(3));
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIEnumerableOfT(IEnumerable<int> array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Exactly(3).Items);
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(SingleDimensionArray))]
+        public void TestMayReceiveFlatArrayIntoIEnumerable(IEnumerable array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Exactly(3).Items);
+            Assert.That(array, Is.EqualTo(SingleDimensionArray[0]));
+        }
+
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndIndividualParameters(int[] values, int sum, int sumSquared)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(values.Sum(), Is.EqualTo(sum));
+            Assert.That(values.Select(x => x * x).Sum(), Is.EqualTo(sumSquared));
+        }
+
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndParamsArray(int[] values, params int[] sums)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(sums, Is.Not.Null);
+
+            for (int i = 0; i < sums.Length; i++)
+            {
+                int actual = values.Select(x => Pow(x, i + 1)).Sum();
+                Assert.That(actual, Is.EqualTo(sums[i]));
+            }
+
+            static int Pow(int x, int n) => (int)Math.Pow(x, n);
+        }
+
         [TestCaseSource(nameof(ExplicitNullValue))]
         public void TestMayReceiveExplicitNullValue(object item)
         {
@@ -208,6 +263,43 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
+        }
+
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestObjectArrayGetsUnwrapped(Array array)
+        {
+            Assert.That(array, Is.Not.Null);
+            Assert.That(array, Has.Length.EqualTo(3));
+        }
+
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestWithObjectRetainsOriginalValue(object arg)
+        {
+            Assert.That(arg, Is.Not.Null);
+            Assert.That(arg.GetType().IsArray, Is.True);
+            if (arg is object[] objectArray)
+            {
+                // We need to unwrap ourselves
+                Assert.That(arg, Has.Length.EqualTo(1));
+                arg = objectArray[0];
+            }
+            Assert.That(arg, Is.TypeOf<int[]>());
+            Assert.That(arg, Has.Length.EqualTo(3));
+        }
+
+        [TestCaseSource(nameof(WrappedAndNotWrapped))]
+        public void TestWithObjectArrayRetainsOriginalValue(object[] array)
+        {
+            Assert.That(array, Is.Not.Null);
+            if (array.Length == 1)
+            {
+                object element = array[0];
+                Assert.That(element, Has.Length.EqualTo(3));
+            }
+            else
+            {
+                Assert.That(array, Has.Length.EqualTo(3));
+            }
         }
 
         [TestCaseSource(nameof(FourArgs))]
@@ -448,6 +540,34 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(testCase.RunState, Is.EqualTo(RunState.NotRunnable), testCase.Name);
                 }
             }
+        }
+
+        [Test]
+        public void HandlesTestCaseWithNotEnoughParameters()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.TestWithArrayAndNotEnoughIndividualParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Too many arguments provided, provide at most 2 arguments."));
+            });
+        }
+
+        [Test]
+        public void HandlesTestCaseWithTooManyParameters()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.TestWithArrayAndTooManyIndividualParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Not enough arguments provided, provide at least 4 arguments."));
+            });
         }
 
 #pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
@@ -878,8 +998,19 @@ namespace NUnit.Framework.Tests.Attributes
         [
             new[] { 12, 6, 2 }
         ];
+        private static readonly object[] NestedArray =
+        [
+            new object[] { new int[] { 2, 3, 4 }, 2 + 3 + 4, 2 * 2 + 3 * 3 + 4 * 4 }
+        ];
         private static readonly string?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
+
+        private static readonly int[] IntArray = [5, 7, 12];
+        private static readonly object[] WrappedAndNotWrapped =
+        [
+            new object[] { IntArray },
+            IntArray,
+        ];
 
         private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {

@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
             }
             else if (Numerics.IsNumericType(actual))
             {
-                hasSucceeded = Numerics.AreEqual(actual, _expected, ref _tolerance);
+                hasSucceeded = Numerics.AreEqual(_expected, actual, ref _tolerance);
             }
             else
             {

@@ -147,6 +147,27 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        private static readonly object[] NestedArray =
+        [
+            new object[] { new int[] { 2, 3, 4 }, 2 + 3 + 4, 2 * 2 + 3 * 3 + 4 * 4 }
+        ];
+
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndNotEnoughIndividualParameters(int[] values, int sum)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(values.Sum(), Is.EqualTo(sum));
+        }
+
+        [TestCaseSource(nameof(NestedArray))]
+        public void TestWithArrayAndTooManyIndividualParameters(int[] values, int sum, int sumSquared, int sumCubed)
+        {
+            Assert.That(values, Is.Not.Null);
+            Assert.That(values.Sum(), Is.EqualTo(sum));
+            Assert.That(values.Select(x => x * x).Sum(), Is.EqualTo(sumSquared));
+            Assert.That(values.Select(x => x * x * x).Sum(), Is.EqualTo(sumCubed));
+        }
+
         private static IEnumerable ExceptionSource
         {
             get
