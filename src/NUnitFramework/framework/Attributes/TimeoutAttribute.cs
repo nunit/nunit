@@ -11,7 +11,7 @@ namespace NUnit.Framework
     /// When applied to a method, the test is cancelled if the timeout is exceeded.
     /// When applied to a class or assembly, the default timeout is set for all contained test methods.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]
 #if !NETFRAMEWORK
     [Obsolete(".NET No longer supports aborting threads as it is not a safe thing to do. Update your tests to use CancelAfterAttribute instead")]
 #endif

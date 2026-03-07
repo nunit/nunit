@@ -81,4 +81,28 @@ namespace NUnit.TestData
         {
         }
     }
+
+    [CancelAfter(50)]
+    public abstract class CancelAfterBaseFixtureWithCancelAfterOnFixture
+    {
+        [Test]
+        public void Test1()
+        {
+        }
+
+        [Test]
+        public void Test3()
+        {
+        }
+    }
+
+    [TestFixture]
+    public sealed class CancelAfterFixtureWithInheritedCancelAfterOnFixture : CancelAfterBaseFixtureWithCancelAfterOnFixture
+    {
+        [Test]
+        public async Task Test2ExceedsTimeout()
+        {
+            await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+    }
 }

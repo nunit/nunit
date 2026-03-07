@@ -16,11 +16,17 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public sealed class CancelAfterTests : ThreadingTests
     {
-        private sealed class SampleTests
+        private abstract class BaseTestsClass
         {
-            private const int TimeExceedingCancelAfter = 500;
+            protected const int TimeExceedingCancelAfter = 500;
 
             public const int CancelAfter = 50;
+
+            public bool TestRanToCompletion { get; protected set; }
+        }
+
+        private sealed class SampleTests : BaseTestsClass
+        {
             private readonly Action _testAction;
             private readonly StubDebugger _debugger;
 
@@ -29,8 +35,6 @@ namespace NUnit.Framework.Tests.Attributes
                 _testAction = testAction;
                 _debugger = debugger;
             }
-
-            public bool TestRanToCompletion { get; private set; }
 
             [CancelAfter(CancelAfter)]
             public async Task TestThatTimesOut(CancellationToken cancellationToken)
@@ -58,6 +62,31 @@ namespace NUnit.Framework.Tests.Attributes
             public async Task TestThatAttachesDebuggerAndTimesOut(CancellationToken cancellationToken)
             {
                 _debugger.IsAttached = true;
+                await Task.Delay(TimeExceedingCancelAfter, cancellationToken);
+                TestRanToCompletion = true;
+            }
+        }
+
+        private abstract class CancelableTestsBaseclass : BaseTestsClass
+        {
+            [CancelAfter(CancelAfter)]
+            public abstract Task TestThatTimesOut(CancellationToken cancellationToken);
+        }
+
+        private sealed class InheritedCancelableTestsClass : CancelableTestsBaseclass
+        {
+            public override async Task TestThatTimesOut(CancellationToken cancellationToken)
+            {
+                await Task.Delay(TimeExceedingCancelAfter, cancellationToken);
+                TestRanToCompletion = true;
+            }
+        }
+
+        private sealed class OverriddenCancelableTestsClass : CancelableTestsBaseclass
+        {
+            [CancelAfter(2 * TimeExceedingCancelAfter)]
+            public override async Task TestThatTimesOut(CancellationToken cancellationToken)
+            {
                 await Task.Delay(TimeExceedingCancelAfter, cancellationToken);
                 TestRanToCompletion = true;
             }
@@ -135,6 +164,52 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
         }
 
+        [Test]
+        public void InheritedCancelAfterCausesOtherwisePassingTestToFail()
+        {
+            // given
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(InheritedCancelableTestsClass), nameof(InheritedCancelableTestsClass.TestThatTimesOut));
+
+            var debugger = new StubDebugger { IsAttached = false };
+            var tests = new InheritedCancelableTestsClass();
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, tests, debugger);
+
+            Assert.Multiple(() =>
+            {
+                // then
+                Assert.That(tests.TestRanToCompletion, Is.False, "Test ran to completion");
+
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.Message, Is.EqualTo($"Test exceeded CancelAfter value of {InheritedCancelableTestsClass.CancelAfter}ms"));
+            });
+        }
+
+        [Test]
+        public void OverriddenCancelAfterCausesTestToPass()
+        {
+            // given
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(OverriddenCancelableTestsClass), nameof(OverriddenCancelableTestsClass.TestThatTimesOut));
+
+            var debugger = new StubDebugger { IsAttached = false };
+            var tests = new OverriddenCancelableTestsClass();
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, tests, debugger);
+
+            Assert.Multiple(() =>
+            {
+                // then
+                Assert.That(tests.TestRanToCompletion, Is.True, "Test ran to completion");
+
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            });
+        }
+
         [Test, CancelAfter(500)]
         public void TestWithCancelAfterRunsOnSameThread()
         {
@@ -208,8 +283,27 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
                 Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             });
-            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             ITestResult? result = TestFinder.Find(nameof(CancelAfterFixtureWithCancelAfterOnFixture.Test2ExceedsTimeout), suiteResult, false);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.Message, Does.Contain("50ms"));
+            });
+        }
+
+        [Test]
+        public void CancelAfterCanBeSetOnBaseTestFixture()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterFixtureWithInheritedCancelAfterOnFixture));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+            });
+            ITestResult? result = TestFinder.Find(nameof(CancelAfterFixtureWithInheritedCancelAfterOnFixture.Test2ExceedsTimeout), suiteResult, false);
             Assert.That(result, Is.Not.Null);
             Assert.Multiple(() =>
             {
