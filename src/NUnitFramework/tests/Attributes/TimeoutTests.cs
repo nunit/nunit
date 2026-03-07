@@ -69,13 +69,13 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        private abstract class TimeoutTestsBaseclass : BaseTestsClass
+        private abstract class TimeoutTestsBaseClass : BaseTestsClass
         {
             [Timeout(Timeout)]
             public abstract void TestThatTimesOut();
         }
 
-        private sealed class InheritedTimeoutTestsClass : TimeoutTestsBaseclass
+        private sealed class InheritedTimeoutTestsClass : TimeoutTestsBaseClass
         {
             public override void TestThatTimesOut()
             {
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        private sealed class OverriddenTimeoutTestsClass : TimeoutTestsBaseclass
+        private sealed class OverriddenTimeoutTestsClass : TimeoutTestsBaseClass
         {
             [Timeout(2 * TimeExceedingTimeout)]
             public override void TestThatTimesOut()
