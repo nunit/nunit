@@ -1,15 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if NETFRAMEWORK
+
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData
 {
-#if !NETFRAMEWORK
-#pragma warning disable CS0618 // Type or member is obsolete
-#endif
-
     [TestFixture]
     public class TimeoutFixture
     {
@@ -90,6 +88,30 @@ namespace NUnit.TestData
         [Test]
         public void Test3()
         {
+        }
+    }
+
+    [Timeout(50)]
+    public abstract class TimeoutBaseFixtureWithTimeoutOnFixture
+    {
+        [Test]
+        public void Test1()
+        {
+        }
+
+        [Test]
+        public void Test3()
+        {
+        }
+    }
+
+    [TestFixture]
+    public class TimeoutFixtureWithInheritedTimeoutOnFixture : TimeoutBaseFixtureWithTimeoutOnFixture
+    {
+        [Test]
+        public void Test2WithLongDuration()
+        {
+            Thread.Sleep(2000);
         }
     }
 
@@ -178,3 +200,5 @@ namespace NUnit.TestData
         }
     }
 }
+
+#endif
