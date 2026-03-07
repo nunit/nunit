@@ -67,13 +67,13 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        private abstract class CancelableTestsBaseclass : BaseTestsClass
+        private abstract class CancelableTestsBaseClass : BaseTestsClass
         {
             [CancelAfter(CancelAfter)]
             public abstract Task TestThatTimesOut(CancellationToken cancellationToken);
         }
 
-        private sealed class InheritedCancelableTestsClass : CancelableTestsBaseclass
+        private sealed class InheritedCancelableTestsClass : CancelableTestsBaseClass
         {
             public override async Task TestThatTimesOut(CancellationToken cancellationToken)
             {
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        private sealed class OverriddenCancelableTestsClass : CancelableTestsBaseclass
+        private sealed class OverriddenCancelableTestsClass : CancelableTestsBaseClass
         {
             [CancelAfter(2 * TimeExceedingCancelAfter)]
             public override async Task TestThatTimesOut(CancellationToken cancellationToken)
