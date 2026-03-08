@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as applying to a specific platform.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]
     public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
     {
         private readonly PlatformHelper _platformHelper = new();

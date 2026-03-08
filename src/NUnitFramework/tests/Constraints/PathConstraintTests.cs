@@ -4,11 +4,31 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
+    [Platform("Win")]
+    public abstract class WindowsConstraintTests : ConstraintTestBase
+    {
+        [OneTimeSetUp]
+        public void BaseSetUp()
+        {
+            Assume.That(System.IO.Path.DirectorySeparatorChar, Is.EqualTo('\\'), "Tests assume Windows path separator");
+        }
+    }
+
+    [Platform("Unix")]
+    public abstract class UnixConstraintTests : ConstraintTestBase
+    {
+        [OneTimeSetUp]
+        public void BaseSetUp()
+        {
+            Assume.That(System.IO.Path.DirectorySeparatorChar, Is.EqualTo('/'), "Tests assume Unix path separator");
+        }
+    }
+
     /// <summary>
     /// Summary description for PathConstraintTests.
     /// </summary>]
-    [TestFixture, Platform("Win")]
-    public class SamePathTest_Windows : StringConstraintTests
+    [TestFixture]
+    public class SamePathTest_Windows : WindowsConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SamePathConstraint(@"C:\folder1\file.tmp").IgnoreCase;
 
@@ -87,8 +107,8 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-    [TestFixture, Platform("Win")]
-    public class SubPathTest_Windows : ConstraintTestBase
+    [TestFixture]
+    public class SubPathTest_Windows : WindowsConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SubPathConstraint(@"C:\folder1\folder2").IgnoreCase;
 
@@ -128,8 +148,8 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-    [TestFixture, Platform("Unix")]
-    public class SubPathTest_Linux : ConstraintTestBase
+    [TestFixture]
+    public class SubPathTest_Linux : UnixConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SubPathConstraint(@"/folder1/folder2").RespectCase;
 
@@ -170,8 +190,8 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-    [TestFixture, Platform("Win")]
-    public class SamePathOrUnderTest_Windows : StringConstraintTests
+    [TestFixture]
+    public class SamePathOrUnderTest_Windows : WindowsConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint(@"C:\folder1\folder2").IgnoreCase;
 
@@ -205,8 +225,8 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning restore IDE0052 // Remove unread private members
     }
 
-    [TestFixture, Platform("Unix")]
-    public class SamePathOrUnderTest_Linux : StringConstraintTests
+    [TestFixture]
+    public class SamePathOrUnderTest_Linux : UnixConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint(@"/folder1/folder2").RespectCase;
 
