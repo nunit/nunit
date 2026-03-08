@@ -17,7 +17,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
-    [Platform(Exclude = "Mono,MonoTouch", Reason = "Mono does not implement Code Access Security")]
+    [Platform(Excludes = [PlatformNames.Mono, PlatformNames.MonoTouch], Reason = "Mono does not implement Code Access Security")]
     public class LowTrustFixture
     {
         private TestSandBox _sandBox;

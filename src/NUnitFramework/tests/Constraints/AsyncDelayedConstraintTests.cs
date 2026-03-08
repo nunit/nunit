@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        [Platform(Exclude = "Linux", Reason = "Intermittent failure under Linux")]
+        [Platform(Exclude = PlatformNames.Linux, Reason = "Intermittent failure under Linux")]
         public void SyntaxError()
         {
             Assert.Throws<InvalidOperationException>(() =>
