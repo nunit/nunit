@@ -359,7 +359,7 @@ namespace NUnit.Framework
         #endregion
     }
 
-#if NET6_0_OR_GREATER // Although this compiles for .NET Framework, it fails at runtime with a NotSupportedException : Generic types are not valid.
+#if NET8_0_OR_GREATER // Although this compiles for .NET Framework, it fails at runtime with a NotSupportedException : Generic types are not valid.
 
 #pragma warning disable CS3015 // Type has no accessible constructors which use only CLS-compliant types
 

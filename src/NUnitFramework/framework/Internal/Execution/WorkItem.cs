@@ -439,7 +439,7 @@ namespace NUnit.Framework.Internal.Execution
                 Name = "NUnit.Fw.WorkItemThread"
             };
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
             if (OperatingSystem.IsWindows())
             {
                 _thread.SetApartmentState(apartment);

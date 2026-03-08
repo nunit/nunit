@@ -136,9 +136,7 @@ using System.ComponentModel;
 using System.IO;
 #if !NET8_0_OR_GREATER
 using System.Runtime.Serialization;
-#if !NET6_0_OR_GREATER
 using System.Security.Permissions;
-#endif
 #endif
 using System.Text;
 using System.Text.RegularExpressions;
@@ -584,9 +582,7 @@ namespace NUnit.Options
         public string OptionName => _option;
 
 #if !NET8_0_OR_GREATER
-#if !NET6_0_OR_GREATER
         [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
-#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if NETFRAMEWORK || NET6_0
+#if NETFRAMEWORK
 
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;

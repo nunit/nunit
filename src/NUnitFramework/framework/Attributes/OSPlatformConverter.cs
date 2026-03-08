@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Converts .NET6+ <see cref="OSPlatformAttribute"/> to <see cref="NetPlatformAttribute"/>
+    /// Converts .NET8+ <see cref="OSPlatformAttribute"/> to <see cref="NetPlatformAttribute"/>
     /// which can be applied to tests.
     /// </summary>
     internal static class OSPlatformConverter
