@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework
 {
    /// <summary>
@@ -28,30 +30,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a TestCaseData with a single argument and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T argument, TReturn expectedReturnValue)
-            : this(argument)
-        {
-            Returns(expectedReturnValue);
-        }
-
-        /// <summary>
         /// Construct a TestCaseData with two arguments.
         /// </summary>
         public TestCaseDataWithReturn(T argument1, T argument2)
             : base([argument1, argument2])
         {
             TypeArgs = [typeof(T)];
-        }
-
-        /// <summary>
-        /// Construct a TestCaseData with two arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T argument1, T argument2, TReturn expectedReturnValue)
-            : this(argument1, argument2)
-        {
-            Returns(expectedReturnValue);
         }
 
         /// <summary>
@@ -63,13 +47,9 @@ namespace NUnit.Framework
             TypeArgs = [typeof(T)];
         }
 
-        /// <summary>
-        /// Construct a TestCaseData with three arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T argument1, T argument2, T argument3, TReturn expectedReturnValue)
-            : this(argument1, argument2, argument3)
+        internal TestCaseDataWithReturn(TestCaseParameters data)
+            : base(data)
         {
-            Returns(expectedReturnValue);
         }
 
         #endregion
@@ -96,13 +76,9 @@ namespace NUnit.Framework
             TypeArgs = [typeof(T1), typeof(T2)];
         }
 
-        /// <summary>
-        /// Construct a TestCaseData with a list of arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T1 argument1, T2 argument2, TReturn expectedReturnValue)
-            : this(argument1, argument2)
+        internal TestCaseDataWithReturn(TestCaseParameters data)
+            : base(data)
         {
-            Returns(expectedReturnValue);
         }
 
         #endregion
@@ -129,13 +105,9 @@ namespace NUnit.Framework
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3)];
         }
 
-        /// <summary>
-        /// Construct a TestCaseData with a list of arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T1 argument1, T2 argument2, T3 argument3, TReturn expectedReturnValue)
-            : this(argument1, argument2, argument3)
+        internal TestCaseDataWithReturn(TestCaseParameters data)
+            : base(data)
         {
-            Returns(expectedReturnValue);
         }
 
         #endregion
@@ -162,13 +134,9 @@ namespace NUnit.Framework
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4)];
         }
 
-        /// <summary>
-        /// Construct a TestCaseData with a list of arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T1 argument1, T2 argument2, T3 argument3, T4 argument4, TReturn expectedReturnValue)
-            : this(argument1, argument2, argument3, argument4)
+        internal TestCaseDataWithReturn(TestCaseParameters data)
+            : base(data)
         {
-            Returns(expectedReturnValue);
         }
 
         #endregion
@@ -195,13 +163,9 @@ namespace NUnit.Framework
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
         }
 
-        /// <summary>
-        /// Construct a TestCaseData with a list of arguments and an expected return value.
-        /// </summary>
-        public TestCaseDataWithReturn(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5, TReturn expectedReturnValue)
-            : this(argument1, argument2, argument3, argument4, argument5)
+        internal TestCaseDataWithReturn(TestCaseParameters data)
+            : base(data)
         {
-            Returns(expectedReturnValue);
         }
 
         #endregion

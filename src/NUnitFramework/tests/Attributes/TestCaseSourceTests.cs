@@ -1946,25 +1946,21 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int>> TestCaseDataWithReturn_T1_T2_Source()
         {
-            yield return new TestCaseDataWithReturn<int, int, int>(1, 2, expectedReturnValue: 3);
             yield return new TestCaseDataWithReturn<int, int, int>(2, 3).Returns(5);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_Source()
         {
-            yield return new TestCaseDataWithReturn<int, int, int, int>(1, 2, 3, expectedReturnValue: 6);
             yield return new TestCaseDataWithReturn<int, int, int, int>(2, 3, 4).Returns(24);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_Source()
         {
-            yield return new TestCaseDataWithReturn<int, int, int, int, int>(1, 2, 3, 4, expectedReturnValue: 10);
             yield return new TestCaseDataWithReturn<int, int, int, int, int>(2, 3, 4, 5).Returns(14);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_T5_Source()
         {
-            yield return new TestCaseDataWithReturn<int, int, int, int, int, int>(1, 2, 3, 4, 5, expectedReturnValue: 55);
             yield return new TestCaseDataWithReturn<int, int, int, int, int, int>(2, 3, 4, 5, 6).Returns(90);
         }
 

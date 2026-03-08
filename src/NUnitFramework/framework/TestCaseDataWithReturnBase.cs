@@ -23,36 +23,6 @@ namespace NUnit.Framework
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseDataBase{TSelf}"/> class.
-        /// </summary>
-        /// <param name="arg">The argument.</param>
-        public TestCaseDataWithReturnBase(object? arg)
-            : base([arg])
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseDataBase{TSelf}"/> class.
-        /// </summary>
-        /// <param name="arg1">The first argument.</param>
-        /// <param name="arg2">The second argument.</param>
-        public TestCaseDataWithReturnBase(object? arg1, object? arg2)
-            : base([arg1, arg2])
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestCaseDataBase{TSelf}"/> class.
-        /// </summary>
-        /// <param name="arg1">The first argument.</param>
-        /// <param name="arg2">The second argument.</param>
-        /// <param name="arg3">The third argument.</param>
-        public TestCaseDataWithReturnBase(object? arg1, object? arg2, object? arg3)
-            : base([arg1, arg2, arg3])
-        {
-        }
-
         internal TestCaseDataWithReturnBase(TestCaseParameters data)
             : base(data)
         {

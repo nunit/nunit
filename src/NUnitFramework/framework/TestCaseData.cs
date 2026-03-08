@@ -66,6 +66,49 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Create Methods
+
+        /// <summary>
+        /// Construct a TestCaseData with a single argument. If the test is
+        /// expected to return a value, you can specify it with the
+        /// <see cref="TestCaseData{T}.Returns{TReturn}(TReturn)"/> method.
+        /// </summary>
+        public static TestCaseData<T> Create<T>(T argument)
+            => new TestCaseData<T>(argument);
+
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments. If the test is
+        /// expected to return a value, you can specify it with the
+        /// <see cref="TestCaseData{T1, T2}.Returns{TReturn}(TReturn)"/> method.
+        /// </summary>
+        public static TestCaseData<T1, T2> Create<T1, T2>(T1 argument1, T2 argument2)
+            => new TestCaseData<T1, T2>(argument1, argument2);
+
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments. If the test is
+        /// expected to return a value, you can specify it with the
+        /// <see cref="TestCaseData{T1, T2, T3}.Returns{TReturn}(TReturn)"/> method.
+        /// </summary>
+        public static TestCaseData<T1, T2, T3> Create<T1, T2, T3>(T1 argument1, T2 argument2, T3 argument3)
+            => new TestCaseData<T1, T2, T3>(argument1, argument2, argument3);
+
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments. If the test is
+        /// expected to return a value, you can specify it with the
+        /// <see cref="TestCaseData{T1, T2, T3, T4}.Returns{TReturn}(TReturn)"/> method.
+        /// </summary>
+        public static TestCaseData<T1, T2, T3, T4> Create<T1, T2, T3, T4>(T1 argument1, T2 argument2, T3 argument3, T4 argument4)
+            => new TestCaseData<T1, T2, T3, T4>(argument1, argument2, argument3, argument4);
+
+        /// <summary>
+        /// Construct a TestCaseData with a list of arguments. If the test is
+        /// expected to return a value, you can specify it with the
+        /// <see cref="TestCaseData{T1, T2, T3, T4, T5}.Returns{TReturn}(TReturn)"/> method.
+        /// </summary>
+        public static TestCaseData<T1, T2, T3, T4, T5> Create<T1, T2, T3, T4, T5>(T1 argument1, T2 argument2, T3 argument3, T4 argument4, T5 argument5)
+            => new TestCaseData<T1, T2, T3, T4, T5>(argument1, argument2, argument3, argument4, argument5);
+
+        #endregion
     }
 
     /// <summary>
@@ -108,6 +151,22 @@ namespace NUnit.Framework
         }
 
         #endregion
+
+        #region Return Value
+
+        /// <summary>
+        /// Specifies an expected return value for the <see cref="TestCaseData{T} "/>.
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TestCaseDataWithReturn{T, TReturn}"/> with
+        /// the argument data from this instance and the supplied <paramref name="result"/>
+        /// value.</returns>
+        public TestCaseDataWithReturn<T, TReturn> Returns<TReturn>(TReturn result)
+        {
+            return new TestCaseDataWithReturn<T, TReturn>(this).Returns(result);
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -129,6 +188,22 @@ namespace NUnit.Framework
             : base([argument1, argument2])
         {
             TypeArgs = [typeof(T1), typeof(T2)];
+        }
+
+        #endregion
+
+        #region Return Value
+
+        /// <summary>
+        /// Specifies an expected return value for the <see cref="TestCaseData{T1, T2} "/>.
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, TReturn}"/> with
+        /// the argument data from this instance and the supplied <paramref name="result"/>
+        /// value.</returns>
+        public TestCaseDataWithReturn<T1, T2, TReturn> Returns<TReturn>(TReturn result)
+        {
+            return new TestCaseDataWithReturn<T1, T2, TReturn>(this).Returns(result);
         }
 
         #endregion
@@ -156,6 +231,22 @@ namespace NUnit.Framework
         }
 
         #endregion
+
+        #region Return Value
+
+        /// <summary>
+        /// Specifies an expected return value for the <see cref="TestCaseData{T1, T2, T3} "/>.
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, TReturn}"/> with
+        /// the argument data from this instance and the supplied <paramref name="result"/>
+        /// value.</returns>
+        public TestCaseDataWithReturn<T1, T2, T3, TReturn> Returns<TReturn>(TReturn result)
+        {
+            return new TestCaseDataWithReturn<T1, T2, T3, TReturn>(this).Returns(result);
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -180,6 +271,22 @@ namespace NUnit.Framework
         }
 
         #endregion
+
+        #region Return Value
+
+        /// <summary>
+        /// Specifies an expected return value for the <see cref="TestCaseData{T1, T2, T3, T4} "/>.
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, T4, TReturn}"/> with
+        /// the argument data from this instance and the supplied <paramref name="result"/>
+        /// value.</returns>
+        public TestCaseDataWithReturn<T1, T2, T3, T4, TReturn> Returns<TReturn>(TReturn result)
+        {
+            return new TestCaseDataWithReturn<T1, T2, T3, T4, TReturn>(this).Returns(result);
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -201,6 +308,22 @@ namespace NUnit.Framework
             : base([argument1, argument2, argument3, argument4, argument5])
         {
             TypeArgs = [typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5)];
+        }
+
+        #endregion
+
+        #region Return Value
+
+        /// <summary>
+        /// Specifies an expected return value for the <see cref="TestCaseData{T1, T2, T3, T4, T5} "/>.
+        /// </summary>
+        /// <returns>
+        /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, T4, T5, TReturn}"/> with
+        /// the argument data from this instance and the supplied <paramref name="result"/>
+        /// value.</returns>
+        public TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn> Returns<TReturn>(TReturn result)
+        {
+            return new TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn>(this).Returns(result);
         }
 
         #endregion
