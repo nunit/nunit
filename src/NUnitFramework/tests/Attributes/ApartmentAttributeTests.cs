@@ -9,7 +9,7 @@ using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    [Platform(Include = "Win, Mono")]
+    [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
     {
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Test, Apartment(ApartmentState.STA)]
         public void TestWithRequiresSTARunsInSTA()
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Timeout(10_000)]
 #endif
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Timeout(10_000)]
 #endif
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture, Apartment(ApartmentState.STA)]
         public class FixtureRequiresSTA
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
