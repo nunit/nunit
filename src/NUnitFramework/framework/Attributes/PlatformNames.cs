@@ -10,17 +10,12 @@ namespace NUnit.Framework
     /// these comments ensures that the precise name of a platform cannot be mistyped
     /// or misspelled.
     /// </para>
-    /// <para>
-    /// You can use these constants in conjunction with extended syntax by building
-    /// the desired expression using string interpolation:
-    /// </para>
     /// <code>
-    /// [Platform(PlatformNames.Windows)]
-    /// [Platform(PlatformNames.Linux)]
+    /// [Platform(Include = PlatformNames.Linux)]
     ///
     /// // or
     ///
-    /// [Platform($"{PlatformNames.Windows},{PlatformNames.Linux}")]
+    /// [Platform(Excludes = [PlatformNames.Mono,PlatformNames.MonoTouch])]
     /// </code>
     /// </summary>
     public static class PlatformNames
@@ -93,6 +88,10 @@ namespace NUnit.Framework
         /// Platform: "Win2008Server"
         /// </summary>
         public const string Win2008Server = "Win2008Server";
+        /// <summary>
+        /// Platform: "Win2008ServerR2"
+        /// </summary>
+        public const string Win2008ServerR2 = "Win2008ServerR2";
         /// <summary>
         /// Platform: "Win2012Server"
         /// </summary>
