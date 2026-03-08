@@ -2,7 +2,7 @@
 
 #nullable enable
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
 using System;
 using System.Linq;
 using System.Runtime.Versioning;

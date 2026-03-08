@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if !NET6_0_OR_GREATER
+#if !NET8_0_OR_GREATER
         private static class OperatingSystem
         {
             public static bool IsOSPlatform(string platform)

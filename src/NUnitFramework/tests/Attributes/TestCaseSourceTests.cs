@@ -910,12 +910,12 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 TypeArgs = [typeof(IntConverter), typeof(int)]
             };
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
             yield return new TestCaseData<IntConverter, int>(new DerivedIntConverter(), 2);
 #endif
         }
 
-#if NET6_0_OR_GREATER
+#if NET8_0_OR_GREATER
         [TestCaseSource(nameof(GenericDataWithGenericConstraint1))]
         public void ExplicitGenericDataWithCompatibleParameters<T>(T input)
         {
