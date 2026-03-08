@@ -32,7 +32,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [TestFixture]
         public class ApartmentStateRequiredTests : ThreadingTests
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 #if NETCOREAPP
-        [Platform(Include = "Unix")]
+        [Platform(Include = PlatformNames.UNIX)]
         [TestFixture]
         public class ApartmentStateRequiredToFailOnUnixNetCoreTests
         {

@@ -15,7 +15,7 @@ using NUnit.Framework.Tests.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Tests.Constraints;
 
-[Platform(Exclude = "MACOSX", Reason = "MacOS github runner is very slow")]
+[Platform(Exclude = PlatformNames.MacOSX, Reason = "MacOS github runner is very slow")]
 public class CollectionEquivalentConstraintTests
 {
     private const int Size = 10000; // For large collection tests

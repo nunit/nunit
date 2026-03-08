@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+
 namespace NUnit.Framework
 {
     /// <summary>
@@ -48,6 +50,28 @@ namespace NUnit.Framework
         {
             get => _exclude;
             set => _exclude = value;
+        }
+
+        private static readonly char[] CommaCharacter = [','];
+
+        /// <summary>
+        /// An array of items to be included. This is a helper that assigns a
+        /// comma-separated list to the <see cref="Include" /> property.
+        /// </summary>
+        public string[] Includes
+        {
+            get => _include?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
+            set => _include = string.Join(",", value);
+        }
+
+        /// <summary>
+        /// An array of items to be excluded. This is a helper that assigns a
+        /// comma-separated list to the <see cref="Exclude" /> property.
+        /// </summary>
+        public string[] Excludes
+        {
+            get => _exclude?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
+            set => _exclude = string.Join(",", value);
         }
 
         /// <summary>
