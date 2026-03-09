@@ -12,7 +12,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Converts .NET8+ <see cref="OSPlatformAttribute"/> to <see cref="NetPlatformAttribute"/>
+    /// Converts <see cref="OSPlatformAttribute"/> to <see cref="NetPlatformAttribute"/>
     /// which can be applied to tests.
     /// </summary>
     internal static class OSPlatformConverter
