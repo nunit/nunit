@@ -363,7 +363,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void PlatformAttributeSkipsTest()
         {
             string notMyPlatform = System.IO.Path.DirectorySeparatorChar == '/'
-                ? "Win" : "Linux";
+                ? PlatformNames.Win : PlatformNames.Linux;
             new PlatformAttribute(notMyPlatform).ApplyToTest(_test);
             Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
         }
@@ -396,9 +396,9 @@ namespace NUnit.Framework.Tests.Attributes
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
-                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux";
+                return OSPlatform.CurrentPlatform.IsMacOSX ? PlatformNames.MacOSX : PlatformNames.Linux;
             }
-            return "Win";
+            return PlatformNames.Win;
         }
 
         #endregion

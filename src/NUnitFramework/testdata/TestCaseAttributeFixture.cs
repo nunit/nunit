@@ -78,31 +78,31 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-        [TestCase(1, IncludePlatform = "Win")]
-        [TestCase(2, IncludePlatform = "Linux")]
-        [TestCase(3, IncludePlatform = "MacOSX")]
-        [TestCase(4, IncludePlatform = "XBox")]
+        [TestCase(1, IncludePlatform = PlatformNames.Win)]
+        [TestCase(2, IncludePlatform = PlatformNames.Linux)]
+        [TestCase(3, IncludePlatform = PlatformNames.MacOSX)]
+        [TestCase(4, IncludePlatform = PlatformNames.XBox)]
         public void MethodWithIncludePlatform(int num)
         {
         }
 
-        [TestCase(1, ExcludePlatform = "Win")]
-        [TestCase(2, ExcludePlatform = "Linux")]
-        [TestCase(3, ExcludePlatform = "MacOSX")]
-        [TestCase(4, ExcludePlatform = "XBox")]
+        [TestCase(1, ExcludePlatform = PlatformNames.Win)]
+        [TestCase(2, ExcludePlatform = PlatformNames.Linux)]
+        [TestCase(3, ExcludePlatform = PlatformNames.MacOSX)]
+        [TestCase(4, ExcludePlatform = PlatformNames.XBox)]
         public void MethodWithExcludePlatform(int num)
         {
         }
-        [TestCase(1, IncludePlatform = "Net")]
-        [TestCase(2, IncludePlatform = "NetCore")]
-        [TestCase(3, IncludePlatform = "Mono")]
+        [TestCase(1, IncludePlatform = PlatformNames.NET)]
+        [TestCase(2, IncludePlatform = PlatformNames.NETCore)]
+        [TestCase(3, IncludePlatform = PlatformNames.Mono)]
         public void MethodWithIncludeRuntime(int num)
         {
         }
 
-        [TestCase(1, ExcludePlatform = "Net")]
-        [TestCase(2, ExcludePlatform = "NetCore")]
-        [TestCase(3, ExcludePlatform = "Mono")]
+        [TestCase(1, ExcludePlatform = PlatformNames.NET)]
+        [TestCase(2, ExcludePlatform = PlatformNames.NETCore)]
+        [TestCase(3, ExcludePlatform = PlatformNames.Mono)]
         public void MethodWithExcludeRuntime(int num)
         {
         }

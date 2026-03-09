@@ -222,12 +222,12 @@ namespace NUnit.Framework.Tests.Assertions
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = PlatformNames.Mono, Reason = "Warning has no effect inside BeginInvoke on Mono")]
 #if NET10_0
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = "Win")]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = PlatformNames.Win)]
 #elif NET7_0_OR_GREATER
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4, ExcludePlatform = "MacOSX")]
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = "MacOSX")]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4, ExcludePlatform = PlatformNames.MacOSX)]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = PlatformNames.MacOSX)]
 #else
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
 #endif

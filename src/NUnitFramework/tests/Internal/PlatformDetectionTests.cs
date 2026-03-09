@@ -375,7 +375,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_Include()
         {
-            PlatformAttribute attr = new PlatformAttribute("Win2K,WinXP,NT4");
+            PlatformAttribute attr = new PlatformAttribute([PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4]);
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
@@ -385,7 +385,7 @@ namespace NUnit.Framework.Tests.Internal
         public void PlatformAttribute_Exclude()
         {
             PlatformAttribute attr = new PlatformAttribute();
-            attr.Exclude = "Win2K,WinXP,NT4";
+            attr.Excludes = [PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4];
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
             Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on Win2K,WinXP,NT4"));
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.True);
@@ -394,12 +394,12 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_IncludeAndExclude()
         {
-            PlatformAttribute attr = new PlatformAttribute("Win2K,WinXP,NT4");
-            attr.Exclude = "Mono";
+            PlatformAttribute attr = new PlatformAttribute([PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4]);
+            attr.Exclude = PlatformNames.Mono;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
-            attr.Exclude = "Net";
+            attr.Exclude = PlatformNames.NET;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
@@ -418,8 +418,8 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_ProcessBitNess()
         {
-            PlatformAttribute attr32 = new PlatformAttribute("32-Bit");
-            PlatformAttribute attr64 = new PlatformAttribute("64-Bit");
+            PlatformAttribute attr32 = new PlatformAttribute(PlatformNames.X32Bit);
+            PlatformAttribute attr64 = new PlatformAttribute(PlatformNames.X64Bit);
             PlatformHelper helper = new PlatformHelper();
 
             // This test verifies that the two labels are known,
@@ -433,8 +433,8 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_OperatingSystemBitNess()
         {
-            PlatformAttribute attr32 = new PlatformAttribute("32-Bit-OS");
-            PlatformAttribute attr64 = new PlatformAttribute("64-Bit-OS");
+            PlatformAttribute attr32 = new PlatformAttribute(PlatformNames.X32BitOS);
+            PlatformAttribute attr64 = new PlatformAttribute(PlatformNames.X64BitOS);
             PlatformHelper helper = new PlatformHelper();
 
             bool is64BitOS = Environment.Is64BitOperatingSystem;

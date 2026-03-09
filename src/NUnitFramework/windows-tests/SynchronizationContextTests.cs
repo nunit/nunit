@@ -79,7 +79,7 @@ namespace NUnit.Windows.Tests
 
         private static SynchronizationContext CreateSynchronizationContext(Type knownSynchronizationContextType)
         {
-            if (new PlatformHelper().IsPlatformSupported("Mono"))
+            if (new PlatformHelper().IsPlatformSupported(PlatformNames.Mono))
             {
                 if (knownSynchronizationContextType == typeof(System.Windows.Threading.DispatcherSynchronizationContext))
                 {

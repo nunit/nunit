@@ -32,6 +32,15 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Constructor taking an array of included items
+        /// </summary>
+        /// <param name="includes">Array included items</param>
+        public IncludeExcludeAttribute(string[] includes)
+        {
+            Includes = includes;
+        }
+
+        /// <summary>
         /// Name of the item that is needed in order for
         /// a test to run. Multiple items may be given,
         /// separated by a comma.
