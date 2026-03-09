@@ -1949,6 +1949,16 @@ namespace NUnit.Framework.Tests.Attributes
             yield return new TestCaseDataWithReturn<int, int>(2).Returns(4);
         }
 
+        private static IEnumerable<TestCaseDataWithReturn<int, int>> TestCaseDataWithReturn_T_2Args_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int>(2, 3).Returns(6);
+        }
+
+        private static IEnumerable<TestCaseDataWithReturn<int, int>> TestCaseDataWithReturn_T_3Args_Source()
+        {
+            yield return new TestCaseDataWithReturn<int, int>(2, 3, 4).Returns(24);
+        }
+
         private static IEnumerable<TestCaseDataWithReturn<int, int, int>> TestCaseDataWithReturn_T1_T2_Source()
         {
             yield return TestCaseData.Create(2, 3).Returns(5);
@@ -1975,6 +1985,12 @@ namespace NUnit.Framework.Tests.Attributes
 
         [TestCaseSource(nameof(TestCaseDataWithReturn_T_Source))]
         public int TestCaseDataWithReturn_T(int arg) => arg * 2;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T_2Args_Source))]
+        public int TestCaseDataWithReturn_T_2Args(int arg1, int arg2) => arg1 * arg2;
+
+        [TestCaseSource(nameof(TestCaseDataWithReturn_T_3Args_Source))]
+        public int TestCaseDataWithReturn_T_3Args(int arg1, int arg2, int arg3) => arg1 * arg2 * arg3;
 
         [TestCaseSource(nameof(TestCaseDataWithReturn_T1_T2_Source))]
         public int TestCaseDataWithReturn_T1_T2(int arg1, int arg2) => arg1 + arg2;
