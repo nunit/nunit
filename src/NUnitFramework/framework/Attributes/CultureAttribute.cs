@@ -60,15 +60,9 @@ namespace NUnit.Framework
         /// <returns>True, if the current culture is supported</returns>
         private bool IsCultureSupported([NotNullWhen(false)] out string? reason)
         {
-            if (Include is not null && !_cultureDetector.IsCultureSupported(Include))
+            if (!_cultureDetector.IsCultureSupported(this))
             {
-                reason = $"Only supported under culture {Include}";
-                return false;
-            }
-
-            if (Exclude is not null && _cultureDetector.IsCultureSupported(Exclude))
-            {
-                reason = $"Not supported under culture {Exclude}";
+                reason = _cultureDetector.Reason;
                 return false;
             }
 

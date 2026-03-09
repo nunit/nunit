@@ -8,8 +8,6 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string? _include;
-        private string? _exclude;
         private string? _reason;
 
         /// <summary>
@@ -26,8 +24,19 @@ namespace NUnit.Framework
         /// <param name="include">Comma-delimited list of included items</param>
         public IncludeExcludeAttribute(string? include)
         {
-            _include = include;
+            Include = include;
         }
+
+        /// <summary>
+        /// Constructor taking an array of included items
+        /// </summary>
+        /// <param name="includes">Array included items</param>
+        public IncludeExcludeAttribute(string[] includes)
+        {
+            Includes = includes;
+        }
+
+        private static readonly char[] CommaCharacter = [','];
 
         /// <summary>
         /// Name of the item that is needed in order for
@@ -36,8 +45,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get => _include;
-            set => _include = value;
+            get => Includes.Length > 0 ? string.Join(",", Includes) : null;
+            set => Includes = value?.Split(CommaCharacter) ?? [];
         }
 
         /// <summary>
@@ -46,9 +55,19 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get => _exclude;
-            set => _exclude = value;
+            get => Excludes.Length > 0 ? string.Join(",", Excludes) : null;
+            set => Excludes = value?.Split(CommaCharacter) ?? [];
         }
+
+        /// <summary>
+        /// An array of items to be included.
+        /// </summary>
+        public string[] Includes { get; set; } = [];
+
+        /// <summary>
+        /// An array of items to be excluded.
+        /// </summary>
+        public string[] Excludes { get; set; } = [];
 
         /// <summary>
         /// The reason for including or excluding the test

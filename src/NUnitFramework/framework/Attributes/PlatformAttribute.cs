@@ -30,6 +30,14 @@ namespace NUnit.Framework
         {
         }
 
+        /// <summary>
+        /// Constructor taking an array of included items
+        /// </summary>
+        /// <param name="includes">Array included items</param>
+        public PlatformAttribute(string[] includes) : base(includes)
+        {
+        }
+
         #region IApplyToTest members
 
         /// <summary>

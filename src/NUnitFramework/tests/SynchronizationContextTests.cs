@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Tests
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]

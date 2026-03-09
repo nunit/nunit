@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     public class ThreadUtilityTests
     {
-        [Platform("Win")]
+        [Platform(PlatformNames.Win)]
         [TestCase(false, TestName = "Abort")]
         [TestCase(true, TestName = "Kill")]
         public void AbortOrKillThreadWithMessagePump(bool kill)
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests.Internal
             }
         }
 
-        [Platform("Win")]
+        [Platform(PlatformNames.Win)]
         [Test, Explicit("For diagnostic purposes; slow")]
         public void AbortOrKillThreadWithMessagePump_StressTest()
         {

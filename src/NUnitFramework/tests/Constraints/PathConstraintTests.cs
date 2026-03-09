@@ -4,7 +4,7 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-    [Platform("Win")]
+    [Platform(PlatformNames.Win)]
     public abstract class WindowsConstraintTests : ConstraintTestBase
     {
         [OneTimeSetUp]
@@ -14,7 +14,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-    [Platform("Unix")]
+    [Platform(PlatformNames.UNIX)]
     public abstract class UnixConstraintTests : ConstraintTestBase
     {
         [OneTimeSetUp]

@@ -375,7 +375,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_Include()
         {
-            PlatformAttribute attr = new PlatformAttribute("Win2K,WinXP,NT4");
+            PlatformAttribute attr = new PlatformAttribute([PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4]);
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
@@ -385,7 +385,7 @@ namespace NUnit.Framework.Tests.Internal
         public void PlatformAttribute_Exclude()
         {
             PlatformAttribute attr = new PlatformAttribute();
-            attr.Exclude = "Win2K,WinXP,NT4";
+            attr.Excludes = [PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4];
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
             Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on Win2K,WinXP,NT4"));
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.True);
@@ -394,16 +394,16 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_IncludeAndExclude()
         {
-            PlatformAttribute attr = new PlatformAttribute("Win2K,WinXP,NT4");
-            attr.Exclude = "Mono";
+            PlatformAttribute attr = new PlatformAttribute([PlatformNames.Win2K, PlatformNames.WinXP, PlatformNames.NT4]);
+            attr.Exclude = PlatformNames.Mono;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
-            attr.Exclude = "Net";
+            attr.Exclude = PlatformNames.NET;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
-            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on Net"));
+            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NET"));
         }
 
         [Test]
@@ -418,8 +418,8 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_ProcessBitNess()
         {
-            PlatformAttribute attr32 = new PlatformAttribute("32-Bit");
-            PlatformAttribute attr64 = new PlatformAttribute("64-Bit");
+            PlatformAttribute attr32 = new PlatformAttribute(PlatformNames.X32Bit);
+            PlatformAttribute attr64 = new PlatformAttribute(PlatformNames.X64Bit);
             PlatformHelper helper = new PlatformHelper();
 
             // This test verifies that the two labels are known,
@@ -433,13 +433,53 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PlatformAttribute_OperatingSystemBitNess()
         {
-            PlatformAttribute attr32 = new PlatformAttribute("32-Bit-OS");
-            PlatformAttribute attr64 = new PlatformAttribute("64-Bit-OS");
+            PlatformAttribute attr32 = new PlatformAttribute(PlatformNames.X32BitOS);
+            PlatformAttribute attr64 = new PlatformAttribute(PlatformNames.X64BitOS);
             PlatformHelper helper = new PlatformHelper();
 
             bool is64BitOS = Environment.Is64BitOperatingSystem;
             Assert.That(helper.IsPlatformSupported(attr32), Is.Not.EqualTo(is64BitOS));
             Assert.That(helper.IsPlatformSupported(attr64), Is.EqualTo(is64BitOS));
+        }
+
+        [Test]
+        public void PlatformAttribute_Include_Matches_Includes()
+        {
+            string[] includes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string include = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new();
+            attr.Includes = includes;
+            Assert.That(attr.Include, Is.EqualTo(include));
+
+            attr = new PlatformAttribute();
+            attr.Include = include;
+            Assert.That(attr.Includes, Is.EqualTo(includes));
+        }
+
+        [Test]
+        public void PlatformAttribute_Exclude_Matches_Excludes()
+        {
+            string[] excludes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string exclude = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new();
+            attr.Excludes = excludes;
+            Assert.That(attr.Exclude, Is.EqualTo(exclude));
+
+            attr = new PlatformAttribute();
+            attr.Exclude = exclude;
+            Assert.That(attr.Excludes, Is.EqualTo(excludes));
+        }
+
+        [Test]
+        public void PlatformAttribute_Constructor_Splits()
+        {
+            string[] includes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string include = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new(include);
+            Assert.That(attr.Includes, Is.EqualTo(includes));
         }
     }
 }

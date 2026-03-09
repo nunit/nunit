@@ -396,7 +396,7 @@ namespace NUnit.Framework.Tests
         }
 
         [TestCase(null!)]
-        [TestCase("bad|path.png", IncludePlatform = "Win")]
+        [TestCase("bad|path.png", IncludePlatform = PlatformNames.Win)]
         public void InvalidFilePathsThrowsArgumentException(string filePath)
         {
             Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
@@ -408,7 +408,7 @@ namespace NUnit.Framework.Tests
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
 
-        [TestCase(IncludePlatform = "Net")]
+        [TestCase(IncludePlatform = PlatformNames.NET)]
         public void LogFilePathDoesNotThrow()
         {
             string longPathPrefix = string.Empty;

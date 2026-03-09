@@ -233,7 +233,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
-        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingChecksValueCorrectNumberOfTimes()
         {
             var list = new PretendList();
@@ -259,7 +259,7 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;
@@ -268,7 +268,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
         }
 
-        [Test, Platform(Exclude = "MACOSX", Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
+        [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;

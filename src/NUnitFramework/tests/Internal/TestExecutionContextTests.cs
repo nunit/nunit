@@ -910,7 +910,7 @@ namespace NUnit.Framework.Tests.Internal
         #region Cross-domain Tests
 
 #if NETFRAMEWORK
-        [Test, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
+        [Test, Platform(Exclude = PlatformNames.Mono, Reason = "Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
             AppDomain domain = AppDomain.CreateDomain(
@@ -965,7 +965,7 @@ namespace NUnit.Framework.Tests.Internal
     }
 
 #if NETFRAMEWORK
-    [TestFixture, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
+    [TestFixture, Platform(Exclude = PlatformNames.Mono, Reason = "Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {
         private RunsInAppDomain _runsInAppDomain;

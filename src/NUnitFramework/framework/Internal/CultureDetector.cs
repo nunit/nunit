@@ -40,6 +40,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsCultureSupported(string[] cultures)
         {
+            if (cultures.Length == 0)
+                return false;
+
             foreach (string culture in cultures)
             {
                 if (IsCultureSupported(culture))
@@ -57,18 +60,15 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsCultureSupported(CultureAttribute cultureAttribute)
         {
-            string? include = cultureAttribute.Include;
-            string? exclude = cultureAttribute.Exclude;
-
-            if (include is not null && !IsCultureSupported(include))
+            if (cultureAttribute.Includes.Length > 0 && !IsCultureSupported(cultureAttribute.Includes))
             {
-                _reason = $"Only supported under culture {include}";
+                _reason = $"Only supported under culture {cultureAttribute.Include}";
                 return false;
             }
 
-            if (exclude is not null && IsCultureSupported(exclude))
+            if (cultureAttribute.Excludes.Length > 0 && IsCultureSupported(cultureAttribute.Excludes))
             {
-                _reason = $"Not supported under culture {exclude}";
+                _reason = $"Not supported under culture {cultureAttribute.Exclude}";
                 return false;
             }
 

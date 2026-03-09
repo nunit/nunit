@@ -395,7 +395,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
                     That("TestFixture2_Test").RunsOn(nonParallelWorker)))
                 .SetName("Issue-2464");
 
-            if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Include = "Win, Mono" }))
+            if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Includes = [PlatformNames.Win, PlatformNames.Mono] }))
             {
                 const string nunitFwParallelSTAWorker = "NUnit.Fw.ParallelSTAWorker";
                 yield return new TestFixtureData(

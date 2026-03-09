@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
 using NUnit.Framework.Interfaces;
@@ -43,16 +44,8 @@ namespace NUnit.Framework
             {
                 if (attribute is NetPlatformAttribute netPlatformAttribute)
                 {
-                    Add(includes, netPlatformAttribute.Include);
-                    Add(excludes, netPlatformAttribute.Exclude);
-
-                    static void Add(HashSet<string> set, string? platforms)
-                    {
-                        if (platforms is not null)
-                        {
-                            set.UnionWith(platforms.Split(','));
-                        }
-                    }
+                    includes.UnionWith(netPlatformAttribute.Includes);
+                    excludes.UnionWith(netPlatformAttribute.Excludes);
                 }
                 else
                 {
@@ -83,8 +76,8 @@ namespace NUnit.Framework
             {
                 yield return new NetPlatformAttribute
                 {
-                    Include = includes.Count == 0 ? null : string.Join(",", includes),
-                    Exclude = excludes.Count == 0 ? null : string.Join(",", excludes),
+                    Includes = includes.ToArray(),
+                    Excludes = excludes.ToArray(),
                 };
             }
         }
