@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework
 {
     /// <summary>
@@ -48,7 +46,7 @@ namespace NUnit.Framework
         public string? Include
         {
             get => Includes.Length > 0 ? string.Join(",", Includes) : null;
-            set => Includes = value?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
+            set => Includes = value?.Split(CommaCharacter) ?? [];
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace NUnit.Framework
         public string? Exclude
         {
             get => Excludes.Length > 0 ? string.Join(",", Excludes) : null;
-            set => Excludes = value?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
+            set => Excludes = value?.Split(CommaCharacter) ?? [];
         }
 
         /// <summary>

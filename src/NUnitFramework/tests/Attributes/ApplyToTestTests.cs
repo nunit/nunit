@@ -309,6 +309,21 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
+        [Test]
+        [SetCulture("")]
+        public void InvariantCultureWorks()
+        {
+            string current = System.Globalization.CultureInfo.InvariantCulture.Name;
+
+            Assume.That(current, Is.Empty);
+
+            var cultureAttribute = new CultureAttribute(current);
+            Assert.That(cultureAttribute.Includes, Is.EqualTo([current]));
+
+            cultureAttribute.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
+        }
+
         #endregion
 
         #region MaxTimeAttribute
