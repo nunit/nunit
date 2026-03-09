@@ -10,8 +10,6 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string? _include;
-        private string? _exclude;
         private string? _reason;
 
         /// <summary>
@@ -28,7 +26,7 @@ namespace NUnit.Framework
         /// <param name="include">Comma-delimited list of included items</param>
         public IncludeExcludeAttribute(string? include)
         {
-            _include = include;
+            Include = include;
         }
 
         /// <summary>
@@ -40,6 +38,8 @@ namespace NUnit.Framework
             Includes = includes;
         }
 
+        private static readonly char[] CommaCharacter = [','];
+
         /// <summary>
         /// Name of the item that is needed in order for
         /// a test to run. Multiple items may be given,
@@ -47,8 +47,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get => _include;
-            set => _include = value;
+            get => Includes.Length > 0 ? string.Join(",", Includes) : null;
+            set => Includes = value?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
         }
 
         /// <summary>
@@ -57,31 +57,19 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get => _exclude;
-            set => _exclude = value;
-        }
-
-        private static readonly char[] CommaCharacter = [','];
-
-        /// <summary>
-        /// An array of items to be included. This is a helper that assigns a
-        /// comma-separated list to the <see cref="Include" /> property.
-        /// </summary>
-        public string[] Includes
-        {
-            get => _include?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
-            set => _include = string.Join(",", value);
+            get => Excludes.Length > 0 ? string.Join(",", Excludes) : null;
+            set => Excludes = value?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
         }
 
         /// <summary>
-        /// An array of items to be excluded. This is a helper that assigns a
-        /// comma-separated list to the <see cref="Exclude" /> property.
+        /// An array of items to be included.
         /// </summary>
-        public string[] Excludes
-        {
-            get => _exclude?.Split(CommaCharacter, StringSplitOptions.RemoveEmptyEntries) ?? [];
-            set => _exclude = string.Join(",", value);
-        }
+        public string[] Includes { get; set; } = [];
+
+        /// <summary>
+        /// An array of items to be excluded.
+        /// </summary>
+        public string[] Excludes { get; set; } = [];
 
         /// <summary>
         /// The reason for including or excluding the test

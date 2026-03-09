@@ -403,7 +403,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
-            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on Net"));
+            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NET"));
         }
 
         [Test]
@@ -440,6 +440,46 @@ namespace NUnit.Framework.Tests.Internal
             bool is64BitOS = Environment.Is64BitOperatingSystem;
             Assert.That(helper.IsPlatformSupported(attr32), Is.Not.EqualTo(is64BitOS));
             Assert.That(helper.IsPlatformSupported(attr64), Is.EqualTo(is64BitOS));
+        }
+
+        [Test]
+        public void PlatformAttribute_Include_Matches_Includes()
+        {
+            string[] includes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string include = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new();
+            attr.Includes = includes;
+            Assert.That(attr.Include, Is.EqualTo(include));
+
+            attr = new PlatformAttribute();
+            attr.Include = include;
+            Assert.That(attr.Includes, Is.EqualTo(includes));
+        }
+
+        [Test]
+        public void PlatformAttribute_Exclude_Matches_Excludes()
+        {
+            string[] excludes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string exclude = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new();
+            attr.Excludes = excludes;
+            Assert.That(attr.Exclude, Is.EqualTo(exclude));
+
+            attr = new PlatformAttribute();
+            attr.Exclude = exclude;
+            Assert.That(attr.Excludes, Is.EqualTo(excludes));
+        }
+
+        [Test]
+        public void PlatformAttribute_Constructor_Splits()
+        {
+            string[] includes = [PlatformNames.WinXP, PlatformNames.Win2K];
+            const string include = $"{PlatformNames.WinXP},{PlatformNames.Win2K}";
+
+            PlatformAttribute attr = new(include);
+            Assert.That(attr.Includes, Is.EqualTo(includes));
         }
     }
 }

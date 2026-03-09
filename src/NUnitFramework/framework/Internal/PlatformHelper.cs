@@ -64,6 +64,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported(string[] platforms)
         {
+            if (platforms.Length == 0)
+                return false;
             return platforms.Any(IsPlatformSupported);
         }
 
@@ -75,10 +77,19 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported(PlatformAttribute platformAttribute)
         {
-            string? include = platformAttribute.Include;
-            string? exclude = platformAttribute.Exclude;
+            if (platformAttribute.Includes.Length > 0 && !IsPlatformSupported(platformAttribute.Includes))
+            {
+                Reason = $"Only supported on {platformAttribute.Include}";
+                return false;
+            }
 
-            return IsPlatformSupported(include, exclude);
+            if (platformAttribute.Excludes.Length > 0 && IsPlatformSupported(platformAttribute.Excludes))
+            {
+                Reason = $"Not supported on {platformAttribute.Exclude}";
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
