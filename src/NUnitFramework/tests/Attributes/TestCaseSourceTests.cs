@@ -645,6 +645,7 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 yield return new TestCaseData("a").SetArgDisplayNames("new TestCaseData(\"a\")");
                 yield return new TestCaseData<string>("a").SetArgDisplayNames("new TestCaseData<string>(\"a\")");
+                yield return TestCaseData.Create("a").SetArgDisplayNames("TestCaseData.Create(\"a\")");
                 yield return new string[] { "a" };
             }
         }
@@ -655,6 +656,7 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 yield return new TestCaseData("a", "b").SetArgDisplayNames("new TestCaseData(\"a\", \"b\")");
                 yield return new TestCaseData<string>("a", "b").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\")");
+                yield return TestCaseData.Create("a", "b").SetArgDisplayNames("TestCaseData.Create(\"a\", \"b\")");
                 yield return new string[] { "a", "b" };
             }
         }
@@ -665,6 +667,7 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 yield return new TestCaseData("a", "b", "c").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\")");
                 yield return new TestCaseData<string>("a", "b", "c").SetArgDisplayNames("new TestCaseData<string>(\"a\", \"b\", \"c\")");
+                yield return TestCaseData.Create("a", "b", "c").SetArgDisplayNames("TestCaseData.Create(\"a\", \"b\", \"c\")");
                 yield return new string[] { "a", "b", "c" };
             }
         }
@@ -674,6 +677,7 @@ namespace NUnit.Framework.Tests.Attributes
             get
             {
                 yield return new TestCaseData("a", "b", "c", "d").SetArgDisplayNames("new TestCaseData(\"a\", \"b\", \"c\", \"d\")");
+                yield return TestCaseData.Create("a", "b", "c", "d").SetArgDisplayNames("TestCaseData.Create(\"a\", \"b\", \"c\", \"d\")");
                 yield return new string[] { "a", "b", "c", "d" };
             }
         }
@@ -1941,26 +1945,31 @@ namespace NUnit.Framework.Tests.Attributes
 
         private static IEnumerable<TestCaseDataWithReturn<int, int>> TestCaseDataWithReturn_T_Source()
         {
+            yield return TestCaseData.Create(2).Returns(4);
             yield return new TestCaseDataWithReturn<int, int>(2).Returns(4);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int>> TestCaseDataWithReturn_T1_T2_Source()
         {
+            yield return TestCaseData.Create(2, 3).Returns(5);
             yield return new TestCaseDataWithReturn<int, int, int>(2, 3).Returns(5);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_Source()
         {
+            yield return TestCaseData.Create(2, 3, 4).Returns(24);
             yield return new TestCaseDataWithReturn<int, int, int, int>(2, 3, 4).Returns(24);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_Source()
         {
+            yield return TestCaseData.Create(2, 3, 4, 5).Returns(14);
             yield return new TestCaseDataWithReturn<int, int, int, int, int>(2, 3, 4, 5).Returns(14);
         }
 
         private static IEnumerable<TestCaseDataWithReturn<int, int, int, int, int, int>> TestCaseDataWithReturn_T1_T2_T3_T4_T5_Source()
         {
+            yield return TestCaseData.Create(2, 3, 4, 5, 6).Returns(90);
             yield return new TestCaseDataWithReturn<int, int, int, int, int, int>(2, 3, 4, 5, 6).Returns(90);
         }
 
