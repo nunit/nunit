@@ -121,7 +121,7 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase(2.0)]
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         [TestCase<double>(2)]
         [TestCase<double>(2.0)]
 #endif

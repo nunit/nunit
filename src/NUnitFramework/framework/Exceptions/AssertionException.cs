@@ -26,7 +26,7 @@ namespace NUnit.Framework
         {
         }
 
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
         /// <summary>
         /// Serialization Constructor
         /// </summary>

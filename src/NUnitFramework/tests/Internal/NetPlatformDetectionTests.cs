@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
 using System;
 using System.Runtime.Versioning;
 using NUnit.Framework.Internal;

@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
                 if (OperatingSystem.IsWindows())
                     _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
                 else

@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal
             if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
             {
                 if (
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
                     OperatingSystem.IsWindows() &&
 #endif
 
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Internal
         /// </remarks>
         /// <param name="version">The original version</param>
         /// <returns>The correct OS version</returns>
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
         private static Version GetWindows81PlusVersion(Version version)
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
 
         private static ProductType GetProductType()
         {
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
             if (OperatingSystem.IsWindows())
                 return GetWindowsProductType();
 
@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NETFRAMEWORK
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
 #endif
         private static ProductType GetWindowsProductType()

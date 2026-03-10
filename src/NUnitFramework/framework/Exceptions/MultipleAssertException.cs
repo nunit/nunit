@@ -28,7 +28,7 @@ namespace NUnit.Framework
             TestResult = testResult;
         }
 
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         /// <summary>
         /// Serialization Constructor

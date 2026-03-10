@@ -524,14 +524,14 @@ namespace NUnit.Framework.Internal
                 return GetStringSafe(outputLength, allowedChars);
             }
 
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
             return GetStringUnsafeSpan(outputLength, allowedChars);
 #else
             return GetStringUnsafeArray(outputLength, allowedChars);
 #endif
         }
 
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         private string GetStringUnsafeSpan(int outputLength, string allowedChars)
         {
             // Use stackalloc for small strings, heap for large ones

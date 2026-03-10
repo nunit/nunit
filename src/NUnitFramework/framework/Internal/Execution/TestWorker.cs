@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
                 Name = Name
             };
 
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
             if (OperatingSystem.IsWindows())
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
 #else
