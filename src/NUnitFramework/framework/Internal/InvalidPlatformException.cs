@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
 using System.Runtime.Serialization;
 #endif
 
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         {
         }
 
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
         /// <summary>
         /// Serialization constructor for the <see cref="InvalidPlatformException"/> class
         /// </summary>
