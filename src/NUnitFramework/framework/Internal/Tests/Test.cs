@@ -310,7 +310,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
             ApplyAttributesToTest(OSPlatformConverter.RetrieveAndConvert(provider));
 #else
             ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));

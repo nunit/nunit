@@ -134,7 +134,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 #endif
@@ -571,7 +571,7 @@ namespace NUnit.Options
             _option = optionName;
         }
 
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
         protected OptionException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -581,7 +581,7 @@ namespace NUnit.Options
 
         public string OptionName => _option;
 
-#if !NET8_0_OR_GREATER
+#if NETFRAMEWORK
         [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

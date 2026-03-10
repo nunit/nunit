@@ -821,7 +821,7 @@ namespace NUnit.Framework.Tests.Attributes
         public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T _)
             => typeof(T);
 
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         [TestCase<double>(2)]
         [TestCase<double>(2.0)]
         public void ExplicitGenericTypeArgsWithCompatibleParameters<T>(T input)
@@ -928,7 +928,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase(0, TypeArgs = [typeof(int)])]
-#if NET8_0_OR_GREATER
+#if !NETFRAMEWORK
         [TestCase<int>(0)]
 #endif
         [TestCase(0)]
