@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Internal.Extensions
             {
                 if (currentTest.Properties.TryGet(property, out System.Collections.IList? propValues))
                 {
-                    yield return new PropertyValueHierarchyItem(test.Name, propValues);
+                    yield return new PropertyValueHierarchyItem(currentTest.Name, propValues);
                 }
 
                 currentTest = currentTest.Parent;
@@ -69,7 +70,11 @@ namespace NUnit.Framework.Internal.Extensions
             if (value is null)
                 return defaultValue;
 
-            return (T)value;
+            if (value is T typedValue)
+                return typedValue;
+
+            // Let it throw if the value cannot be converted to the requested type, rather than silently returning a default value.
+            return (T)Convert.ChangeType(value, typeof(T))!;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace NUnit.TestData
     public class UnhandledExceptionFixture
     {
         private Task? _task;
-        private bool _exceptionCaught = true;
+        private volatile bool _exceptionCaught = true;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -90,8 +90,8 @@ namespace NUnit.TestData
                 // Ensure the task runs to completion using a backdoor,
                 // as standard awaiting it would cause the exception to be observed and
                 // thus not trigger the unobserved task exception behavior.
-                ((IAsyncResult)_task).AsyncWaitHandle.WaitOne();
-                Assume.That(_task.IsCompleted, Is.True);
+                ((IAsyncResult)_task).AsyncWaitHandle.WaitOne(10_000);
+                Assert.That(_task.IsCompleted, Is.True);
                 _task = null;
             }
 

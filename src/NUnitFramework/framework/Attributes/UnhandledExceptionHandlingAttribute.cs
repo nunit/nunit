@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// Specifies the handling behavior for unhandled exceptions in the assembly, class, or method.
     /// </summary>
     /// <remarks>
-    /// This attribute can be applied to assemblies, classes, or modules to define how unhandled
+    /// This attribute can be applied to assemblies, classes, or methods to define how unhandled
     /// exceptions should be managed. It allows for centralized exception handling strategies across different
     /// components of an application.
     /// </remarks>
@@ -19,10 +19,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Initializes a new instance of the <see cref="UnhandledExceptionHandlingAttribute"/> class with the specified handling behavior.
         /// </summary>
-        /// <param name="handling">The flag indicating how exceptions not handled the user should be handled.</param>
+        /// <param name="handling">The flag indicating how exceptions not handled by the user should be handled.</param>
         public UnhandledExceptionHandlingAttribute(UnhandledExceptionHandling handling)
-            : base(PropertyNames.UnhandledExceptionHandling, (int)handling)
         {
+            Properties.Add(PropertyNames.UnhandledExceptionHandling, handling);
         }
     }
 

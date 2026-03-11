@@ -74,7 +74,7 @@ namespace NUnit.Framework.Tests.Attributes
             AssertChildResults(result);
         }
 
-        private static void AssertChildResults(ITestResult result, ResultState? overridenResult = null)
+        private static void AssertChildResults(ITestResult result, ResultState? overriddenResult = null)
         {
             Assert.That(result.InitiatedCount, Is.EqualTo(ExpectedPassCount + ExpectedFailCount));
 
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Tests.Attributes
                 foreach (var pair in ExpectedResults)
                 {
                     ITestResult childResult = result.Children.Single(t => t.Name == pair.Key);
-                    Assert.That(childResult.ResultState, Is.EqualTo(overridenResult ?? pair.Value), pair.Key);
+                    Assert.That(childResult.ResultState, Is.EqualTo(overriddenResult ?? pair.Value), pair.Key);
                 }
             }
         }
