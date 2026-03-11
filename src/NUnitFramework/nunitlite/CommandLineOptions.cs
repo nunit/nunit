@@ -175,6 +175,8 @@ namespace NUnit.Common
 
         public bool NoColor { get; private set; }
 
+        public bool Quiet { get; private set; }
+
         public bool TeamCity { get; private set; }
 
         public string OutFile { get; private set; }
@@ -415,6 +417,9 @@ namespace NUnit.Common
 
             Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v is not null);
+
+            Add("quiet|q", "Minimal output - only shows errors, failures and summary.",
+                v => Quiet = v is not null);
 
             Add("help|h", "Display this message and exit.",
                 v => ShowHelp = v is not null);
