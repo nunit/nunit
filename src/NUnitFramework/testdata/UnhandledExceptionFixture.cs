@@ -11,7 +11,7 @@ namespace NUnit.TestData
     public class UnhandledExceptionFixture
     {
         private Task? _task;
-        private volatile bool _exceptionCaught = true;
+        private volatile bool _exceptionCaught;
 
         [OneTimeSetUp]
         public void OneTimeSetup()
@@ -21,14 +21,34 @@ namespace NUnit.TestData
 #if NET10_0_OR_GREATER
             System.Runtime.ExceptionServices.ExceptionHandling.SetUnhandledExceptionHandler(CaughtIt);
 #endif
-            AppDomain.CurrentDomain.UnhandledException += CaughtIt;
         }
+
+        private void CaughtIt(object? sender, UnobservedTaskExceptionEventArgs e)
+        {
+            _exceptionCaught = true;
+        }
+
+        private void CaughtIt(object sender, UnhandledExceptionEventArgs e)
+        {
+            _exceptionCaught = true;
+        }
+
+#if NET10_0_OR_GREATER
+        private bool CaughtIt(Exception _)
+        {
+            _exceptionCaught = true;
+            return true;
+        }
+#endif
 
         [SetUp]
         public void Setup()
         {
             _task = null;
             _exceptionCaught = false;
+
+            AppDomain.CurrentDomain.UnhandledException += CaughtIt;
+            TaskScheduler.UnobservedTaskException += CaughtIt;
         }
 
         [Test]
@@ -49,29 +69,11 @@ namespace NUnit.TestData
         [Test]
         public void TestExceptionThrownInTask()
         {
-            TaskScheduler.UnobservedTaskException += CaughtIt;
-
             _task = Task.Run(async () =>
             {
                 await Task.Delay(50);
                 throw new InvalidOperationException("Raised from non-nunit Task");
             });
-        }
-
-        private void CaughtIt(object? sender, UnobservedTaskExceptionEventArgs e)
-        {
-            _exceptionCaught = true;
-        }
-
-        private void CaughtIt(object sender, UnhandledExceptionEventArgs e)
-        {
-            _exceptionCaught = true;
-        }
-
-        private bool CaughtIt(Exception exception)
-        {
-            _exceptionCaught = true;
-            return true;
         }
 
         [Test]
@@ -83,35 +85,36 @@ namespace NUnit.TestData
         {
             await Task.Delay(100);
 
-            if (_task is not null)
+            try
             {
-                await Task.Yield();
+                if (_task is not null)
+                {
+                    await Task.Yield();
 
-                // Ensure the task runs to completion using a backdoor,
-                // as standard awaiting it would cause the exception to be observed and
-                // thus not trigger the unobserved task exception behavior.
-                ((IAsyncResult)_task).AsyncWaitHandle.WaitOne(10_000);
-                Assert.That(_task.IsCompleted, Is.True);
-                _task = null;
+                    // Ensure the task runs to completion using a backdoor,
+                    // as standard awaiting it would cause the exception to be observed and
+                    // thus not trigger the unobserved task exception behavior.
+                    ((IAsyncResult)_task).AsyncWaitHandle.WaitOne(10_000);
+                    Assert.That(_task.IsCompleted, Is.True);
+                    _task = null;
+                }
+
+                for (int i = 0; i < 10 && !_exceptionCaught; i++)
+                {
+                    // Force finalizers to run, which should cause unobserved task exceptions to be raised.
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    await Task.Delay(10);
+                }
+
+                Assert.That(_exceptionCaught, Is.True, "Expected exception thrown was not caught");
             }
-
-            for (int i = 0; i < 10 && !_exceptionCaught; i++)
+            finally
             {
-                // Force finalizers to run, which should cause unobserved task exceptions to be raised.
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                await Task.Delay(10);
+                AppDomain.CurrentDomain.UnhandledException -= CaughtIt;
+                TaskScheduler.UnobservedTaskException -= CaughtIt;
             }
-
-            TaskScheduler.UnobservedTaskException -= CaughtIt;
-            Assert.That(_exceptionCaught, Is.True, "Expected exception thrown was not caught");
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            AppDomain.CurrentDomain.UnhandledException -= CaughtIt;
         }
 
 #if THREAD_ABORT

@@ -14,6 +14,7 @@
 // Limit tests to .NET Framework for now, later enable .NET 10.0+ if we can handle this.
 #if NETFRAMEWORK
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -23,6 +24,7 @@ using NUnit.TestData;
 namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
+    [Explicit("When running in Nunit-Lite it seems to crash the process.")]
     internal class UnhandledExceptionHandlingAttributeTests
     {
         // +/-1 because TestExceptionThrownInTask does not find the current test and thus does not cause an error.
@@ -38,7 +40,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThread)] = ResultState.Error,
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThreadDirectedToBeIgnored)] = ResultState.Success,
-            // The Task.UnobservedException handler runs on a different thread and cannot find the current test.
+            // This test does not find the current test and thus does not cause an error.
             ////[nameof(UnhandledExceptionFixture.TestExceptionThrownInTask)] = ResultState.Error,
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInTaskDirectedToBeIgnored)] = ResultState.Success,
 #if THREAD_ABORT
@@ -83,7 +85,8 @@ namespace NUnit.Framework.Tests.Attributes
                 foreach (var pair in ExpectedResults)
                 {
                     ITestResult childResult = result.Children.Single(t => t.Name == pair.Key);
-                    Assert.That(childResult.ResultState, Is.EqualTo(overriddenResult ?? pair.Value), pair.Key);
+                    Assert.That(childResult.ResultState, Is.EqualTo(overriddenResult ?? pair.Value),
+                                $"{pair.Key}{Environment.NewLine}{childResult.Message}");
                 }
             }
         }
