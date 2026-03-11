@@ -11,6 +11,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -538,19 +539,7 @@ namespace NUnit.Framework
             /// </summary>
             /// <returns></returns>
             private IEnumerable<PropertyValueHierarchyItem> PropertyValues(string property)
-            {
-                ITest? test = _test;
-                do
-                {
-                    if (test.Properties.TryGet(property, out IList? propValues))
-                    {
-                        yield return new PropertyValueHierarchyItem(test.Name, propValues);
-                    }
-
-                    test = test.Parent;
-                }
-                while (test is not null);
-            }
+                => _test.PropertyValues(property);
 
             /// <summary>
             /// Returns all values of a given property, with no duplicates

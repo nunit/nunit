@@ -119,6 +119,12 @@ namespace NUnit.Framework.Internal
         /// The optional Order the test will run in
         /// </summary>
         public const string Order = "Order";
+
+        /// <summary>
+        /// How to deal with exceptions raised on threads other than the main test thread that are not handled by the user code.
+        /// </summary>
+        public const string UnhandledExceptionHandling = "UnhandledExceptionHandling";
+
         #endregion
     }
 }

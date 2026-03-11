@@ -244,12 +244,36 @@ namespace NUnit.Framework.Api
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
 
-            Log.Error($"Unexpected exception from {originator} in test {context.CurrentTest.FullName}: {e.Message}");
-            lock (context)
+            if (context is TestExecutionContext.AdhocContext)
             {
-                context.CurrentResult.RecordException(e, FailureSite.Test);
-                context.CurrentResult.RecordTestCompletion();
+                // We cannot associate this with any test, so just log it and move on.
+                Log.Error($"Unexpected exception from {originator} in AdhocContext: {e.Message}");
+                return;
             }
+
+            TestStatus status = context.CurrentResult.ResultState.Status;
+
+            Log.Error($"Unexpected exception from {originator} in {status} test {context.CurrentTest.FullName}: {e.Message}");
+
+            var unhandledExceptionHandling = context.CurrentTest.GetEffectiveProperty(PropertyNames.UnhandledExceptionHandling,
+                                                                                      UnhandledExceptionHandling.Default);
+
+            if (unhandledExceptionHandling is UnhandledExceptionHandling.Error)
+            {
+                lock (context)
+                {
+                    context.CurrentResult.RecordException(e, FailureSite.Test);
+                    context.CurrentResult.RecordTestCompletion();
+                }
+            }
+
+#if THREAD_ABORT
+            if (e is ThreadAbortException)
+            {
+                // We "handled" the exception, it should not be rethrown by the runtime.
+                Thread.ResetAbort();
+            }
+#endif
         }
 
         /// <summary>
