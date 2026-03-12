@@ -64,9 +64,28 @@ namespace NUnit.TestData
 
         [Test]
         [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
-        public void TestExceptionThrownInSpawnedThreadDirectedToBeIgnored() => TestExceptionThrownInSpawnedThread();
+        public void TestExceptionThrownInSpawnedThreadAllDirectedToBeIgnored()
+            => TestExceptionThrownInSpawnedThread();
 
         [Test]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore, typeof(InvalidOperationException))]
+        public void TestExceptionThrownInSpawnedThreadDirectedToBeIgnored()
+            => TestExceptionThrownInSpawnedThread();
+
+        // This ignores all exceptions, except the InvalidOperationException
+        [Test]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Error, typeof(InvalidOperationException))]
+        public void TestExceptionThrownInSpawnedThreadNotToBeIgnored()
+            => TestExceptionThrownInSpawnedThread();
+
+        [Test]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore, typeof(NotSupportedException))]
+        public void TestExceptionThrownInSpawnedThreadNotSupportedToBeIgnored()
+            => TestExceptionThrownInSpawnedThread();
+
+        [Test]
+        [Explicit("This test does not find the current test and thus does not cause an error.")]
         public void TestExceptionThrownInTask()
         {
             _task = Task.Run(async () =>
@@ -78,6 +97,7 @@ namespace NUnit.TestData
 
         [Test]
         [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
+        [Explicit("This test does not find the current test and thus does implictly ignore the error.")]
         public void TestExceptionThrownInTaskDirectedToBeIgnored() => TestExceptionThrownInTask();
 
         [TearDown]
@@ -119,13 +139,10 @@ namespace NUnit.TestData
 
 #if THREAD_ABORT
         [Test]
-        public void TestThreadAbort()
-        {
-            LimitRunningTime(LongRunningOperations);
-        }
+        public void TestThreadAbort() => LimitRunningTime(LongRunningOperations);
 
         [Test]
-        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore, typeof(ThreadAbortException))]
         public void TestThreadAbortDirectedToBeIgnored() => TestThreadAbort();
 
         [Test]
@@ -137,7 +154,7 @@ namespace NUnit.TestData
         }
 
         [Test]
-        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore, typeof(ThreadAbortException))]
         public void TestThreadAbortCaughtAndResetDirectedToBeIgnored() => TestThreadAbortCaughtAndReset();
 
         private static void LimitRunningTime(Action action)

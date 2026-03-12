@@ -13,7 +13,7 @@ namespace NUnit.Framework
     /// exceptions should be managed. It allows for centralized exception handling strategies across different
     /// components of an application.
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public sealed class UnhandledExceptionHandlingAttribute : PropertyAttribute
     {
         /// <summary>
@@ -22,7 +22,18 @@ namespace NUnit.Framework
         /// <param name="handling">The flag indicating how exceptions not handled by the user should be handled.</param>
         public UnhandledExceptionHandlingAttribute(UnhandledExceptionHandling handling)
         {
-            Properties.Add(PropertyNames.UnhandledExceptionHandling, handling);
+            Properties.Add(PropertyNames.UnhandledExceptionHandling,
+                           new UnhandledExceptionConfiguration(handling, null));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnhandledExceptionHandlingAttribute"/> class with the specified handling behavior.
+        /// </summary>
+        /// <param name="handling">The flag indicating how exceptions not handled by the user should be handled.</param>
+        /// <param name="exceptions">The exceptions types to be handled liek this.</param>
+        public UnhandledExceptionHandlingAttribute(UnhandledExceptionHandling handling, params Type[] exceptions)
+        {
+            Properties.Add(PropertyNames.UnhandledExceptionHandling, new UnhandledExceptionConfiguration(handling, exceptions));
         }
     }
 
@@ -50,4 +61,6 @@ namespace NUnit.Framework
         /// </summary>
         Default = Error,
     }
+
+    internal sealed record UnhandledExceptionConfiguration(UnhandledExceptionHandling Handling, Type[]? Exceptions);
 }

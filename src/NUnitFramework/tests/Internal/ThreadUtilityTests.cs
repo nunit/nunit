@@ -14,7 +14,7 @@ namespace NUnit.Framework.Tests.Internal
         [Platform("Win")]
         [TestCase(false, TestName = "Abort")]
         [TestCase(true, TestName = "Kill")]
-        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore)]
+        [UnhandledExceptionHandling(UnhandledExceptionHandling.Ignore, typeof(ThreadAbortException))]
         public void AbortOrKillThreadWithMessagePump(bool kill)
         {
             using (var isThreadAboutToWait = new ManualResetEventSlim())

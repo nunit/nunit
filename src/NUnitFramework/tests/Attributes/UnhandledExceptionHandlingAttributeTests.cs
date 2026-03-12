@@ -29,20 +29,25 @@ namespace NUnit.Framework.Tests.Attributes
     {
         // +/-1 because TestExceptionThrownInTask does not find the current test and thus does not cause an error.
 #if THREAD_ABORT
-        private const int ExpectedPassCount = 5 + 1;
-        private const int ExpectedFailCount = 3 - 1;
+        private const int ExpectedPassCount = 5;
+        private const int ExpectedFailCount = 4;
 #else
-        private const int ExpectedPassCount = 2 + 1;
-        private const int ExpectedFailCount = 2 - 1;
+        private const int ExpectedPassCount = 2;
+        private const int ExpectedFailCount = 3;
 #endif
 
         private static readonly Dictionary<string, ResultState> ExpectedResults = new()
         {
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThread)] = ResultState.Error,
+            [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThreadAllDirectedToBeIgnored)] = ResultState.Success,
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThreadDirectedToBeIgnored)] = ResultState.Success,
+            [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThreadNotToBeIgnored)] = ResultState.Error,
+            [nameof(UnhandledExceptionFixture.TestExceptionThrownInSpawnedThreadNotSupportedToBeIgnored)] = ResultState.Error,
+#if TASK_EXCEPTION_FINDS_CONTEXT
             // This test does not find the current test and thus does not cause an error.
-            ////[nameof(UnhandledExceptionFixture.TestExceptionThrownInTask)] = ResultState.Error,
+            [nameof(UnhandledExceptionFixture.TestExceptionThrownInTask)] = ResultState.Error,
             [nameof(UnhandledExceptionFixture.TestExceptionThrownInTaskDirectedToBeIgnored)] = ResultState.Success,
+#endif
 #if THREAD_ABORT
             [nameof(UnhandledExceptionFixture.TestThreadAbort)] = ResultState.Error,
             [nameof(UnhandledExceptionFixture.TestThreadAbortDirectedToBeIgnored)] = ResultState.Success,
@@ -85,18 +90,18 @@ namespace NUnit.Framework.Tests.Attributes
                 foreach (var pair in ExpectedResults)
                 {
                     ITestResult childResult = result.Children.Single(t => t.Name == pair.Key);
-                    Assert.That(childResult.ResultState, Is.EqualTo(overriddenResult ?? pair.Value),
+                    Assert.That(childResult.ResultState, Is.EqualTo(pair.Value).Or.EqualTo(overriddenResult),
                                 $"{pair.Key}{Environment.NewLine}{childResult.Message}");
                 }
             }
         }
+    }
 
-        [TestFixture]
-        [Explicit]
-        public class ExplicitRun : UnhandledExceptionFixture
-        {
-            // This is so we can run the test fixture to see what the behaviour is.
-        }
+    [TestFixture]
+    [Explicit]
+    public class UnhandledExceptionHandlingAttributeTestsDirectRun : UnhandledExceptionFixture
+    {
+        // This is so we can run the test fixture to check the behaviour.
     }
 }
 

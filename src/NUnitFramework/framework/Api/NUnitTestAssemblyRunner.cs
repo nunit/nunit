@@ -15,6 +15,7 @@ using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -255,8 +256,7 @@ namespace NUnit.Framework.Api
 
             Log.Error($"Unexpected exception from {originator} in {status} test {context.CurrentTest.FullName}: {e.Message}");
 
-            var unhandledExceptionHandling = context.CurrentTest.GetEffectiveProperty(PropertyNames.UnhandledExceptionHandling,
-                                                                                      UnhandledExceptionHandling.Default);
+            var unhandledExceptionHandling = GetUnhandledExceptionHandlingFor(context.CurrentTest, e.GetType());
 
             if (unhandledExceptionHandling is UnhandledExceptionHandling.Error)
             {
@@ -274,6 +274,39 @@ namespace NUnit.Framework.Api
                 Thread.ResetAbort();
             }
 #endif
+        }
+
+        private static UnhandledExceptionHandling GetUnhandledExceptionHandlingFor(Test test, Type exception)
+        {
+            // Look up the test hierarchy (testcase -> test -> testfixture -> testsuite) for
+            // any UnhandledExceptionHandling proprty set that match the exception type.
+            // The most specific match wins, and if there are multiple matches at the same level, the first one found wins.
+            // An "all exceptions" match (where the Exceptions property is null) is considered the least specific match at that level.
+            // If no matches are found, we default to UnhandledExceptionHandling.Default.
+            foreach (var values in test.PropertyValues(PropertyNames.UnhandledExceptionHandling)
+                                       .Select(p => p.Values))
+            {
+                UnhandledExceptionConfiguration? allExceptionsConfiguration = null;
+
+                foreach (var configuration in values.OfType<UnhandledExceptionConfiguration>())
+                {
+                    if (configuration.Exceptions is null)
+                    {
+                        allExceptionsConfiguration = configuration;
+                    }
+                    else if (configuration.Exceptions.Contains(exception))
+                    {
+                        return configuration.Handling;
+                    }
+                }
+
+                if (allExceptionsConfiguration is not null)
+                {
+                    return allExceptionsConfiguration.Handling;
+                }
+            }
+
+            return UnhandledExceptionHandling.Default;
         }
 
         /// <summary>
