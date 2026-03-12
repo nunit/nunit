@@ -418,7 +418,7 @@ namespace NUnit.Common
             Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v is not null);
 
-            Add("quiet|q", "Minimal output - only shows errors, failures and summary.",
+            Add("quiet|q", "Minimal output - only shows errors, failures, warnings and summary.",
                 v => Quiet = v is not null);
 
             Add("help|h", "Display this message and exit.",
