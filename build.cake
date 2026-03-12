@@ -406,7 +406,9 @@ void CheckForError(ref List<string> errorDetail)
         Error("One or more unit tests failed, breaking the build.");
         foreach(var error in copyError)
             Error("  " + error);
-        throw new Exception("Test failures detected");
+        var detailedMessage = "One or more unit tests failed, breaking the build." + Environment.NewLine
+            + string.Join(Environment.NewLine, copyError.Select(e => "  " + e));
+        throw new Exception(detailedMessage);
     }
 }
 
