@@ -50,7 +50,7 @@ namespace NUnitLite
         /// </summary>
         public void DisplayHeader()
         {
-            if (_quiet)
+            if (_quiet && !_options.ShowVersion)
                 return;
 
             Assembly executingAssembly = GetType().Assembly;
