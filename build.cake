@@ -169,10 +169,10 @@ Task("TestNetFramework")
     {
         var runtime = NetFrameworkTestRuntime;
         var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
-        Information("Run tests for " + runtime + " in " + dir + "using runner");
+        Information("Run tests for " + runtime + " in " + dir + " using runner");
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
         dir = NUNITFRAMEWORKLEGACYTESTSBIN + runtime + "/";
-        Information("Run legacy tests for " + runtime + " in " + dir + "using runner");
+        Information("Run legacy tests for " + runtime + " in " + dir + " using runner");
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORKLEGACY_TESTS, dir + "nunit.framework.legacy.tests.xml", runtime, ref ErrorDetail);
         dir = NUNITLITETESTSBIN + runtime + "/";
         Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
@@ -403,8 +403,12 @@ void CheckForError(ref List<string> errorDetail)
         var copyError = new List<string>();
         copyError = errorDetail.Select(s => s).ToList();
         errorDetail.Clear();
-        throw new Exception("One or more unit tests failed, breaking the build.\n"
-                              + copyError.Aggregate((x,y) => x + "\n" + y));
+        Error("One or more unit tests failed, breaking the build.");
+        foreach(var error in copyError)
+            Error("  " + error);
+        var detailedMessage = "One or more unit tests failed, breaking the build." + Environment.NewLine
+            + string.Join(Environment.NewLine, copyError.Select(e => "  " + e));
+        throw new Exception(detailedMessage);
     }
 }
 
@@ -455,6 +459,7 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, FileP
             Arguments = new ProcessArgumentBuilder()
                 .Append(arguments)
                 .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
+                .Append("--quiet")
                 .Render(),
             WorkingDirectory = workingDir
         });
@@ -486,6 +491,7 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
                 .AppendQuoted(exePath.FullPath)
                 .Append(arguments)
                 .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
+                .Append("--quiet")
                 .Render(),
             WorkingDirectory = workingDir
         });

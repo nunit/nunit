@@ -106,6 +106,14 @@ namespace NUnitLite
                 originalStdOutWriter = Console.Out;
                 Console.SetOut(outWriter);
             }
+            else if (_options.Quiet)
+            {
+                // In quiet mode, redirect Console.Out to suppress test output
+                // but keep our own writer for errors/summary
+                outWriter = new ColorConsoleWriter(!_options.NoColor);
+                originalStdOutWriter = Console.Out;
+                Console.SetOut(TextWriter.Null);
+            }
             else
             {
                 outWriter = new ColorConsoleWriter(!_options.NoColor);
