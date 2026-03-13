@@ -775,14 +775,6 @@ namespace NUnit.Framework.Internal
                     Message = ex.GetMessageWithoutThrowing();
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
                 }
-#if THREAD_ABORT
-                else if (ex is ThreadAbortException)
-                {
-                    ResultState = ResultState.Cancelled.WithSite(site);
-                    Message = "Test cancelled by user";
-                    StackTrace = ex.GetStackTraceWithoutThrowing();
-                }
-#endif
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
                     ResultState = ResultState.Failure.WithSite(site);
