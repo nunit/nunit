@@ -6,7 +6,8 @@
   <!-- Packages for used features -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageVersion Include="System.Memory" Version="4.6.0" />
-    <PackageVersion Include="System.ValueTuple" Version="4.4.0" />  <!-- Stay on 4.4.0, due to this package also is in the build extensions, and we cant change that  -->
+    <PackageVersion Include="System.ValueTuple" Version="4.4.0" />
+    <!-- Stay on 4.4.0, due to this package also is in the build extensions, and we cant change that  -->
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
@@ -31,7 +32,7 @@
     <PackageVersion Include="CSharpIsNullAnalyzer" Version="0.1.593" />
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.10.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.9.2" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.12.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
   </ItemGroup>
   <!-- Roslyn Compilation -->
