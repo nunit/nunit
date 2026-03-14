@@ -21,6 +21,7 @@ namespace NUnitLite
         private readonly bool _displayBeforeTest;
         private readonly bool _displayAfterTest;
         private readonly bool _displayBeforeOutput;
+        private readonly bool _quiet;
 
         #region Constructor
 
@@ -29,12 +30,13 @@ namespace NUnitLite
             Writer = writer;
             _reader = reader;
             _options = options;
+            _quiet = options.Quiet;
 
             string labelsOption = options.DisplayTestLabels?.ToUpperInvariant() ?? "ON";
 
-            _displayBeforeTest = labelsOption == "ALL" || labelsOption == "BEFORE";
-            _displayAfterTest = labelsOption == "AFTER";
-            _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
+            _displayBeforeTest = !_quiet && (labelsOption == "ALL" || labelsOption == "BEFORE");
+            _displayAfterTest = !_quiet && labelsOption == "AFTER";
+            _displayBeforeOutput = !_quiet && (_displayBeforeTest || _displayAfterTest || labelsOption == "ON");
         }
 
         #endregion
@@ -48,6 +50,9 @@ namespace NUnitLite
         /// </summary>
         public void DisplayHeader()
         {
+            if (_quiet && !_options.ShowVersion)
+                return;
+
             Assembly executingAssembly = GetType().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
@@ -73,6 +78,9 @@ namespace NUnitLite
 
         public void DisplayTestFiles(IEnumerable<string> testFiles)
         {
+            if (_quiet)
+                return;
+
             WriteSectionHeader("Test Files");
 
             foreach (string testFile in testFiles)
@@ -146,6 +154,9 @@ namespace NUnitLite
         /// </summary>
         public void DisplayRuntimeEnvironment()
         {
+            if (_quiet)
+                return;
+
             WriteSectionHeader("Runtime Environment");
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
@@ -158,6 +169,9 @@ namespace NUnitLite
 
         public void DisplayDiscoveryReport(TimeStamp startTime, TimeStamp endTime)
         {
+            if (_quiet)
+                return;
+
             WriteSectionHeader("Test Discovery");
 
             foreach (string filter in _options.PreFilters)
@@ -177,6 +191,9 @@ namespace NUnitLite
 
         public void DisplayTestFilters()
         {
+            if (_quiet)
+                return;
+
             if (_options.TestList.Count > 0 || _options.WhereClauseSpecified)
             {
                 WriteSectionHeader("Test Filters");
@@ -197,6 +214,9 @@ namespace NUnitLite
 
         public void DisplayRunSettings()
         {
+            if (_quiet)
+                return;
+
             WriteSectionHeader("Run Settings");
 
             if (_options.DefaultTimeout >= 0)
@@ -240,6 +260,9 @@ namespace NUnitLite
 
         public void TestFinished(ITestResult result)
         {
+            if (_quiet)
+                return;
+
             if (result.Output.Length > 0)
             {
                 if (_displayBeforeOutput)
@@ -270,6 +293,9 @@ namespace NUnitLite
 
         public void TestOutput(TestOutput output)
         {
+            if (_quiet)
+                return;
+
             if (_displayBeforeOutput && output.TestName is not null)
                 WriteLabelLine(output.TestName);
 
@@ -381,6 +407,9 @@ namespace NUnitLite
 
         public void DisplayNotRunReport(ITestResult result)
         {
+            if (_quiet)
+                return;
+
             _reportIndex = 0;
             WriteSectionHeader("Tests Not Run");
 

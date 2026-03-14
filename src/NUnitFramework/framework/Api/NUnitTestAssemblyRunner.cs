@@ -15,6 +15,7 @@ using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -244,12 +245,68 @@ namespace NUnit.Framework.Api
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
 
-            Log.Error($"Unexpected exception from {originator} in test {context.CurrentTest.FullName}: {e.Message}");
-            lock (context)
+            if (context is TestExecutionContext.AdhocContext)
             {
-                context.CurrentResult.RecordException(e, FailureSite.Test);
-                context.CurrentResult.RecordTestCompletion();
+                // We cannot associate this with any test, so just log it and move on.
+                Log.Error($"Unexpected exception from {originator} in AdhocContext: {e.Message}");
+                return;
             }
+
+            TestStatus status = context.CurrentResult.ResultState.Status;
+
+            Log.Error($"Unexpected exception from {originator} in {status} test {context.CurrentTest.FullName}: {e.Message}");
+
+            var unhandledExceptionHandling = GetUnhandledExceptionHandlingFor(context.CurrentTest, e.GetType());
+
+            if (unhandledExceptionHandling is UnhandledExceptionHandling.Error)
+            {
+                lock (context)
+                {
+                    context.CurrentResult.RecordException(e, FailureSite.Test);
+                    context.CurrentResult.RecordTestCompletion();
+                }
+            }
+
+#if THREAD_ABORT
+            if (e is ThreadAbortException)
+            {
+                // We "handled" the exception, it should not be rethrown by the runtime.
+                Thread.ResetAbort();
+            }
+#endif
+        }
+
+        private static UnhandledExceptionHandling GetUnhandledExceptionHandlingFor(Test test, Type exception)
+        {
+            // Look up the test hierarchy (testcase -> test -> testfixture -> testsuite) for
+            // any UnhandledExceptionHandling proprty set that match the exception type.
+            // The most specific match wins, and if there are multiple matches at the same level, the first one found wins.
+            // An "all exceptions" match (where the Exceptions property is null) is considered the least specific match at that level.
+            // If no matches are found, we default to UnhandledExceptionHandling.Default.
+            foreach (var values in test.PropertyValues(PropertyNames.UnhandledExceptionHandling)
+                                       .Select(p => p.Values))
+            {
+                UnhandledExceptionConfiguration? allExceptionsConfiguration = null;
+
+                foreach (var configuration in values.OfType<UnhandledExceptionConfiguration>())
+                {
+                    if (configuration.Exceptions is null)
+                    {
+                        allExceptionsConfiguration = configuration;
+                    }
+                    else if (configuration.Exceptions.Contains(exception))
+                    {
+                        return configuration.Handling;
+                    }
+                }
+
+                if (allExceptionsConfiguration is not null)
+                {
+                    return allExceptionsConfiguration.Handling;
+                }
+            }
+
+            return UnhandledExceptionHandling.Default;
         }
 
         /// <summary>
