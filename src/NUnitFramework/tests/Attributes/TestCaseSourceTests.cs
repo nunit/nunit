@@ -109,10 +109,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(source, Is.EqualTo("StaticField"));
         }
 
-        private static readonly object[] StaticField =
-            [
-                new object[] { "StaticField" }
-            ];
+        private static readonly object[] StaticField = [new object[] { "StaticField" }];
 
         [Test]
         public void SourceUsingInstanceFieldIsNotRunnable()
