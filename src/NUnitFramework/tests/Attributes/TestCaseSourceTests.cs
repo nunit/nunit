@@ -60,7 +60,6 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(source, Is.EqualTo("StaticAsyncEnumerableMethodReturningTask"));
         }
-#pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
 
         private static IAsyncEnumerable<object> StaticAsyncEnumerableMethod()
         {
@@ -111,9 +110,9 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly object[] StaticField =
-            {
+            [
                 new object[] { "StaticField" }
-            };
+            ];
 
         [Test]
         public void SourceUsingInstanceFieldIsNotRunnable()
@@ -177,7 +176,7 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCaseSource(nameof(EvenNumbers))]
         public void SourceMayReturnSinglePrimitiveArgumentAlone(int n)
         {
-            Assert.That(n % 2, Is.EqualTo(0));
+            Assert.That(n % 2, Is.Zero);
         }
 
         [TestCaseSource(nameof(Params))]
@@ -232,15 +231,21 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestWithArrayAndIndividualParameters(int[] values, int sum, int sumSquared)
         {
             Assert.That(values, Is.Not.Null);
-            Assert.That(values.Sum(), Is.EqualTo(sum));
-            Assert.That(values.Select(x => x * x).Sum(), Is.EqualTo(sumSquared));
+            Assert.Multiple(() =>
+            {
+                Assert.That(values.Sum(), Is.EqualTo(sum));
+                Assert.That(values.Select(x => x * x).Sum(), Is.EqualTo(sumSquared));
+            });
         }
 
         [TestCaseSource(nameof(NestedArray))]
         public void TestWithArrayAndParamsArray(int[] values, params int[] sums)
         {
-            Assert.That(values, Is.Not.Null);
-            Assert.That(sums, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(values, Is.Not.Null);
+                Assert.That(sums, Is.Not.Null);
+            });
 
             for (int i = 0; i < sums.Length; i++)
             {
@@ -318,13 +323,17 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
+#pragma warning disable IDE0300 // Simplify collection initialization
         [Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheDataWithParameters), new object[] { 100, 4, 25 })]
+#pragma warning restore IDE0300 // Simplify collection initialization
         public void SourceInAnotherClassPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
         }
 
+#pragma warning disable IDE0300 // Simplify collection initialization
         [Category("Top"), TestCaseSource(nameof(StaticMethodDataWithParameters), new object[] { 8000, 8, 1000 })]
+#pragma warning restore IDE0300 // Simplify collection initialization
         public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
         {
             Assert.That(n / d, Is.EqualTo(q));
@@ -497,8 +506,11 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(string), null, TypeArgs = [typeof(string)])]
         public void GenericParams<T>(Type t, params T?[]? x)
         {
-            Assert.That(x, Is.Null);
-            Assert.That(typeof(T), Is.EqualTo(t));
+            Assert.Multiple(() =>
+            {
+                Assert.That(x, Is.Null);
+                Assert.That(typeof(T), Is.EqualTo(t));
+            });
         }
 
         [Test]
@@ -570,7 +582,6 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         [TestCaseSource(nameof(ExplicitNullValue))]
         public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
         {
@@ -603,18 +614,24 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCaseSource(nameof(ParamsArrayFourStringArguments))]
         public void HandlesParamsArrayAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.That(s1, Is.EqualTo("a"));
-            Assert.That(s2, Is.EqualTo("b"));
-            Assert.That(array[0], Is.EqualTo("c"));
-            Assert.That(array[1], Is.EqualTo("d"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(s1, Is.EqualTo("a"));
+                Assert.That(s2, Is.EqualTo("b"));
+                Assert.That(array[0], Is.EqualTo("c"));
+                Assert.That(array[1], Is.EqualTo("d"));
+            });
         }
 
         [TestCaseSource(nameof(ParamsArrayTwoStringArguments))]
         public void HandlesParamsArrayWithNoItemsAsLastArgument(string s1, string s2, params string[] array)
         {
-            Assert.That(s1, Is.EqualTo("a"));
-            Assert.That(s2, Is.EqualTo("b"));
-            Assert.That(array, Is.Empty);
+            Assert.Multiple(() =>
+            {
+                Assert.That(s1, Is.EqualTo("a"));
+                Assert.That(s2, Is.EqualTo("b"));
+                Assert.That(array, Is.Empty);
+            });
         }
 
         [TestCaseSource(nameof(OptionalArgumentsTestCasesSource))]
@@ -636,8 +653,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(cancellationToken, Is.Not.Default);
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
-
-#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
 
         private static IEnumerable ParamsArrayOneStringArgument
         {
@@ -700,7 +715,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
+        private static IEnumerable<TestCaseData> ZeroTestCasesSource() => [];
 
         [TestCaseSource(nameof(ZeroTestCasesSource))]
         public void TestWithZeroTestSourceCasesShouldPassWithoutRequiringArguments(int requiredParameter)
@@ -717,11 +732,11 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         private static readonly object[] TestCases =
-        {
+        [
             new TestCaseData(
                 new[] { "A" },
                 new[] { "B" })
-        };
+        ];
 
         [TestCaseSource(nameof(TestCases))]
         public void MethodTakingTwoStringArrays(string[] a, string[] b)
@@ -798,8 +813,11 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCaseSource(nameof(ExplicitTypeArgsWithUnrelatedParametersTestCases))]
         public void ExplicitTypeArgsWithUnrelatedParameters<T>(string input)
         {
-            Assert.That(typeof(T), Is.EqualTo(typeof(long)));
-            Assert.That(input, Is.EqualTo("2"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(typeof(T), Is.EqualTo(typeof(long)));
+                Assert.That(input, Is.EqualTo("2"));
+            });
         }
 
         private static IEnumerable<TestCaseData> ExplicitTypeArgsWithUnrelatedParametersTestCases()
@@ -858,16 +876,22 @@ namespace NUnit.Framework.Tests.Attributes
 
             var result = TestBuilder.RunTest(test);
 
-            Assert.That(result.FailCount, Is.EqualTo(1));
-            Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.FailCount, Is.EqualTo(1));
+                Assert.That(result.Message, Does.Contain("Object of type 'System.String' cannot be converted to type 'System.Int32'."));
+            });
         }
 
         [TestCaseSource(nameof(ExplicitTypeArgsWithGenericConstraintSatisfiedTestCases))]
         public void ExplicitTypeArgsWithGenericConstraintSatisfied<T1, T2>(T1 a, T2 b)
             where T1 : IComparer<T2>
         {
-            Assert.That(typeof(T1), Is.EqualTo(typeof(IntConverter)));
-            Assert.That(a, Is.TypeOf<DerivedIntConverter>());
+            Assert.Multiple(() =>
+            {
+                Assert.That(typeof(T1), Is.EqualTo(typeof(IntConverter)));
+                Assert.That(a, Is.TypeOf<DerivedIntConverter>());
+            });
         }
 
         public class IntConverter : IComparer<int>

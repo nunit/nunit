@@ -42,12 +42,10 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(c, Is.EqualTo(4));
         }
 
-#pragma warning disable NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         [TestCaseSource(nameof(Cases))]
-#pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         public void TestE(params object[] a)
         {
-            Assert.That(a.Length, Is.EqualTo(2));
+            Assert.That(a, Has.Length.EqualTo(2));
             Assert.That(a[0], Is.InstanceOf<string>());
             Assert.That(int.Parse((string)a[0]), Is.EqualTo(a[1]));
         }
