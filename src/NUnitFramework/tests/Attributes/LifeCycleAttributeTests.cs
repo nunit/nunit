@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 

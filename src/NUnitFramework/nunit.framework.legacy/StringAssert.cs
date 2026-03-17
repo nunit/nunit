@@ -3,7 +3,8 @@
 using System;
 using System.ComponentModel;
 
-namespace NUnit.Framework.Legacy
+// ReSharper disable once CheckNamespace
+namespace NUnit.Framework
 {
     /// <summary>
     /// Basic Asserts on strings.
