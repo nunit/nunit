@@ -580,7 +580,13 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCaseSource(nameof(ExplicitNullValue))]
-        public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
+        public void HandlesParamsArrayWithExplicitNullObjectArgument(params object[]? array)
+        {
+            Assert.That(array, Is.Null);
+        }
+
+        [TestCaseSource(nameof(ExplicitNullValue))]
+        public void HandlesParamsArrayWithExplicitNullStringArgument(params string[]? array)
         {
             Assert.That(array, Is.Null);
         }
@@ -1023,7 +1029,7 @@ namespace NUnit.Framework.Tests.Attributes
         [
             new object[] { new int[] { 2, 3, 4 }, 2 + 3 + 4, 2 * 2 + 3 * 3 + 4 * 4 }
         ];
-        private static readonly string?[] ExplicitNullValue = [null];
+        private static readonly object?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
 
         private static readonly int[] IntArray = [5, 7, 12];
