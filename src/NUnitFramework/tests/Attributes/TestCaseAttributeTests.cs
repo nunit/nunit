@@ -170,8 +170,9 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(array[1], Is.EqualTo("b"));
         }
 
-        [TestCase([null])]
-        public void NullArgumentsAreCoalescedInObjectArray(object?[] array)
+        [TestCase(arg: new object?[] { null })]
+        [TestCase([new object?[] { null }])]
+        public void NullArgumentsNeedToBeExplcitlySetInObjectArray(object?[] array)
         {
             Assert.That(array, Is.EqualTo(new object?[] { null }));
         }
