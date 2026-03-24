@@ -17,9 +17,8 @@ namespace NUnit.Framework.Internal.Extensions
             /// </summary>
             public object?[] Unpack()
             {
-                var result = new object?[array.Length];
-                for (var i = 0; i < array.Length; i++)
-                    result[i] = array.GetValue(i);
+                var result = GC.AllocateUninitializedArray<object?>(array.Length);
+                Array.Copy(array, result, array.Length);
                 return result;
             }
         }
