@@ -18,6 +18,11 @@ namespace NUnit.Framework.Internal.Extensions
             /// </summary>
             public object?[] Unpack()
             {
+                if (array.Rank != 1)
+                {
+                    throw new ArgumentException("Array was not a one-dimensional array.");
+                }
+
                 var result = GC.AllocateUninitializedArray<object?>(array.Length);
                 Array.Copy(array, result, array.Length);
                 return result;

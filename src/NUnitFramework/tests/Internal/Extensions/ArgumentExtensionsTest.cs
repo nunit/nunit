@@ -79,13 +79,13 @@ namespace NUnit.Framework.Internal.Extensions
         [Test]
         public void Unpack_MultidimensionalArray_ThrowsException()
         {
-            Array array = new int[,]
+            Array array = new object[,]
             {
                 { 1, 2, 3 },
                 { 4, 5, 6 }
             };
 
-            Assert.That(() => array.Unpack(), Throws.Exception);
+            Assert.That(() => array.Unpack(), Throws.ArgumentException);
         }
 
         [TestCase(nameof(MethodWithNoParameters), ExpectedResult = false)]
