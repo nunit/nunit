@@ -524,6 +524,30 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void CanRunGenericArray()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericNestedArray));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(1));
+            Test testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable), testCase.Name);
+            ITestResult result = TestBuilder.RunTest(testCase);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+        }
+
+        [Test]
+        public void CanRunGenericWithArraySource()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericWithArraySource));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(1));
+            Test testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable), testCase.Name);
+            ITestResult result = TestBuilder.RunTest(testCase);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+        }
+
+        [Test]
         public void CanNotRunGenericParamsArray()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
