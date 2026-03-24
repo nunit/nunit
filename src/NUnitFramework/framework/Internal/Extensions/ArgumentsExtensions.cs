@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -117,8 +118,17 @@ namespace NUnit.Framework.Internal.Extensions
                 // directly (e.g. Array, IList<T>, IEnumerable) then the array IS the argument.
                 // But only if we don't need more arguments.
                 // i.e. We expect one argument or one argument plus a params array.
-                if (paramType.IsAssignableFrom(arrayType) && (argsNeeded == 1 || argsNeeded == 2 && parameters.LastParameterIsParamsArray()))
-                    return false;
+                if (argsNeeded == 1 || argsNeeded == 2 && parameters.LastParameterIsParamsArray())
+                {
+                    if (paramType.IsGenericParameter)
+                        return false;   // Potentially could check constraints, but for now don't unpack.
+
+                    if (paramType.IsGenericType && paramType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+                        return false;   // The parameter is an IEnumerable<T> for some T, so the array is the argument, not a container.
+
+                    if (paramType.IsAssignableFrom(arrayType))
+                        return false;   // The parameter type can accept the array directly, so the array is the argument, not a container.
+                }
 
                 // A params parameter always absorbs the elements individually
                 if (parameters.LastParameterIsParamsArray())
