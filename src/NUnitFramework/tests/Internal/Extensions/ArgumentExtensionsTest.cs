@@ -55,6 +55,39 @@ namespace NUnit.Framework.Internal.Extensions
             Assert.That(array.Unpack(), Is.EqualTo(new object?[] { 1, 2, 3 }));
         }
 
+        [Test]
+        public void Unpack_JaggedArray_UnpacksOneLevelOnly()
+        {
+            Array array = new int[][]
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6 }
+            };
+
+            var expected = new object[]
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6 }
+            };
+            var actual = array.Unpack();
+
+            Assert.That(actual, Is.TypeOf<object[]>().And.EqualTo(expected));
+            Assert.That(actual[0], Is.TypeOf<int[]>());
+            Assert.That(actual[1], Is.TypeOf<int[]>());
+        }
+
+        [Test]
+        public void Unpack_MultidimensionalArray_ThrowsException()
+        {
+            Array array = new int[,]
+            {
+                { 1, 2, 3 },
+                { 4, 5, 6 }
+            };
+
+            Assert.That(() => array.Unpack(), Throws.Exception);
+        }
+
         [TestCase(nameof(MethodWithNoParameters), ExpectedResult = false)]
         [TestCase(nameof(MethodWithIntegerParameter), ExpectedResult = true)]
         [TestCase(nameof(MethodWithCancellationTokenParameter), ExpectedResult = false)]
