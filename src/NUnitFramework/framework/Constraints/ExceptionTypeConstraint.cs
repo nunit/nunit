@@ -11,14 +11,28 @@ namespace NUnit.Framework.Constraints
     /// an error message.
     /// </summary>
     /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
-    public class ExceptionTypeConstraint<TExpected> : ExceptionTypeConstraint
+    public class ExceptionTypeConstraint<TExpected> : ExactTypeConstraint<TExpected>
         where TExpected : Exception
     {
         /// <summary>
         /// Constructs an ExceptionTypeConstraint
         /// </summary>
-        public ExceptionTypeConstraint() : base(typeof(TExpected))
+        public ExceptionTypeConstraint() : base()
         {
+        }
+
+        /// <summary>
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
+
+            actualType = actual?.GetType();
+
+            return new ExceptionTypeConstraintResult(this, actual, actualType, Matches(actual));
         }
     }
 
@@ -49,33 +63,31 @@ namespace NUnit.Framework.Constraints
 
             return new ExceptionTypeConstraintResult(this, actual, actualType, Matches(actual));
         }
+    }
 
-        #region Nested Result Class
-        private class ExceptionTypeConstraintResult : ConstraintResult
+    file class ExceptionTypeConstraintResult : ConstraintResult
+    {
+        private readonly object? _caughtException;
+
+        public ExceptionTypeConstraintResult(TypeConstraint constraint, object? caughtException, Type? type, bool matches)
+            : base(constraint, type, matches)
         {
-            private readonly object? _caughtException;
+            _caughtException = caughtException;
+        }
 
-            public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object? caughtException, Type? type, bool matches)
-                : base(constraint, type, matches)
+        public override void WriteActualValueTo(MessageWriter writer)
+        {
+            if (Status == ConstraintStatus.Failure)
             {
-                _caughtException = caughtException;
-            }
-
-            public override void WriteActualValueTo(MessageWriter writer)
-            {
-                if (Status == ConstraintStatus.Failure)
+                if (_caughtException is Exception ex)
                 {
-                    if (_caughtException is Exception ex)
-                    {
-                        writer.WriteActualValue(ex);
-                    }
-                    else
-                    {
-                        base.WriteActualValueTo(writer);
-                    }
+                    writer.WriteActualValue(ex);
+                }
+                else
+                {
+                    base.WriteActualValueTo(writer);
                 }
             }
         }
-        #endregion
     }
 }
