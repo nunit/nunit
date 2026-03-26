@@ -359,6 +359,9 @@ namespace NUnitLite
             if (options.NumberOfTestWorkers >= 0)
                 runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;
 
+            if (options.RunOnMainThread)
+                runSettings[FrameworkPackageSettings.RunOnMainThread] = true;
+
             if (options.InternalTraceLevel is not null)
                 runSettings[FrameworkPackageSettings.InternalTraceLevel] = options.InternalTraceLevel;
 
