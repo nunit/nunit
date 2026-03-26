@@ -85,7 +85,15 @@ namespace NUnit.Framework.Internal.Extensions
                 { 4, 5, 6 }
             };
 
-            Assert.That(() => array.Unpack(), Throws.ArgumentException);
+            Assert.That(() => array.Unpack(), Throws.ArgumentException.With.Message.EqualTo("Array was not a one-dimensional array."));
+        }
+
+        [Test]
+        public void Unpack_NonZeroBasedArray_ThrowsException()
+        {
+            var array = Array.CreateInstance(typeof(int), [3], [1]); // Length 3, but starts at index 1
+
+            Assert.That(() => array.Unpack(), Throws.ArgumentException.With.Message.EqualTo("Array does not have a zero lower bound."));
         }
 
         [TestCase(nameof(MethodWithNoParameters), ExpectedResult = false)]
