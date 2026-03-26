@@ -22,6 +22,10 @@ namespace NUnit.Framework.Internal.Extensions
                     throw new ArgumentException("Array was not a one-dimensional array.");
                 }
 
+                if (array.GetLowerBound(0) != 0)
+                {
+                    throw new ArgumentException("Array does not have a zero lower bound.");
+                }
                 var result = GC.AllocateUninitializedArray<object?>(array.Length);
                 Array.Copy(array, result, array.Length);
                 return result;
