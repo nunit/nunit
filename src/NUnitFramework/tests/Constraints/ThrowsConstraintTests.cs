@@ -19,7 +19,7 @@ namespace NUnit.Framework.Tests.Constraints
                 .SetArgDisplayNames("non-generic");
         }
 
-        public ThrowsConstraintTest_ExactType(ExceptionTypeConstraint constraint)
+        public ThrowsConstraintTest_ExactType(Constraint constraint)
         {
             TheConstraint = new ThrowsConstraint(constraint);
         }
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Tests.Constraints
                 .SetArgDisplayNames("non-generic");
         }
 
-        public ThrowsConstraintTest_InstanceOfType(InstanceOfTypeConstraint constraint)
+        public ThrowsConstraintTest_InstanceOfType(Constraint constraint)
         {
             TheConstraint = new ThrowsConstraint(constraint);
         }
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Tests.Constraints
                 .SetArgDisplayNames("non-generic");
         }
 
-        public ThrowsConstraintTest_WithConstraint(ExceptionTypeConstraint constraint)
+        public ThrowsConstraintTest_WithConstraint(Constraint constraint)
         {
             TheConstraint = new ThrowsConstraint(
                 new AndConstraint(

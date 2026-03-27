@@ -16,7 +16,7 @@ namespace NUnit.Framework.Tests.Constraints
                 .SetArgDisplayNames("non-generic");
         }
 
-        public InstanceOfTypeConstraintTests(InstanceOfTypeConstraint constraint)
+        public InstanceOfTypeConstraintTests(Constraint constraint)
         {
             TheConstraint = constraint;
         }
