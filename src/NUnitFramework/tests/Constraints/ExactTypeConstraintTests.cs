@@ -16,7 +16,7 @@ namespace NUnit.Framework.Tests.Constraints
                 .SetArgDisplayNames("non-generic");
         }
 
-        public ExactTypeConstraintTests(ExactTypeConstraint constraint)
+        public ExactTypeConstraintTests(Constraint constraint)
         {
             TheConstraint = constraint;
         }
