@@ -98,19 +98,6 @@ namespace NUnit.Framework.Constraints
             return ApplyTo(GetTestObject(del));
         }
 
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given reference.
-        /// The default implementation simply dereferences the value but
-        /// derived classes may override it to provide for delayed processing.
-        /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
-        [Obsolete("This was never implemented and will be removed.")]
-        public virtual ConstraintResult ApplyTo<TActual>(ref TActual actual)
-        {
-            return ApplyTo(actual);
-        }
-
         /// <inheritdoc/>
         public virtual async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {

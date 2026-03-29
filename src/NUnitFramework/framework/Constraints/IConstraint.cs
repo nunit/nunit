@@ -54,16 +54,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del);
 
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given reference.
-        /// The default implementation simply dereferences the value but
-        /// derived classes may override it to provide for delayed processing.
-        /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
-        [Obsolete("This was never implemented and will be removed.")]
-        ConstraintResult ApplyTo<TActual>(ref TActual actual);
-
         #endregion
     }
 }
