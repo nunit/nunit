@@ -138,15 +138,8 @@ namespace NUnit.Framework.Internal.Extensions
                 if (argsNeeded > 1)
                     return true;
 
-                // Single parameter from here on.
-
-                // The parameter is of type object, so the array is the argument, not a container.
-                if (paramType == typeof(object))
-                    return false;
-
-                // Classic argument-container pattern: new object[] { actualArg }
-                // Unpack and let the count mismatch produce a clear error.
-                return true;
+                // We expect a single argument, so we shouldn't unpack.
+                return false;
             }
         }
 
