@@ -329,6 +329,21 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             where T : notnull
             => Assert.That(data.GetType(), Is.EqualTo(typeof(int[][])));
 
+        [TestCaseSource(nameof(IntegerArrays))]
+        public static void MethodWithSingleParameter(int i)
+        {
+        }
+
+        [TestCaseSource(nameof(IntegerArrays))]
+        public static void MethodWithThreeParameters(int i, int j, int k)
+        {
+        }
+
+        private static readonly object[] IntegerArrays =
+        {
+            new int[] { 1, 2, 3 },
+        };
+
         private class D1
         {
         }

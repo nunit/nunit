@@ -164,6 +164,30 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
+        [Test]
+        public void SourceShouldNotUnpackArgumentsAsIntArray()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithSingleParameter)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.Runnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo("System.ArgumentException : Object of type 'System.Int32[]' cannot be converted to type 'System.Int32'."));
+            });
+        }
+
+        [Test]
+        public void SourceShouldUnpackArgumentsAsIntArray()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithThreeParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.Runnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+        }
+
         [TestCaseSource(nameof(MyArrayData))]
         public void SourceMayReturnArrayForArray(int[] array)
         {

@@ -157,11 +157,11 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldUnpackArrayAsArguments_SingleParam_NonAssignableType_ReturnsTrue()
+        public void ShouldUnpackArrayAsArguments_SingleParam_NonAssignableType_ReturnsFalse()
         {
-            // int[] is not assignable to int — unpack (will produce a count-mismatch error downstream)
+            // int[] is not assignable to int
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithIntegerParameter)).GetParameters();
-            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.True);
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
         }
 
         private void MethodWithNoParameters()
