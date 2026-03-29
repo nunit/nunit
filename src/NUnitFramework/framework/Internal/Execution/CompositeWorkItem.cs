@@ -6,7 +6,6 @@ using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
-using System.Linq;
 
 namespace NUnit.Framework.Internal.Execution
 {
