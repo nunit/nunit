@@ -103,13 +103,8 @@ namespace NUnit.Framework.Internal.Execution
                                 }
                                 else
                                 {
-                                    var property = Test.PropertyValues(PropertyNames.NoTests).FirstOrDefault();
-                                    if (property is not null
-                                        && property.Values.Count > 0
-                                        && property.Values[property.Values.Count - 1] is TestStatus status)
-                                    {
-                                        Result.SetResult(new(status), "No test cases were provided");
-                                    }
+                                    var status = Test.GetEffectiveProperty(PropertyNames.NoTests, TestStatus.Inconclusive);
+                                    Result.SetResult(new(status), "No test cases were provided");
                                 }
                             }
 
