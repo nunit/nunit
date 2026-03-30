@@ -1,11 +1,5 @@
 # Third party notices for development-only projects
 
-## nunit.framework.benchmarks.csproj
-
-| Reference       | Version | License Type | License                        |
-|---------------------------------------------------------------------------|
-| BenchmarkDotNet | 0.13.5  | MIT          | https://licenses.nuget.org/MIT |
-
 ## nunit.framework.legacy.tests.csproj
 
 | Reference              | Version | License Type    | License                                                              |
