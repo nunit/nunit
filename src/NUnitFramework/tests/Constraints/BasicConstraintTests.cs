@@ -23,9 +23,9 @@ namespace NUnit.Framework.Tests.Constraints
     }
 
     [TestFixture]
-    public class TrueConstraintTest : ConstraintTestBase
+    public class TrueConstraintTest : ConstraintTestBase<bool?>
     {
-        protected override Constraint TheConstraint { get; } = new TrueConstraint();
+        protected override Constraint<bool?> TheConstraint { get; } = new TrueConstraint();
 
         [SetUp]
         public void SetUp()
@@ -35,21 +35,20 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { true, 2 + 2 == 4 };
-        private static readonly object[] FailureData = new object[]
-        {
-            new object?[] { null, "null" },
-            new object[] { "hello", "\"hello\"" },
-            new object[] { false, "False" },
-            new object[] { 2 + 2 == 5, "False" }
-        };
+        private static readonly bool?[] SuccessData = [true, 2 + 2 == 4];
+        private static readonly (bool?, string)[] FailureData =
+        [
+            (null, "null"),
+            (false, "False"),
+            (2 + 2 == 5, "False"),
+        ];
 #pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
-    public class FalseConstraintTest : ConstraintTestBase
+    public class FalseConstraintTest : ConstraintTestBase<bool?>
     {
-        protected override Constraint TheConstraint { get; } = new FalseConstraint();
+        protected override Constraint<bool?> TheConstraint { get; } = new FalseConstraint();
 
         [SetUp]
         public void SetUp()
@@ -59,14 +58,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { false, 2 + 2 == 5 };
-        private static readonly object[] FailureData = new object[]
-        {
-            new TestCaseData(null, "null"),
-            new TestCaseData("hello", "\"hello\""),
-            new TestCaseData(true, "True"),
-            new TestCaseData(2 + 2 == 4, "True")
-        };
+        private static readonly bool?[] SuccessData = [false, 2 + 2 == 5];
+        private static readonly (bool?, string)[] FailureData =
+        [
+            (null, "null"),
+            (true, "True"),
+            (2 + 2 == 4, "True"),
+        ];
 #pragma warning restore IDE0052 // Remove unread private members
     }
 

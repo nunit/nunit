@@ -13,28 +13,6 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class TrueTest : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            ParseTree = "<true>";
-            StaticSyntax = Is.True;
-            BuilderSyntax = Builder().True;
-        }
-    }
-
-    public class FalseTest : SyntaxTest
-    {
-        [SetUp]
-        public void SetUp()
-        {
-            ParseTree = "<false>";
-            StaticSyntax = Is.False;
-            BuilderSyntax = Builder().False;
-        }
-    }
-
     public class PositiveTest : SyntaxTest
     {
         [SetUp]

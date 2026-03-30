@@ -16,7 +16,9 @@ namespace NUnit.TestData
         // Constructor/Dispose and one-time setup/teardown may need to start flowing differently when we implement
         // instance-per-test-case.
 
-#if !NETFRAMEWORK
+#if NETFRAMEWORK
+        private bool? LogicalGetBooleanData(string key) => (bool?)CallContext.LogicalGetData(key);
+#else
         private static readonly AsyncLocal<bool> FromConstructor = new AsyncLocal<bool>();
         private static readonly AsyncLocal<bool> FromOneTimeSetUp1 = new AsyncLocal<bool>();
         private static readonly AsyncLocal<bool> FromOneTimeSetUp2 = new AsyncLocal<bool>();
@@ -42,7 +44,7 @@ namespace NUnit.TestData
         public void OneTimeSetUp1()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
 
             CallContext.LogicalSetData("OneTimeSetUp1", true);
 #else
@@ -56,8 +58,8 @@ namespace NUnit.TestData
         public void OneTimeSetUp2()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
 
             CallContext.LogicalSetData("OneTimeSetUp2", true);
 #else
@@ -72,15 +74,15 @@ namespace NUnit.TestData
         public void SetUp1()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("SetUp1", true);
 #else
@@ -102,15 +104,15 @@ namespace NUnit.TestData
         public void SetUp2()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("SetUp2", true);
 #else
@@ -132,15 +134,15 @@ namespace NUnit.TestData
         public void TestMethod([Range(1, 2)] int testCase)
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("TestMethod", true);
 #else
@@ -162,15 +164,15 @@ namespace NUnit.TestData
         public void TearDown2()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.True);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.True);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("TearDown2", true);
 #else
@@ -192,15 +194,15 @@ namespace NUnit.TestData
         public void TearDown1()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.True);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("TearDown1", true);
 #else
@@ -222,17 +224,17 @@ namespace NUnit.TestData
         public void OneTimeTearDown2()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
-            Assert.That(CallContext.LogicalGetData("OneTimeTearDown1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeTearDown1"), Is.True);
 
             CallContext.LogicalSetData("OneTimeTearDown2", true);
 #else
@@ -256,15 +258,15 @@ namespace NUnit.TestData
         public void OneTimeTearDown1()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
             CallContext.LogicalSetData("OneTimeTearDown1", true);
 #else
@@ -285,18 +287,18 @@ namespace NUnit.TestData
         public void Dispose()
         {
 #if NETFRAMEWORK
-            Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
+            Assert.That(LogicalGetBooleanData("Constructor"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeSetUp2"), Is.True);
 
-            Assert.That(CallContext.LogicalGetData("SetUp1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("SetUp2"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TestMethod"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown1"), Is.Null);
-            Assert.That(CallContext.LogicalGetData("TearDown2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("SetUp2"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TestMethod"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown1"), Is.Null);
+            Assert.That(LogicalGetBooleanData("TearDown2"), Is.Null);
 
-            Assert.That(CallContext.LogicalGetData("OneTimeTearDown1"), Is.True);
-            Assert.That(CallContext.LogicalGetData("OneTimeTearDown2"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeTearDown1"), Is.True);
+            Assert.That(LogicalGetBooleanData("OneTimeTearDown2"), Is.True);
 #else
             Assert.That(FromConstructor.Value, Is.True);
             Assert.That(FromOneTimeSetUp1.Value, Is.True);

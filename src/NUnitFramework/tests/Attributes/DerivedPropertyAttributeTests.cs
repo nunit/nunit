@@ -3,6 +3,7 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -39,8 +40,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void ConstructCancelAfter()
         {
             var attr = new CancelAfterAttribute(100);
-            Assert.That(attr.Properties.Get(PropertyNames.Timeout), Is.EqualTo(100));
-            Assert.That(attr.Properties.Get(PropertyNames.UseCancellation), Is.True);
+            Assert.That(attr.Properties.TryGet(PropertyNames.Timeout, 0), Is.EqualTo(100));
+            Assert.That(attr.Properties.TryGet(PropertyNames.UseCancellation, false), Is.True);
         }
     }
 }

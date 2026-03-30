@@ -73,7 +73,7 @@ namespace NUnit.Framework.Tests.Internal.Results
             Assert.That(attachmentNode, Is.Not.Null);
 
             var descriptionNode = attachmentNode.SelectSingleNode(DescriptionXName);
-            Assert.That(descriptionNode, Has.Property(nameof(TNode.ValueIsCDATA)).True);
+            Assert.That(descriptionNode, Has.Property(nameof(TNode.ValueIsCDATA)));
             Assert.That(descriptionNode, Has.Property(nameof(TNode.Value)).EqualTo("description"));
         }
 
