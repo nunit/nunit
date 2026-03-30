@@ -8,9 +8,9 @@ namespace NUnit.Framework.Internal.Extensions
 {
     internal static partial class ConstraintExtensions
     {
-        public static Task<ConstraintResult> ApplyToAsync<TActual>(this IConstraint constraint, Func<Task<TActual>> delTask)
+        public static Task<ConstraintResult> ApplyToAsync<TActual>(this IConstraint<TActual> constraint, Func<Task<TActual>> delTask)
         {
-            if (constraint is not IAsyncConstraint asyncConstraint)
+            if (constraint is not IAsyncConstraint<TActual> asyncConstraint)
             {
                 throw new NotSupportedException($"Constraint {constraint?.GetType().Name} does not support async execution.");
             }
