@@ -5,7 +5,7 @@ using NUnit.Framework.Constraints;
 namespace NUnit.Framework.Tests.Constraints
 {
     [Platform(PlatformNames.Win)]
-    public abstract class WindowsConstraintTests : ConstraintTestBase
+    public abstract class WindowsConstraintTests : StringConstraintTests
     {
         [OneTimeSetUp]
         public void BaseSetUp()
@@ -15,7 +15,7 @@ namespace NUnit.Framework.Tests.Constraints
     }
 
     [Platform(PlatformNames.UNIX)]
-    public abstract class UnixConstraintTests : ConstraintTestBase
+    public abstract class UnixConstraintTests : StringConstraintTests
     {
         [OneTimeSetUp]
         public void BaseSetUp()
