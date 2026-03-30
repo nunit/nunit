@@ -188,6 +188,5 @@ project.lock.json
 *.out
 .ionide
 .fake
-BenchmarkDotNet.Artifacts*
 .claude/settings.local.json
 
