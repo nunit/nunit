@@ -44,7 +44,6 @@
   </Folder>
   <Project Path="CakeScripts.Tests/CakeScripts.Tests.csproj" />
   <Project Path="CakeScripts/CakeScripts.csproj" />
-  <Project Path="src/NUnitFramework/benchmarks/nunit.framework.benchmarks/nunit.framework.benchmarks.csproj" />
   <Project Path="src/NUnitFramework/framework/nunit.framework.csproj" />
   <Project Path="src/NUnitFramework/mock-assembly/mock-assembly.csproj" />
   <Project Path="src/NUnitFramework/nunit.framework.legacy.tests/nunit.framework.legacy.tests.csproj" />
