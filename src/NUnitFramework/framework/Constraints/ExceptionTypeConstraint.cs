@@ -21,18 +21,12 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Applies the constraint to an actual value, returning a ConstraintResult.
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
+        /// <inheritdoc/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
 
-            actualType = actual?.GetType();
-
-            return new ExceptionTypeConstraintResult(this, actual, actualType, Matches(actual));
+            return new ExceptionTypeConstraintResult(this, actual, GetActualType(actual), Matches(actual));
         }
     }
 
@@ -50,11 +44,7 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Applies the constraint to an actual value, returning a ConstraintResult.
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
+        /// <inheritdoc/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
@@ -69,7 +59,7 @@ namespace NUnit.Framework.Constraints
     {
         private readonly object? _caughtException;
 
-        public ExceptionTypeConstraintResult(TypeConstraint constraint, object? caughtException, Type? type, bool matches)
+        public ExceptionTypeConstraintResult(Constraint constraint, object? caughtException, Type? type, bool matches)
             : base(constraint, type, matches)
         {
             _caughtException = caughtException;
