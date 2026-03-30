@@ -169,6 +169,7 @@ namespace NUnitLite.Tests
         [TestCase("WaitBeforeExit", "wait")]
         [TestCase("NoHeader", "noheader|noh")]
         [TestCase("TeamCity", "teamcity")]
+        [TestCase("RunOnMainThread", "mainthread")]
         public void CanRecognizeBooleanOptions(string propertyName, string pattern)
         {
             Console.WriteLine("Testing " + propertyName);

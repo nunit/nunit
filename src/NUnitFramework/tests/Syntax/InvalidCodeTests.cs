@@ -1,6 +1,4 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-
-using System;
 using Microsoft.CodeAnalysis.Emit;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -9,20 +7,15 @@ namespace NUnit.Framework.Tests.Syntax
     [TestFixture]
     public class InvalidCodeTests
     {
-        private static readonly Type[] ReferencedTypes =
-        [
-            typeof(Assert),
-        ];
-
         private TestCompiler _compiler;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _compiler = new TestCompiler(ReferencedTypes);
+            _compiler = new TestCompiler();
         }
 
-        private static readonly string Template1 =
+        private const string Template1 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -50,7 +43,7 @@ class SomeClass
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
-        private static readonly string Template2 =
+        private const string Template2 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

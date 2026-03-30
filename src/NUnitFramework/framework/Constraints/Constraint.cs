@@ -152,16 +152,16 @@ namespace NUnit.Framework.Constraints
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("<");
+            sb.Append('<');
             sb.Append(DisplayName.ToLower());
 
             foreach (object? arg in arguments)
             {
-                sb.Append(" ");
+                sb.Append(' ');
                 sb.Append(Displayable(arg));
             }
 
-            sb.Append(">");
+            sb.Append('>');
 
             return sb.ToString();
 

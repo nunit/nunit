@@ -38,7 +38,7 @@ namespace NUnit.Windows.Tests
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
@@ -54,7 +54,7 @@ namespace NUnit.Windows.Tests
         }
 
 #if NETCOREAPP
-        [Platform(Include = "Win, Mono")]
+        [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
@@ -79,7 +79,7 @@ namespace NUnit.Windows.Tests
 
         private static SynchronizationContext CreateSynchronizationContext(Type knownSynchronizationContextType)
         {
-            if (new PlatformHelper().IsPlatformSupported("Mono"))
+            if (new PlatformHelper().IsPlatformSupported(PlatformNames.Mono))
             {
                 if (knownSynchronizationContextType == typeof(System.Windows.Threading.DispatcherSynchronizationContext))
                 {

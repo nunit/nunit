@@ -45,17 +45,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Formatting strings used for expected and actual values
         /// </summary>
-        private static readonly string Fmt_Null = "null";
+        private const string Fmt_Null = "null";
 
-        private static readonly string Fmt_EmptyString = "<string.Empty>";
-        private static readonly string Fmt_EmptyCollection = "<empty>";
-        private static readonly string Fmt_String = "\"{0}\"";
-        private static readonly string Fmt_Char = "'{0}'";
-        private static readonly string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.FFFFFFF";
-        private static readonly string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.FFFFFFFzzz";
-        private static readonly string Fmt_ValueType = "{0}";
-        private static readonly string Fmt_Default = "<{0}>";
-        private static readonly string Fmt_ExceptionThrown = "<! {0} !>";
+        private const string Fmt_EmptyString = "<string.Empty>";
+        private const string Fmt_EmptyCollection = "<empty>";
+        private const string Fmt_String = "\"{0}\"";
+        private const string Fmt_Char = "'{0}'";
+        private const string Fmt_DateTime = "yyyy-MM-dd HH:mm:ss.FFFFFFF";
+        private const string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.FFFFFFFzzz";
+        private const string Fmt_ValueType = "{0}";
+        private const string Fmt_Default = "<{0}>";
+        private const string Fmt_ExceptionThrown = "<! {0} !>";
 
         /// <summary>
         /// Current head of chain of value formatters. Public for testing.
@@ -323,7 +323,7 @@ namespace NUnit.Framework.Constraints
 
             StringBuilder sb = new StringBuilder();
             if (printParentheses)
-                sb.Append("(");
+                sb.Append('(');
 
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
@@ -337,7 +337,7 @@ namespace NUnit.Framework.Constraints
                 sb.Append(formattedValue);
             }
             if (printParentheses)
-                sb.Append(")");
+                sb.Append(')');
 
             return sb.ToString();
         }
@@ -569,7 +569,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (r > 0)
                     sb.Append(',');
-                sb.Append(indices[r].ToString());
+                sb.Append(indices[r]);
             }
             sb.Append(']');
             return sb.ToString();

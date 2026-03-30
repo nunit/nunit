@@ -27,12 +27,15 @@ namespace NUnit.Framework.Tests.TestUtilities
 
         public TestCompiler(params IEnumerable<Assembly> assemblies)
         {
-            Dictionary<string, Assembly> alreadyReferencedAssemblies = new();
+            Dictionary<string, Assembly> alreadyReferencedAssemblies = [];
+
+            // Always reference the NUnit framework assembly
+            AddAssemblyReference(alreadyReferencedAssemblies, typeof(Assert).Assembly);
 
             // Add user-specified references
             foreach (var assembly in assemblies)
             {
-                AddAssemblyReference(alreadyReferencedAssemblies, assembly.GetName(), assembly);
+                AddAssemblyReference(alreadyReferencedAssemblies, assembly);
             }
 
             // Convert the loaded assemblies to metadata references
@@ -43,7 +46,12 @@ namespace NUnit.Framework.Tests.TestUtilities
             }
         }
 
-        private static void AddAssemblyReference(Dictionary<string, Assembly> alreadyReferencedAssemblies, AssemblyName assemblyName, Assembly assembly)
+        private static void AddAssemblyReference(Dictionary<string, Assembly> alreadyReferencedAssemblies, Assembly assembly)
+        {
+            AddAssemblyReference(alreadyReferencedAssemblies, assembly, assembly.GetName());
+        }
+
+        private static void AddAssemblyReference(Dictionary<string, Assembly> alreadyReferencedAssemblies, Assembly assembly, AssemblyName assemblyName)
         {
             if (alreadyReferencedAssemblies.ContainsKey(assemblyName.Name!))
             {
@@ -61,7 +69,7 @@ namespace NUnit.Framework.Tests.TestUtilities
                     try
                     {
                         var loadedAssembly = Assembly.Load(referencedAssembly);
-                        AddAssemblyReference(alreadyReferencedAssemblies, referencedAssembly, loadedAssembly);
+                        AddAssemblyReference(alreadyReferencedAssemblies, loadedAssembly, referencedAssembly);
                     }
                     catch (Exception ex)
                     {

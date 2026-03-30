@@ -121,6 +121,11 @@ namespace NUnit.Framework.Internal
         public const string Order = "Order";
 
         /// <summary>
+        /// The default status for a test with no runnable children
+        /// </summary>
+        public const string NoTests = "NoTests";
+
+        /// <summary>
         /// How to deal with exceptions raised on threads other than the main test thread that are not handled by the user code.
         /// </summary>
         public const string UnhandledExceptionHandling = "UnhandledExceptionHandling";

@@ -276,7 +276,7 @@ namespace NUnit.Framework.Internal
                     break;
             }
 
-            sb.Append(" ").Append(Version);
+            sb.Append(' ').Append(Version);
             return sb.ToString();
         }
 

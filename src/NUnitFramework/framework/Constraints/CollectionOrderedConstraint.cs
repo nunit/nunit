@@ -266,7 +266,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(" " + step.ComparerName);
             }
 
-            sb.Append(">");
+            sb.Append('>');
 
             return sb.ToString();
         }

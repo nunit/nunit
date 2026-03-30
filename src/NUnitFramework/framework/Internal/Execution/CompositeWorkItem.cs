@@ -16,8 +16,6 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CompositeWorkItem : WorkItem
     {
-        //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
-
         private readonly TestSuite _suite;
         private readonly TestSuiteResult _suiteResult;
         private TestCommand? _setupCommand;
@@ -26,7 +24,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// List of Child WorkItems
         /// </summary>
-        public List<WorkItem> Children { get; } = new();
+        public List<WorkItem> Children { get; } = [];
 
         /// <summary>
         /// Indicates whether this work item should use a separate dispatcher.
@@ -99,6 +97,11 @@ namespace NUnit.Framework.Internal.Execution
                             else if (Test.TestType == "Theory")
                             {
                                 Result.SetResult(ResultState.Failure, "No test cases were provided");
+                            }
+                            else
+                            {
+                                var status = Test.GetEffectiveProperty(PropertyNames.NoTests, TestStatus.Inconclusive);
+                                Result.SetResult(new ResultState(status), "No test cases were provided");
                             }
 
                             break;

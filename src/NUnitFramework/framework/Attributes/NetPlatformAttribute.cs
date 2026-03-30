@@ -45,7 +45,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {
-                bool platformIsSupported = IsPlatformSupported(Include, Exclude, out string reason);
+                bool platformIsSupported = IsPlatformSupported(out string reason);
 
                 if (!platformIsSupported)
                 {
@@ -55,17 +55,17 @@ namespace NUnit.Framework
             }
         }
 
-        private static bool IsPlatformSupported(string? include, string? exclude, out string reason)
+        private bool IsPlatformSupported(out string reason)
         {
-            if (include is not null && !NetPlatformHelper.IsPlatformSupported(include))
+            if (Includes.Length > 0 && !NetPlatformHelper.IsPlatformSupported(Includes))
             {
-                reason = $"Only supported on {include}";
+                reason = $"Only supported on {Include}";
                 return false;
             }
 
-            if (exclude is not null && NetPlatformHelper.IsPlatformSupported(exclude))
+            if (Excludes.Length > 0 && NetPlatformHelper.IsPlatformSupported(Excludes))
             {
-                reason = $"Not supported on {exclude}";
+                reason = $"Not supported on {Exclude}";
                 return false;
             }
 

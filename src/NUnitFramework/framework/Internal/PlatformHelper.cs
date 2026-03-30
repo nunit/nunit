@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NUnit.Framework.Internal
@@ -63,6 +64,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported(string[] platforms)
         {
+            if (platforms.Length == 0)
+                return false;
             return platforms.Any(IsPlatformSupported);
         }
 
@@ -74,10 +77,19 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsPlatformSupported(PlatformAttribute platformAttribute)
         {
-            string? include = platformAttribute.Include;
-            string? exclude = platformAttribute.Exclude;
+            if (platformAttribute.Includes.Length > 0 && !IsPlatformSupported(platformAttribute.Includes))
+            {
+                Reason = $"Only supported on {platformAttribute.Include}";
+                return false;
+            }
 
-            return IsPlatformSupported(include, exclude);
+            if (platformAttribute.Excludes.Length > 0 && IsPlatformSupported(platformAttribute.Excludes))
+            {
+                Reason = $"Not supported on {platformAttribute.Exclude}";
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -111,6 +123,74 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
+        private static readonly Dictionary<string, Func<OSPlatform, bool>> PlatformChecks =
+            new Dictionary<string, Func<OSPlatform, bool>>(StringComparer.OrdinalIgnoreCase)
+            {
+                { PlatformNames.Win, os => os.IsWindows },
+                { PlatformNames.Win32, os => os.IsWindows },
+                //
+                { PlatformNames.Win32s, os => os.IsWin32S },
+                //
+                { PlatformNames.Win32Windows, os => os.IsWin32Windows },
+                //
+                { PlatformNames.Win32NT, os => os.IsWin32NT },
+                //
+                { PlatformNames.Win95, os => os.IsWin95 },
+                //
+                { PlatformNames.Win98, os => os.IsWin98 },
+                //
+                { PlatformNames.WinME, os => os.IsWinME },
+                //
+                { PlatformNames.NT3, os => os.IsNT3 },
+                { PlatformNames.NT4, os => os.IsNT4 },
+                { PlatformNames.NT5, os => os.IsNT5 },
+                { PlatformNames.NT6, os => os.IsNT6 },
+                //
+                { PlatformNames.Win2K, os => os.IsWin2K },
+                //
+                { PlatformNames.WinXP, os => os.IsWinXP },
+                //
+                { PlatformNames.Vista, os => os.IsVista },
+                //
+                { PlatformNames.Win2003Server, os => os.IsWin2003Server },
+                { PlatformNames.Win2008Server, os => os.IsWin2008Server },
+                { PlatformNames.Win2008ServerR2, os => os.IsWin2008ServerR2 },
+                { PlatformNames.Win2012Server, os => os.IsWin2012Server },
+                { PlatformNames.Win2012ServerR2, os => os.IsWin2012ServerR2 },
+                //
+                { PlatformNames.Win7, os => os.IsWindows7 },
+                { PlatformNames.Windows7, os => os.IsWindows7 },
+                //
+                { PlatformNames.Win8, os => os.IsWindows8 },
+                { PlatformNames.Windows8, os => os.IsWindows8 },
+                //
+                { PlatformNames.Win81, os => os.IsWindows81 },
+                { PlatformNames.Windows81, os => os.IsWindows81 },
+                //
+                { PlatformNames.Win10, os => os.IsWindows10 },
+                { PlatformNames.Windows10, os => os.IsWindows10 },
+                //
+                { PlatformNames.Win11, os => os.IsWindows11 },
+                { PlatformNames.Windows11, os => os.IsWindows11 },
+                //
+                { PlatformNames.WindowsServer10, os => os.IsWindowsServer10 },
+                //
+                { PlatformNames.UNIX, os => os.IsUnix },
+                { PlatformNames.Linux, os => os.IsUnix },
+                //
+                { PlatformNames.XBox, os => os.IsXbox },
+                //
+                { PlatformNames.MacOSX, os => os.IsMacOSX },
+                // These bitness tests relate to the process, not the OS
+                { PlatformNames.X64Bit, _ => Environment.Is64BitProcess },
+                { PlatformNames.X64BitProcess, _ => Environment.Is64BitProcess },
+                { PlatformNames.X32Bit, _ => !Environment.Is64BitProcess },
+                { PlatformNames.X32BitProcess, _ => !Environment.Is64BitProcess },
+                //
+                { PlatformNames.X64BitOS, _ => Environment.Is64BitOperatingSystem },
+                { PlatformNames.X32BitOS, _ => !Environment.Is64BitOperatingSystem },
+            };
+
         /// <summary>
         /// Test to determine if a particular platform or comma-delimited set of platforms is in use.
         /// </summary>
@@ -124,120 +204,13 @@ namespace NUnit.Framework.Internal
             string platformName = platform.Trim();
             bool isSupported;
 
-            switch (platformName.ToUpper())
+            if (PlatformChecks.TryGetValue(platformName, out var check))
             {
-                case "WIN":
-                case "WIN32":
-                    isSupported = _os.IsWindows;
-                    break;
-                case "WIN32S":
-                    isSupported = _os.IsWin32S;
-                    break;
-                case "WIN32WINDOWS":
-                    isSupported = _os.IsWin32Windows;
-                    break;
-                case "WIN32NT":
-                    isSupported = _os.IsWin32NT;
-                    break;
-                case "WIN95":
-                    isSupported = _os.IsWin95;
-                    break;
-                case "WIN98":
-                    isSupported = _os.IsWin98;
-                    break;
-                case "WINME":
-                    isSupported = _os.IsWinME;
-                    break;
-                case "NT3":
-                    isSupported = _os.IsNT3;
-                    break;
-                case "NT4":
-                    isSupported = _os.IsNT4;
-                    break;
-                case "NT5":
-                    isSupported = _os.IsNT5;
-                    break;
-                case "WIN2K":
-                    isSupported = _os.IsWin2K;
-                    break;
-                case "WINXP":
-                    isSupported = _os.IsWinXP;
-                    break;
-                case "WIN2003SERVER":
-                    isSupported = _os.IsWin2003Server;
-                    break;
-                case "NT6":
-                    isSupported = _os.IsNT6;
-                    break;
-                case "VISTA":
-                    isSupported = _os.IsVista;
-                    break;
-                case "WIN2008SERVER":
-                    isSupported = _os.IsWin2008Server;
-                    break;
-                case "WIN2008SERVERR2":
-                    isSupported = _os.IsWin2008ServerR2;
-                    break;
-                case "WIN2012SERVER":
-                    isSupported = _os.IsWin2012ServerR1 || _os.IsWin2012ServerR2;
-                    break;
-                case "WIN2012SERVERR2":
-                    isSupported = _os.IsWin2012ServerR2;
-                    break;
-                case "WIN7":
-                case "WINDOWS7":
-                    isSupported = _os.IsWindows7;
-                    break;
-                case "WINDOWS8":
-                case "WIN8":
-                    isSupported = _os.IsWindows8;
-                    break;
-                case "WINDOWS8.1":
-                case "WIN8.1":
-                    isSupported = _os.IsWindows81;
-                    break;
-                case "WINDOWS10":
-                case "WIN10":
-                    isSupported = _os.IsWindows10;
-                    break;
-                case "WINDOWS11":
-                case "WIN11":
-                    isSupported = _os.IsWindows11;
-                    break;
-                case "WINDOWSSERVER10":
-                    isSupported = _os.IsWindowsServer10;
-                    break;
-                case "UNIX":
-                case "LINUX":
-                    isSupported = _os.IsUnix;
-                    break;
-                case "XBOX":
-                    isSupported = _os.IsXbox;
-                    break;
-                case "MACOSX":
-                    isSupported = _os.IsMacOSX;
-                    break;
-
-                // These bitness tests relate to the process, not the OS.
-                case "64-BIT":
-                case "64-BIT-PROCESS":
-                    isSupported = Environment.Is64BitProcess;
-                    break;
-                case "32-BIT":
-                case "32-BIT-PROCESS":
-                    isSupported = !Environment.Is64BitProcess;
-                    break;
-
-                case "64-BIT-OS":
-                    isSupported = Environment.Is64BitOperatingSystem;
-                    break;
-                case "32-BIT-OS":
-                    isSupported = !Environment.Is64BitOperatingSystem;
-                    break;
-
-                default:
-                    isSupported = IsRuntimeSupported(platformName);
-                    break;
+                isSupported = check(_os);
+            }
+            else
+            {
+                isSupported = IsRuntimeSupported(platformName);
             }
 
             if (!isSupported)

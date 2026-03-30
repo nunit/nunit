@@ -10,8 +10,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class Logger : ILogger
     {
-        private static readonly string TIME_FMT = "HH:mm:ss.fff";
-        private static readonly string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
+        private const string TIME_FMT = "HH:mm:ss.fff";
+        private const string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
         private readonly string _name;
         private readonly string _fullname;

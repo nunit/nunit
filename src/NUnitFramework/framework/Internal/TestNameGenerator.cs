@@ -297,7 +297,7 @@ namespace NUnit.Framework.Internal
                     for (int i = 0; i < arglist.Length; i++)
                     {
                         if (i > 0)
-                            sb.Append(",");
+                            sb.Append(',');
                         sb.Append(GetDisplayString(arglist[i], _maxStringLength));
                     }
 

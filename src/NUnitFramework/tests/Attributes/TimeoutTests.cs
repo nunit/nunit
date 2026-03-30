@@ -18,11 +18,17 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        private sealed class SampleTests
+        private abstract class BaseTestsClass
         {
-            private const int TimeExceedingTimeout = 500;
+            protected const int TimeExceedingTimeout = 500;
 
             public const int Timeout = 50;
+
+            public bool TestRanToCompletion { get; protected set; }
+        }
+
+        private sealed class SampleTests : BaseTestsClass
+        {
             private readonly Action _testAction;
             private readonly StubDebugger _debugger;
 
@@ -31,8 +37,6 @@ namespace NUnit.Framework.Tests.Attributes
                 _testAction = testAction;
                 _debugger = debugger;
             }
-
-            public bool TestRanToCompletion { get; private set; }
 
             [Timeout(Timeout)]
             public void TestThatTimesOut()
@@ -60,6 +64,31 @@ namespace NUnit.Framework.Tests.Attributes
             public void TestThatAttachesDebuggerAndTimesOut()
             {
                 _debugger.IsAttached = true;
+                Thread.Sleep(TimeExceedingTimeout);
+                TestRanToCompletion = true;
+            }
+        }
+
+        private abstract class TimeoutTestsBaseClass : BaseTestsClass
+        {
+            [Timeout(Timeout)]
+            public abstract void TestThatTimesOut();
+        }
+
+        private sealed class InheritedTimeoutTestsClass : TimeoutTestsBaseClass
+        {
+            public override void TestThatTimesOut()
+            {
+                Thread.Sleep(TimeExceedingTimeout);
+                TestRanToCompletion = true;
+            }
+        }
+
+        private sealed class OverriddenTimeoutTestsClass : TimeoutTestsBaseClass
+        {
+            [Timeout(2 * TimeExceedingTimeout)]
+            public override void TestThatTimesOut()
+            {
                 Thread.Sleep(TimeExceedingTimeout);
                 TestRanToCompletion = true;
             }
@@ -134,7 +163,52 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
         }
 
-#if THREAD_ABORT
+        [Test]
+        public void InheritedTimeoutCausesOtherwisePassingTestToFail()
+        {
+            // given
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(InheritedTimeoutTestsClass), nameof(InheritedTimeoutTestsClass.TestThatTimesOut));
+
+            var debugger = new StubDebugger { IsAttached = false };
+            var tests = new InheritedTimeoutTestsClass();
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, tests, debugger);
+
+            Assert.Multiple(() =>
+            {
+                // then
+                Assert.That(tests.TestRanToCompletion, Is.False, "Test ran to completion");
+
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {InheritedTimeoutTestsClass.Timeout}ms"));
+            });
+        }
+
+        [Test]
+        public void OverriddenTimeoutCausesTestToPass()
+        {
+            // given
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(OverriddenTimeoutTestsClass), nameof(OverriddenTimeoutTestsClass.TestThatTimesOut));
+
+            var debugger = new StubDebugger { IsAttached = false };
+            var tests = new OverriddenTimeoutTestsClass();
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, tests, debugger);
+
+            Assert.Multiple(() =>
+            {
+                // then
+                Assert.That(tests.TestRanToCompletion, Is.True, "Test ran to completion");
+
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            });
+        }
+
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
         {
@@ -146,7 +220,6 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
-#endif
 
         [Test]
         public void TestTimesOutAndTearDownIsRun()
@@ -248,15 +321,40 @@ namespace NUnit.Framework.Tests.Attributes
         public void TimeoutCanBeSetOnTestFixture()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutFixtureWithTimeoutOnFixture));
-            Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
-            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+            });
             ITestResult? result = TestFinder.Find(nameof(TimeoutFixtureWithTimeoutOnFixture.Test2WithLongDuration), suiteResult, false);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.Message, Does.Contain("50ms"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.Message, Does.Contain("50ms"));
+            });
+        }
+
+        [Test]
+        public void TimeoutCanBeSetOnBaseTestFixture()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutFixtureWithInheritedTimeoutOnFixture));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+            });
+            ITestResult? result = TestFinder.Find(nameof(TimeoutFixtureWithInheritedTimeoutOnFixture.Test2WithLongDuration), suiteResult, false);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.Message, Does.Contain("50ms"));
+            });
         }
 
         [Explicit("Tests that demonstrate Timeout failure")]
@@ -300,7 +398,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        [Test, Platform("Win")]
+        [Test, Platform(PlatformNames.Win)]
         public void TimeoutWithMessagePumpShouldAbort()
         {
             ITestResult result = TestBuilder.RunTest(

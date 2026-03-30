@@ -244,6 +244,7 @@ namespace NUnit.Framework
         {
             var fixture = _builder.BuildFrom(typeInfo, filter, this);
             fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<FixtureLifeCycleAttribute>());
+            fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<NoTestsAttribute>());
             fixture.ApplyAttributesToTest(typeInfo.Type);
 
             yield return fixture;

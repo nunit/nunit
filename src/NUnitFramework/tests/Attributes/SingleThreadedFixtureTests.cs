@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests.Attributes
     }
 
 #if NETCOREAPP
-    [Platform(Include = "Win, Mono")]
+    [Platform(Includes = [PlatformNames.Win, PlatformNames.Mono])]
 #endif
     [SingleThreaded]
     public class SingleThreadedFixtureWithApartmentStateTests : ThreadingTests
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Tests.Attributes
     }
 
 #if NETCOREAPP
-    [Platform(Include = "Win")]
+    [Platform(Include = PlatformNames.Win)]
 #endif
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests

@@ -7,6 +7,8 @@
         <Optimize>true</Optimize>
         <RootNamespace>NUnit.Framework</RootNamespace>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <!-- Disable MTP entry point generation - conflicts with BenchmarkDotNet's Main -->
+        <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
     </PropertyGroup>
 
     <ItemGroup>

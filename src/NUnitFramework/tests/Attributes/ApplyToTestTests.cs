@@ -309,6 +309,21 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
+        [Test]
+        [SetCulture("")]
+        public void InvariantCultureWorks()
+        {
+            string current = System.Globalization.CultureInfo.InvariantCulture.Name;
+
+            Assume.That(current, Is.Empty);
+
+            var cultureAttribute = new CultureAttribute(current);
+            Assert.That(cultureAttribute.Includes, Is.EqualTo([current]));
+
+            cultureAttribute.ApplyToTest(_test);
+            Assert.That(_test.RunState, Is.EqualTo(RunState.Runnable));
+        }
+
         #endregion
 
         #region MaxTimeAttribute
@@ -363,7 +378,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void PlatformAttributeSkipsTest()
         {
             string notMyPlatform = System.IO.Path.DirectorySeparatorChar == '/'
-                ? "Win" : "Linux";
+                ? PlatformNames.Win : PlatformNames.Linux;
             new PlatformAttribute(notMyPlatform).ApplyToTest(_test);
             Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
         }
@@ -396,9 +411,9 @@ namespace NUnit.Framework.Tests.Attributes
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {
-                return OSPlatform.CurrentPlatform.IsMacOSX ? "MacOSX" : "Linux";
+                return OSPlatform.CurrentPlatform.IsMacOSX ? PlatformNames.MacOSX : PlatformNames.Linux;
             }
-            return "Win";
+            return PlatformNames.Win;
         }
 
         #endregion
