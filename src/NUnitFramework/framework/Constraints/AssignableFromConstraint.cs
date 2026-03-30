@@ -19,14 +19,10 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Apply the constraint to an actual value, returning true if it succeeds
-        /// </summary>
-        /// <param name="actual">The actual argument</param>
-        /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected override bool Matches(object? actual)
+        /// <inheritdoc />
+        protected override bool Matches<TActual>(TActual actual)
         {
-            return actualType is null ? expectedType is null : expectedType.CanImplicitlyConvertTo(actualType);
+            return typeof(TExpected).CanImplicitlyConvertTo(GetActualType(actual)!);
         }
     }
 
@@ -44,11 +40,7 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Apply the constraint to an actual value, returning true if it succeeds
-        /// </summary>
-        /// <param name="actual">The actual argument</param>
-        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
             return actualType is null ? expectedType is null : expectedType.CanImplicitlyConvertTo(actualType);
