@@ -24,6 +24,8 @@ internal static class TestBuilder
     {
         return new TestSuite(name);
     }
+    public static TestSuite MakeFixture<TFixture>()
+        => MakeFixture(typeof(TFixture));
 
     public static TestSuite MakeFixture(Type type)
     {
