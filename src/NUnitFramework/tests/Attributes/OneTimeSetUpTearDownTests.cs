@@ -12,7 +12,7 @@ using NUnit.Framework.Tests.TestUtilities;
 namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
-    public class OneTimeSetupTearDownTest
+    public class OneTimeSetupTearDownTests
     {
         [Test]
         public void MakeSureSetUpAndTearDownAreCalled()
