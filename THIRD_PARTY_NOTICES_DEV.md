@@ -4,7 +4,7 @@
 
 | Reference              | Version | License Type    | License                                                              |
 |---------------------------------------------------------------------------------------------------------------------------|
-| Microsoft.NET.Test.Sdk | 17.7.2  | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
+| Microsoft.NET.Test.Sdk | 17.11.1  | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.11.1/License |
 
 ## nunit.testdata.csproj
 
@@ -16,12 +16,12 @@
 
 | Reference   | Version | License Type | License                        |
 |-----------------------------------------------------------------------|
-| FSharp.Core | 7.0.200 | MIT          | https://licenses.nuget.org/MIT |
+| FSharp.Core | 8.0.400 | MIT          | https://licenses.nuget.org/MIT |
 
 ## nunit.framework.tests.csproj
 
 | Reference                                   | Version         | License Type    | License                                                              |
 |--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Microsoft.NET.Test.Sdk                      | 17.7.2          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.6.3/License |
-| System.Collections.Immutable                | 6.0.0           | MIT             | https://github.com/dotnet/runtime/blob/main/LICENSE.TXT             |
+| Microsoft.NET.Test.Sdk                      | 17.11.1          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.11.1/License |
+| System.Collections.Immutable                | 8.0.0           | MIT             | https://github.com/dotnet/runtime/blob/main/LICENSE.TXT             |
 | TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160 | MIT             | https://licenses.nuget.org/MIT                                       |
