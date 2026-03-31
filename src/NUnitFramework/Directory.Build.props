@@ -11,16 +11,8 @@
     <MinVerVerbosity Condition="'$(MSBuildProjectName)' != 'nunit.framework' OR '$(TargetFramework)' != 'net462'">quiet</MinVerVerbosity>
   </PropertyGroup>
 
-  <!-- Override AssemblyVersion to use major.minor.0.0 for binary compatibility -->
-  <Target Name="SetAssemblyVersion" AfterTargets="MinVer" Condition="'$(MinVerMajor)' != ''">
-    <PropertyGroup>
-      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).0.0</AssemblyVersion>
-    </PropertyGroup>
-    <!-- Only show version info once for main framework project (first TFM) -->
-    <Message Importance="high" Text="AssemblyVersion: $(AssemblyVersion)" Condition="'$(MSBuildProjectName)' == 'nunit.framework' AND '$(TargetFramework)' == 'net462'" />
-    <Message Importance="high" Text="FileVersion: $(FileVersion)" Condition="'$(MSBuildProjectName)' == 'nunit.framework' AND '$(TargetFramework)' == 'net462'" />
-    <Message Importance="high" Text="InformationalVersion: $(InformationalVersion)" Condition="'$(MSBuildProjectName)' == 'nunit.framework' AND '$(TargetFramework)' == 'net462'" />
-  </Target>
+  <!-- Build targets (for example, SetAssemblyVersion) are defined in Directory.Build.targets
+       to keep evaluation-time properties separate from execution-time build logic. -->
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
