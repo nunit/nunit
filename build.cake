@@ -71,7 +71,7 @@ var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Sing
 
 Setup(context =>
 {
-    Information("Building {0} version {1} of NUnit.", configuration, packageVersion);
+    Information($"Building {configuration} version {packageVersion} of NUnit.");
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -121,9 +121,9 @@ DotNetBuildSettings CreateDotNetBuildSettings()
         FileVersion = assemblyVersion,
         InformationalVersion = version
     };
-    Information("AssemblyVersion: {0}", msBuildSettings.AssemblyVersion);
-    Information("FileVersion: {0}", msBuildSettings.FileVersion);
-    Information("InformationalVersion: {0}", msBuildSettings.InformationalVersion);
+    Information($"AssemblyVersion: {msBuildSettings.AssemblyVersion}");
+    Information($"FileVersion: {msBuildSettings.FileVersion}");
+    Information($"InformationalVersion: {msBuildSettings.InformationalVersion}");
 
     var settings =  new DotNetBuildSettings
     {
@@ -345,7 +345,7 @@ Task("SignPackages")
 
         foreach(var file in files)
         {
-            Information("Signing {0}...", file.FullPath);
+            Information($"Signing {file.FullPath}...");
 
             // Build the argument list.
             var arguments = new ProcessArgumentBuilder()
