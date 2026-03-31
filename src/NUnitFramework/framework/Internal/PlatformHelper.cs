@@ -123,7 +123,11 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-        private static readonly Dictionary<string, Func<OSPlatform, bool>> PlatformChecks =
+#pragma warning disable IDE0044 // Add readonly modifier
+#pragma warning disable IDE1006 // Naming Styles
+        private static Dictionary<string, Func<OSPlatform, bool>> PlatformChecks =
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore IDE0044 // Add readonly modifier
             new Dictionary<string, Func<OSPlatform, bool>>(StringComparer.OrdinalIgnoreCase)
             {
                 { PlatformNames.Win, os => os.IsWindows },
@@ -198,7 +202,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the platform is in use on the system</returns>
         public bool IsPlatformSupported(string platform)
         {
-            if (platform.IndexOf(',') >= 0)
+            if (platform.Contains(','))
                 return IsPlatformSupported(platform.Split(','));
 
             string platformName = platform.Trim();
