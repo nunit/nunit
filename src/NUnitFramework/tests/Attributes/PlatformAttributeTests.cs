@@ -1,54 +1,85 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
-using NUnit.TestData.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
+    [NonParallelizable]
     internal class PlatformAttributeTests
     {
-        [Test]
-        public void ChildTestWithoutAttribute_DoesntExplicitlyInheritPlatforms()
-        {
-            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
-            var fixtureIncludes = fixture.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
+        private Dictionary<string, Func<OSPlatform, bool>> _originalPlatformChecks;
+        private FieldInfo _platformField;
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _platformField = typeof(PlatformHelper).GetField("PlatformChecks", BindingFlags.Static | BindingFlags.NonPublic)!;
+            _originalPlatformChecks = (Dictionary<string, Func<OSPlatform, bool>>)_platformField.GetValue(null)!;
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _platformField.SetValue(null, _originalPlatformChecks);
+        }
+
+        private void OverridePlatformCheck(string key, bool value = false)
+        {
+            var currentChecks = (Dictionary<string, Func<OSPlatform, bool>>)_platformField.GetValue(null)!;
+            var newChecks = new Dictionary<string, Func<OSPlatform, bool>>(currentChecks)
+            {
+                [key] = _ => value
+            };
+            _platformField.SetValue(null, newChecks);
+        }
+
+        [Test]
+        public void ChildTestWithoutAttribute_DoesntExplicitlyInheritFixturePlatforms([Values]bool allowOS)
+        {
+            OverridePlatformCheck(PlatformNames.Win, allowOS);
+            OverridePlatformCheck(PlatformNames.X64BitOS, true);
+
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
             var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.NoTestLevelAttributeSpecified));
-            var methodIncludes = testMethod.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
 
-            Assert.That(fixtureIncludes, Is.Not.Empty);
-            Assert.That(methodIncludes, Is.Null);
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(fixture.RunState == RunState.Runnable, Is.EqualTo(allowOS));
         }
 
         [Test]
-        public void ChildTestWithAttribute_WithoutDuplication_DoesntImplicitlyInheritOrMergePlatforms()
+        public void ChildTestWithAttribute_DoesntImplicitlyInheritFixturePlatforms([Values] bool allowBitness)
         {
-            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
-            var fixtureIncludes = fixture.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
+            OverridePlatformCheck(PlatformNames.Win, false);
+            OverridePlatformCheck(PlatformNames.X64BitOS, allowBitness);
 
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
             var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.WithoutDuplicateProperty));
-            var methodIncludes = testMethod.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
 
-            Assert.That(fixtureIncludes, Is.Not.Empty);
-            Assert.That(methodIncludes, Is.Not.Empty);
-            Assert.That(fixtureIncludes.Intersect(methodIncludes), Is.Empty);
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.Skipped));
+            Assert.That(testMethod.RunState == RunState.Runnable, Is.EqualTo(allowBitness));
         }
 
-        [Test]
-        public void ChildTestWithAttribute_WithDuplication_DoesntImplicitlyInheritOrMergePlatforms()
+        [TestCase(true, false, ExpectedResult = RunState.Runnable)]
+        [TestCase(false, true, ExpectedResult = RunState.Runnable)]
+        [TestCase(true, true, ExpectedResult = RunState.Runnable)]
+        [TestCase(false, false, ExpectedResult = RunState.Skipped)]
+        public RunState ChildTestWithAttribute_WithMultiplePlatforms_WillRunForAnySpecified(bool allowOS, bool allowBitness)
         {
+            OverridePlatformCheck(PlatformNames.Win, allowOS);
+            OverridePlatformCheck(PlatformNames.X64BitOS, allowBitness);
+
             var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
-            var fixtureIncludes = fixture.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
-
             var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.WithDuplicateProperty));
-            var methodIncludes = testMethod.Properties.Get(ObservablePlatformAttribute.PlatformIncludesPropertyName) as string[];
 
-            Assert.That(fixtureIncludes, Is.Not.Empty);
-            Assert.That(methodIncludes, Is.Not.Empty);
-            Assert.That(fixtureIncludes.Intersect(methodIncludes), Is.Not.Empty);
+            return testMethod.RunState;
         }
     }
 }
