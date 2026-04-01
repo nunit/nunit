@@ -54,6 +54,19 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(testMethod.RunState, Is.EqualTo(allowBitness ? RunState.Runnable : RunState.Skipped));
         }
 
+        [Test]
+        public void ChildTestWithExclucesAttribute([Values] bool allowBitness)
+        {
+            OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
+            OverridePlatformCheck(PlatformAttributeFixture.NUnitArchitecture, allowBitness);
+
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
+            var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.WithExcludesProperty));
+
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(testMethod.RunState, Is.EqualTo(allowBitness ? RunState.Skipped : RunState.Runnable));
+        }
+
         [TestCase(true, false, ExpectedResult = RunState.Runnable)]
         [TestCase(false, true, ExpectedResult = RunState.Runnable)]
         [TestCase(true, true, ExpectedResult = RunState.Runnable)]
@@ -85,6 +98,15 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
             var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.UnixOnlyTest));
             Assert.That(testMethod.RunState, Is.EqualTo(OSPlatform.CurrentPlatform.IsUnix ? RunState.Runnable : RunState.Skipped));
+        }
+
+        [Test]
+        public void TestWithAttribute_WillRunNotRunOnMacOSXPlatform()
+        {
+            OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
+            var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.RunsOnAllButMacOSX));
+            Assert.That(testMethod.RunState, Is.EqualTo(OSPlatform.CurrentPlatform.IsMacOSX ? RunState.Skipped : RunState.Runnable));
         }
     }
 }

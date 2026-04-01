@@ -29,6 +29,12 @@ namespace NUnit.TestData
         }
 
         [Test]
+        [Platform(Excludes = [NUnitArchitecture])]
+        public void WithExcludesProperty()
+        {
+        }
+
+        [Test]
         [Platform(Includes = [PlatformNames.Win])]
         public void WindowsOnlyTest()
         {
@@ -37,6 +43,12 @@ namespace NUnit.TestData
         [Test]
         [Platform(Includes = [PlatformNames.UNIX])]
         public void UnixOnlyTest()
+        {
+        }
+
+        [Test]
+        [Platform(Excludes = [PlatformNames.MacOSX])]
+        public void RunsOnAllButMacOSX()
         {
         }
     }
