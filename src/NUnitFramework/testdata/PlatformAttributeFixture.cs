@@ -5,22 +5,25 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.TestData
 {
-    [Platform(Includes = [PlatformNames.Win])]
+    [Platform(Includes = [NUnitOS])]
     public class PlatformAttributeFixture
     {
+        public const string NUnitOS = "NUnit:OS";
+        public const string NUnitArchitecture = "NUnit:Architecture";
+
         [Test]
         public void NoTestLevelAttributeSpecified()
         {
         }
 
         [Test]
-        [Platform(Includes = [PlatformNames.Win, PlatformNames.X64BitOS])]
+        [Platform(Includes = [NUnitOS, NUnitArchitecture])]
         public void WithDuplicateProperty()
         {
         }
 
         [Test]
-        [Platform(Includes = [PlatformNames.X64BitOS])]
+        [Platform(Includes = [NUnitArchitecture])]
         public void WithoutDuplicateProperty()
         {
         }

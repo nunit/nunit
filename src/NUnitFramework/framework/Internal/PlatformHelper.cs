@@ -123,12 +123,8 @@ namespace NUnit.Framework.Internal
             return true;
         }
 
-#pragma warning disable IDE0044 // Add readonly modifier
-#pragma warning disable IDE1006 // Naming Styles
-        private static Dictionary<string, Func<OSPlatform, bool>> PlatformChecks =
-#pragma warning restore IDE1006 // Naming Styles
-#pragma warning restore IDE0044 // Add readonly modifier
-            new Dictionary<string, Func<OSPlatform, bool>>(StringComparer.OrdinalIgnoreCase)
+        internal static readonly Dictionary<string, Func<OSPlatform, bool>> PlatformChecks =
+            new(StringComparer.OrdinalIgnoreCase)
             {
                 { PlatformNames.Win, os => os.IsWindows },
                 { PlatformNames.Win32, os => os.IsWindows },
