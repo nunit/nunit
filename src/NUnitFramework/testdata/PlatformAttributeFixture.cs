@@ -27,5 +27,17 @@ namespace NUnit.TestData
         public void WithoutDuplicateProperty()
         {
         }
+
+        [Test]
+        [Platform(Includes = [PlatformNames.Win])]
+        public void WindowsOnlyTest()
+        {
+        }
+
+        [Test]
+        [Platform(Includes = [PlatformNames.UNIX])]
+        public void UnixOnlyTest()
+        {
+        }
     }
 }
