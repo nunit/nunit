@@ -68,5 +68,23 @@ namespace NUnit.Framework.Tests.Attributes
 
             return testMethod.RunState;
         }
+
+        [Test]
+        public void TestWithAttribute_WillRunOnlyOnWindowsPlatform()
+        {
+            OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
+            var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.WindowsOnlyTest));
+            Assert.That(testMethod.RunState, Is.EqualTo(OSPlatform.CurrentPlatform.IsWindows ? RunState.Runnable : RunState.Skipped));
+        }
+
+        [Test]
+        public void TestWithAttribute_WillRunOnlyOnUnixPlatform()
+        {
+            OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
+            var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
+            var testMethod = fixture.Tests.First(x => x.Name == nameof(PlatformAttributeFixture.UnixOnlyTest));
+            Assert.That(testMethod.RunState, Is.EqualTo(OSPlatform.CurrentPlatform.IsUnix ? RunState.Runnable : RunState.Skipped));
+        }
     }
 }
