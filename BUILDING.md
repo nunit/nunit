@@ -111,10 +111,12 @@ Tests can be run using either Cake or directly with `dotnet test`:
 | `build --target=Test` | Run all tests with normal output |
 | `build --target=Test --quiet=true` | Run tests with minimal output (summaries only) |
 | `dotnet test` | Run tests directly using dotnet CLI |
-| `dotnet test -v q` | Run tests with quiet MSBuild output |
+| `dotnet test -v q` | Run tests with quiet MSBuild ouput | 
 | `dotnet test --settings quiet.runsettings` | Run tests with reduced NUnit output |
 
 The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks. The `--quiet=true` option shows only per-assembly summaries without individual test names.
+
+Any failures will be shown for all commands.
 
 ### Notes
 
@@ -130,7 +132,7 @@ This brings clarity to the code and makes it easy to change the mapping between 
 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
-- `THREAD_ABORT` enables timeouts and forcible cancellation
+- `THREAD_ABORT` enables timeouts and forcible cancellation  (applies only to .net framework)
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
 For example, `NET462`, `NETSTANDARD2_0`, `NET6_0`, and so on.

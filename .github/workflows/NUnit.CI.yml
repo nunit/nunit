@@ -36,10 +36,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
-
-    - name: 🔨 Windows Specific Tests
-      run: dotnet test --no-build --configuration=Release src/NUnitFramework/windows-tests/windows-tests.csproj
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
 
     - name: 📦 Package
       run: dotnet tool run dotnet-cake --target=Package
@@ -54,7 +51,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Test results (Windows)
-        path: test-results
+        path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
 
@@ -84,13 +81,13 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: Test results (Linux)
-        path: test-results
+        path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
 
@@ -117,12 +114,12 @@ jobs:
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: Test results (macOS)
-        path: test-results
+        path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
