@@ -1,5 +1,5 @@
-#load "CakeScripts/VersionParsers.cs"
 #load "CakeScripts/MinVerTool.cs"
+#load "CakeScripts/TestResultsParser.cs"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -7,6 +7,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
+var quiet = Argument("quiet", false);
 
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
@@ -30,8 +31,6 @@ var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
 var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
-var NUNITFRAMEWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
-var NUNITFRAMEWORKLEGACYTESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.legacy.tests/bin/" + configuration + "/";
 var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
 var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
 var NUNITFRAMEWORKLEGACYBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.legacy/bin/" + configuration + "/";
@@ -42,13 +41,7 @@ var SOLUTION_FILE = "./nunit.slnx";
 
 var DIRECTORY_BUILD_PROPS = PROJECT_DIR + "src/NUnitFramework/Directory.Build.props";
 
-// Test Runners
-var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
-
-// Test Assemblies
-var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var FRAMEWORKLEGACY_TESTS = "nunit.framework.legacy.tests.dll";
-var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
+// Test Assemblies (for NUnitLite dogfood tests)
 var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
 var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
@@ -61,9 +54,6 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 
 var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitLibraryFrameworks").Split(';');
 var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
-
-var NetCoreTestRuntimes = RuntimeFrameworks.Where(s => !s.StartsWith("net4")).ToArray();
-var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Single();
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -111,27 +101,20 @@ Task("Build")
         DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetBuildSettings CreateDotNetBuildSettings() 
+DotNetBuildSettings CreateDotNetBuildSettings()
 {
-    var version = packageVersion.ToString(); 
-    var assemblyVersion = VersionParsers.ParseAssemblyVersion(version);
+    // Version settings removed - MinVer package now handles AssemblyVersion, FileVersion, InformationalVersion
     var msBuildSettings = new DotNetMSBuildSettings {
-        ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions,
-        AssemblyVersion = assemblyVersion,
-        FileVersion = assemblyVersion,
-        InformationalVersion = version
+        ContinuousIntegrationBuild = BuildSystem.GitHubActions.IsRunningOnGitHubActions
     };
-    Information($"AssemblyVersion: {msBuildSettings.AssemblyVersion}");
-    Information($"FileVersion: {msBuildSettings.FileVersion}");
-    Information($"InformationalVersion: {msBuildSettings.InformationalVersion}");
 
-    var settings =  new DotNetBuildSettings
+    var settings = new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
         Verbosity = DotNetVerbosity.Minimal,
         MSBuildSettings = msBuildSettings
-     };
+    };
     return settings;
 }
 
@@ -143,51 +126,81 @@ Task("CheckForError")
     .Description("Checks for errors running the test suites")
     .Does(() => CheckForError(ref ErrorDetail));
 
-Task("TestNetFramework")
-    .Description("Tests the .NET Framework version of nunit framework")
+Task("Test")
+    .Description("Runs all tests using dotnet test. Use --quiet=true for minimal output.")
     .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = NetFrameworkTestRuntime;
-        var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
-        Information("Run tests for " + runtime + " in " + dir + " using runner");
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
-        dir = NUNITFRAMEWORKLEGACYTESTSBIN + runtime + "/";
-        Information("Run legacy tests for " + runtime + " in " + dir + " using runner");
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORKLEGACY_TESTS, dir + "nunit.framework.legacy.tests.xml", runtime, ref ErrorDetail);
-        dir = NUNITLITETESTSBIN + runtime + "/";
-        Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
+        var resultsDir = PROJECT_DIR + "TestResults";
+        CleanDirectory(resultsDir);
+
+        var settings = new DotNetTestSettings
+        {
+            Configuration = configuration,
+            NoBuild = true,
+            Settings = quiet ? "quiet.runsettings" : ".runsettings",
+            ResultsDirectory = resultsDir,
+            Loggers = new[] { "trx" },
+            Verbosity = quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Minimal
+        };
+
+        if (quiet)
+            settings.ArgumentCustomization = args => args.Append("--logger \"console;verbosity=quiet\"");
+
+        DotNetTest(SOLUTION_FILE, settings);
+
+        // Parse TRX files and show summary
+        var summary = TestResultsParser.ParseTrxFiles(resultsDir);
+
+        Information("");
+        Information("═══════════════════════════════════════════════════════════════════");
+        Information($"  Test Summary: {summary.Total} total, {summary.Passed} passed, {summary.Failed} failed, {summary.Skipped} skipped");
+        Information("═══════════════════════════════════════════════════════════════════");
+
+        if (summary.Failed > 0)
+            throw new Exception($"{summary.Failed} test(s) failed.");
     });
 
-var testCore = Task("TestNetCore")
-    .Description("Tests the .NET (6.0+) version of the framework");
-
-foreach (var runtime in NetCoreTestRuntimes)
-{
-    var task = Task("TestNetCore on " + runtime)
-        .Description("Tests the .NET (6.0+) version of the framework on " + runtime)
-        .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
-        .IsDependentOn("Build")
-        .OnError(exception => { ErrorDetail.Add(exception.Message); })
-        .Does(() =>
+Task("TestNUnitLite")
+    .Description("Tests NUnitLite by running nunitlite.tests (dogfooding)")
+    .IsDependentOn("Build")
+    .Does(() =>
+    {
+        // Run nunitlite.tests for each runtime framework
+        foreach (var runtime in RuntimeFrameworks)
         {
-            var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
-            Information("Run tests for " + runtime + " in " + dir);
-            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-            dir = NUNITFRAMEWORKLEGACYTESTSBIN + runtime + "/";
-            Information("Run legacy tests for " + runtime + " in " + dir);
-            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORKLEGACY_TESTS, runtime, GetResultXmlPath(FRAMEWORKLEGACY_TESTS, runtime), ref ErrorDetail);
-            dir = NUNITLITETESTSBIN + runtime + "/";
-            Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
-            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-            PublishTestResults(runtime);
-        });
+            var dir = NUNITLITETESTSBIN + runtime + "/";
 
-    testCore.IsDependentOn(task);
-}
+            if (runtime.StartsWith("net4"))
+            {
+                // .NET Framework - run exe directly
+                var exePath = dir + EXECUTABLE_NUNITLITE_TESTS_EXE;
+                if (FileExists(exePath))
+                {
+                    Information($"Running NUnitLite tests for {runtime}");
+                    var rc = StartProcess(MakeAbsolute(new FilePath(exePath)), new ProcessSettings { WorkingDirectory = dir });
+                    if (rc != 0)
+                        throw new Exception($"NUnitLite tests failed for {runtime} with exit code {rc}");
+                }
+            }
+            else
+            {
+                // .NET Core - run with dotnet
+                var dllPath = dir + EXECUTABLE_NUNITLITE_TESTS_DLL;
+                if (FileExists(dllPath))
+                {
+                    Information($"Running NUnitLite tests for {runtime}");
+                    var rc = StartProcess("dotnet", new ProcessSettings
+                    {
+                        Arguments = new ProcessArgumentBuilder().AppendQuoted(dllPath).Render(),
+                        WorkingDirectory = dir
+                    });
+                    if (rc != 0)
+                        throw new Exception($"NUnitLite tests failed for {runtime} with exit code {rc}");
+                }
+            }
+        }
+    });
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
@@ -394,133 +407,6 @@ void CheckForError(ref List<string> errorDetail)
     }
 }
 
-//////////////////////////////////////////////////////////////////////
-// HELPER METHODS - TEST
-//////////////////////////////////////////////////////////////////////
-
-FilePath GetResultXmlPath(string testAssembly, string framework)
-{
-    var assemblyName = System.IO.Path.GetFileNameWithoutExtension(testAssembly);
-
-    CreateDirectory($@"test-results\{framework}");
-
-    return MakeAbsolute(new FilePath($@"test-results\{framework}\{assemblyName}.xml"));
-}
-
-void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail)
-{
-    try
-    {
-        var path = workingDir.CombineWithFilePath(testAssembly);
-
-        var settings = new NUnit3Settings();
-        settings.Results = new[] { new NUnit3Result { FileName = GetResultXmlPath(testAssembly, framework) } };
-
-        if (!IsRunningOnWindows())
-            settings.Process = NUnit3ProcessOption.InProcess;
-
-        NUnit3(path.ToString(), settings);
-    }
-    catch(CakeException ce)
-    {
-        errorDetail.Add(string.Format("{0}: {1}", framework, ce.Message));
-    }
-}
-
-void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
-{
-    RunTest(exePath, workingDir, null, GetResultXmlPath(exePath.FullPath, framework), framework, ref errorDetail);
-}
-
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, FilePath resultFile, string framework, ref List<string> errorDetail)
-{
-    int rc = StartProcess(
-        MakeAbsolute(exePath),
-        new ProcessSettings
-        {
-            Arguments = new ProcessArgumentBuilder()
-                .Append(arguments)
-                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
-                .Append("--quiet")
-                .Render(),
-            WorkingDirectory = workingDir
-        });
-
-    if (rc > 0)
-        errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
-    else if (rc < 0)
-        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
-}
-
-void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
-{
-    RunDotnetCoreTests(exePath, workingDir, null, framework, GetResultXmlPath(exePath.FullPath, framework), ref errorDetail);
-}
-
-void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
-{
-    if (!FileExists(exePath))
-    {
-        Information(string.Format("{0}: {1} not found", framework, exePath));
-        return;
-    }
-
-    int rc = StartProcess(
-        "dotnet",
-        new ProcessSettings
-        {
-            Arguments = new ProcessArgumentBuilder()
-                .AppendQuoted(exePath.FullPath)
-                .Append(arguments)
-                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
-                .Append("--quiet")
-                .Render(),
-            WorkingDirectory = workingDir
-        });
-
-    if (rc > 0)
-        errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
-    else if (rc < 0)
-        errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
-}
-
-void PublishTestResults(string framework)
-{
-    if (EnvironmentVariable("TF_BUILD", false))
-    {
-        Information("Publishing test results to Azure Pipelines");
-        var fullTestRunTitle = framework;
-        var ciRunName = Argument<string>("test-run-name");
-        if (!string.IsNullOrEmpty(ciRunName))
-            fullTestRunTitle += '/' + ciRunName;
-
-        AzurePipelines.Commands.PublishTestResults(new AzurePipelinesPublishTestResultsData
-        {
-            TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
-            TestRunTitle = fullTestRunTitle,
-            TestRunner = AzurePipelinesTestRunnerType.NUnit,
-            MergeTestResults = true,
-            PublishRunAttachments = true,
-            Configuration = configuration
-        });
-    }
-}
-
-public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
-{
-    if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-    if (!string.IsNullOrEmpty(rawArgument))
-    {
-        var previousCustomizer = settings.ArgumentCustomization;
-        if (previousCustomizer != null)
-            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
-        else
-            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
-    }
-
-    return settings;
-}
 
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
@@ -531,11 +417,10 @@ Task("Rebuild")
     .IsDependentOn("Clean")
     .IsDependentOn("Build");
 
-Task("Test")
-    .Description("Builds and tests all versions of the framework")
-    .IsDependentOn("Build")
-    .IsDependentOn("TestNetFramework")
-    .IsDependentOn("TestNetCore");
+Task("TestAll")
+    .Description("Runs all tests including NUnitLite dogfood tests")
+    .IsDependentOn("Test")
+    .IsDependentOn("TestNUnitLite");
 
 Task("Package")
     .Description("Packages all versions of the framework")

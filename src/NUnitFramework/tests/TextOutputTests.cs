@@ -135,10 +135,9 @@ namespace NUnit.Framework.Tests
             });
         }
 
-        [Test]
+        [Test, Explicit("For display purposes only - demonstrates immediate output behavior")]
         public void MultipleWrites()
         {
-            // Test purely for display purposes
             TestContext.Progress.WriteLine("TestContext.Progress displays immediately");
             TestContext.Error.WriteLine("TestContext.Error displays immediately as well");
             Console.Error.WriteLine("Console.Error also displays immediately");

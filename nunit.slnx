@@ -17,6 +17,7 @@
     <File Path="NUnit.sln.DotSettings" />
     <File Path="README.md" />
     <File Path="src/NUnitFramework/Directory.Build.props" />
+    <File Path="src/NUnitFramework/Directory.Build.targets" />
     <File Path="src/NUnitFramework/Directory.Packages.props" />
     <File Path="src/NUnitFramework/StyleCop.Analyzers.globalconfig" />
     <File Path="THIRD_PARTY_NOTICES.md" />

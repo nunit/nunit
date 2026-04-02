@@ -98,9 +98,23 @@ The build.cake script contains a large number of interdependent tasks. The most 
 | Test     | Runs all tests. Dependent on Build. |
 | Package  | Creates all packages without building first. See Note below. |
 
-For example, the following command `.\build.ps1 --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
+For example, the following command `.\build.ps1 --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target.
 
 For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `./build.sh --showdescription` (bash on Linux).
+
+### Running Tests
+
+Tests can be run using either Cake or directly with `dotnet test`:
+
+| Command | Description |
+|---------|-------------|
+| `build --target=Test` | Run all tests with normal output |
+| `build --target=Test --quiet=true` | Run tests with minimal output (summaries only) |
+| `dotnet test` | Run tests directly using dotnet CLI |
+| `dotnet test -v q` | Run tests with quiet MSBuild output |
+| `dotnet test --settings quiet.runsettings` | Run tests with reduced NUnit output |
+
+The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks. The `--quiet=true` option shows only per-assembly summaries without individual test names.
 
 ### Notes
 
