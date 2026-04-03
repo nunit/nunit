@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Only build on Windows - this project requires Windows Desktop runtime -->
-  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-    <TargetFrameworks>net462;net6.0-windows7;net8.0-windows10.0.19041.0</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup>
+    <TargetFrameworks>net462;net6.0-windows7;net8.0-windows10.0.19041.0</TargetFrameworks>
     <RootNamespace>NUnit.Windows.Tests</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <!-- Enable cross-platform build but only test on Windows -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <IsTestProject Condition="!$([MSBuild]::IsOSPlatform('Windows'))">false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,9 +24,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit3TestAdapter" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NUnit.Analyzers" />
   </ItemGroup>
 
