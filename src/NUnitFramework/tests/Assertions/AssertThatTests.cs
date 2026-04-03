@@ -1115,5 +1115,75 @@ namespace NUnit.Framework.Tests.Assertions
                 .With.Message.Contains("Expected: not equal to \"abc\"")
                 .And.Message.Contains("But was:  \"abc\""));
         }
+
+        private readonly struct InfinitelyRecursiveTestStructure
+        {
+            public int Value1 { get; init; }
+            public int Value2 { get; init; }
+            public InfinitelyRecursiveTestStructure Product => new InfinitelyRecursiveTestStructure() { Value1 = Value1 * Value2 };
+        }
+
+        [Test]
+        public void PropertyComparerThrowsExceptionForInfinitelyRecursiveGraph()
+        {
+            var objectA = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
+            var objectB = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                 Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer());
+            });
+        }
+
+        private readonly struct DepthThreeTestStructure
+        {
+            public DepthThreeTestStructure()
+            {
+            }
+            public readonly struct GrandChild
+            {
+                public int Value { get; init; }
+            }
+            public readonly struct Child
+            {
+                public Child()
+                {
+                }
+                public GrandChild MyGrandChild { get; init; } = new();
+            }
+            public Child FirstChild { get; init; } = new();
+        }
+
+        [Test]
+        public void PropertyComparerThrowsExceptionForDepthThreeWhenConfiguredForMaxDepthTwo()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(2)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerDoesNotThrowExceptionForDepthThreeWhenConfiguredForMaxDepthThree()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.DoesNotThrow(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(3)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerMaxDepthCannotBeSetToLessThanOne()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(0)));
+            });
+        }
     }
 }

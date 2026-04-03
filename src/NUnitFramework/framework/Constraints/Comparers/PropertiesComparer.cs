@@ -81,6 +81,12 @@ namespace NUnit.Framework.Constraints.Comparers
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
+            if (comparisonState.StackDepth > configuration.MaximumGraphDepth)
+            {
+                throw new InvalidOperationException(
+                    $"This object graph is deeper than the configured maximum of {configuration.MaximumGraphDepth}.  This may be caused by the compared objects having recursive properties.");
+            }
+
             BitArray redoWithoutTolerance = new BitArray(xProperties.Length);
             int toleranceNotSupportedCount = 0;
 
