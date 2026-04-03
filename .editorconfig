@@ -121,6 +121,8 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 
 # DOC100: Place text in paragraphs
 dotnet_diagnostic.DOC100.severity = silent
+# Crashes with VS standard formatting in some cases
+dotnet_diagnostic.SA1001.severity = none
 
 
 # Expression-bodied members
