@@ -36,7 +36,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release  --quiet=true
 
     - name: 📦 Package
       run: dotnet tool run dotnet-cake --target=Package
@@ -81,7 +81,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=true
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
@@ -114,7 +114,7 @@ jobs:
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=true
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
