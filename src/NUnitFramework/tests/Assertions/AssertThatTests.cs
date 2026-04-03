@@ -508,11 +508,11 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
+        public void AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
         {
-            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
-            await Task.Delay(500);
-            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+            var start = DateTimeOffset.UtcNow;
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start);
+            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start.AddMilliseconds(500));
 
 #pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
