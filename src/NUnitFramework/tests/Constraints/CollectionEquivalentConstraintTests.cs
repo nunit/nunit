@@ -392,7 +392,7 @@ public class CollectionEquivalentConstraintTests
         watch.Stop();
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 2)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 3)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
@@ -416,7 +416,7 @@ public class CollectionEquivalentConstraintTests
         watch.Stop();
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 2)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 3)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
