@@ -138,10 +138,6 @@ Task("Test")
             Verbosity = quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Minimal
         };
 
-        // Skip windows-tests on non-Windows platforms
-        if (!IsRunningOnWindows())
-            settings.Filter = "FullyQualifiedName!~NUnit.Windows";
-
         DotNetTest(SOLUTION_FILE, settings);
 
         // Parse TRX files and show summary
