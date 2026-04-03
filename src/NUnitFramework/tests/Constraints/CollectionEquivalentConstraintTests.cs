@@ -373,7 +373,7 @@ public class CollectionEquivalentConstraintTests
         watch.Stop();
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime*2)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 2)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
@@ -475,8 +475,8 @@ public class CollectionEquivalentConstraintTests
     [Test(Description = "Issue #4252 - CollectionAssert.AreEquivalent with multidimensional arrays throws System.RankException")]
     public void WorksWithMultiRankArray()
     {
-        var expected = new[,,] { { { "value1", "value2", "value3" } } };
-        var actual = new[,,] { { { "value2", "value3", "value1" } } };
+        var expected = new[, ,] { { { "value1", "value2", "value3" } } };
+        var actual = new[, ,] { { { "value2", "value3", "value1" } } };
 
         var constraint = new CollectionEquivalentConstraint(expected);
         var constraintResult = constraint.ApplyTo(actual);
