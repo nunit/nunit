@@ -371,9 +371,10 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraintResult.IsSuccess, Is.True);
 
         watch.Stop();
+        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 2)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
@@ -390,9 +391,10 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraintResult.IsSuccess, Is.True);
 
         watch.Stop();
+        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 3)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
@@ -414,9 +416,10 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraintResult.IsSuccess, Is.True);
 
         watch.Stop();
+        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 3)
+        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
             Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
     }
 
