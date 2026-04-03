@@ -1,6 +1,5 @@
 namespace NUnit.Framework.Tests;
 
-
 /// <summary>
 /// This test is for verifying the output of test runs when developing the build scripts
 /// </summary>
