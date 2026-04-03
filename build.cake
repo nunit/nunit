@@ -126,7 +126,7 @@ Task("Test")
 
         var loggers = quiet
             ? new[] { "trx", "console;verbosity=quiet" }
-            : new[] { "trx" };
+            : new[] { "trx", "console;verbosity=minimal" };
 
         var settings = new DotNetTestSettings
         {
