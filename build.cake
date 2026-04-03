@@ -10,12 +10,6 @@ var configuration = Argument("configuration", "Release");
 var quiet = Argument("quiet", false);
 
 //////////////////////////////////////////////////////////////////////
-// SET ERROR LEVELS
-//////////////////////////////////////////////////////////////////////
-
-var ErrorDetail = new List<string>();
-
-//////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
@@ -122,10 +116,6 @@ DotNetBuildSettings CreateDotNetBuildSettings()
 // TEST
 //////////////////////////////////////////////////////////////////////
 
-Task("CheckForError")
-    .Description("Checks for errors running the test suites")
-    .Does(() => CheckForError(ref ErrorDetail));
-
 Task("Test")
     .Description("Runs all tests using dotnet test. Use --quiet=true for minimal output.")
     .IsDependentOn("Build")
@@ -134,18 +124,19 @@ Task("Test")
         var resultsDir = PROJECT_DIR + "TestResults";
         CleanDirectory(resultsDir);
 
+        var loggers = quiet
+            ? new[] { "trx", "console;verbosity=quiet" }
+            : new[] { "trx" };
+
         var settings = new DotNetTestSettings
         {
             Configuration = configuration,
             NoBuild = true,
             Settings = quiet ? "quiet.runsettings" : ".runsettings",
-            ResultsDirectory = resultsDir,
-            Loggers = new[] { "trx" },
+            // ResultsDirectory is set in runsettings files - keeping single source of truth
+            Loggers = loggers,
             Verbosity = quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Minimal
         };
-
-        if (quiet)
-            settings.ArgumentCustomization = args => args.Append("--logger \"console;verbosity=quiet\"");
 
         // Skip windows-tests on non-Windows platforms
         if (!IsRunningOnWindows())
@@ -386,33 +377,6 @@ Task("SignPackages")
     });
 
 //////////////////////////////////////////////////////////////////////
-// SETUP AND TEARDOWN TASKS
-//////////////////////////////////////////////////////////////////////
-
-Teardown(context => CheckForError(ref ErrorDetail));
-
-//////////////////////////////////////////////////////////////////////
-// HELPER METHODS - GENERAL
-//////////////////////////////////////////////////////////////////////
-
-void CheckForError(ref List<string> errorDetail)
-{
-    if(errorDetail.Count != 0)
-    {
-        var copyError = new List<string>();
-        copyError = errorDetail.Select(s => s).ToList();
-        errorDetail.Clear();
-        Error("One or more unit tests failed, breaking the build.");
-        foreach(var error in copyError)
-            Error("  " + error);
-        var detailedMessage = "One or more unit tests failed, breaking the build." + Environment.NewLine
-            + string.Join(Environment.NewLine, copyError.Select(e => "  " + e));
-        throw new Exception(detailedMessage);
-    }
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
 
@@ -428,7 +392,6 @@ Task("TestAll")
 
 Task("Package")
     .Description("Packages all versions of the framework")
-    .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
     .IsDependentOn("PackageZip");
 
