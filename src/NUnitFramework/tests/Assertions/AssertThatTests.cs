@@ -1165,6 +1165,17 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void PropertyComparerThrowsExceptionForDepthThreeWhenConfiguredForMaxDepthTwoWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(2)));
+            });
+        }
+
+        [Test]
         public void PropertyComparerDoesNotThrowExceptionForDepthThreeWhenConfiguredForMaxDepthThree()
         {
             var objectA = new DepthThreeTestStructure();
@@ -1176,6 +1187,17 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void PropertyComparerDoesNotThrowExceptionForDepthThreeWhenConfiguredForMaxDepthThreeWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.DoesNotThrow(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(3)));
+            });
+        }
+
+        [Test]
         public void PropertyComparerMaxDepthCannotBeSetToLessThanOne()
         {
             var objectA = new DepthThreeTestStructure();
@@ -1183,6 +1205,17 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
                 Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(0)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerMaxDepthCannotBeSetToLessThanOneWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(0)));
             });
         }
     }
