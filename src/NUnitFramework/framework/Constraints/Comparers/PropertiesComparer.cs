@@ -83,7 +83,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (comparisonState.StackDepth > configuration.MaximumGraphDepth)
             {
-                throw new InvalidOperationException(
+                throw new InconclusiveException(
                     $"This object graph is deeper than the configured maximum of {configuration.MaximumGraphDepth}.  This may be caused by the compared objects having recursive properties.");
             }
 

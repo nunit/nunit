@@ -1128,7 +1128,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var objectA = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
             var objectB = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<InconclusiveException>(() =>
             {
                  Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer());
             });
@@ -1158,7 +1158,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var objectA = new DepthThreeTestStructure();
             var objectB = new DepthThreeTestStructure();
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<InconclusiveException>(() =>
             {
                 Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(2)));
             });
@@ -1169,7 +1169,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var objectA = new DepthThreeTestStructure();
             var objectB = new DepthThreeTestStructure();
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<InconclusiveException>(() =>
             {
                 Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(2)));
             });
