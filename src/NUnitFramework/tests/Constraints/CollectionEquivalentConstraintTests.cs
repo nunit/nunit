@@ -478,8 +478,8 @@ public class CollectionEquivalentConstraintTests
     [Test(Description = "Issue #4252 - CollectionAssert.AreEquivalent with multidimensional arrays throws System.RankException")]
     public void WorksWithMultiRankArray()
     {
-        var expected = new[, ,] { { { "value1", "value2", "value3" } } };
-        var actual = new[, ,] { { { "value2", "value3", "value1" } } };
+        var expected = new string[,,] { { { "value1", "value2", "value3" } } };
+        var actual = new string[,,] { { { "value2", "value3", "value1" } } };
 
         var constraint = new CollectionEquivalentConstraint(expected);
         var constraintResult = constraint.ApplyTo(actual);
