@@ -343,6 +343,19 @@ namespace NUnit.Framework.Tests
             });
         }
 
+        [Test]
+        public void TestContextStoresThrownException()
+        {
+            var fixture = new TestThrowingException();
+            TestBuilder.RunTestFixture(fixture);
+            Assert.Multiple(() =>
+            {
+                Assert.That(fixture.Message, Does.Contain(nameof(InvalidOperationException)));
+                Assert.That(fixture.StackTrace, Does.Contain(nameof(TestThrowingException.FailingTest)));
+                Assert.That(fixture.RecordedException, Is.InstanceOf<InvalidOperationException>().With.Message.EqualTo(TestThrowingException.ExceptionMessage));
+            });
+        }
+
         #endregion
 
         #region Out
