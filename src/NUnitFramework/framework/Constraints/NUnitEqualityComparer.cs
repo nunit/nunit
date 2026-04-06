@@ -221,15 +221,6 @@ namespace NUnit.Framework.Constraints
 
         internal EqualMethodResult AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (x is null && y is null)
-                return EqualMethodResult.ComparedEqual;
-
-            if (x is null || y is null)
-                return EqualMethodResult.ComparedNotEqual;
-
-            if (object.ReferenceEquals(x, y))
-                return EqualMethodResult.ComparedEqual;
-
             if (state.DidCompare(x, y))
                 return EqualMethodResult.ComparisonPending;
 
@@ -247,6 +238,15 @@ namespace NUnit.Framework.Constraints
                     return EqualMethodResult.ToleranceNotSupported;
                 }
             }
+
+            if (x is null && y is null)
+                return EqualMethodResult.ComparedEqual;
+
+            if (x is null || y is null)
+                return EqualMethodResult.ComparedNotEqual;
+
+            if (object.ReferenceEquals(x, y))
+                return EqualMethodResult.ComparedEqual;
 
             foreach (EqualMethod equalMethod in Comparers)
             {
@@ -271,7 +271,7 @@ namespace NUnit.Framework.Constraints
 
         #region Helper Methods
 
-        private EqualityAdapter? GetExternalComparer(object x, object y)
+        private EqualityAdapter? GetExternalComparer(object? x, object? y)
         {
             if (_externalComparers is not null)
             {

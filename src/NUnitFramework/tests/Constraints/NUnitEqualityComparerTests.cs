@@ -368,13 +368,13 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public override bool CanCompare(object x, object y)
+        public override bool CanCompare(object? x, object? y)
         {
             var currentDepth = new StackTrace().FrameCount - 1;
             return currentDepth >= _maxRecursion;
         }
 
-        public override bool AreEqual(object x, object y)
+        public override bool AreEqual(object? x, object? y)
         {
             throw new InvalidOperationException("Recurses");
         }
