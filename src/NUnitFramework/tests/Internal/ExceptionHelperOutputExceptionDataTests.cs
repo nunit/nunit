@@ -35,33 +35,56 @@ namespace NUnit.Framework.Tests.Internal
 
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
-            Assert.That(message, Contains.Substring("CustomProperty"));
-            Assert.That(message, Contains.Substring("custom-value"));
-            Assert.That(message, Contains.Substring("AuxiliaryValues"));
-            Assert.That(message, Contains.Substring("aux-key1"));
-            Assert.That(message, Contains.Substring("aux-key1-value"));
-            Assert.That(message, Contains.Substring("aux-key2"));
-            Assert.That(message, Contains.Substring("aux-key2-value"));
+            Assert.That(message, Contains.Substring("CustomProperty: custom-value"));
+            Assert.That(message, Contains.Substring("AuxiliaryValues: ["));
+            Assert.That(message, Contains.Substring("[aux-key1] = aux-key1-value"));
+            Assert.That(message, Contains.Substring("[aux-key2] = aux-key2-value"));
         }
 
         [Test]
-        public static void AppendsPropertiesToExceptionMessageCanDealWithNull()
+        public static void AppendsPropertiesToExceptionMessageEmptyDictionary()
+        {
+            var exception = new ExceptionHelperException("blah")
+            {
+                CustomProperty = "custom-value",
+                AuxiliaryValues = [],
+            };
+
+            var message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
+            Assert.That(message, Contains.Substring("CustomProperty: custom-value"));
+            Assert.That(message, Contains.Substring("AuxiliaryValues: []"));
+            Assert.That(message, Does.Not.Contain("Message: Override"));
+        }
+
+        [Test]
+        public static void AppendsPropertiesToExceptionMessageCanDealWithExceptions()
         {
             var exception = new ExceptionHelperException("blah");
 
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("CustomProperty"));
-            Assert.That(message, Contains.Substring("<null>"));
-            Assert.That(message, Contains.Substring("AuxiliaryValues"));
+            Assert.That(message, Contains.Substring("NullReferenceException"));
+            Assert.That(message, Contains.Substring("AuxiliaryValues: <null>"));
         }
 
         private sealed class ExceptionHelperException : Exception
         {
+            private readonly string? _customProperty;
+
             public ExceptionHelperException(string message) : base(message)
             {
             }
-            public string? CustomProperty { get; init; }
+
+            public override string Message => $"Override({base.Message})";
+
+            public string? CustomProperty
+            {
+                get => _customProperty ?? throw new NullReferenceException();
+                init => _customProperty = value;
+            }
+
             public Dictionary<string, string>? AuxiliaryValues { get; init; }
         }
         [Test]

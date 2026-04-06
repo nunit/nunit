@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -120,42 +121,70 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        private static readonly ConcurrentDictionary<Type, List<PropertyInfo>> ExceptionPropertiesCache = new();
+
         private static void AppendExceptionProperties(Exception ex, StringBuilder sb)
         {
-            var properties = ex.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var properties = ExceptionPropertiesCache.GetOrAdd(ex.GetType(), GetPropertiesToDisplay);
+
             foreach (var property in properties)
             {
-                if (property.DeclaringType == typeof(Exception))
-                {
-                    // Ignore properties from the Exception base class (Message, StackTrace) as these are mostly handled.
-                    continue;
-                }
-
                 try
                 {
                     var value = property.GetValue(ex);
                     sb.AppendLine();
-                    if (value is IDictionary dictionary && dictionary.Count != 0)
+                    if (value is IDictionary dictionary)
                     {
                         sb.AppendFormat("  {0}: [", property.Name);
-                        foreach (DictionaryEntry kvp in dictionary)
+                        if (dictionary.Count == 0)
                         {
-                            sb.AppendLine();
-                            sb.AppendFormat("    [{0}] = {1},", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                            sb.Append(']');
                         }
-                        sb.AppendLine();
-                        sb.Append("  ]");
+                        else
+                        {
+                            foreach (DictionaryEntry kvp in dictionary)
+                            {
+                                sb.AppendLine();
+                                sb.AppendFormat("    [{0}] = {1},", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                            }
+
+                            sb.AppendLine();
+                            sb.Append("  ]");
+                        }
                     }
                     else
                     {
                         sb.AppendFormat("  {0}: {1}", property.Name, value?.ToString() ?? "<null>");
                     }
                 }
-                catch
+                catch (TargetInvocationException targetInvocationEx)
                 {
-                    // Ignore exceptions thrown by property getters
+                    var propertyEx = targetInvocationEx.InnerException ?? targetInvocationEx;
+
+                    sb.AppendLine();
+                    sb.AppendFormat("  {0}: <getter threw {1}({2})", property.Name, propertyEx.GetType().Name, propertyEx.Message);
                 }
             }
+        }
+
+        private static List<PropertyInfo> GetPropertiesToDisplay(Type type)
+        {
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var list = new List<PropertyInfo>(properties.Length);
+            foreach (var property in properties)
+            {
+                if (property.DeclaringType == typeof(Exception) ||
+                    property.GetMethod is null ||
+                    property.GetMethod.GetBaseDefinition().DeclaringType == typeof(Exception))
+                {
+                    // Ignore (overridden) properties from the Exception base class (Message, StackTrace) as these are mostly handled.
+                    continue;
+                }
+
+                list.Add(property);
+            }
+
+            return list;
         }
 
         private static List<Exception> FlattenExceptionHierarchy(Exception exception)
