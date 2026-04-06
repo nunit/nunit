@@ -17,12 +17,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects, returning true if they are equal
         /// </summary>
-        public abstract bool AreEqual(object x, object y);
+        public abstract bool AreEqual(object? x, object? y);
 
         /// <summary>
         /// Compares two objects, within a tolerance returning true if they are equal
         /// </summary>
-        public virtual bool AreEqual(object x, object y, ref Tolerance tolerance)
+        public virtual bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
             // For backwards compatibility all existing equality operators can continue
             // to use the existing AreEqual.  Attempting to use a tolerance when it's
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// Returns true if the two objects can be compared by this adapter.
         /// The base adapter cannot handle IEnumerables except for strings.
         /// </summary>
-        public virtual bool CanCompare(object x, object y)
+        public virtual bool CanCompare(object? x, object? y)
         {
             return (x is string || x is not IEnumerable) &&
                    (y is string || y is not IEnumerable);
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
                 _comparer = comparer;
             }
 
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
                 return _comparer.Compare(x, y) == 0;
             }
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
                 _comparer = comparer;
             }
 
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
                 return _comparer.Equals(x, y);
             }
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Constraints
             /// Returns true if the two objects can be compared by this adapter.
             /// The base adapter cannot handle IEnumerables except for strings.
             /// </summary>
-            public override bool CanCompare(object x, object y)
+            public override bool CanCompare(object? x, object? y)
             {
                 return TypeHelper.CanCast<TExpected>(x) && TypeHelper.CanCast<TActual>(y);
             }
@@ -130,9 +130,11 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Compares two objects, returning true if they are equal
             /// </summary>
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
-                return _comparison.Invoke((TActual)y, (TExpected)x);
+                // The CanCompare method ensures that the casts will succeed,
+                // so we can safely use the null-forgiving operator here.
+                return _comparison.Invoke((TActual)y!, (TExpected)x!);
             }
 
             public PredicateEqualityAdapter(Func<TActual, TExpected, bool> comparison)
@@ -151,7 +153,7 @@ namespace NUnit.Framework.Constraints
             /// Returns true if the two objects can be compared by this adapter.
             /// Generic adapter requires objects of the specified type.
             /// </summary>
-            public override bool CanCompare(object x, object y)
+            public override bool CanCompare(object? x, object? y)
             {
                 return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
             }
@@ -191,7 +193,7 @@ namespace NUnit.Framework.Constraints
                 _comparer = comparer;
             }
 
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
                 return _comparer.Equals(xValue, yValue);
@@ -222,7 +224,7 @@ namespace NUnit.Framework.Constraints
                 _comparer = comparer;
             }
 
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
                 return _comparer.Compare(xValue, yValue) == 0;
@@ -250,7 +252,7 @@ namespace NUnit.Framework.Constraints
                 _comparer = comparer;
             }
 
-            public override bool AreEqual(object x, object y)
+            public override bool AreEqual(object? x, object? y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
                 return _comparer.Invoke(xValue, yValue) == 0;
