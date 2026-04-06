@@ -351,8 +351,12 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(fixture.Message, Does.Contain(nameof(InvalidOperationException)));
-                Assert.That(fixture.StackTrace, Does.Contain(nameof(TestThrowingException.FailingTest)));
                 Assert.That(fixture.RecordedException, Is.InstanceOf<InvalidOperationException>().With.Message.EqualTo(TestThrowingException.ExceptionMessage));
+            });
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(fixture.StackTrace, Does.Contain(nameof(TestThrowingException.FailingTest)));
             });
         }
 
