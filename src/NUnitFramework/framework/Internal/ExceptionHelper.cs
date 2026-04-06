@@ -42,6 +42,7 @@ namespace NUnit.Framework.Internal
                 sb.AppendFormat("{0} : ", exception.GetType());
             sb.Append(GetExceptionMessage(exception));
             AppendExceptionDataContents(exception, sb);
+            AppendExceptionProperties(exception, sb);
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -51,6 +52,7 @@ namespace NUnit.Framework.Internal
                     sb.AppendFormat("{0} : ", inner.GetType());
                 sb.Append(GetExceptionMessage(inner));
                 AppendExceptionDataContents(inner, sb);
+                AppendExceptionProperties(inner, sb);
             }
 
             return sb.ToString();
@@ -114,6 +116,44 @@ namespace NUnit.Framework.Internal
                         sb.AppendLine();
                         sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
                     }
+                }
+            }
+        }
+
+        private static void AppendExceptionProperties(Exception ex, StringBuilder sb)
+        {
+            var properties = ex.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var property in properties)
+            {
+                if (property.DeclaringType == typeof(Exception))
+                {
+                    // Ignore properties from the Exception base class (Message, StackTrace) as these are mostly handled.
+                    continue;
+                }
+
+                try
+                {
+                    var value = property.GetValue(ex);
+                    sb.AppendLine();
+                    if (value is IDictionary dictionary && dictionary.Count != 0)
+                    {
+                        sb.AppendFormat("  {0}: [", property.Name);
+                        foreach (DictionaryEntry kvp in dictionary)
+                        {
+                            sb.AppendLine();
+                            sb.AppendFormat("    [{0}] = {1},", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                        }
+                        sb.AppendLine();
+                        sb.Append("  ]");
+                    }
+                    else
+                    {
+                        sb.AppendFormat("  {0}: {1}", property.Name, value?.ToString() ?? "<null>");
+                    }
+                }
+                catch
+                {
+                    // Ignore exceptions thrown by property getters
                 }
             }
         }
