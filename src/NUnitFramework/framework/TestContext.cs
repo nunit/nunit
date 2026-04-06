@@ -702,6 +702,11 @@ namespace NUnit.Framework
             public string Message => _result.Message;
 
             /// <summary>
+            /// The last exception recorded in this result.
+            /// </summary>
+            public Exception? RecordedException => _result.RecordedException;
+
+            /// <summary>
             /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
