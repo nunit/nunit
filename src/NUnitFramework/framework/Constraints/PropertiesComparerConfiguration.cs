@@ -61,6 +61,11 @@ namespace NUnit.Framework.Constraints
         internal Dictionary<Type, Dictionary<string, object?>>? PropertyNameToValueMapForType { get; set; }
 
         /// <summary>
+        /// Gets and sets the maximum graph depth
+        /// </summary>
+        internal int MaximumGraphDepth { get; set; } = 32;
+
+        /// <summary>
         /// Gets and sets the tolerance to apply for time values.
         /// </summary>
         internal Tolerance TimeSpanTolerance { get; set; } = Tolerance.Default;
@@ -196,6 +201,21 @@ namespace NUnit.Framework.Constraints
         public PropertiesComparerConfigurationUntyped Within(object amount)
         {
             SetTolerance(amount);
+            return this;
+        }
+
+        /// <summary>
+        /// Specify a maximum graph depth
+        /// </summary>
+        /// <param name="depth">The deepest graph that can be compared.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfigurationUntyped WithMaximumGraphDepth(int depth)
+        {
+            if (depth < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
+            }
+            MaximumGraphDepth = depth;
             return this;
         }
     }
@@ -355,6 +375,21 @@ namespace NUnit.Framework.Constraints
         public PropertiesComparerConfiguration<T> Within(object amount)
         {
             SetTolerance(amount);
+            return this;
+        }
+
+        /// <summary>
+        /// Specify a maximum graph depth
+        /// </summary>
+        /// <param name="depth">The deepest graph that can be compared.</param>
+        /// <returns>Self.</returns>
+        public PropertiesComparerConfiguration<T> WithMaximumGraphDepth(int depth)
+        {
+            if (depth < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
+            }
+            MaximumGraphDepth = depth;
             return this;
         }
 
