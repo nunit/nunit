@@ -13,8 +13,6 @@ namespace NUnit.Framework.Constraints.Comparers
 
         /// <summary>
         /// The number of items on the comparison stack
-        ///
-        /// This is maintained separately to the _comparisons collection because there is no O(1) count operation on ImmutableStack
         /// </summary>
         public int StackDepth { get; }
 

@@ -213,7 +213,7 @@ namespace NUnit.Framework.Constraints
         {
             if (depth < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(depth), "Depth must be at least 1");
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
             }
             MaximumGraphDepth = depth;
             return this;
@@ -387,7 +387,7 @@ namespace NUnit.Framework.Constraints
         {
             if (depth < 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(depth), "Depth must be at least 1");
+                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
             }
             MaximumGraphDepth = depth;
             return this;
