@@ -96,6 +96,15 @@ jobs:
         path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
+    - name: Debug TestResults
+      run: |
+        echo "PWD:"
+        pwd
+        echo "Contents of root:"
+        ls -la
+        echo "Looking for trx files:"
+        find . -name "*.trx" || true
+
     - name: 🧪 Publish test results to Checks
       if: ${{ always() }}
       uses: dorny/test-reporter@v1
@@ -141,6 +150,6 @@ jobs:
       uses: dorny/test-reporter@v1
       with:
         name: "Tests (${{ runner.os }})"
-        path: TestResults/**/*.trx
+        path: "**/*.trx"
         reporter: dotnet-trx
         fail-on-error: false
