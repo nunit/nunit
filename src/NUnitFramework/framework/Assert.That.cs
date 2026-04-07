@@ -14,7 +14,7 @@ namespace NUnit.Framework
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
     /// </summary>
-    public abstract partialx class Assert
+    public abstract partial class Assert
     {
         #region Assert.That
 
