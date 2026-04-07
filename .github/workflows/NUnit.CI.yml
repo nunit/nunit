@@ -110,7 +110,7 @@ jobs:
       uses: dorny/test-reporter@v1
       with:
         name: "Tests (${{ runner.os }})"
-        path: TestResults/**/*.trx
+        path: "**/*.trx"
         reporter: dotnet-trx
         fail-on-error: false
 
