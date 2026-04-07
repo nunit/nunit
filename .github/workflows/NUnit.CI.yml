@@ -125,7 +125,7 @@ jobs:
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=true
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release 
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
