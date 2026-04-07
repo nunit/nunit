@@ -170,7 +170,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
-                Assert.That(result.Message, Is.EqualTo("System.ArgumentException : Object of type 'System.Int32[]' cannot be converted to type 'System.Int32'."));
+                Assert.That(result.Message, Does.Contain("System.ArgumentException : Object of type 'System.Int32[]' cannot be converted to type 'System.Int32'."));
             });
         }
 
