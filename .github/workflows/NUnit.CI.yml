@@ -55,11 +55,11 @@ jobs:
       if: ${{ always() }}
     - name: 🧪 Publish test results to Checks
       if: ${{ always() }}
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: dorny/test-reporter@v1
       with:
-        files: |
-          TestResults/**/*.trx
-        check_name: "Tests"
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        reporter: dotnet-trx
 
   build-linux:
     name: Linux Build
@@ -95,6 +95,13 @@ jobs:
         path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
+    - name: 🧪 Publish test results to Checks
+      if: ${{ always() }}
+      uses: dorny/test-reporter@v1
+      with:
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        reporter: dotnet-trx
 
   build-macos:
     name: MacOS Build
@@ -127,3 +134,10 @@ jobs:
         path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
+    - name: 🧪 Publish test results to Checks
+      if: ${{ always() }}
+      uses: dorny/test-reporter@v1
+      with:
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        reporter: dotnet-trx
