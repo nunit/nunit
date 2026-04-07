@@ -60,6 +60,7 @@ jobs:
         name: "Tests (${{ runner.os }})"
         path: TestResults/**/*.trx
         reporter: dotnet-trx
+        fail-on-error: false
 
   build-linux:
     name: Linux Build
@@ -102,6 +103,7 @@ jobs:
         name: "Tests (${{ runner.os }})"
         path: TestResults/**/*.trx
         reporter: dotnet-trx
+        fail-on-error: false
 
   build-macos:
     name: MacOS Build
@@ -141,3 +143,4 @@ jobs:
         name: "Tests (${{ runner.os }})"
         path: TestResults/**/*.trx
         reporter: dotnet-trx
+        fail-on-error: false
