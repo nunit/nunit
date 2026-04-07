@@ -54,6 +54,13 @@ jobs:
         path: TestResults
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
+    - name: 🧪 Publish test results to Checks
+      if: ${{ always() }}
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        files: |
+          TestResults/**/*.trx
+        check_name: "Tests"
 
   build-linux:
     name: Linux Build
