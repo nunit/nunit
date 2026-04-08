@@ -7,7 +7,8 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var quiet = Argument("quiet", false);
+var minimal = Argument("minimal", false);
+var quiet = Argument("quiet", true);
 
 //////////////////////////////////////////////////////////////////////
 // SET PACKAGE VERSION
@@ -106,7 +107,7 @@ DotNetBuildSettings CreateDotNetBuildSettings()
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetVerbosity.Minimal,
+        Verbosity = DotNetVerbosity.Quiet,
         MSBuildSettings = msBuildSettings
     };
     return settings;
@@ -117,28 +118,41 @@ DotNetBuildSettings CreateDotNetBuildSettings()
 //////////////////////////////////////////////////////////////////////
 
 Task("Test")
-    .Description("Runs all tests using dotnet test. Use --quiet=true for minimal output.")
+    .Description("Runs all tests using dotnet test. Use --minimal=true for minimal output.")
     .IsDependentOn("Build")
     .Does(() =>
     {
         var resultsDir = PROJECT_DIR + "TestResults";
         CleanDirectory(resultsDir);
 
-        var loggers = quiet
-            ? new[] { "trx", "console;verbosity=quiet" }
-            : new[] { "trx", "console;verbosity=minimal" };
+        var loggers = minimal
+            ? new[] { "trx", "console;verbosity=minimal" }
+            : (quiet 
+               ? new[] { "trx", "console;verbosity=quiet" }
+               : new[] { "trx", "console;verbosity=normal"}) ;
 
         var settings = new DotNetTestSettings
         {
             Configuration = configuration,
             NoBuild = true,
-            Settings = quiet ? "quiet.runsettings" : ".runsettings",
+            Settings = minimal
+               ? "minimal.runsettings"
+               : (quiet ? "quiet.runsettings" : ".runsettings"),
             // ResultsDirectory is set in runsettings files - keeping single source of truth
             Loggers = loggers,
-            Verbosity = quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Minimal
+            Verbosity = minimal ? DotNetVerbosity.Minimal : (quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Normal)
         };
 
-        DotNetTest(SOLUTION_FILE, settings);
+        // Run tests but don't throw on failure - we want to show the summary first
+        int exitCode = 0;
+        try
+        {
+            DotNetTest(SOLUTION_FILE, settings);
+        }
+        catch (Exception)
+        {
+            exitCode = 1;
+        }
 
         // Parse TRX files and show summary
         var summary = TestResultsParser.ParseTrxFiles(resultsDir);
@@ -148,8 +162,9 @@ Task("Test")
         Information($"  Test Summary: {summary.Total} total, {summary.Passed} passed, {summary.Failed} failed, {summary.Skipped} skipped");
         Information("═══════════════════════════════════════════════════════════════════");
 
-        if (summary.Failed > 0)
-            throw new Exception($"{summary.Failed} test(s) failed.");
+        // Throw after showing summary if tests failed
+        if (exitCode != 0 || summary.Failed > 0)
+            throw new Exception($"Tests failed. {summary.Failed} test(s) reported as failed.");
     });
 
 Task("TestNUnitLite")

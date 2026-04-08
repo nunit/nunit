@@ -12,9 +12,11 @@
     <File Path="CONTRIBUTING.md" />
     <File Path="global.json" />
     <File Path="LICENSE.txt" />
+    <File Path="minimal.runsettings" />
     <File Path="NOTICES.md" />
     <File Path="NuGet.config" />
     <File Path="NUnit.sln.DotSettings" />
+    <File Path="quiet.runsettings" />
     <File Path="README.md" />
     <File Path="src/NUnitFramework/Directory.Build.props" />
     <File Path="src/NUnitFramework/Directory.Build.targets" />
