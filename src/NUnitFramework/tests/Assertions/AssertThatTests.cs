@@ -883,6 +883,132 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list1, Is.EqualTo(list2).UsingPropertiesComparer());
         }
 
+        private sealed class LinkedList
+        {
+            public LinkedList(int value, LinkedList? next = null)
+            {
+                Value = value;
+                Next = next;
+            }
+
+            public int Value { get; }
+
+            public LinkedList? Next { get; set; }
+        }
+
+        [Test]
+        public void RecursiveRecordWithDerivedProperty()
+        {
+            var d1 = new DistanceRecord(-42);
+            var d2 = new DistanceRecord(42);
+
+            Assert.That(d2, Is.Not.EqualTo(d1), "Record Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(), "PropertiesComparer");
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "Record Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer");
+        }
+
+        [Test]
+        public void RecursiveStructWithAutoReadOnlyAndDerivedProperty()
+        {
+            var d1 = new DistanceStructWithAutoReadOnlyPropery(-42);
+            var d2 = new DistanceStructWithAutoReadOnlyPropery(42);
+
+            Assert.That(d2, Is.Not.EqualTo(d1), "ValueType Equals");
+            Assert.That(d2, Is.Not.EqualTo(d1).UsingPropertiesComparer(), "PropertiesComparer");
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+            Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer");
+        }
+
+        [Test]
+        public void RecursiveStructWithManualReadOnlyAndDerivedProperty()
+        {
+            var d1 = new DistanceStructWithManualReadOnlyPropery(-42);
+            var d2 = new DistanceStructWithManualReadOnlyPropery(42);
+
+            Assert.That(d2.Length, Is.EqualTo(d1.Length), "ValueType Equals");
+
+            // The PropertiesComparer does not support properties on structs that are not auto read-only
+            // because we can't distinguish between properties with a local field and properties that do calculations.
+            Assert.That(() => Assert.That(d2.Length, Is.EqualTo(d1.Length).UsingPropertiesComparer(), "PropertiesComparer"),
+                        Throws.InstanceOf<NotSupportedException>());
+        }
+
+        private readonly record struct DistanceRecord(int Metres)
+        {
+            public DistanceRecord Length => new(Math.Abs(Metres));
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
+        private readonly struct DistanceStructWithAutoReadOnlyPropery
+        {
+            public DistanceStructWithAutoReadOnlyPropery(int metres) => Metres = metres;
+
+            public DistanceStructWithAutoReadOnlyPropery Length => new(Math.Abs(Metres));
+
+            public int Metres { get; }
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
+        private readonly struct DistanceStructWithManualReadOnlyPropery
+        {
+            private readonly int _metres;
+
+            public DistanceStructWithManualReadOnlyPropery(int metres) => _metres = metres;
+
+            public DistanceStructWithManualReadOnlyPropery Length => new(Math.Abs(Metres));
+
+            public int Metres => _metres;
+
+            public override string ToString()
+            {
+                return $"{{ Metres = {Metres} }}";
+            }
+        }
+
+        [Test]
+        public void AssertWithClassWithDerivedProperty()
+        {
+            var c1 = new RecordWithDerivedProperty(42);
+            var c2 = new RecordWithDerivedProperty(42);
+
+            Assert.That(c2, Is.EqualTo(c1), "Value Equals");
+            Assert.That(c2, Is.EqualTo(c1).UsingPropertiesComparer(), "PropertiesComparer");
+            Assert.That(c2, Is.EqualTo(c1).UsingPropertiesComparer(c => c.AlsoCompareDerivedProperties()), "PropertiesComparer with Derived");
+
+            Assert.That(c1.IncrementingValue, Is.EqualTo(2));
+
+            Assert.That(c2, Is.EqualTo(c1).UsingPropertiesComparer(), "PropertiesComparer");
+
+            // Because c2.IncrementingValue is called one less time, the instances are not equal when we compare the derived property.
+            Assert.That(c2, Is.Not.EqualTo(c1), "Value Equals");
+            Assert.That(c2, Is.Not.EqualTo(c1).UsingPropertiesComparer(c => c.AlsoCompareDerivedProperties()), "PropertiesComparer with Derived");
+        }
+
+        private record RecordWithDerivedProperty
+        {
+            private int _numberOfCalls;
+
+            public RecordWithDerivedProperty(int value)
+            {
+                Value = value;
+            }
+
+            public int Value { get; }
+
+            public int IncrementingValue => ++_numberOfCalls;
+        }
+
         [Test]
         public void AssertRecordsComparingProperties()
         {
@@ -901,19 +1027,6 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.That(record1, Is.Not.EqualTo(record2)); // ParentRecord's generated method does not handle collections
             Assert.That(record1, Is.EqualTo(record2).UsingPropertiesComparer());
-        }
-
-        private sealed class LinkedList
-        {
-            public LinkedList(int value, LinkedList? next = null)
-            {
-                Value = value;
-                Next = next;
-            }
-
-            public int Value { get; }
-
-            public LinkedList? Next { get; set; }
         }
 
         [Test]
