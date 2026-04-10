@@ -1,12 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -16,7 +14,6 @@ namespace NUnit.Framework.Tests
     {
         private const string SOME_TEXT = "Should go to the result";
         private const string ERROR_TEXT = "Written directly to console";
-        private const string SOME_MORE_TEXT = "Should be written to stdout";
         private static readonly string NL = Environment.NewLine;
 
         private static string CapturedOutput => TestExecutionContext.CurrentContext.CurrentResult.Output;
@@ -38,67 +35,43 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleWrite_WritesToResult_AdhocContext()
         {
-            var savedOut = Console.Out;
-            var stdout = new StringWriter();
-            Console.SetOut(new TextCapture(stdout));
-            try
+            using (ExecutionContext.SuppressFlow())
             {
-                using (ExecutionContext.SuppressFlow())
+                Task.Run(() =>
                 {
-                    // Use TaskCreationOptions.LongRunning to ensure the task runs on a separate thread
-                    // and isn't inlined by Wait(), which would bypass ExecutionContext.SuppressFlow()
-                    Task.Factory.StartNew(
-                        () => Console.Write(SOME_MORE_TEXT),
-                        CancellationToken.None,
-                        TaskCreationOptions.LongRunning,
-                        TaskScheduler.Default).Wait();
+                    var context = TestExecutionContext.CurrentContext;
+                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
 
-                    Console.Write(SOME_TEXT);
-                }
-            }
-            finally
-            {
-                Console.SetOut(savedOut);
+                    var initialOut = context.CurrentResult.Output;
+                    Console.Write("Should not be captured in the ad-hoc context");
+                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
+                }).Wait();
+
+                Console.Write(SOME_TEXT);
             }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
-                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT));
-            });
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT));
         }
 
         [Test]
         public void ConsoleWriteLine_WritesToResult_AdhocContext()
         {
-            var savedOut = Console.Out;
-            var stdout = new StringWriter();
-            Console.SetOut(new TextCapture(stdout));
-            try
+            using (ExecutionContext.SuppressFlow())
             {
-                using (ExecutionContext.SuppressFlow())
+                Task.Run(() =>
                 {
-                    // Use TaskCreationOptions.LongRunning to ensure the task runs on a separate thread
-                    // and isn't inlined by Wait(), which would bypass ExecutionContext.SuppressFlow()
-                    Task.Factory.StartNew(
-                        () => Console.WriteLine(SOME_MORE_TEXT),
-                        CancellationToken.None,
-                        TaskCreationOptions.LongRunning,
-                        TaskScheduler.Default).Wait();
+                    var context = TestExecutionContext.CurrentContext;
+                    Assert.That(context, Is.InstanceOf<TestExecutionContext.AdhocContext>());
 
-                    Console.WriteLine(SOME_TEXT);
-                }
-            }
-            finally
-            {
-                Console.SetOut(savedOut);
+                    var initialOut = context.CurrentResult.Output;
+                    Console.WriteLine("Should not be captured in the ad-hoc context");
+                    Assert.That(context.CurrentResult.Output, Is.EqualTo(initialOut));
+                }).Wait();
+
+                Console.WriteLine(SOME_TEXT);
             }
 
-            Assert.Multiple(() =>
-            {
-                Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
-                Assert.That(stdout.ToString(), Is.EqualTo(SOME_MORE_TEXT + NL));
-            });
+            Assert.That(TextOutputTests.CapturedOutput, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]
@@ -145,9 +118,10 @@ namespace NUnit.Framework.Tests
             });
         }
 
-        [Test, Explicit("For display purposes only - demonstrates immediate output behavior")]
+        [Test]
         public void MultipleWrites()
         {
+            // Test purely for display purposes
             TestContext.Progress.WriteLine("TestContext.Progress displays immediately");
             TestContext.Error.WriteLine("TestContext.Error displays immediately as well");
             Console.Error.WriteLine("Console.Error also displays immediately");
