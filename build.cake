@@ -155,11 +155,21 @@ Task("Test")
         }
 
         // Parse TRX files and show summary
-        var summary = TestResultsParser.ParseTrxFiles(resultsDir);
+        var summary = TestResultsParser.ParseTrxFilesDetailed(resultsDir);
 
         Information("");
         Information("═══════════════════════════════════════════════════════════════════");
-        Information($"  Test Summary: {summary.Total} total, {summary.Passed} passed, {summary.Failed} failed, {summary.Skipped} skipped");
+        Information("  TEST RESULTS BY FRAMEWORK");
+        Information("───────────────────────────────────────────────────────────────────");
+
+        foreach (var fw in summary.ByFramework)
+        {
+            var status = fw.Failed > 0 ? "FAIL" : "PASS";
+            Information($"  {fw.Framework,-15} {status}  {fw.Total,5} total, {fw.Passed,5} passed, {fw.Failed,3} failed, {fw.Skipped,3} skipped");
+        }
+
+        Information("───────────────────────────────────────────────────────────────────");
+        Information($"  {"TOTAL",-15}       {summary.Total,5} total, {summary.Passed,5} passed, {summary.Failed,3} failed, {summary.Skipped,3} skipped");
         Information("═══════════════════════════════════════════════════════════════════");
 
         // Throw after showing summary if tests failed
