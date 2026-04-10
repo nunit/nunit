@@ -45,8 +45,13 @@ namespace NUnit.Framework.Tests
             {
                 using (ExecutionContext.SuppressFlow())
                 {
-                    Task.Run(() => Console.Write(SOME_MORE_TEXT))
-                        .Wait();
+                    // Use TaskCreationOptions.LongRunning to ensure the task runs on a separate thread
+                    // and isn't inlined by Wait(), which would bypass ExecutionContext.SuppressFlow()
+                    Task.Factory.StartNew(
+                        () => Console.Write(SOME_MORE_TEXT),
+                        CancellationToken.None,
+                        TaskCreationOptions.LongRunning,
+                        TaskScheduler.Default).Wait();
 
                     Console.Write(SOME_TEXT);
                 }
@@ -73,8 +78,13 @@ namespace NUnit.Framework.Tests
             {
                 using (ExecutionContext.SuppressFlow())
                 {
-                    Task.Run(() => Console.WriteLine(SOME_MORE_TEXT))
-                        .Wait();
+                    // Use TaskCreationOptions.LongRunning to ensure the task runs on a separate thread
+                    // and isn't inlined by Wait(), which would bypass ExecutionContext.SuppressFlow()
+                    Task.Factory.StartNew(
+                        () => Console.WriteLine(SOME_MORE_TEXT),
+                        CancellationToken.None,
+                        TaskCreationOptions.LongRunning,
+                        TaskScheduler.Default).Wait();
 
                     Console.WriteLine(SOME_TEXT);
                 }

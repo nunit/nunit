@@ -12,6 +12,10 @@
   <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
+  <!-- Build tooling -->
+  <ItemGroup>
+    <PackageVersion Include="MinVer" Version="7.0.0" />
+  </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
