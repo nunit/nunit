@@ -51,16 +51,16 @@ jobs:
       with:
         name: Test results (Windows)
         path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
-    - name: 🧪 Publish test results to Checks
+
+    - name: 🧪 Test Report
       if: ${{ always() }}
-      uses: dorny/test-reporter@v1
+      uses: ./.github/actions/test-reporter
       with:
         name: "Tests (${{ runner.os }})"
         path: TestResults/**/*.trx
-        reporter: dotnet-trx
         fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
     name: Linux Build
@@ -94,25 +94,16 @@ jobs:
       with:
         name: Test results (Linux)
         path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
-    - name: Debug TestResults
-      run: |
-        echo "PWD:"
-        pwd
-        echo "Contents of root:"
-        ls -la
-        echo "Looking for trx files:"
-        find . -name "*.trx" || true
 
-    - name: 🧪 Publish test results to Checks
+    - name: 🧪 Test Report
       if: ${{ always() }}
-      uses: dorny/test-reporter@v1
+      uses: ./.github/actions/test-reporter
       with:
         name: "Tests (${{ runner.os }})"
-        path: "**/*.trx"
-        reporter: dotnet-trx
+        path: TestResults/**/*.trx
         fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
     name: MacOS Build
@@ -143,13 +134,13 @@ jobs:
       with:
         name: Test results (macOS)
         path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
       if: ${{ always() }}
-    - name: 🧪 Publish test results to Checks
+
+    - name: 🧪 Test Report
       if: ${{ always() }}
-      uses: dorny/test-reporter@v1
+      uses: ./.github/actions/test-reporter
       with:
         name: "Tests (${{ runner.os }})"
-        path: "**/*.trx"
-        reporter: dotnet-trx
+        path: TestResults/**/*.trx
         fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}
