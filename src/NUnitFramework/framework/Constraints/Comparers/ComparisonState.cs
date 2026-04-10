@@ -12,18 +12,24 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool TopLevelComparison { get; }
 
         /// <summary>
+        /// The number of items on the comparison stack
+        /// </summary>
+        public int StackDepth { get; }
+
+        /// <summary>
         /// A list of tracked comparisons
         /// </summary>
         private readonly ImmutableStack<Comparison> _comparisons;
 
         public ComparisonState(bool topLevelComparison)
-            : this(topLevelComparison, ImmutableStack<Comparison>.Empty)
+            : this(topLevelComparison, 0, ImmutableStack<Comparison>.Empty)
         {
         }
 
-        private ComparisonState(bool topLevelComparison, ImmutableStack<Comparison> comparisons)
+        private ComparisonState(bool topLevelComparison, int stackDepth, ImmutableStack<Comparison> comparisons)
         {
             TopLevelComparison = topLevelComparison;
+            StackDepth = stackDepth;
             _comparisons = comparisons;
         }
 
@@ -31,6 +37,7 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             return new ComparisonState(
                 false,
+                StackDepth + 1,
                 _comparisons.Push(new Comparison(x, y)));
         }
 
