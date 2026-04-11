@@ -213,6 +213,55 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Action
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
+            NUnitString message = default,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, message, actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
+            FormattableString message,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, message, actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
+            Func<string> getExceptionMessage,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, getExceptionMessage, actualExpression, constraintExpression);
+        }
+
+        #endregion
+
         #endregion
 
         #region Assert.That<TActual>

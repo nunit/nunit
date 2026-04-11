@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
@@ -245,6 +246,51 @@ namespace NUnit.Framework
             using (EnterMultipleScope())
             {
                 await testDelegate();
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="action">An action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static void Multiple(Action action)
+        {
+            using (EnterMultipleScope())
+            {
+                action();
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static void Multiple(Func<Task> asyncAction)
+        {
+            using (EnterMultipleScope())
+            {
+                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, asyncAction.Invoke);
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static async Task MultipleAsync(Func<Task> asyncAction)
+        {
+            using (EnterMultipleScope())
+            {
+                await asyncAction();
             }
         }
 

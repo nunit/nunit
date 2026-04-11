@@ -9,6 +9,7 @@ namespace NUnit.Framework
     public abstract partial class Assert
     {
         #region Throws
+
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
         /// langword="null"/> when inside a multiple assert block.
@@ -154,6 +155,7 @@ namespace NUnit.Framework
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
         }
+
         #endregion
 
         #region Catch<TActual>
