@@ -30,7 +30,7 @@ $totalTests = 0
 # Regex to extract framework from paths
 $frameworkRegex = '[/\\](net\d+\.\d+|net\d+|netcoreapp\d+\.\d+|netstandard\d+\.\d+)[/\\]'
 
-# Function to convert stack trace to markdown with source links
+# Function to convert stack trace to markdown with source links (outside code blocks)
 function Convert-StackTraceToMarkdown {
     param([string]$stackTrace, [string]$repoUrl, [string]$sha)
 
@@ -42,22 +42,31 @@ function Convert-StackTraceToMarkdown {
     $result = @()
 
     foreach ($line in $lines) {
-        $linkedLine = $line
+        $trimmedLine = $line.Trim()
+        if ([string]::IsNullOrWhiteSpace($trimmedLine)) {
+            continue
+        }
 
         # Match patterns like "in C:\path\to\file.cs:line 123" or "in /path/to/file.cs:line 123"
-        if ($line -match ' in (.+?):line (\d+)') {
-            $filePath = $Matches[1]
-            $lineNum = $Matches[2]
+        if ($trimmedLine -match '^\s*at (.+?) in (.+?):line (\d+)\s*$') {
+            $methodCall = $Matches[1]
+            $filePath = $Matches[2]
+            $lineNum = $Matches[3]
 
             # Try to extract relative path from src/ or similar
             if ($filePath -match '[/\\](src[/\\].+)$') {
                 $relativePath = $Matches[1] -replace '\\', '/'
                 $sourceLink = "$repoUrl/blob/$sha/$relativePath#L$lineNum"
-                $linkedLine = $line -replace [regex]::Escape("$filePath`:line $lineNum"), "[$relativePath`:$lineNum]($sourceLink)"
+                $result += "- ``$methodCall`` in [$relativePath#L$lineNum]($sourceLink)"
+            } else {
+                $result += "- ``$methodCall`` in ``$filePath`:line $lineNum``"
             }
+        } elseif ($trimmedLine -match '^\s*at (.+?)\s*$') {
+            $methodCall = $Matches[1]
+            $result += "- ``$methodCall``"
+        } else {
+            $result += "- $trimmedLine"
         }
-
-        $result += $linkedLine
     }
 
     return ($result -join "`n")
@@ -263,15 +272,14 @@ $($test.ErrorMessage)
 "@
         }
 
-        # Stack Trace with source links
+        # Stack Trace with source links (as list, not code block, so links are clickable)
         if ($test.StackTrace) {
             $linkedStackTrace = Convert-StackTraceToMarkdown -stackTrace $test.StackTrace -repoUrl $repoUrl -sha $commitSha
             $summary += @"
 
 **Stack Trace:**
-``````
+
 $linkedStackTrace
-``````
 
 "@
         }
@@ -354,33 +362,48 @@ if ($checkSummary.Length -gt 65000) {
     $checkSummary = $checkSummary.Substring(0, 65000) + "`n`n... (truncated, see Job Summary for full details)"
 }
 
-# Build the check run payload
-$checkRunPayload = @{
-    name = $name
-    head_sha = $commitSha
-    status = "completed"
-    conclusion = $conclusion
-    output = @{
-        title = $title
-        summary = $checkSummary
-    }
-} | ConvertTo-Json -Depth 10 -Compress
+# Only create check run if we have a token
+if ($env:GITHUB_TOKEN) {
+    $apiUrl = "https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/check-runs"
 
-# Create check run using GitHub API
-$apiUrl = "$($env:GITHUB_API_URL)/repos/$($env:GITHUB_REPOSITORY)/check-runs"
-$headers = @{
-    "Authorization" = "Bearer $($env:GITHUB_TOKEN)"
-    "Accept" = "application/vnd.github+json"
-    "X-GitHub-Api-Version" = "2022-11-28"
-}
-
-try {
     Write-Host "Creating Check Run '$name'..."
-    $response = Invoke-RestMethod -Uri $apiUrl -Method Post -Headers $headers -Body $checkRunPayload -ContentType "application/json"
-    Write-Host "Check Run created: $($response.html_url)"
-} catch {
-    Write-Host "::warning::Failed to create Check Run: $_"
-    Write-Host "::warning::Check Run API response: $($_.ErrorDetails.Message)"
+    Write-Host "  API URL: $apiUrl"
+    Write-Host "  Commit SHA: $commitSha"
+    Write-Host "  Conclusion: $conclusion"
+
+    # Build the check run payload
+    $checkRunPayload = @{
+        name = $name
+        head_sha = $commitSha
+        status = "completed"
+        conclusion = $conclusion
+        output = @{
+            title = $title
+            summary = $checkSummary
+        }
+    } | ConvertTo-Json -Depth 10
+
+    $headers = @{
+        "Authorization" = "Bearer $($env:GITHUB_TOKEN)"
+        "Accept" = "application/vnd.github+json"
+        "X-GitHub-Api-Version" = "2022-11-28"
+    }
+
+    try {
+        $response = Invoke-RestMethod -Uri $apiUrl -Method Post -Headers $headers -Body $checkRunPayload -ContentType "application/json; charset=utf-8"
+        Write-Host "Check Run created successfully: $($response.html_url)"
+    } catch {
+        $statusCode = $_.Exception.Response.StatusCode.value__
+        $errorBody = $_.ErrorDetails.Message
+        Write-Host "::warning::Failed to create Check Run (HTTP $statusCode)"
+        Write-Host "::warning::Error: $_"
+        if ($errorBody) {
+            Write-Host "::warning::Response: $errorBody"
+        }
+        Write-Host "::warning::This may be expected for PRs from forks (limited token permissions)"
+    }
+} else {
+    Write-Host "::warning::GITHUB_TOKEN not available, skipping Check Run creation"
 }
 
 # Exit with error if tests failed and fail-on-error is set

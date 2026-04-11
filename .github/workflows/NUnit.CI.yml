@@ -7,10 +7,14 @@ on:
       - release
       - 'v3'
   pull_request:
-  
+
+permissions:
+  contents: read
+  checks: write
+
 env:
   DOTNET_NOLOGO: true                     # Disable the .NET logo
-  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry  
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
 
 jobs:
   build-windows:
