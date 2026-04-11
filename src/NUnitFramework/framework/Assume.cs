@@ -18,7 +18,7 @@ namespace NUnit.Framework
     /// result. If an assumption is not met, the test
     /// should produce an inconclusive result.
     /// </summary>
-    public abstract class Assume
+    public abstract partial class Assume
     {
         #region Equals and ReferenceEquals
 

@@ -315,24 +315,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        #region True
-
-        /// <summary>
-        /// Returns a constraint that tests for True
-        /// </summary>
-        public TrueConstraint True => Append(new TrueConstraint());
-
-        #endregion
-
-        #region False
-
-        /// <summary>
-        /// Returns a constraint that tests for False
-        /// </summary>
-        public FalseConstraint False => Append(new FalseConstraint());
-
-        #endregion
-
         #region Positive
 
         /// <summary>

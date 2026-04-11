@@ -5,7 +5,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// FalseConstraint tests that the actual value is false
     /// </summary>
-    public class FalseConstraint : Constraint
+    public class FalseConstraint : Constraint<bool?>
     {
         /// <inheritdoc/>
         public override string Description => "False";
@@ -15,7 +15,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>True for success, false for failure</returns>
-        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        public override ConstraintResult ApplyTo(bool? actual)
         {
             return new ConstraintResult(this, actual, false.Equals(actual));
         }

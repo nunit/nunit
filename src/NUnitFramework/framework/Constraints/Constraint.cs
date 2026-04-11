@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 
@@ -19,10 +17,8 @@ namespace NUnit.Framework.Constraints
     /// within NUnit. It provides the operator overloads used to combine
     /// constraints.
     /// </summary>
-    public abstract class Constraint : IAsyncConstraint
+    public abstract class Constraint : ConstraintBase, IAsyncConstraint
     {
-        private readonly Lazy<string> _displayName;
-
         #region Constructor
 
         /// <summary>
@@ -30,41 +26,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="args">Arguments to be saved</param>
         protected Constraint(params object?[] args)
+            : base(args)
         {
-            Arguments = args;
-
-            _displayName = new Lazy<string>(() =>
-            {
-                var type = GetType();
-                var displayName = type.Name;
-                if (type.IsGenericType)
-                    displayName = displayName.Substring(0, displayName.Length - 2);
-                if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
-                    displayName = displayName.Substring(0, displayName.Length - 10);
-                return displayName;
-            });
         }
 
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// The display name of this Constraint for use by ToString().
-        /// The default value is the name of the constraint with
-        /// trailing "Constraint" removed. Derived classes may set
-        /// this to another name in their constructors.
-        /// </summary>
-        public virtual string DisplayName => _displayName.Value;
-
-        /// <inheritdoc/>
-        public abstract string Description { get; }
-
-        /// <summary>
-        /// Arguments provided to this Constraint, for use in
-        /// formatting the description.
-        /// </summary>
-        public object?[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint
@@ -75,21 +43,12 @@ namespace NUnit.Framework.Constraints
 
         #region Abstract and Virtual Methods
 
-        /// <summary>
-        /// Applies the constraint to an actual value, returning a ConstraintResult.
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
+        /// <inheritdoc/>
         public abstract ConstraintResult ApplyTo<TActual>(TActual actual);
 
-        /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns
-        /// the value to be tested. The default implementation simply evaluates
-        /// the delegate but derived classes may override it to provide for
-        /// delayed processing.
-        /// </summary>
-        /// <param name="del">An ActualValueDelegate</param>
-        /// <returns>A ConstraintResult</returns>
+        /// Applies the constraint to a Func that returns
+        /// <inheritdoc/>
+        /// <param name="del">A Func</param>
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
@@ -133,54 +92,13 @@ namespace NUnit.Framework.Constraints
 
         #region ToString Override
 
-        /// <summary>
-        /// Default override of ToString returns the constraint DisplayName
-        /// followed by any arguments within angle brackets.
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ToString()
         {
             string rep = GetStringRepresentation();
 
             return Builder is null ? rep : $"<unresolved {rep}>";
         }
-
-        /// <summary>
-        /// Returns the string representation of this constraint and the passed in arguments
-        /// </summary>
-        protected string GetStringRepresentation(IEnumerable arguments)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append('<');
-            sb.Append(DisplayName.ToLower());
-
-            foreach (object? arg in arguments)
-            {
-                sb.Append(' ');
-                sb.Append(Displayable(arg));
-            }
-
-            sb.Append('>');
-
-            return sb.ToString();
-
-            static string Displayable(object? o)
-            {
-                if (o is null)
-                    return "null";
-                else if (o is string s)
-                    return $"\"{s}\"";
-                else
-                    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
-            }
-        }
-
-        /// <summary>
-        /// Returns the string representation of this constraint
-        /// </summary>
-        protected virtual string GetStringRepresentation()
-            => GetStringRepresentation(Arguments);
 
         #endregion
 

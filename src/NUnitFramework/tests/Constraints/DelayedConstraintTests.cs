@@ -211,7 +211,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Delay(DELAY);
                 throw new InvalidOperationException();
-            }, Is.True.After(AFTER)));
+            }, Throws.Nothing.After(AFTER)));
 
             watch.Stop();
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(MIN));
@@ -227,7 +227,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Delay(DELAY);
                 throw new InvalidOperationException();
-            }, Is.True.After(AFTER, POLLING)));
+            }, Throws.Nothing.After(AFTER, POLLING)));
 
             watch.Stop();
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));

@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests
                 })
                 {
                     var parameterizedSuite = fixture.Tests.Single(t => t.Method?.Name == name);
-                    Assert.That(parameterizedSuite.Tests.Single().Arguments.Single(), Is.True);
+                    Assert.That(parameterizedSuite.Tests.Single().Arguments.Single() as bool?, Is.True);
                 }
             }
         }
