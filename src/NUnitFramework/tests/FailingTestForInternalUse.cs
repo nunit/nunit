@@ -15,7 +15,7 @@ public class FailingTestForInternalUse
 
     private void Verify(int x)
     {
-        Assert.That(x, Is.EqualTo(42), "Deliberately fails");
+        Assert.That(x, Is.Not.EqualTo(42), "Deliberately fails");
     }
 
     private int TheAnswer()
