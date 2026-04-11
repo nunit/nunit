@@ -122,8 +122,11 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        var resultsDir = PROJECT_DIR + "TestResults";
-        CleanDirectory(resultsDir);
+        // Absolute path so TRX output goes to the repo root on all OSes. Runsettings alone
+        // uses a path relative to the settings file, which vstest can resolve per-project on
+        // Linux/macOS, leaving the top-level TestResults folder empty after CleanDirectory.
+        var testResultsDir = MakeAbsolute(Directory("./TestResults"));
+        CleanDirectory(testResultsDir);
 
         var loggers = minimal
             ? new[] { "trx", "console;verbosity=minimal" }
@@ -138,7 +141,8 @@ Task("Test")
             Settings = minimal
                ? "minimal.runsettings"
                : (quiet ? "quiet.runsettings" : ".runsettings"),
-            // ResultsDirectory is set in runsettings files - keeping single source of truth
+            // Overrides runsettings; dotnet test CLI takes precedence (see dotnet-test --help).
+            ResultsDirectory = testResultsDir,
             Loggers = loggers,
             Verbosity = minimal ? DotNetVerbosity.Minimal : (quiet ? DotNetVerbosity.Quiet : DotNetVerbosity.Normal)
         };
@@ -155,7 +159,7 @@ Task("Test")
         }
 
         // Parse TRX files and show summary
-        var summary = TestResultsParser.ParseTrxFilesDetailed(resultsDir);
+        var summary = TestResultsParser.ParseTrxFilesDetailed(testResultsDir.FullPath);
 
         Information("");
         Information("═══════════════════════════════════════════════════════════════════");

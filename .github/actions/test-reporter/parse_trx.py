@@ -42,11 +42,16 @@ else:
 # Find all TRX files
 trx_files = glob(path_pattern, recursive=True)
 
-# Also try without the leading directory in case we're already in the right place
 if not trx_files:
     alt_pattern = "**/*.trx"
     print(f"Trying alternative pattern: {alt_pattern}")
     trx_files = glob(alt_pattern, recursive=True)
+
+# VSTest often writes under TestResults/<guid>/; glob patterns can miss some layouts — scan the tree
+if not trx_files and test_results_dir.is_dir():
+    trx_files = sorted(str(p) for p in test_results_dir.rglob("*.trx"))
+    if trx_files:
+        print(f"Found {len(trx_files)} TRX file(s) via TestResults/**/*.trx (rglob)")
 
 if not trx_files:
     print(f"::warning::No TRX files found matching pattern: {path_pattern}")
@@ -81,10 +86,35 @@ def extract_project(storage_path):
     return Path(storage_path).stem
 
 
+def dedupe_repeated_stack_trace(stack_trace):
+    """
+    VSTest / adapters sometimes emit the same stack frames multiple times in a row.
+    If the entire trace consists of N>=2 identical copies of a multi-line block,
+    return a single copy. Skips period-1 repetition so consecutive identical frames
+    from recursion are not collapsed.
+    """
+    if not stack_trace or not stack_trace.strip():
+        return stack_trace
+    normalized = stack_trace.replace('\r\n', '\n').replace('\r', '\n')
+    lines = [ln.strip() for ln in normalized.split('\n') if ln.strip()]
+    n = len(lines)
+    if n < 4:
+        return stack_trace
+    for period in range(2, n // 2 + 1):
+        if n % period != 0:
+            continue
+        block = lines[:period]
+        if all(lines[i] == block[i % period] for i in range(n)):
+            return '\n'.join(block)
+    return stack_trace
+
+
 def parse_stack_trace(stack_trace):
     """Convert stack trace to markdown list with source links"""
     if not stack_trace:
         return ""
+
+    stack_trace = dedupe_repeated_stack_trace(stack_trace)
 
     lines = []
     for line in stack_trace.strip().split('\n'):
