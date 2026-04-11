@@ -44,6 +44,9 @@ namespace NUnit.Framework.Tests.Constraints
                            .ApplyTo(new TestDelegate(async () => await Throw())).IsSuccess, Is.False);
         }
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
+
         [Test]
         public void SyntaxSuccess()
         {
@@ -64,6 +67,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await Throw(), Is.EqualTo(1).After(100)));
         }
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
         [Test]
         public void SyntaxVoidDelegateExceptionIsFailureAsCodeIsNotCalled()

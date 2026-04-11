@@ -64,6 +64,9 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(2 + 2, Is.EqualTo(4), GetExceptionMessage);
         }
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
+
         [Test]
         public void AssertionPasses_ActualLambdaAndConstraint()
         {
@@ -103,6 +106,8 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         private int ReturnsFour() => 4;
+
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
         [Test]
         public void TestEquatableWithConvertible()
@@ -193,6 +198,9 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2, Is.EqualTo(5))"));
         }
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
+
         [Test]
         public void FailureThrowsAssertionException_ActualLambdaAndConstraint()
         {
@@ -238,6 +246,8 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(ReturnsFive, Is.EqualTo(4))"));
         }
+
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
         [Test]
         public void AssertionsAreCountedCorrectly()
@@ -335,6 +345,9 @@ namespace NUnit.Framework.Tests.Assertions
             return 5;
         }
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
+
         [Test]
         public void AssertThatSuccess()
         {
@@ -347,6 +360,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Throws<AssertionException>(() =>
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
         [Test, Platform(Exclude = PlatformNames.Linux, Reason = "Intermittent failures on Linux")]
         public void AssertThatErrorTask()
@@ -363,9 +377,12 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertThatErrorGenericTask()
         {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
             var exception =
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
             Assert.That(exception?.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
         }

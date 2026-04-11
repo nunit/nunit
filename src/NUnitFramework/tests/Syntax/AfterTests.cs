@@ -113,6 +113,11 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
+    // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+#pragma warning disable NUnit2024 // Wrong actual type used with String Constraint
+#pragma warning disable NUnit2041 // Incompatible types for comparison constraint
+
     public class AfterSyntaxUsingAnonymousDelegates : AfterSyntaxTests
     {
         [Test]
