@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 _comparisons.Push(new Comparison(x, y)));
         }
 
-        public bool DidCompare(object x, object y)
+        public bool DidCompare(object? x, object? y)
         {
             foreach (var comparison in _comparisons)
             {

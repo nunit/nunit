@@ -1520,6 +1520,22 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Assert.That("1", Is.EqualTo(1).Using<string, int>((s, i) => i.ToString() == s));
             }
+
+            [Test]
+            public void UsesProvidedPredicateForComparisonWithSelf()
+            {
+                var a = new object();
+
+                Assert.That(a, Is.Not.EqualTo(a).Using<object>((left, right) => false));
+            }
+
+            [Test]
+            public void UsesProvidedPredicateForComparisonWithNull()
+            {
+                var a = new object();
+
+                Assert.That(a, Is.EqualTo((object?)null).Using<object>((left, right) => true));
+            }
         }
 
         #endregion
