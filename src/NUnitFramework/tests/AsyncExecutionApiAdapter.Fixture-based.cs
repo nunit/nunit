@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Tests.TestUtilities;
@@ -9,7 +10,7 @@ namespace NUnit.Framework.Tests
 {
     public partial class AsyncExecutionApiAdapter
     {
-        private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
+        private static void ExecuteFixture(Type fixtureType, Func<Task> asyncUserCode)
         {
             TestBuilder.RunTest(
                 new NUnitTestFixtureBuilder().BuildFrom(new TypeWrapper(fixtureType), PreFilter.Empty, new TestFixtureData(asyncUserCode)))
@@ -18,7 +19,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class TaskReturningTestMethodAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.AsyncExecutionApiAdapter.TaskReturningTestMethodFixture),
@@ -30,7 +31,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class TaskReturningSetUpAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.AsyncExecutionApiAdapter.TaskReturningSetUpFixture),
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class TaskReturningTearDownAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.AsyncExecutionApiAdapter.TaskReturningTearDownFixture),
@@ -54,7 +55,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class TaskReturningOneTimeSetUpAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.AsyncExecutionApiAdapter.TaskReturningOneTimeSetUpFixture),
@@ -66,7 +67,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class TaskReturningOneTimeTearDownAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.AsyncExecutionApiAdapter.TaskReturningOneTimeTearDownFixture),

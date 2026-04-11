@@ -27,21 +27,21 @@ namespace NUnit.Framework.Tests.Constraints
         public void ConstraintError()
         {
             Assert.Throws<InvalidOperationException>(() =>
-                new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(new ActualValueDelegate<Task>(async () => await Throw())));
+                new DelayedConstraint(new EqualConstraint(1), 100).ApplyTo(async () => await Throw()));
         }
 
         [Test]
         public void ConstraintVoidDelegateFailureAsDelegateIsNotCalled()
         {
             Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => await One())).IsSuccess, Is.False);
+                           .ApplyTo((Action)(async () => await One())).IsSuccess, Is.False);
         }
 
         [Test]
         public void ConstraintVoidDelegateExceptionIsFailureAsDelegateIsNotCalled()
         {
             Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => await Throw())).IsSuccess, Is.False);
+                           .ApplyTo((Action)(async () => await Throw())).IsSuccess, Is.False);
         }
 
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             Assert.Throws<AssertionException>(() =>
-                Assert.That(new TestDelegate(async () => await Throw()), Is.EqualTo(1).After(100)));
+                Assert.That((Action)(async () => await Throw()), Is.EqualTo(1).After(100)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 

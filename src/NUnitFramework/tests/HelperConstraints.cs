@@ -25,6 +25,7 @@ namespace NUnit.Framework.Tests
 
             public override string Description => "Has Maximum Time";
 
+            [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
             protected override object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
             {
                 return del;

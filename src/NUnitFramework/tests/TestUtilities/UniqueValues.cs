@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.TestUtilities
 {
@@ -16,7 +16,7 @@ namespace NUnit.Framework.Tests.TestUtilities
         /// Call a delegate until a certain number of unique values are returned,
         /// up to a maximum number of tries. Assert that the target was reached.
         /// </summary>
-        public static void Check<T>(ActualValueDelegate<T> del, int targetCount, int maxTries)
+        public static void Check<T>(Func<T> del, int targetCount, int maxTries)
             where T : notnull
         {
             var lookup = new Dictionary<T, int>();

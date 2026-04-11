@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -88,20 +87,20 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssumptionPasses_DelegateAndConstraint()
         {
-            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4));
+            Assume.That(ReturnsFour, Is.EqualTo(4));
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessage()
         {
-            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Message");
+            Assume.That(ReturnsFour, Is.EqualTo(4), "Message");
         }
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => $"Not Equal to {4}";
-            Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), (Func<string>)GetExceptionMessage);
+            Assume.That(ReturnsFour, Is.EqualTo(4), (Func<string>)GetExceptionMessage);
         }
 
         private int ReturnsFour() => 4;
@@ -201,15 +200,15 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void FailureThrowsInconclusiveException_DelegateAndConstraint()
         {
-            Assert.Throws<InconclusiveException>(() => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4)));
+            Assert.Throws<InconclusiveException>(() => Assume.That(ReturnsFive, Is.EqualTo(4)));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessage()
         {
-            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(ReturnsFive, Is.EqualTo(4), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
-            Assert.That(ex?.Message, Does.Contain("Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4))"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(ReturnsFive, Is.EqualTo(4))"));
         }
 
         [Test]
@@ -217,9 +216,9 @@ namespace NUnit.Framework.Tests.Assertions
         {
             string GetExceptionMessage() => "Should be 4";
             var ex = Assert.Throws<InconclusiveException>(
-                () => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), GetExceptionMessage));
+                () => Assume.That(ReturnsFive, Is.EqualTo(4), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Should be 4"));
-            Assert.That(ex?.Message, Does.Contain("Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4))"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(ReturnsFive, Is.EqualTo(4))"));
         }
 
         [Test]
