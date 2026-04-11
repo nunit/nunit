@@ -30,6 +30,11 @@ namespace NUnit.Framework.Tests
                 return del;
             }
 
+            protected override object? GetTestObject<TActual>(Func<TActual> code)
+            {
+                return code;
+            }
+
             public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
                 var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));

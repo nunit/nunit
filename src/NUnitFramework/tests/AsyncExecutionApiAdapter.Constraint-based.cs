@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -19,7 +21,8 @@ namespace NUnit.Framework.Tests
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
                 _constraint.ApplyTo(asyncUserCode);
-                _constraint.ApplyTo(asyncUserCode.Invoke); // ActualValueDelegate<> overload
+                _constraint.ApplyTo((ActualValueDelegate<Task>)asyncUserCode.Invoke); // ActualValueDelegate<> overload
+                _constraint.ApplyTo((Func<Task>)asyncUserCode.Invoke); // Func<> overload
             }
 
             public sealed override string ToString() => _constraint.GetType().Name + ".ApplyTo(…)";

@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal.Extensions;
@@ -240,6 +241,16 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             return PollLoop(() => BaseConstraint.ApplyTo(del));
+        }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a delegate
+        /// </summary>
+        /// <param name="code">The delegate whose value is to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
+        {
+            return PollLoop(() => BaseConstraint.ApplyTo(code));
         }
 
         /// <inheritdoc/>
