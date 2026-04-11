@@ -5,7 +5,7 @@ namespace NUnit.Framework.Tests;
 /// </summary>
 public class FailingTestForInternalUse
 {
-    // [Explicit]
+    [Explicit]
     [Test]
     public void DeliberatelyFailingTest()
     {
