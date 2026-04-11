@@ -7,7 +7,9 @@ $name = $env:INPUT_NAME
 $pathPattern = $env:INPUT_PATH
 $failOnError = $env:INPUT_FAIL_ON_ERROR -eq 'true'
 $repoUrl = $env:GITHUB_SERVER_URL + "/" + $env:GITHUB_REPOSITORY
-$commitSha = $env:GITHUB_SHA
+# Use COMMIT_SHA from action (handles PR head SHA correctly) or fall back to GITHUB_SHA
+$commitSha = if ($env:COMMIT_SHA) { $env:COMMIT_SHA } else { $env:GITHUB_SHA }
+Write-Host "Using commit SHA: $commitSha"
 
 # Find all TRX files
 $trxFiles = Get-ChildItem -Path $pathPattern -Recurse -ErrorAction SilentlyContinue
@@ -30,7 +32,7 @@ $totalTests = 0
 # Regex to extract framework from paths
 $frameworkRegex = '[/\\](net\d+\.\d+|net\d+|netcoreapp\d+\.\d+|netstandard\d+\.\d+)[/\\]'
 
-# Function to convert stack trace to markdown with source links (outside code blocks)
+# Function to convert stack trace to markdown with source links (as bullet list, NOT in code blocks)
 function Convert-StackTraceToMarkdown {
     param([string]$stackTrace, [string]$repoUrl, [string]$sha)
 
@@ -47,36 +49,42 @@ function Convert-StackTraceToMarkdown {
             continue
         }
 
-        # Match patterns like "in C:\path\to\file.cs:line 123" or "in /path/to/file.cs:line 123"
-        if ($trimmedLine -match '^\s*at (.+?) in (.+?):line (\d+)\s*$') {
+        # Match patterns like "at Method() in C:\path\file.cs:line 123"
+        if ($trimmedLine -match 'at (.+?) in (.+?):line (\d+)') {
             $methodCall = $Matches[1]
             $filePath = $Matches[2]
             $lineNum = $Matches[3]
 
-            # Try to extract relative path from src/ or similar
+            # Try to extract relative path from src/
             if ($filePath -match '[/\\](src[/\\].+)$') {
                 $relativePath = $Matches[1] -replace '\\', '/'
                 $sourceLink = "$repoUrl/blob/$sha/$relativePath#L$lineNum"
-                $result += "- ``$methodCall`` in [$relativePath#L$lineNum]($sourceLink)"
+                # Format: bullet with method in backticks, then clickable link
+                $result += "| ``$methodCall`` | [$relativePath#L$lineNum]($sourceLink) |"
             } else {
-                $result += "- ``$methodCall`` in ``$filePath`:line $lineNum``"
+                $fileName = [System.IO.Path]::GetFileName($filePath)
+                $result += "| ``$methodCall`` | $fileName`:$lineNum |"
             }
-        } elseif ($trimmedLine -match '^\s*at (.+?)\s*$') {
+        } elseif ($trimmedLine -match 'at (.+)') {
             $methodCall = $Matches[1]
-            $result += "- ``$methodCall``"
-        } else {
-            $result += "- $trimmedLine"
+            $result += "| ``$methodCall`` | (no source) |"
         }
     }
 
-    return ($result -join "`n")
+    if ($result.Count -gt 0) {
+        # Return as a table
+        $header = "| Method | Source |`n|:-------|:-------|"
+        return $header + "`n" + ($result -join "`n")
+    }
+    return ""
 }
 
 foreach ($trxFile in $trxFiles) {
     Write-Host "Processing: $($trxFile.Name)"
 
     try {
-        [xml]$xml = Get-Content $trxFile.FullName
+        # Use -LiteralPath to handle filenames with brackets like [1]
+        [xml]$xml = Get-Content -LiteralPath $trxFile.FullName
         $ns = @{ t = $xml.DocumentElement.NamespaceURI }
 
         # Get counters
@@ -370,6 +378,8 @@ if ($env:GITHUB_TOKEN) {
     Write-Host "  API URL: $apiUrl"
     Write-Host "  Commit SHA: $commitSha"
     Write-Host "  Conclusion: $conclusion"
+    Write-Host "  Summary length: $($checkSummary.Length) chars"
+    Write-Host "  Title: $title"
 
     # Build the check run payload
     $checkRunPayload = @{

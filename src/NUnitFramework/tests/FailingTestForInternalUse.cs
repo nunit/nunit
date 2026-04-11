@@ -7,8 +7,9 @@ public class FailingTestForInternalUse
 {
     // [Explicit]
     [Test]
-    public void Test1()
+    public void DeliberatelyFailingTest()
     {
-        Assert.Fail("Deliberately fails");
+        int x = 42;
+        Assert.That(x, Is.Not.EqualTo(42), "Deliberately fails");
     }
 }

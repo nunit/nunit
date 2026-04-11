@@ -32,6 +32,16 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Get PR head SHA
+      id: get-sha
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          echo "sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+        else
+          echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+        fi
+
     - name: Parse TRX files and generate report
       id: parse
       shell: pwsh
@@ -40,5 +50,6 @@ runs:
         INPUT_PATH: ${{ inputs.path }}
         INPUT_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
         GITHUB_TOKEN: ${{ inputs.token }}
+        COMMIT_SHA: ${{ steps.get-sha.outputs.sha }}
       run: |
         ${{ github.action_path }}/parse-trx.ps1
