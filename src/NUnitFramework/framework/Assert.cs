@@ -16,12 +16,14 @@ namespace NUnit.Framework
     /// Delegate used by tests that execute code and
     /// capture any thrown exception.
     /// </summary>
+    [Obsolete("Use Action instead of TestDelegate")]
     public delegate void TestDelegate();
 
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
+    [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
     public delegate Task AsyncTestDelegate();
 
     /// <summary>
@@ -213,6 +215,7 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void Multiple(TestDelegate testDelegate)
         {
             using (EnterMultipleScope())
@@ -227,6 +230,7 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
             using (EnterMultipleScope())
@@ -241,6 +245,7 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">An AsyncTestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
         {
             using (EnterMultipleScope())

@@ -61,6 +61,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -83,6 +84,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             FormattableString message,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -105,6 +107,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void Unless<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
@@ -352,6 +355,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -374,6 +378,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             FormattableString message,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -396,6 +401,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void If<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,

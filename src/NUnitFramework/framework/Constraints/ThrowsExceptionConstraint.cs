@@ -38,6 +38,7 @@ namespace NUnit.Framework.Constraints
         /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             return ApplyTo((Delegate)del);

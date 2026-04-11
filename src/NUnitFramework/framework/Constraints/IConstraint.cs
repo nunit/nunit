@@ -53,6 +53,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>A ConstraintResult</returns>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del);
 
         /// <summary>

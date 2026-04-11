@@ -13,6 +13,7 @@ namespace NUnit.Framework.Constraints
     /// Delegate used to delay evaluation of the actual value
     /// to be used in evaluating a constraint
     /// </summary>
+    [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
     public delegate TActual ActualValueDelegate<TActual>();
 
     /// <summary>
@@ -91,6 +92,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>A ConstraintResult</returns>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
@@ -123,6 +125,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>Delegate evaluation result</returns>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         protected virtual object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
         {
             return del();

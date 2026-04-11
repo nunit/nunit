@@ -19,6 +19,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static async Task ThatAsync(AsyncTestDelegate code, IResolveConstraint constraint,
             NUnitString message = default,
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
@@ -46,6 +47,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static async Task ThatAsync(AsyncTestDelegate code, IResolveConstraint constraint,
             FormattableString message,
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)

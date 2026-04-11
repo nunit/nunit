@@ -18,6 +18,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestSnippet delegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Throws(IResolveConstraint expression, TestDelegate code, string message, params object?[]? args)
         {
             Exception? caughtException = null;
@@ -48,6 +49,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Throws(IResolveConstraint expression, TestDelegate code)
         {
             return Throws(expression, code, string.Empty, null);
@@ -61,6 +63,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Throws(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
@@ -72,6 +75,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
         /// <param name="code">A TestDelegate</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Throws(Type expectedExceptionType, TestDelegate code)
         {
             return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
@@ -89,10 +93,11 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Throws<TActual>(TestDelegate code, string message, params object?[]? args)
-            where TActual : Exception
+        [Obsolete("Use overload with Action instead of TestDelegate")]
+        public static TExpected? Throws<TExpected>(TestDelegate code, string message, params object?[]? args)
+            where TExpected : Exception
         {
-            return (TActual?)Throws(typeof(TActual), code, message, args);
+            return Throws<TExpected>(new ExceptionTypeConstraint<TExpected>(), code, message, args);
         }
 
         /// <summary>
@@ -101,10 +106,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? Throws<TActual>(TestDelegate code)
-            where TActual : Exception
+        [Obsolete("Use overload with Action instead of TestDelegate")]
+        public static TExpected? Throws<TExpected>(TestDelegate code)
+            where TExpected : Exception
         {
-            return Throws<TActual>(code, string.Empty, null);
+            return Throws<TExpected>(code, string.Empty, null);
         }
 
         #endregion
@@ -117,6 +123,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Catch(TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
@@ -127,6 +134,7 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Catch(TestDelegate code)
         {
             return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
@@ -140,6 +148,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Catch(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
@@ -151,6 +160,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A TestDelegate</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static Exception? Catch(Type expectedExceptionType, TestDelegate code)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
@@ -158,7 +168,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Catch<TActual>
+        #region Catch<TExpected>
 
         /// <summary>
         /// Verifies that a delegate throws an exception of a certain Type or one derived from it when called and
@@ -167,10 +177,11 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? Catch<TActual>(TestDelegate code, string message, params object?[]? args)
-            where TActual : System.Exception
+        [Obsolete("Use overload with Action instead of TestDelegate")]
+        public static TExpected? Catch<TExpected>(TestDelegate code, string message, params object?[]? args)
+            where TExpected : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
+            return Throws<TExpected>(new InstanceOfTypeConstraint<TExpected>(), code, message, args);
         }
 
         /// <summary>
@@ -178,10 +189,11 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
-        public static TActual? Catch<TActual>(TestDelegate code)
-            where TActual : System.Exception
+        [Obsolete("Use overload with Action instead of TestDelegate")]
+        public static TExpected? Catch<TExpected>(TestDelegate code)
+            where TExpected : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code);
+            return Catch<TExpected>(code, string.Empty, null);
         }
 
         #endregion
@@ -194,6 +206,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void DoesNotThrow(TestDelegate code, string message, params object?[]? args)
         {
             Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
@@ -203,6 +216,7 @@ namespace NUnit.Framework
         /// Verifies that a delegate does not throw an exception.
         /// </summary>
         /// <param name="code">A TestDelegate</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void DoesNotThrow(TestDelegate code)
         {
             DoesNotThrow(code, string.Empty, null);
