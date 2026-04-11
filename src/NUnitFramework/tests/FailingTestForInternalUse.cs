@@ -22,5 +22,4 @@ public class FailingTestForInternalUse
     {
         return 42;
     }
-
 }
