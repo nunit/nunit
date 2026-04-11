@@ -86,6 +86,14 @@ def extract_project(storage_path):
     return Path(storage_path).stem
 
 
+def _fmt(n):
+    """Thousands separators for readability in GitHub markdown."""
+    try:
+        return f"{int(n):,}"
+    except (TypeError, ValueError):
+        return str(n)
+
+
 def _collapse_internal_whitespace(s):
     """Single spaces only — catches tabs vs spaces and double spaces in raw TRX lines."""
     return re.sub(r'\s+', ' ', s.strip())
@@ -339,21 +347,14 @@ grouped_results = sorted(grouped.values(), key=lambda x: (x['project'], x['frame
 
 # Determine overall status
 status_icon = ":x:" if total_failed > 0 else ":white_check_mark:"
-status_badge = "![Failed](https://img.shields.io/badge/tests-failed-red)" if total_failed > 0 else "![Passed](https://img.shields.io/badge/tests-passed-brightgreen)"
 conclusion = "failure" if total_failed > 0 else "success"
 
-# Build markdown summary
-summary = f"""# {status_icon} {name}
+# Build markdown summary — one compact stats block (avoid repeating the same numbers as title + table + badge)
+summary = f"""# {name}
 
-{status_badge}
+> {status_icon} **{_fmt(total_tests)}** total · **{_fmt(total_passed)}** passed · **{_fmt(total_failed)}** failed · **{_fmt(total_skipped)}** skipped
 
-## Summary
-
-| Total | Passed | Failed | Skipped |
-|------:|-------:|-------:|--------:|
-| {total_tests} | {total_passed} | {total_failed} | {total_skipped} |
-
-## Results by Project and Framework
+## Results by project
 
 | Project | Framework | Passed | Failed | Skipped | Status |
 |:--------|:----------|-------:|-------:|--------:|:------:|
@@ -361,7 +362,7 @@ summary = f"""# {status_icon} {name}
 
 for r in grouped_results:
     icon = ":x:" if r['failed'] > 0 else ":white_check_mark:"
-    summary += f"| {r['project']} | {r['framework']} | {r['passed']} | {r['failed']} | {r['skipped']} | {icon} |\n"
+    summary += f"| {r['project']} | {r['framework']} | {_fmt(r['passed'])} | {_fmt(r['failed'])} | {_fmt(r['skipped'])} | {icon} |\n"
 
 # Add failed tests section
 if all_failed_tests:
@@ -449,7 +450,13 @@ print("========================================")
 
 # Create GitHub Check Run via API
 if github_token and repo and commit_sha:
-    title = f"{total_tests} tests: {total_passed} passed, {total_failed} failed, {total_skipped} skipped"
+    # Short check title; full counts are in the summary body (not duplicated here).
+    if total_failed > 0:
+        title = f"{name} — {_fmt(total_failed)} failed"
+    elif total_skipped > 0 and total_skipped == total_tests:
+        title = f"{name} — skipped"
+    else:
+        title = name
 
     # Truncate summary if too long
     check_summary = summary
