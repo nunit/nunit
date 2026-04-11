@@ -134,18 +134,54 @@ def dedupe_repeated_sequence_by_key(keys, items):
     return items
 
 
+def _strip_il_offset(method_fragment):
+    """Remove trailing IL bytecode offset from netfx stack text, e.g. `[0x00017]`."""
+    return re.sub(r'\s*\[0x[0-9a-fA-F]+\]\s*$', '', method_fragment).strip()
+
+
+def _is_bogus_source_path(file_path):
+    """
+    netfx / Mono often emit no real path: <guid>:0, <filename unknown>, bare guid, etc.
+    Those must not become clickable links or distinct dedupe keys by fake 'file names'.
+    """
+    if not file_path or not str(file_path).strip():
+        return True
+    fp = str(file_path).strip()
+    if re.fullmatch(r'<[0-9a-fA-F-]{32,36}>', fp):
+        return True
+    if fp.startswith('<') and fp.endswith('>') and 'unknown' in fp.lower():
+        return True
+    if 'unknown' in fp.lower() and '<' in fp:
+        return True
+    # Mono/Linux: guid without brackets, or guid-looking basename only
+    if re.fullmatch(r'[0-9a-fA-F-]{32,36}', fp):
+        return True
+    base = Path(fp.replace('\\', '/')).name
+    if re.fullmatch(r'[0-9a-fA-F-]{32,36}', base):
+        return True
+    if base.startswith('<') and base.endswith('>'):
+        inner = base[1:-1]
+        if re.fullmatch(r'[0-9a-fA-F-]{32,36}', inner):
+            return True
+    return False
+
+
 def parse_stack_frame_in_file(line):
     """
     Parse a CLR stack line with file info. Returns (method, file_path, line_num_str) or None.
     Supports :line N and trailing :N (Core/5+ sometimes omits the word 'line').
+
+    Kept as the original non-greedy regex split — the later ``find(' in ')`` experiment
+    regressed some TRX layouts; deduplication is handled separately via frame keys.
     """
+    line = line.strip()
     m = re.search(r'at (.+?) in (.+?):line (\d+)', line)
     if m:
         return m.group(1).strip(), m.group(2), m.group(3)
     m = re.search(r'at (.+?) in (.+)', line)
     if not m:
         return None
-    method, rest = m.group(1).strip(), m.group(2)
+    method, rest = m.group(1).strip(), m.group(2).strip()
     m2 = re.match(r'(.+):(?:line )?(\d+)\s*$', rest)
     if m2:
         return method, m2.group(1), m2.group(2)
@@ -198,9 +234,17 @@ def parse_stack_trace(stack_trace):
         parsed = parse_stack_frame_in_file(line)
         if parsed:
             method, file_path, line_num = parsed
+            method_display = _strip_il_offset(method)
+
+            if _is_bogus_source_path(file_path):
+                # netfx often has no real path; duplicate halves differ only by IL offset — one key.
+                frame_keys.append((method_display, '', ''))
+                lines.append(f"- `{method_display}`")
+                continue
+
             file_name = Path(file_path.replace('\\', '/')).name
-            # Dedupe key: basename + line only — full paths often differ between duplicate halves on net6+.
-            frame_keys.append((method, file_name, line_num))
+            # Dedupe key: basename + line — full paths often differ between duplicate halves on net6+.
+            frame_keys.append((method_display, file_name, line_num))
 
             # Try to extract relative path from src/
             src_match = re.search(r'[/\\](src[/\\].+)$', file_path)
@@ -208,15 +252,15 @@ def parse_stack_trace(stack_trace):
                 rel_path = src_match.group(1).replace('\\', '/')
                 file_name = Path(rel_path).name
                 source_link = f"{repo_url}/blob/{commit_sha}/{rel_path}#L{line_num}"
-                lines.append(f"- `{method}`<br/>  :point_right: [{file_name}:{line_num}]({source_link})")
+                lines.append(f"- `{method_display}`<br/>  :point_right: [{file_name}:{line_num}]({source_link})")
             else:
                 file_name = Path(file_path.replace('\\', '/')).name
-                lines.append(f"- `{method}`<br/>  :point_right: {file_name}:{line_num}")
+                lines.append(f"- `{method_display}`<br/>  :point_right: {file_name}:{line_num}")
         else:
-            # Match: at Method() without file info
+            # Match: at Method() without file info (or unusual netfx formatting)
             match = re.search(r'at (.+)', line)
             if match:
-                method = match.group(1).strip()
+                method = _strip_il_offset(match.group(1).strip())
                 frame_keys.append((method, '', ''))
                 lines.append(f"- `{method}`")
 
