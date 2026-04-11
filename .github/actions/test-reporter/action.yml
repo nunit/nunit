@@ -32,6 +32,11 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
     - name: Get PR head SHA
       id: get-sha
       shell: bash
@@ -44,7 +49,7 @@ runs:
 
     - name: Parse TRX files and generate report
       id: parse
-      shell: pwsh
+      shell: bash
       env:
         INPUT_NAME: ${{ inputs.name }}
         INPUT_PATH: ${{ inputs.path }}
@@ -52,4 +57,4 @@ runs:
         GITHUB_TOKEN: ${{ inputs.token }}
         COMMIT_SHA: ${{ steps.get-sha.outputs.sha }}
       run: |
-        ${{ github.action_path }}/parse-trx.ps1
+        python "${{ github.action_path }}/parse_trx.py"

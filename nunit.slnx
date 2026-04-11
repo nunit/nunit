@@ -32,6 +32,8 @@
     <File Path=".config/dotnet-tools.json" />
   </Folder>
   <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/actions/" />
+  <Folder Name="/Solution Items/.github/actions/NUnit.TestReporter/" />
   <Folder Name="/Solution Items/.github/workflows/">
     <File Path=".github/workflows/NUnit.CI.yml" />
     <File Path=".github/workflows/NUnit.Myget.Publish.yml" />
