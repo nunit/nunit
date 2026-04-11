@@ -25,8 +25,28 @@ repo_url = f"{server_url}/{repo}"
 
 print(f"Using commit SHA: {commit_sha}")
 
+# Debug: show current directory and contents
+cwd = os.getcwd()
+print(f"Current working directory: {cwd}")
+print(f"Looking for pattern: {path_pattern}")
+
+# List TestResults directory if it exists
+test_results_dir = Path("TestResults")
+if test_results_dir.exists():
+    print(f"TestResults directory exists, contents:")
+    for f in test_results_dir.rglob("*"):
+        print(f"  {f}")
+else:
+    print(f"TestResults directory does NOT exist at {test_results_dir.absolute()}")
+
 # Find all TRX files
 trx_files = glob(path_pattern, recursive=True)
+
+# Also try without the leading directory in case we're already in the right place
+if not trx_files:
+    alt_pattern = "**/*.trx"
+    print(f"Trying alternative pattern: {alt_pattern}")
+    trx_files = glob(alt_pattern, recursive=True)
 
 if not trx_files:
     print(f"::warning::No TRX files found matching pattern: {path_pattern}")
@@ -62,7 +82,7 @@ def extract_project(storage_path):
 
 
 def parse_stack_trace(stack_trace):
-    """Convert stack trace to markdown table with source links"""
+    """Convert stack trace to markdown list with source links"""
     if not stack_trace:
         return ""
 
@@ -83,22 +103,21 @@ def parse_stack_trace(stack_trace):
             src_match = re.search(r'[/\\](src[/\\].+)$', file_path)
             if src_match:
                 rel_path = src_match.group(1).replace('\\', '/')
+                file_name = Path(rel_path).name
                 source_link = f"{repo_url}/blob/{commit_sha}/{rel_path}#L{line_num}"
-                lines.append(f"| `{method}` | [{rel_path}#L{line_num}]({source_link}) |")
+                # Show method, then link with just filename:line
+                lines.append(f"- `{method}`<br/>  :point_right: [{file_name}:{line_num}]({source_link})")
             else:
                 file_name = Path(file_path).name
-                lines.append(f"| `{method}` | {file_name}:{line_num} |")
+                lines.append(f"- `{method}`<br/>  :point_right: {file_name}:{line_num}")
         else:
-            # Match: at Method()
+            # Match: at Method() without file info
             match = re.search(r'at (.+)', line)
             if match:
                 method = match.group(1)
-                lines.append(f"| `{method}` | (no source) |")
+                lines.append(f"- `{method}`")
 
-    if lines:
-        header = "| Method | Source |\n|:-------|:-------|"
-        return header + "\n" + "\n".join(lines)
-    return ""
+    return "\n".join(lines) if lines else ""
 
 
 # Parse each TRX file

@@ -9,7 +9,13 @@ public class FailingTestForInternalUse
     [Test]
     public void DeliberatelyFailingTest()
     {
-        int x = 42;
+        int x = TheAnswer();
         Assert.That(x, Is.Not.EqualTo(42), "Deliberately fails");
     }
+
+    private int TheAnswer()
+    {
+        return 42;
+    }
+
 }
