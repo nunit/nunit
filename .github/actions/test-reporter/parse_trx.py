@@ -86,12 +86,73 @@ def extract_project(storage_path):
     return Path(storage_path).stem
 
 
+def _collapse_internal_whitespace(s):
+    """Single spaces only — catches tabs vs spaces and double spaces in raw TRX lines."""
+    return re.sub(r'\s+', ' ', s.strip())
+
+
+def dedupe_repeated_sequence(items):
+    """
+    If the whole list is N>=2 copies of the same block and the block has length>=2,
+    return one copy. Used when list items compare equal as strings.
+    """
+    n = len(items)
+    if n < 4:
+        return items
+    for period in range(2, n // 2 + 1):
+        if n % period != 0:
+            continue
+        block = items[:period]
+        if all(items[i] == block[i % period] for i in range(n)):
+            return list(block)
+    return items
+
+
+def dedupe_repeated_sequence_by_key(keys, items):
+    """
+    Same as dedupe_repeated_sequence but compares by parallel *keys* (e.g. method +
+    file basename + line). Needed when duplicate stack halves produce different markdown
+    (e.g. one frame resolves to a repo src/ link and the duplicate uses bin/ paths).
+    """
+    n = len(keys)
+    if n < 4 or n != len(items):
+        return items
+    for period in range(2, n // 2 + 1):
+        if n % period != 0:
+            continue
+        block = keys[:period]
+        if all(keys[i] == block[i % period] for i in range(n)):
+            return list(items[:period])
+    return items
+
+
+def parse_stack_frame_in_file(line):
+    """
+    Parse a CLR stack line with file info. Returns (method, file_path, line_num_str) or None.
+    Supports :line N and trailing :N (Core/5+ sometimes omits the word 'line').
+    """
+    m = re.search(r'at (.+?) in (.+?):line (\d+)', line)
+    if m:
+        return m.group(1).strip(), m.group(2), m.group(3)
+    m = re.search(r'at (.+?) in (.+)', line)
+    if not m:
+        return None
+    method, rest = m.group(1).strip(), m.group(2)
+    m2 = re.match(r'(.+):(?:line )?(\d+)\s*$', rest)
+    if m2:
+        return method, m2.group(1), m2.group(2)
+    return None
+
+
 def dedupe_repeated_stack_trace(stack_trace):
     """
     VSTest / adapters sometimes emit the same stack frames multiple times in a row.
     If the entire trace consists of N>=2 identical copies of a multi-line block,
     return a single copy. Skips period-1 repetition so consecutive identical frames
     from recursion are not collapsed.
+
+    Comparison uses collapsed internal whitespace so minor spacing differences between
+    duplicate halves do not prevent detection.
     """
     if not stack_trace or not stack_trace.strip():
         return stack_trace
@@ -100,12 +161,14 @@ def dedupe_repeated_stack_trace(stack_trace):
     n = len(lines)
     if n < 4:
         return stack_trace
+    norm = [_collapse_internal_whitespace(ln) for ln in lines]
     for period in range(2, n // 2 + 1):
         if n % period != 0:
             continue
-        block = lines[:period]
-        if all(lines[i] == block[i % period] for i in range(n)):
-            return '\n'.join(block)
+        block_norm = norm[:period]
+        if all(norm[i] == block_norm[i % period] for i in range(n)):
+            # Preserve original spacing from the first occurrence
+            return '\n'.join(lines[:period])
     return stack_trace
 
 
@@ -117,17 +180,19 @@ def parse_stack_trace(stack_trace):
     stack_trace = dedupe_repeated_stack_trace(stack_trace)
 
     lines = []
+    frame_keys = []
+
     for line in stack_trace.strip().split('\n'):
         line = line.strip()
         if not line:
             continue
 
-        # Match: at Method() in /path/file.cs:line 123
-        match = re.search(r'at (.+?) in (.+?):line (\d+)', line)
-        if match:
-            method = match.group(1)
-            file_path = match.group(2)
-            line_num = match.group(3)
+        parsed = parse_stack_frame_in_file(line)
+        if parsed:
+            method, file_path, line_num = parsed
+            file_name = Path(file_path.replace('\\', '/')).name
+            # Dedupe key: basename + line only — full paths often differ between duplicate halves on net6+.
+            frame_keys.append((method, file_name, line_num))
 
             # Try to extract relative path from src/
             src_match = re.search(r'[/\\](src[/\\].+)$', file_path)
@@ -135,17 +200,22 @@ def parse_stack_trace(stack_trace):
                 rel_path = src_match.group(1).replace('\\', '/')
                 file_name = Path(rel_path).name
                 source_link = f"{repo_url}/blob/{commit_sha}/{rel_path}#L{line_num}"
-                # Show method, then link with just filename:line
                 lines.append(f"- `{method}`<br/>  :point_right: [{file_name}:{line_num}]({source_link})")
             else:
-                file_name = Path(file_path).name
+                file_name = Path(file_path.replace('\\', '/')).name
                 lines.append(f"- `{method}`<br/>  :point_right: {file_name}:{line_num}")
         else:
             # Match: at Method() without file info
             match = re.search(r'at (.+)', line)
             if match:
-                method = match.group(1)
+                method = match.group(1).strip()
+                frame_keys.append((method, '', ''))
                 lines.append(f"- `{method}`")
+
+    # Semantic dedupe: on net6+ duplicate halves often use different full paths (src/ vs bin/),
+    # so markdown strings differ but (method, file basename, line) repeats.
+    lines = dedupe_repeated_sequence_by_key(frame_keys, lines)
+    lines = dedupe_repeated_sequence(lines)
 
     return "\n".join(lines) if lines else ""
 
