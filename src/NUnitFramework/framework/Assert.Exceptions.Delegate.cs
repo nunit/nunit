@@ -83,7 +83,41 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Throws<TActual>
+        #region Throws<TExpected>
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
+        /// langword="null"/> when inside a multiple assert block.
+        /// </summary>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
+        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
+        public static TExpected? Throws<TExpected>(IResolveConstraint expression, TestDelegate code, string message, params object?[]? args)
+            where TExpected : Exception
+        {
+            Exception? caughtException = null;
+
+            // Since TestDelegate returns void, it’s always async void if it’s async at all.
+            Guard.ArgumentNotAsyncVoid(code, nameof(code));
+
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                try
+                {
+                    code();
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
+                }
+            }
+
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
+
+            return caughtException as TExpected;
+        }
 
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see

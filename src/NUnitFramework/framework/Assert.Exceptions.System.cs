@@ -84,34 +84,68 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Throws<TActual>
+        #region Throws<TExpected>
 
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [OverloadResolutionPriority(1)]
-        public static TActual? Throws<TActual>(Action code, string message, params object?[]? args)
-            where TActual : Exception
+        public static TExpected? Throws<TExpected>(IResolveConstraint expression, Action code, string message, params object?[]? args)
+            where TExpected : Exception
         {
-            return (TActual?)Throws(typeof(TActual), code, message, args);
+            Exception? caughtException = null;
+
+            // Since TestDelegate returns void, it’s always async void if it’s async at all.
+            Guard.ArgumentNotAsyncVoid(code, nameof(code));
+
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                try
+                {
+                    code();
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
+                }
+            }
+
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
+
+            return caughtException as TExpected;
         }
 
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <typeparam name="TActual">Type of the expected exception</typeparam>
+        /// <typeparam name="TExpected">Type of the expected exception</typeparam>
+        /// <param name="code">A piece of code to execute</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Throws<TExpected>(Action code, string message, params object?[]? args)
+            where TExpected : Exception
+        {
+            return Throws<TExpected>(new ExceptionTypeConstraint<TExpected>(), code, message, args);
+        }
+
+        /// <summary>
+        /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
+        /// langword="null"/> when inside a multiple assert block.
+        /// </summary>
+        /// <typeparam name="TExpected">Type of the expected exception</typeparam>
         /// <param name="code">A piece of code to execute</param>
         [OverloadResolutionPriority(1)]
-        public static TActual? Throws<TActual>(Action code)
-            where TActual : Exception
+        public static TExpected? Throws<TExpected>(Action code)
+            where TExpected : Exception
         {
-            return Throws<TActual>(code, string.Empty, null);
+            return Throws<TExpected>(code, string.Empty, null);
         }
 
         #endregion
@@ -170,7 +204,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Catch<TActual>
+        #region Catch<TExpected>
 
         /// <summary>
         /// Verifies that a delegate throws an exception of a certain Type or one derived from it when called and
@@ -180,10 +214,10 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [OverloadResolutionPriority(1)]
-        public static TActual? Catch<TActual>(Action code, string message, params object?[]? args)
-            where TActual : System.Exception
+        public static TExpected? Catch<TExpected>(Action code, string message, params object?[]? args)
+            where TExpected : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
+            return (TExpected?)Throws(new InstanceOfTypeConstraint(typeof(TExpected)), code, message, args);
         }
 
         /// <summary>
@@ -192,10 +226,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="code">A piece of code to execute</param>
         [OverloadResolutionPriority(1)]
-        public static TActual? Catch<TActual>(Action code)
-            where TActual : System.Exception
+        public static TExpected? Catch<TExpected>(Action code)
+            where TExpected : System.Exception
         {
-            return (TActual?)Throws(new InstanceOfTypeConstraint(typeof(TActual)), code);
+            return (TExpected?)Throws(new InstanceOfTypeConstraint(typeof(TExpected)), code);
         }
 
         #endregion
