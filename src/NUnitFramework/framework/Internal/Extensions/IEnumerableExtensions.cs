@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -31,6 +32,17 @@ namespace NUnit.Framework.Internal.Extensions
                 return false;
 
             return itemType.IsSortable();
+        }
+
+        /// <summary>
+        /// Determines whether the specified generic enumerable collection's item type is sortable.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the collection.</typeparam>
+        /// <param name="collection">The collection to check (null collections are considered not sortable).</param>
+        /// <returns>true if the item type T implements IComparable; otherwise, false.</returns>
+        public static bool IsSortable<T>(this IEnumerable<T>? collection)
+        {
+            return collection is not null && TypeExtensions.IsSortable<T>();
         }
     }
 }

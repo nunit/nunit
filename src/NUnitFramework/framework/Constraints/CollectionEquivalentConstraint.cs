@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -51,6 +52,12 @@ namespace NUnit.Framework.Constraints
                 return true;
             }
 
+            // Fast path for int and string collections
+            if (TryMatches<int>(actual, out tallyResult) || TryMatches<string>(actual, out tallyResult))
+            {
+                return tallyResult.ExtraItems.Count == 0 && tallyResult.MissingItems.Count == 0;
+            }
+
             CollectionTally ct = Tally(_expected);
             ct.TryRemove(actual);
 
@@ -59,6 +66,37 @@ namespace NUnit.Framework.Constraints
             tallyResult = ct.Result;
 
             return ((tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0));
+        }
+
+
+        private bool TryMatches<T>(IEnumerable actual, out CollectionTally.CollectionTallyResult tallyResult)
+        {
+            tallyResult = new CollectionTally.CollectionTallyResult([], []);
+
+            if (_expected is not IEnumerable<T> expectedItems || actual is not IEnumerable<T> actualItems)
+                return false;
+
+            var tally = new CollectionTally<T>(_comparer, expectedItems);
+            tally.TryRemove(actualItems);
+            tallyResult = ConvertGenericResult(tally.Result);
+            return true;
+        }
+
+        /// <summary>
+        /// Converts a generic CollectionTallyResult to the non-generic version by casting list items to object.
+        /// </summary>
+        private static CollectionTally.CollectionTallyResult ConvertGenericResult<T>(
+            CollectionTally<T>.CollectionTallyResult genericResult)
+        {
+            var missingItems = new List<object>(genericResult.MissingItems.Count);
+            foreach (var item in genericResult.MissingItems)
+                missingItems.Add(item!);
+
+            var extraItems = new List<object>(genericResult.ExtraItems.Count);
+            foreach (var item in genericResult.ExtraItems)
+                extraItems.Add(item!);
+
+            return new CollectionTally.CollectionTallyResult(missingItems, extraItems);
         }
 
         /// <inheritdoc/>
