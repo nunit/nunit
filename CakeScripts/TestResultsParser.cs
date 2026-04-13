@@ -20,8 +20,8 @@ public static class TestResultsParser
 {
     // Regex to extract framework from paths like bin/Release/net8.0/ or bin\Release\net462\
     private static readonly Regex FrameworkPattern = new Regex(
-        @"[/\\](net\d+\.\d+|net\d+|netcoreapp\d+\.\d+|netstandard\d+\.\d+)[/\\]",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        @"[/\\](net\d+\.\d+|net\d+|)[/\\]",
+        RegexOptions.Compiled);
 
     /// <summary>
     /// Parses TRX files in the specified directory and returns aggregated test results.
@@ -117,7 +117,7 @@ public static class TestResultsParser
             var match = FrameworkPattern.Match(codeBase);
             if (match.Success)
             {
-                return match.Groups[1].Value.ToLowerInvariant();
+                return match.Groups[1].Value;
             }
         }
 
@@ -132,7 +132,7 @@ public static class TestResultsParser
             var match = FrameworkPattern.Match(codeBase);
             if (match.Success)
             {
-                return match.Groups[1].Value.ToLowerInvariant();
+                return match.Groups[1].Value;
             }
         }
 

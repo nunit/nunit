@@ -60,7 +60,7 @@ if not trx_files:
 print(f"Found {len(trx_files)} TRX file(s)")
 
 # Regex to extract framework from paths
-framework_regex = re.compile(r'[/\\](net\d+\.\d+|net\d+|netcoreapp\d+\.\d+|netstandard\d+\.\d+)[/\\]', re.IGNORECASE)
+framework_regex = re.compile(r'[/\\](net\d+\.\d+|net\d+|)[/\\]')
 
 # Data structures
 results = []
@@ -76,7 +76,7 @@ def extract_framework(storage_path):
     if not storage_path:
         return "unknown"
     match = framework_regex.search(storage_path)
-    return match.group(1).lower() if match else "unknown"
+    return match.group(1) if match else "unknown"
 
 
 def extract_project(storage_path):
