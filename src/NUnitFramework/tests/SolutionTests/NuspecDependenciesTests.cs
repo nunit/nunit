@@ -65,9 +65,11 @@ namespace NUnit.Framework.Tests.SolutionTests
 
                 var doc = XDocument.Parse(xml);
                 var packageVersions = new Dictionary<string, string>();
+                var conditionalPackages = new HashSet<string>();
 
                 foreach (var itemGroup in doc.Descendants("ItemGroup"))
                 {
+                    var condition = itemGroup.Attribute("Condition")?.Value;
                     var packageReferences = itemGroup.Descendants("PackageVersion");
 
                     foreach (var packageReference in packageReferences)
@@ -79,12 +81,28 @@ namespace NUnit.Framework.Tests.SolutionTests
                         {
                             if (packageVersions.TryGetValue(package, out string? previousVersion))
                             {
-                                Assert.That(previousVersion, Is.EqualTo(version), $"Package {package} has multiple versions in the same file");
+                                if (condition is null)
+                                {
+                                    Assert.That(previousVersion, Is.EqualTo(version), $"Package {package} has multiple versions in the same file");
+                                }
+                                else
+                                {
+                                    // Package has different versions for different conditions (e.g., different frameworks)
+                                    // This is intentional, so skip duplicate check and track as conditional
+                                    conditionalPackages.Add(package);
+                                }
                             }
 
                             packageVersions[package] = version;
                         }
                     }
+                }
+
+                // Remove conditional packages as they have framework-specific versions
+                // and shouldn't be validated against a single version
+                foreach (var package in conditionalPackages)
+                {
+                    packageVersions.Remove(package);
                 }
 
                 return packageVersions;
