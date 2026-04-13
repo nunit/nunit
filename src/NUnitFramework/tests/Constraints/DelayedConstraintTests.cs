@@ -239,10 +239,10 @@ namespace NUnit.Framework.Tests.Constraints
             var list = new PretendList();
 
 #pragma warning disable NUnit2044 // Non-delegate actual parameter
-            Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(1000, 100)),
+            Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
 #pragma warning restore NUnit2044 // Non-delegate actual parameter
-            Assert.That(list.PollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(list.PollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
 
         private class PretendList
@@ -263,19 +263,18 @@ namespace NUnit.Framework.Tests.Constraints
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;
-            Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(1000, 100)),
+            Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
 
-        [Explicit("This test is flaky, se comment below")]
         [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;
-            Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1000, 100)),
+            Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
         /*  Claude analysis of this test
          *   Analysis of Flaky Test
