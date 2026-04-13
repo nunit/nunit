@@ -109,7 +109,8 @@ public static class TestResultsParser
         // Look for codeBase attribute in UnitTest elements which contains the assembly path
         var codeBases = xml.Descendants(ns + "UnitTest")
             .Select(ut => ut.Attribute("storage")?.Value)
-            .Where(s => !string.IsNullOrEmpty(s));
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Select(s => s!);
 
         foreach (var codeBase in codeBases)
         {
@@ -123,7 +124,8 @@ public static class TestResultsParser
         // Also try TestMethod codeBase
         var testMethods = xml.Descendants(ns + "TestMethod")
             .Select(tm => tm.Attribute("codeBase")?.Value)
-            .Where(s => !string.IsNullOrEmpty(s));
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Select(s => s!);
 
         foreach (var codeBase in testMethods)
         {
