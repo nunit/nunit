@@ -109,12 +109,14 @@ Tests can be run using either Cake or directly with `dotnet test`:
 | Command | Description |
 |---------|-------------|
 | `build --target=Test` | Run all tests with normal output |
-| `build --target=Test --quiet=true` | Run tests with minimal output (summaries only) |
+| `build --target=Test --minimal=true` | Run tests with minimal output (summaries only) |
 | `dotnet test` | Run tests directly using dotnet CLI |
-| `dotnet test -v q` | Run tests with quiet MSBuild ouput | 
+| `dotnet test -v m` | Run tests with minimal MSBuild output | 
+| `dotnet test -l "console;verbosity=detailed` | Run tests with detailed test output | 
 | `dotnet test --settings quiet.runsettings` | Run tests with reduced NUnit output |
 
-The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks. The `--quiet=true` option shows only per-assembly summaries without individual test names.
+The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks.
+The `--quiet=true` option shows only per-assembly summaries without individual test names.
 
 Any failures will be shown for all commands.
 
