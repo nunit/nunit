@@ -36,6 +36,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly bool _isSortable;
         private bool _sorted = false;
+        private readonly bool _useMergeOptimization;
 
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
@@ -69,6 +70,7 @@ namespace NUnit.Framework.Constraints
         public CollectionTally(IEqualityComparer<T> comparer, IEnumerable<T> c)
         {
             _comparer = comparer;
+            _useMergeOptimization = ReferenceEquals(comparer, EqualityComparer<T>.Default);
 
             _missingItems = ToList(c);
 
@@ -113,6 +115,12 @@ namespace NUnit.Framework.Constraints
 
                 _sorted = true;
 
+                if (_useMergeOptimization)
+                {
+                    TryRemoveMergeSorted(remove);
+                    return;
+                }
+
                 // Reverse so that we match removing from the end,
                 // see issue #2598 - Is.Not.EquivalentTo is extremely slow
                 for (int index = remove.Count - 1; index >= 0; index--)
@@ -128,6 +136,48 @@ namespace NUnit.Framework.Constraints
                 foreach (T item in c)
                     TryRemove(item);
             }
+        }
+
+        private void TryRemoveMergeSorted(List<T> remove)
+        {
+            int missingIndex = _missingItems.Count - 1;
+            int removeIndex = remove.Count - 1;
+
+            var stillMissingDescending = new List<T>(_missingItems.Count);
+            var orderComparer = Comparer<T>.Default;
+
+            while (missingIndex >= 0 && removeIndex >= 0)
+            {
+                T missingItem = _missingItems[missingIndex];
+                T removeItem = remove[removeIndex];
+
+                int comparison = orderComparer.Compare(missingItem, removeItem);
+                if (comparison == 0)
+                {
+                    missingIndex--;
+                    removeIndex--;
+                }
+                else if (comparison > 0)
+                {
+                    stillMissingDescending.Add(missingItem);
+                    missingIndex--;
+                }
+                else
+                {
+                    _extraItems.Add(removeItem);
+                    removeIndex--;
+                }
+            }
+
+            while (missingIndex >= 0)
+                stillMissingDescending.Add(_missingItems[missingIndex--]);
+
+            while (removeIndex >= 0)
+                _extraItems.Add(remove[removeIndex--]);
+
+            _missingItems.Clear();
+            for (int index = stillMissingDescending.Count - 1; index >= 0; index--)
+                _missingItems.Add(stillMissingDescending[index]);
         }
 
         private static List<T> ToList(IEnumerable<T> items)
