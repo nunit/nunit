@@ -59,14 +59,6 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
-  <!-- Enable Microsoft.Testing.Platform support in VSTest mode for .NET 10 SDK compatibility -->
-  <PropertyGroup>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
-    <TestingPlatformDotnetTestSupport>false</TestingPlatformDotnetTestSupport>
-  </PropertyGroup>
-
   <Choose>
     <When Condition="'$(TargetFramework)' == 'net462'">
       <PropertyGroup>

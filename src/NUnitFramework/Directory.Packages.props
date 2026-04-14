@@ -22,12 +22,8 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
   </ItemGroup>
-  <!-- NUnit3TestAdapter: 5.2.0 for net6.0 (adapter compatibility issue), 6.2.0 for all others -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
+  <ItemGroup>
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
-  </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0'))">
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
   </ItemGroup>
   <!-- Package to allow Nullability etc. in older SDKS -->
   <ItemGroup>
