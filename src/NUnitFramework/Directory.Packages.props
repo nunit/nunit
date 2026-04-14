@@ -22,12 +22,12 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
   </ItemGroup>
-  <!-- NUnit3TestAdapter: 5.2.0 for net6.0 and net462, 6.2.0 for all others -->
-  <!-- net462 needs 5.2.0 because 6.2.0 brings in Microsoft.Testing.Platform which fails on .NET 10 SDK on Linux/Mac -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) Or '$(TargetFramework)' == 'net462'">
+  <!-- NUnit3TestAdapter: 5.2.0 for net6.0, net462, and Windows-specific TFMs; 6.2.0 for all others -->
+  <!-- These need 5.2.0 because 6.2.0 brings in Microsoft.Testing.Platform which fails on .NET 10 SDK on Linux/Mac -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) Or '$(TargetFramework)' == 'net462' Or $(TargetFramework.Contains('-windows'))">
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
   </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0')) And '$(TargetFramework)' != 'net462'">
+  <ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0')) And '$(TargetFramework)' != 'net462' And !$(TargetFramework.Contains('-windows'))">
     <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
   </ItemGroup>
   <!-- Package to allow Nullability etc. in older SDKS -->
