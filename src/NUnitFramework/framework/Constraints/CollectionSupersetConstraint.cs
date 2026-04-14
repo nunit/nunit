@@ -49,12 +49,15 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            // Create tally from 'actual' collection, and remove '_expected'.
-            // ExtraItems from tally would be missing items for '_expected' collection.
-            CollectionTally tally = Tally(actual);
-            tally.TryRemove(_expected);
+            // Try fastpath, falling back to slow path if needed
+            if (!TryTallyResultFastPath(actual, _expected, _comparer, out var tallyResult))
+            {
+                CollectionTally ct = Tally(actual);
+                ct.TryRemove(_expected);
+                tallyResult = ct.Result;
+            }
 
-            _missingItems = tally.Result.ExtraItems;
+            _missingItems = tallyResult.ExtraItems;
 
             return _missingItems.Count == 0;
         }

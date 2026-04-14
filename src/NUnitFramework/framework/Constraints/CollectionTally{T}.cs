@@ -8,7 +8,7 @@ using NUnit.Framework.Internal.Extensions;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Generic version of <see cref="CollectionTally"/> that counts (tallies) 
+    /// Generic version of <see cref="CollectionTally"/> that counts (tallies).
     /// the number of occurrences of each typed item in one or more enumerations.
     /// </summary>
     /// <typeparam name="T">The type of items in the collections being compared.</typeparam>
@@ -30,6 +30,22 @@ namespace NUnit.Framework.Constraints
                 MissingItems = missingItems;
                 ExtraItems = extraItems;
             }
+
+            /// <summary>
+            /// Converts a generic CollectionTallyResult to the non-generic version.
+            /// </summary>
+            internal CollectionTally.CollectionTallyResult ToObjectResult()
+            {
+                var missingItems = new List<object>(MissingItems.Count);
+                foreach (var item in MissingItems)
+                    missingItems.Add(item!);
+
+                var extraItems = new List<object>(ExtraItems.Count);
+                foreach (var item in ExtraItems)
+                    extraItems.Add(item!);
+
+                return new CollectionTally.CollectionTallyResult(missingItems, extraItems);
+            }
         }
 
         private readonly NUnitEqualityComparerAdapter<T> _comparer;
@@ -44,7 +60,7 @@ namespace NUnit.Framework.Constraints
             {
                 var missingItems = new List<T>(_missingItems);
 
-                var extraItems = _sorted 
+                var extraItems = _sorted
                     ? new List<T>(_extraItems.Reverse<T>())
                     : new List<T>(_extraItems);
 

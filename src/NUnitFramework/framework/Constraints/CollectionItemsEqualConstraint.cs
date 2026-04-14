@@ -221,5 +221,26 @@ namespace NUnit.Framework.Constraints
         {
             return new CollectionTally(_comparer, c);
         }
+
+        private protected static bool TryTallyResultFastPath(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
+        {
+            if (expected is IEnumerable<int> expectedInts && actual is IEnumerable<int> actualInts)
+                return TryTallyResult(expectedInts, actualInts, comparer, out tallyResult);
+            else if (expected is IEnumerable<string> expectedStrings && actual is IEnumerable<string> actualStrings)
+                return TryTallyResult(expectedStrings, actualStrings, comparer, out tallyResult);
+            else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
+                return TryTallyResult(expectedDoubles, actualDoubles, comparer, out tallyResult);
+
+            tallyResult = default!;
+            return false;
+        }
+
+        private protected static bool TryTallyResult<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
+        {
+            var tally = new CollectionTally<T>(comparer, expectedItems);
+            tally.TryRemove(actualItems);
+            tallyResult = tally.Result.ToObjectResult();
+            return true;
+        }
     }
 }

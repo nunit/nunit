@@ -47,10 +47,15 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            CollectionTally tally = Tally(_expected);
-            tally.TryRemove(actual);
+            // Try fastpath, falling back to slow path if needed
+            if (!TryTallyResultFastPath(_expected, actual, _comparer, out var tallyResult))
+            {
+                CollectionTally ct = Tally(_expected);
+                ct.TryRemove(actual);
+                tallyResult = ct.Result;
+            }
 
-            _extraItems = tally.Result.ExtraItems;
+            _extraItems = tallyResult.ExtraItems;
 
             return _extraItems.Count == 0;
         }
