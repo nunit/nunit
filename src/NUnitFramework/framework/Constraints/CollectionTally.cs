@@ -28,6 +28,22 @@ namespace NUnit.Framework.Constraints
                 MissingItems = missingItems;
                 ExtraItems = extraItems;
             }
+
+            /// <summary>
+            /// Converts a generic CollectionTallyResult to the non-generic version.
+            /// </summary>
+            internal static CollectionTallyResult FromGenericResult<T>(CollectionTally<T>.CollectionTallyResult genericResult)
+            {
+                var missingItems = new List<object>(genericResult.MissingItems.Count);
+                foreach (var item in genericResult.MissingItems)
+                    missingItems.Add(item!);
+
+                var extraItems = new List<object>(genericResult.ExtraItems.Count);
+                foreach (var item in genericResult.ExtraItems)
+                    extraItems.Add(item!);
+
+                return new CollectionTallyResult(missingItems, extraItems);
+            }
         }
 
         private readonly NUnitEqualityComparer _comparer;

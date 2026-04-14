@@ -30,25 +30,9 @@ namespace NUnit.Framework.Constraints
                 MissingItems = missingItems;
                 ExtraItems = extraItems;
             }
-
-            /// <summary>
-            /// Converts a generic CollectionTallyResult to the non-generic version.
-            /// </summary>
-            internal CollectionTally.CollectionTallyResult ToObjectResult()
-            {
-                var missingItems = new List<object>(MissingItems.Count);
-                foreach (var item in MissingItems)
-                    missingItems.Add(item!);
-
-                var extraItems = new List<object>(ExtraItems.Count);
-                foreach (var item in ExtraItems)
-                    extraItems.Add(item!);
-
-                return new CollectionTally.CollectionTallyResult(missingItems, extraItems);
-            }
         }
 
-        private readonly NUnitEqualityComparerAdapter<T> _comparer;
+        private readonly IEqualityComparer<T> _comparer;
 
         private readonly bool _isSortable;
         private bool _sorted = false;
@@ -75,8 +59,16 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to use for equality comparisons.</param>
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable<T> c)
+            : this(new NUnitEqualityComparerAdapter<T>(comparer), c)
         {
-            _comparer = new NUnitEqualityComparerAdapter<T>(comparer);
+        }
+
+        /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
+        /// <param name="c">The expected collection to compare against.</param>
+        public CollectionTally(IEqualityComparer<T> comparer, IEnumerable<T> c)
+        {
+            _comparer = comparer;
 
             _missingItems = ToList(c);
 
