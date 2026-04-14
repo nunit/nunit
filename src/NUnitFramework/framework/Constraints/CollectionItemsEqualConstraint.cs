@@ -230,6 +230,8 @@ namespace NUnit.Framework.Constraints
                 return TryTallyResult(expectedStrings, actualStrings, comparer, out tallyResult);
             else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
                 return TryTallyResult(expectedDoubles, actualDoubles, comparer, out tallyResult);
+            else if (expected is IEnumerable<byte> expectedBytes && actual is IEnumerable<byte> actualBytes)
+                return TryTallyResult(expectedBytes, actualBytes, comparer, out tallyResult);
 
             tallyResult = default!;
             return false;
