@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints
 
             _missingItems = ToList(c);
 
-            if (c.IsSortable())
+            if (false && c.IsSortable())
             {
                 _missingItems.Sort();
                 _isSortable = true;
@@ -126,6 +126,10 @@ namespace NUnit.Framework.Constraints
                 for (int index = remove.Count - 1; index >= 0; index--)
                     TryRemove(remove[index]);
             }
+            else if (_useMergeOptimization)
+            {
+                TryRemoveUnsortedHashed(c);
+            }
             else
             {
                 TryRemoveSlow(c);
@@ -136,6 +140,79 @@ namespace NUnit.Framework.Constraints
                 foreach (T item in c)
                     TryRemove(item);
             }
+        }
+
+        private void TryRemoveUnsortedHashed(IEnumerable<T> removeItems)
+        {
+            var missingCounts = new Dictionary<T, int>();
+            int missingNullCount = 0;
+
+            foreach (T item in _missingItems)
+            {
+                if (item is null)
+                {
+                    missingNullCount++;
+                    continue;
+                }
+
+                if (missingCounts.TryGetValue(item, out int count))
+                    missingCounts[item] = count + 1;
+                else
+                    missingCounts[item] = 1;
+            }
+
+            foreach (T item in removeItems)
+            {
+                if (item is null)
+                {
+                    if (missingNullCount > 0)
+                        missingNullCount--;
+                    else
+                        _extraItems.Add(item);
+
+                    continue;
+                }
+
+                if (missingCounts.TryGetValue(item, out int count))
+                {
+                    if (count == 1)
+                        missingCounts.Remove(item);
+                    else
+                        missingCounts[item] = count - 1;
+                }
+                else
+                {
+                    _extraItems.Add(item);
+                }
+            }
+
+            var remainingMissingItems = new List<T>(_missingItems.Count);
+            foreach (T item in _missingItems)
+            {
+                if (item is null)
+                {
+                    if (missingNullCount > 0)
+                    {
+                        remainingMissingItems.Add(item);
+                        missingNullCount--;
+                    }
+
+                    continue;
+                }
+
+                if (missingCounts.TryGetValue(item, out int count) && count > 0)
+                {
+                    remainingMissingItems.Add(item);
+
+                    if (count == 1)
+                        missingCounts.Remove(item);
+                    else
+                        missingCounts[item] = count - 1;
+                }
+            }
+
+            _missingItems.Clear();
+            _missingItems.AddRange(remainingMissingItems);
         }
 
         private void TryRemoveMergeSorted(List<T> remove)

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace NUnit.Framework.Constraints
 {
@@ -232,9 +233,17 @@ namespace NUnit.Framework.Constraints
                 return TryTallyResult(expectedDoubles, actualDoubles, comparer, out tallyResult);
             else if (expected is IEnumerable<byte> expectedBytes && actual is IEnumerable<byte> actualBytes)
                 return TryTallyResult(expectedBytes, actualBytes, comparer, out tallyResult);
+            else if (expected is StringCollection x && actual is StringCollection y)
+                return TryTallyResult(ToList(x), ToList(y), comparer, out tallyResult);
 
             tallyResult = default!;
             return false;
+        }
+
+        private static IEnumerable<string?> ToList(IList l)
+        {
+            foreach (var item in l)
+                yield return item?.ToString();
         }
 
         private protected static bool TryTallyResult<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
