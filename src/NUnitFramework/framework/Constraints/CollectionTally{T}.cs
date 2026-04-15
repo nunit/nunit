@@ -33,9 +33,6 @@ namespace NUnit.Framework.Constraints
         private readonly IEqualityComparer<T> _comparer;
         private readonly IRemoveItemsStrategy _removeItemsStrategy;
 
-        private static readonly IRemoveItemsStrategy s_sortableRemoveItemsStrategy = new SortableRemoveItemsStrategy();
-        private static readonly IRemoveItemsStrategy s_unsortedRemoveItemsStrategy = new UnsortedRemoveItemsStrategy();
-
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
         {
@@ -72,8 +69,8 @@ namespace NUnit.Framework.Constraints
                 _missingItems.Sort();
 
             _removeItemsStrategy = contentsAreSortable
-                ? s_sortableRemoveItemsStrategy
-                : s_unsortedRemoveItemsStrategy;
+                ? new SortableRemoveItemsStrategy()
+                : new UnsortedRemoveItemsStrategy();
         }
 
         /// <summary>Construct a CollectionTally object from a collection using a new <see cref="NUnitEqualityComparer"/>.</summary>
