@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace NUnit.Framework.Constraints
 {
@@ -226,28 +227,46 @@ namespace NUnit.Framework.Constraints
         private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
         {
             if (expected is IEnumerable<int> expectedInts && actual is IEnumerable<int> actualInts)
+            {
                 return TallyResultCore(expectedInts, actualInts, comparer);
+            }
             else if (expected is IEnumerable<string> expectedStrings && actual is IEnumerable<string> actualStrings)
+            {
                 return TallyResultCore(expectedStrings, actualStrings, comparer);
+            }
             else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
+            {
                 return TallyResultCore(expectedDoubles, actualDoubles, comparer);
+            }
             else if (expected is IEnumerable<byte> expectedBytes && actual is IEnumerable<byte> actualBytes)
+            {
                 return TallyResultCore(expectedBytes, actualBytes, comparer);
+            }
+            else if (expected is StringCollection expectedStringCollection && actual is StringCollection actualStringCollection)
+            {
+                return TallyResultCore(ToStringList(expectedStringCollection), ToStringList(actualStringCollection), comparer);
+            }
             else
+            {
                 return TallyResultCore(ToList(expected), ToList(actual), comparer);
-        }
+            }
 
-        private static IEnumerable<string?> ToList(IEnumerable l)
-        {
-            foreach (var item in l)
-                yield return item?.ToString();
+            static IEnumerable<string?> ToStringList(IEnumerable l)
+            {
+                foreach (var item in l)
+                    yield return item?.ToString();
+            }
+
+            static IEnumerable<object?> ToList(IEnumerable l)
+            {
+                foreach (var item in l)
+                    yield return item;
+            }
         }
 
         private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)
         {
-            var tally = comparer.IsModified
-                ? new CollectionTally<T>(expectedItems, comparer)
-                : new CollectionTally<T>(expectedItems);
+            var tally = new CollectionTally<T>(expectedItems, comparer);
 
             tally.TryRemove(actualItems);
             return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);

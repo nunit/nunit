@@ -16,12 +16,14 @@ namespace NUnit.Framework.Tests.Internal
 
         private static IEnumerable<TestFixtureParameters> GetCollectionTallyTestCases()
         {
-            yield return new TestFixtureParameters(() => new CollectionTally<string>(TestStrings))
+            yield return new TestFixtureParameters(() => new CollectionTally<string>(TestStrings, new NUnitEqualityComparer()))
             {
                 ArgDisplayNames = ["DefaultEqualityComparer"]
             };
 
-            yield return new TestFixtureParameters(() => new CollectionTally<string>(TestStrings, new NUnitEqualityComparer()))
+            var modifiedComparer = new NUnitEqualityComparer();
+            modifiedComparer.IgnoreCase = true;
+            yield return new TestFixtureParameters(() => new CollectionTally<string>(TestStrings, modifiedComparer))
             {
                 ArgDisplayNames = ["NUnitEqualityComparer"]
             };

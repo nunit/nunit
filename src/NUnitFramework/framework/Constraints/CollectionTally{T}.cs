@@ -48,32 +48,18 @@ namespace NUnit.Framework.Constraints
         private readonly List<T> _missingItems = new();
         private readonly List<T> _extraItems = new();
 
-        /// <summary>Construct a CollectionTally object from a collection using the default comparer.</summary>
-        /// <param name="c">The expected collection to compare against.</param>
-        public CollectionTally(IEnumerable<T> c) : this(c, EqualityComparer<T>.Default, false)
-        {
-        }
-
         /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
         public CollectionTally(IEnumerable<T> c, NUnitEqualityComparer comparer)
-            : this(c, new NUnitEqualityComparerAdapter<T>(comparer), comparer.IsModified)
         {
-        }
-
-        /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
-        /// <param name="c">The expected collection to compare against.</param>
-        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
-        /// <param name="fuzzyCompare">Indicates whether the comparer supports fuzzy comparisons.</param>
-        private CollectionTally(IEnumerable<T> c, IEqualityComparer<T> comparer, bool fuzzyCompare)
-        {
-            _comparer = comparer;
-
-            _missingItems = ToList(c);
-
             bool contentsArePrimitive = typeof(T).IsPrimitive;
             bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
+
+            bool fuzzyCompare = comparer.IsModified || typeof(T) == typeof(object);
+
+            _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
+            _missingItems = ToList(c);
 
             if (!fuzzyCompare && contentsArePrimitive)
             {
