@@ -92,40 +92,52 @@ public class CollectionEquivalentConstraintTests
         Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess, Is.False);
     }
 
-    [Test]
-    public void EquivalentHandlesNull()
+    [TestCaseSource(nameof(GetNullTestCases))]
+    public void EquivalentHandlesNull(IEnumerable set1, IEnumerable set2)
     {
-        ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
-        ICollection set2 = new SimpleObjectCollection("z", null, "x", null);
-
         Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreCase()
+    private static IEnumerable<object[]> GetNullTestCases()
     {
-        ICollection set1 = new SimpleObjectCollection("x", "y", "z");
-        ICollection set2 = new SimpleObjectCollection("z", "Y", "X");
+        yield return new object[] { new SimpleObjectCollection(null, "x", null, "z"), new SimpleObjectCollection("z", null, "x", null) };
+        yield return new object[] { new string?[] { null, "x", null, "z" }, new string?[] { "z", null, "x", null } };
+    }
 
+    [TestCaseSource(nameof(GetIgnoreCaseTestCases))]
+    public void EquivalentHonorsIgnoreCase(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreWhiteSpace()
+    private static IEnumerable<object[]> GetIgnoreCaseTestCases()
     {
-        ICollection set1 = new SimpleObjectCollection("abc", "def", "ghi");
-        ICollection set2 = new SimpleObjectCollection("g h i", "d e f", "a b c");
+        yield return new object[] { new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("z", "Y", "X") };
+        yield return new object[] { new string?[] { "x", "y", "z" }, new string?[] { "z", "Y", "X" } };
+    }
 
+    [TestCaseSource(nameof(GetIgnoreWhiteSpaceTestCases))]
+    public void EquivalentHonorsIgnoreWhiteSpace(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreWhiteSpace.ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreLineEndingFormat()
+    private static IEnumerable<object[]> GetIgnoreWhiteSpaceTestCases()
     {
-        ICollection set1 = new SimpleObjectCollection("a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n");
-        ICollection set2 = new SimpleObjectCollection("g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n");
+        yield return new object[] { new SimpleObjectCollection("abc", "def", "ghi"), new SimpleObjectCollection("g h i", "d e f", "a b c") };
+        yield return new object[] { new string?[] { "abc", "def", "ghi" }, new string?[] { "g h i", "d e f", "a b c" } };
+    }
 
+    [TestCaseSource(nameof(GetIgnoreLineEndingFormatTestCases))]
+    public void EquivalentHonorsIgnoreLineEndingFormat(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreLineEndingFormat.ApplyTo(set2).IsSuccess);
+    }
+
+    private static IEnumerable<object[]> GetIgnoreLineEndingFormatTestCases()
+    {
+        yield return new object[] { new SimpleObjectCollection("a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n"), new SimpleObjectCollection("g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n") };
+        yield return new object[] { new string?[] { "a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n" }, new string?[] { "g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n" } };
     }
 
     [Test]
