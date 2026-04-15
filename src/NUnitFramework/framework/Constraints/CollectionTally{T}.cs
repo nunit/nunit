@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -31,7 +32,7 @@ namespace NUnit.Framework.Constraints
         }
 
         private readonly IEqualityComparer<T> _comparer;
-        private readonly IRemoveItemsStrategy _removeItemsStrategy;
+        private readonly IItemsStrategy _removeItemsStrategy;
 
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
@@ -49,26 +50,49 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>Construct a CollectionTally object from a collection using the default comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
-        public CollectionTally(IEnumerable<T> c) : this(c, EqualityComparer<T>.Default)
+        public CollectionTally(IEnumerable<T> c) : this(c, EqualityComparer<T>.Default, false)
         {
         }
 
         /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
         /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
-        public CollectionTally(IEnumerable<T> c, IEqualityComparer<T> comparer)
+        public CollectionTally(IEnumerable<T> c, NUnitEqualityComparer comparer)
+            : this(c, new NUnitEqualityComparerAdapter<T>(comparer), comparer.IsModified)
+        {
+        }
+
+        /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
+        /// <param name="c">The expected collection to compare against.</param>
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
+        /// <param name="fuzzyCompare">Indicates whether the comparer supports fuzzy comparisons.</param>
+        private CollectionTally(IEnumerable<T> c, IEqualityComparer<T> comparer, bool fuzzyCompare)
         {
             _comparer = comparer;
 
             _missingItems = ToList(c);
 
-            bool contentsAreSortable = typeof(T).IsPrimitive;
-            if (contentsAreSortable)
-                _missingItems.Sort();
+            bool contentsArePrimitive = typeof(T).IsPrimitive;
+            bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
 
-            _removeItemsStrategy = contentsAreSortable
-                ? new SortableRemoveItemsStrategy()
-                : new UnsortedRemoveItemsStrategy();
+            if (!fuzzyCompare && contentsArePrimitive)
+            {
+                _missingItems.Sort();
+                _removeItemsStrategy = new MergeSortableItemsStrategy();
+            }
+            else if (!fuzzyCompare)
+            {
+                _removeItemsStrategy = new HashableItemsStrategy();
+            }
+            else if (contentsAreSortable)
+            {
+                _missingItems.Sort();
+                _removeItemsStrategy = new LinearSortableItemsStrategy();
+            }
+            else
+            {
+                _removeItemsStrategy = new QuadraticItemsStrategy();
+            }
         }
 
         /// <summary>Try to remove an item from the tally.</summary>
@@ -93,13 +117,73 @@ namespace NUnit.Framework.Constraints
         {
             _removeItemsStrategy.RemoveItems(this, c);
         }
+        private static List<T> ToList(IEnumerable<T> items)
+        {
+            var list = items is ICollection<T> ic ? new List<T>(ic.Count) : new List<T>();
 
-        private interface IRemoveItemsStrategy
+            foreach (T item in items)
+                list.Add(item);
+
+            return list;
+        }
+
+        private interface IItemsStrategy
         {
             void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items);
         }
 
-        private sealed class SortableRemoveItemsStrategy : IRemoveItemsStrategy
+        private sealed class MergeSortableItemsStrategy : IItemsStrategy
+        {
+            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            {
+                var remove = ToList(items);
+                int missingIndex = tally._missingItems.Count - 1;
+                int removeIndex = remove.Count - 1;
+
+                var stillMissingDescending = new List<T>(tally._missingItems.Count);
+                var orderComparer = Comparer<T>.Default;
+                int extrasStart = tally._extraItems.Count;
+
+                while (missingIndex >= 0 && removeIndex >= 0)
+                {
+                    T missingItem = tally._missingItems[missingIndex];
+                    T removeItem = remove[removeIndex];
+
+                    int comparison = orderComparer.Compare(missingItem, removeItem);
+                    if (comparison == 0)
+                    {
+                        missingIndex--;
+                        removeIndex--;
+                    }
+                    else if (comparison > 0)
+                    {
+                        stillMissingDescending.Add(missingItem);
+                        missingIndex--;
+                    }
+                    else
+                    {
+                        tally._extraItems.Add(removeItem);
+                        removeIndex--;
+                    }
+                }
+
+                while (missingIndex >= 0)
+                    stillMissingDescending.Add(tally._missingItems[missingIndex--]);
+
+                while (removeIndex >= 0)
+                    tally._extraItems.Add(remove[removeIndex--]);
+
+                int extrasAddedCount = tally._extraItems.Count - extrasStart;
+                if (extrasAddedCount > 1)
+                    tally._extraItems.Reverse(extrasStart, extrasAddedCount);
+
+                tally._missingItems.Clear();
+                for (int index = stillMissingDescending.Count - 1; index >= 0; index--)
+                    tally._missingItems.Add(stillMissingDescending[index]);
+            }
+        }
+
+        private sealed class LinearSortableItemsStrategy : IItemsStrategy
         {
             public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
@@ -119,7 +203,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private sealed class UnsortedRemoveItemsStrategy : IRemoveItemsStrategy
+        private sealed class HashableItemsStrategy : IItemsStrategy
         {
             public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
@@ -195,14 +279,13 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static List<T> ToList(IEnumerable<T> items)
+        private sealed class QuadraticItemsStrategy : IItemsStrategy
         {
-            var list = items is ICollection<T> ic ? new List<T>(ic.Count) : new List<T>();
-
-            foreach (T item in items)
-                list.Add(item);
-
-            return list;
+            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            {
+                foreach (T item in items)
+                    tally.TryRemove(item);
+            }
         }
     }
 }
