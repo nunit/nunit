@@ -47,18 +47,16 @@ namespace NUnit.Framework.Constraints
         private readonly List<T> _missingItems = new();
         private readonly List<T> _extraItems = new();
 
-        /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
-        /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to use for equality comparisons.</param>
+        /// <summary>Construct a CollectionTally object from a collection using the default comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
-        public CollectionTally(NUnitEqualityComparer comparer, IEnumerable<T> c)
-            : this(new NUnitEqualityComparerAdapter<T>(comparer), c)
+        public CollectionTally(IEnumerable<T> c) : this(c, EqualityComparer<T>.Default)
         {
         }
 
-        /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
-        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
+        /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
-        public CollectionTally(IEqualityComparer<T> comparer, IEnumerable<T> c)
+        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
+        public CollectionTally(IEnumerable<T> c, IEqualityComparer<T> comparer)
         {
             _comparer = comparer;
 
@@ -71,13 +69,6 @@ namespace NUnit.Framework.Constraints
             _removeItemsStrategy = contentsAreSortable
                 ? new SortableRemoveItemsStrategy()
                 : new UnsortedRemoveItemsStrategy();
-        }
-
-        /// <summary>Construct a CollectionTally object from a collection using a new <see cref="NUnitEqualityComparer"/>.</summary>
-        /// <param name="c">The expected collection to compare against.</param>
-        public CollectionTally(IEnumerable<T> c)
-            : this(new NUnitEqualityComparer(), c)
-        {
         }
 
         /// <summary>Try to remove an item from the tally.</summary>

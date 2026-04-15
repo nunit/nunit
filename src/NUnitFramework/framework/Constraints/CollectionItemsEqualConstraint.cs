@@ -249,8 +249,8 @@ namespace NUnit.Framework.Constraints
         private protected static bool TryTallyResult<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
         {
             var tally = comparer.IsModified
-                ? new CollectionTally<T>(comparer, expectedItems)
-                : new CollectionTally<T>(EqualityComparer<T>.Default, expectedItems);
+                ? new CollectionTally<T>(expectedItems, new NUnitEqualityComparerAdapter<T>(comparer))
+                : new CollectionTally<T>(expectedItems);
 
             tally.TryRemove(actualItems);
             tallyResult = CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
