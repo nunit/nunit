@@ -217,6 +217,7 @@ namespace NUnit.Framework.Constraints
         /// Return a new CollectionTally for use in making tests
         /// </summary>
         /// <param name="c">The collection to be included in the tally</param>
+        [Obsolete("This method will be removed in a future release.")]
         protected CollectionTally Tally(IEnumerable c)
         {
             return new CollectionTally(_comparer, c);
