@@ -317,8 +317,8 @@ public class CollectionEquivalentConstraintTests
     // warn at 100ms and fail at 500mS
     // Seems to be slower on MacOs on build on github actions, so increasing this with 50%
 
-    private const int LargeCollectionWarnTime = 100;
-    private const int LargeCollectionFailTime = 500;
+    private const int LargeCollectionWarnTime = 20;
+    private const int LargeCollectionFailTime = 100;
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
     public void LargeIntCollectionsInSameOrder()
