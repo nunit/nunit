@@ -51,13 +51,7 @@ namespace NUnit.Framework.Constraints
                 return true;
             }
 
-            // Try fastpath, falling back to slow path if needed
-            if (!TryTallyResultFastPath(_expected, actual, _comparer, out tallyResult))
-            {
-                CollectionTally ct = Tally(_expected);
-                ct.TryRemove(actual);
-                tallyResult = ct.Result;
-            }
+            tallyResult = TallyResult(_expected, actual, _comparer);
 
             return (tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0);
         }

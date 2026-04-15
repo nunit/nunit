@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         }
 
         private readonly IEqualityComparer<T> _comparer;
-        private readonly IItemsStrategy _removeItemsStrategy;
+        private readonly ItemsStrategy _removeItemsStrategy;
 
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
@@ -77,7 +77,6 @@ namespace NUnit.Framework.Constraints
 
             if (!fuzzyCompare && contentsArePrimitive)
             {
-                _missingItems.Sort();
                 _removeItemsStrategy = new MergeSortableItemsStrategy();
             }
             else if (!fuzzyCompare)
@@ -86,13 +85,14 @@ namespace NUnit.Framework.Constraints
             }
             else if (contentsAreSortable)
             {
-                _missingItems.Sort();
-                _removeItemsStrategy = new LinearSortableItemsStrategy();
+                _removeItemsStrategy = new QuadraticSortableItemsStrategy();
             }
             else
             {
                 _removeItemsStrategy = new QuadraticItemsStrategy();
             }
+
+            _removeItemsStrategy.Initialize(this);
         }
 
         /// <summary>Try to remove an item from the tally.</summary>
@@ -117,6 +117,7 @@ namespace NUnit.Framework.Constraints
         {
             _removeItemsStrategy.RemoveItems(this, c);
         }
+
         private static List<T> ToList(IEnumerable<T> items)
         {
             var list = items is ICollection<T> ic ? new List<T>(ic.Count) : new List<T>();
@@ -127,14 +128,22 @@ namespace NUnit.Framework.Constraints
             return list;
         }
 
-        private interface IItemsStrategy
+        private abstract class ItemsStrategy
         {
-            void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items);
+            public abstract void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items);
+            public virtual void Initialize(CollectionTally<T> tally)
+            {
+            }
         }
 
-        private sealed class MergeSortableItemsStrategy : IItemsStrategy
+        private sealed class MergeSortableItemsStrategy : ItemsStrategy
         {
-            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            public override void Initialize(CollectionTally<T> tally)
+            {
+                tally._missingItems.Sort();
+            }
+
+            public override void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
                 var remove = ToList(items);
                 remove.Sort();
@@ -184,31 +193,14 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private sealed class LinearSortableItemsStrategy : IItemsStrategy
+        private sealed class HashableItemsStrategy : ItemsStrategy
         {
-            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            public override void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
-                var remove = ToList(items);
-                remove.Sort();
-
-                int extrasStart = tally._extraItems.Count;
-
-                // Reverse so that we match removing from the end,
-                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
-                for (int index = remove.Count - 1; index >= 0; index--)
-                    tally.TryRemove(remove[index]);
-
-                int extrasAddedCount = tally._extraItems.Count - extrasStart;
-                if (extrasAddedCount > 1)
-                    tally._extraItems.Reverse(extrasStart, extrasAddedCount);
-            }
-        }
-
-        private sealed class HashableItemsStrategy : IItemsStrategy
-        {
-            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
-            {
+#pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
+                // We can supress this since we track nulls separately and will not try to store null keys in the dictionary.
                 var missingCounts = new Dictionary<T, int>(tally._comparer);
+#pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
                 int missingNullCount = 0;
 
                 foreach (T item in tally._missingItems)
@@ -280,9 +272,34 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private sealed class QuadraticItemsStrategy : IItemsStrategy
+        private sealed class QuadraticSortableItemsStrategy : ItemsStrategy
         {
-            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            public override void Initialize(CollectionTally<T> tally)
+            {
+                tally._missingItems.Sort();
+            }
+
+            public override void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
+            {
+                var remove = ToList(items);
+                remove.Sort();
+
+                int extrasStart = tally._extraItems.Count;
+
+                // Reverse so that we match removing from the end,
+                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
+                for (int index = remove.Count - 1; index >= 0; index--)
+                    tally.TryRemove(remove[index]);
+
+                int extrasAddedCount = tally._extraItems.Count - extrasStart;
+                if (extrasAddedCount > 1)
+                    tally._extraItems.Reverse(extrasStart, extrasAddedCount);
+            }
+        }
+
+        private sealed class QuadraticItemsStrategy : ItemsStrategy
+        {
+            public override void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
                 foreach (T item in items)
                     tally.TryRemove(item);

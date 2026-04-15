@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace NUnit.Framework.Constraints
 {
@@ -223,18 +222,18 @@ namespace NUnit.Framework.Constraints
             return new CollectionTally(_comparer, c);
         }
 
-        private protected static bool TryTallyResultFastPath(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
+        private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
         {
             if (expected is IEnumerable<int> expectedInts && actual is IEnumerable<int> actualInts)
-                return TryTallyResult(expectedInts, actualInts, comparer, out tallyResult);
+                return TallyResultCore(expectedInts, actualInts, comparer);
             else if (expected is IEnumerable<string> expectedStrings && actual is IEnumerable<string> actualStrings)
-                return TryTallyResult(expectedStrings, actualStrings, comparer, out tallyResult);
+                return TallyResultCore(expectedStrings, actualStrings, comparer);
             else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
-                return TryTallyResult(expectedDoubles, actualDoubles, comparer, out tallyResult);
+                return TallyResultCore(expectedDoubles, actualDoubles, comparer);
             else if (expected is IEnumerable<byte> expectedBytes && actual is IEnumerable<byte> actualBytes)
-                return TryTallyResult(expectedBytes, actualBytes, comparer, out tallyResult);
+                return TallyResultCore(expectedBytes, actualBytes, comparer);
             else
-                return TryTallyResult(ToList(expected), ToList(actual), comparer, out tallyResult);
+                return TallyResultCore(ToList(expected), ToList(actual), comparer);
         }
 
         private static IEnumerable<string?> ToList(IEnumerable l)
@@ -243,15 +242,14 @@ namespace NUnit.Framework.Constraints
                 yield return item?.ToString();
         }
 
-        private protected static bool TryTallyResult<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer, out CollectionTally.CollectionTallyResult tallyResult)
+        private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)
         {
             var tally = comparer.IsModified
                 ? new CollectionTally<T>(expectedItems, comparer)
                 : new CollectionTally<T>(expectedItems);
 
             tally.TryRemove(actualItems);
-            tallyResult = CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
-            return true;
+            return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
         }
     }
 }
