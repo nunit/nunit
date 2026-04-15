@@ -137,6 +137,7 @@ namespace NUnit.Framework.Constraints
             public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
                 var remove = ToList(items);
+                remove.Sort();
                 int missingIndex = tally._missingItems.Count - 1;
                 int removeIndex = remove.Count - 1;
 
