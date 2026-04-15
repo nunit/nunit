@@ -2,8 +2,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -33,10 +31,10 @@ namespace NUnit.Framework.Constraints
         }
 
         private readonly IEqualityComparer<T> _comparer;
+        private readonly IRemoveItemsStrategy _removeItemsStrategy;
 
-        private readonly bool _isSortable;
-        private bool _sorted = false;
-        private readonly bool _useMergeOptimization;
+        private static readonly IRemoveItemsStrategy s_sortableRemoveItemsStrategy = new SortableRemoveItemsStrategy();
+        private static readonly IRemoveItemsStrategy s_unsortedRemoveItemsStrategy = new UnsortedRemoveItemsStrategy();
 
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
@@ -44,11 +42,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var missingItems = new List<T>(_missingItems);
-
-                var extraItems = _sorted
-                    ? new List<T>(_extraItems.Reverse<T>())
-                    : new List<T>(_extraItems);
-
+                var extraItems = new List<T>(_extraItems);
                 return new CollectionTallyResult(missingItems, extraItems);
             }
         }
@@ -70,15 +64,16 @@ namespace NUnit.Framework.Constraints
         public CollectionTally(IEqualityComparer<T> comparer, IEnumerable<T> c)
         {
             _comparer = comparer;
-            _useMergeOptimization = ReferenceEquals(comparer, EqualityComparer<T>.Default);
 
             _missingItems = ToList(c);
 
-            if (false && c.IsSortable())
-            {
+            bool contentsAreSortable = typeof(T).IsPrimitive;
+            if (contentsAreSortable)
                 _missingItems.Sort();
-                _isSortable = true;
-            }
+
+            _removeItemsStrategy = contentsAreSortable
+                ? s_sortableRemoveItemsStrategy
+                : s_unsortedRemoveItemsStrategy;
         }
 
         /// <summary>Construct a CollectionTally object from a collection using a new <see cref="NUnitEqualityComparer"/>.</summary>
@@ -108,153 +103,108 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The items to remove.</param>
         public void TryRemove(IEnumerable<T> c)
         {
-            if (_isSortable && c.IsSortable())
+            _removeItemsStrategy.RemoveItems(this, c);
+        }
+
+        private interface IRemoveItemsStrategy
+        {
+            void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items);
+        }
+
+        private sealed class SortableRemoveItemsStrategy : IRemoveItemsStrategy
+        {
+            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
-                var remove = ToList(c);
+                var remove = ToList(items);
                 remove.Sort();
 
-                _sorted = true;
-
-                if (_useMergeOptimization)
-                {
-                    TryRemoveMergeSorted(remove);
-                    return;
-                }
+                int extrasStart = tally._extraItems.Count;
 
                 // Reverse so that we match removing from the end,
                 // see issue #2598 - Is.Not.EquivalentTo is extremely slow
                 for (int index = remove.Count - 1; index >= 0; index--)
-                    TryRemove(remove[index]);
-            }
-            else if (_useMergeOptimization)
-            {
-                TryRemoveUnsortedHashed(c);
-            }
-            else
-            {
-                TryRemoveSlow(c);
-            }
+                    tally.TryRemove(remove[index]);
 
-            void TryRemoveSlow(IEnumerable<T> c)
-            {
-                foreach (T item in c)
-                    TryRemove(item);
+                int extrasAddedCount = tally._extraItems.Count - extrasStart;
+                if (extrasAddedCount > 1)
+                    tally._extraItems.Reverse(extrasStart, extrasAddedCount);
             }
         }
 
-        private void TryRemoveUnsortedHashed(IEnumerable<T> removeItems)
+        private sealed class UnsortedRemoveItemsStrategy : IRemoveItemsStrategy
         {
-            var missingCounts = new Dictionary<T, int>();
-            int missingNullCount = 0;
-
-            foreach (T item in _missingItems)
+            public void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
-                if (item is null)
-                {
-                    missingNullCount++;
-                    continue;
-                }
+                var missingCounts = new Dictionary<T, int>(tally._comparer);
+                int missingNullCount = 0;
 
-                if (missingCounts.TryGetValue(item, out int count))
-                    missingCounts[item] = count + 1;
-                else
-                    missingCounts[item] = 1;
-            }
-
-            foreach (T item in removeItems)
-            {
-                if (item is null)
+                foreach (T item in tally._missingItems)
                 {
-                    if (missingNullCount > 0)
-                        missingNullCount--;
-                    else
-                        _extraItems.Add(item);
-
-                    continue;
-                }
-
-                if (missingCounts.TryGetValue(item, out int count))
-                {
-                    if (count == 1)
-                        missingCounts.Remove(item);
-                    else
-                        missingCounts[item] = count - 1;
-                }
-                else
-                {
-                    _extraItems.Add(item);
-                }
-            }
-
-            var remainingMissingItems = new List<T>(_missingItems.Count);
-            foreach (T item in _missingItems)
-            {
-                if (item is null)
-                {
-                    if (missingNullCount > 0)
+                    if (item is null)
                     {
-                        remainingMissingItems.Add(item);
-                        missingNullCount--;
+                        missingNullCount++;
+                        continue;
                     }
 
-                    continue;
-                }
-
-                if (missingCounts.TryGetValue(item, out int count) && count > 0)
-                {
-                    remainingMissingItems.Add(item);
-
-                    if (count == 1)
-                        missingCounts.Remove(item);
+                    if (missingCounts.TryGetValue(item, out int count))
+                        missingCounts[item] = count + 1;
                     else
-                        missingCounts[item] = count - 1;
+                        missingCounts[item] = 1;
                 }
+
+                foreach (T item in items)
+                {
+                    if (item is null)
+                    {
+                        if (missingNullCount > 0)
+                            missingNullCount--;
+                        else
+                            tally._extraItems.Add(item);
+
+                        continue;
+                    }
+
+                    if (missingCounts.TryGetValue(item, out int count))
+                    {
+                        if (count == 1)
+                            missingCounts.Remove(item);
+                        else
+                            missingCounts[item] = count - 1;
+                    }
+                    else
+                    {
+                        tally._extraItems.Add(item);
+                    }
+                }
+
+                var remainingMissingItems = new List<T>(tally._missingItems.Count);
+                foreach (T item in tally._missingItems)
+                {
+                    if (item is null)
+                    {
+                        if (missingNullCount > 0)
+                        {
+                            remainingMissingItems.Add(item);
+                            missingNullCount--;
+                        }
+
+                        continue;
+                    }
+
+                    if (missingCounts.TryGetValue(item, out int count) && count > 0)
+                    {
+                        remainingMissingItems.Add(item);
+
+                        if (count == 1)
+                            missingCounts.Remove(item);
+                        else
+                            missingCounts[item] = count - 1;
+                    }
+                }
+
+                tally._missingItems.Clear();
+                tally._missingItems.AddRange(remainingMissingItems);
             }
-
-            _missingItems.Clear();
-            _missingItems.AddRange(remainingMissingItems);
-        }
-
-        private void TryRemoveMergeSorted(List<T> remove)
-        {
-            int missingIndex = _missingItems.Count - 1;
-            int removeIndex = remove.Count - 1;
-
-            var stillMissingDescending = new List<T>(_missingItems.Count);
-            var orderComparer = Comparer<T>.Default;
-
-            while (missingIndex >= 0 && removeIndex >= 0)
-            {
-                T missingItem = _missingItems[missingIndex];
-                T removeItem = remove[removeIndex];
-
-                int comparison = orderComparer.Compare(missingItem, removeItem);
-                if (comparison == 0)
-                {
-                    missingIndex--;
-                    removeIndex--;
-                }
-                else if (comparison > 0)
-                {
-                    stillMissingDescending.Add(missingItem);
-                    missingIndex--;
-                }
-                else
-                {
-                    _extraItems.Add(removeItem);
-                    removeIndex--;
-                }
-            }
-
-            while (missingIndex >= 0)
-                stillMissingDescending.Add(_missingItems[missingIndex--]);
-
-            while (removeIndex >= 0)
-                _extraItems.Add(remove[removeIndex--]);
-
-            _missingItems.Clear();
-            for (int index = stillMissingDescending.Count - 1; index >= 0; index--)
-                _missingItems.Add(stillMissingDescending[index]);
         }
 
         private static List<T> ToList(IEnumerable<T> items)
