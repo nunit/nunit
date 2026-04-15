@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal.Extensions
             type?.GetInterface("System.IComparable") is not null;
 
         public static bool ImplementsIComparable<T>() =>
-            typeof(T).IsAssignableTo(typeof(IComparable));
+            typeof(IComparable).IsAssignableFrom(typeof(T));
 
         public static bool IsSortable(this Type type)
         {
