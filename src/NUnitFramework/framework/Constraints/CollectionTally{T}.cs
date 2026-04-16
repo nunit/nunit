@@ -184,7 +184,7 @@ namespace NUnit.Framework.Constraints
             public override void RemoveItems(CollectionTally<T> tally, IEnumerable<T> items)
             {
 #pragma warning disable CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
-                // We can supress this since we track nulls separately and will not try to store null keys in the dictionary.
+                // We can suppress this since we track nulls separately and will not try to store null keys in the dictionary.
                 var missingCounts = new Dictionary<T, int>(tally._comparer);
 #pragma warning restore CS8714 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'notnull' constraint.
                 int missingNullCount = 0;
