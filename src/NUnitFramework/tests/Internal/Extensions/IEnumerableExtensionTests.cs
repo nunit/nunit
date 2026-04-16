@@ -41,13 +41,18 @@ namespace NUnit.Framework.Tests.Internal.Extensions
             new TestCaseData(new HashSet<string> { "1" }) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("HashSet<string>"),
         };
 
-        public static IEnumerable<TestCaseData> SortableCollections => GenericSortableCollections.Select(o =>
+        public static IEnumerable<TestCaseData> SortableCollections => new[]
         {
-            o.TypeArgs = null;
-            return o;
-        }).Concat([
-            new TestCaseData(new StringCollection { "1" }) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("StringCollection")
-        ]);
+            new TestCaseData(new[] { 1 }).SetArgDisplayNames("int[]"),
+            new TestCaseData((object)new[] { "1" }).SetArgDisplayNames("string[]"),
+            new TestCaseData(Enumerable.Range(0, 10)).SetArgDisplayNames("IEnumerable<int>"),
+            new TestCaseData(Enumerable.Range(0, 10).Select(n => n.ToString())).SetArgDisplayNames("IEnumerable<string>"),
+            new TestCaseData(new List<int> { 1 }).SetArgDisplayNames("List<int>"),
+            new TestCaseData(new List<string> { "1" }).SetArgDisplayNames("List<string>"),
+            new TestCaseData(new HashSet<int> { 1 }).SetArgDisplayNames("HashSet<int>"),
+            new TestCaseData(new HashSet<string> { "1" }).SetArgDisplayNames("HashSet<string>"),
+            new TestCaseData(new StringCollection { "1" }).SetArgDisplayNames("StringCollection")
+        };
 
         public static IEnumerable<TestCaseData> UnsortableCollections => new[]
         {
