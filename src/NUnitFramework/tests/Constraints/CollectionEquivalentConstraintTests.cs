@@ -326,8 +326,8 @@ public class CollectionEquivalentConstraintTests
     }
 
     // The following tests are each running in 14ms to 46ms on my machine. Based on that,
-    // warn at 100ms and fail at 500mS
-    // Seems to be slower on MacOs on build on github actions, so increasing this with 50%
+    // warn at 20ms and fail at 100ms.
+    // Seems to be slower on MacOS on GitHub Actions builds, so these limits allow extra headroom.
 
     private const int LargeCollectionWarnTime = 20;
     private const int LargeCollectionFailTime = 100;
