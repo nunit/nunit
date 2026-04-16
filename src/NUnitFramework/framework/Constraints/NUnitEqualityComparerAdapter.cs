@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints
     /// an <see cref="IEqualityComparer{T}"/> for sorting and searching operations.
     /// </summary>
     /// <typeparam name="T">The type of objects to compare.</typeparam>
-    public sealed class NUnitEqualityComparerAdapter<T> : IEqualityComparer<T>
+    internal sealed class NUnitEqualityComparerAdapter<T> : IEqualityComparer<T>
     {
         private readonly NUnitEqualityComparer _comparer;
         private Tolerance _tolerance;

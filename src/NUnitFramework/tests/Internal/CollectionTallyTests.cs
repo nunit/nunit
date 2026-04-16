@@ -8,7 +8,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Tests.Internal
 {
     [TestFixtureSource(nameof(GetCollectionTallyTestCases))]
-    public class CollectionTallyTests
+    internal class CollectionTallyTests
     {
         private static readonly List<string> TestStrings = new List<string> { "one", "two", "three" };
 

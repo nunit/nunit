@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Internal.Extensions
 {
@@ -25,6 +26,23 @@ namespace NUnit.Framework.Internal.Extensions
             }
 
             return true;
+        }
+        public static bool CanUseDefaultEquality(this Type type)
+        {
+            if (type.IsPrimitive)
+                return true;
+            else if (type.IsEnum)
+                return true;
+            else if (type == typeof(string) || Numerics.IsNumericType(type) || type == typeof(DateTime))
+                return true;
+
+            if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
+            {
+                return type.GetGenericArguments()
+                           .All(arg => arg.CanUseDefaultEquality());
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -11,6 +11,29 @@ namespace NUnit.Framework.Tests.Internal.Extensions
 {
     public class TypeExtensionTests
     {
+        [TestCaseSource(nameof(CanUseDefaultEqualityCases))]
+        public bool CanUseDefaultEquality(Type t)
+        {
+            return t.CanUseDefaultEquality();
+        }
+
+        private static IEnumerable<TestCaseData> CanUseDefaultEqualityCases()
+        {
+            yield return new TestCaseData(typeof(int)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(long)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(DateTime)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(float)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(double)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(decimal)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(bool)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(string)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(DayOfWeek)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(object)) { ExpectedResult = false };
+
+            yield return new TestCaseData((1, "HI").GetType()) { ExpectedResult = true };
+            yield return new TestCaseData(Tuple.Create(1, "HI").GetType()) { ExpectedResult = true };
+        }
+
         [TestCaseSource(nameof(WrapTestCaseForGenericMethod), new object[] { nameof(TypesThatImplementIComparable) })]
         public void TypesThatImplementIComparable_ReturnTrue<T>()
         {

@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
     /// the number of occurrences of each typed item in one or more enumerations.
     /// </summary>
     /// <typeparam name="T">The type of items in the collections being compared.</typeparam>
-    public sealed class CollectionTally<T>
+    internal sealed class CollectionTally<T>
     {
         /// <summary>The result of a <see cref="CollectionTally{T}"/>.</summary>
         [DebuggerDisplay("Missing = {MissingItems.Count}, Extra = {ExtraItems.Count}")]
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         {
             bool contentsArePrimitive = typeof(T).IsPrimitive;
             bool contentsAreSortable = typeof(T) != typeof(object) && (contentsArePrimitive || c.IsSortable());
-            bool fuzzyCompare = comparer.IsModified || !(contentsArePrimitive || typeof(T) == typeof(string));
+            bool fuzzyCompare = comparer.IsModified || !(contentsArePrimitive || typeof(T).CanUseDefaultEquality());
 
             _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
             _missingItems = ToList(c);
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
             if (!fuzzyCompare)
             {
                 var underlyingType = c.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
-                fuzzyCompare = underlyingType is null || !(underlyingType.IsPrimitive || underlyingType == typeof(string));
+                fuzzyCompare = underlyingType is null || !(underlyingType.IsPrimitive || underlyingType.CanUseDefaultEquality());
             }
 
             _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
