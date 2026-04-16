@@ -248,7 +248,7 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                return TallyResultCore(ToList(expected), ToList(actual), comparer);
+                return TallyResultCore<object?>(expected, actual, comparer);
             }
 
             static IEnumerable<string?> ToStringList(IEnumerable l)
@@ -256,12 +256,14 @@ namespace NUnit.Framework.Constraints
                 foreach (var item in l)
                     yield return item?.ToString();
             }
+        }
 
-            static IEnumerable<object?> ToList(IEnumerable l)
-            {
-                foreach (var item in l)
-                    yield return item;
-            }
+        private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable expectedItems, IEnumerable actualItems, NUnitEqualityComparer comparer)
+        {
+            var tally = new CollectionTally<T>(expectedItems, comparer);
+
+            tally.TryRemove(actualItems);
+            return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
         }
 
         private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)

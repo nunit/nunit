@@ -325,12 +325,21 @@ public class CollectionEquivalentConstraintTests
         Assert.That(result.IsSuccess);
     }
 
-    // The following tests are each running in 14ms to 46ms on my machine. Based on that,
+    // The following tests are each running in 2ms to 8ms on my machine. Based on that,
     // warn at 20ms and fail at 100ms.
     // Seems to be slower on MacOS on GitHub Actions builds, so these limits allow extra headroom.
 
     private const int LargeCollectionWarnTime = 20;
     private const int LargeCollectionFailTime = 100;
+
+    [Test]
+    public void LargeDoubleCollectionsInSameOrder()
+    {
+        var actual = Enumerable.Range(0, Size).Select(x => (double)x);
+        var expected = Enumerable.Range(0, Size).Select(x => (double)x);
+
+        AssertFailIfTooSlow(expected, actual);
+    }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
     public void LargeIntCollectionsInSameOrder()
@@ -338,17 +347,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size);
         var expected = Enumerable.Range(0, Size);
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -357,17 +356,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size);
         var expected = Enumerable.Range(0, Size).Select(i => Size - i - 1);
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -376,18 +365,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
         var expected = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -396,18 +374,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
         var expected = Enumerable.Range(0, Size).Select(i => (Size - i - 1).ToString()).ToList();
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -421,18 +388,7 @@ public class CollectionEquivalentConstraintTests
             expected.Add(i.ToString());
         }
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
@@ -443,17 +399,7 @@ public class CollectionEquivalentConstraintTests
         encrypted[0] = 2;
         encrypted[1] = 3;
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(data);
-        var constraintResult = constraint.ApplyTo(encrypted);
-        Assert.That(constraintResult.IsSuccess, Is.False);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 4)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(encrypted, data, expectSuccess: false);
     }
 
     [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
@@ -464,13 +410,28 @@ public class CollectionEquivalentConstraintTests
         encrypted[Size - 2] = 2;
         encrypted[Size - 1] = 3;
 
+        AssertFailIfTooSlow(encrypted, data, expectSuccess: false);
+    }
+
+    [Test]
+    public void LargeValueTupleCollectionsInSameOrder()
+    {
+        var actual = Enumerable.Range(0, Size).Select(x => (x, Size - x));
+        var expected = Enumerable.Range(0, Size).Select(x => (x, Size - x));
+
+        AssertFailIfTooSlow(expected, actual);
+    }
+
+    private static void AssertFailIfTooSlow(IEnumerable expected, IEnumerable actual, bool expectSuccess = true)
+    {
         var watch = Stopwatch.StartNew();
 
-        var constraint = new CollectionEquivalentConstraint(data);
-        var constraintResult = constraint.ApplyTo(encrypted);
-        Assert.That(constraintResult.IsSuccess, Is.False);
+        var constraint = new CollectionEquivalentConstraint(actual);
+        var constraintResult = constraint.ApplyTo(expected);
+        Assert.That(constraintResult.IsSuccess, Is.EqualTo(expectSuccess));
 
         watch.Stop();
+
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         if (watch.ElapsedMilliseconds > LargeCollectionFailTime)

@@ -43,9 +43,12 @@ namespace NUnit.Framework.Tests.Internal.Extensions
         {
             var types = typeof(TypeExtensionTests).GetProperty(sourceName)?.GetValue(null) as IEnumerable<Type>;
 
-            return types is not null
-                ? types.Select(type => new TestCaseData() { TypeArgs = [type] }).ToArray()
-                : Array.Empty<TestCaseData>();
+            if (types is null)
+            {
+                throw new ArgumentException($"The property '{sourceName}' was not found or did not return an IEnumerable<Type>.", nameof(sourceName));
+            }
+
+            return types.Select(type => new TestCaseData() { TypeArgs = [type] }).ToArray();
         }
 
         public static IEnumerable<Type> TypesThatAreNotSortable => TypesThatDontImplementIComparable.Union(new[]

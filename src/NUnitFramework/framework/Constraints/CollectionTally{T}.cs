@@ -1,7 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
@@ -55,30 +58,48 @@ namespace NUnit.Framework.Constraints
         {
             bool contentsArePrimitive = typeof(T).IsPrimitive;
             bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
-
             bool fuzzyCompare = comparer.IsModified || typeof(T) == typeof(object);
 
             _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
             _missingItems = ToList(c);
 
+            _removeItemsStrategy = InferItemsStrategy(contentsArePrimitive, contentsAreSortable, fuzzyCompare);
+            _removeItemsStrategy.Initialize(this);
+        }
+        /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
+        /// <param name="c">The expected collection to compare against.</param>
+        /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to use for equality comparisons, which may be optimized to <see cref="EqualityComparer{T}.Default"/> when no comparer modifications are active.</param>
+        public CollectionTally(System.Collections.IEnumerable c, NUnitEqualityComparer comparer)
+        {
+            bool contentsArePrimitive = false;
+            bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
+            bool fuzzyCompare = comparer.IsModified; // || typeof(T) == typeof(object);
+
+            _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
+            _missingItems = c.Cast<T>().ToList();
+
+            _removeItemsStrategy = InferItemsStrategy(contentsArePrimitive, contentsAreSortable, fuzzyCompare);
+            _removeItemsStrategy.Initialize(this);
+        }
+
+        private static ItemsStrategy InferItemsStrategy(bool contentsArePrimitive, bool contentsAreSortable, bool fuzzyCompare)
+        {
             if (!fuzzyCompare && contentsArePrimitive)
             {
-                _removeItemsStrategy = new MergeSortableItemsStrategy();
+                return new MergeSortableItemsStrategy();
             }
             else if (!fuzzyCompare)
             {
-                _removeItemsStrategy = new HashableItemsStrategy();
+                return new HashableItemsStrategy();
             }
             else if (contentsAreSortable)
             {
-                _removeItemsStrategy = new QuadraticSortableItemsStrategy();
+                return new QuadraticSortableItemsStrategy();
             }
             else
             {
-                _removeItemsStrategy = new QuadraticItemsStrategy();
+                return new QuadraticItemsStrategy();
             }
-
-            _removeItemsStrategy.Initialize(this);
         }
 
         /// <summary>Try to remove an item from the tally.</summary>
@@ -102,6 +123,13 @@ namespace NUnit.Framework.Constraints
         public void TryRemove(IEnumerable<T> c)
         {
             _removeItemsStrategy.RemoveItems(this, c);
+        }
+
+        /// <summary>Try to remove a set of items from the tally.</summary>
+        /// <param name="c">The items to remove.</param>
+        public void TryRemove(IEnumerable c)
+        {
+            _removeItemsStrategy.RemoveItems(this, c.Cast<T>());
         }
 
         private static List<T> ToList(IEnumerable<T> items)

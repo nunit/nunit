@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Extensions
         /// Determines whether the specified type parameter T is sortable.
         /// </summary>
         /// <typeparam name="T">The type to check for sortability.</typeparam>
-        /// <returns>true if T implements IComparable; otherwise, false.</returns>
+        /// <returns>True if the type T can be inferred as sortable; otherwise, false.</returns>
         public static bool IsSortable<T>()
         {
             if (!ImplementsIComparable<T>())
