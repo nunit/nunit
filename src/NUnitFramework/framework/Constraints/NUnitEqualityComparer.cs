@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
             || _compareProperties
             || _compareAsCollection
             || WithSameOffset
-            || _externalComparers is not null
+            || (_externalComparers is not null && _externalComparers.Count > 0)
             || _comparePropertiesConfiguration is not null;
 
         /// <summary>
