@@ -57,8 +57,8 @@ namespace NUnit.Framework.Constraints
         public CollectionTally(IEnumerable<T> c, NUnitEqualityComparer comparer)
         {
             bool contentsArePrimitive = typeof(T).IsPrimitive;
-            bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
-            bool fuzzyCompare = comparer.IsModified || typeof(T) == typeof(object);
+            bool contentsAreSortable = typeof(T) != typeof(object) && (contentsArePrimitive || c.IsSortable());
+            bool fuzzyCompare = comparer.IsModified || !(contentsArePrimitive || typeof(T) == typeof(string));
 
             _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
             _missingItems = ToList(c);
@@ -72,8 +72,14 @@ namespace NUnit.Framework.Constraints
         public CollectionTally(System.Collections.IEnumerable c, NUnitEqualityComparer comparer)
         {
             bool contentsArePrimitive = false;
-            bool contentsAreSortable = contentsArePrimitive || c.IsSortable();
-            bool fuzzyCompare = comparer.IsModified; // || typeof(T) == typeof(object);
+            // When T is object, we can't rely on sorting because the runtime types may vary and produce unpredictable sort orders
+            bool contentsAreSortable = typeof(T) != typeof(object) && (contentsArePrimitive || c.IsSortable());
+            bool fuzzyCompare = comparer.IsModified;
+            if (!fuzzyCompare)
+            {
+                var underlyingType = c.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
+                fuzzyCompare = underlyingType is null || !(underlyingType.IsPrimitive || underlyingType == typeof(string));
+            }
 
             _comparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
             _missingItems = c.Cast<T>().ToList();
