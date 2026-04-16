@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
@@ -51,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A hash code for the specified object.</returns>
         public int GetHashCode(T? obj)
         {
-            return obj?.GetHashCode() ?? 0;
+            return HashCode.Combine(obj, _comparer.IsModified, _tolerance);
         }
     }
 }

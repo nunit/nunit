@@ -27,6 +27,7 @@ namespace NUnit.Framework.Internal.Extensions
 
             return true;
         }
+
         public static bool CanUseDefaultEquality(this Type type)
         {
             if (type.IsPrimitive)
