@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>Construct a CollectionTally object from a collection and a comparer.</summary>
         /// <param name="c">The expected collection to compare against.</param>
-        /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> to use for equality comparisons.</param>
+        /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to use for equality comparisons, which may be optimized to <see cref="EqualityComparer{T}.Default"/> when no comparer modifications are active.</param>
         public CollectionTally(IEnumerable<T> c, NUnitEqualityComparer comparer)
         {
             bool contentsArePrimitive = typeof(T).IsPrimitive;
