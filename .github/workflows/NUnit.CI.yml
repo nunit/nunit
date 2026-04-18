@@ -7,10 +7,14 @@ on:
       - release
       - 'v3'
   pull_request:
-  
+
+permissions:
+  contents: read
+  checks: write
+
 env:
   DOTNET_NOLOGO: true                     # Disable the .NET logo
-  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry  
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
 
 jobs:
   build-windows:
@@ -35,10 +39,7 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Windows --configuration=Release
-
-    - name: 🔨 Windows Specific Tests
-      run: dotnet test --no-build --configuration=Release src/NUnitFramework/windows-tests/windows-tests.csproj
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release  --quiet=false --minimal=true
 
     - name: 📦 Package
       run: dotnet tool run dotnet-cake --target=Package
@@ -53,9 +54,17 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Test results (Windows)
-        path: test-results
-      # Use always() to always run this step to publish test results when there are test failures
+        path: TestResults
       if: ${{ always() }}
+
+    - name: 🧪 Test Report
+      if: ${{ always() }}
+      uses: ./.github/actions/test-reporter
+      with:
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
     name: Linux Build
@@ -82,15 +91,23 @@ jobs:
       run: dotnet tool restore
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=false --minimal=true
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: Test results (Linux)
-        path: test-results
-      # Use always() to always run this step to publish test results when there are test failures
+        path: TestResults
       if: ${{ always() }}
+
+    - name: 🧪 Test Report
+      if: ${{ always() }}
+      uses: ./.github/actions/test-reporter
+      with:
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   build-macos:
     name: MacOS Build
@@ -114,12 +131,20 @@ jobs:
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
 
     - name: 🔨 Build and Test
-      run: dotnet tool run dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
+      run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=false --minimal=true
 
     - name: 💾 Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: Test results (macOS)
-        path: test-results
-      # Use always() to always run this step to publish test results when there are test failures
+        path: TestResults
       if: ${{ always() }}
+
+    - name: 🧪 Test Report
+      if: ${{ always() }}
+      uses: ./.github/actions/test-reporter
+      with:
+        name: "Tests (${{ runner.os }})"
+        path: TestResults/**/*.trx
+        fail-on-error: false
+        token: ${{ secrets.GITHUB_TOKEN }}

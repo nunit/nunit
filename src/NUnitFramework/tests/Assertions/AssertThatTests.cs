@@ -513,11 +513,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public async Task AssertThatWithInvalidTolerance()
         {
-            DateTime expected = DateTime.UtcNow;
-
-            await Task.Delay(500);
-
-            DateTime actual = DateTime.UtcNow;
+            var start = DateTime.UtcNow;
+            DateTime expected = start;
+            DateTime actual = start.AddMilliseconds(500);
 
             Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds);
             Assert.That(() => Assert.That(actual, Is.EqualTo((object)expected).Within(1)),
@@ -525,11 +523,11 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
+        public void AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
         {
-            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
-            await Task.Delay(500);
-            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+            var start = DateTimeOffset.UtcNow;
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start);
+            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start.AddMilliseconds(500));
 
 #pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
@@ -539,9 +537,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public async Task AssertPropertiesComparerOnlyUsesToleranceWhereSpecified()
         {
-            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
-            await Task.Delay(500);
-            var actual = new RecordWithDifferentToleranceAwareMembers(2, "Name", 1.81, DateTimeOffset.UtcNow);
+            var start = DateTimeOffset.UtcNow;
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start);
+            var actual = new RecordWithDifferentToleranceAwareMembers(2, "Name", 1.81, start.AddMilliseconds(500));
 
             // Fails because of Id and Height field
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(

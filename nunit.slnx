@@ -12,11 +12,14 @@
     <File Path="CONTRIBUTING.md" />
     <File Path="global.json" />
     <File Path="LICENSE.txt" />
+    <File Path="minimal.runsettings" />
     <File Path="NOTICES.md" />
     <File Path="NuGet.config" />
     <File Path="NUnit.sln.DotSettings" />
+    <File Path="quiet.runsettings" />
     <File Path="README.md" />
     <File Path="src/NUnitFramework/Directory.Build.props" />
+    <File Path="src/NUnitFramework/Directory.Build.targets" />
     <File Path="src/NUnitFramework/Directory.Packages.props" />
     <File Path="src/NUnitFramework/StyleCop.Analyzers.globalconfig" />
     <File Path="THIRD_PARTY_NOTICES.md" />
@@ -29,6 +32,10 @@
     <File Path=".config/dotnet-tools.json" />
   </Folder>
   <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/actions/" />
+  <Folder Name="/Solution Items/.github/actions/NUnit.TestReporter/">
+    <File Path=".github/actions/test-reporter/parse_trx.py" />
+  </Folder>
   <Folder Name="/Solution Items/.github/workflows/">
     <File Path=".github/workflows/NUnit.CI.yml" />
     <File Path=".github/workflows/NUnit.Myget.Publish.yml" />

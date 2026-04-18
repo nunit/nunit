@@ -6,7 +6,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <!-- Enable cross-platform build but only test on Windows -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <IsTestProject Condition="!$([MSBuild]::IsOSPlatform('Windows'))">false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,9 +24,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NUnit3TestAdapter" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NUnit.Analyzers" />
   </ItemGroup>
 
