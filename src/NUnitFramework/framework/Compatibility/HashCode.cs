@@ -12,15 +12,6 @@ namespace System
             hash = (hash * 31) + (value2?.GetHashCode() ?? 0);
             return hash;
         }
-
-        public static int Combine<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
-        {
-            int hash = 0;
-            hash = (hash * 31) + (value1?.GetHashCode() ?? 0);
-            hash = (hash * 31) + (value2?.GetHashCode() ?? 0);
-            hash = (hash * 31) + (value3?.GetHashCode() ?? 0);
-            return hash;
-        }
     }
 #endif
 }

@@ -13,7 +13,6 @@ namespace NUnit.Framework.Constraints
     internal sealed class NUnitEqualityComparerAdapter<T> : IEqualityComparer<T>
     {
         private readonly NUnitEqualityComparer _comparer;
-        private Tolerance _tolerance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitEqualityComparerAdapter{T}"/> class.
@@ -22,16 +21,6 @@ namespace NUnit.Framework.Constraints
         public NUnitEqualityComparerAdapter(NUnitEqualityComparer? comparer = null)
         {
             _comparer = comparer ?? new NUnitEqualityComparer();
-            _tolerance = Tolerance.Default;
-        }
-
-        /// <summary>
-        /// Gets or sets the tolerance to use in comparisons.
-        /// </summary>
-        public Tolerance Tolerance
-        {
-            get => _tolerance;
-            set => _tolerance = value;
         }
 
         /// <summary>
@@ -42,7 +31,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>true if the objects are equal; otherwise, false.</returns>
         public bool Equals(T? x, T? y)
         {
-            return _comparer.AreEqual(x, y, ref _tolerance);
+            Tolerance tolerance = Tolerance.Default;
+            return _comparer.AreEqual(x, y, ref tolerance);
         }
 
         /// <summary>
@@ -52,7 +42,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A hash code for the specified object.</returns>
         public int GetHashCode(T? obj)
         {
-            return HashCode.Combine(obj, _comparer.IsModified, _tolerance);
+            return HashCode.Combine(obj, _comparer.IsModified);
         }
     }
 }
