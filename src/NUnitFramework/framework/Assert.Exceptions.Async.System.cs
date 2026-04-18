@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -15,10 +17,11 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
-        /// <param name="code">A TestSnippet delegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? ThrowsAsync(IResolveConstraint expression, Func<Task> asyncCode, string message, params object?[]? args)
         {
             Exception? caughtException = null;
 
@@ -26,7 +29,7 @@ namespace NUnit.Framework
             {
                 try
                 {
-                    AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, code.Invoke);
+                    AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, asyncCode.Invoke);
                 }
                 catch (Exception e)
                 {
@@ -44,10 +47,11 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
-        /// <param name="code">A TestSnippet delegate</param>
-        public static Exception? ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? ThrowsAsync(IResolveConstraint expression, Func<Task> asyncCode)
         {
-            return ThrowsAsync(expression, code, string.Empty, null);
+            return ThrowsAsync(expression, asyncCode, string.Empty, null);
         }
 
         /// <summary>
@@ -55,12 +59,13 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? ThrowsAsync(Type expectedExceptionType, AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? ThrowsAsync(Type expectedExceptionType, Func<Task> asyncCode, string message, params object?[]? args)
         {
-            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
+            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), asyncCode, message, args);
         }
 
         /// <summary>
@@ -68,10 +73,11 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? ThrowsAsync(Type expectedExceptionType, AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? ThrowsAsync(Type expectedExceptionType, Func<Task> asyncCode)
         {
-            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
+            return ThrowsAsync(new ExceptionTypeConstraint(expectedExceptionType), asyncCode, string.Empty, null);
         }
 
         #endregion
@@ -83,13 +89,14 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static TActual? ThrowsAsync<TActual>(Func<Task> asyncCode, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(typeof(TActual), code, message, args);
+            return (TActual?)ThrowsAsync(typeof(TActual), asyncCode, message, args);
         }
 
         /// <summary>
@@ -97,11 +104,12 @@ namespace NUnit.Framework
         /// <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <typeparam name="TActual">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
-        public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static TActual? ThrowsAsync<TActual>(Func<Task> asyncCode)
             where TActual : Exception
         {
-            return ThrowsAsync<TActual>(code, string.Empty, null);
+            return ThrowsAsync<TActual>(asyncCode, string.Empty, null);
         }
 
         #endregion
@@ -112,22 +120,24 @@ namespace NUnit.Framework
         /// Verifies that an async delegate throws an exception when called and returns it. The returned exception may
         /// be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? CatchAsync(AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? CatchAsync(Func<Task> asyncCode, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
+            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode, message, args);
         }
 
         /// <summary>
         /// Verifies that an async delegate throws an exception when called and returns it. The returned exception may
         /// be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? CatchAsync(AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? CatchAsync(Func<Task> asyncCode)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), code);
+            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode);
         }
 
         /// <summary>
@@ -135,12 +145,13 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? CatchAsync(Type expectedExceptionType, AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? CatchAsync(Type expectedExceptionType, Func<Task> asyncCode, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
+            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), asyncCode, message, args);
         }
 
         /// <summary>
@@ -148,10 +159,11 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? CatchAsync(Type expectedExceptionType, AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? CatchAsync(Type expectedExceptionType, Func<Task> asyncCode)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), code);
+            return ThrowsAsync(new InstanceOfTypeConstraint(expectedExceptionType), asyncCode);
         }
 
         #endregion
@@ -162,24 +174,26 @@ namespace NUnit.Framework
         /// Verifies that an async delegate throws an exception of a certain Type or one derived from it when called and
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static TActual? CatchAsync<TActual>(Func<Task> asyncCode, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode, message, args);
         }
 
         /// <summary>
         /// Verifies that an async delegate throws an exception of a certain Type or one derived from it when called and
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
-        public static TActual? CatchAsync<TActual>(AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static TActual? CatchAsync<TActual>(Func<Task> asyncCode)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode);
         }
 
         #endregion
@@ -189,20 +203,23 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that an async delegate does not throw an exception
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void DoesNotThrowAsync(AsyncTestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static void DoesNotThrowAsync(Func<Task> asyncCode, string message, params object?[]? args)
         {
-            Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
+            Assert.That(asyncCode, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
+
         /// <summary>
         /// Verifies that an async delegate does not throw an exception.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
-        public static void DoesNotThrowAsync(AsyncTestDelegate code)
+        /// <param name="asyncCode">An async piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static void DoesNotThrowAsync(Func<Task> asyncCode)
         {
-            DoesNotThrowAsync(code, string.Empty, null);
+            DoesNotThrowAsync(asyncCode, string.Empty, null);
         }
 
         #endregion

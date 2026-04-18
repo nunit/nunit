@@ -123,7 +123,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {
             var notEnumerable = 42;
-            TestDelegate act = () => Assert.That(notEnumerable, new ExactCountConstraint(1));
+            var act = () => Assert.That(notEnumerable, new ExactCountConstraint(1));
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
         }
 

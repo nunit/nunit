@@ -33,14 +33,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[]
-        {
-            new TestDelegate(TestDelegates.ThrowsArgumentException)
-        };
-        private static readonly object[] FailureData = new object[]
-        {
-            new TestCaseData(new TestDelegate(TestDelegates.ThrowsNothing), "no exception thrown"),
-        };
+        private static readonly object[] SuccessData =
+        [
+            (Action)TestDelegates.ThrowsArgumentException
+        ];
+        private static readonly object[] FailureData =
+        [
+            new TestCaseData((Action)TestDelegates.ThrowsNothing, "no exception thrown"),
+        ];
 #pragma warning restore IDE0052 // Remove unread private members
 
         [Test]

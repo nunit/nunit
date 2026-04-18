@@ -110,6 +110,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -130,6 +131,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             FormattableString message,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
@@ -150,6 +152,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
         public static void That<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
@@ -167,6 +170,75 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Func<TActual>
+
+        /// <summary>
+        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="code">A piece of code returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That<TActual>(Func<TActual> code, IResolveConstraint expr,
+            NUnitString message = default,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+        {
+            var constraint = expr.Resolve();
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(code);
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="code">A piece of code returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That<TActual>(Func<TActual> code, IResolveConstraint expr,
+            FormattableString message,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+        {
+            var constraint = expr.Resolve();
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(code);
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="code">A piece of code returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [OverloadResolutionPriority(1)]
+        public static void That<TActual>(
+            Func<TActual> code,
+            IResolveConstraint expr,
+            Func<string> getExceptionMessage,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+        {
+            var constraint = expr.Resolve();
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(code);
+            if (!result.IsSuccess)
+                ReportFailure(result, getExceptionMessage(), actualExpression, constraintExpression);
+        }
+
+        #endregion
+
         #region TestDelegate
 
         /// <summary>
@@ -175,6 +247,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void That(TestDelegate code, IResolveConstraint constraint,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -189,6 +262,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void That(TestDelegate code, IResolveConstraint constraint,
             FormattableString message,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -203,7 +277,57 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void That(TestDelegate code, IResolveConstraint constraint,
+            Func<string> getExceptionMessage,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, getExceptionMessage, actualExpression, constraintExpression);
+        }
+
+        #endregion
+
+        #region Action
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
+            NUnitString message = default,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, message, actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
+            FormattableString message,
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+        {
+            That((object)code, constraint, message, actualExpression, constraintExpression);
+        }
+
+        /// <summary>
+        /// Apply a constraint to an action. Returns without throwing an exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="code">An Action to be executed</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
+        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [OverloadResolutionPriority(1)]
+        public static void That(Action code, IResolveConstraint constraint,
             Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")

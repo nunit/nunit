@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
 
-            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hallo"));
+            var act = () => Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hallo"));
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
             List<KeyValuePair<string, string>> keyValuePairs = new List<KeyValuePair<string, string>>(
                 new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } });
 
-            TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyConstraint("Hallo"));
+            var act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyConstraint("Hallo"));
 
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("ContainsKey"));
         }

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
-using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -52,34 +51,34 @@ namespace NUnit.Framework.Tests.Constraints
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
-        private static readonly ActualValueDelegate DelegateReturningValue;
-        private static readonly ActualValueDelegate DelegateReturningFalse;
-        private static readonly ActualValueDelegate DelegateReturningZero;
-        private static readonly ActualValueDelegate<object>[] SuccessDelegates;
-        private static readonly ActualValueDelegate<object>[] FailureDelegates;
+        private static readonly Func<object> DelegateReturningValue;
+        private static readonly Func<object> DelegateReturningFalse;
+        private static readonly Func<object> DelegateReturningZero;
+        private static readonly Func<object>[] SuccessDelegates;
+        private static readonly Func<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
         // Most compilers would probably initialize these in lexical order but it
         // may not be guaranteed in all cases so we do it directly.
         static DelayedConstraintTests()
         {
-            DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
-            DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
-            DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
+            DelegateReturningValue = MethodReturningValue;
+            DelegateReturningFalse = MethodReturningFalse;
+            DelegateReturningZero = MethodReturningZero;
 
-            SuccessDelegates = new[] { DelegateReturningValue };
-            FailureDelegates = new[] { DelegateReturningFalse, DelegateReturningZero };
+            SuccessDelegates = [DelegateReturningValue];
+            FailureDelegates = [DelegateReturningFalse, DelegateReturningZero];
         }
 
         [Test, TestCaseSource(nameof(SuccessDelegates))]
-        public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
+        public void SucceedsWithGoodDelegates(Func<object> del)
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(TheConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test, TestCaseSource(nameof(FailureDelegates))]
-        public void FailsWithBadDelegates(ActualValueDelegate<object> del)
+        public void FailsWithBadDelegates(Func<object> del)
         {
             Assert.That(TheConstraint.ApplyTo(del).IsSuccess, Is.False);
         }
@@ -127,7 +126,10 @@ namespace NUnit.Framework.Tests.Constraints
         public void CanTestContentsOfDelegateReturningList()
         {
             SetValuesAfterDelay(1);
+#pragma warning disable NUnit2022 // Missing property required for constraint
+            // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
             Assert.That(() => _list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+#pragma warning restore NUnit2022 // Missing property required for constraint
         }
 
         [Test]
@@ -258,6 +260,9 @@ namespace NUnit.Framework.Tests.Constraints
                 }
             }
         }
+
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
 
         [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()

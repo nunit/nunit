@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
@@ -15,12 +16,14 @@ namespace NUnit.Framework
     /// Delegate used by tests that execute code and
     /// capture any thrown exception.
     /// </summary>
+    [Obsolete("Use Action instead of TestDelegate")]
     public delegate void TestDelegate();
 
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
+    [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
     public delegate Task AsyncTestDelegate();
 
     /// <summary>
@@ -212,6 +215,7 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use overload with Action instead of TestDelegate")]
         public static void Multiple(TestDelegate testDelegate)
         {
             using (EnterMultipleScope())
@@ -226,6 +230,7 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
             using (EnterMultipleScope())
@@ -240,11 +245,57 @@ namespace NUnit.Framework
         /// reported at the end of the code block.
         /// </summary>
         /// <param name="testDelegate">An AsyncTestDelegate to be executed in Multiple Assertion mode.</param>
+        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
         public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
         {
             using (EnterMultipleScope())
             {
                 await testDelegate();
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="action">An action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static void Multiple(Action action)
+        {
+            using (EnterMultipleScope())
+            {
+                action();
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static void Multiple(Func<Task> asyncAction)
+        {
+            using (EnterMultipleScope())
+            {
+                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, asyncAction.Invoke);
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
+        [OverloadResolutionPriority(1)]
+        public static async Task MultipleAsync(Func<Task> asyncAction)
+        {
+            using (EnterMultipleScope())
+            {
+                await asyncAction();
             }
         }
 

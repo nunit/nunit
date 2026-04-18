@@ -39,8 +39,11 @@ namespace NUnit.Framework.Tests.Internal
             _worker.Start();
             _queue.Start();
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
             Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(
                 delayInMilliseconds: 10_000, pollingInterval: 200));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 
         private void FakeMethod()

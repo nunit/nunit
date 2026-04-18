@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Tests.TestUtilities;
 
@@ -16,10 +18,12 @@ namespace NUnit.Framework.Tests
                 _constraint = constraint;
             }
 
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 _constraint.ApplyTo(asyncUserCode);
-                _constraint.ApplyTo(asyncUserCode.Invoke); // ActualValueDelegate<> overload
+#pragma warning disable CS0618 // Type or member is obsolete
+                _constraint.ApplyTo((ActualValueDelegate<Task>)asyncUserCode.Invoke); // ActualValueDelegate<> overload
+#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             public sealed override string ToString() => _constraint.GetType().Name + ".ApplyTo(…)";

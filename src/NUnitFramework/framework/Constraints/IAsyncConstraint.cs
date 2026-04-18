@@ -1,12 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Interface for constraints which support asynchrnious ApplyAsync.
+    /// Interface for constraints which support asynchronous ApplyAsync.
     /// </summary>
     internal interface IAsyncConstraint : IConstraint
     {
@@ -18,6 +19,7 @@ namespace NUnit.Framework.Constraints
         /// <typeparam name="TActual"></typeparam>
         /// <param name="delTask"></param>
         /// <returns></returns>
+        [OverloadResolutionPriority(2)]
         Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> delTask);
     }
 }

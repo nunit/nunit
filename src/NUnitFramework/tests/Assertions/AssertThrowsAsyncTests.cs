@@ -27,6 +27,7 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        [Obsolete("Verifying AsyncTestDelegate overload")]
         public void ThrowsConstraintSucceedsWithDelegate()
         {
             // Without cast, delegate is ambiguous before C# 3.0.
@@ -65,9 +66,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ThrowsConstraintReturnsCorrectException()
         {
-            // Without cast, delegate is ambiguous before C# 3.0.
             Assert.That(
-                (AsyncTestDelegate)delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException(), TaskScheduler.Default); },
+                delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException(), TaskScheduler.Default); },
                 Throws.Exception.TypeOf<ArgumentException>());
 
             CheckForSpuriousAssertionResults();
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void CorrectExceptionIsReturnedToMethod()
         {
             ArgumentException? ex = Assert.ThrowsAsync(typeof(ArgumentException),
-                new AsyncTestDelegate(AsyncTestDelegates.ThrowsArgumentException)) as ArgumentException;
+                AsyncTestDelegates.ThrowsArgumentException) as ArgumentException;
 
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             Assert.That(ex!.Message, Does.StartWith("myMessage"));
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void CorrectExceptionIsReturnedToMethodAsync()
         {
             ArgumentException? ex = Assert.ThrowsAsync(typeof(ArgumentException),
-                new AsyncTestDelegate(AsyncTestDelegates.ThrowsArgumentExceptionAsync)) as ArgumentException;
+                AsyncTestDelegates.ThrowsArgumentExceptionAsync) as ArgumentException;
 
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             Assert.That(ex!.Message, Does.StartWith("myMessage"));
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private Exception? CatchException(TestDelegate del)
+        private Exception? CatchException(Action del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {
