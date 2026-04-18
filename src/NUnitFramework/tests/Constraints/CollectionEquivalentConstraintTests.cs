@@ -399,7 +399,7 @@ public class CollectionEquivalentConstraintTests
         encrypted[0] = 2;
         encrypted[1] = 3;
 
-        AssertFailIfTooSlow(encrypted, data, expectSuccess: false);
+        AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
     }
 
     [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
