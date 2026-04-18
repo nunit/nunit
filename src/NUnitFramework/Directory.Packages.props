@@ -20,8 +20,10 @@
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
   </ItemGroup>
   <!-- Package to allow Nullability etc. in older SDKS -->
   <ItemGroup>
