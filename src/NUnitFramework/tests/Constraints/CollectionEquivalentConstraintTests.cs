@@ -410,7 +410,7 @@ public class CollectionEquivalentConstraintTests
         encrypted[Size - 2] = 2;
         encrypted[Size - 1] = 3;
 
-        AssertFailIfTooSlow(encrypted, data, expectSuccess: false);
+        AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
     }
 
     [Test]
@@ -426,8 +426,8 @@ public class CollectionEquivalentConstraintTests
     {
         var watch = Stopwatch.StartNew();
 
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
+        var constraint = new CollectionEquivalentConstraint(expected);
+        var constraintResult = constraint.ApplyTo(actual);
         Assert.That(constraintResult.IsSuccess, Is.EqualTo(expectSuccess));
 
         watch.Stop();
