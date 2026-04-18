@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
                 return true;
             }
 
-            tallyResult = TallyResult(_expected, actual, _comparer);
+            tallyResult = TallyResult(_expected, actual);
 
             return (tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0);
         }

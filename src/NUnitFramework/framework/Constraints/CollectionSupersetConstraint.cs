@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            var tallyResult = TallyResult(actual, _expected, _comparer);
+            var tallyResult = TallyResult(actual, _expected);
 
             _missingItems = tallyResult.ExtraItems;
 

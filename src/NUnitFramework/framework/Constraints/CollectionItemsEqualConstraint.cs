@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The NUnitEqualityComparer in use for this constraint
         /// </summary>
-        private protected readonly NUnitEqualityComparer _comparer = new();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         /// <summary>
         /// Construct an empty CollectionConstraint
@@ -230,6 +230,9 @@ namespace NUnit.Framework.Constraints
         {
             return new CollectionTally(_comparer, c);
         }
+
+        private protected CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual)
+            => TallyResult(expected, actual, _comparer);
 
         private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
         {
