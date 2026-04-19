@@ -15,7 +15,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionSupersetConstraint : CollectionItemsEqualConstraint
     {
         private readonly IEnumerable _expected;
-        private List<object>? _missingItems;
+        private List<object?>? _missingItems;
 
         /// <summary>
         /// Construct a CollectionSupersetConstraint
@@ -85,9 +85,9 @@ namespace NUnit.Framework.Constraints
 
         private sealed class CollectionSupersetConstraintResult : ConstraintResult
         {
-            private readonly List<object>? _missingItems;
+            private readonly List<object?>? _missingItems;
 
-            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? missingItems)
+            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object?>? missingItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _missingItems = missingItems;
