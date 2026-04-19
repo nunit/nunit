@@ -236,6 +236,8 @@ namespace NUnit.Framework.Constraints
 
         private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
         {
+            // Add a few explicit cases for extremely commonly used types as there can be a measureable difference
+            // if many calls of these types are made for large collections over the lifetime of a single process.
             if (expected is IEnumerable<int> expectedInts && actual is IEnumerable<int> actualInts)
             {
                 return TallyResultCore(expectedInts, actualInts, comparer);
@@ -247,10 +249,6 @@ namespace NUnit.Framework.Constraints
             else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
             {
                 return TallyResultCore(expectedDoubles, actualDoubles, comparer);
-            }
-            else if (expected is IEnumerable<byte> expectedBytes && actual is IEnumerable<byte> actualBytes)
-            {
-                return TallyResultCore(expectedBytes, actualBytes, comparer);
             }
             else if (expected is StringCollection expectedStringCollection && actual is StringCollection actualStringCollection)
             {
