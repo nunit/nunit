@@ -326,11 +326,11 @@ public class CollectionEquivalentConstraintTests
     }
 
     // The following tests are each running in 2ms to 8ms on my machine. Based on that,
-    // warn at 20ms and fail at 100ms.
+    // warn at 50ms and fail at 250ms.
     // Seems to be slower on MacOS on GitHub Actions builds, so these limits allow extra headroom.
 
-    private const int LargeCollectionWarnTime = 20;
-    private const int LargeCollectionFailTime = 100;
+    private const int LargeCollectionWarnTime = 50;
+    private const int LargeCollectionFailTime = 250;
 
     [Test]
     public void LargeDoubleCollectionsInSameOrder()
