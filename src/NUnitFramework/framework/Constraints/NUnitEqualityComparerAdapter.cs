@@ -17,10 +17,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitEqualityComparerAdapter{T}"/> class.
         /// </summary>
-        /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to adapt. If null, a new instance is created.</param>
-        public NUnitEqualityComparerAdapter(NUnitEqualityComparer? comparer = null)
+        /// <param name="comparer">The <see cref="NUnitEqualityComparer"/> to adapt.</param>
+        public NUnitEqualityComparerAdapter(NUnitEqualityComparer comparer)
         {
-            _comparer = comparer ?? new NUnitEqualityComparer();
+            _comparer = comparer;
         }
 
         /// <summary>
