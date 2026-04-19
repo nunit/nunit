@@ -431,7 +431,7 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraintResult.IsSuccess, Is.EqualTo(expectSuccess));
 
         watch.Stop();
-
+        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
