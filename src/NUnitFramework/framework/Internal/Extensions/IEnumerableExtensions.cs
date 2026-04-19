@@ -45,9 +45,6 @@ namespace NUnit.Framework.Internal.Extensions
         /// <typeparam name="T">The type of items in the collection.</typeparam>
         /// <param name="collection">The collection to check (null collections are considered not sortable).</param>
         /// <returns>True if the item type T can be inferred as sortable.</returns>
-        public static bool IsSortable<T>(this IEnumerable<T>? collection)
-        {
-            return collection is not null && TypeExtensions.IsSortable<T>();
-        }
+        public static bool IsSortable<T>(this IEnumerable<T> collection) => TypeExtensions.IsSortable<T>();
     }
 }

@@ -98,6 +98,27 @@ public class CollectionEquivalentConstraintTests
         Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
     }
 
+    [TestCase(TypeArgs = [typeof(ArrayList)], Description = "Non-generics path")]
+    [TestCase(TypeArgs = [typeof(List<int?>)], Description = "Generics path")]
+    public void EquivalentHandlesNull_FailureScenario<T>()
+        where T : IList, new()
+    {
+        T set1 = [1];
+        T set2 = [1, null];
+
+        var result = new CollectionEquivalentConstraint(set1).ApplyTo(set2) as CollectionEquivalentConstraintResult;
+
+        var output = new TextMessageWriter();
+        result!.WriteMessageTo(output);
+
+        string expectedMsg =
+            "  Expected: equivalent to < 1 >" + Environment.NewLine +
+            "  But was:  < 1, null >" + Environment.NewLine +
+            "  Extra (1): < null >" + Environment.NewLine;
+
+        Assert.That(output.ToString(), Is.EqualTo(expectedMsg));
+    }
+
     private static IEnumerable<object[]> GetNullTestCases()
     {
         yield return new object[] { new SimpleObjectCollection(null, "x", null, "z"), new SimpleObjectCollection("z", null, "x", null) };

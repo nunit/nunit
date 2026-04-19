@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal.Extensions
     internal static class TypeExtensions
     {
         public static bool ImplementsIComparable(this Type type) =>
-            type?.GetInterface("System.IComparable") is not null;
+            type.GetInterface("System.IComparable") is not null;
 
         public static bool ImplementsIComparable<T>() =>
             typeof(IComparable).IsAssignableFrom(typeof(T));
