@@ -92,40 +92,73 @@ public class CollectionEquivalentConstraintTests
         Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess, Is.False);
     }
 
-    [Test]
-    public void EquivalentHandlesNull()
+    [TestCaseSource(nameof(GetNullTestCases))]
+    public void EquivalentHandlesNull(IEnumerable set1, IEnumerable set2)
     {
-        ICollection set1 = new SimpleObjectCollection(null, "x", null, "z");
-        ICollection set2 = new SimpleObjectCollection("z", null, "x", null);
-
         Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreCase()
+    [TestCase(TypeArgs = [typeof(ArrayList)], Description = "Non-generics path")]
+    [TestCase(TypeArgs = [typeof(List<int?>)], Description = "Generics path")]
+    public void EquivalentHandlesNull_FailureScenario<T>()
+        where T : IList, new()
     {
-        ICollection set1 = new SimpleObjectCollection("x", "y", "z");
-        ICollection set2 = new SimpleObjectCollection("z", "Y", "X");
+        T set1 = [1];
+        T set2 = [1, null];
 
+        var result = new CollectionEquivalentConstraint(set1).ApplyTo(set2) as CollectionEquivalentConstraintResult;
+
+        var output = new TextMessageWriter();
+        result!.WriteMessageTo(output);
+
+        string expectedMsg =
+            "  Expected: equivalent to < 1 >" + Environment.NewLine +
+            "  But was:  < 1, null >" + Environment.NewLine +
+            "  Extra (1): < null >" + Environment.NewLine;
+
+        Assert.That(output.ToString(), Is.EqualTo(expectedMsg));
+    }
+
+    private static IEnumerable<object[]> GetNullTestCases()
+    {
+        yield return new object[] { new SimpleObjectCollection(null, "x", null, "z"), new SimpleObjectCollection("z", null, "x", null) };
+        yield return new object[] { new string?[] { null, "x", null, "z" }, new string?[] { "z", null, "x", null } };
+    }
+
+    [TestCaseSource(nameof(GetIgnoreCaseTestCases))]
+    public void EquivalentHonorsIgnoreCase(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreCase.ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreWhiteSpace()
+    private static IEnumerable<object[]> GetIgnoreCaseTestCases()
     {
-        ICollection set1 = new SimpleObjectCollection("abc", "def", "ghi");
-        ICollection set2 = new SimpleObjectCollection("g h i", "d e f", "a b c");
+        yield return new object[] { new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("z", "Y", "X") };
+        yield return new object[] { new string?[] { "x", "y", "z" }, new string?[] { "z", "Y", "X" } };
+    }
 
+    [TestCaseSource(nameof(GetIgnoreWhiteSpaceTestCases))]
+    public void EquivalentHonorsIgnoreWhiteSpace(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreWhiteSpace.ApplyTo(set2).IsSuccess);
     }
 
-    [Test]
-    public void EquivalentHonorsIgnoreLineEndingFormat()
+    private static IEnumerable<object[]> GetIgnoreWhiteSpaceTestCases()
     {
-        ICollection set1 = new SimpleObjectCollection("a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n");
-        ICollection set2 = new SimpleObjectCollection("g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n");
+        yield return new object[] { new SimpleObjectCollection("abc", "def", "ghi"), new SimpleObjectCollection("g h i", "d e f", "a b c") };
+        yield return new object[] { new string?[] { "abc", "def", "ghi" }, new string?[] { "g h i", "d e f", "a b c" } };
+    }
 
+    [TestCaseSource(nameof(GetIgnoreLineEndingFormatTestCases))]
+    public void EquivalentHonorsIgnoreLineEndingFormat(IEnumerable set1, IEnumerable set2)
+    {
         Assert.That(new CollectionEquivalentConstraint(set1).IgnoreLineEndingFormat.ApplyTo(set2).IsSuccess);
+    }
+
+    private static IEnumerable<object[]> GetIgnoreLineEndingFormatTestCases()
+    {
+        yield return new object[] { new SimpleObjectCollection("a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n"), new SimpleObjectCollection("g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n") };
+        yield return new object[] { new string?[] { "a\nb\r\nc\r", "d\r\ne\rf\n", "g\rh\ni\r\n" }, new string?[] { "g\rh\ni\r\n", "d\ne\r\nf\r", "a\r\nb\rc\n" } };
     }
 
     [Test]
@@ -313,12 +346,21 @@ public class CollectionEquivalentConstraintTests
         Assert.That(result.IsSuccess);
     }
 
-    // The following tests are each running in 14ms to 46ms on my machine. Based on that,
-    // warn at 100ms and fail at 500mS
-    // Seems to be slower on MacOs on build on github actions, so increasing this with 50%
+    // The following tests are each running in 2ms to 8ms on my machine. Based on that,
+    // warn at 50ms and fail at 250ms.
+    // Seems to be slower on MacOS on GitHub Actions builds, so these limits allow extra headroom.
 
-    private const int LargeCollectionWarnTime = 100;
-    private const int LargeCollectionFailTime = 500;
+    private const int LargeCollectionWarnTime = 50;
+    private const int LargeCollectionFailTime = 250;
+
+    [Test]
+    public void LargeDoubleCollectionsInSameOrder()
+    {
+        var actual = Enumerable.Range(0, Size).Select(x => (double)x);
+        var expected = Enumerable.Range(0, Size).Select(x => (double)x);
+
+        AssertFailIfTooSlow(expected, actual);
+    }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
     public void LargeIntCollectionsInSameOrder()
@@ -326,17 +368,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size);
         var expected = Enumerable.Range(0, Size);
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -345,17 +377,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size);
         var expected = Enumerable.Range(0, Size).Select(i => Size - i - 1);
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -364,18 +386,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
         var expected = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -384,18 +395,7 @@ public class CollectionEquivalentConstraintTests
         var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
         var expected = Enumerable.Range(0, Size).Select(i => (Size - i - 1).ToString()).ToList();
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
@@ -409,18 +409,7 @@ public class CollectionEquivalentConstraintTests
             expected.Add(i.ToString());
         }
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(actual);
-        var constraintResult = constraint.ApplyTo(expected);
-        Assert.That(constraintResult.IsSuccess, Is.True);
-
-        watch.Stop();
-        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 5)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(expected, actual);
     }
 
     [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
@@ -431,17 +420,7 @@ public class CollectionEquivalentConstraintTests
         encrypted[0] = 2;
         encrypted[1] = 3;
 
-        var watch = Stopwatch.StartNew();
-
-        var constraint = new CollectionEquivalentConstraint(data);
-        var constraintResult = constraint.ApplyTo(encrypted);
-        Assert.That(constraintResult.IsSuccess, Is.False);
-
-        watch.Stop();
-        if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-            Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-        if (watch.ElapsedMilliseconds > LargeCollectionFailTime * 4)
-            Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
     }
 
     [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
@@ -452,13 +431,28 @@ public class CollectionEquivalentConstraintTests
         encrypted[Size - 2] = 2;
         encrypted[Size - 1] = 3;
 
+        AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
+    }
+
+    [Test]
+    public void LargeValueTupleCollectionsInSameOrder()
+    {
+        var actual = Enumerable.Range(0, Size).Select(x => (x, Size - x));
+        var expected = Enumerable.Range(0, Size).Select(x => (x, Size - x));
+
+        AssertFailIfTooSlow(expected, actual);
+    }
+
+    private static void AssertFailIfTooSlow(IEnumerable expected, IEnumerable actual, bool expectSuccess = true)
+    {
         var watch = Stopwatch.StartNew();
 
-        var constraint = new CollectionEquivalentConstraint(data);
-        var constraintResult = constraint.ApplyTo(encrypted);
-        Assert.That(constraintResult.IsSuccess, Is.False);
+        var constraint = new CollectionEquivalentConstraint(expected);
+        var constraintResult = constraint.ApplyTo(actual);
+        Assert.That(constraintResult.IsSuccess, Is.EqualTo(expectSuccess));
 
         watch.Stop();
+        TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} mS");
         if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
             Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         if (watch.ElapsedMilliseconds > LargeCollectionFailTime)

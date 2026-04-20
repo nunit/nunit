@@ -11,28 +11,67 @@ namespace NUnit.Framework.Tests.Internal.Extensions
 {
     public class TypeExtensionTests
     {
-        [TestCaseSource(nameof(TypesThatImplementIComparable))]
-        public void TypesThatImplementIComparable_ReturnTrue(Type type)
+        [TestCaseSource(nameof(CanUseDefaultEqualityCases))]
+        public bool CanUseDefaultEquality(Type t)
         {
-            Assert.That(type.ImplementsIComparable(), Is.True);
+            return t.CanUseDefaultEquality();
         }
 
-        [TestCaseSource(nameof(TypesThatDontImplementIComparable))]
-        public void TypesThatDontImplementIComparable_ReturnFalse(Type type)
+        private static IEnumerable<TestCaseData> CanUseDefaultEqualityCases()
         {
-            Assert.That(type.ImplementsIComparable(), Is.False);
+            yield return new TestCaseData(typeof(int)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(long)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(DateTime)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(float)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(double)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(decimal)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(bool)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(string)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(DayOfWeek)) { ExpectedResult = true };
+            yield return new TestCaseData(typeof(object)) { ExpectedResult = false };
+
+            yield return new TestCaseData((1, "HI").GetType()) { ExpectedResult = true };
+            yield return new TestCaseData(Tuple.Create(1, "HI").GetType()) { ExpectedResult = true };
         }
 
-        [TestCaseSource(nameof(TypesThatAreSortable))]
-        public void TypesThatAreSortable_ReturnTrue(Type type)
+        [TestCaseSource(nameof(WrapTestCaseForGenericMethod), new object[] { nameof(TypesThatImplementIComparable) })]
+        public void TypesThatImplementIComparable_ReturnTrue<T>()
         {
-            Assert.That(type.IsSortable(), Is.True);
+            Assert.That(TypeExtensions.ImplementsIComparable<T>(), Is.True);
+            Assert.That(typeof(T).ImplementsIComparable(), Is.True);
         }
 
-        [TestCaseSource(nameof(TypesThatAreNotSortable))]
-        public void TypesThatAreNotSortable_ReturnFalse(Type type)
+        [TestCaseSource(nameof(WrapTestCaseForGenericMethod), new object[] { nameof(TypesThatDontImplementIComparable) })]
+        public void TypesThatDontImplementIComparable_ReturnFalse<T>()
         {
-            Assert.That(type.IsSortable(), Is.False);
+            Assert.That(TypeExtensions.ImplementsIComparable<T>(), Is.False);
+            Assert.That(typeof(T).ImplementsIComparable(), Is.False);
+        }
+
+        [TestCaseSource(nameof(WrapTestCaseForGenericMethod), new object[] { nameof(TypesThatAreSortable) })]
+        public void TypesThatAreSortable_ReturnTrue<T>()
+        {
+            Assert.That(TypeExtensions.IsSortable<T>(), Is.True);
+            Assert.That(typeof(T).IsSortable(), Is.True);
+        }
+
+        [TestCaseSource(nameof(WrapTestCaseForGenericMethod), new object[] { nameof(TypesThatAreNotSortable) })]
+        public void TypesThatAreNotSortable_ReturnFalse<T>()
+        {
+            Assert.That(TypeExtensions.IsSortable<T>(), Is.False);
+            Assert.That(typeof(T).IsSortable(), Is.False);
+        }
+
+        private static TestCaseData[] WrapTestCaseForGenericMethod(string sourceName)
+        {
+            var types = typeof(TypeExtensionTests).GetProperty(sourceName)?.GetValue(null) as IEnumerable<Type>;
+
+            if (types is null)
+            {
+                throw new ArgumentException($"The property '{sourceName}' was not found or did not return an IEnumerable<Type>.", nameof(sourceName));
+            }
+
+            return types.Select(type => new TestCaseData() { TypeArgs = [type] }).ToArray();
         }
 
         public static IEnumerable<Type> TypesThatAreNotSortable => TypesThatDontImplementIComparable.Union(new[]

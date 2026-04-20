@@ -17,16 +17,32 @@ namespace NUnit.Framework.Constraints
         public sealed class CollectionTallyResult
         {
             /// <summary>Items that were not in the expected collection.</summary>
-            public List<object> ExtraItems { get; }
+            public List<object?> ExtraItems { get; }
 
             /// <summary>Items that were not accounted for in the expected collection.</summary>
-            public List<object> MissingItems { get; }
+            public List<object?> MissingItems { get; }
 
             /// <summary>Initializes a new instance of the <see cref="CollectionTallyResult"/> class with the given fields.</summary>
-            public CollectionTallyResult(List<object> missingItems, List<object> extraItems)
+            public CollectionTallyResult(List<object?> missingItems, List<object?> extraItems)
             {
                 MissingItems = missingItems;
                 ExtraItems = extraItems;
+            }
+
+            /// <summary>
+            /// Converts a generic CollectionTallyResult to the non-generic version.
+            /// </summary>
+            internal static CollectionTallyResult FromGenericResult<T>(CollectionTally<T>.CollectionTallyResult genericResult)
+            {
+                var missingItems = new List<object?>(genericResult.MissingItems.Count);
+                foreach (var item in genericResult.MissingItems)
+                    missingItems.Add(item);
+
+                var extraItems = new List<object?>(genericResult.ExtraItems.Count);
+                foreach (var item in genericResult.ExtraItems)
+                    extraItems.Add(item);
+
+                return new CollectionTallyResult(missingItems, extraItems);
             }
         }
 
@@ -40,11 +56,11 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                var missingItems = new List<object>(_missingItems.Count);
+                var missingItems = new List<object?>(_missingItems.Count);
                 foreach (var o in _missingItems)
                     missingItems.Add(o);
 
-                var extraItems = new List<object>(_extraItems.Count);
+                var extraItems = new List<object?>(_extraItems.Count);
                 if (_sorted)
                 {
                     for (int index = _extraItems.Count - 1; index >= 0; index--)

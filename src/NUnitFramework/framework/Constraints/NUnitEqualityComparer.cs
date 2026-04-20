@@ -103,6 +103,14 @@ namespace NUnit.Framework.Constraints
 
         #region Properties
 
+        internal bool IsModified => _caseInsensitive
+            || _ignoreWhiteSpace
+            || _ignoreLineEndingFormat
+            || _compareProperties
+            || _compareAsCollection
+            || WithSameOffset
+            || (_externalComparers is not null && _externalComparers.Count > 0);
+
         /// <summary>
         /// Gets and sets a flag indicating whether case should
         /// be ignored in determining equality.

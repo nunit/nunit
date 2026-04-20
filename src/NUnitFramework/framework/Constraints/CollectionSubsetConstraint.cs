@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionSubsetConstraint : CollectionItemsEqualConstraint
     {
         private readonly IEnumerable _expected;
-        private List<object>? _extraItems;
+        private List<object?>? _extraItems;
 
         /// <summary>
         /// Construct a CollectionSubsetConstraint
@@ -47,10 +47,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            CollectionTally tally = Tally(_expected);
-            tally.TryRemove(actual);
+            var tallyResult = TallyResult(_expected, actual);
 
-            _extraItems = tally.Result.ExtraItems;
+            _extraItems = tallyResult.ExtraItems;
 
             return _extraItems.Count == 0;
         }
@@ -82,9 +81,9 @@ namespace NUnit.Framework.Constraints
 
         private sealed class CollectionSubsetConstraintResult : ConstraintResult
         {
-            private readonly List<object>? _extraItems;
+            private readonly List<object?>? _extraItems;
 
-            public CollectionSubsetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? extraItems)
+            public CollectionSubsetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object?>? extraItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _extraItems = extraItems;

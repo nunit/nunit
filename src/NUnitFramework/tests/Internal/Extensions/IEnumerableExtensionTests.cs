@@ -17,23 +17,41 @@ namespace NUnit.Framework.Tests.Internal.Extensions
             Assert.That(collection.IsSortable(), Is.True);
         }
 
+        [TestCaseSource(nameof(GenericSortableCollections))]
+        public void GenericSortableCollectionsAreSortable<T>(IEnumerable<T> collection)
+        {
+            Assert.That(collection.IsSortable(), Is.True);
+        }
+
         [TestCaseSource(nameof(UnsortableCollections))]
         public void UnsortableCollectionsAreNotSortable(IEnumerable collection)
         {
             Assert.That(collection.IsSortable(), Is.False);
         }
 
+        public static IEnumerable<TestCaseData> GenericSortableCollections => new[]
+        {
+            new TestCaseData(new[] { 1 }) { TypeArgs = new[] { typeof(int) } }.SetArgDisplayNames("int[]"),
+            new TestCaseData((object)new[] { "1" }) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("string[]"),
+            new TestCaseData(Enumerable.Range(0, 10)) { TypeArgs = new[] { typeof(int) } }.SetArgDisplayNames("IEnumerable<int>"),
+            new TestCaseData(Enumerable.Range(0, 10).Select(n => n.ToString())) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("IEnumerable<string>"),
+            new TestCaseData(new List<int> { 1 }) { TypeArgs = new[] { typeof(int) } }.SetArgDisplayNames("List<int>"),
+            new TestCaseData(new List<string> { "1" }) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("List<string>"),
+            new TestCaseData(new HashSet<int> { 1 }) { TypeArgs = new[] { typeof(int) } }.SetArgDisplayNames("HashSet<int>"),
+            new TestCaseData(new HashSet<string> { "1" }) { TypeArgs = new[] { typeof(string) } }.SetArgDisplayNames("HashSet<string>"),
+        };
+
         public static IEnumerable<TestCaseData> SortableCollections => new[]
         {
             new TestCaseData(new[] { 1 }).SetArgDisplayNames("int[]"),
-            new TestCaseData(new[] { "1" }).SetArgDisplayNames("string[]"),
+            new TestCaseData((object)new[] { "1" }).SetArgDisplayNames("string[]"),
             new TestCaseData(Enumerable.Range(0, 10)).SetArgDisplayNames("IEnumerable<int>"),
             new TestCaseData(Enumerable.Range(0, 10).Select(n => n.ToString())).SetArgDisplayNames("IEnumerable<string>"),
             new TestCaseData(new List<int> { 1 }).SetArgDisplayNames("List<int>"),
             new TestCaseData(new List<string> { "1" }).SetArgDisplayNames("List<string>"),
             new TestCaseData(new HashSet<int> { 1 }).SetArgDisplayNames("HashSet<int>"),
             new TestCaseData(new HashSet<string> { "1" }).SetArgDisplayNames("HashSet<string>"),
-            new TestCaseData(new StringCollection { "1" }).SetArgDisplayNames("StringCollection"),
+            new TestCaseData(new StringCollection { "1" }).SetArgDisplayNames("StringCollection")
         };
 
         public static IEnumerable<TestCaseData> UnsortableCollections => new[]
