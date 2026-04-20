@@ -366,7 +366,6 @@ public class CollectionEquivalentConstraintTests
     }
 
     [TestFixture]
-    [Platform(Exclude = PlatformNames.MacOSX, Reason = "MacOS github runner is very slow")]
     public static class Performance
     {
         private const int Size = 10000; // For large collection tests
