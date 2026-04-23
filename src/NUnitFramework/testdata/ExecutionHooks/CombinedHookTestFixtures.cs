@@ -83,20 +83,35 @@ namespace NUnit.TestData.ExecutionHooks
         public void OneTimeTearDown() => TestLog.LogCurrentMethod();
     }
 
+    [ExceptionLogging]
+    public class TestLifeCycleThrowsExceptionPassesExceptionToAfterHook
+    {
+        public Dictionary<string, Exception> SetupErrors { get; } = [];
+        public Dictionary<string, Exception> TearDownErrors { get; } = [];
+
+        [SetUp]
+        public void SetUp() => throw new InvalidOperationException(nameof(SetUp));
+
+        [TearDown]
+        public void TearDown() => throw new InvalidOperationException(nameof(TearDown));
+
+        [Test]
+        public void EmptyTest() { }
+    }
+
+    [ExceptionLogging]
     public class TestThrowsExceptionPassesExceptionToAfterHook
     {
-        public Dictionary<string, Exception> Errors { get; } = [];
+        public Dictionary<string, Exception> TestErrors { get; } = [];
 
         [Test]
-        [ExceptionLogging]
-        public void WrappedExceptionExample() => throw new InvalidOperationException();
+        public void WrappedExceptionExample() => throw new InvalidOperationException(nameof(WrappedExceptionExample));
 
         [Test]
-        [ExceptionLogging]
         public void AssertPassedExample() => Assert.Pass();
     }
 
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Class)]
     public sealed class ExceptionLoggingAttribute : ExecutionHookAttribute
     {
         public override void AfterTestHook(HookData hookData)
@@ -104,7 +119,25 @@ namespace NUnit.TestData.ExecutionHooks
             if (hookData.Exception is not null)
             {
                 var fixture = hookData.Context.Test.Parent!.Fixture as TestThrowsExceptionPassesExceptionToAfterHook;
-                fixture!.Errors[hookData.Context.Test.Name] = hookData.Exception;
+                fixture!.TestErrors[hookData.Context.Test.Name] = hookData.Exception;
+            }
+        }
+
+        public override void AfterEverySetUpHook(HookData hookData)
+        {
+            if (hookData.Exception is not null)
+            {
+                var fixture = hookData.Context.Test.Parent!.Fixture as TestLifeCycleThrowsExceptionPassesExceptionToAfterHook;
+                fixture!.SetupErrors[hookData.Context.Test.Name] = hookData.Exception;
+            }
+        }
+
+        public override void AfterEveryTearDownHook(HookData hookData)
+        {
+            if (hookData.Exception is not null)
+            {
+                var fixture = hookData.Context.Test.Parent!.Fixture as TestLifeCycleThrowsExceptionPassesExceptionToAfterHook;
+                fixture!.TearDownErrors[hookData.Context.Test.Name] = hookData.Exception;
             }
         }
     }
