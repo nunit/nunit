@@ -28,13 +28,35 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         }
 
         [Test]
+        public void TestSetUpThrowsException_HooksReceiveException()
+        {
+            var obj = new TestLifeCycleThrowsExceptionPassesExceptionToAfterHook();
+            var result = TestBuilder.RunTestFixture(obj);
+
+            var testName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.EmptyTest);
+            var ex = obj.SetupErrors[testName];
+            Assert.That(ex, Is.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void TestTearDownThrowsException_HooksReceiveException()
+        {
+            var obj = new TestLifeCycleThrowsExceptionPassesExceptionToAfterHook();
+            var result = TestBuilder.RunTestFixture(obj);
+
+            var testName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.EmptyTest);
+            var ex = obj.TearDownErrors[testName];
+            Assert.That(ex, Is.TypeOf<InvalidOperationException>());
+        }
+
+        [Test]
         public void TestThrowsException_HooksReceiveOriginalException()
         {
             var obj = new TestThrowsExceptionPassesExceptionToAfterHook();
             var result = TestBuilder.RunTestFixture(obj);
 
             var testName = nameof(TestThrowsExceptionPassesExceptionToAfterHook.WrappedExceptionExample);
-            var ex = obj.Errors[testName];
+            var ex = obj.TestErrors[testName];
             Assert.That(ex, Is.TypeOf<InvalidOperationException>());
         }
 
@@ -45,7 +67,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
             var result = TestBuilder.RunTestFixture(obj);
 
             var testName = nameof(TestThrowsExceptionPassesExceptionToAfterHook.AssertPassedExample);
-            Assert.That(obj.Errors, Does.Not.ContainKey(testName));
+            Assert.That(obj.TestErrors, Does.Not.ContainKey(testName));
         }
     }
 }
