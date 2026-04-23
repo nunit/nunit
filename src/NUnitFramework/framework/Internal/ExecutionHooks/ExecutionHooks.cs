@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterTest.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterTest.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
         }
 
         internal void OnBeforeEveryTearDown(TestExecutionContext context, IMethodInfo hookedMethod)
@@ -178,6 +178,12 @@ namespace NUnit.Framework.Internal.ExecutionHooks
         internal void OnAfterTestActionAfterTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
             AfterTestActionAfterTest.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+        }
+
+        private static Exception? PrepareException(Exception? exception)
+        {
+            exception = exception?.Unwrap();
+            return exception is SuccessException ? null : exception;
         }
     }
 }

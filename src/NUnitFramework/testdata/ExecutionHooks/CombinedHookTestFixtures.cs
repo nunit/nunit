@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData.ExecutionHooks
 {
@@ -78,6 +81,32 @@ namespace NUnit.TestData.ExecutionHooks
 
         [OneTimeTearDown]
         public void OneTimeTearDown() => TestLog.LogCurrentMethod();
+    }
+
+    public class TestThrowsExceptionPassesExceptionToAfterHook
+    {
+        public Dictionary<string, Exception> Errors { get; } = [];
+
+        [Test]
+        [ExceptionLogging]
+        public void WrappedExceptionExample() => throw new InvalidOperationException();
+
+        [Test]
+        [ExceptionLogging]
+        public void AssertPassedExample() => Assert.Pass();
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class ExceptionLoggingAttribute : ExecutionHookAttribute
+    {
+        public override void AfterTestHook(HookData hookData)
+        {
+            if (hookData.Exception is not null)
+            {
+                var fixture = hookData.Context.Test.Parent!.Fixture as TestThrowsExceptionPassesExceptionToAfterHook;
+                fixture!.Errors[hookData.Context.Test.Name] = hookData.Exception;
+            }
+        }
     }
 
     public class TestFailsWithAssertHooksProceedsToExecuteFixture
