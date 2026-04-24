@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestSetUpThrowsException_HooksReceiveException()
         {
             var obj = new TestLifeCycleThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var hookName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.SetUp);
             var testName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.EmptyTest);
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestTearDownThrowsException_HooksReceiveException()
         {
             var obj = new TestLifeCycleThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var hookName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.TearDown);
             var testName = nameof(TestLifeCycleThrowsExceptionPassesExceptionToAfterHook.EmptyTest);
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestThrowsException_HooksReceiveOriginalException()
         {
             var obj = new TestThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var hookName = nameof(TestThrowsExceptionPassesExceptionToAfterHook.WrappedExceptionExample);
             var testName = nameof(TestThrowsExceptionPassesExceptionToAfterHook.WrappedExceptionExample);
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestThrowsSuccessException_HooksReceiveNoException()
         {
             var obj = new TestThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var testName = nameof(TestThrowsExceptionPassesExceptionToAfterHook.AssertPassedExample);
             Assert.That(obj.TestErrors, Does.Not.ContainKey(testName));
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestActionBeforeTestThrowsException_HooksReceiveOriginalException()
         {
             var obj = new TestActionThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var hookName = nameof(BeforeTestActionThrowsExceptionAttribute.BeforeTest);
             var testName = nameof(TestActionThrowsExceptionPassesExceptionToAfterHook.TestActionTest);
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
         public void TestActionAfterTestThrowsException_HooksReceiveOriginalException()
         {
             var obj = new TestActionThrowsExceptionPassesExceptionToAfterHook();
-            var result = TestBuilder.RunTestFixture(obj);
+            TestBuilder.RunTestFixture(obj);
 
             var hookName = nameof(AfterTestActionThrowsExceptionAttribute.AfterTest);
             var testName = nameof(TestActionThrowsExceptionPassesExceptionToAfterHook.TestActionTest);
