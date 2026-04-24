@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData.ExecutionHooks
@@ -96,7 +97,9 @@ namespace NUnit.TestData.ExecutionHooks
         public void TearDown() => throw new InvalidOperationException(nameof(TearDown));
 
         [Test]
-        public void EmptyTest() { }
+        public void EmptyTest()
+        {
+        }
     }
 
     [ExceptionLogging]
@@ -109,6 +112,44 @@ namespace NUnit.TestData.ExecutionHooks
 
         [Test]
         public void AssertPassedExample() => Assert.Pass();
+    }
+
+    [ExceptionLogging]
+    public class TestActionThrowsExceptionPassesExceptionToAfterHook
+    {
+        public Dictionary<string, Exception> BeforeTestActionErrors { get; } = [];
+        public Dictionary<string, Exception> AfterTestActionErrors { get; } = [];
+
+        [Test]
+        [BeforeTestActionThrowsException]
+        [AfterTestActionThrowsException]
+        public void TestActionTest()
+        {
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class BeforeTestActionThrowsExceptionAttribute : Attribute, ITestAction
+    {
+        public void BeforeTest(ITest test) => throw new InvalidOperationException(nameof(BeforeTest));
+
+        public void AfterTest(ITest test)
+        {
+        }
+
+        public ActionTargets Targets => ActionTargets.Test;
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class AfterTestActionThrowsExceptionAttribute : Attribute, ITestAction
+    {
+        public void BeforeTest(ITest test)
+        {
+        }
+
+        public void AfterTest(ITest test) => throw new InvalidOperationException(nameof(AfterTest));
+
+        public ActionTargets Targets => ActionTargets.Test;
     }
 
     [AttributeUsage(AttributeTargets.Class)]
@@ -138,6 +179,24 @@ namespace NUnit.TestData.ExecutionHooks
             {
                 var fixture = hookData.Context.Test.Parent!.Fixture as TestLifeCycleThrowsExceptionPassesExceptionToAfterHook;
                 fixture!.TearDownErrors[hookData.Context.Test.Name] = hookData.Exception;
+            }
+        }
+
+        public override void AfterTestActionBeforeTestHook(HookData hookData)
+        {
+            if (hookData.Exception is not null)
+            {
+                var fixture = hookData.Context.Test.Parent!.Fixture as TestActionThrowsExceptionPassesExceptionToAfterHook;
+                fixture!.BeforeTestActionErrors[hookData.Context.Test.Name] = hookData.Exception;
+            }
+        }
+
+        public override void AfterTestActionAfterTestHook(HookData hookData)
+        {
+            if (hookData.Exception is not null)
+            {
+                var fixture = hookData.Context.Test.Parent!.Fixture as TestActionThrowsExceptionPassesExceptionToAfterHook;
+                fixture!.AfterTestActionErrors[hookData.Context.Test.Name] = hookData.Exception;
             }
         }
     }
