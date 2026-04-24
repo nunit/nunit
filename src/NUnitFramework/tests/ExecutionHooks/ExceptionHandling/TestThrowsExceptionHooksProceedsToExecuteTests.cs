@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests.ExecutionHooks.ExceptionHandling
             var obj = new TestActionThrowsExceptionPassesExceptionToAfterHook();
             var result = TestBuilder.RunTestFixture(obj);
 
-            var hookName = nameof(BeforeTestActionThrowsExceptionAttribute.AfterTest);
+            var hookName = nameof(AfterTestActionThrowsExceptionAttribute.AfterTest);
             var testName = nameof(TestActionThrowsExceptionPassesExceptionToAfterHook.TestActionTest);
 
             var ex = obj.AfterTestActionErrors[testName];
