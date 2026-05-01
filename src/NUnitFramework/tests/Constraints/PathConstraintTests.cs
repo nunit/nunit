@@ -63,8 +63,8 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-    [TestFixture, Platform("Unix")]
-    public class SamePathTest_Linux : StringConstraintTests
+    [TestFixture]
+    public class SamePathTest_Linux : UnixConstraintTests
     {
         protected override Constraint TheConstraint { get; } = new SamePathConstraint(@"/folder1/folder2").RespectCase;
 
