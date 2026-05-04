@@ -126,10 +126,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void CanTestContentsOfDelegateReturningList()
         {
             SetValuesAfterDelay(1);
-#pragma warning disable NUnit2022 // Missing property required for constraint
-            // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
             Assert.That(() => _list, Has.Count.EqualTo(1).After(AFTER, POLLING));
-#pragma warning restore NUnit2022 // Missing property required for constraint
         }
 
         [Test]
@@ -260,9 +257,6 @@ namespace NUnit.Framework.Tests.Constraints
                 }
             }
         }
-
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-        // TODO: Remove when https://github.com/nunit/nunit.analyzers/issues/982 is released
 
         [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
