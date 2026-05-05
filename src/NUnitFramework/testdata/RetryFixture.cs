@@ -236,4 +236,14 @@ namespace NUnit.TestData.RepeatingTests
             throw new NullReferenceException("Failure due to badly written test");
         }
     }
+
+    public class RetryWithRetryExceptionFixtureWithoutSetupTearDown
+    {
+        [Test]
+        [Retry(tryCount: 3, RetryExceptions = [typeof(Exception)])]
+        public void RetriesButEventuallyFails()
+        {
+            throw new NullReferenceException("Failure due to badly written test");
+        }
+    }
 }

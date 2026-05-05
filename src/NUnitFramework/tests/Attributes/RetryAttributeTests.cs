@@ -131,5 +131,15 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.Count, Is.EqualTo(2), "expected that the test stopped after 3rd retry");
             Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
         }
+
+        [Test]
+        public void RetryOnAllowedExceptionTooManyRetriesWithoutSetupTeardown()
+        {
+            object fixture = Reflect.Construct(typeof(RetryWithRetryExceptionFixtureWithoutSetupTearDown));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesButEventuallyFails");
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
+            Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
+        }
     }
 }
