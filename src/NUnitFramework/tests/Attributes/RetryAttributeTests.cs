@@ -118,7 +118,12 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed after 2nd retry");
             Assert.That(fixture.Count, Is.EqualTo(1), "expected that the test stopped after 2nd retry");
-            Assert.That(result.Message, Does.Contain(typeof(OperationCanceledException).Name), "expected that the final exception was the OperationCanceledException");
+using (Assert.EnterMultipleScope())
+{
+    Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed after 2nd retry");
+    Assert.That(fixture.Count, Is.EqualTo(1), "expected that the test stopped after 2nd retry");
+    Assert.That(result.Message, Does.Contain(typeof(OperationCanceledException).Name), "expected that the final exception was the OperationCanceledException");
+}
         }
 
         [Test]
@@ -138,9 +143,12 @@ namespace NUnit.Framework.Tests.Attributes
             RetryWithRetryExceptionFixtureWithoutSetupTearDown fixture = (RetryWithRetryExceptionFixtureWithoutSetupTearDown)Reflect.Construct(typeof(RetryWithRetryExceptionFixtureWithoutSetupTearDown));
             ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesButEventuallyFails");
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
-            Assert.That(fixture.Count, Is.EqualTo(3), "expected that the test executes all three tries");
-            Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
+                Assert.That(fixture.Count, Is.EqualTo(3), "expected that the test executes all three tries");
+                Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
+            }
         }
     }
 }
