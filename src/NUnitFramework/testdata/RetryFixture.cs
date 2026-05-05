@@ -239,10 +239,13 @@ namespace NUnit.TestData.RepeatingTests
 
     public class RetryWithRetryExceptionFixtureWithoutSetupTearDown
     {
+        public int Count;
+
         [Test]
         [Retry(tryCount: 3, RetryExceptions = [typeof(Exception)])]
         public void RetriesButEventuallyFails()
         {
+            Count++;
             throw new NullReferenceException("Failure due to badly written test");
         }
     }

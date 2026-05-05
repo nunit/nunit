@@ -135,10 +135,11 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void RetryOnAllowedExceptionTooManyRetriesWithoutSetupTeardown()
         {
-            object fixture = Reflect.Construct(typeof(RetryWithRetryExceptionFixtureWithoutSetupTearDown));
+            RetryWithRetryExceptionFixtureWithoutSetupTearDown fixture = (RetryWithRetryExceptionFixtureWithoutSetupTearDown)Reflect.Construct(typeof(RetryWithRetryExceptionFixtureWithoutSetupTearDown));
             ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesButEventuallyFails");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
+            Assert.That(fixture.Count, Is.EqualTo(3), "expected that the test executes all three tries");
             Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
         }
     }
