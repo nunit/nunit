@@ -112,7 +112,7 @@ namespace NUnit.Framework
                         }
                     }
 
-                    if (context.CurrentResult.ResultState != ResultState.Failure &&
+                    if (IsRetryException(caughtException) is false && context.CurrentResult.ResultState != ResultState.Failure &&
                         IsRetryException(context.CurrentResult.RecordedException) is false)
                     {
                         break;
