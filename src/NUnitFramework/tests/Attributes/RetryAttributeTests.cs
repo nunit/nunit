@@ -27,13 +27,15 @@ namespace NUnit.Framework.Tests.Attributes
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-
-            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
-            Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
-            Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
-            Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
-            Assert.That(fixture.Count, Is.EqualTo(nTries));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+                Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+                Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+                Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            }
         }
 
         [TestCase(typeof(RetrySucceedsOnFirstTryFixture), "Passed")]
@@ -51,9 +53,12 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.That(fixture.TearDownResults, Has.Count.EqualTo(results.Length));
-            for (int i = 0; i < results.Length; i++)
-                Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(fixture.TearDownResults, Has.Count.EqualTo(results.Length));
+                for (int i = 0; i < results.Length; i++)
+                    Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
+            }
         }
 
         [TestCase(nameof(RetryWithoutSetUpOrTearDownFixture.SucceedsOnThirdTry), "Passed", 3)]
@@ -63,9 +68,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var fixture = (RetryWithoutSetUpOrTearDownFixture)Reflect.Construct(typeof(RetryWithoutSetUpOrTearDownFixture));
             ITestResult result = TestBuilder.RunTestCase(fixture, methodName);
-
-            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.That(fixture.Count, Is.EqualTo(nTries));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            }
         }
 
         [Test]
@@ -85,9 +92,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, "NeverPasses");
-
-            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.That(1, Is.EqualTo(result.FailCount), "expected that the test failed all retries");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+                Assert.That(1, Is.EqualTo(result.FailCount), "expected that the test failed all retries");
+            }
         }
 
         [Test]
@@ -96,8 +105,11 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestVerifyAttempt));
             ITestResult result = TestBuilder.RunTestCase(fixture, "PassesOnLastRetry");
 
-            Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
-            Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
+                Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
+            }
         }
 
         [Test]
@@ -106,8 +118,11 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryWithRetryExceptionFixture));
             ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesOnAllowedException");
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), "expected that the test passed final retry");
-            Assert.That(fixture.Count, Is.EqualTo(2), "expected that the test needed 3 tries");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), "expected that the test passed final retry");
+                Assert.That(fixture.Count, Is.EqualTo(2), "expected that the test needed 3 tries");
+            }
         }
 
         [Test]
@@ -116,14 +131,12 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryWithRetryExceptionFixture));
             ITestResult result = TestBuilder.RunTestCase(fixture, "OnlyRetriesOnAllowedException");
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed after 2nd retry");
-            Assert.That(fixture.Count, Is.EqualTo(1), "expected that the test stopped after 2nd retry");
-using (Assert.EnterMultipleScope())
-{
-    Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed after 2nd retry");
-    Assert.That(fixture.Count, Is.EqualTo(1), "expected that the test stopped after 2nd retry");
-    Assert.That(result.Message, Does.Contain(typeof(OperationCanceledException).Name), "expected that the final exception was the OperationCanceledException");
-}
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed after 2nd retry");
+                Assert.That(fixture.Count, Is.EqualTo(1), "expected that the test stopped after 2nd retry");
+                Assert.That(result.Message, Does.Contain(typeof(OperationCanceledException).Name), "expected that the final exception was the OperationCanceledException");
+            }
         }
 
         [Test]
@@ -132,9 +145,12 @@ using (Assert.EnterMultipleScope())
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryWithRetryExceptionFixture));
             ITestResult result = TestBuilder.RunTestCase(fixture, "RetriesButEventuallyFails");
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
-            Assert.That(fixture.Count, Is.EqualTo(2), "expected that the test stopped after 3rd retry");
-            Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "expected that the test failed every retry");
+                Assert.That(fixture.Count, Is.EqualTo(2), "expected that the test stopped after 3rd retry");
+                Assert.That(result.Message, Does.Contain(typeof(NullReferenceException).Name), "expected that the final exception was the NullReferenceException");
+            }
         }
 
         [Test]
