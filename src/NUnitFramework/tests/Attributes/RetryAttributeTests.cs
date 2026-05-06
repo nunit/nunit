@@ -53,9 +53,9 @@ namespace NUnit.Framework.Tests.Attributes
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
+            Assert.That(fixture.TearDownResults, Has.Count.EqualTo(results.Length));
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(fixture.TearDownResults, Has.Count.EqualTo(results.Length));
                 for (int i = 0; i < results.Length; i++)
                     Assert.That(fixture.TearDownResults[i], Is.EqualTo(results[i]), $"Teardown {i} received incorrect result");
             }
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests.Attributes
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
-                Assert.That(1, Is.EqualTo(result.FailCount), "expected that the test failed all retries");
+                Assert.That(result.FailCount, Is.EqualTo(1), "expected that the test failed all retries");
             }
         }
 
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Tests.Attributes
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
-                Assert.That(0, Is.EqualTo(result.FailCount), "expected that the test passed final retry");
+                Assert.That(result.FailCount, Is.EqualTo(0), "expected that the test passed final retry");
             }
         }
 
