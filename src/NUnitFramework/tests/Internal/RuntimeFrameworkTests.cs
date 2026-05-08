@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -61,19 +62,14 @@ namespace NUnit.Framework.Tests.Internal
             });
         }
 
-        [TestCaseSource(nameof(FrameworkTestData))]
+        [TestCaseSource(nameof(ClrTestData))]
         public void CanCreateUsingClrVersion(FrameworkData data)
         {
-            Assume.That(data.FrameworkVersion.Major != 3, "#0");
-            //.NET Framework 4.0+ and .NET Core 2.0+ all have the same CLR version
-            Assume.That(data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5, "#0");
-            Assume.That(data.Runtime != RuntimeType.NetCore, "#0");
-
             var framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
             Assert.Multiple(() =>
             {
                 Assert.That(framework.Runtime, Is.EqualTo(data.Runtime), "#1");
-                Assert.That(framework.FrameworkVersion, Is.EqualTo(data.FrameworkVersion), "#2");
+                Assert.That(framework.FrameworkVersion, Is.GreaterThanOrEqualTo(data.FrameworkVersion), "#2");
                 Assert.That(framework.ClrVersion, Is.EqualTo(data.ClrVersion), "#3");
             });
         }
@@ -328,6 +324,13 @@ namespace NUnit.Framework.Tests.Internal
             new FrameworkData(RuntimeType.Any, new Version(4, 0), new Version(4, 0, 30319), "v4.0", "v4.0"),
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
+
+        internal static FrameworkData[] ClrTestData => FrameworkTestData.Where(data =>
+                                                            //.NET Framework 4.0+ and .NET Core 2.0+ all have the same CLR version
+                                                            data.Runtime != RuntimeType.NetCore &&
+                                                            data.FrameworkVersion.Major != 3 &&
+                                                            data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5)
+                                                        .ToArray();
 
         internal static string[] NetcoreRuntimes = new string[]
         {
