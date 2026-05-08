@@ -7,6 +7,14 @@
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <EditorConfigFiles>$(MSBuildThisFileDirectory)..\tests\.editorconfig</EditorConfigFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\tests\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
   </ItemGroup>
