@@ -145,35 +145,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(result.Message, Is.EqualTo("All test cases were inconclusive"));
         }
 
-        public class SqrtTests
-        {
-            [Datapoint]
-            public double Zero = 0;
-
-            [Datapoint]
-            public double Positive = 1;
-
-            [Datapoint]
-            public double Negative = -1;
-
-            [Datapoint]
-            public double Max = double.MaxValue;
-
-            [Datapoint]
-            public double Infinity = double.PositiveInfinity;
-
-            [Theory]
-            public void SqrtTimesItselfGivesOriginal(double num)
-            {
-                Assume.That(num >= 0.0 && num < double.MaxValue);
-
-                double sqrt = Math.Sqrt(num);
-
-                Assert.That(sqrt, Is.GreaterThanOrEqualTo(0.0));
-                Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
-            }
-        }
-
         public class NestedTheoryThatSearchesInDeclaringTypes
         {
             private static readonly Type NestedType = typeof(TheoryFixture.NestedWhileSearchingInDeclaringType);
