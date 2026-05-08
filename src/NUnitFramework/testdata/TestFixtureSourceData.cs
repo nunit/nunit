@@ -655,7 +655,9 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     public class BaseClassUsingDerivedClassDataSource : DataSourcePrivateFieldInBaseClass
     {
+#pragma warning disable IDE0052 // Remove unread private members
         private static readonly int[] DataSource = { 2, 4 };
+#pragma warning restore IDE0052 // Remove unread private members
 
         public BaseClassUsingDerivedClassDataSource(int data) : base(data)
         {
