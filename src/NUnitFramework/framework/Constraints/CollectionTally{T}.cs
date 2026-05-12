@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         {
             bool contentsArePrimitive = typeof(T).IsPrimitive;
             bool contentsAreSortable = typeof(T) != typeof(object) && (contentsArePrimitive || c.IsSortable());
-            bool fuzzyCompare = comparer.IsModified || !(contentsArePrimitive || typeof(T).CanUseDefaultEquality());
+            bool fuzzyCompare = typeof(T) == typeof(object) || comparer.IsModified || !(contentsArePrimitive || typeof(T).CanUseDefaultEquality());
 
             IEqualityComparer<T> equalityComparer = fuzzyCompare ? new NUnitEqualityComparerAdapter<T>(comparer) : EqualityComparer<T>.Default;
             StrategyKey key = new(contentsArePrimitive, contentsAreSortable, fuzzyCompare);
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
             bool contentsArePrimitive = false;
             // When T is object, we can't rely on sorting because the runtime types may vary and produce unpredictable sort orders
             bool contentsAreSortable = typeof(T) != typeof(object) && (contentsArePrimitive || c.IsSortable());
-            bool fuzzyCompare = comparer.IsModified;
+            bool fuzzyCompare = typeof(T) == typeof(object) || comparer.IsModified;
             if (!fuzzyCompare)
             {
                 var underlyingType = c.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
