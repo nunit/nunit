@@ -8,13 +8,8 @@ namespace NUnit.TestData
     [TestFixture]
     public class ValueSourceFixture
     {
-#pragma warning disable CS0414 // The field is assigned a value that is never used
-        private static readonly string ValidSource = "Rumpelstilzchen";
-#pragma warning restore CS0414 // The field is assigned a value that is never used
-
-#pragma warning disable CS0169 // The field is never used
+        public static readonly string ValidSource = "Rumpelstilzchen";
         private static readonly string? NullSource;
-#pragma warning restore CS0169 // The field is never used
 
         public static IEnumerable<int>? NullDataSourceProperty => null;
         private static IEnumerable<int>? NullDataSourceProvider()
@@ -36,9 +31,9 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public void Valid([ValueSource(nameof(ValidSource))] char source)
+        public void Valid([ValueSource(nameof(ValidSource))] char sourceItem)
         {
-            Assert.AreNotSame("z", source);
+            Assert.That(ValidSource, Does.Contain(sourceItem));
         }
 
         [Test]
