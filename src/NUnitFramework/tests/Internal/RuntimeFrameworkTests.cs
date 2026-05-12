@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Internal;
 
@@ -325,12 +326,11 @@ namespace NUnit.Framework.Tests.Internal
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
 
-        internal static FrameworkData[] ClrTestData => FrameworkTestData.Where(data =>
+        internal static IEnumerable<FrameworkData> ClrTestData => FrameworkTestData.Where(data =>
                                                             //.NET Framework 4.0+ and .NET Core 2.0+ all have the same CLR version
                                                             data.Runtime != RuntimeType.NetCore &&
                                                             data.FrameworkVersion.Major != 3 &&
-                                                            data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5)
-                                                        .ToArray();
+                                                            data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5);
 
         internal static string[] NetcoreRuntimes = new string[]
         {

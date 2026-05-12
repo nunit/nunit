@@ -194,13 +194,13 @@ namespace NUnit.Framework.Tests.Attributes
             TestSuite suite = TestBuilder.MakeFixture(fixture);
 
             Test? validTests = TestFinder.Find(nameof(ValueSourceFixture.Valid), suite, false)!;
-            Assert.That(validTests.Tests, Has.Count.EqualTo(15));
+            Assert.That(validTests.Tests, Has.Count.EqualTo(ValidSource.Length));
 
             ITestResult result = TestBuilder.RunTest(suite);
             ITestResult? validResults = TestFinder.Find(nameof(ValueSourceFixture.Valid), result, false)!;
 
             Assert.That(validResults.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(validResults.Children.ToArray(), Has.Length.EqualTo(15));
+            Assert.That(validResults.Children.ToArray(), Has.Length.EqualTo(ValidSource.Length));
         }
 
         [Test]
@@ -210,8 +210,10 @@ namespace NUnit.Framework.Tests.Attributes
             TestSuite suite = TestBuilder.MakeFixture(fixture);
             Test? nullSourceTests = TestFinder.Find(nameof(ValueSourceFixture.UsingNullSources), suite, false)!;
 
-            ITestResult result = TestBuilder.RunTest(nullSourceTests);
+            Assert.That(nullSourceTests.Tests, Has.Count.EqualTo(1));
+            Assert.That(nullSourceTests.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
 
+            ITestResult result = TestBuilder.RunTest(nullSourceTests);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
         }
 

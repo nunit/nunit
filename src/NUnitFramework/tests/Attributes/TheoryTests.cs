@@ -114,7 +114,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Datapoints]
-        private readonly string[] _vals = new string[] { "xyz1", "xyz2", "xyz3" };
+        private readonly string[] _vals = ["xyz1", "xyz2", "xyz3"];
 
         [Theory]
         public void ArrayWithDatapointsAttributeIsUsed(string s)
