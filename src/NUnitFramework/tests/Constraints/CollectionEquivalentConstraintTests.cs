@@ -295,6 +295,16 @@ public class CollectionEquivalentConstraintTests
     }
 
     [Test]
+    public void WorksWithArraysOfCompatibleYetDifferentTypes()
+    {
+        var longs = new long[] { 1L, 2L, 3L };
+        var ints = new int[] { 1, 2, 3 };
+
+        Assert.That(longs, Is.EquivalentTo(ints));
+        Assert.That(ints, Is.EquivalentTo(longs));
+    }
+
+    [Test]
     public void FailureMessageWithHashSetAndArray()
     {
         var hash = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });

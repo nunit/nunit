@@ -256,10 +256,12 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                var underlyingType = expected.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
-                if (underlyingType is not null && underlyingType == actual.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument())
+                var expectedUnderlyingType = expected.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
+                var actualUnderlyingType = actual.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
+
+                if (expectedUnderlyingType is not null && expectedUnderlyingType == actualUnderlyingType)
                 {
-                    var method = TallyResultCoreMethod.MakeGenericMethod(underlyingType);
+                    var method = TallyResultCoreMethod.MakeGenericMethod(expectedUnderlyingType);
                     return (CollectionTally.CollectionTallyResult)method.Invoke(null, [expected, actual, comparer])!;
                 }
 
