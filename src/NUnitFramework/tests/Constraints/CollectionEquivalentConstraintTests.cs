@@ -305,6 +305,18 @@ public class CollectionEquivalentConstraintTests
     }
 
     [Test]
+    public void FailureWithIncompatibleActualValue()
+    {
+        var expected = new int[] { 1, 2, 3 };
+        var actual = new { hello = "world" };
+
+        var ex = Assert.Throws<ArgumentException>(() => Assert.That(actual, Is.EquivalentTo(expected)));
+
+        Assert.That(ex!.ParamName, Is.EqualTo("actual"));
+        Assert.That(ex.Message, Does.Contain(actual.GetType().Name));
+    }
+
+    [Test]
     public void FailureMessageWithHashSetAndArray()
     {
         var hash = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });
