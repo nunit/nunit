@@ -294,14 +294,23 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraint.ApplyTo(hash).IsSuccess);
     }
 
-    [Test]
-    public void WorksWithArraysOfCompatibleYetDifferentTypes()
+    [TestCaseSource(nameof(ArrayCompatibilitySource))]
+    public void WorksWithArraysOfCompatibleYetDifferentTypes<T1, T2>(T1 actual, T2 expected)
+        where T1 : IEnumerable
+        where T2 : IEnumerable
     {
-        var longs = new long[] { 1L, 2L, 3L };
-        var ints = new int[] { 1, 2, 3 };
+        Assert.That(actual, Is.EquivalentTo(expected));
+        Assert.That(expected, Is.EquivalentTo(actual));
+    }
 
-        Assert.That(longs, Is.EquivalentTo(ints));
-        Assert.That(ints, Is.EquivalentTo(longs));
+    private static IEnumerable<TestCaseParameters> ArrayCompatibilitySource()
+    {
+        yield return new TestCaseData<long[], int[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<long[], object[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<object[], object[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<int[], double[]>([1, 2, 3], [1.0d, 2.0d, 3.0d]);
+        yield return new TestCaseData<decimal[], double[]>([1.0m, 2.0m, 3.0m], [1.0d, 2.0d, 3.0d]);
+        yield return new TestCaseData<string, char[]>("NUnit", ['t', 'i', 'n', 'U', 'N']);
     }
 
     [Test]
