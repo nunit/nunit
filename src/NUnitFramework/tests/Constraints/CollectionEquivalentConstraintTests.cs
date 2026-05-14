@@ -312,7 +312,8 @@ public class CollectionEquivalentConstraintTests
 
         var ex = Assert.Throws<ArgumentException>(() => Assert.That(actual, Is.EquivalentTo(expected)));
 
-        Assert.That(ex!.ParamName, Is.EqualTo("actual"));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex.ParamName, Is.EqualTo("actual"));
         Assert.That(ex.Message, Does.Contain(actual.GetType().Name));
     }
 
