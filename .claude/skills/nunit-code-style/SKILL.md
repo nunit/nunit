@@ -102,7 +102,7 @@ For the second form, write the explicit type: `List<Item> items = CreateItems();
 
 ## One statement per line, one thing per statement
 
-Don't chain side-effectful calls across a single line to save vertical space. Split multi-step expressions into named intermediates when it aids the reader. Keep tests in assertions obvious — one check per `Assert.That`, or use `Assert.Multiple` for groups.
+Don't chain side-effectful calls across a single line to save vertical space. Split multi-step expressions into named intermediates when it aids the reader. Keep tests in assertions obvious — one check per `Assert.That`, or use `Assert.EnterMultipleScope()` for groups.
 
 ## Prefer positive predicates
 

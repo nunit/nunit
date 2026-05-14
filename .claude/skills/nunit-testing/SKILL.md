@@ -56,7 +56,7 @@ For features that only make sense on one OS (long paths, Windows registry, etc.)
 
 ```csharp
 [Test]
-[Platform(Exclude = "MACOSX")]
+[Platform(Exclude = PlatformNames.MacOSX)]
 public void LongPathSupport() { ... }
 ```
 
