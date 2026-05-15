@@ -3,6 +3,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Reflection;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -13,6 +16,11 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class CollectionItemsEqualConstraint : CollectionConstraint
     {
+        /// <summary>
+        /// The generic helper method used to compare two collections of the same underlying type. This is used to avoid boxing of value types when comparing collections of value types.
+        /// </summary>
+        private static readonly MethodInfo TallyResultCoreMethod = typeof(CollectionItemsEqualConstraint).GetMethod(nameof(TallyResultCore), BindingFlags.NonPublic | BindingFlags.Static)!;
+
         /// <summary>
         /// The NUnitEqualityComparer in use for this constraint
         /// </summary>
@@ -217,9 +225,63 @@ namespace NUnit.Framework.Constraints
         /// Return a new CollectionTally for use in making tests
         /// </summary>
         /// <param name="c">The collection to be included in the tally</param>
+        [Obsolete("This method will be removed in a future release.")]
         protected CollectionTally Tally(IEnumerable c)
         {
             return new CollectionTally(_comparer, c);
+        }
+
+        private protected CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual)
+            => TallyResult(expected, actual, _comparer);
+
+        private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
+        {
+            // Add a few explicit cases for extremely commonly used types as there can be a measureable difference
+            // if many calls of these types are made for large collections over the lifetime of a single process.
+            if (expected is IEnumerable<int> expectedInts && actual is IEnumerable<int> actualInts)
+            {
+                return TallyResultCore(expectedInts, actualInts, comparer);
+            }
+            else if (expected is IEnumerable<string> expectedStrings && actual is IEnumerable<string> actualStrings)
+            {
+                return TallyResultCore(expectedStrings, actualStrings, comparer);
+            }
+            else if (expected is IEnumerable<double> expectedDoubles && actual is IEnumerable<double> actualDoubles)
+            {
+                return TallyResultCore(expectedDoubles, actualDoubles, comparer);
+            }
+            else if (expected is StringCollection expectedStringCollection && actual is StringCollection actualStringCollection)
+            {
+                return TallyResultCore(ToStringList(expectedStringCollection), ToStringList(actualStringCollection), comparer);
+            }
+            else
+            {
+                var underlyingType = expected.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument();
+                if (underlyingType is not null && underlyingType == actual.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument())
+                {
+                    var method = TallyResultCoreMethod.MakeGenericMethod(underlyingType);
+                    return (CollectionTally.CollectionTallyResult)method.Invoke(null, [expected, actual, comparer])!;
+                }
+
+                // Fallback to object-based approach for non-generic collections or generic collections of different underlying type.
+                var tally = new CollectionTally<object>(expected, comparer);
+                tally.TryRemove(actual);
+                return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
+            }
+
+            static IEnumerable<string?> ToStringList(IEnumerable l)
+            {
+                foreach (var item in l)
+                    yield return item?.ToString();
+            }
+        }
+
+        private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)
+        {
+            var tally = new CollectionTally<T>(expectedItems, comparer);
+
+            tally.TryRemove(actualItems);
+            return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
         }
     }
 }

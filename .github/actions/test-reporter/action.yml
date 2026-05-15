@@ -1,0 +1,60 @@
+name: 'NUnit Test Reporter'
+description: 'Parses TRX test results and creates a summary with framework information'
+inputs:
+  name:
+    description: 'Name of the check run'
+    required: true
+    default: 'Test Results'
+  path:
+    description: 'Path to TRX files (glob pattern)'
+    required: true
+    default: 'TestResults/**/*.trx'
+  fail-on-error:
+    description: 'Set check run to failed if any tests fail'
+    required: false
+    default: 'true'
+  token:
+    description: 'GitHub token for creating check runs'
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  passed:
+    description: 'Total passed tests'
+    value: ${{ steps.parse.outputs.passed }}
+  failed:
+    description: 'Total failed tests'
+    value: ${{ steps.parse.outputs.failed }}
+  skipped:
+    description: 'Total skipped tests'
+    value: ${{ steps.parse.outputs.skipped }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Get PR head SHA
+      id: get-sha
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          echo "sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+        else
+          echo "sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Parse TRX files and generate report
+      id: parse
+      shell: bash
+      env:
+        INPUT_NAME: ${{ inputs.name }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
+        GITHUB_TOKEN: ${{ inputs.token }}
+        COMMIT_SHA: ${{ steps.get-sha.outputs.sha }}
+      run: |
+        python "${{ github.action_path }}/parse_trx.py"

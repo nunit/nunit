@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal
             if (argsNeeded == 1 && parameters[0].ParameterType == typeof(object[]))
             {
                 if (argsProvided > 1 ||
-                    argsProvided == 1 && Arguments[0]?.GetType() != typeof(object[]))
+                    argsProvided == 1 && Arguments[0] is not null && Arguments[0]?.GetType() != typeof(object[]))
                 {
                     Arguments = [Arguments];
                 }

@@ -237,9 +237,20 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">The delegate whose value is to be tested</param>
         /// <returns>A ConstraintResult</returns>
+        [Obsolete("Use overload with Func<TActual> instead of ActualValueDelegate<TActual>")]
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
             return PollLoop(() => BaseConstraint.ApplyTo(del));
+        }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a delegate
+        /// </summary>
+        /// <param name="code">The delegate whose value is to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
+        {
+            return PollLoop(() => BaseConstraint.ApplyTo(code));
         }
 
         /// <inheritdoc/>

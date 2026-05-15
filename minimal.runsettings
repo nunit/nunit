@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Quiet mode runsettings - suppresses individual test output -->
+
+<RunSettings>
+  <RunConfiguration>
+    <TreatTestAdapterErrorsAsWarnings>false</TreatTestAdapterErrorsAsWarnings>
+    <ResultsDirectory>.\TestResults</ResultsDirectory>
+    <MaxCpuCount>0</MaxCpuCount>
+    <TestSessionTimeout>1000000</TestSessionTimeout>
+    <TreatNoTestsAsError>false</TreatNoTestsAsError>
+    <DisableParallelization>false</DisableParallelization>
+    <DisableAppDomain>false</DisableAppDomain>
+    <CollectSourceInformation>false</CollectSourceInformation>
+    <BatchSize>10</BatchSize>
+  </RunConfiguration>
+
+  <LoggerRunSettings>
+    <Loggers>
+      <Logger friendlyName="console" enabled="True">
+        <Configuration>
+          <Verbosity>minimal</Verbosity>
+        </Configuration>
+      </Logger>
+    </Loggers>
+  </LoggerRunSettings>
+
+  <NUnit>
+    <DefaultTimeout>0</DefaultTimeout>
+    <InternalTraceLevel>Off</InternalTraceLevel>
+    <NumberOfTestWorkers>-1</NumberOfTestWorkers>
+    <Verbosity>0</Verbosity>
+    <DumpXmlTestDiscovery>false</DumpXmlTestDiscovery>
+    <DumpXmlTestResults>false</DumpXmlTestResults>
+    <ShowInternalProperties>false</ShowInternalProperties>
+    <ConsoleOut>0</ConsoleOut>
+    <UseTestNameInConsoleOutput>false</UseTestNameInConsoleOutput>
+    <StopOnError>false</StopOnError>
+    <SkipNonTestAssemblies>false</SkipNonTestAssemblies>
+    <MapWarningTo>Skipped</MapWarningTo>
+    <DisplayName>Name</DisplayName>
+    <FullnameSeparator>:</FullnameSeparator>
+    <DiscoveryMethod>Current</DiscoveryMethod>
+    <AssemblySelectLimit>2000</AssemblySelectLimit>
+    <NewOutputXmlFileForEachRun>false</NewOutputXmlFileForEachRun>
+    <IncludeStackTraceForSuites>false</IncludeStackTraceForSuites>
+    <ExplicitMode>Strict</ExplicitMode>
+    <SkipExecutionWhenNoTests>false</SkipExecutionWhenNoTests>
+  </NUnit>
+</RunSettings>

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
-using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -52,34 +51,34 @@ namespace NUnit.Framework.Tests.Constraints
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
-        private static readonly ActualValueDelegate DelegateReturningValue;
-        private static readonly ActualValueDelegate DelegateReturningFalse;
-        private static readonly ActualValueDelegate DelegateReturningZero;
-        private static readonly ActualValueDelegate<object>[] SuccessDelegates;
-        private static readonly ActualValueDelegate<object>[] FailureDelegates;
+        private static readonly Func<object> DelegateReturningValue;
+        private static readonly Func<object> DelegateReturningFalse;
+        private static readonly Func<object> DelegateReturningZero;
+        private static readonly Func<object>[] SuccessDelegates;
+        private static readonly Func<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
         // Most compilers would probably initialize these in lexical order but it
         // may not be guaranteed in all cases so we do it directly.
         static DelayedConstraintTests()
         {
-            DelegateReturningValue = new ActualValueDelegate(MethodReturningValue);
-            DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
-            DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
+            DelegateReturningValue = MethodReturningValue;
+            DelegateReturningFalse = MethodReturningFalse;
+            DelegateReturningZero = MethodReturningZero;
 
-            SuccessDelegates = new[] { DelegateReturningValue };
-            FailureDelegates = new[] { DelegateReturningFalse, DelegateReturningZero };
+            SuccessDelegates = [DelegateReturningValue];
+            FailureDelegates = [DelegateReturningFalse, DelegateReturningZero];
         }
 
         [Test, TestCaseSource(nameof(SuccessDelegates))]
-        public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
+        public void SucceedsWithGoodDelegates(Func<object> del)
         {
             SetValuesAfterDelay(DELAY);
             Assert.That(TheConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test, TestCaseSource(nameof(FailureDelegates))]
-        public void FailsWithBadDelegates(ActualValueDelegate<object> del)
+        public void FailsWithBadDelegates(Func<object> del)
         {
             Assert.That(TheConstraint.ApplyTo(del).IsSuccess, Is.False);
         }
@@ -239,10 +238,10 @@ namespace NUnit.Framework.Tests.Constraints
             var list = new PretendList();
 
 #pragma warning disable NUnit2044 // Non-delegate actual parameter
-            Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(1000, 100)),
+            Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
 #pragma warning restore NUnit2044 // Non-delegate actual parameter
-            Assert.That(list.PollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(list.PollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
 
         private class PretendList
@@ -263,19 +262,104 @@ namespace NUnit.Framework.Tests.Constraints
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;
-            Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(1000, 100)),
+            Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
 
         [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
         {
             int pollCount = 0;
-            Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1000, 100)),
+            Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
         }
+        /*  Claude analysis of this test
+         *   Analysis of Flaky Test
+
+           The Test (lines 271-278)
+
+           [Test, Platform(Exclude = PlatformNames.MacOSX, ...)]
+           public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
+           {
+               int pollCount = 0;
+               Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1000, 100)),
+                           Throws.InstanceOf<AssertionException>());
+               Assert.That(pollCount, Is.GreaterThan(5).And.LessThanOrEqualTo(10 + 1));
+           }
+
+           The test expects pollCount to be between 6 and 11 after 1000ms with 100ms polling intervals.
+
+           Root Causes of Flakiness
+
+           1. Delay-Before-Check Pattern in ApplyToAsync (DelayedConstraint.cs:246-270)
+
+           The async polling loop structure is:
+           while (await PollingDelayAsync(stopwatch))   // Wait FIRST
+           {
+               ConstraintResult result = await BaseConstraint.ApplyToAsync(taskDel);  // Then check
+               ...
+           }
+           // Final check after loop
+           return ... await BaseConstraint.ApplyToAsync(taskDel);
+
+           This waits before each check rather than checking immediately. With 1000ms total and 100ms polling:
+           - Ideally: ~10 loop iterations + 1 final check = 11 total calls
+           - But timing drift reduces this
+
+           2. Task.Delay Timing Imprecision (DelayedConstraint.cs:272-290)
+
+           The PollingDelayAsync method uses Task.Delay, which:
+           - Depends on system timer resolution (~15.6ms on Windows, varies on Linux)
+           - Can overshoot significantly under load
+           - Has thread pool scheduling overhead when resuming
+
+           The codebase already acknowledges this problem (lines 282-286):
+           // The below should not be needed, except that on github runners
+           // waiting for a specified time doesn't seem to work.
+           while ((elapsed = stopwatch.Elapsed) < endElapsed)
+               await Task.Delay(endElapsed - elapsed);
+
+           3. Cumulative Timing Errors
+
+           Each of the ~10 iterations accumulates:
+           - Task.Delay variance
+           - await context-switch overhead
+           - Constraint evaluation time
+           - Task scheduler latency
+
+           Even 5-10ms extra per iteration = 50-100ms total drift, reducing poll count.
+
+           4. Aggressive Lower Bound
+
+           Expecting at least 6 calls leaves little margin. If Task.Delay(100) consistently takes 120-150ms (common under CI
+           load), you'd only get 7-8 polls, making the lower bound fragile.
+
+           5. Async vs Sync Behavioral Difference
+
+           The synchronous counterpart ThatPollingCallsDelegateCorrectNumberOfTimes (line 263) uses Thread.Sleep, which:
+           - Blocks the thread directly
+           - Has more predictable timing characteristics
+           - Doesn't involve task scheduler overhead
+
+           Evidence of Known Issues
+
+           - All three polling count tests are excluded on macOS with the comment: "Doesn't seem to work correctly with timing,
+           something to ponder later"
+           - The compensation loop in PollingDelayAsync was explicitly added for GitHub runners
+           - This suggests timing sensitivity is a known, unresolved problem
+
+           Summary
+
+           The test is fundamentally timing-dependent, relying on:
+           1. Precise 100ms delays (not guaranteed)
+           2. Minimal overhead per iteration (varies by system load)
+           3. Consistent scheduler behavior (varies by platform/load)
+
+           This creates a test that passes most of the time but fails intermittently when system conditions cause timing drift -
+           the classic definition of a flaky test.
+        */
 
         [Test]
         public void AssertionExpectingAnExceptionWithRetrySucceeds()

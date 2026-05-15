@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -9,9 +10,9 @@ namespace NUnit.TestData
     {
         public sealed class TaskReturningTestMethodFixture
         {
-            private readonly AsyncTestDelegate _asyncUserCode;
+            private readonly Func<Task> _asyncUserCode;
 
-            public TaskReturningTestMethodFixture(AsyncTestDelegate asyncUserCode)
+            public TaskReturningTestMethodFixture(Func<Task> asyncUserCode)
             {
                 _asyncUserCode = asyncUserCode;
             }
@@ -22,9 +23,9 @@ namespace NUnit.TestData
 
         public sealed class TaskReturningSetUpFixture
         {
-            private readonly AsyncTestDelegate _asyncUserCode;
+            private readonly Func<Task> _asyncUserCode;
 
-            public TaskReturningSetUpFixture(AsyncTestDelegate asyncUserCode)
+            public TaskReturningSetUpFixture(Func<Task> asyncUserCode)
             {
                 _asyncUserCode = asyncUserCode;
             }
@@ -40,9 +41,9 @@ namespace NUnit.TestData
 
         public sealed class TaskReturningTearDownFixture
         {
-            private readonly AsyncTestDelegate _asyncUserCode;
+            private readonly Func<Task> _asyncUserCode;
 
-            public TaskReturningTearDownFixture(AsyncTestDelegate asyncUserCode)
+            public TaskReturningTearDownFixture(Func<Task> asyncUserCode)
             {
                 _asyncUserCode = asyncUserCode;
             }
@@ -58,9 +59,9 @@ namespace NUnit.TestData
 
         public sealed class TaskReturningOneTimeSetUpFixture
         {
-            private readonly AsyncTestDelegate _asyncUserCode;
+            private readonly Func<Task> _asyncUserCode;
 
-            public TaskReturningOneTimeSetUpFixture(AsyncTestDelegate asyncUserCode)
+            public TaskReturningOneTimeSetUpFixture(Func<Task> asyncUserCode)
             {
                 _asyncUserCode = asyncUserCode;
             }
@@ -76,9 +77,9 @@ namespace NUnit.TestData
 
         public sealed class TaskReturningOneTimeTearDownFixture
         {
-            private readonly AsyncTestDelegate _asyncUserCode;
+            private readonly Func<Task> _asyncUserCode;
 
-            public TaskReturningOneTimeTearDownFixture(AsyncTestDelegate asyncUserCode)
+            public TaskReturningOneTimeTearDownFixture(Func<Task> asyncUserCode)
             {
                 _asyncUserCode = asyncUserCode;
             }

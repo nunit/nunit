@@ -58,6 +58,7 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        [Obsolete("Verifying TestDelegate overload")]
         public void ThrowsConstraintSucceedsWithDelegate()
         {
             // Without cast, delegate is ambiguous before C# 3.0.
@@ -211,7 +212,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private Exception? CatchException(TestDelegate del)
+        private Exception? CatchException(Action del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {

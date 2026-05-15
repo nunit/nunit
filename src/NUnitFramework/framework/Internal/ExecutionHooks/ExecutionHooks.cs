@@ -137,7 +137,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterEverySetUp(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterEverySetUp.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterEverySetUp.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
         }
 
         internal void OnBeforeTest(TestExecutionContext context, IMethodInfo hookedMethod)
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterTest.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterTest.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
         }
 
         internal void OnBeforeEveryTearDown(TestExecutionContext context, IMethodInfo hookedMethod)
@@ -157,7 +157,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterEveryTearDown(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterEveryTearDown.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterEveryTearDown.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
         }
 
         internal void OnBeforeTestActionBeforeTest(TestExecutionContext context, IMethodInfo hookedMethod)
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterTestActionBeforeTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterTestActionBeforeTest.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterTestActionBeforeTest.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
         }
 
         internal void OnBeforeTestActionAfterTest(TestExecutionContext context, IMethodInfo hookedMethod)
@@ -177,7 +177,13 @@ namespace NUnit.Framework.Internal.ExecutionHooks
 
         internal void OnAfterTestActionAfterTest(TestExecutionContext context, IMethodInfo hookedMethod, Exception? exceptionContext = null)
         {
-            AfterTestActionAfterTest.InvokeHandlers(new HookData(context, hookedMethod, exceptionContext));
+            AfterTestActionAfterTest.InvokeHandlers(new HookData(context, hookedMethod, PrepareException(exceptionContext)));
+        }
+
+        private static Exception? PrepareException(Exception? exception)
+        {
+            exception = exception?.Unwrap();
+            return exception is SuccessException ? null : exception;
         }
     }
 }

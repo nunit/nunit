@@ -34,13 +34,13 @@ namespace NUnit.Framework.Tests.Internal
         public static void RecordExceptionHandlesDelegatesThatHaveOneFewerParameterThanTheBoundMethod()
         {
             Assert.That(
-                ExceptionHelper.RecordException(new TestDelegate(new Foo(null).ThrowingExtensionMethod), "someParamName"),
+                ExceptionHelper.RecordException(new Foo(null).ThrowingExtensionMethod, "someParamName"),
                 Is.Null);
 
             var exceptionToThrow = new Exception();
 
             Assert.That(
-                ExceptionHelper.RecordException(new TestDelegate(new Foo(exceptionToThrow).ThrowingExtensionMethod), "someParamName"),
+                ExceptionHelper.RecordException(new Foo(exceptionToThrow).ThrowingExtensionMethod, "someParamName"),
                 Is.SameAs(exceptionToThrow));
         }
 

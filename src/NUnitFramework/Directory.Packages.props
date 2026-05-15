@@ -12,12 +12,18 @@
   <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
+  <!-- Build tooling -->
+  <ItemGroup>
+    <PackageVersion Include="MinVer" Version="7.0.0" />
+  </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageVersion Include="FSharp.Core" Version="8.0.400" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
   </ItemGroup>
   <!-- Package to allow Nullability etc. in older SDKS -->
   <ItemGroup>
@@ -32,17 +38,13 @@
     <PackageVersion Include="CSharpIsNullAnalyzer" Version="0.1.593" />
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.10.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.12.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.13.0" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
   </ItemGroup>
   <!-- Roslyn Compilation -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
-  </ItemGroup>
-  <!-- Specific dependencies -->
-  <ItemGroup>
-    <PackageVersion Include="BenchmarkDotNet" Version="0.15.0" />
   </ItemGroup>
   <!-- Explictily set the version of indirect referenced nuget packages -->
   <ItemGroup>

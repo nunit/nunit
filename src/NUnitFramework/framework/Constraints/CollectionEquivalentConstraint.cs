@@ -51,14 +51,9 @@ namespace NUnit.Framework.Constraints
                 return true;
             }
 
-            CollectionTally ct = Tally(_expected);
-            ct.TryRemove(actual);
+            tallyResult = TallyResult(_expected, actual);
 
-            // Store the CollectionTallyResult so the comparison between the two collections
-            // is only performed once.
-            tallyResult = ct.Result;
-
-            return ((tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0));
+            return (tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0);
         }
 
         /// <inheritdoc/>

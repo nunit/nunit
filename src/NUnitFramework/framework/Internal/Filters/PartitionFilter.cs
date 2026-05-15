@@ -28,10 +28,8 @@ namespace NUnit.Framework.Internal.Filters
 
 #if NETFRAMEWORK
         private readonly ThreadLocal<SHA256> _sha256 = new(() => SHA256.Create());
-        private readonly ThreadLocal<byte[]> _buffer = new(() => new byte[4096]);
-#else
-        private readonly ThreadLocal<byte[]> _buffer = new(() => GC.AllocateUninitializedArray<byte>(4096));
 #endif
+        private readonly ThreadLocal<byte[]> _buffer = new(() => GC.AllocateUninitializedArray<byte>(4096));
         private readonly ThreadLocal<Encoder> _encoder = new(() => Encoding.UTF8.GetEncoder());
 
         /// <summary>

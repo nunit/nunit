@@ -166,6 +166,8 @@ namespace NUnit.Common
         public int NumberOfTestWorkers { get; private set; } = -1;
         public bool NumberOfTestWorkersSpecified => NumberOfTestWorkers >= 0;
 
+        public bool RunOnMainThread { get; private set; }
+
         public bool StopOnError { get; private set; }
 
         public bool WaitBeforeExit { get; private set; }
@@ -371,6 +373,9 @@ namespace NUnit.Common
 
             Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
+
+            Add("mainthread", "Run tests on the same thread as the NUnitLite runner.",
+                v => RunOnMainThread = v is not null);
 
             Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v is not null);

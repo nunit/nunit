@@ -578,6 +578,15 @@ namespace NUnit.Framework.Constraints
             return Append(new SameAsConstraint<T>(expected));
         }
 
+        /// <summary>
+        /// Returns a constraint that tests that two references are the same object
+        /// </summary>
+        public static SameAsConstraint<T> SameAs<T>(T? expected)
+            where T : class?
+        {
+            return new SameAsConstraint<T>(expected);
+        }
+
         #endregion
 
         #region GreaterThan

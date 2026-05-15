@@ -12,6 +12,10 @@
         <Title>NUnit Framework Tests</Title>
     </PropertyGroup>
 
+    <ItemGroup>
+        <EditorConfigFiles Include="$(MSBuildThisFileDirectory)..\tests.editorconfig" />
+    </ItemGroup>
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     </ItemGroup>

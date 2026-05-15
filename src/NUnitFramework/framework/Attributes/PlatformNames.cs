@@ -7,7 +7,7 @@ namespace NUnit.Framework
     /// Canonical platform names for use with <see cref="PlatformAttribute"/>. Note that
     /// the <c>platforms</c> argument to <see cref="PlatformAttribute"/> supports
     /// syntax beyond just naming platforms, such as comma-delimited lists, but using
-    /// these comments ensures that the precise name of a platform cannot be mistyped
+    /// these constants ensure that the precise name of a platform cannot be mistyped
     /// or misspelled.
     /// </para>
     /// <code>

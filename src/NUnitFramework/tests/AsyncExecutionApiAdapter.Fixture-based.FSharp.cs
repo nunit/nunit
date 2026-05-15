@@ -1,12 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Threading.Tasks;
+
 namespace NUnit.Framework.Tests
 {
     public partial class AsyncExecutionApiAdapter
     {
         private sealed class FSharpTaskReturningTestMethodAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.FSharp.AsyncExecutionApiAdapter.TaskReturningTestMethodFixture),
@@ -18,7 +21,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class FSharpTaskReturningSetUpAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.FSharp.AsyncExecutionApiAdapter.TaskReturningSetUpFixture),
@@ -30,7 +33,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class FSharpTaskReturningTearDownAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.FSharp.AsyncExecutionApiAdapter.TaskReturningTearDownFixture),
@@ -42,7 +45,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class FSharpTaskReturningOneTimeSetUpAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.FSharp.AsyncExecutionApiAdapter.TaskReturningOneTimeSetUpFixture),
@@ -54,7 +57,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class FSharpTaskReturningOneTimeTearDownAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 ExecuteFixture(
                     typeof(TestData.FSharp.AsyncExecutionApiAdapter.TaskReturningOneTimeTearDownFixture),

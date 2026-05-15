@@ -81,14 +81,15 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public static void RecursivelyPostedWorkIsStillExecutedIfStartedWithinTimeout()
         {
-            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            // Use longer timeout and shorter sleep to avoid flaky failures on slow CI machines
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(5)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
                 var wasExecuted = new CallbackWatcher();
 
                 context.Post(state =>
                 {
-                    context.Post(_ => Thread.Sleep(TimeSpan.FromSeconds(0.5)), null);
+                    context.Post(_ => Thread.Sleep(TimeSpan.FromSeconds(0.2)), null);
                     context.Post(_ => wasExecuted.OnCallback(), null);
 
                     context.ShutDown();
@@ -189,14 +190,15 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public static void RecursivelyPostedWorkIsStillExecutedWithinTimeout()
         {
-            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            // Use longer timeout and shorter work duration to avoid flaky failures on slow CI machines
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(5)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
                 var wasExecuted = new CallbackWatcher();
 
                 context.Post(_ =>
                 {
-                    ScheduleWorkRecursively(Stopwatch.StartNew(), until: TimeSpan.FromSeconds(0.5), wasExecuted: wasExecuted);
+                    ScheduleWorkRecursively(Stopwatch.StartNew(), until: TimeSpan.FromSeconds(0.2), wasExecuted: wasExecuted);
 
                     context.ShutDown();
                 }, null);

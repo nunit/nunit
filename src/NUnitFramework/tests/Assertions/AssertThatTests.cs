@@ -496,11 +496,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public async Task AssertThatWithInvalidTolerance()
         {
-            DateTime expected = DateTime.UtcNow;
-
-            await Task.Delay(500);
-
-            DateTime actual = DateTime.UtcNow;
+            var start = DateTime.UtcNow;
+            DateTime expected = start;
+            DateTime actual = start.AddMilliseconds(500);
 
             Assert.That(actual, Is.EqualTo(expected).Within(1).Seconds);
             Assert.That(() => Assert.That(actual, Is.EqualTo((object)expected).Within(1)),
@@ -508,11 +506,11 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
+        public void AssertPropertiesComparerOnlyUsesToleranceWhereAppropriate()
         {
-            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
-            await Task.Delay(500);
-            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
+            var start = DateTimeOffset.UtcNow;
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start);
+            var actual = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start.AddMilliseconds(500));
 
 #pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(actual, Is.EqualTo(expected).UsingPropertiesComparer().Within(1.0).Seconds);
@@ -522,9 +520,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public async Task AssertPropertiesComparerOnlyUsesToleranceWhereSpecified()
         {
-            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, DateTimeOffset.UtcNow);
-            await Task.Delay(500);
-            var actual = new RecordWithDifferentToleranceAwareMembers(2, "Name", 1.81, DateTimeOffset.UtcNow);
+            var start = DateTimeOffset.UtcNow;
+            var expected = new RecordWithDifferentToleranceAwareMembers(1, "Name", 1.80, start);
+            var actual = new RecordWithDifferentToleranceAwareMembers(2, "Name", 1.81, start.AddMilliseconds(500));
 
             // Fails because of Id and Height field
             Assert.That(actual, Is.Not.EqualTo(expected).UsingPropertiesComparer(
@@ -1114,6 +1112,109 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(() => Assert.That("abc", constraint), Throws.InstanceOf<AssertionException>()
                 .With.Message.Contains("Expected: not equal to \"abc\"")
                 .And.Message.Contains("But was:  \"abc\""));
+        }
+
+        private readonly struct InfinitelyRecursiveTestStructure
+        {
+            public int Value1 { get; init; }
+            public int Value2 { get; init; }
+            public InfinitelyRecursiveTestStructure Product => new InfinitelyRecursiveTestStructure() { Value1 = Value1 * Value2 };
+        }
+
+        [Test]
+        public void PropertyComparerThrowsExceptionForInfinitelyRecursiveGraph()
+        {
+            var objectA = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
+            var objectB = new InfinitelyRecursiveTestStructure() { Value1 = 2 };
+            Assert.Throws<InconclusiveException>(() =>
+            {
+                 Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer());
+            });
+        }
+
+        private readonly struct DepthThreeTestStructure
+        {
+            public DepthThreeTestStructure()
+            {
+            }
+            public readonly struct GrandChild
+            {
+                public int Value { get; init; }
+            }
+            public readonly struct Child
+            {
+                public Child()
+                {
+                }
+                public GrandChild MyGrandChild { get; init; } = new();
+            }
+            public Child FirstChild { get; init; } = new();
+        }
+
+        [Test]
+        public void PropertyComparerThrowsExceptionForDepthThreeWhenConfiguredForMaxDepthTwo()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<InconclusiveException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(2)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerThrowsExceptionForDepthThreeWhenConfiguredForMaxDepthTwoWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<InconclusiveException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(2)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerDoesNotThrowExceptionForDepthThreeWhenConfiguredForMaxDepthThree()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.DoesNotThrow(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(3)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerDoesNotThrowExceptionForDepthThreeWhenConfiguredForMaxDepthThreeWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.DoesNotThrow(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(3)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerMaxDepthCannotBeSetToLessThanOne()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer(cfg => cfg.WithMaximumGraphDepth(0)));
+            });
+        }
+
+        [Test]
+        public void PropertyComparerMaxDepthCannotBeSetToLessThanOneWithGenericConfiguration()
+        {
+            var objectA = new DepthThreeTestStructure();
+            var objectB = new DepthThreeTestStructure();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                Assert.That(objectA, Is.EqualTo(objectB).UsingPropertiesComparer<DepthThreeTestStructure>(cfg => cfg.WithMaximumGraphDepth(0)));
+            });
         }
     }
 }

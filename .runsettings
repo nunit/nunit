@@ -112,7 +112,7 @@
     <FullnameSeparator>:</FullnameSeparator>
     <DiscoveryMethod>Current</DiscoveryMethod>
     <!--Legacy or Current-->
-    <AssemblySelectLimit>2000</AssemblySelectLimit>
+    <AssemblySelectLimit>200000</AssemblySelectLimit>
     <NewOutputXmlFileForEachRun>false</NewOutputXmlFileForEachRun>
     <IncludeStackTraceForSuites>true</IncludeStackTraceForSuites>
     <ExplicitMode>Strict</ExplicitMode>
