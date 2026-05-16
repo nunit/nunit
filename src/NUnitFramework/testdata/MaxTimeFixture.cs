@@ -52,7 +52,7 @@ namespace NUnit.TestData
     [TestFixture]
     public class MaxTimeFixtureWithWarning
     {
-        [Test, MaxTime(100, WarningTime = 20)]
+        [Test, MaxTime(2000, WarningTime = 20)]
         public void WarningTimeExceeded()
         {
             Thread.Sleep(30);
