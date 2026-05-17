@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command.</param>
         /// <param name="maxTime">The max time allowed in milliseconds</param>
         public MaxTimeCommand(TestCommand innerCommand, int maxTime)
-            : this(innerCommand, maxTime, null)
+            : this(innerCommand, maxTime, 0)
         {
         }
 
@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command.</param>
         /// <param name="maxTime">The max time allowed in milliseconds</param>
         ///  <param name="warningTime">Gets or sets an optional warning threshold in milliseconds </param>
-        public MaxTimeCommand(TestCommand innerCommand, int maxTime, int? warningTime)
+        public MaxTimeCommand(TestCommand innerCommand, int maxTime, int warningTime)
             : base(innerCommand)
         {
             AfterTest = context =>
@@ -54,10 +54,10 @@ namespace NUnit.Framework.Internal.Commands
                         result.SetResult(ResultState.Failure,
                             $"Elapsed time of {elapsedTime}ms exceeds maximum of {maxTime}ms");
                     }
-                    else if (warningTime.HasValue && elapsedTime > warningTime)
+                    else if (warningTime > 0 && elapsedTime > warningTime)
                     {
                         result.SetResult(ResultState.Warning,
-                            $"Elapsed time of {elapsedTime}ms exceeds warning threshold of {warningTime.Value}ms");
+                            $"Elapsed time of {elapsedTime}ms exceeds warning threshold of {warningTime}ms");
                     }
                 }
             };

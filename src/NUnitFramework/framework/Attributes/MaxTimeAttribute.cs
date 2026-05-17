@@ -18,7 +18,7 @@ namespace NUnit.Framework
         /// Gets or sets an optional warning threshold in milliseconds.
         /// If the test takes longer than this time, but less than the maximum time, a warning is issued.
         /// </summary>
-        public int? WarningTime { get; set; }
+        public int WarningTime { get; set; }
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>
