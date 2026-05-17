@@ -13,20 +13,6 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Delegate used by tests that execute code and
-    /// capture any thrown exception.
-    /// </summary>
-    [Obsolete("Use Action instead of TestDelegate")]
-    public delegate void TestDelegate();
-
-    /// <summary>
-    /// Delegate used by tests that execute async code and
-    /// capture any thrown exception.
-    /// </summary>
-    [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
-    public delegate Task AsyncTestDelegate();
-
-    /// <summary>
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
     /// </summary>
@@ -43,7 +29,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new bool Equals(object a, object b)
+        public new static bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used. Use Assert.AreEqual instead.");
         }
@@ -56,7 +42,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new void ReferenceEquals(object a, object b)
+        public new static void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used. Use Assert.AreSame instead.");
         }
@@ -214,51 +200,6 @@ namespace NUnit.Framework
         /// be executed, even if they fail. Failed results are saved and
         /// reported at the end of the code block.
         /// </summary>
-        /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
-        [Obsolete("Use overload with Action instead of TestDelegate")]
-        public static void Multiple(TestDelegate testDelegate)
-        {
-            using (EnterMultipleScope())
-            {
-                testDelegate();
-            }
-        }
-
-        /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
-        /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
-        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
-        public static void Multiple(AsyncTestDelegate testDelegate)
-        {
-            using (EnterMultipleScope())
-            {
-                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, testDelegate.Invoke);
-            }
-        }
-
-        /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
-        /// <param name="testDelegate">An AsyncTestDelegate to be executed in Multiple Assertion mode.</param>
-        [Obsolete("Use Func<Task> instead of AsyncTestDelegate")]
-        public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
-        {
-            using (EnterMultipleScope())
-            {
-                await testDelegate();
-            }
-        }
-
-        /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
         /// <param name="action">An action to be executed in Multiple Assertion mode.</param>
         [OverloadResolutionPriority(1)]
         public static void Multiple(Action action)
@@ -359,7 +300,7 @@ namespace NUnit.Framework
                     {
                         // We are at the end of the outermost multiple assert scope and there were failures recorded.
                         // Throw MultipleAssertException to exit current test
-                        // unless we are in the middle of handling another exception we don't want to loose.
+                        // unless we are in the middle of handling another exception we don't want to lose.
                         if (!IsExceptionActive())
                             throw new MultipleAssertException(_context.CurrentResult);
                     }
