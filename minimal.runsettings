@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Quiet mode runsettings - suppresses individual test output -->
+<!-- Minimal mode runsettings - suppresses individual test output -->
 
 <RunSettings>
   <RunConfiguration>

@@ -111,7 +111,7 @@ Tests can be run using either Cake or directly with `dotnet test`:
 | `build --target=Test --minimal=true` | Run tests with minimal output (summaries only) |
 | `dotnet test` | Run tests directly using dotnet CLI |
 | `dotnet test -v m` | Run tests with minimal MSBuild output | 
-| `dotnet test -l "console;verbosity=detailed` | Run tests with detailed test output | 
+| `dotnet test -l "console;verbosity=detailed"` | Run tests with detailed test output | 
 | `dotnet test --settings quiet.runsettings` | Run tests with reduced NUnit output |
 
 The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks.

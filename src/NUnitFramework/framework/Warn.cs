@@ -81,7 +81,7 @@ namespace NUnit.Framework
         /// is satisfied and issuing a warning on failure.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="code">AA piece of code returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         [OverloadResolutionPriority(1)]
