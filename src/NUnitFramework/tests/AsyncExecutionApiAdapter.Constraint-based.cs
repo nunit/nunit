@@ -21,9 +21,9 @@ namespace NUnit.Framework.Tests
             public override void Execute(Func<Task> asyncUserCode)
             {
                 _constraint.ApplyTo(asyncUserCode);
-#pragma warning disable CS0618 // Type or member is obsolete
-                _constraint.ApplyTo(asyncUserCode.Invoke);
-#pragma warning restore CS0618 // Type or member is obsolete
+//#pragma warning disable CS0618 // Type or member is obsolete
+//                _constraint.ApplyTo(asyncUserCode.Invoke);
+//#pragma warning restore CS0618 // Type or member is obsolete
             }
 
             public sealed override string ToString() => _constraint.GetType().Name + ".ApplyTo(…)";

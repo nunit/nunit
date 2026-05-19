@@ -172,7 +172,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [TestCase(arg: new object?[] { null })]
         [TestCase([new object?[] { null }])]
-        public void NullArgumentsNeedToBeExplcitlySetInObjectArray(object?[] array)
+        public void NullArgumentsNeedToBeExplicitlySetInObjectArray(object?[] array)
         {
             Assert.That(array, Is.EqualTo(new object?[] { null }));
         }

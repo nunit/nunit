@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void TestWithAttribute_WillRunNotRunOnMacOSXPlatform()
+        public void TestWithAttribute_WillNotRunOnMacOSXPlatform()
         {
             OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
             var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();
