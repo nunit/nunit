@@ -42,7 +42,7 @@ namespace NUnit.Framework
 
             Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
-            return caughtException;
+            return caughtException as TExpected;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(IResolveConstraint expression, Action code)
         {
-            return Throws(expression, code, string.Empty, null);
+            return Throws<Exception>(expression, code, string.Empty, null);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
         }
 
         #endregion
@@ -140,7 +140,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Catch(Action code)
         {
-            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
+            return Catch<Exception>(code);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Catch(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace NUnit.Framework
         public static TExpected? Catch<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
-             return Throws<TExpected>(new InstanceOfTypeConstraint<TExpected>(), code, message, args);
+            return Throws<TExpected>(new InstanceOfTypeConstraint<TExpected>(), code, message, args);
         }
 
         /// <summary>

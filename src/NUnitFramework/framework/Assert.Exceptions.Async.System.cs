@@ -126,7 +126,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? CatchAsync(Func<Task> asyncCode, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode, message, args);
+            return CatchAsync<Exception>(asyncCode, message, args);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? CatchAsync(Func<Task> asyncCode)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode);
+            return CatchAsync<Exception>(asyncCode);
         }
 
         /// <summary>
