@@ -292,13 +292,13 @@ namespace NUnit.Framework.Internal
         {
             if (exception is NUnitException { InnerException: not null } nUnitException)
             {
-                exception = nUnitException.InnerException;
+                exception = nUnitException.InnerException!;
             }
 
             while (exception is TargetInvocationException { InnerException: not null, StackTrace: { } stackTrace } targetInvocationException &&
                 stackTrace.Contains("NUnit.Framework"))
             {
-                exception = targetInvocationException.InnerException;
+                exception = targetInvocationException.InnerException!;
             }
 
             return exception;
