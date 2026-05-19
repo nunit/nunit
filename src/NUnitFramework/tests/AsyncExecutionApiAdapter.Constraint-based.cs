@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests
             {
                 _constraint.ApplyTo(asyncUserCode);
 #pragma warning disable CS0618 // Type or member is obsolete
-                _constraint.ApplyTo((Func<Task>)asyncUserCode.Invoke); // ActualValueDelegate<> overload
+                _constraint.ApplyTo(asyncUserCode.Invoke);
 #pragma warning restore CS0618 // Type or member is obsolete
             }
 
