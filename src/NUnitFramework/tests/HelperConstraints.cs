@@ -25,9 +25,9 @@ namespace NUnit.Framework.Tests
 
             public override string Description => "Has Maximum Time";
 
-            protected override object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+            protected override object? GetTestObject<TActual>(Func<TActual> code)
             {
-                return del;
+                return code;
             }
 
             public override ConstraintResult ApplyTo<TActual>(TActual actual)

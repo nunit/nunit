@@ -313,6 +313,37 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             yield return new TestCaseData(new D2(), string.Empty);
         }
 
+        private static readonly int[][][] ArraySources =
+        [
+            [
+                [1, 2, 3],
+                [4, 5, 6]
+            ],
+        ];
+
+        [TestCaseSource(nameof(ArraySources))]
+        public static void GenericNestedArray<T>(IEnumerable<T> data) => Assert.That(data.GetType(), Is.EqualTo(typeof(int[][])));
+
+        [TestCaseSource(nameof(ArraySources))]
+        public static void GenericWithArraySource<T>(T data)
+            where T : notnull
+            => Assert.That(data.GetType(), Is.EqualTo(typeof(int[][])));
+
+        [TestCaseSource(nameof(IntegerArrays))]
+        public static void MethodWithSingleParameter(int i)
+        {
+        }
+
+        [TestCaseSource(nameof(IntegerArrays))]
+        public static void MethodWithThreeParameters(int i, int j, int k)
+        {
+        }
+
+        private static readonly object[] IntegerArrays =
+        {
+            new int[] { 1, 2, 3 },
+        };
+
         private class D1
         {
         }

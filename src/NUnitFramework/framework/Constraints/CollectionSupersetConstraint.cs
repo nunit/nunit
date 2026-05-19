@@ -15,7 +15,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionSupersetConstraint : CollectionItemsEqualConstraint
     {
         private readonly IEnumerable _expected;
-        private List<object>? _missingItems;
+        private List<object?>? _missingItems;
 
         /// <summary>
         /// Construct a CollectionSupersetConstraint
@@ -49,12 +49,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            // Create tally from 'actual' collection, and remove '_expected'.
-            // ExtraItems from tally would be missing items for '_expected' collection.
-            CollectionTally tally = Tally(actual);
-            tally.TryRemove(_expected);
+            var tallyResult = TallyResult(actual, _expected);
 
-            _missingItems = tally.Result.ExtraItems;
+            _missingItems = tallyResult.ExtraItems;
 
             return _missingItems.Count == 0;
         }
@@ -88,9 +85,9 @@ namespace NUnit.Framework.Constraints
 
         private sealed class CollectionSupersetConstraintResult : ConstraintResult
         {
-            private readonly List<object>? _missingItems;
+            private readonly List<object?>? _missingItems;
 
-            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? missingItems)
+            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object?>? missingItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _missingItems = missingItems;

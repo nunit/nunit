@@ -60,14 +60,11 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Converts an ActualValueDelegate to a TestDelegate
-        /// before calling the primary overload.
+        /// Converts a Func to a Delegate before calling the primary overload.
         /// </summary>
-        /// <param name="del"></param>
-        /// <returns></returns>
-        public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
+        public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
         {
-            return ApplyTo((Delegate)del);
+            return ApplyTo<Delegate>(code);
         }
 
         /// <inheritdoc/>

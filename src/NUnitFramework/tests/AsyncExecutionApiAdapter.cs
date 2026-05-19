@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Tests
 {
@@ -10,8 +12,8 @@ namespace NUnit.Framework.Tests
     /// </summary>
     public abstract partial class AsyncExecutionApiAdapter
     {
-        public static IEnumerable<AsyncExecutionApiAdapter> All { get; } = new AsyncExecutionApiAdapter[]
-        {
+        public static IEnumerable<AsyncExecutionApiAdapter> All { get; } =
+        [
             new TaskReturningTestMethodAdapter(),
             new TaskReturningSetUpAdapter(),
             new TaskReturningTearDownAdapter(),
@@ -29,9 +31,9 @@ namespace NUnit.Framework.Tests
             new ThrowsConstraintAdapter(),
             new ThrowsExceptionConstraintAdapter(),
             new NormalConstraintAdapter()
-        };
+        ];
 
-        public abstract void Execute(AsyncTestDelegate asyncUserCode);
+        public abstract void Execute(Func<Task> asyncUserCode);
         public abstract override string ToString();
     }
 }

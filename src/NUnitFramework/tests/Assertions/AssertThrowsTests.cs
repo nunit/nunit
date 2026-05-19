@@ -58,14 +58,6 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void ThrowsConstraintSucceedsWithDelegate()
-        {
-            // Without cast, delegate is ambiguous before C# 3.0.
-            Assert.That((TestDelegate)delegate { throw new ArgumentException(); },
-                    Throws.Exception.TypeOf<ArgumentException>());
-        }
-
-        [Test]
         public void ThrowsSucceedsWithLambda()
         {
             Assert.Throws(typeof(ArgumentException), () => throw new ArgumentException());
@@ -211,7 +203,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private Exception? CatchException(TestDelegate del)
+        private Exception? CatchException(Action del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {

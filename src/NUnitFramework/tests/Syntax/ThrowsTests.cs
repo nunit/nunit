@@ -140,7 +140,7 @@ namespace NUnit.Framework.Tests.Syntax
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }
 
-        private Exception? CatchException(TestDelegate del)
+        private Exception? CatchException(Action del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {

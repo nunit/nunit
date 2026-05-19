@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests
@@ -9,7 +10,7 @@ namespace NUnit.Framework.Tests
     {
         private sealed class AssertThrowsAsyncAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class AssertDoesNotThrowAsyncAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 Assert.DoesNotThrowAsync(asyncUserCode);
             }
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Tests
 
         private sealed class AssertCatchAsyncAdapter : AsyncExecutionApiAdapter
         {
-            public override void Execute(AsyncTestDelegate asyncUserCode)
+            public override void Execute(Func<Task> asyncUserCode)
             {
                 var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())

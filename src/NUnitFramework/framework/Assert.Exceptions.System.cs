@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -9,37 +10,6 @@ namespace NUnit.Framework
     public abstract partial class Assert
     {
         #region Throws
-        /// <summary>
-        /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
-        /// langword="null"/> when inside a multiple assert block.
-        /// </summary>
-        /// <param name="expression">A constraint to be satisfied by the exception</param>
-        /// <param name="code">A TestSnippet delegate</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Throws(IResolveConstraint expression, TestDelegate code, string message, params object?[]? args)
-        {
-            Exception? caughtException = null;
-
-            // Since TestDelegate returns void, it’s always async void if it’s async at all.
-            Guard.ArgumentNotAsyncVoid(code, nameof(code));
-
-            using (new TestExecutionContext.IsolatedContext())
-            {
-                try
-                {
-                    code();
-                }
-                catch (Exception ex)
-                {
-                    caughtException = ex;
-                }
-            }
-
-            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
-
-            return caughtException;
-        }
 
         /// <summary>
         /// Verifies that a delegate throws a particular exception when called. The returned exception may be <see
@@ -49,12 +19,13 @@ namespace NUnit.Framework
         /// <param name="code">A TestSnippet delegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TExpected? Throws<TExpected>(IResolveConstraint expression, TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Throws<TExpected>(IResolveConstraint expression, Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
             Exception? caughtException = null;
 
-            // Since TestDelegate returns void, it’s always async void if it’s async at all.
+            // Since Action returns void, it’s always async void if it’s async at all.
             Guard.ArgumentNotAsyncVoid(code, nameof(code));
 
             using (new TestExecutionContext.IsolatedContext())
@@ -80,9 +51,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
-        public static Exception? Throws(IResolveConstraint expression, TestDelegate code)
+        [OverloadResolutionPriority(1)]
+        public static Exception? Throws(IResolveConstraint expression, Action code)
         {
-            return Throws(expression, code, string.Empty, null);
+            return Throws<Exception>(expression, code, string.Empty, null);
         }
 
         /// <summary>
@@ -90,12 +62,13 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Throws(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? Throws(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -103,10 +76,11 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? Throws(Type expectedExceptionType, TestDelegate code)
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? Throws(Type expectedExceptionType, Action code)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
         }
 
         #endregion
@@ -118,10 +92,11 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <typeparam name="TExpected">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TExpected? Throws<TExpected>(TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Throws<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
             return Throws<TExpected>(new ExceptionTypeConstraint<TExpected>(), code, message, args);
@@ -132,8 +107,9 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <typeparam name="TExpected">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
-        public static TExpected? Throws<TExpected>(TestDelegate code)
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Throws<TExpected>(Action code)
             where TExpected : Exception
         {
             return Throws<TExpected>(code, string.Empty, null);
@@ -142,14 +118,16 @@ namespace NUnit.Framework
         #endregion
 
         #region Catch
+
         /// <summary>
         /// Verifies that a delegate throws an exception when called and returns it. The returned exception may be <see
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Catch(TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? Catch(Action code, string message, params object?[]? args)
         {
             return Throws<Exception>(code, message, args);
         }
@@ -158,8 +136,9 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception when called and returns it. The returned exception may be <see
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? Catch(TestDelegate code)
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? Catch(Action code)
         {
             return Catch<Exception>(code);
         }
@@ -169,12 +148,13 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Exception? Catch(Type expectedExceptionType, TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static Exception? Catch(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -182,11 +162,13 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
-        /// <param name="code">A TestDelegate</param>
-        public static Exception? Catch(Type expectedExceptionType, TestDelegate code)
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static Exception? Catch(Type expectedExceptionType, Action code)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
         }
+
         #endregion
 
         #region Catch<TExpected>
@@ -195,12 +177,12 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type or one derived from it when called and
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <typeparam name="TExpected">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static TExpected? Catch<TExpected>(TestDelegate code, string message, params object?[]? args)
-            where TExpected : System.Exception
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Catch<TExpected>(Action code, string message, params object?[]? args)
+            where TExpected : Exception
         {
             return Throws<TExpected>(new InstanceOfTypeConstraint<TExpected>(), code, message, args);
         }
@@ -209,10 +191,10 @@ namespace NUnit.Framework
         /// Verifies that a delegate throws an exception of a certain Type or one derived from it when called and
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
-        /// <typeparam name="TExpected">Type of the expected exception</typeparam>
-        /// <param name="code">A TestDelegate</param>
-        public static TExpected? Catch<TExpected>(TestDelegate code)
-            where TExpected : System.Exception
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static TExpected? Catch<TExpected>(Action code)
+            where TExpected : Exception
         {
             return Catch<TExpected>(code, string.Empty, null);
         }
@@ -224,10 +206,11 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that a delegate does not throw an exception
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
+        /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void DoesNotThrow(TestDelegate code, string message, params object?[]? args)
+        [OverloadResolutionPriority(1)]
+        public static void DoesNotThrow(Action code, string message, params object?[]? args)
         {
             Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
@@ -235,8 +218,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Verifies that a delegate does not throw an exception.
         /// </summary>
-        /// <param name="code">A TestDelegate</param>
-        public static void DoesNotThrow(TestDelegate code)
+        /// <param name="code">A piece of code to execute</param>
+        [OverloadResolutionPriority(1)]
+        public static void DoesNotThrow(Action code)
         {
             DoesNotThrow(code, string.Empty, null);
         }

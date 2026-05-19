@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -17,9 +18,18 @@ namespace NUnit.Framework.Internal.Extensions
             /// </summary>
             public object?[] Unpack()
             {
-                var result = new object?[array.Length];
-                for (var i = 0; i < array.Length; i++)
-                    result[i] = array.GetValue(i);
+                if (array.Rank != 1)
+                {
+                    throw new ArgumentException("Array was not a one-dimensional array.");
+                }
+
+                if (array.GetLowerBound(0) != 0)
+                {
+                    throw new ArgumentException("Array does not have a zero lower bound.");
+                }
+
+                var result = GC.AllocateUninitializedArray<object?>(array.Length);
+                Array.Copy(array, result, array.Length);
                 return result;
             }
         }
@@ -117,8 +127,17 @@ namespace NUnit.Framework.Internal.Extensions
                 // directly (e.g. Array, IList<T>, IEnumerable) then the array IS the argument.
                 // But only if we don't need more arguments.
                 // i.e. We expect one argument or one argument plus a params array.
-                if (paramType.IsAssignableFrom(arrayType) && (argsNeeded == 1 || argsNeeded == 2 && parameters.LastParameterIsParamsArray()))
-                    return false;
+                if (argsNeeded == 1 || argsNeeded == 2 && parameters.LastParameterIsParamsArray())
+                {
+                    if (paramType.IsGenericParameter)
+                        return false;   // Potentially could check constraints, but for now don't unpack.
+
+                    if (paramType.IsGenericType && paramType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+                        return false;   // The parameter is an IEnumerable<T> for some T, so the array is the argument, not a container.
+
+                    if (paramType.IsAssignableFrom(arrayType))
+                        return false;   // The parameter type can accept the array directly, so the array is the argument, not a container.
+                }
 
                 // A params parameter always absorbs the elements individually
                 if (parameters.LastParameterIsParamsArray())
@@ -128,15 +147,8 @@ namespace NUnit.Framework.Internal.Extensions
                 if (argsNeeded > 1)
                     return true;
 
-                // Single parameter from here on.
-
-                // The parameter is of type object, so the array is the argument, not a container.
-                if (paramType == typeof(object))
-                    return false;
-
-                // Classic argument-container pattern: new object[] { actualArg }
-                // Unpack and let the count mismatch produce a clear error.
-                return true;
+                // We expect a single argument, so we shouldn't unpack.
+                return false;
             }
         }
 

@@ -16,6 +16,7 @@ namespace NUnitLite.Tests
             new TestCaseData("--work=results", "WorkDirectory", Path.GetFullPath("results")),
             new TestCaseData("--seed=1234", "RandomSeed", 1234),
             new TestCaseData("--workers=8", "NumberOfTestWorkers", 8),
+            new TestCaseData("--mainthread", "RunOnMainThread", true),
             new TestCaseData("--prefilter=A.B.C", "LOAD", new[] { "A.B.C" }),
             new TestCaseData("--test=A.B.C", "LOAD", new[] { "A.B.C" }),
             new TestCaseData("--test=A.B.C(arg)", "LOAD", new[] { "A.B.C" }),

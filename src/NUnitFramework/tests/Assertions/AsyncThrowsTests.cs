@@ -9,11 +9,11 @@ namespace NUnit.Framework.Tests.Assertions
     [TestFixture]
     public class AsyncThrowsTests
     {
-        private readonly TestDelegate _asyncVoid = new TestDelegate(async () => await Task.Delay(1));
-        private readonly ActualValueDelegate<System.Threading.Tasks.Task> _noThrowsAsyncTask = async () => await Task.Delay(1);
-        private readonly ActualValueDelegate<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
-        private readonly ActualValueDelegate<System.Threading.Tasks.Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
-        private readonly ActualValueDelegate<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
+        private readonly Action _asyncVoid = async () => await Task.Delay(1);
+        private readonly Func<Task> _noThrowsAsyncTask = async () => await Task.Delay(1);
+        private readonly Func<Task<int>> _noThrowsAsyncGenericTask = async () => await ReturnOne();
+        private readonly Func<Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
+        private readonly Func<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
 
         private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint => new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException)));
 

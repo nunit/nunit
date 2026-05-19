@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -37,11 +38,12 @@ namespace NUnit.Framework.Internal
         {
             ArgumentNullException.ThrowIfNull(exception);
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (!excludeExceptionNames)
                 sb.AppendFormat("{0} : ", exception.GetType());
             sb.Append(GetExceptionMessage(exception));
             AppendExceptionDataContents(exception, sb);
+            AppendExceptionProperties(exception, sb);
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -51,6 +53,7 @@ namespace NUnit.Framework.Internal
                     sb.AppendFormat("{0} : ", inner.GetType());
                 sb.Append(GetExceptionMessage(inner));
                 AppendExceptionDataContents(inner, sb);
+                AppendExceptionProperties(inner, sb);
             }
 
             return sb.ToString();
@@ -64,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined stack trace.</returns>
         public static string BuildStackTrace(Exception exception)
         {
-            StringBuilder sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
+            var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -116,6 +119,72 @@ namespace NUnit.Framework.Internal
                     }
                 }
             }
+        }
+
+        private static readonly ConcurrentDictionary<Type, List<PropertyInfo>> ExceptionPropertiesCache = new();
+
+        private static void AppendExceptionProperties(Exception ex, StringBuilder sb)
+        {
+            var properties = ExceptionPropertiesCache.GetOrAdd(ex.GetType(), GetPropertiesToDisplay);
+
+            foreach (var property in properties)
+            {
+                try
+                {
+                    var value = property.GetValue(ex);
+                    sb.AppendLine();
+                    if (value is IDictionary dictionary)
+                    {
+                        sb.AppendFormat("  {0}: [", property.Name);
+                        if (dictionary.Count == 0)
+                        {
+                            sb.Append(']');
+                        }
+                        else
+                        {
+                            foreach (DictionaryEntry kvp in dictionary)
+                            {
+                                sb.AppendLine();
+                                sb.AppendFormat("    [{0}] = {1},", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                            }
+
+                            sb.AppendLine();
+                            sb.Append("  ]");
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendFormat("  {0}: {1}", property.Name, value?.ToString() ?? "<null>");
+                    }
+                }
+                catch (TargetInvocationException targetInvocationEx)
+                {
+                    var propertyEx = targetInvocationEx.InnerException ?? targetInvocationEx;
+
+                    sb.AppendLine();
+                    sb.AppendFormat("  {0}: <getter threw {1}({2})>", property.Name, propertyEx.GetType().Name, propertyEx.Message);
+                }
+            }
+        }
+
+        private static List<PropertyInfo> GetPropertiesToDisplay(Type type)
+        {
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var list = new List<PropertyInfo>(properties.Length);
+            foreach (var property in properties)
+            {
+                if (property.DeclaringType == typeof(Exception) ||
+                    property.GetMethod is null ||
+                    property.GetMethod.GetBaseDefinition().DeclaringType == typeof(Exception))
+                {
+                    // Ignore (overridden) properties from the Exception base class (Message, StackTrace) as these are mostly handled.
+                    continue;
+                }
+
+                list.Add(property);
+            }
+
+            return list;
         }
 
         private static List<Exception> FlattenExceptionHierarchy(Exception exception)
@@ -221,17 +290,15 @@ namespace NUnit.Framework.Internal
         /// <returns>The InnerException is available, otherwise the <paramref name="exception"/>.</returns>
         public static Exception Unwrap(this Exception exception)
         {
-            if (exception is NUnitException nUnitException &&
-                nUnitException.InnerException is not null)
+            if (exception is NUnitException { InnerException: not null } nUnitException)
             {
-                exception = nUnitException.InnerException;
+                exception = nUnitException.InnerException!;
             }
 
-            while (exception is TargetInvocationException targetInvocationException &&
-                targetInvocationException.InnerException is not null &&
-                targetInvocationException.StackTrace?.Contains("NUnit.Framework") is true)
+            while (exception is TargetInvocationException { InnerException: not null, StackTrace: { } stackTrace } targetInvocationException &&
+                stackTrace.Contains("NUnit.Framework"))
             {
-                exception = targetInvocationException.InnerException;
+                exception = targetInvocationException.InnerException!;
             }
 
             return exception;

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+// ReSharper disable CheckNamespace
 namespace NUnit.Framework
 {
     /// <summary>
@@ -8,13 +9,11 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string? _reason;
-
         /// <summary>
         /// Constructor with no included items specified, for use
         /// with named property syntax.
         /// </summary>
-        public IncludeExcludeAttribute()
+        protected IncludeExcludeAttribute()
         {
         }
 
@@ -22,7 +21,7 @@ namespace NUnit.Framework
         /// Constructor taking one or more included items
         /// </summary>
         /// <param name="include">Comma-delimited list of included items</param>
-        public IncludeExcludeAttribute(string? include)
+        protected IncludeExcludeAttribute(string? include)
         {
             Include = include;
         }
@@ -31,7 +30,7 @@ namespace NUnit.Framework
         /// Constructor taking an array of included items
         /// </summary>
         /// <param name="includes">Array included items</param>
-        public IncludeExcludeAttribute(string[] includes)
+        protected IncludeExcludeAttribute(string[] includes)
         {
             Includes = includes;
         }
@@ -72,10 +71,6 @@ namespace NUnit.Framework
         /// <summary>
         /// The reason for including or excluding the test
         /// </summary>
-        public string? Reason
-        {
-            get => _reason;
-            set => _reason = value;
-        }
+        public string? Reason { get; set; }
     }
 }

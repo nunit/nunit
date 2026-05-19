@@ -160,6 +160,30 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(n / d, Is.EqualTo(q));
         }
 
+        [Test]
+        public void SourceShouldNotUnpackArgumentsAsIntArray()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithSingleParameter)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.Runnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Does.Contain("System.ArgumentException : Object of type 'System.Int32[]' cannot be converted to type 'System.Int32'."));
+            });
+        }
+
+        [Test]
+        public void SourceShouldUnpackArgumentsAsIntArray()
+        {
+            var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithThreeParameters)).Tests[0];
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.Runnable));
+            ITestResult result = TestBuilder.RunTest(testMethod, null);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+        }
+
         [TestCaseSource(nameof(MyArrayData))]
         public void SourceMayReturnArrayForArray(int[] array)
         {
@@ -533,6 +557,30 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void CanRunGenericArray()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericNestedArray));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(1));
+            Test testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable), testCase.Name);
+            ITestResult result = TestBuilder.RunTest(testCase);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+        }
+
+        [Test]
+        public void CanRunGenericWithArraySource()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.GenericWithArraySource));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(1));
+            Test testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable), testCase.Name);
+            ITestResult result = TestBuilder.RunTest(testCase);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), testCase.Name);
+        }
+
+        [Test]
         public void CanNotRunGenericParamsArray()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
@@ -580,7 +628,13 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCaseSource(nameof(ExplicitNullValue))]
-        public void HandlesParamsArrayWithExplicitNullArgument(params string[]? array)
+        public void HandlesParamsArrayWithExplicitNullObjectArgument(params object[]? array)
+        {
+            Assert.That(array, Is.Null);
+        }
+
+        [TestCaseSource(nameof(ExplicitNullValue))]
+        public void HandlesParamsArrayWithExplicitNullStringArgument(params string[]? array)
         {
             Assert.That(array, Is.Null);
         }
@@ -1027,7 +1081,7 @@ namespace NUnit.Framework.Tests.Attributes
         [
             new object[] { new int[] { 2, 3, 4 }, 2 + 3 + 4, 2 * 2 + 3 * 3 + 4 * 4 }
         ];
-        private static readonly string?[] ExplicitNullValue = [null];
+        private static readonly object?[] ExplicitNullValue = [null];
         private static readonly object?[] ExplicitEmptyValue = [Array.Empty<string>()];
 
         private static readonly int[] IntArray = [5, 7, 12];

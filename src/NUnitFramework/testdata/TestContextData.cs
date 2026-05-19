@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -179,6 +180,30 @@ namespace NUnit.TestData.TestContextData
             SkipCount = TestContext.CurrentContext.Result.SkipCount;
             InconclusiveCount = TestContext.CurrentContext.Result.InconclusiveCount;
             Message = TestContext.CurrentContext.Result.Message;
+        }
+    }
+
+    [TestFixture]
+    public class TestThrowingException
+    {
+        public const string ExceptionMessage = "Deliberate exception";
+
+        public string? Message { get; private set; }
+        public string? StackTrace { get; private set; }
+        public Exception? RecordedException { get; private set; }
+
+        [Test]
+        public void FailingTest()
+        {
+            throw new InvalidOperationException(ExceptionMessage);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Message = TestContext.CurrentContext.Result.Message;
+            StackTrace = TestContext.CurrentContext.Result.StackTrace;
+            RecordedException = TestContext.CurrentContext.Result.RecordedException;
         }
     }
 }

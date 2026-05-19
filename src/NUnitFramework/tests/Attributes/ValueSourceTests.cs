@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
+using static NUnit.TestData.ValueSourceFixture;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -185,60 +187,34 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(2 * val, Is.EqualTo(val + val));
         }
 
-        public class ValueProvider
+        [Test]
+        public void NullValueSourceStillRunsOtherTests()
         {
-            public static IEnumerable<int> IntegerProvider()
-            {
-                List<int> dataList = new List<int>();
+            ValueSourceFixture fixture = new ValueSourceFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
 
-                dataList.Add(1);
-                dataList.Add(2);
-                dataList.Add(4);
-                dataList.Add(8);
+            Test? validTests = TestFinder.Find(nameof(ValueSourceFixture.Valid), suite, false)!;
+            Assert.That(validTests.Tests, Has.Count.EqualTo(ValidSource.Length));
 
-                return dataList;
-            }
+            ITestResult result = TestBuilder.RunTest(suite);
+            ITestResult? validResults = TestFinder.Find(nameof(ValueSourceFixture.Valid), result, false)!;
 
-            public static IEnumerable<int>? ForeignNullResultProvider()
-            {
-                return null;
-            }
-        }
-
-        private static readonly string? NullSource;
-
-        private static IEnumerable<int>? NullDataSourceProvider()
-        {
-            return null;
-        }
-
-        public static IEnumerable<int>? NullDataSourceProperty => null;
-
-        [Test, Explicit("Null or nonexistent data sources definitions should not prevent other tests from run #1121")]
-        public void ValueSourceMayNotBeNull(
-            [ValueSource(nameof(NullSource))] string nullSource,
-            [ValueSource(nameof(NullDataSourceProvider))] string nullDataSourceProvided,
-            [ValueSource(typeof(ValueProvider), nameof(ValueProvider.ForeignNullResultProvider))] string nullDataSourceProvider,
-            [ValueSource(typeof(object), sourceName: null)] string typeNotImplementingIEnumerableAndNullSourceName,
-            [ValueSource(nameof(NullDataSourceProperty))] int nullDataSourceProperty,
-#pragma warning disable NUnit1025 // The ValueSource argument does not specify an existing member
-            [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
-#pragma warning restore NUnit1025 // The ValueSource argument does not specify an existing member
-        {
-            Assert.Fail();
+            Assert.That(validResults.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(validResults.Children.ToArray(), Has.Length.EqualTo(ValidSource.Length));
         }
 
         [Test]
-        public void ValueSourceAttributeShouldThrowInsteadOfReturningNull()
+        public void NullValueSourceReportsFailure()
         {
-            var method = new MethodWrapper(GetType(), "ValueSourceMayNotBeNull");
-            var parameters = method.GetParameters();
+            ValueSourceFixture fixture = new ValueSourceFixture();
+            TestSuite suite = TestBuilder.MakeFixture(fixture);
+            Test? nullSourceTests = TestFinder.Find(nameof(ValueSourceFixture.UsingNullSources), suite, false)!;
 
-            foreach (var parameter in parameters)
-            {
-                var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
-                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter));
-            }
+            Assert.That(nullSourceTests.Tests, Has.Count.EqualTo(1));
+            Assert.That(nullSourceTests.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
+
+            ITestResult result = TestBuilder.RunTest(nullSourceTests);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
         }
 
         [Test]

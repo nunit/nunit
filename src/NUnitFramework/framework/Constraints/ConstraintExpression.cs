@@ -1069,7 +1069,7 @@ namespace NUnit.Framework.Constraints
         {
             if (expected is null)
             {
-                expected = new object?[] { null };
+                expected = [null];
             }
 
             return Append(new AnyOfConstraint(expected));

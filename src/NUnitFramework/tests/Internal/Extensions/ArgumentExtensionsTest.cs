@@ -55,6 +55,47 @@ namespace NUnit.Framework.Internal.Extensions
             Assert.That(array.Unpack(), Is.EqualTo(new object?[] { 1, 2, 3 }));
         }
 
+        [Test]
+        public void Unpack_JaggedArray_UnpacksOneLevelOnly()
+        {
+            Array array = new int[][]
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6 }
+            };
+
+            var expected = new object[]
+            {
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6 }
+            };
+            var actual = array.Unpack();
+
+            Assert.That(actual, Is.TypeOf<object[]>().And.EqualTo(expected));
+            Assert.That(actual[0], Is.TypeOf<int[]>());
+            Assert.That(actual[1], Is.TypeOf<int[]>());
+        }
+
+        [Test]
+        public void Unpack_MultidimensionalArray_ThrowsException()
+        {
+            Array array = new object[,]
+            {
+                { 1, 2, 3 },
+                { 4, 5, 6 }
+            };
+
+            Assert.That(() => array.Unpack(), Throws.ArgumentException.With.Message.EqualTo("Array was not a one-dimensional array."));
+        }
+
+        [Test]
+        public void Unpack_NonZeroBasedArray_ThrowsException()
+        {
+            var array = Array.CreateInstance(typeof(int), [3], [1]); // Length 3, but starts at index 1
+
+            Assert.That(() => array.Unpack(), Throws.ArgumentException.With.Message.EqualTo("Array does not have a zero lower bound."));
+        }
+
         [TestCase(nameof(MethodWithNoParameters), ExpectedResult = false)]
         [TestCase(nameof(MethodWithIntegerParameter), ExpectedResult = true)]
         [TestCase(nameof(MethodWithCancellationTokenParameter), ExpectedResult = false)]
@@ -157,11 +198,11 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         [Test]
-        public void ShouldUnpackArrayAsArguments_SingleParam_NonAssignableType_ReturnsTrue()
+        public void ShouldUnpackArrayAsArguments_SingleParam_NonAssignableType_ReturnsFalse()
         {
-            // int[] is not assignable to int — unpack (will produce a count-mismatch error downstream)
+            // int[] is not assignable to int
             var parameters = new MethodWrapper(GetType(), nameof(MethodWithIntegerParameter)).GetParameters();
-            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.True);
+            Assert.That(parameters.ShouldUnpackArrayAsArguments(new int[] { 1, 2, 3 }), Is.False);
         }
 
         private void MethodWithNoParameters()

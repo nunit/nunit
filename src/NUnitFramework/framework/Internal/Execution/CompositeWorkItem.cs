@@ -6,7 +6,6 @@ using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
-using System.Linq;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -95,21 +94,14 @@ namespace NUnit.Framework.Internal.Execution
                                 if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
                                     PerformOneTimeTearDown();
                             }
+                            else if (Test.TestType == "Theory")
+                            {
+                                Result.SetResult(ResultState.Failure, "No test cases were provided");
+                            }
                             else
                             {
-                                if (Test.TestType == "Theory")
-                                {
-                                    Result.SetResult(ResultState.Failure, "No test cases were provided");
-                                }
-                                else
-                                {
-                                    var property = Test.PropertyValues(PropertyNames.NoTests).FirstOrDefault();
-                                    if (property is not null
-                                        && property.Values[property.Values.Count - 1] is TestStatus status)
-                                    {
-                                        Result.SetResult(new(status), "No test cases were provided");
-                                    }
-                                }
+                                var status = Test.GetEffectiveProperty(PropertyNames.NoTests, TestStatus.Inconclusive);
+                                Result.SetResult(new ResultState(status), "No test cases were provided");
                             }
 
                             break;

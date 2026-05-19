@@ -114,7 +114,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Datapoints]
-        private readonly string[] _vals = new string[] { "xyz1", "xyz2", "xyz3" };
+        private readonly string[] _vals = ["xyz1", "xyz2", "xyz3"];
 
         [Theory]
         public void ArrayWithDatapointsAttributeIsUsed(string s)
@@ -143,35 +143,6 @@ namespace NUnit.Framework.Tests.Attributes
             ITestResult result = TestBuilder.RunParameterizedMethodSuite(FixtureType, nameof(TheoryFixture.TestWithAllBadValues));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("All test cases were inconclusive"));
-        }
-
-        public class SqrtTests
-        {
-            [Datapoint]
-            public double Zero = 0;
-
-            [Datapoint]
-            public double Positive = 1;
-
-            [Datapoint]
-            public double Negative = -1;
-
-            [Datapoint]
-            public double Max = double.MaxValue;
-
-            [Datapoint]
-            public double Infinity = double.PositiveInfinity;
-
-            [Theory]
-            public void SqrtTimesItselfGivesOriginal(double num)
-            {
-                Assume.That(num >= 0.0 && num < double.MaxValue);
-
-                double sqrt = Math.Sqrt(num);
-
-                Assert.That(sqrt, Is.GreaterThanOrEqualTo(0.0));
-                Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
-            }
         }
 
         public class NestedTheoryThatSearchesInDeclaringTypes

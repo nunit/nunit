@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Constraints
 {
@@ -45,24 +46,15 @@ namespace NUnit.Framework.Constraints
         ConstraintResult ApplyTo<TActual>(TActual actual);
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns
+        /// Applies the constraint to a func that returns
         /// the value to be tested. The default implementation simply evaluates
         /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
-        /// <param name="del">An ActualValueDelegate</param>
+        /// <param name="code">A func returning the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
-        ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del);
-
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given reference.
-        /// The default implementation simply dereferences the value but
-        /// derived classes may override it to provide for delayed processing.
-        /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
-        [Obsolete("This was never implemented and will be removed.")]
-        ConstraintResult ApplyTo<TActual>(ref TActual actual);
+        [OverloadResolutionPriority(1)]
+        ConstraintResult ApplyTo<TActual>(Func<TActual> code);
 
         #endregion
     }

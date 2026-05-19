@@ -142,10 +142,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The list of display names to use as the parameters in the test name.
         /// </summary>
-        internal string[]? ArgDisplayNames
+        public string[]? ArgDisplayNames
         {
             get;
-            set
+            internal set
             {
                 Guard.OperationValid(TestName is null || value is null,
                     "Argument display names cannot be set when TestName is set.");

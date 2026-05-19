@@ -51,25 +51,26 @@ namespace NUnit.Framework
 
         #region Warn.Unless
 
-        #region ActualValueDelegate
+        #region Func<TActual>
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and issuing a warning on failure.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
+        [OverloadResolutionPriority(1)]
+        public static void Unless<TActual>(Func<TActual> code, IResolveConstraint expr,
             NUnitString message = default,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
@@ -80,18 +81,19 @@ namespace NUnit.Framework
         /// is satisfied and issuing a warning on failure.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
+        [OverloadResolutionPriority(1)]
+        public static void Unless<TActual>(Func<TActual> code, IResolveConstraint expr,
             FormattableString message,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
@@ -102,20 +104,21 @@ namespace NUnit.Framework
         /// is satisfied and issuing a warning on failure.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [OverloadResolutionPriority(1)]
         public static void Unless<TActual>(
-            ActualValueDelegate<TActual> del,
+            Func<TActual> code,
             IResolveConstraint expr,
             Func<string> getExceptionMessage,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(Unless), getExceptionMessage(), actualExpression, constraintExpression);
@@ -267,25 +270,26 @@ namespace NUnit.Framework
 
         #region Warn.If
 
-        #region ActualValueDelegate
+        #region Func<TActual>
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// fails and issuing a warning on success.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
+        [OverloadResolutionPriority(1)]
+        public static void If<TActual>(Func<TActual> code, IResolveConstraint expr,
             NUnitString message = default,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = new NotConstraint(expr.Resolve());
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
@@ -296,18 +300,19 @@ namespace NUnit.Framework
         /// fails and issuing a warning on success.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
+        [OverloadResolutionPriority(1)]
+        public static void If<TActual>(Func<TActual> code, IResolveConstraint expr,
             FormattableString message,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = new NotConstraint(expr.Resolve());
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
@@ -318,20 +323,21 @@ namespace NUnit.Framework
         /// fails and issuing a warning on failure.
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
+        [OverloadResolutionPriority(1)]
         public static void If<TActual>(
-            ActualValueDelegate<TActual> del,
+            Func<TActual> code,
             IResolveConstraint expr,
             Func<string> getExceptionMessage,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             var constraint = new NotConstraint(expr.Resolve());
 
             IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
+            var result = constraint.ApplyTo(code);
 
             if (!result.IsSuccess)
                 IssueWarning(result, nameof(If), getExceptionMessage(), actualExpression, constraintExpression);

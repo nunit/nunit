@@ -19,7 +19,9 @@ namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
     [Order(1)]
     public class MultipleTestFixtureAttributesOrder1
     {
+#pragma warning disable IDE0052 // Remove unread private members
         private readonly string _s;
+#pragma warning restore IDE0052 // Remove unread private members
         public MultipleTestFixtureAttributesOrder1(string s)
         {
             _s = s;

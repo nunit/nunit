@@ -2,15 +2,17 @@
 
 module NUnit.TestData.FSharp.AsyncExecutionApiAdapter
 
+open System
+open System.Threading.Tasks
 open NUnit.Framework
 
-type TaskReturningTestMethodFixture(asyncUserCode: AsyncTestDelegate) =
+type TaskReturningTestMethodFixture(asyncUserCode: Func<Task>) =
     [<Test>]
     member this.TestMethod() = async {
         do! Async.AwaitTask(asyncUserCode.Invoke())
     }
 
-type TaskReturningSetUpFixture(asyncUserCode: AsyncTestDelegate) =
+type TaskReturningSetUpFixture(asyncUserCode: Func<Task>) =
     [<SetUp>]
     member this.SetUp() = async {
         do! Async.AwaitTask(asyncUserCode.Invoke())
@@ -19,7 +21,7 @@ type TaskReturningSetUpFixture(asyncUserCode: AsyncTestDelegate) =
     [<Test>]
     member this.DummyTest() = ()
 
-type TaskReturningTearDownFixture(asyncUserCode: AsyncTestDelegate) =
+type TaskReturningTearDownFixture(asyncUserCode: Func<Task>) =
     [<TearDown>]
     member this.TearDown() = async {
         do! Async.AwaitTask(asyncUserCode.Invoke())
@@ -28,7 +30,7 @@ type TaskReturningTearDownFixture(asyncUserCode: AsyncTestDelegate) =
     [<Test>]
     member this.DummyTest() = ()
 
-type TaskReturningOneTimeSetUpFixture(asyncUserCode: AsyncTestDelegate) =
+type TaskReturningOneTimeSetUpFixture(asyncUserCode: Func<Task>) =
     [<OneTimeSetUp>]
     member this.OneTimeSetUp() = async {
         do! Async.AwaitTask(asyncUserCode.Invoke())
@@ -37,7 +39,7 @@ type TaskReturningOneTimeSetUpFixture(asyncUserCode: AsyncTestDelegate) =
     [<Test>]
     member this.DummyTest() = ()
 
-type TaskReturningOneTimeTearDownFixture(asyncUserCode: AsyncTestDelegate) =
+type TaskReturningOneTimeTearDownFixture(asyncUserCode: Func<Task>) =
     [<OneTimeTearDown>]
     member this.OneTimeTearDown() = async {
         do! Async.AwaitTask(asyncUserCode.Invoke())

@@ -2,18 +2,13 @@
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary>
-    /// Delegate used to delay evaluation of the actual value
-    /// to be used in evaluating a constraint
-    /// </summary>
-    public delegate TActual ActualValueDelegate<TActual>();
-
     /// <summary>
     /// The Constraint class is the base of all built-in constraints
     /// within NUnit. It provides the operator overloads used to combine
@@ -76,13 +71,6 @@ namespace NUnit.Framework.Constraints
         #region Abstract and Virtual Methods
 
         /// <summary>
-        /// Applies the constraint to an actual value, returning a ConstraintResult.
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
-        public abstract ConstraintResult ApplyTo<TActual>(TActual actual);
-
-        /// <summary>
         /// Applies the constraint to an ActualValueDelegate that returns
         /// the value to be tested. The default implementation simply evaluates
         /// the delegate but derived classes may override it to provide for
@@ -90,7 +78,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>A ConstraintResult</returns>
-        public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
+        public virtual ConstraintResult ApplyTo<TActual>(Func<TActual> del)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
                 return ApplyTo(AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => del.Invoke()));
@@ -99,34 +87,30 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given reference.
-        /// The default implementation simply dereferences the value but
-        /// derived classes may override it to provide for delayed processing.
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
-        /// <param name="actual">A reference to the value to be tested</param>
+        /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
-        [Obsolete("This was never implemented and will be removed.")]
-        public virtual ConstraintResult ApplyTo<TActual>(ref TActual actual)
-        {
-            return ApplyTo(actual);
-        }
+        public abstract ConstraintResult ApplyTo<TActual>(TActual actual);
 
         /// <inheritdoc/>
+        [OverloadResolutionPriority(2)]
         public virtual async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {
             return ApplyTo(await taskDel());
         }
 
         /// <summary>
-        /// Retrieves the value to be tested from an ActualValueDelegate.
+        /// Retrieves the value to be tested from a func.
         /// The default implementation simply evaluates the delegate but derived
         /// classes may override it to provide for delayed processing.
         /// </summary>
-        /// <param name="del">An ActualValueDelegate</param>
+        /// <param name="code">A func returning the value to be tested</param>
         /// <returns>Delegate evaluation result</returns>
-        protected virtual object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        [OverloadResolutionPriority(1)]
+        protected virtual object? GetTestObject<TActual>(Func<TActual> code)
         {
-            return del();
+            return code();
         }
 
         #endregion
@@ -150,7 +134,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected string GetStringRepresentation(IEnumerable arguments)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append('<');
             sb.Append(DisplayName.ToLower());

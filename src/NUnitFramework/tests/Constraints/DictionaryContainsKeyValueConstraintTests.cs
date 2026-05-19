@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
 
-            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Bye", "Universe"));
+            var act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Bye", "Universe"));
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
 
-            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hello", "Universe"));
+            var act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("Hello", "Universe"));
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var keyValuePairs = new List<string> { "Hello", "Hi", "Hola" };
 
-            TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
+            var act = () => Assert.That(keyValuePairs, new DictionaryContainsKeyValuePairConstraint("Hi", "Universe"));
 
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary or IEnumerable<KeyValuePair<,>>"));
         }
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             TestDictionary? dictionary = null;
 
-            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
+            var act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null"));
         }
