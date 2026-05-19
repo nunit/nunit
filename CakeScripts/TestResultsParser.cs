@@ -20,7 +20,7 @@ public static class TestResultsParser
 {
     // Regex to extract framework from paths like bin/Release/net8.0/ or bin\Release\net462\
     private static readonly Regex FrameworkPattern = new Regex(
-        @"[/\\](net\d+\.\d+|net\d+|)[/\\]",
+        @"[/\\](net\d+\.\d+|net\d+)[/\\]",
         RegexOptions.Compiled);
 
     /// <summary>
