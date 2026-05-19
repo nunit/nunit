@@ -181,7 +181,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(Func<Task> asyncCode, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), asyncCode, message, args);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(Func<Task> asyncCode)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), asyncCode);
         }
 
         #endregion
