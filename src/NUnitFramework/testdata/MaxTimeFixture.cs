@@ -48,4 +48,14 @@ namespace NUnit.TestData
             throw new Exception("Exception message");
         }
     }
+
+    [TestFixture]
+    public class MaxTimeFixtureWithWarning
+    {
+        [Test, MaxTime(2000, WarningTime = 20)]
+        public void WarningTimeExceeded()
+        {
+            Thread.Sleep(30);
+        }
+    }
 }
