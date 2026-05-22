@@ -94,7 +94,7 @@ namespace NUnit.Framework.Tests.Assertions
             VerifyMessageAndParam(ex);
         }
 
-        private void VerifyMessageAndParam(ArgumentException? ex)
+        private static void VerifyMessageAndParam(ArgumentException? ex)
         {
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             using (Assert.EnterMultipleScope())
@@ -222,24 +222,24 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void DoesNotThrowSucceeds()
+        public async Task DoesNotThrowSucceeds()
         {
-            Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);
+            await Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);
         }
 
         [Test]
-        public void DoesNotThrowFails()
+        public async Task DoesNotThrowFails()
         {
-            var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentException));
+            var ex = await CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentException));
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public void DoesNotThrowFailsAsync()
+        public async Task DoesNotThrowFailsAsync()
         {
-            var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
+            var ex = await CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
@@ -252,23 +252,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private Exception? CatchException(Action del)
-        {
-            using (new TestExecutionContext.IsolatedContext())
-            {
-                try
-                {
-                    del();
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    return ex;
-                }
-            }
-        }
-
-        private async Task<Exception?> CatchException(Func<Task> del)
+        private static async Task<Exception?> CatchException(Func<Task> del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {
