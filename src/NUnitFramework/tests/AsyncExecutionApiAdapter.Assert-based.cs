@@ -17,7 +17,7 @@ namespace NUnit.Framework.Tests
                 {
                     try
                     {
-                        ex = Assert.ThrowsAsync<Exception>(asyncUserCode);
+                        ex = AsyncToSyncAdapter.Await<Exception?>(TestExecutionContext.CurrentContext, () => Assert.ThrowsAsync<Exception>(asyncUserCode));
                     }
                     catch
                     {
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests
                 {
                     try
                     {
-                        ex = Assert.CatchAsync(asyncUserCode);
+                        ex = AsyncToSyncAdapter.Await<Exception?>(TestExecutionContext.CurrentContext, () => Assert.CatchAsync(asyncUserCode));
                     }
                     catch
                     {
