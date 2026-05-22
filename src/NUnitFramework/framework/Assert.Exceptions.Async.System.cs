@@ -241,15 +241,16 @@ namespace NUnit.Framework
         #region DoesNotThrowAsync
 
         /// <summary>
-        /// Verifies that an async delegate does not throw an exception
+        /// Verifies that an async delegate does not throw an exception.
         /// </summary>
         /// <param name="asyncCode">An async piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [OverloadResolutionPriority(1)]
-        public static void DoesNotThrowAsync(Func<Task> asyncCode, string message, params object?[]? args)
+        public static async Task DoesNotThrowAsync(Func<Task> asyncCode, string message, params object?[]? args)
         {
-            Assert.That(asyncCode, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
+            var formattableString = FormattableStringFactory.Create(message, args ?? []);
+            await ThatAsync(asyncCode, new ThrowsNothingConstraint(), formattableString);
         }
 
         /// <summary>
@@ -257,9 +258,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="asyncCode">An async piece of code to execute</param>
         [OverloadResolutionPriority(1)]
-        public static void DoesNotThrowAsync(Func<Task> asyncCode)
+        public static Task DoesNotThrowAsync(Func<Task> asyncCode)
         {
-            DoesNotThrowAsync(asyncCode, string.Empty, null);
+            return DoesNotThrowAsync(asyncCode, string.Empty, null);
         }
 
         #endregion

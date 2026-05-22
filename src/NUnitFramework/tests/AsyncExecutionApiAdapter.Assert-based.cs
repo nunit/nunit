@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests
         {
             public override void Execute(Func<Task> asyncUserCode)
             {
-                Assert.DoesNotThrowAsync(asyncUserCode);
+                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => Assert.DoesNotThrowAsync(asyncUserCode));
             }
 
             public override string ToString() => "Assert.DoesNotThrowAsync(…)";
