@@ -294,6 +294,38 @@ public class CollectionEquivalentConstraintTests
         Assert.That(constraint.ApplyTo(hash).IsSuccess);
     }
 
+    [TestCaseSource(nameof(ArrayCompatibilitySource))]
+    public void WorksWithArraysOfCompatibleYetDifferentTypes<T1, T2>(T1 actual, T2 expected)
+        where T1 : IEnumerable
+        where T2 : IEnumerable
+    {
+        Assert.That(actual, Is.EquivalentTo(expected));
+        Assert.That(expected, Is.EquivalentTo(actual));
+    }
+
+    private static IEnumerable<TestCaseParameters> ArrayCompatibilitySource()
+    {
+        yield return new TestCaseData<long[], int[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<long[], object[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<object[], object[]>([1L, 2L, 3L], [1, 2, 3]);
+        yield return new TestCaseData<int[], double[]>([1, 2, 3], [1.0d, 2.0d, 3.0d]);
+        yield return new TestCaseData<decimal[], double[]>([1.0m, 2.0m, 3.0m], [1.0d, 2.0d, 3.0d]);
+        yield return new TestCaseData<string, char[]>("NUnit", ['t', 'i', 'n', 'U', 'N']);
+    }
+
+    [Test]
+    public void FailureWithIncompatibleActualValue()
+    {
+        var expected = new int[] { 1, 2, 3 };
+        var actual = new { hello = "world" };
+
+        var ex = Assert.Throws<ArgumentException>(() => Assert.That(actual, Is.EquivalentTo(expected)));
+
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex.ParamName, Is.EqualTo("actual"));
+        Assert.That(ex.Message, Does.Contain(actual.GetType().Name));
+    }
+
     [Test]
     public void FailureMessageWithHashSetAndArray()
     {

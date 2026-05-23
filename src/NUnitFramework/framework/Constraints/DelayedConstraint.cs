@@ -242,6 +242,16 @@ namespace NUnit.Framework.Constraints
             return PollLoop(() => BaseConstraint.ApplyTo(code));
         }
 
+        /// <summary>
+        /// Test whether the constraint is satisfied by a delegate
+        /// </summary>
+        /// <param name="code">The delegate whose value is to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
+        {
+            return PollLoop(() => BaseConstraint.ApplyTo(code));
+        }
+
         /// <inheritdoc/>
         public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {

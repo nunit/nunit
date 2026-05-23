@@ -25,7 +25,7 @@ namespace NUnit.Framework
         {
             Exception? caughtException = null;
 
-            // Since Action returns void, it’s always async void if it’s async at all.
+            // Since Action returns void, it's always async void if it's async at all.
             Guard.ArgumentNotAsyncVoid(code, nameof(code));
 
             using (new TestExecutionContext.IsolatedContext())

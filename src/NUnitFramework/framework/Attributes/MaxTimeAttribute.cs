@@ -13,6 +13,12 @@ namespace NUnit.Framework
     public sealed class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
         private readonly int _milliseconds;
+
+        /// <summary>
+        /// Gets or sets an optional warning threshold in milliseconds.
+        /// If the test takes longer than this time, but less than the maximum time, a warning is issued.
+        /// </summary>
+        public int WarningTime { get; set; }
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>
@@ -27,7 +33,7 @@ namespace NUnit.Framework
 
         TestCommand ICommandWrapper.Wrap(TestCommand command)
         {
-            return new MaxTimeCommand(command, _milliseconds);
+            return new MaxTimeCommand(command, _milliseconds, WarningTime);
         }
 
         #endregion

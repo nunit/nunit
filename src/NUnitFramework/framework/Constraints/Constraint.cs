@@ -113,6 +113,19 @@ namespace NUnit.Framework.Constraints
             return code();
         }
 
+        /// <summary>
+        /// Retrieves the value to be tested from a func.
+        /// The default implementation simply evaluates the delegate but derived
+        /// classes may override it to provide for delayed processing.
+        /// </summary>
+        /// <param name="code">A func returning the value to be tested</param>
+        /// <returns>Delegate evaluation result</returns>
+        [OverloadResolutionPriority(1)]
+        protected virtual object? GetTestObject<TActual>(Func<TActual> code)
+        {
+            return code();
+        }
+
         #endregion
 
         #region ToString Override

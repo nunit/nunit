@@ -64,5 +64,14 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
             Assert.That(result.Message, Does.Contain("Exception message"));
         }
+
+        [Test]
+        public void WarningThresholdExceeded()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithWarning));
+            ITestResult result = suiteResult.Children.ToArray()[0];
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+            Assert.That(result.Message, Does.Contain("exceeds warning threshold of 20ms"));
+        }
     }
 }

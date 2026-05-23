@@ -39,6 +39,14 @@ namespace NUnit.Framework.Constraints
             return ApplyTo<Delegate>(code);
         }
 
+        /// <summary>
+        /// Converts a Func to a TestDelegate before calling the primary overload.
+        /// </summary>
+        public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
+        {
+            return ApplyTo((Delegate)code);
+        }
+
         /// <inheritdoc/>
         public override async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {

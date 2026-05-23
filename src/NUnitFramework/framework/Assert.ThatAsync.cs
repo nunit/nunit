@@ -11,6 +11,7 @@ namespace NUnit.Framework
     public abstract partial class Assert
     {
         #region Assert.ThatAsync
+
         /// <summary>
         /// Apply a constraint to an async action. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
@@ -68,9 +69,10 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Apply a constraint to an async action. Returns without throwing an exception when inside a multiple assert block.
+        /// Apply a constraint to an async delegate. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
-        /// <param name="asyncCode">An async action to be executed</param>
+        /// <typeparam name="T">The type returned by the async delegate</typeparam>
+        /// <param name="asyncCode">An async delegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
@@ -92,9 +94,10 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Apply a constraint to an async action. Returns without throwing an exception when inside a multiple assert block.
+        /// Apply a constraint to an async delegate. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
-        /// <param name="asyncCode">An async action to be executed</param>
+        /// <typeparam name="T">The type returned by the async delegate</typeparam>
+        /// <param name="asyncCode">An async delegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
