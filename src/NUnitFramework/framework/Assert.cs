@@ -241,51 +241,6 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
-        /// <param name="action">An action to be executed in Multiple Assertion mode.</param>
-        [OverloadResolutionPriority(1)]
-        public static void Multiple(Action action)
-        {
-            using (EnterMultipleScope())
-            {
-                action();
-            }
-        }
-
-        /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
-        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
-        [OverloadResolutionPriority(1)]
-        public static void Multiple(Func<Task> asyncAction)
-        {
-            using (EnterMultipleScope())
-            {
-                AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, asyncAction.Invoke);
-            }
-        }
-
-        /// <summary>
-        /// Wraps code containing a series of assertions, which should all
-        /// be executed, even if they fail. Failed results are saved and
-        /// reported at the end of the code block.
-        /// </summary>
-        /// <param name="asyncAction">An async action to be executed in Multiple Assertion mode.</param>
-        [OverloadResolutionPriority(1)]
-        public static async Task MultipleAsync(Func<Task> asyncAction)
-        {
-            using (EnterMultipleScope())
-            {
-                await asyncAction();
-            }
-        }
-
-        /// <summary>
         /// Enters a multiple assert scope.
         /// Wraps code containing a series of assertions, which should all
         /// be executed, even if they fail. Failed results are saved and
