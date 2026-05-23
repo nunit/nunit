@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -19,7 +18,6 @@ namespace NUnit.Framework
         /// <param name="code">A TestSnippet delegate</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static TExpected? Throws<TExpected>(IResolveConstraint expression, Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
@@ -51,7 +49,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expression">A constraint to be satisfied by the exception</param>
         /// <param name="code">A TestSnippet delegate</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Throws(IResolveConstraint expression, Action code)
         {
             return Throws<Exception>(expression, code, string.Empty, null);
@@ -65,7 +62,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
             return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
@@ -77,7 +73,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The exception Type expected</param>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code)
         {
             return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
@@ -95,7 +90,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static TExpected? Throws<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
@@ -108,7 +102,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TExpected">Type of the expected exception</typeparam>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static TExpected? Throws<TExpected>(Action code)
             where TExpected : Exception
         {
@@ -126,7 +119,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Catch(Action code, string message, params object?[]? args)
         {
             return Throws<Exception>(code, message, args);
@@ -137,7 +129,6 @@ namespace NUnit.Framework
         /// langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Catch(Action code)
         {
             return Catch<Exception>(code);
@@ -151,7 +142,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Catch(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
             return Throws<Exception>(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
@@ -163,7 +153,6 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expectedExceptionType">The expected Exception Type</param>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static Exception? Catch(Type expectedExceptionType, Action code)
         {
             return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code);
@@ -180,7 +169,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static TExpected? Catch<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
@@ -192,7 +180,6 @@ namespace NUnit.Framework
         /// returns it. The returned exception may be <see langword="null"/> when inside a multiple assert block.
         /// </summary>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static TExpected? Catch<TExpected>(Action code)
             where TExpected : Exception
         {
@@ -209,7 +196,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code to execute</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        [OverloadResolutionPriority(1)]
         public static void DoesNotThrow(Action code, string message, params object?[]? args)
         {
             Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
@@ -219,7 +205,6 @@ namespace NUnit.Framework
         /// Verifies that a delegate does not throw an exception.
         /// </summary>
         /// <param name="code">A piece of code to execute</param>
-        [OverloadResolutionPriority(1)]
         public static void DoesNotThrow(Action code)
         {
             DoesNotThrow(code, string.Empty, null);

@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
@@ -94,7 +93,6 @@ namespace NUnit.Framework.Constraints
         public abstract ConstraintResult ApplyTo<TActual>(TActual actual);
 
         /// <inheritdoc/>
-        [OverloadResolutionPriority(2)]
         public virtual async Task<ConstraintResult> ApplyToAsync<TActual>(Func<Task<TActual>> taskDel)
         {
             return ApplyTo(await taskDel());
@@ -107,7 +105,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="code">A func returning the value to be tested</param>
         /// <returns>Delegate evaluation result</returns>
-        [OverloadResolutionPriority(1)]
         protected virtual object? GetTestObject<TActual>(Func<TActual> code)
         {
             return code();

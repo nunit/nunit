@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Constraints
 {
@@ -53,7 +52,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="code">A func returning the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
-        [OverloadResolutionPriority(1)]
         ConstraintResult ApplyTo<TActual>(Func<TActual> code);
 
         #endregion
