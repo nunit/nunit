@@ -166,9 +166,7 @@ namespace NUnit.Framework.Internal
         }
 
 #if !NETFRAMEWORK
-#if !NETFRAMEWORK
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-#endif
         private static ProductType GetWindowsProductType()
         {
             try
