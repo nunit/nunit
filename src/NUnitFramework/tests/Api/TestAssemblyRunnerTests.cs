@@ -670,7 +670,7 @@ namespace NUnit.Framework.Tests.Api
             // This test verifies that on .NET Framework, forced stop actually terminates tests
             // On .NET Core/5+, this test is skipped because Thread.Abort is not available
 
-            var tests = LoadSlowTests(0);  // Simple dispatcher
+            _ = LoadSlowTests(0); // Simple dispatcher
             _runner.RunAsync(this, TestFilter.Empty);
 
             // Wait for test to start
