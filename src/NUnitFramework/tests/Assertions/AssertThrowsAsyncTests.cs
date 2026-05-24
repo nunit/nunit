@@ -11,45 +11,45 @@ namespace NUnit.Framework.Tests.Assertions
     public class AssertThrowsAsyncTests
     {
         [Test]
-        public async Task ThrowsAsyncSucceedsWithDelegate()
+        public void ThrowsAsyncSucceedsWithDelegate()
         {
-            await Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentException);
-            await Assert.ThrowsAsync(typeof(ArgumentException),
+            Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentException);
+            Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { throw new ArgumentException(); });
         }
 
         [Test]
-        public async Task GenericThrowsAsyncSucceedsWithDelegate()
+        public void GenericThrowsAsyncSucceedsWithDelegate()
         {
-            await Assert.ThrowsAsync<ArgumentException>(
+            Assert.ThrowsAsync<ArgumentException>(
                 delegate { throw new ArgumentException(); });
-            await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
+            Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
         }
 
         [Test]
         public async Task AsyncRegionThrowsDoesNotDisposeAsyncRegion()
         {
             await AsyncTestDelegates.Delay(100);
-            await Assert.ThrowsAsync<ArgumentException>(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync());
+            Assert.ThrowsAsync<ArgumentException>(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync());
             Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.ArgumentException);
         }
 
         [Test]
-        public async Task ThrowsAsyncReturnsCorrectException()
+        public void ThrowsAsyncReturnsCorrectException()
         {
-            await Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentExceptionAsync);
-            await Assert.ThrowsAsync(typeof(ArgumentException),
+            Assert.ThrowsAsync(typeof(ArgumentException), AsyncTestDelegates.ThrowsArgumentExceptionAsync);
+            Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException(), TaskScheduler.Default); });
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public async Task GenericThrowsAsyncReturnsCorrectException()
+        public void GenericThrowsAsyncReturnsCorrectException()
         {
-            await Assert.ThrowsAsync<ArgumentException>(
+            Assert.ThrowsAsync<ArgumentException>(
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException(), TaskScheduler.Default); });
-            await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
+            Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
             CheckForSpuriousAssertionResults();
         }
@@ -65,36 +65,36 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task ThrowsAsyncIsNotAffectedByAssertionsInDelegate()
+        public void ThrowsAsyncIsNotAffectedByAssertionsInDelegate()
         {
-            await Assert.ThrowsAsync<AssertionException>(
+            Assert.ThrowsAsync<AssertionException>(
                 () => Assert.ThatAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync, Throws.InvalidOperationException));
         }
 
         [Test]
-        public async Task CorrectExceptionIsReturnedToMethod()
+        public void CorrectExceptionIsReturnedToMethod()
         {
-            var ex = await Assert.ThrowsAsync(typeof(ArgumentException),
+            var ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 AsyncTestDelegates.ThrowsArgumentException) as ArgumentException;
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync<ArgumentException>(
+            ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { throw new ArgumentException("myMessage", "myParam"); });
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync(typeof(ArgumentException),
+            ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
+            ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
 
             VerifyMessageAndParam(ex);
         }
 
-        private static void VerifyMessageAndParam(ArgumentException? ex)
+        private void VerifyMessageAndParam(ArgumentException? ex)
         {
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             using (Assert.EnterMultipleScope())
@@ -105,32 +105,32 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task CorrectExceptionIsReturnedToMethodAsync()
+        public void CorrectExceptionIsReturnedToMethodAsync()
         {
-            var ex = await Assert.ThrowsAsync(typeof(ArgumentException),
+            var ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 AsyncTestDelegates.ThrowsArgumentExceptionAsync) as ArgumentException;
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync<ArgumentException>(
+            ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException("myMessage", "myParam"), TaskScheduler.Default); });
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync(typeof(ArgumentException),
+            ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException("myMessage", "myParam"), TaskScheduler.Default); }) as ArgumentException;
 
             VerifyMessageAndParam(ex);
 
-            ex = await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
+            ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
             VerifyMessageAndParam(ex);
         }
 
         [Test]
-        public async Task NoExceptionThrown()
+        public void NoExceptionThrown()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNothing));
+            var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNothing));
             VerifyArgumentExceptionWithNullMessage(ex);
 
             CheckForSpuriousAssertionResults();
@@ -160,43 +160,43 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task UnrelatedExceptionThrown()
+        public void UnrelatedExceptionThrown()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceException));
+            var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceException));
             VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public async Task UnrelatedExceptionThrownAsync()
+        public void UnrelatedExceptionThrownAsync()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceExceptionAsync));
+            var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceExceptionAsync));
             VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public async Task BaseExceptionThrown()
+        public void BaseExceptionThrown()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemException));
+            var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemException));
             VerifyArgumentExceptionWithSystemExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public async Task BaseExceptionThrownAsync()
+        public void BaseExceptionThrownAsync()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemExceptionAsync));
+            var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemExceptionAsync));
             VerifyArgumentExceptionWithSystemExceptionAndMyMessage(ex);
         }
 
         [Test, SetUICulture("en-US")]
-        public async Task DerivedExceptionThrown()
+        public void DerivedExceptionThrown()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
+            var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
             VerifyArgumentExceptionWithArgumentExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
@@ -211,9 +211,9 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test, SetUICulture("en-US")]
-        public async Task DerivedExceptionThrownAsync()
+        public void DerivedExceptionThrownAsync()
         {
-            var ex = await CatchException(async () => await Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
+            var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
             //Assert.That(ex, Is.Not.Null);
             //Assert.That(ex!.Message, Does.Contain(
             //    "  Expected: <System.Exception>" + Environment.NewLine +
@@ -222,24 +222,24 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public async Task DoesNotThrowSucceeds()
+        public void DoesNotThrowSucceeds()
         {
-            await Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);
+            Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsNothing);
         }
 
         [Test]
-        public async Task DoesNotThrowFails()
+        public void DoesNotThrowFails()
         {
-            var ex = await CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentException));
+            var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentException));
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
         }
 
         [Test]
-        public async Task DoesNotThrowFailsAsync()
+        public void DoesNotThrowFailsAsync()
         {
-            var ex = await CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
+            var ex = CatchException(() => Assert.DoesNotThrowAsync(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
@@ -252,13 +252,13 @@ namespace NUnit.Framework.Tests.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private static async Task<Exception?> CatchException(Func<Task> del)
+        private Exception? CatchException(Action del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {
                 try
                 {
-                    await del();
+                    del();
                     return null;
                 }
                 catch (Exception ex)
