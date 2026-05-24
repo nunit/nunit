@@ -53,7 +53,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="code">A func returning the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
-        [OverloadResolutionPriority(1)]
         ConstraintResult ApplyTo<TActual>(Func<TActual> code);
 
         #endregion

@@ -110,7 +110,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        [OverloadResolutionPriority(1)]
         public static void That<TActual>(Func<TActual> code, IResolveConstraint expr,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -131,7 +130,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        [OverloadResolutionPriority(1)]
         public static void That<TActual>(Func<TActual> code, IResolveConstraint expr,
             FormattableString message,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -152,7 +150,6 @@ namespace NUnit.Framework
         /// <param name="code">A piece of code returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        [OverloadResolutionPriority(1)]
         public static void That<TActual>(
             Func<TActual> code,
             IResolveConstraint expr,
@@ -178,7 +175,6 @@ namespace NUnit.Framework
         /// <param name="code">An Action to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        [OverloadResolutionPriority(1)]
         public static void That(Action code, IResolveConstraint constraint,
             NUnitString message = default,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -193,7 +189,6 @@ namespace NUnit.Framework
         /// <param name="code">An Action to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        [OverloadResolutionPriority(1)]
         public static void That(Action code, IResolveConstraint constraint,
             FormattableString message,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
@@ -208,7 +203,6 @@ namespace NUnit.Framework
         /// <param name="code">An Action to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        [OverloadResolutionPriority(1)]
         public static void That(Action code, IResolveConstraint constraint,
             Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
