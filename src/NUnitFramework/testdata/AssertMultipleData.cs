@@ -584,6 +584,36 @@ namespace NUnit.TestData.AssertMultipleData
             }
         }
 
+        /// <summary>
+        /// Reproduces issue #3849: Assert.Catch inside Assert.Multiple should report
+        /// a clear assertion failure when the exception type doesn't match, not throw
+        /// an InvalidCastException.
+        /// </summary>
+        [Test]
+        public void AssertCatchWithWrongExceptionType()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Catch<ArgumentException>(() => throw new InvalidOperationException("Test exception"));
+            });
+        }
+
+        /// <summary>
+        /// Reproduces issue #3849: Multiple Assert.Catch failures inside Assert.Multiple
+        /// should all be reported clearly.
+        /// </summary>
+        [Test]
+        public void AssertCatchWithMultipleFailures()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(1, Is.EqualTo(2));
+                Assert.Catch<ArgumentException>(() => throw new InvalidOperationException("First"));
+                Assert.Catch<ArgumentException>(() => { }); // No exception thrown
+                Assert.That("A", Is.EqualTo("B"));
+            });
+        }
+
         private static readonly object[] DetectFailuresInsideMultipleTestCases =
         [
             new object[] { 1, 1, string.Empty },
