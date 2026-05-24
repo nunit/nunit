@@ -57,6 +57,22 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actual, Is.Not.AssignableTo(type));
         }
 
+        [Test]
+        public static void GenericConstraintUsesRuntimeTypeForActualValue()
+        {
+            D1 actual = new D2();
+
+            Assert.That(actual, Is.AssignableTo<D2>());
+        }
+
+        [Test]
+        public static void GenericConstraintReturnsFalseForNullActual()
+        {
+            object? actual = null;
+
+            Assert.That(actual, Is.Not.AssignableTo<D1>());
+        }
+
         private static readonly TestCaseData[] FailureCases =
         [
             new TestCaseData(null, typeof(int)),
