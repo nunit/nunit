@@ -655,6 +655,62 @@ namespace NUnit.Framework.Tests.Api
         }
         //#endif
 
+        #region Issue 3682 - StopRun not cancelling non-cooperative tests
+
+        /// <summary>
+        /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
+        /// On .NET Framework, this works via Thread.Abort.
+        /// On .NET Core/5+, Thread.Abort is not available, so non-cooperative tests
+        /// cannot be forcibly terminated.
+        /// </summary>
+        [Test]
+        [Platform(Include = "Net")] // Only run on .NET Framework where Thread.Abort is available
+        public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_OnNetFramework()
+        {
+            // This test verifies that on .NET Framework, forced stop actually terminates tests
+            // On .NET Core/5+, this test is skipped because Thread.Abort is not available
+
+            var tests = LoadSlowTests(0);  // Simple dispatcher
+            _runner.RunAsync(this, TestFilter.Empty);
+
+            // Wait for test to start
+            SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
+
+            // Force stop
+            _runner.StopRun(force: true);
+
+            // Should complete within reasonable time on .NET Framework
+            var completed = _runner.WaitForCompletion(CancelTestDelay);
+
+            Assert.That(completed, Is.True,
+                "StopRun(true) should terminate tests on .NET Framework");
+        }
+
+        /// <summary>
+        /// Issue #3682: Documents that StopRun(true) cannot forcibly terminate
+        /// non-cooperative tests on .NET Core/5+ because Thread.Abort is not available.
+        /// This is a known limitation that requires tests to cooperatively check for cancellation.
+        /// </summary>
+        [Test]
+        [Platform(Exclude = "Net")] // Only run on .NET Core/5+
+        public void StopRun_WithForce_CannotTerminateNonCooperativeTests_OnNetCore()
+        {
+            // This test documents the limitation on .NET Core/5+
+            // Non-cooperative tests cannot be forcibly terminated because Thread.Abort
+            // is not available. Tests must cooperatively check for cancellation.
+
+            // NOTE: We cannot actually test this with a truly non-cooperative test
+            // because it would hang the test suite. Instead, we document the limitation.
+
+            Assert.Warn(
+                "Issue #3682: On .NET Core/5+, StopRun(true) cannot forcibly terminate " +
+                "non-cooperative tests because Thread.Abort is not available. " +
+                "Tests must cooperatively check TestContext.CurrentContext.CancellationToken " +
+                "or TestExecutionContext.CurrentContext.ExecutionStatus for proper cancellation.");
+        }
+
+        #endregion
+
         #endregion
 
         #region ConvertSetting
