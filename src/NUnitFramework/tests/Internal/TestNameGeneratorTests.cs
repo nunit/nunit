@@ -164,11 +164,10 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         /// <summary>
-        /// Issue #4826: Control characters (beyond the commonly escaped ones) should be escaped.
-        /// Tests various non-printable ASCII control characters.
+        /// Issue #4826: DEL (0x7F) control character should be escaped.
         /// </summary>
         [Test]
-        public void ControlCharacters_ShouldBeEscaped()
+        public void ControlCharacterDEL_ShouldBeEscaped()
         {
             // Test DEL character (0x7F) which is not handled by current EscapeControlChar
             char delChar = '\x7F';
