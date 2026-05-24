@@ -803,6 +803,13 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
+        public static TestCaseData[] DateTimeArgs => new TestCaseData[] { new TestCaseData("2019-10-10 11:11:11") };
+        [TestCaseSource(nameof(DateTimeArgs))]
+        public void MethodTakingConvertibleArgs(DateTime time)
+        {
+            Assert.That(time, Is.EqualTo(DateTime.Parse("2019-10-10 11:11:11")));
+        }
+
         [TestCaseSource(nameof(SingleMemberArrayAsArgument))]
         public void Issue1337SingleMemberArrayAsArgument(string[] args)
         {
