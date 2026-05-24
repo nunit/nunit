@@ -24,8 +24,10 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
 
             // Tests should be discovered even with non-static DatapointSource
-            Assert.That(fixture.TestCaseCount, Is.GreaterThan(0),
-                "Tests should be discovered even when constructor will throw");
+            // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
+            // Using >= 2 to ensure Theory (not just RegularTestMethod) is discovered
+            Assert.That(fixture.TestCaseCount, Is.GreaterThanOrEqualTo(2),
+                "Theory test cases should be discovered, not just RegularTestMethod");
         }
 
         /// <summary>
@@ -60,8 +62,9 @@ namespace NUnit.Framework.Tests.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(TheoryWithStaticDatapointSourceAndThrowingConstructor));
 
             // Tests should be discovered with static DatapointSource
-            Assert.That(fixture.TestCaseCount, Is.GreaterThan(0),
-                "Tests should be discovered with static DatapointSource");
+            // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
+            Assert.That(fixture.TestCaseCount, Is.GreaterThanOrEqualTo(2),
+                "Theory test cases should be discovered with static DatapointSource");
         }
 
         /// <summary>
