@@ -225,6 +225,7 @@ namespace NUnit.Framework.Constraints
         /// Return a new CollectionTally for use in making tests
         /// </summary>
         /// <param name="c">The collection to be included in the tally</param>
+        #pragma warning disable CS0618 // Type or member is obsolete
         [Obsolete("This method will be removed in a future release.")]
         protected CollectionTally Tally(IEnumerable c)
         {
@@ -283,5 +284,6 @@ namespace NUnit.Framework.Constraints
             tally.TryRemove(actualItems);
             return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
         }
+        #pragma warning restore CS0618 // Type or member is obsolete
     }
 }

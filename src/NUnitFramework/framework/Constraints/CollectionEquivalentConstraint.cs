@@ -39,6 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Test whether two collections are equivalent
         /// </summary>
+        #pragma warning disable CS0618 // Type or member is obsolete
         private bool Matches(
             IEnumerable actual,
             out CollectionTally.CollectionTallyResult tallyResult)
@@ -55,6 +56,7 @@ namespace NUnit.Framework.Constraints
 
             return (tallyResult.ExtraItems.Count == 0) && (tallyResult.MissingItems.Count == 0);
         }
+        #pragma warning restore CS0618 // Type or member is obsolete
 
         /// <inheritdoc/>
         protected override bool Matches(IEnumerable actual) => Matches(actual, out _);

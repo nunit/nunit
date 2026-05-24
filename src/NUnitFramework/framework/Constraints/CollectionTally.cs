@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +11,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences
     /// of each object in one or more enumerations.</summary>
+    [Obsolete("CollectionTally is obsolete in NUnit 5.0 and will be removed in NUnit 6.0.")]
     public sealed class CollectionTally
     {
         /// <summary>The result of a <see cref="CollectionTally"/>.</summary>

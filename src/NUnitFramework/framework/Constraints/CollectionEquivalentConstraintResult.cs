@@ -7,6 +7,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>Provides a <see cref="ConstraintResult"/> for the <see cref="CollectionEquivalentConstraint"/>.</summary>
     public class CollectionEquivalentConstraintResult : ConstraintResult
     {
+        #pragma warning disable CS0618 // Type or member is obsolete
         /// <summary>Result of a <see cref="CollectionTally"/> of the collections to compare for equivalence.</summary>
         private readonly CollectionTally.CollectionTallyResult _tallyResult;
 
@@ -26,6 +27,7 @@ namespace NUnit.Framework.Constraints
 
             _tallyResult = tallyResult;
         }
+        #pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>Write any additional lines (following <c>Expected:</c> and <c>But was:</c>) for a failing constraint.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>

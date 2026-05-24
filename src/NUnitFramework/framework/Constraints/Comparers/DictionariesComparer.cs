@@ -17,7 +17,9 @@ namespace NUnit.Framework.Constraints.Comparers
             if (xDictionary.Count != yDictionary.Count)
                 return EqualMethodResult.ComparedNotEqual;
 
+            #pragma warning disable CS0618 // Type or member is obsolete
             CollectionTally tally = new CollectionTally(equalityComparer, xDictionary.Keys);
+            #pragma warning restore CS0618 // Type or member is obsolete
             tally.TryRemove(yDictionary.Keys);
             if ((tally.Result.MissingItems.Count > 0) || (tally.Result.ExtraItems.Count > 0))
                 return EqualMethodResult.ComparedNotEqual;
