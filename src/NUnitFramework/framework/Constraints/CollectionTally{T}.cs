@@ -38,13 +38,7 @@ namespace NUnit.Framework.Constraints
         private readonly ItemsStrategy _removeItemsStrategy;
 
         /// <summary>The result of the comparison between the two collections.</summary>
-        public CollectionTallyResult Result
-        {
-            get
-            {
-                return _removeItemsStrategy.Result;
-            }
-        }
+        public CollectionTallyResult Result => _removeItemsStrategy.Result;
 
         private record struct StrategyKey(bool ContentsArePrimitive, bool ContentsAreSortable, bool FuzzyCompare);
 
@@ -171,13 +165,7 @@ namespace NUnit.Framework.Constraints
                 ExtraItems.Add(item);
             }
 
-            public CollectionTallyResult Result
-            {
-                get
-                {
-                    return new CollectionTallyResult(new(MissingItems), new(ExtraItems));
-                }
-            }
+            public CollectionTallyResult Result => new(new(MissingItems), new(ExtraItems));
         }
 
         private sealed class LinearSortAndScanItemsStrategy : ItemsStrategy

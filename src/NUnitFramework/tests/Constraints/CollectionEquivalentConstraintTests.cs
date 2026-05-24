@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework.Constraints;
@@ -407,52 +406,67 @@ public class CollectionEquivalentConstraintTests
         private const int LargeCollectionWarnTime = 50;
         private const int LargeCollectionFailTime = 250;
 
-        [Test]
+        [Test, MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeDoubleCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, Size).Select(x => (double)x);
             var expected = Enumerable.Range(0, Size).Select(x => (double)x);
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeIntCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, Size);
             var expected = Enumerable.Range(0, Size);
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeIntCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, Size);
             var expected = Enumerable.Range(0, Size).Select(i => Size - i - 1);
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeStringCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
             var expected = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeStringCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, Size).Select(i => i.ToString()).ToList();
             var expected = Enumerable.Range(0, Size).Select(i => (Size - i - 1).ToString()).ToList();
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeStringCollection()
         {
             var actual = new StringCollection();
@@ -463,10 +477,13 @@ public class CollectionEquivalentConstraintTests
                 expected.Add(i.ToString());
             }
 
-            AssertFailIfTooSlow(expected, actual);
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
 
         [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeByteCollectionsNotEquivalent()
         {
             byte[] data = new byte[Size];
@@ -474,10 +491,13 @@ public class CollectionEquivalentConstraintTests
             encrypted[0] = 2;
             encrypted[1] = 3;
 
-            AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
+            var constraint = new CollectionEquivalentConstraint(data);
+            var constraintResult = constraint.ApplyTo(encrypted);
+            Assert.That(constraintResult.IsSuccess, Is.False);
         }
 
         [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
+        [MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeByteCollectionsNotEquivalentAtEnd()
         {
             byte[] data = new byte[Size];
@@ -485,34 +505,20 @@ public class CollectionEquivalentConstraintTests
             encrypted[Size - 2] = 2;
             encrypted[Size - 1] = 3;
 
-            AssertFailIfTooSlow(data, encrypted, expectSuccess: false);
+            var constraint = new CollectionEquivalentConstraint(data);
+            var constraintResult = constraint.ApplyTo(encrypted);
+            Assert.That(constraintResult.IsSuccess, Is.False);
         }
 
-        [Test]
+        [Test, MaxTime(LargeCollectionFailTime, WarningTime = LargeCollectionWarnTime)]
         public static void LargeValueTupleCollectionsInSameOrder()
         {
             var actual = Enumerable.Range(0, Size).Select(x => (x, Size - x));
             var expected = Enumerable.Range(0, Size).Select(x => (x, Size - x));
 
-            AssertFailIfTooSlow(expected, actual);
-        }
-
-        private static void AssertFailIfTooSlow(IEnumerable expected, IEnumerable actual, bool expectSuccess = true)
-        {
-            var watch = Stopwatch.StartNew();
-
             var constraint = new CollectionEquivalentConstraint(expected);
             var constraintResult = constraint.ApplyTo(actual);
-            Assert.That(constraintResult.IsSuccess, Is.EqualTo(expectSuccess));
-
-            watch.Stop();
-
-            TestContext.Out.WriteLine($"Elapsed time {watch.ElapsedMilliseconds} ms");
-
-            if (watch.ElapsedMilliseconds > LargeCollectionWarnTime)
-                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
-            if (watch.ElapsedMilliseconds > LargeCollectionFailTime)
-                Assert.Fail($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+            Assert.That(constraintResult.IsSuccess, Is.True);
         }
     }
 }
