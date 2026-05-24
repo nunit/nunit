@@ -4,6 +4,72 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.TheoryFixture
 {
+    /// <summary>
+    /// Issue #4426: Fixture with non-static DatapointSource and constructor that throws.
+    /// Tests should be discovered and report an error, not be silently ignored.
+    /// </summary>
+    [TestFixture]
+    public class TheoryWithNonStaticDatapointSourceAndThrowingConstructor
+    {
+        public TheoryWithNonStaticDatapointSourceAndThrowingConstructor()
+        {
+            throw new System.InvalidOperationException("Constructor throws");
+        }
+
+#pragma warning disable IDE0044 // Make field readonly
+#pragma warning disable IDE0052 // Remove unused private members
+        [DatapointSource]
+        private int[] _intSource = new int[] { 0, 1, 6, 8, 50 };
+#pragma warning restore IDE0052 // Remove unused private members
+#pragma warning restore IDE0044 // Make field readonly
+
+        [Theory]
+        public void TheoryMethod(int value)
+        {
+            Assert.That(value, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [Test]
+        public void RegularTestMethod()
+        {
+            Assert.Pass();
+        }
+    }
+
+    /// <summary>
+    /// Issue #4426: Fixture with static DatapointSource and constructor that throws.
+    /// Tests should be discovered and report an error (this works correctly).
+    /// </summary>
+    [TestFixture]
+    public class TheoryWithStaticDatapointSourceAndThrowingConstructor
+    {
+        public TheoryWithStaticDatapointSourceAndThrowingConstructor()
+        {
+            throw new System.InvalidOperationException("Constructor throws");
+        }
+
+#pragma warning disable IDE0044 // Make field readonly
+#pragma warning disable IDE0052 // Remove unused private members
+#pragma warning disable IDE1006 // Naming rule violation
+        [DatapointSource]
+        private static int[] IntSource = new int[] { 0, 1, 6, 8, 50 };
+#pragma warning restore IDE1006 // Naming rule violation
+#pragma warning restore IDE0052 // Remove unused private members
+#pragma warning restore IDE0044 // Make field readonly
+
+        [Theory]
+        public void TheoryMethod(int value)
+        {
+            Assert.That(value, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [Test]
+        public void RegularTestMethod()
+        {
+            Assert.Pass();
+        }
+    }
+
     [TestFixture]
     public class TheoryFixture
     {

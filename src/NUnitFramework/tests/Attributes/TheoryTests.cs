@@ -12,6 +12,78 @@ namespace NUnit.Framework.Tests.Attributes
     {
         private static readonly Type FixtureType = typeof(TheoryFixture);
 
+        #region Issue 4426 - Non-static DatapointSource with throwing constructor
+
+        /// <summary>
+        /// Issue #4426: When a fixture has a non-static DatapointSource and the constructor throws,
+        /// tests should still be discovered and report an error (not be silently ignored).
+        /// </summary>
+        [Test]
+        public void TheoryWithNonStaticDatapointSource_ConstructorThrows_TestsAreDiscovered()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
+
+            // Tests should be discovered even with non-static DatapointSource
+            Assert.That(fixture.TestCaseCount, Is.GreaterThan(0),
+                "Tests should be discovered even when constructor will throw");
+        }
+
+        /// <summary>
+        /// Issue #4426: When a fixture has a non-static DatapointSource and the constructor throws,
+        /// the test results should report the constructor failure (Error state).
+        /// </summary>
+        [Test]
+        public void TheoryWithNonStaticDatapointSource_ConstructorThrows_ReportsError()
+        {
+            var result = TestBuilder.RunTestFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
+
+            // Should report an error, not silently pass or be inconclusive
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed),
+                    "Should not pass silently");
+                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Skipped),
+                    "Should not be silently skipped");
+                // The fixture should fail because the constructor throws
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
+                    "Should report failure due to constructor exception");
+            });
+        }
+
+        /// <summary>
+        /// Issue #4426: Verify static DatapointSource with throwing constructor works correctly
+        /// (this is the baseline - it should discover tests and report error).
+        /// </summary>
+        [Test]
+        public void TheoryWithStaticDatapointSource_ConstructorThrows_TestsAreDiscovered()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(TheoryWithStaticDatapointSourceAndThrowingConstructor));
+
+            // Tests should be discovered with static DatapointSource
+            Assert.That(fixture.TestCaseCount, Is.GreaterThan(0),
+                "Tests should be discovered with static DatapointSource");
+        }
+
+        /// <summary>
+        /// Issue #4426: Verify static DatapointSource with throwing constructor reports error
+        /// (this is the baseline behavior that non-static should match).
+        /// </summary>
+        [Test]
+        public void TheoryWithStaticDatapointSource_ConstructorThrows_ReportsError()
+        {
+            var result = TestBuilder.RunTestFixture(typeof(TheoryWithStaticDatapointSourceAndThrowingConstructor));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed),
+                    "Should not pass silently");
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
+                    "Should report failure due to constructor exception");
+            });
+        }
+
+        #endregion
+
         [Test]
         public void TheoryWithNoArgumentsIsTreatedAsTest()
         {
