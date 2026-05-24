@@ -22,7 +22,8 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            return typeof(TExpected).CanImplicitlyConvertTo(GetActualType(actual)!);
+            Type? actualType = GetActualType(actual);
+            return actualType is not null && typeof(TExpected).CanImplicitlyConvertTo(actualType);
         }
     }
 

@@ -55,6 +55,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actual, Is.Not.AssignableFrom(type));
         }
 
+        [Test]
+        public static void GenericConstraintReturnsFalseForNullActual()
+        {
+            object? actual = null;
+
+            Assert.That(actual, Is.Not.AssignableFrom<D1>());
+        }
+
         private static readonly TestCaseData[] FailureCases =
         [
             new TestCaseData(42.0f, typeof(double)),
