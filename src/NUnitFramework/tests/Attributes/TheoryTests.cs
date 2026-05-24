@@ -39,7 +39,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var result = TestBuilder.RunTestFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
 
-            // Should report an error, not silently pass or be inconclusive
+            // Should report a failure, not silently pass or be skipped
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed),
@@ -49,6 +49,9 @@ namespace NUnit.Framework.Tests.Attributes
                 // The fixture should fail because the constructor throws
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
                     "Should report failure due to constructor exception");
+                // Verify the exception message is captured
+                Assert.That(result.Message, Does.Contain("Constructor throws"),
+                    "Should contain the constructor exception message");
             });
         }
 
@@ -82,6 +85,9 @@ namespace NUnit.Framework.Tests.Attributes
                     "Should not pass silently");
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
                     "Should report failure due to constructor exception");
+                // Verify the exception message is captured
+                Assert.That(result.Message, Does.Contain("Constructor throws"),
+                    "Should contain the constructor exception message");
             });
         }
 
