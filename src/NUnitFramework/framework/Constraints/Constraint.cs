@@ -80,10 +80,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(Func<TActual> code)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(code))
-                return ApplyTo(AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => code.Invoke()));
-
-            return ApplyTo(GetTestObject(code));
+            return ApplyTo(AsyncToSyncAdapter.IsAsyncOperation(code)
+                ? AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => code.Invoke())
+                : GetTestObject(code));
         }
 
         /// <summary>
