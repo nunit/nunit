@@ -1234,9 +1234,11 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(message, Does.Not.Contain("Expected and actual are both"),
                     "Error message should not use generic 'Expected and actual are both' format");
 
-                // The message should contain some indication of the expected or actual values
-                Assert.That(message, Does.Contain("expected").Or.Contain("actual"),
-                    "Error message should contain information about the differing values");
+                // The message should contain the ToString() output of the objects
+                // showing the actual differing values, not just the type name
+                Assert.That(message,
+                    Does.Contain("TestEnumerableEquatable(expected").Or.Contain("TestEnumerableEquatable(actual"),
+                    "Error message should contain the ToString() representation of the differing values");
             }
 
             /// <summary>
