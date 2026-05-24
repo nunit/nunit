@@ -76,14 +76,14 @@ namespace NUnit.Framework.Constraints
         /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
-        /// <param name="del">An ActualValueDelegate</param>
+        /// <param name="code">An ActualValueDelegate</param>
         /// <returns>A ConstraintResult</returns>
-        public virtual ConstraintResult ApplyTo<TActual>(Func<TActual> del)
+        public virtual ConstraintResult ApplyTo<TActual>(Func<TActual> code)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(del))
-                return ApplyTo(AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => del.Invoke()));
+            if (AsyncToSyncAdapter.IsAsyncOperation(code))
+                return ApplyTo(AsyncToSyncAdapter.Await(TestExecutionContext.CurrentContext, () => code.Invoke()));
 
-            return ApplyTo(GetTestObject(del));
+            return ApplyTo(GetTestObject(code));
         }
 
         /// <summary>
