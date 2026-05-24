@@ -43,8 +43,8 @@ namespace NUnit.Framework.Internal.Extensions
         /// Determines whether the specified generic enumerable collection's item type is sortable.
         /// </summary>
         /// <typeparam name="T">The type of items in the collection.</typeparam>
-        /// <param name="collection">The collection to check (null collections are considered not sortable).</param>
-        /// <returns>True if the item type T can be inferred as sortable.</returns>
+        /// <param name="collection">The collection whose item type to check.</param>
+        /// <returns>True if the item type T is sortable.</returns>
         public static bool IsSortable<T>(this IEnumerable<T> collection) => TypeExtensions.IsSortable<T>();
     }
 }

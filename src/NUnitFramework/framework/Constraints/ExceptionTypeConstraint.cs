@@ -10,6 +10,31 @@ namespace NUnit.Framework.Constraints
     /// used to provided detailed info about the exception thrown in
     /// an error message.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class ExceptionTypeConstraint<TExpected> : ExactTypeConstraint<TExpected>
+        where TExpected : Exception
+    {
+        /// <summary>
+        /// Constructs an ExceptionTypeConstraint
+        /// </summary>
+        public ExceptionTypeConstraint() : base()
+        {
+        }
+
+        /// <inheritdoc/>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
+
+            return new ExceptionTypeConstraintResult(this, actual, GetActualType(actual), Matches(actual));
+        }
+    }
+
+    /// <summary>
+    /// ExceptionTypeConstraint is a special version of ExactTypeConstraint
+    /// used to provided detailed info about the exception thrown in
+    /// an error message.
+    /// </summary>
     public class ExceptionTypeConstraint : ExactTypeConstraint
     {
         /// <summary>
@@ -19,11 +44,7 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Applies the constraint to an actual value, returning a ConstraintResult.
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>A ConstraintResult</returns>
+        /// <inheritdoc/>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
@@ -32,33 +53,31 @@ namespace NUnit.Framework.Constraints
 
             return new ExceptionTypeConstraintResult(this, actual, actualType, Matches(actual));
         }
+    }
 
-        #region Nested Result Class
-        private class ExceptionTypeConstraintResult : ConstraintResult
+    file class ExceptionTypeConstraintResult : ConstraintResult
+    {
+        private readonly object? _caughtException;
+
+        public ExceptionTypeConstraintResult(Constraint constraint, object? caughtException, Type? type, bool matches)
+            : base(constraint, type, matches)
         {
-            private readonly object? _caughtException;
+            _caughtException = caughtException;
+        }
 
-            public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object? caughtException, Type? type, bool matches)
-                : base(constraint, type, matches)
+        public override void WriteActualValueTo(MessageWriter writer)
+        {
+            if (Status == ConstraintStatus.Failure)
             {
-                _caughtException = caughtException;
-            }
-
-            public override void WriteActualValueTo(MessageWriter writer)
-            {
-                if (Status == ConstraintStatus.Failure)
+                if (_caughtException is Exception ex)
                 {
-                    if (_caughtException is Exception ex)
-                    {
-                        writer.WriteActualValue(ex);
-                    }
-                    else
-                    {
-                        base.WriteActualValueTo(writer);
-                    }
+                    writer.WriteActualValue(ex);
+                }
+                else
+                {
+                    base.WriteActualValueTo(writer);
                 }
             }
         }
-        #endregion
     }
 }

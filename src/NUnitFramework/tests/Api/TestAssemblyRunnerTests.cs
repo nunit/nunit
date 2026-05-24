@@ -447,6 +447,7 @@ namespace NUnit.Framework.Tests.Api
             var ex = Assert.Throws<ArgumentException>(() =>
                 TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>"));
 
+            Assert.That(ex.ParamName, Is.EqualTo("xmlNode"));
             Assert.That(ex?.Message, Does.StartWith(string.Format(InvalidFilterElementMessage, "invalidElement")));
         }
 

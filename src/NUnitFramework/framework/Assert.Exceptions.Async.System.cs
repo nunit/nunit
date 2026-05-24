@@ -96,7 +96,7 @@ namespace NUnit.Framework
         public static TActual? ThrowsAsync<TActual>(Func<Task> asyncCode, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(typeof(TActual), asyncCode, message, args);
+            return (TActual?)ThrowsAsync(new ExceptionTypeConstraint<TActual>(), asyncCode, message, args);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? CatchAsync(Func<Task> asyncCode, string message, params object?[]? args)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode, message, args);
+            return CatchAsync<Exception>(asyncCode, message, args);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? CatchAsync(Func<Task> asyncCode)
         {
-            return ThrowsAsync(new InstanceOfTypeConstraint(typeof(Exception)), asyncCode);
+            return CatchAsync<Exception>(asyncCode);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(Func<Task> asyncCode, string message, params object?[]? args)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), asyncCode, message, args);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace NUnit.Framework
         public static TActual? CatchAsync<TActual>(Func<Task> asyncCode)
             where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), asyncCode);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint<TActual>(), asyncCode);
         }
 
         #endregion

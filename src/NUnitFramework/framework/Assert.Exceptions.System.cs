@@ -20,11 +20,12 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [OverloadResolutionPriority(1)]
-        public static Exception? Throws(IResolveConstraint expression, Action code, string message, params object?[]? args)
+        public static TExpected? Throws<TExpected>(IResolveConstraint expression, Action code, string message, params object?[]? args)
+            where TExpected : Exception
         {
             Exception? caughtException = null;
 
-            // Since Action returns void, it’s always async void if it’s async at all.
+            // Since Action returns void, it's always async void if it's async at all.
             Guard.ArgumentNotAsyncVoid(code, nameof(code));
 
             using (new TestExecutionContext.IsolatedContext())
@@ -41,7 +42,7 @@ namespace NUnit.Framework
 
             Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
-            return caughtException;
+            return caughtException as TExpected;
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(IResolveConstraint expression, Action code)
         {
-            return Throws(expression, code, string.Empty, null);
+            return Throws<Exception>(expression, code, string.Empty, null);
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Throws(Type expectedExceptionType, Action code)
         {
-            return Throws(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
+            return Throws<Exception>(new ExceptionTypeConstraint(expectedExceptionType), code, string.Empty, null);
         }
 
         #endregion
@@ -98,7 +99,7 @@ namespace NUnit.Framework
         public static TExpected? Throws<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
-            return (TExpected?)Throws(typeof(TExpected), code, message, args);
+            return Throws<TExpected>(new ExceptionTypeConstraint<TExpected>(), code, message, args);
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Catch(Action code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code, message, args);
+            return Throws<Exception>(code, message, args);
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Catch(Action code)
         {
-            return Throws(new InstanceOfTypeConstraint(typeof(Exception)), code);
+            return Catch<Exception>(code);
         }
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace NUnit.Framework
         [OverloadResolutionPriority(1)]
         public static Exception? Catch(Type expectedExceptionType, Action code, string message, params object?[]? args)
         {
-            return Throws(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
+            return Throws<Exception>(new InstanceOfTypeConstraint(expectedExceptionType), code, message, args);
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace NUnit.Framework
         public static TExpected? Catch<TExpected>(Action code, string message, params object?[]? args)
             where TExpected : Exception
         {
-            return (TExpected?)Throws(new InstanceOfTypeConstraint(typeof(TExpected)), code, message, args);
+            return Throws<TExpected>(new InstanceOfTypeConstraint<TExpected>(), code, message, args);
         }
 
         /// <summary>

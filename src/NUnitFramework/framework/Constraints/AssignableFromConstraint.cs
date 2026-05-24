@@ -9,6 +9,27 @@ namespace NUnit.Framework.Constraints
     /// AssignableFromConstraint is used to test that an object
     /// can be assigned from an instance of a given Type.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class AssignableFromConstraint<TExpected> : TypeConstraint<TExpected>
+    {
+        /// <summary>
+        /// Construct an AssignableFromConstraint for the type provided
+        /// </summary>
+        public AssignableFromConstraint() : base("assignable from ")
+        {
+        }
+
+        /// <inheritdoc />
+        protected override bool Matches<TActual>(TActual actual)
+        {
+            return typeof(TExpected).CanImplicitlyConvertTo(GetActualType(actual)!);
+        }
+    }
+
+    /// <summary>
+    /// AssignableFromConstraint is used to test that an object
+    /// can be assigned from a given Type.
+    /// </summary>
     public class AssignableFromConstraint : TypeConstraint
     {
         /// <summary>
@@ -19,11 +40,7 @@ namespace NUnit.Framework.Constraints
         {
         }
 
-        /// <summary>
-        /// Apply the constraint to an actual value, returning true if it succeeds
-        /// </summary>
-        /// <param name="actual">The actual argument</param>
-        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
             return actualType is null ? expectedType is null : expectedType.CanImplicitlyConvertTo(actualType);

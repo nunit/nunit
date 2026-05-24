@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         {
             ArgumentNullException.ThrowIfNull(exception);
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (!excludeExceptionNames)
                 sb.AppendFormat("{0} : ", exception.GetType());
             sb.Append(GetExceptionMessage(exception));
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined stack trace.</returns>
         public static string BuildStackTrace(Exception exception)
         {
-            StringBuilder sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
+            var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -290,17 +290,15 @@ namespace NUnit.Framework.Internal
         /// <returns>The InnerException is available, otherwise the <paramref name="exception"/>.</returns>
         public static Exception Unwrap(this Exception exception)
         {
-            if (exception is NUnitException nUnitException &&
-                nUnitException.InnerException is not null)
+            if (exception is NUnitException { InnerException: not null } nUnitException)
             {
-                exception = nUnitException.InnerException;
+                exception = nUnitException.InnerException!;
             }
 
-            while (exception is TargetInvocationException targetInvocationException &&
-                targetInvocationException.InnerException is not null &&
-                targetInvocationException.StackTrace?.Contains("NUnit.Framework") is true)
+            while (exception is TargetInvocationException { InnerException: not null, StackTrace: { } stackTrace } targetInvocationException &&
+                stackTrace.Contains("NUnit.Framework"))
             {
-                exception = targetInvocationException.InnerException;
+                exception = targetInvocationException.InnerException!;
             }
 
             return exception;

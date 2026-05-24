@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 
@@ -11,10 +12,15 @@ namespace NUnit.Framework.Tests.Constraints
     {
         [TestFixtureSource(typeof(AssignableTestScenarios), nameof(GetAssignableTestScenarios))]
         public class ConstraintValidation<TFrom, TTo> : ConstraintTestBase
-        where TFrom : new()
-        where TTo : new()
+            where TFrom : new()
+            where TTo : new()
         {
-            protected override Constraint TheConstraint { get; } = new AssignableToConstraint(typeof(TTo));
+            public ConstraintValidation(Constraint constraint) : base()
+            {
+                TheConstraint = constraint;
+            }
+
+            protected override Constraint TheConstraint { get; }
 
             [SetUp]
             public void SetUp()
@@ -58,5 +64,26 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(new D1(), typeof(D2)),
             new TestCaseData(new D1(), typeof(D3)),
         ];
+
+        private static IEnumerable<TestFixtureData> GetAssignableTestScenarios()
+        {
+            foreach (var assignment in AssignableTestScenarios.GetAssignableTestScenarios())
+            {
+                var from = assignment.from;
+                var typeArgs = new Type[] { assignment.from, assignment.to };
+
+                yield return new TestFixtureData(new AssignableToConstraint(from))
+                {
+                    TypeArgs = typeArgs
+                }.SetArgDisplayNames("non-generic");
+
+                var genericType = typeof(AssignableToConstraint<>).MakeGenericType(from);
+                var genericConstraint = (Constraint)Activator.CreateInstance(genericType)!;
+                yield return new TestFixtureData(genericConstraint)
+                {
+                    TypeArgs = typeArgs
+                }.SetArgDisplayNames("generic");
+            }
+        }
     }
 }

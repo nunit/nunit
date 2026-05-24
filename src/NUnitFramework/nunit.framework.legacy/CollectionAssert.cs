@@ -5,7 +5,8 @@ using System.Collections;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Legacy
+// ReSharper disable once CheckNamespace
+namespace NUnit.Framework
 {
     /// <summary>
     /// A set of Assert methods operating on one or more collections

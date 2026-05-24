@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
 using NUnit.Framework.Constraints.Comparers;
 using System.Threading.Tasks;

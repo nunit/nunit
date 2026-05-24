@@ -46,17 +46,6 @@ namespace NUnit.Framework.Constraints
         ConstraintResult ApplyTo<TActual>(TActual actual);
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns
-        /// the value to be tested. The default implementation simply evaluates
-        /// the delegate but derived classes may override it to provide for
-        /// delayed processing.
-        /// </summary>
-        /// <param name="del">An ActualValueDelegate</param>
-        /// <returns>A ConstraintResult</returns>
-        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
-        ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del);
-
-        /// <summary>
         /// Applies the constraint to a func that returns
         /// the value to be tested. The default implementation simply evaluates
         /// the delegate but derived classes may override it to provide for

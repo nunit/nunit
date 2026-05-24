@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -35,24 +37,43 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void SameValueTypes()
-        {
-            int index = 2;
-            var expectedMessage =
-                "  Expected: same as 2" + Environment.NewLine +
-                "  But was:  2" + Environment.NewLine;
-#pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
-#pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
-            Assert.That(ex?.Message, Does.Contain(expectedMessage));
-        }
-
-        [Test]
         public void ShouldNotCallToStringOnClassForPassingTests()
         {
             var actual = new ThrowsIfToStringIsCalled(1);
 
             Assert.That(actual, Is.SameAs(actual));
         }
+
+        [Test]
+        public void SameValueTypes_CantCompile()
+        {
+            var testCompiler = new TestCompiler(typeof(Assert));
+            var result = testCompiler.CompileCode(ValueTypeCode);
+
+            Assert.That(result.Success, Is.False);
+
+            var error = result.Diagnostics.First(x => x.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(error.Id, Is.EqualTo("CS0452"));
+                Assert.That(error.GetMessage(), Does.StartWith("The type 'int' must be a reference type in order to use it as parameter 'T'"));
+            }
+        }
+
+        private const string ValueTypeCode = @"
+            using NUnit.Framework;
+
+            [TestFixture]
+            public class SameAsValueTypeFixture
+            {
+                [Test]
+                public void SameValueTypes()
+                {
+                    int index = 2;
+                    Assert.That(2, Is.SameAs(index));
+                }
+            }
+            ";
     }
 }

@@ -33,23 +33,11 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns
-        /// the value to be tested. The default implementation simply evaluates
-        /// the delegate but derived classes may override it to provide for
-        /// delayed processing.
-        /// </summary>
-        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
-        public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
-        {
-            return ApplyTo((Delegate)del);
-        }
-
-        /// <summary>
-        /// Converts a Func to a TestDelegate before calling the primary overload.
+        /// Converts a Func to a Delegate before calling the primary overload.
         /// </summary>
         public override ConstraintResult ApplyTo<TActual>(Func<TActual> code)
         {
-            return ApplyTo((Delegate)code);
+            return ApplyTo<Delegate>(code);
         }
 
         /// <inheritdoc/>
@@ -62,13 +50,9 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        private class ThrowsExceptionConstraintResult : ConstraintResult
+        private class ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception? caughtException)
+            : ConstraintResult(constraint, caughtException, caughtException is not null)
         {
-            public ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception? caughtException)
-                : base(constraint, caughtException, caughtException is not null)
-            {
-            }
-
             public override void WriteActualValueTo(MessageWriter writer)
             {
                 if (Status == ConstraintStatus.Failure)

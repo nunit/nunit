@@ -8,6 +8,58 @@ namespace NUnit.Framework.Constraints
     /// TypeConstraint is the abstract base for constraints
     /// that take a Type as their expected value.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public abstract class TypeConstraint<TExpected> : Constraint
+    {
+        /// <summary>
+        /// Construct a TypeConstraint for a given Type
+        /// </summary>
+        /// <param name="descriptionPrefix">Prefix used in forming the constraint description</param>
+        protected TypeConstraint(string descriptionPrefix)
+        {
+            Description = descriptionPrefix + MsgUtils.FormatValue(typeof(TExpected));
+        }
+
+        /// <inheritdoc/>
+        public override string Description { get; }
+
+        /// <summary>
+        /// Applies the constraint to an actual value, returning a ConstraintResult.
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            if (actual is Exception)
+                return new ConstraintResult(this, actual, Matches(actual));
+
+            return new ConstraintResult(this, actual?.GetType(), Matches(actual));
+        }
+
+        private protected static Type? GetActualType<TActual>(TActual? actual)
+        {
+            return actual?.GetType();
+        }
+
+        /// <summary>
+        /// Apply the constraint to an actual value, returning true if it succeeds
+        /// </summary>
+        /// <param name="actual">The actual argument</param>
+        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        protected abstract bool Matches<TActual>(TActual actual);
+
+        /// <inheritdoc />
+        protected override string GetStringRepresentation()
+        {
+            object[] args = [typeof(TExpected)];
+            return base.GetStringRepresentation(args);
+        }
+    }
+
+    /// <summary>
+    /// TypeConstraint is the abstract base for constraints
+    /// that take a Type as their expected value.
+    /// </summary>
     public abstract class TypeConstraint : Constraint
     {
 #pragma warning disable IDE1006

@@ -8,6 +8,36 @@ namespace NUnit.Framework.Constraints
     /// InstanceOfTypeConstraint is used to test that an object
     /// is of the same type provided or derived from it.
     /// </summary>
+    /// <typeparam name="TExpected">The expected Type used by the constraint</typeparam>
+    public class InstanceOfTypeConstraint<TExpected> : TypeConstraint<TExpected>
+    {
+        /// <summary>
+        /// Construct an InstanceOfTypeConstraint for the type provided
+        /// </summary>
+        public InstanceOfTypeConstraint()
+            : base("instance of ")
+        {
+        }
+
+        /// <summary>
+        /// The display name of this Constraint for use by ToString().
+        /// The default value is the name of the constraint with
+        /// trailing "Constraint" removed. Derived classes may set
+        /// this to another name in their constructors.
+        /// </summary>
+        public override string DisplayName => "InstanceOf";
+
+        /// <inheritdoc />
+        protected override bool Matches<TActual>(TActual actual)
+        {
+            return typeof(TExpected).IsInstanceOfType(actual);
+        }
+    }
+
+    /// <summary>
+    /// InstanceOfTypeConstraint is used to test that an object
+    /// is of the same type provided or derived from it.
+    /// </summary>
     public class InstanceOfTypeConstraint : TypeConstraint
     {
         /// <summary>
@@ -27,11 +57,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string DisplayName => "InstanceOf";
 
-        /// <summary>
-        /// Apply the constraint to an actual value, returning true if it succeeds
-        /// </summary>
-        /// <param name="actual">The actual argument</param>
-        /// <returns>True if the constraint succeeds, otherwise false.</returns>
+        /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
             return expectedType is null ? actual is null : expectedType.IsInstanceOfType(actual);

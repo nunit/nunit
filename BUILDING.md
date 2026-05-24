@@ -43,7 +43,6 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
     bin\
        Debug\
           net8.0
-          net6.0
           net462
 ```
 
@@ -112,7 +111,7 @@ Tests can be run using either Cake or directly with `dotnet test`:
 | `build --target=Test --minimal=true` | Run tests with minimal output (summaries only) |
 | `dotnet test` | Run tests directly using dotnet CLI |
 | `dotnet test -v m` | Run tests with minimal MSBuild output | 
-| `dotnet test -l "console;verbosity=detailed` | Run tests with detailed test output | 
+| `dotnet test -l "console;verbosity=detailed"` | Run tests with detailed test output | 
 | `dotnet test --settings quiet.runsettings` | Run tests with reduced NUnit output |
 
 The Cake `Test` target produces a summary at the end showing total tests, passed, failed, and skipped counts across all frameworks.
@@ -137,14 +136,14 @@ Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Dire
 - `THREAD_ABORT` enables timeouts and forcible cancellation  (applies only to .net framework)
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET462`, `NETSTANDARD2_0`, `NET6_0`, and so on.
+For example, `NET462`, `NETSTANDARD2_0`, `NET8_0_OR_GREATER`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
 For example, rather than this code:
 
 ```cs
-#if NETSTANDARD2_0 || NET6_0
+#if NETSTANDARD2_0 || NET8_0_OR_GREATER
 // Something that .NET Framework can't do
 #endif
 ```

@@ -27,15 +27,6 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        [Obsolete("Verifying AsyncTestDelegate overload")]
-        public void ThrowsConstraintSucceedsWithDelegate()
-        {
-            // Without cast, delegate is ambiguous before C# 3.0.
-            Assert.That((AsyncTestDelegate)delegate { throw new ArgumentException(); },
-                    Throws.Exception.TypeOf<ArgumentException>());
-        }
-
-        [Test]
         public async Task AsyncRegionThrowsDoesNotDisposeAsyncRegion()
         {
             await AsyncTestDelegates.Delay(100);
@@ -83,85 +74,96 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void CorrectExceptionIsReturnedToMethod()
         {
-            ArgumentException? ex = Assert.ThrowsAsync(typeof(ArgumentException),
+            var ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 AsyncTestDelegates.ThrowsArgumentException) as ArgumentException;
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { throw new ArgumentException("myMessage", "myParam"); });
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentException);
 
+            VerifyMessageAndParam(ex);
+        }
+
+        private void VerifyMessageAndParam(ArgumentException? ex)
+        {
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(ex!.Message, Does.StartWith("myMessage"));
+                Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            }
         }
 
         [Test]
         public void CorrectExceptionIsReturnedToMethodAsync()
         {
-            ArgumentException? ex = Assert.ThrowsAsync(typeof(ArgumentException),
+            var ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 AsyncTestDelegates.ThrowsArgumentExceptionAsync) as ArgumentException;
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync<ArgumentException>(
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException("myMessage", "myParam"), TaskScheduler.Default); });
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync(typeof(ArgumentException),
                 delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => throw new ArgumentException("myMessage", "myParam"), TaskScheduler.Default); }) as ArgumentException;
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
 
             ex = Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsArgumentExceptionAsync);
 
-            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
-            Assert.That(ex!.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            VerifyMessageAndParam(ex);
         }
 
         [Test]
         public void NoExceptionThrown()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNothing));
+            VerifyArgumentExceptionWithNullMessage(ex);
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        private static void VerifyArgumentExceptionWithNullMessage(Exception? ex)
+        {
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine));
+        }
 
-            CheckForSpuriousAssertionResults();
+        private static void VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(Exception? ex)
+        {
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex!.Message, Does.Contain(
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
+        }
+        private static void VerifyArgumentExceptionWithSystemExceptionAndMyMessage(Exception? ex)
+        {
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex!.Message, Does.Contain(
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.Exception: my message" + Environment.NewLine));
         }
 
         [Test]
         public void UnrelatedExceptionThrown()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceException));
-            Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
+            VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
@@ -170,10 +172,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void UnrelatedExceptionThrownAsync()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceExceptionAsync));
-            Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
+            VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
@@ -182,10 +181,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void BaseExceptionThrown()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemException));
-            Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.Exception: my message" + Environment.NewLine));
+            VerifyArgumentExceptionWithSystemExceptionAndMyMessage(ex);
 
             CheckForSpuriousAssertionResults();
         }
@@ -194,32 +190,35 @@ namespace NUnit.Framework.Tests.Assertions
         public void BaseExceptionThrownAsync()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemExceptionAsync));
-            Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
-                "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.Exception: my message" + Environment.NewLine));
+            VerifyArgumentExceptionWithSystemExceptionAndMyMessage(ex);
         }
 
         [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrown()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
+            VerifyArgumentExceptionWithArgumentExceptionAndMyMessage(ex);
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        private static void VerifyArgumentExceptionWithArgumentExceptionAndMyMessage(Exception? ex)
+        {
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage"));
-
-            CheckForSpuriousAssertionResults();
         }
 
         [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrownAsync()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
-            Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
-                "  Expected: <System.Exception>" + Environment.NewLine +
-                "  But was:  <System.ArgumentException: myMessage"));
+            //Assert.That(ex, Is.Not.Null);
+            //Assert.That(ex!.Message, Does.Contain(
+            //    "  Expected: <System.Exception>" + Environment.NewLine +
+            //    "  But was:  <System.ArgumentException: myMessage"));
+            VerifyArgumentExceptionWithArgumentExceptionAndMyMessage(ex);
         }
 
         [Test]

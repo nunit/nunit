@@ -572,18 +572,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-        public SameAsConstraint SameAs(object? expected)
-        {
-            return Append(new SameAsConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests that two references are the same object
-        /// </summary>
-        public static SameAsConstraint<T> SameAs<T>(T? expected)
+        public SameAsConstraint<T> SameAs<T>(T? expected)
             where T : class?
         {
-            return new SameAsConstraint<T>(expected);
+            return Append(new SameAsConstraint<T>(expected));
         }
 
         #endregion
@@ -673,9 +665,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual
         /// value is of the exact type supplied as an argument.
         /// </summary>
-        public ExactTypeConstraint TypeOf<TExpected>()
+        public ExactTypeConstraint<TExpected> TypeOf<TExpected>()
         {
-            return Append(new ExactTypeConstraint(typeof(TExpected)));
+            return Append(new ExactTypeConstraint<TExpected>());
         }
 
         #endregion
@@ -695,9 +687,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is of the type supplied as an argument or a derived type.
         /// </summary>
-        public InstanceOfTypeConstraint InstanceOf<TExpected>()
+        public InstanceOfTypeConstraint<TExpected> InstanceOf<TExpected>()
         {
-            return Append(new InstanceOfTypeConstraint(typeof(TExpected)));
+            return Append(new InstanceOfTypeConstraint<TExpected>());
         }
 
         #endregion
@@ -717,9 +709,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableFromConstraint AssignableFrom<TExpected>()
+        public AssignableFromConstraint<TExpected> AssignableFrom<TExpected>()
         {
-            return Append(new AssignableFromConstraint(typeof(TExpected)));
+            return Append(new AssignableFromConstraint<TExpected>());
         }
 
         #endregion
@@ -739,9 +731,9 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether the actual value
         /// is assignable from the type supplied as an argument.
         /// </summary>
-        public AssignableToConstraint AssignableTo<TExpected>()
+        public AssignableToConstraint<TExpected> AssignableTo<TExpected>()
         {
-            return Append(new AssignableToConstraint(typeof(TExpected)));
+            return Append(new AssignableToConstraint<TExpected>());
         }
 
         #endregion
@@ -1077,7 +1069,7 @@ namespace NUnit.Framework.Constraints
         {
             if (expected is null)
             {
-                expected = new object?[] { null };
+                expected = [null];
             }
 
             return Append(new AnyOfConstraint(expected));

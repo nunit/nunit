@@ -101,75 +101,6 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region ActualValueDelegate
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
-            NUnitString message = default,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-        {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
-            FormattableString message,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-        {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        [Obsolete("Use Func<TActual> instead of ActualValueDelegate<TActual>")]
-        public static void That<TActual>(
-            ActualValueDelegate<TActual> del,
-            IResolveConstraint expr,
-            Func<string> getExceptionMessage,
-            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-        {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-                ReportFailure(result, getExceptionMessage(), actualExpression, constraintExpression);
-        }
-
-        #endregion
-
         #region Func<TActual>
 
         /// <summary>
@@ -235,55 +166,6 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(code);
             if (!result.IsSuccess)
                 ReportFailure(result, getExceptionMessage(), actualExpression, constraintExpression);
-        }
-
-        #endregion
-
-        #region TestDelegate
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A Constraint expression to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        [Obsolete("Use overload with Action instead of TestDelegate")]
-        public static void That(TestDelegate code, IResolveConstraint constraint,
-            NUnitString message = default,
-            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
-        {
-            That((object)code, constraint, message, actualExpression, constraintExpression);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A Constraint expression to be applied</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        [Obsolete("Use overload with Action instead of TestDelegate")]
-        public static void That(TestDelegate code, IResolveConstraint constraint,
-            FormattableString message,
-            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
-        {
-            That((object)code, constraint, message, actualExpression, constraintExpression);
-        }
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A Constraint expression to be applied</param>
-        /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        [Obsolete("Use overload with Action instead of TestDelegate")]
-        public static void That(TestDelegate code, IResolveConstraint constraint,
-            Func<string> getExceptionMessage,
-            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
-            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
-        {
-            That((object)code, constraint, getExceptionMessage, actualExpression, constraintExpression);
         }
 
         #endregion

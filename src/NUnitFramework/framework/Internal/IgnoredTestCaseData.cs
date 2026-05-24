@@ -26,7 +26,7 @@ namespace NUnit.Framework
 
         #region Constructors
 
-        internal IgnoredTestCaseData(TestCaseData data, RunState prevRunState)
+        internal IgnoredTestCaseData(TestCaseParameters data, RunState prevRunState)
         {
             Arguments = data.Arguments;
             ArgDisplayNames = data.ArgDisplayNames;
@@ -68,6 +68,5 @@ namespace NUnit.Framework
         }
 
         #endregion
-
     }
 }

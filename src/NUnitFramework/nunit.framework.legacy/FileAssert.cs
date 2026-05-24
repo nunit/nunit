@@ -5,7 +5,8 @@ using System.ComponentModel;
 using System.IO;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Legacy
+// ReSharper disable once CheckNamespace
+namespace NUnit.Framework
 {
     /// <summary>
     /// Asserts on Files

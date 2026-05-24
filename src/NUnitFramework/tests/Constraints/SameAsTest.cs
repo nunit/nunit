@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object Obj1 = new object();
         private static readonly object Obj2 = new object();
 
-        protected override Constraint TheConstraint { get; } = new SameAsConstraint(Obj1);
+        protected override Constraint TheConstraint { get; } = new SameAsConstraint<object>(Obj1);
 
         [SetUp]
         public void SetUp()

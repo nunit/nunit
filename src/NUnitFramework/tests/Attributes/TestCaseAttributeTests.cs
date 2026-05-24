@@ -172,7 +172,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [TestCase(arg: new object?[] { null })]
         [TestCase([new object?[] { null }])]
-        public void NullArgumentsNeedToBeExplcitlySetInObjectArray(object?[] array)
+        public void NullArgumentsNeedToBeExplicitlySetInObjectArray(object?[] array)
         {
             Assert.That(array, Is.EqualTo(new object?[] { null }));
         }
@@ -822,7 +822,7 @@ namespace NUnit.Framework.Tests.Attributes
         public Type GenericMethodAndParameterWithExplicitOrImplicitTyping<T>(T _)
             => typeof(T);
 
-#if NET6_0_OR_GREATER
+#if !NETFRAMEWORK
         [TestCase<double>(2)]
         [TestCase<double>(2.0)]
         public void ExplicitGenericTypeArgsWithCompatibleParameters<T>(T input)
@@ -929,7 +929,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [TestCase(0, TypeArgs = [typeof(int)])]
-#if NET6_0_OR_GREATER
+#if !NETFRAMEWORK
         [TestCase<int>(0)]
 #endif
         [TestCase(0)]

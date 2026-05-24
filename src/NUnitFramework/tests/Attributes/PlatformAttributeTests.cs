@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void ChildTestWithExclucesAttribute([Values] bool allowBitness)
+        public void ChildTestWithExcludesAttribute([Values] bool allowBitness)
         {
             OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
             OverridePlatformCheck(PlatformAttributeFixture.NUnitArchitecture, allowBitness);
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void TestWithAttribute_WillRunNotRunOnMacOSXPlatform()
+        public void TestWithAttribute_WillNotRunOnMacOSXPlatform()
         {
             OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, true);
             var fixture = TestBuilder.MakeFixture<PlatformAttributeFixture>();

@@ -58,15 +58,6 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        [Obsolete("Verifying TestDelegate overload")]
-        public void ThrowsConstraintSucceedsWithDelegate()
-        {
-            // Without cast, delegate is ambiguous before C# 3.0.
-            Assert.That((TestDelegate)delegate { throw new ArgumentException(); },
-                    Throws.Exception.TypeOf<ArgumentException>());
-        }
-
-        [Test]
         public void ThrowsSucceedsWithLambda()
         {
             Assert.Throws(typeof(ArgumentException), () => throw new ArgumentException());
