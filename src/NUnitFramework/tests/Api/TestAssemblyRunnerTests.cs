@@ -702,7 +702,7 @@ namespace NUnit.Framework.Tests.Api
             // NOTE: We cannot actually test this with a truly non-cooperative test
             // because it would hang the test suite. Instead, we document the limitation.
 
-            Assert.Warn(
+            Assert.Pass(
                 "Issue #3682: On .NET Core/5+, StopRun(true) cannot forcibly terminate " +
                 "non-cooperative tests because Thread.Abort is not available. " +
                 "Tests must cooperatively check TestContext.CurrentContext.CancellationToken " +
