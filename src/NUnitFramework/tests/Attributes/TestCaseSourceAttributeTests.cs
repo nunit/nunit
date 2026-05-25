@@ -6,24 +6,29 @@ namespace NUnit.Framework.Tests.Attributes
 {
     public class TestCaseSourceAttributeTests
     {
+        private const string SourceName = "SourceName";
         private static readonly object?[] MethodParams = { 1, "two" };
 
         [Test]
         public void MethodParams_IsNullWhenNotProvided()
         {
-            var attribute = new TestCaseSourceAttribute("SourceName");
+            var attribute = new TestCaseSourceAttribute(SourceName);
 
-            Assert.That(attribute.MethodParams, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(attribute.SourceName, Is.EqualTo(SourceName));
+                Assert.That(attribute.MethodParams, Is.Null);
+            });
         }
 
         [Test]
         public void MethodParams_IsPreservedWhenProvidedWithSourceName()
         {
-            var attribute = new TestCaseSourceAttribute("SourceName", MethodParams);
+            var attribute = new TestCaseSourceAttribute(SourceName, MethodParams);
 
             Assert.Multiple(() =>
             {
-                Assert.That(attribute.SourceName, Is.EqualTo("SourceName"));
+                Assert.That(attribute.SourceName, Is.EqualTo(SourceName));
                 Assert.That(attribute.MethodParams, Is.EqualTo(MethodParams));
             });
         }
@@ -31,12 +36,12 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void MethodParams_IsPreservedWhenProvidedWithSourceTypeAndSourceName()
         {
-            var attribute = new TestCaseSourceAttribute(typeof(TestCaseSourceAttributeTests), "SourceName", MethodParams);
+            var attribute = new TestCaseSourceAttribute(typeof(TestCaseSourceAttributeTests), SourceName, MethodParams);
 
             Assert.Multiple(() =>
             {
                 Assert.That(attribute.SourceType, Is.EqualTo(typeof(TestCaseSourceAttributeTests)));
-                Assert.That(attribute.SourceName, Is.EqualTo("SourceName"));
+                Assert.That(attribute.SourceName, Is.EqualTo(SourceName));
                 Assert.That(attribute.MethodParams, Is.EqualTo(MethodParams));
             });
         }
