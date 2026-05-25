@@ -242,6 +242,26 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string DisplayName { get; private set; }
 
+        /// <summary>
+        /// Returns a string suitable for displaying the CLR/runtime version in reports.
+        /// Uses <see cref="System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription"/>
+        /// when available to avoid reporting misleading 4.0.0.0 versions on .NET Core runtimes.
+        /// </summary>
+        public static string ClrVersionDisplayString
+        {
+            get
+            {
+                var framework = CurrentFramework;
+                if (framework.Runtime == RuntimeType.Mono && !string.IsNullOrEmpty(framework.DisplayName))
+                    return framework.DisplayName;
+
+                if (TryGetFrameworkDescription(out string? description))
+                    return description;
+
+                return Environment.Version.ToString();
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -414,6 +434,27 @@ namespace NUnit.Framework.Internal
                    v1.Minor == v2.Minor &&
                   (v1.Build < 0 || v2.Build < 0 || v1.Build == v2.Build) &&
                   (v1.Revision < 0 || v2.Revision < 0 || v1.Revision == v2.Revision);
+        }
+
+        private static bool TryGetFrameworkDescription([NotNullWhen(true)] out string? description)
+        {
+            description = null;
+
+#if NETSTANDARD2_0
+            Type? runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
+            if (runtimeInfoType is null)
+                return false;
+#endif
+
+            try
+            {
+                description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+                return !string.IsNullOrEmpty(description);
+            }
+            catch (TypeLoadException)
+            {
+                return false;
+            }
         }
 
         #endregion

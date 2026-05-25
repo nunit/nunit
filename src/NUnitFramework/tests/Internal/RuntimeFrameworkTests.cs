@@ -31,6 +31,23 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        public void ClrVersionDisplayString_IsNotEmpty()
+        {
+            Assert.That(RuntimeFramework.ClrVersionDisplayString, Is.Not.Empty);
+        }
+
+        [Test]
+        public void ClrVersionDisplayString_UsesFrameworkDescriptionOnNetCore()
+        {
+#if NETCOREAPP
+            Assert.That(RuntimeFramework.ClrVersionDisplayString, Does.Contain(".NET"));
+            Assert.That(RuntimeFramework.ClrVersionDisplayString, Is.Not.EqualTo(Environment.Version.ToString()));
+#else
+            Assert.Ignore("Only applies to .NET Core and later runtimes");
+#endif
+        }
+
+        [Test]
         [TestCaseSource(nameof(NetcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {

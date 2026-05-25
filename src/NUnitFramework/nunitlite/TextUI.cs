@@ -159,7 +159,7 @@ namespace NUnitLite
 
             WriteSectionHeader("Runtime Environment");
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.OSDescription);
-            Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
+            Writer.WriteLabelLine("  CLR Version: ", RuntimeFramework.ClrVersionDisplayString);
             Writer.WriteLine();
         }
 

@@ -95,7 +95,7 @@ namespace NUnitLite
             _xmlWriter.WriteAttributeString("nunit-version",
                                            assemblyName.Version.ToString());
             _xmlWriter.WriteAttributeString("clr-version",
-                Environment.Version.ToString());
+                RuntimeFramework.ClrVersionDisplayString);
             _xmlWriter.WriteAttributeString("os-version",
                                            OSPlatform.OSDescription);
             _xmlWriter.WriteAttributeString("platform",

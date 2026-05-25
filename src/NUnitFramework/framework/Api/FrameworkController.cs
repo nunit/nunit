@@ -328,7 +328,7 @@ namespace NUnit.Framework.Api
             targetNode.InsertChildNode(0, env);
 
             env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version?.ToString() ?? "Unknown");
-            env.AddAttribute("clr-version", Environment.Version.ToString());
+            env.AddAttribute("clr-version", RuntimeFramework.ClrVersionDisplayString);
             env.AddAttribute("os-version", OSPlatform.OSDescription);
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
