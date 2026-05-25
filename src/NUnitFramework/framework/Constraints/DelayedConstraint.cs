@@ -249,35 +249,26 @@ namespace NUnit.Framework.Constraints
 
             if (PollingInterval.IsNotZero)
             {
-                if (await TryApplyAsync(taskDel))
-                    return await SuccessAsync(taskDel);
-
-                while (await PollingDelayAsync(stopwatch))
+                do
                 {
-                    if (await TryApplyAsync(taskDel))
-                        return await SuccessAsync(taskDel);
+                    try
+                    {
+                        ConstraintResult result = await BaseConstraint.ApplyToAsync(taskDel);
+                        if (result.IsSuccess)
+                            return new DelegatingConstraintResult(this, result);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
                 }
+                while (await PollingDelayAsync(stopwatch));
             }
 
             await FinalDelayAsync(stopwatch);
 
             return new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
         }
-
-        async Task<bool> TryApplyAsync<TActual>(Func<Task<TActual>> taskDel)
-        {
-            try
-            {
-                return (await BaseConstraint.ApplyToAsync(taskDel)).IsSuccess;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        async Task<ConstraintResult> SuccessAsync<TActual>(Func<Task<TActual>> taskDel) =>
-            new DelegatingConstraintResult(this, await BaseConstraint.ApplyToAsync(taskDel));
 
         private async Task<bool> PollingDelayAsync(Stopwatch stopwatch)
         {
@@ -313,33 +304,25 @@ namespace NUnit.Framework.Constraints
 
             if (PollingInterval.IsNotZero)
             {
-                if (TryApply(applyBaseConstraint, out var success))
-                    return new DelegatingConstraintResult(this, success);
-
-                while (PollingDelay(stopwatch))
+                do
                 {
-                    if (TryApply(applyBaseConstraint, out success))
-                        return new DelegatingConstraintResult(this, success);
+                    try
+                    {
+                        ConstraintResult result = applyBaseConstraint();
+                        if (result.IsSuccess)
+                            return new DelegatingConstraintResult(this, result);
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore any exceptions when polling
+                    }
                 }
+                while (PollingDelay(stopwatch));
             }
 
             FinalDelay(stopwatch);
 
             return new DelegatingConstraintResult(this, applyBaseConstraint());
-        }
-
-        static bool TryApply(Func<ConstraintResult> applyBaseConstraint, out ConstraintResult success)
-        {
-            try
-            {
-                success = applyBaseConstraint();
-                return success.IsSuccess;
-            }
-            catch (Exception)
-            {
-                success = null!;
-                return false;
-            }
         }
 
         private bool PollingDelay(Stopwatch stopwatch)
