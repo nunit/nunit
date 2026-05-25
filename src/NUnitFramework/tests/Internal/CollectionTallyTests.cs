@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -105,6 +106,14 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(_collectionTally.Result.MissingItems, Has.Count.EqualTo(2));
             Assert.That(_collectionTally.Result.ExtraItems, Has.Count.EqualTo(1));
             Assert.That(_collectionTally.Result.ExtraItems.Contains("notFound2"), Is.True);
+        }
+
+        [Test]
+        public void NonGenericCollectionTallyIsObsolete()
+        {
+            var obsolete = typeof(CollectionTally).GetCustomAttribute<ObsoleteAttribute>();
+            Assert.That(obsolete, Is.Not.Null);
+            Assert.That(obsolete!.Message, Does.Contain("NUnit 6.0"));
         }
     }
 }

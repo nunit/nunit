@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,10 +11,12 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences
     /// of each object in one or more enumerations.</summary>
+    [Obsolete("This type is obsolete and will be removed in NUnit 6.0.")]
     public sealed class CollectionTally
     {
         /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
         [DebuggerDisplay("Missing = {MissingItems.Count}, Extra = {ExtraItems.Count}")]
+        [Obsolete("This type is obsolete and will be removed in NUnit 6.0.")]
         public sealed class CollectionTallyResult
         {
             /// <summary>Items that were not in the expected collection.</summary>
@@ -32,7 +35,9 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Converts a generic CollectionTallyResult to the non-generic version.
             /// </summary>
+#pragma warning disable CS0618 // CollectionTally is obsolete until removal in NUnit 6.0 (#5230)
             internal static CollectionTallyResult FromGenericResult<T>(CollectionTally<T>.CollectionTallyResult genericResult)
+#pragma warning restore CS0618
             {
                 var missingItems = new List<object?>(genericResult.MissingItems.Count);
                 foreach (var item in genericResult.MissingItems)
@@ -42,7 +47,9 @@ namespace NUnit.Framework.Constraints
                 foreach (var item in genericResult.ExtraItems)
                     extraItems.Add(item);
 
+#pragma warning disable CS0618 // CollectionTally is obsolete until removal in NUnit 6.0 (#5230)
                 return new CollectionTallyResult(missingItems, extraItems);
+#pragma warning restore CS0618
             }
         }
 

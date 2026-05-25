@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#pragma warning disable CS0618 // CollectionTally is obsolete until removal in NUnit 6.0 (#5230)
+
 using System;
 using System.Collections;
 using NUnit.Framework.Internal;

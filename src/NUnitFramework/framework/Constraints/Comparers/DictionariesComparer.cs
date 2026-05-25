@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints.Comparers
             if (xDictionary.Count != yDictionary.Count)
                 return EqualMethodResult.ComparedNotEqual;
 
-            CollectionTally tally = new CollectionTally(equalityComparer, xDictionary.Keys);
+            CollectionTally<object> tally = new(xDictionary.Keys, equalityComparer);
             tally.TryRemove(yDictionary.Keys);
             if ((tally.Result.MissingItems.Count > 0) || (tally.Result.ExtraItems.Count > 0))
                 return EqualMethodResult.ComparedNotEqual;
