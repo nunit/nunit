@@ -664,7 +664,6 @@ namespace NUnit.Framework.Tests.Api
         /// cannot be forcibly terminated.
         /// </summary>
         [Test]
-        [Platform(Include = "Net")] // Only run on .NET Framework where Thread.Abort is available
         public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_OnNetFramework()
         {
             // This test verifies that on .NET Framework, forced stop actually terminates tests
