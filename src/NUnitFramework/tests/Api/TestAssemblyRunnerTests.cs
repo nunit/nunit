@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -585,7 +584,7 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-// #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
+#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
 
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
@@ -596,13 +595,13 @@ namespace NUnit.Framework.Tests.Api
             Assert.DoesNotThrow(() => _runner.StopRun(force));
         }
 
-        private static readonly TestCaseData[] StopRunCases = new TestCaseData[]
-        {
+        private static readonly TestCaseData[] StopRunCases =
+        [
             new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
             new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
             new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
             new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
-        };
+        ];
 
         [TestCaseSource(nameof(StopRunCases))]
         public void StopRun_WhenTestIsRunning_StopsTest(int workers, bool force)
@@ -627,14 +626,14 @@ namespace NUnit.Framework.Tests.Api
             TestContext.Out.WriteLine($"No of finished tests  {_testFinishedCount}:");
 
             // Use Assert.Multiple so we can see everything that went wrong at one time
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(completionWasSignaled, Is.True, "Runner never signaled completion");
                 Assert.That(_runner.IsTestComplete, Is.True, "Test is not recorded as complete");
 
                 if (_activeTests.Count > 0)
                 {
-                    var sb = new StringBuilder("The following tests never terminated:" + Environment.NewLine);
+                    var sb = new System.Text.StringBuilder("The following tests never terminated:" + Environment.NewLine);
                     foreach (var name in _activeTests.Keys)
                         sb.AppendLine($" * {name}");
                     Assert.Fail(sb.ToString());
@@ -644,19 +643,20 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
                 Assert.That(_suiteFinishedCount, Is.EqualTo(_suiteStartedCount), $"Not all suites terminated after {stopType}");
                 Assert.That(_testFinishedCount, Is.EqualTo(_testStartedCount), $"Not all test cases terminated after {stopType}");
-            });
+            }
 
             Assert.That(_runner.Result, Is.Not.Null, "No result returned.");
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled), $"Invalid ResultState after {stopType}");
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
-            });
+            }
         }
-        //#endif
+#endif
 
         #region Issue 3682 - StopRun not cancelling non-cooperative tests
 
+#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
         /// <summary>
         /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
         /// On .NET Framework, this works via Thread.Abort.
@@ -685,30 +685,7 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(completed, Is.True,
                 "StopRun(true) should terminate tests on .NET Framework");
         }
-
-        /// <summary>
-        /// Issue #3682: Documents that StopRun(true) cannot forcibly terminate
-        /// non-cooperative tests on .NET Core/5+ because Thread.Abort is not available.
-        /// This is a known limitation that requires tests to cooperatively check for cancellation.
-        /// </summary>
-        [Test]
-        [Platform(Exclude = "Net")] // Only run on .NET Core/5+
-        public void StopRun_WithForce_CannotTerminateNonCooperativeTests_OnNetCore()
-        {
-            // This test documents the limitation on .NET Core/5+
-            // Non-cooperative tests cannot be forcibly terminated because Thread.Abort
-            // is not available. Tests must cooperatively check for cancellation.
-
-            // NOTE: We cannot actually test this with a truly non-cooperative test
-            // because it would hang the test suite. Instead, we document the limitation.
-
-            Assert.Pass(
-                "Issue #3682: On .NET Core/5+, StopRun(true) cannot forcibly terminate " +
-                "non-cooperative tests because Thread.Abort is not available. " +
-                "Tests must cooperatively check TestContext.CurrentContext.CancellationToken " +
-                "or TestExecutionContext.CurrentContext.ExecutionStatus for proper cancellation.");
-        }
-
+#endif
         #endregion
 
         #endregion
