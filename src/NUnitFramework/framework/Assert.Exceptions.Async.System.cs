@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
