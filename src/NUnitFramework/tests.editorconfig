@@ -18,4 +18,5 @@ dotnet_diagnostic.NUnit2009.severity = silent
 dotnet_diagnostic.NUnit1028.severity = warning
 
 # IDE0052: Remove unread private members
-dotnet_diagnostic.IDE0052.severity = warning
+# Test fixtures often declare members referenced only via reflection or TestCaseSource.
+dotnet_diagnostic.IDE0052.severity = silent
