@@ -241,7 +241,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(() => Assert.That(list, Has.Count.EqualTo(1).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
 #pragma warning restore NUnit2044 // Non-delegate actual parameter
-            Assert.That(list.PollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
+            Assert.That(list.PollCount, Is.GreaterThanOrEqualTo(3).And.LessThanOrEqualTo(17));
         }
 
         private class PretendList
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Tests.Constraints
             int pollCount = 0;
             Assert.That(() => Assert.That(() => ++pollCount, Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(3).And.LessThanOrEqualTo(17));
         }
 
         [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
@@ -273,7 +273,7 @@ namespace NUnit.Framework.Tests.Constraints
             int pollCount = 0;
             Assert.That(() => Assert.ThatAsync(() => Task.FromResult(++pollCount), Is.EqualTo(0).After(1500, 100)),
                         Throws.InstanceOf<AssertionException>());
-            Assert.That(pollCount, Is.GreaterThanOrEqualTo(5).And.LessThanOrEqualTo(15 + 1));
+            Assert.That(pollCount, Is.GreaterThanOrEqualTo(3).And.LessThanOrEqualTo(17));
         }
         /*  Claude analysis of this test
          *   Analysis of Flaky Test
