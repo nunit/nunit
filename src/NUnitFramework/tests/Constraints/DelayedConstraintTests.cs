@@ -41,7 +41,6 @@ namespace NUnit.Framework.Tests.Constraints
             //SetValueTrueAfterDelay(300);
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { true };
         private static readonly object[] FailureData = new object[]
         {
@@ -49,7 +48,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(0, "0"),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         private static readonly Func<object> DelegateReturningValue;
         private static readonly Func<object> DelegateReturningFalse;

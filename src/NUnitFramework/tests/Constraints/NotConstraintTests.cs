@@ -16,10 +16,8 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<not <equal null>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 42, "Hello" };
         private static readonly object?[] FailureData = new object?[] { new object?[] { null, "null" } };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()

@@ -18,7 +18,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<endswith \"hello\">";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "hello", "I said hello" };
         private static readonly object[] FailureData = new object[]
         {
@@ -28,7 +27,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(string.Empty, "<string.Empty>"),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void RespectsCulture()
@@ -116,7 +114,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<endswith \"hello\">";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "HELLO", "I said Hello" };
         private static readonly object[] FailureData = new object[]
         {
@@ -127,7 +124,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(string.Empty, "<string.Empty>"),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void RespectsCulture()

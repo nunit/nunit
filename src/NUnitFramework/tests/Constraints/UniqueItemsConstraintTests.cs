@@ -23,7 +23,6 @@ namespace NUnit.Framework.Tests.Constraints
             ExpectedDescription = "all items unique";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
         private static readonly object[] FailureData =
         {
@@ -33,7 +32,6 @@ namespace NUnit.Framework.Tests.Constraints
                 "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >"
             }
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test, SetCulture("")]
         [TestCaseSource(nameof(IgnoreCaseData))]

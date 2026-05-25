@@ -18,7 +18,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<substring \"hello\">";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
         private static readonly object[] FailureData = new object[]
         {
@@ -28,7 +27,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(string.Empty, "<string.Empty>"),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(" ss ", "ß", StringComparison.CurrentCulture)]
         [TestCase(" SS ", "ß", StringComparison.CurrentCulture)]
@@ -129,7 +127,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<substring \"hello\">";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
         private static readonly object[] FailureData = new object[]
         {
@@ -138,7 +135,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(string.Empty, "<string.Empty>"),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase("ss ", "ß")]
         [TestCase("ß ", "ß")]

@@ -28,7 +28,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<equal 4>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 4, 4.0f, 4.0d, 4.0000m };
         private static readonly object[] FailureData = new object[]
         {
@@ -38,7 +37,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(double.NaN, double.NaN.ToString()),
             new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void Complex_PassesEquality()

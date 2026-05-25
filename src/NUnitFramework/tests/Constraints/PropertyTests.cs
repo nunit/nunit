@@ -64,7 +64,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<propertyexists Length>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { Array.Empty<int>(), "hello", typeof(Array) };
         private static readonly object[] FailureData = new object[]
         {
@@ -72,7 +71,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>"),
             new TestCaseData(typeof(int), "<System.Int32>")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NullDataThrowsArgumentNullException()
@@ -120,14 +118,12 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<property Length <equal 5>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { new int[5], "hello" };
         private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(new int[3], "3"),
             new TestCaseData("goodbye", "7")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NullDataThrowsArgumentNullException()

@@ -33,7 +33,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<throws <typeof System.ArgumentException>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         [
             (Action)TestDelegates.ThrowsArgumentException
@@ -44,7 +43,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData((Action)TestDelegates.ThrowsNothing, "no exception thrown"),
             new TestCaseData((Action)TestDelegates.ThrowsSystemException, "<System.Exception: my message" + Environment.NewLine)
         ];
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixtureSource(nameof(GetInstanceOfTypeConstraints))]
@@ -72,7 +70,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<throws <instanceof NUnit.Framework.Tests.TestUtilities.TestDelegates+BaseException>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         [
             (Action)TestDelegates.ThrowsBaseException,
@@ -84,7 +81,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData((Action)TestDelegates.ThrowsNothing, "no exception thrown"),
             new TestCaseData((Action)TestDelegates.ThrowsNullReferenceException, "<System.NullReferenceException: my message")
         ];
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixtureSource(nameof(GetExceptionTypeConstraints))]
@@ -115,7 +111,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equalstring ""myParam"">>>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         [
             (Action)TestDelegates.ThrowsArgumentException
@@ -126,7 +121,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData((Action)TestDelegates.ThrowsNothing, "no exception thrown"),
             new TestCaseData((Action)TestDelegates.ThrowsSystemException, "<System.Exception: my message" + Environment.NewLine)
         ];
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     public abstract class ThrowsConstraintTestBase : ConstraintTestBaseNoData

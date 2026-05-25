@@ -16,13 +16,11 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
         private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(typeof(D2), "<" + typeof(D2).FullName + ">")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NonAttributeThrowsException()

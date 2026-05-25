@@ -30,13 +30,11 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = $"<instanceof {typeof(D1)}>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { new D1(), new D2() };
         private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(new B(), "<" + typeof(B).FullName + ">")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         private class B
         {

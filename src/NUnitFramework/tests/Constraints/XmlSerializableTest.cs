@@ -18,7 +18,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<xmlserializable>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 1, "a", new List<string>() };
         private static readonly object[] FailureData = new object[]
         {
@@ -26,7 +25,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(new InternalClass(), "<" + typeof(InternalClass).FullName + ">"),
             new TestCaseData(new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">")
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NullArgumentThrowsException()

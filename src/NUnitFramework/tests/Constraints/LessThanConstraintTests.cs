@@ -19,10 +19,8 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<lessthan 5>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 4, 4.999 };
         private static readonly object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCompareIComparables()

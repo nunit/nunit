@@ -19,7 +19,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<sameas System.Object>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { Obj1 };
         private static readonly object[] FailureData = new object[]
         {
@@ -27,6 +26,5 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(3, "3"),
             new TestCaseData("Hello", "\"Hello\"")
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 }

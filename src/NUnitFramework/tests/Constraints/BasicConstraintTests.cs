@@ -16,10 +16,8 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<null>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object?[] SuccessData = new object?[] { null };
         private static readonly object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
@@ -34,7 +32,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<true>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { true, 2 + 2 == 4 };
         private static readonly object[] FailureData = new object[]
         {
@@ -43,7 +40,6 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { false, "False" },
             new object[] { 2 + 2 == 5, "False" }
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
@@ -58,7 +54,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<false>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { false, 2 + 2 == 5 };
         private static readonly object[] FailureData = new object[]
         {
@@ -67,7 +62,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(true, "True"),
             new TestCaseData(2 + 2 == 4, "True")
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
@@ -82,7 +76,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<nan>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { double.NaN, float.NaN };
         private static readonly object[] FailureData = new object[]
         {
@@ -94,7 +87,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(float.PositiveInfinity, double.PositiveInfinity.ToString()),
             new TestCaseData(float.NegativeInfinity, double.NegativeInfinity.ToString())
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
@@ -109,7 +101,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<multipleof>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 3, 9 };
         private static readonly object[] FailureData = new object[]
         {
@@ -118,6 +109,5 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { false, "False" },
             new object[] { 2, "2" }
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 }

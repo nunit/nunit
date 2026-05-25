@@ -32,7 +32,6 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData =
         [
             (Action)TestDelegates.ThrowsArgumentException
@@ -41,7 +40,6 @@ namespace NUnit.Framework.Tests.Constraints
         [
             new TestCaseData((Action)TestDelegates.ThrowsNothing, "no exception thrown"),
         ];
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public static void CatchesAsyncException()

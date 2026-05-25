@@ -18,10 +18,8 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<anyof 1 2 3>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 1, 2, 3 };
         private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void ItemIsPresent_IgnoreCase()

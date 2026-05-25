@@ -16,10 +16,8 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<or <equal 42> <equal 99>>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 99, 42 };
         private static readonly object[] FailureData = new object[] { new object[] { 37, "37" } };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCombineTestsWithOrOperator()

@@ -22,7 +22,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<empty>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
         {
             string.Empty,
@@ -46,7 +45,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData(System.Collections.Immutable.ImmutableArray.Create(1), "< 1 >"),
             new TestCaseData(new EnumerableWithIndependentCount(0, new[] { 1 }), "< 1 >"),
         };
-#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(null)]
         [TestCase(5)]
@@ -157,7 +155,6 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<emptystring>";
         }
 
-#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
         {
             string.Empty
@@ -167,7 +164,6 @@ namespace NUnit.Framework.Tests.Constraints
             new TestCaseData("Hello", "\"Hello\""),
             new TestCaseData(null, "null")
         };
-#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]
