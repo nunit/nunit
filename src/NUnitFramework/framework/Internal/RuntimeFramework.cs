@@ -440,12 +440,6 @@ namespace NUnit.Framework.Internal
         {
             description = null;
 
-#if NETSTANDARD2_0
-            Type? runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
-            if (runtimeInfoType is null)
-                return false;
-#endif
-
             try
             {
                 description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
