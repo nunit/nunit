@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.RepeatingTests;
@@ -110,6 +111,36 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(fixture.Count + 1, Is.EqualTo(fixture.TearDownResults.Count), "expected the CurrentRepeatCount property to be one less than the number of executions");
                 Assert.That(result.FailCount, Is.EqualTo(0), "expected that the test passed final retry");
             }
+        }
+
+        [Test]
+        public void RetryExceptions_DefaultsToEmptyArray()
+        {
+            var attribute = new RetryAttribute(3);
+
+            Assert.That(attribute.RetryExceptions, Is.Empty);
+        }
+
+        [Test]
+        public void RetryExceptions_IsPreservedWhenConfigured()
+        {
+            var exceptions = new[] { typeof(TimeoutException), typeof(IOException) };
+            var attribute = new RetryAttribute(3) { RetryExceptions = exceptions };
+
+            Assert.That(attribute.RetryExceptions, Is.EqualTo(exceptions));
+        }
+
+        [Test]
+        public void RetryExceptions_IsReadFromDecoratedTestMethod()
+        {
+            MethodInfo? method = typeof(RetryWithRetryExceptionFixture).GetMethod(
+                nameof(RetryWithRetryExceptionFixture.RetriesOnAllowedException));
+            Assert.That(method, Is.Not.Null);
+
+            var attribute = method!.GetCustomAttribute<RetryAttribute>();
+            Assert.That(attribute, Is.Not.Null);
+            Assert.That(attribute!.RetryExceptions,
+                Is.EquivalentTo(new[] { typeof(TimeoutException), typeof(OperationCanceledException) }));
         }
 
         [Test]

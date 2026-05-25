@@ -89,5 +89,13 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(attr.TypeArgs, Is.Not.Null);
             });
         }
+
+        [Test]
+        public void IgnoreReason_IsPreservedWhenSet()
+        {
+            var attribute = new TestFixtureAttribute { IgnoreReason = "Don't run this fixture" };
+
+            Assert.That(attribute.IgnoreReason, Is.EqualTo("Don't run this fixture"));
+        }
     }
 }
