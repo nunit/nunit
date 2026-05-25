@@ -3,13 +3,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 
@@ -18,6 +21,23 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
+        private static readonly string TestDataAssemblyPath = AssemblyHelper.GetAssemblyPath(typeof(TimeoutFixture).Assembly);
+
+        private static ITestResult RunTestData(string fullNamePattern)
+        {
+            var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            var options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { "NUnit.TestData" },
+                ["NumberOfTestWorkers"] = 0
+            };
+
+            ITest test = runner.Load(TestDataAssemblyPath, options);
+            Assert.That(test, Is.Not.Null, "TestData assembly not loaded");
+
+            return runner.Run(TestListener.NULL, new FullNameFilter(fullNamePattern, isRegex: true));
+        }
+
         private abstract class BaseTestsClass
         {
             protected const int TimeExceedingTimeout = 500;
@@ -357,45 +377,45 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
-        [Explicit("Tests that demonstrate Timeout failure")]
-        public class ExplicitTests
+        [Test]
+        public void TestTimesOutViaAssemblyRunner()
         {
-            [Test, Timeout(50)]
-            public void TestTimesOut()
-            {
-                while (true)
-                    ;
-            }
+            ITestResult result = RunTestData(@"NUnit\.TestData\.TimeoutHangFixture\.TestTimesOut$");
 
-            [Test, Timeout(50), RequiresThread]
-            public void TestTimesOutUsingRequiresThread()
-            {
-                while (true)
-                    ;
-            }
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Does.Contain("50ms"));
+        }
 
-            [Test, Timeout(50), Apartment(ApartmentState.STA)]
-            public void TestTimesOutInSTA()
-            {
-                while (true)
-                    ;
-            }
+        [Test]
+        public void TestTimesOutUsingRequiresThreadViaAssemblyRunner()
+        {
+            ITestResult result = RunTestData(@"NUnit\.TestData\.TimeoutHangFixture\.TestTimesOutUsingRequiresThread$");
 
-            // TODO: The test in TimeoutTestCaseFixture work as expected when run
-            // directly by NUnit. It's only when run via TestBuilder as a second
-            // level test that the result is incorrect. We need to fix this.
-            [Test]
-            public void TestTimeOutTestCaseWithOutElapsed()
-            {
-                TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
-                TestSuite suite = TestBuilder.MakeFixture(fixture);
-                ParameterizedMethodSuite? methodSuite = (ParameterizedMethodSuite?)TestFinder.Find(nameof(TimeoutTestCaseFixture.TestTimeOutTestCase), suite, false);
-                Assert.That(methodSuite, Is.Not.Null);
-                ITestResult result = TestBuilder.RunTest(methodSuite, fixture);
-                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), "Suite result");
-                Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.Success), "First test");
-                Assert.That(result.Children.ToArray()[1].ResultState, Is.EqualTo(ResultState.Failure), "Second test");
-            }
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Does.Contain("50ms"));
+        }
+
+        [Test]
+        public void TestTimesOutInSTAViaAssemblyRunner()
+        {
+            ITestResult result = RunTestData(@"NUnit\.TestData\.TimeoutHangFixture\.TestTimesOutInSTA$");
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Does.Contain("50ms"));
+        }
+
+        [Test]
+        public void TestTimeOutTestCaseViaAssemblyRunner()
+        {
+            ITestResult passingResult = RunTestData(@"NUnit\.TestData\.TimeoutTestCaseFixture\.TestTimeOutTestCase\(10\)");
+            ITestResult failingResult = RunTestData(@"NUnit\.TestData\.TimeoutTestCaseFixture\.TestTimeOutTestCase\(500\)");
+
+            Assert.That(passingResult.ResultState, Is.EqualTo(ResultState.Success), "First test");
+            Assert.That(failingResult.ResultState, Is.EqualTo(ResultState.Failure), "Second test");
+            Assert.That(failingResult.Message, Does.Contain("100ms"));
         }
 
         [Test, Platform(PlatformNames.Win)]

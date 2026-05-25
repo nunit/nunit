@@ -115,6 +115,7 @@ namespace NUnit.TestData
         }
     }
 
+    [NonParallelizable]
     public class TimeoutTestCaseFixture
     {
         private const int TIME_OUT_TIME = 100;
@@ -197,6 +198,35 @@ namespace NUnit.TestData
         public void TearDown()
         {
             TestContext.WriteLine("teardown");
+        }
+    }
+
+    /// <summary>
+    /// Hangs until timeout; exercised via <see cref="NUnit.Framework.Tests.Attributes.TimeoutTests"/>
+    /// using <see cref="NUnit.Framework.Api.NUnitTestAssemblyRunner"/>.
+    /// </summary>
+    [NonParallelizable]
+    public class TimeoutHangFixture
+    {
+        [Test, Timeout(50)]
+        public void TestTimesOut()
+        {
+            while (true)
+                ;
+        }
+
+        [Test, Timeout(50), RequiresThread]
+        public void TestTimesOutUsingRequiresThread()
+        {
+            while (true)
+                ;
+        }
+
+        [Test, Timeout(50), Apartment(ApartmentState.STA)]
+        public void TestTimesOutInSTA()
+        {
+            while (true)
+                ;
         }
     }
 }
