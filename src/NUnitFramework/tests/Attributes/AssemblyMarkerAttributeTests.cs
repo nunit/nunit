@@ -12,11 +12,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var attributeUsage = typeof(NonTestAssemblyAttribute).GetCustomAttribute<AttributeUsageAttribute>();
 
+            Assert.That(attributeUsage, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(new NonTestAssemblyAttribute(), Is.InstanceOf<NUnitAttribute>());
-                Assert.That(attributeUsage, Is.Not.Null);
-                Assert.That(attributeUsage!.ValidOn, Is.EqualTo(AttributeTargets.Assembly));
+                Assert.That(attributeUsage.ValidOn, Is.EqualTo(AttributeTargets.Assembly));
                 Assert.That(attributeUsage.AllowMultiple, Is.False);
                 Assert.That(attributeUsage.Inherited, Is.False);
             });
@@ -27,11 +27,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var attributeUsage = typeof(TestAssemblyDirectoryResolveAttribute).GetCustomAttribute<AttributeUsageAttribute>();
 
+            Assert.That(attributeUsage, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(new TestAssemblyDirectoryResolveAttribute(), Is.InstanceOf<NUnitAttribute>());
-                Assert.That(attributeUsage, Is.Not.Null);
-                Assert.That(attributeUsage!.ValidOn, Is.EqualTo(AttributeTargets.Assembly));
+                Assert.That(attributeUsage.ValidOn, Is.EqualTo(AttributeTargets.Assembly));
                 Assert.That(attributeUsage.AllowMultiple, Is.False);
                 Assert.That(attributeUsage.Inherited, Is.False);
             });

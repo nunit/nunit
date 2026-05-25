@@ -21,7 +21,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var attribute = new TestCaseSourceAttribute("SourceName", MethodParams);
 
-            Assert.That(attribute.MethodParams, Is.EqualTo(MethodParams));
+            Assert.Multiple(() =>
+            {
+                Assert.That(attribute.SourceName, Is.EqualTo("SourceName"));
+                Assert.That(attribute.MethodParams, Is.EqualTo(MethodParams));
+            });
         }
 
         [Test]

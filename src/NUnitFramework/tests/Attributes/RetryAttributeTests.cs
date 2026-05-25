@@ -137,9 +137,9 @@ namespace NUnit.Framework.Tests.Attributes
                 nameof(RetryWithRetryExceptionFixture.RetriesOnAllowedException));
             Assert.That(method, Is.Not.Null);
 
-            var attribute = method!.GetCustomAttribute<RetryAttribute>();
+            var attribute = method.GetCustomAttribute<RetryAttribute>();
             Assert.That(attribute, Is.Not.Null);
-            Assert.That(attribute!.RetryExceptions,
+            Assert.That(attribute.RetryExceptions,
                 Is.EquivalentTo(new[] { typeof(TimeoutException), typeof(OperationCanceledException) }));
         }
 
