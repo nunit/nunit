@@ -128,7 +128,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void FailedSetUpStacktracePropogatesToTestResult()
+        public void FailedSetUpStacktraceRemainsOnParentOnly()
         {
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
             fixture.ThrowInBaseSetUp = true;
@@ -143,7 +143,8 @@ namespace NUnit.Framework.Tests.Attributes
             foreach (var childResult in result.Children)
             {
                 Assert.That(childResult.ResultState.Site, Is.EqualTo(FailureSite.Parent));
-                Assert.That(childResult.StackTrace, Is.EqualTo(result.StackTrace));
+                Assert.That(childResult.Message, Is.EqualTo(TestResult.PARENT_ONE_TIME_SETUP_FAILED_MESSAGE));
+                Assert.That(childResult.StackTrace, Is.Null);
             }
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1));
@@ -152,7 +153,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void AssumeFailureSetUpPropogatesToTestResult()
+        public void AssumeFailureSetUpDetailsRemainOnParentOnly()
         {
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
             fixture.AssumeFailureInSetUp = true;
@@ -167,7 +168,8 @@ namespace NUnit.Framework.Tests.Attributes
             foreach (var childResult in result.Children)
             {
                 Assert.That(childResult.ResultState.Site, Is.EqualTo(FailureSite.Parent));
-                Assert.That(childResult.StackTrace, Is.EqualTo(result.StackTrace));
+                Assert.That(childResult.Message, Is.EqualTo(TestResult.PARENT_ONE_TIME_SETUP_FAILED_MESSAGE));
+                Assert.That(childResult.StackTrace, Is.Null);
             }
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1));

@@ -41,6 +41,12 @@ namespace NUnit.Framework.Internal
         internal const string USER_CANCELLED_MESSAGE = "Test run cancelled by user";
 
         /// <summary>
+        /// Message used for child tests when a parent OneTimeSetUp fails.
+        /// Full exception details remain on the parent result only.
+        /// </summary>
+        internal const string PARENT_ONE_TIME_SETUP_FAILED_MESSAGE = "Failed because OneTimeSetUp failed in parent fixture";
+
+        /// <summary>
         /// Error prefix for when there are multiple faiures and/or warnings.
         /// </summary>
         internal const string MULTIPLE_FAILURES_OR_WARNINGS_MESSAGE = "Multiple failures or warnings in test:";

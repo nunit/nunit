@@ -84,7 +84,9 @@ namespace NUnit.Framework.Internal.Execution
                                     }
                                     else
                                     {
-                                        SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
+                                        GetChildSkipDetails(Result.ResultState, Result.Message, Result.StackTrace,
+                                            out var childMessage, out var childStackTrace);
+                                        SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), childMessage, childStackTrace);
                                     }
                                 }
 
@@ -290,7 +292,27 @@ namespace NUnit.Framework.Internal.Execution
         private void SkipFixture(ResultState resultState, string message, string? stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
-            SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message, stackTrace);
+            GetChildSkipDetails(resultState, message, stackTrace, out var childMessage, out var childStackTrace);
+            SkipChildren(this, resultState.WithSite(FailureSite.Parent), childMessage, childStackTrace);
+        }
+
+        private static void GetChildSkipDetails(
+            ResultState resultState,
+            string message,
+            string? stackTrace,
+            out string childMessage,
+            out string? childStackTrace)
+        {
+            if (resultState.Status is TestStatus.Failed or TestStatus.Inconclusive)
+            {
+                childMessage = TestResult.PARENT_ONE_TIME_SETUP_FAILED_MESSAGE;
+                childStackTrace = null;
+            }
+            else
+            {
+                childMessage = "OneTimeSetUp: " + message;
+                childStackTrace = stackTrace;
+            }
         }
 
         private void SkipChildren(CompositeWorkItem workItem, ResultState resultState, string message, string? stackTrace)
