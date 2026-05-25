@@ -12,6 +12,7 @@ using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests
 {
+    [NonParallelizable]
     public class TextOutputTests : ITestListener
     {
         private const string SOME_TEXT = "Should go to the result";
