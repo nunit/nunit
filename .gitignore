@@ -190,3 +190,4 @@ project.lock.json
 .fake
 .claude/settings.local.json
 
+/.claude/plans/*.md
