@@ -16,12 +16,10 @@ namespace NUnit.TestData.TheoryFixture
             throw new System.InvalidOperationException("Constructor throws");
         }
 
-#pragma warning disable IDE0044 // Make field readonly
 #pragma warning disable IDE0052 // Remove unused private members
         [DatapointSource]
-        private int[] _intSource = new int[] { 0, 1, 6, 8, 50 };
+        private readonly int[] _intSource = [0, 1, 6, 8, 50];
 #pragma warning restore IDE0052 // Remove unused private members
-#pragma warning restore IDE0044 // Make field readonly
 
         [Theory]
         public void TheoryMethod(int value)
@@ -48,14 +46,12 @@ namespace NUnit.TestData.TheoryFixture
             throw new System.InvalidOperationException("Constructor throws");
         }
 
-#pragma warning disable IDE0044 // Make field readonly
 #pragma warning disable IDE0052 // Remove unused private members
 #pragma warning disable IDE1006 // Naming rule violation
         [DatapointSource]
-        private static int[] IntSource = new int[] { 0, 1, 6, 8, 50 };
+        private static readonly int[] IntSource = [0, 1, 6, 8, 50];
 #pragma warning restore IDE1006 // Naming rule violation
 #pragma warning restore IDE0052 // Remove unused private members
-#pragma warning restore IDE0044 // Make field readonly
 
         [Theory]
         public void TheoryMethod(int value)

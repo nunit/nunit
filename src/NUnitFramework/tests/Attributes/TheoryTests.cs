@@ -26,7 +26,7 @@ namespace NUnit.Framework.Tests.Attributes
             // Tests should be discovered even with non-static DatapointSource
             // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
             // Using >= 2 to ensure Theory (not just RegularTestMethod) is discovered
-            Assert.That(fixture.TestCaseCount, Is.GreaterThanOrEqualTo(2),
+            Assert.That(fixture.TestCaseCount, Is.EqualTo(6),
                 "Theory test cases should be discovered, not just RegularTestMethod");
         }
 
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             // Tests should be discovered with static DatapointSource
             // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
-            Assert.That(fixture.TestCaseCount, Is.GreaterThanOrEqualTo(2),
+            Assert.That(fixture.TestCaseCount, Is.EqualTo(6),
                 "Theory test cases should be discovered with static DatapointSource");
         }
 
