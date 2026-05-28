@@ -89,6 +89,45 @@ namespace NUnit.Framework.Tests.Assertions
             CheckResult(methodName, ResultState.Error, asserts, assertionMessages);
         }
 
+        /// <summary>
+        /// Issue #3849: Assert.Catch inside Assert.Multiple with wrong exception type
+        /// should report a clear assertion failure, not throw InvalidCastException.
+        /// </summary>
+        [Test]
+        public void AssertCatchInsideMultiple_WrongExceptionType_ShouldReportFailure()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), nameof(AM.AssertCatchWithWrongExceptionType));
+
+            // The test should fail with a proper assertion message, not Error with InvalidCastException
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "Should be Failed, not Error");
+                Assert.That(result.ResultState, Is.Not.EqualTo(ResultState.Error), "Should not be Error state");
+                Assert.That(result.Message, Does.Not.Contain("InvalidCastException"), "Should not contain InvalidCastException");
+                Assert.That(result.Message, Does.Contain("ArgumentException").Or.Contain("InvalidOperationException"),
+                    "Should mention the expected or actual exception type");
+            });
+        }
+
+        /// <summary>
+        /// Issue #3849: Multiple failures including Assert.Catch inside Assert.Multiple
+        /// should all be reported clearly.
+        /// </summary>
+        [Test]
+        public void AssertCatchInsideMultiple_MultipleFailures_ShouldReportAll()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), nameof(AM.AssertCatchWithMultipleFailures));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed), "Should be Failed");
+                Assert.That(result.ResultState, Is.Not.EqualTo(ResultState.Error), "Should not be Error state");
+                // Should have multiple assertion failures reported
+                Assert.That(result.AssertionResults.Count, Is.GreaterThanOrEqualTo(2),
+                    "Should report multiple assertion failures");
+            });
+        }
+
         [TestCase(nameof(AM.AssertPassInBlock), "Assert.Pass")]
         [TestCase(nameof(AM.AssertIgnoreInBlock), "Assert.Ignore")]
         [TestCase(nameof(AM.AssertInconclusiveInBlock), "Assert.Inconclusive")]
