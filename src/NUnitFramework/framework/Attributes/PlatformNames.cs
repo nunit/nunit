@@ -211,6 +211,10 @@ namespace NUnit.Framework
         /// </summary>
         public const string NETCore = "NETCore";
         /// <summary>
+        /// Platform: "NetFramework"
+        /// </summary>
+        public const string NetFramework = "NetFramework";
+        /// <summary>
         /// Platform: "SSCLI"
         /// </summary>
         public const string SSCLI = "SSCLI";
@@ -232,8 +236,12 @@ namespace NUnit.Framework
         /// </summary>
         public const string DotNET = NET;
         /// <summary>
-        /// Platform: "NETCore"
+        /// Platform: "NET"
         /// </summary>
-        public const string DotNETCore = NETCore;
+        public const string DotNETCore = NET;
+        /// <summary>
+        /// Platform: "NetFramework"
+        /// </summary>
+        public const string DotnetFramework = NetFramework;
     }
 }

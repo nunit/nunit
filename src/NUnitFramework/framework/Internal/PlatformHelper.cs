@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
         /// Comma-delimited list of all supported Runtime platform constants
         /// </summary>
         public static readonly string RuntimePlatforms =
-            "Net,NetCore,SSCLI,Rotor,Mono,MonoTouch";
+            "Net,NetCore,DotNET,DotNETCore,NetFramework,DotnetFramework,SSCLI,Rotor,Mono,MonoTouch";
 
         /// <summary>
         /// Default constructor uses the operating system and
@@ -239,10 +239,14 @@ namespace NUnit.Framework.Internal
             switch (platformName.ToUpper())
             {
                 case "NET":
-                    return IsRuntimeSupported(RuntimeType.NetFramework, versionSpecification);
-
                 case "NETCORE":
+                case "DOTNET":
+                case "DOTNETCORE":
                     return IsNetCoreRuntimeSupported(RuntimeType.NetCore, versionSpecification);
+
+                case "NETFRAMEWORK":
+                case "DOTNETFRAMEWORK":
+                    return IsRuntimeSupported(RuntimeType.NetFramework, versionSpecification);
 
                 case "SSCLI":
                 case "ROTOR":
