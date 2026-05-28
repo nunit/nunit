@@ -6,7 +6,9 @@ namespace NUnit.TestData.TheoryFixture
 {
     /// <summary>
     /// Issue #4426: Fixture with non-static DatapointSource and constructor that throws.
-    /// Tests should be discovered and report an error, not be silently ignored.
+    /// The Theory cannot be expanded into parameterized test cases because the non-static
+    /// DatapointSource field cannot be read without an instance (constructor throws = no instance).
+    /// The Theory is discovered but marked NotRunnable.
     /// </summary>
     [TestFixture]
     public class TheoryWithNonStaticDatapointSourceAndThrowingConstructor

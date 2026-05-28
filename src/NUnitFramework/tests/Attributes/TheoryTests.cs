@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
@@ -14,65 +15,94 @@ namespace NUnit.Framework.Tests.Attributes
 
         #region Issue 4426 - Non-static DatapointSource with throwing constructor
 
+        // Issue #4426: Originally, tests with non-static DatapointSource and a throwing constructor
+        // were silently ignored (no test discovered, no error). This has been fixed - tests are now
+        // discovered and failures are reported.
+        //
+        // However, as Manfred notes: with a non-static DatapointSource, the datapoint values cannot
+        // be read without an instance. When the constructor throws, no instance exists, so the Theory
+        // cannot be expanded into parameterized test cases. It is marked NotRunnable instead.
+        //
+        // Future consideration: NotRunnable tests can be "lost between other skipped tests."
+        // Perhaps DatapointSource should require static fields (like TestCaseSource/ValueSource),
+        // or the failure should be more prominent.
+
         /// <summary>
-        /// Issue #4426: When a fixture has a non-static DatapointSource and the constructor throws,
-        /// tests should still be discovered and report an error (not be silently ignored).
+        /// Issue #4426: With a non-static DatapointSource, NUnit cannot read the datapoint values
+        /// without creating an instance. When the constructor throws, no instance can be created,
+        /// so the Theory cannot be expanded into parameterized test cases.
+        /// The Theory method is discovered but marked NotRunnable.
         /// </summary>
         [Test]
-        public void TheoryWithNonStaticDatapointSource_ConstructorThrows_TestsAreDiscovered()
+        public void TheoryWithNonStaticDatapointSource_ConstructorThrows_TheoryIsNotRunnable()
         {
             var fixture = TestBuilder.MakeFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
 
-            // Tests should be discovered even with non-static DatapointSource
-            // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
-            // Using >= 2 to ensure Theory (not just RegularTestMethod) is discovered
-            Assert.That(fixture.TestCaseCount, Is.EqualTo(6),
-                "Theory test cases should be discovered, not just RegularTestMethod");
+            // Find the TheoryMethod test
+            var theoryMethod = (Test)fixture.Tests.Single(t => t.Name == "TheoryMethod");
+
+            Assert.Multiple(() =>
+            {
+                // The Theory is discovered but cannot be expanded into parameterized cases
+                // because the non-static DatapointSource cannot be read without an instance
+                Assert.That(theoryMethod.RunState, Is.EqualTo(RunState.NotRunnable),
+                    "Theory should be NotRunnable when datapoints cannot be accessed");
+                Assert.That(theoryMethod.TestCaseCount, Is.EqualTo(1),
+                    "Theory should have single placeholder test case, not expanded parameterized cases");
+                Assert.That(theoryMethod.Properties.Get(PropertyNames.SkipReason)?.ToString(),
+                    Does.Contain("Failure building Test"),
+                    "Should indicate failure building test");
+            });
         }
 
         /// <summary>
-        /// Issue #4426: When a fixture has a non-static DatapointSource and the constructor throws,
-        /// the test results should report the constructor failure (Error state).
+        /// Issue #4426: When the fixture is executed, the constructor exception should be reported.
+        /// Both the NotRunnable theory and the regular test should fail due to the constructor exception.
         /// </summary>
         [Test]
         public void TheoryWithNonStaticDatapointSource_ConstructorThrows_ReportsError()
         {
             var result = TestBuilder.RunTestFixture(typeof(TheoryWithNonStaticDatapointSourceAndThrowingConstructor));
 
-            // Should report a failure, not silently pass or be skipped
             Assert.Multiple(() =>
             {
-                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed),
-                    "Should not pass silently");
-                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Skipped),
-                    "Should not be silently skipped");
-                // The fixture should fail because the constructor throws
+                // The fixture should fail due to constructor exception
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
                     "Should report failure due to constructor exception");
-                // Verify the exception message is captured
                 Assert.That(result.Message, Does.Contain("Constructor throws"),
                     "Should contain the constructor exception message");
             });
         }
 
         /// <summary>
-        /// Issue #4426: Verify static DatapointSource with throwing constructor works correctly
-        /// (this is the baseline - it should discover tests and report error).
+        /// Issue #4426: With a static DatapointSource, NUnit can read the datapoint values
+        /// without creating an instance. The Theory is properly expanded into parameterized test cases.
+        /// Contrast with non-static case where this is not possible.
         /// </summary>
         [Test]
         public void TheoryWithStaticDatapointSource_ConstructorThrows_TestsAreDiscovered()
         {
             var fixture = TestBuilder.MakeFixture(typeof(TheoryWithStaticDatapointSourceAndThrowingConstructor));
 
-            // Tests should be discovered with static DatapointSource
-            // The fixture has 5 datapoint values + 1 regular test = 6 expected test cases
-            Assert.That(fixture.TestCaseCount, Is.EqualTo(6),
-                "Theory test cases should be discovered with static DatapointSource");
+            // Find the TheoryMethod test
+            var theoryMethod = (Test)fixture.Tests.Single(t => t.Name == "TheoryMethod");
+
+            Assert.Multiple(() =>
+            {
+                // With static DatapointSource, all test cases can be discovered
+                // (5 datapoint values + 1 regular test = 6 total)
+                Assert.That(fixture.TestCaseCount, Is.EqualTo(6),
+                    "All 6 test cases should be discovered with static DatapointSource");
+                Assert.That(theoryMethod.RunState, Is.EqualTo(RunState.Runnable),
+                    "Theory should be Runnable with static DatapointSource");
+                Assert.That(theoryMethod.TestCaseCount, Is.EqualTo(5),
+                    "Theory should have 5 parameterized test cases from datapoints");
+            });
         }
 
         /// <summary>
-        /// Issue #4426: Verify static DatapointSource with throwing constructor reports error
-        /// (this is the baseline behavior that non-static should match).
+        /// Issue #4426: Even with static DatapointSource, execution fails because the constructor throws.
+        /// The difference from non-static is that tests ARE properly discovered.
         /// </summary>
         [Test]
         public void TheoryWithStaticDatapointSource_ConstructorThrows_ReportsError()
@@ -81,11 +111,8 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.Multiple(() =>
             {
-                Assert.That(result.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed),
-                    "Should not pass silently");
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed),
                     "Should report failure due to constructor exception");
-                // Verify the exception message is captured
                 Assert.That(result.Message, Does.Contain("Constructor throws"),
                     "Should contain the constructor exception message");
             });
