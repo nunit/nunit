@@ -16,16 +16,21 @@ namespace NUnit.Framework.Tests.Attributes
         #region Issue 4426 - Non-static DatapointSource with throwing constructor
 
         // Issue #4426: Originally, tests with non-static DatapointSource and a throwing constructor
-        // were silently ignored (no test discovered, no error). This has been fixed - tests are now
-        // discovered and failures are reported.
+        // were silently ignored (no test discovered, no error reported).
         //
-        // However, as Manfred notes: with a non-static DatapointSource, the datapoint values cannot
-        // be read without an instance. When the constructor throws, no instance exists, so the Theory
-        // cannot be expanded into parameterized test cases. It is marked NotRunnable instead.
+        // Fixed by Manfred Brands in commit beb25d77c (April 2022), merged via PR #4133:
+        // "Handle Exceptions thrown during discovery, such as in Custom Attributes"
+        // PR #4133 fixed multiple issues (#4053, #4096, #4107) related to exceptions during
+        // test discovery causing tests to be silently unavailable. Released in NUnit 4.0.0.
+        // The fix added exception handling in DefaultTestCaseBuilder.BuildFrom that calls
+        // MakeInvalid() to create a test marked as invalid instead of silently swallowing the exception.
         //
-        // Future consideration: NotRunnable tests can be "lost between other skipped tests."
-        // Perhaps DatapointSource should require static fields (like TestCaseSource/ValueSource),
-        // or the failure should be more prominent.
+        // Current behavior:
+        // - With non-static DatapointSource, NUnit cannot read datapoint values without an instance
+        // - When the constructor throws, no instance can be created, so the Theory cannot be expanded
+        // - The test is discovered and marked NotRunnable with "Failure building Test"
+        // - At execution time, the constructor exception causes the test to be reported as FAILED
+        // - Tests are NOT silently ignored - failures are properly reported
 
         /// <summary>
         /// Issue #4426: With a non-static DatapointSource, NUnit cannot read the datapoint values
