@@ -93,14 +93,14 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithExcludePlatform(int num)
         {
         }
-        [TestCase(1, IncludePlatform = PlatformNames.NetFramework)]
+        [TestCase(1, IncludePlatform = PlatformNames.NETFramework)]
         [TestCase(2, IncludePlatform = PlatformNames.NET)]
         [TestCase(3, IncludePlatform = PlatformNames.Mono)]
         public void MethodWithIncludeRuntime(int num)
         {
         }
 
-        [TestCase(1, ExcludePlatform = PlatformNames.NetFramework)]
+        [TestCase(1, ExcludePlatform = PlatformNames.NETFramework)]
         [TestCase(2, ExcludePlatform = PlatformNames.NET)]
         [TestCase(3, ExcludePlatform = PlatformNames.Mono)]
         public void MethodWithExcludeRuntime(int num)

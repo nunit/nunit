@@ -211,9 +211,9 @@ namespace NUnit.Framework
         /// </summary>
         public const string NETCore = "NETCore";
         /// <summary>
-        /// Platform: "NetFramework"
+        /// Platform: "NETFramework"
         /// </summary>
-        public const string NetFramework = "NetFramework";
+        public const string NETFramework = "NETFramework";
         /// <summary>
         /// Platform: "SSCLI"
         /// </summary>
@@ -240,8 +240,8 @@ namespace NUnit.Framework
         /// </summary>
         public const string DotNETCore = NET;
         /// <summary>
-        /// Platform: "NetFramework"
+        /// Platform: "NETFramework"
         /// </summary>
-        public const string DotnetFramework = NetFramework;
+        public const string DotNETFramework = NETFramework;
     }
 }

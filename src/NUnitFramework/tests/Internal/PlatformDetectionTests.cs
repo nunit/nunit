@@ -406,11 +406,11 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
-            attr.Exclude = PlatformNames.NetFramework;
+            attr.Exclude = PlatformNames.NETFramework;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
-            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NetFramework"));
+            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NETFramework"));
         }
 
         [Test]
