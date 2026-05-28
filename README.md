@@ -1,4 +1,4 @@
-# NUnit 4 Framework
+# NUnit 5 Framework
 
 
 [![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://x.com/nunit) [![Slack](https://img.shields.io/badge/chat-on%20Slack-brightgreen)](https://join.slack.com/t/nunit/shared_invite/zt-jz58jw68-Led8y3WH4n2a~Y5WjuOpKA) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
@@ -55,12 +55,13 @@ NUnit is made up of several projects. When reporting issues, please try to repor
 ### Core Projects
 
 - [NUnit Test Framework](https://github.com/nunit/nunit) - The test framework used to write NUnit tests (this repository)
-- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio/Dotnet adapter for running NUnit 3 and 4 tests in Visual Studio or the `dotnet` command line.
+- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio/Dotnet adapter for running NUnit 3 and higher in Visual Studio or the `dotnet` command line.
 - [NUnit Analyzers](https://github.com/nunit/nunit.analyzers) - Roslyn analyzers for NUnit tests, providing code analysis and refactoring support in Visual Studio and other IDEs that support Roslyn analyzers.
 - [NUnit Console and Engine](https://github.com/nunit/nunit-console) - Runs unit tests from the command line and provides the engine that is used by other test runners to run NUnit tests.
 
 ### Visual Studio Extensions
 
+- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) - Visual Studio/Dotnet adapter for running NUnit 3 and higher in Visual Studio or the `dotnet` command line.
 - [NUnit Visual Studio Templates](https://github.com/nunit/nunit-vs-templates) - Project templates and snippets for writing unit tests in Visual Studio. This repo is for reference only, as the templates have been donated to the [Dotnet project](https://github.com/dotnet/test-templates) and are maintained there, and also released as part of the dotnet releases.
 - [Visual Studio Test Generator](https://github.com/nunit/nunit-vs-testgenerator) - Generates NUnit tests in Visual Studio
 - [NUnit 2 Visual Studio Adapter](https://github.com/nunit/nunit-vs-adapter) - Visual Studio adapter for running older NUnit 2.x tests in Visual Studio and in VSTS/TFS builds
