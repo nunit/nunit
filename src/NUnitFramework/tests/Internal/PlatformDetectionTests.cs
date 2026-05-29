@@ -37,7 +37,7 @@ namespace NUnit.Framework.Tests.Internal
             CheckPlatforms(
                 new PlatformHelper(OSPlatform.CurrentPlatform, runtimeFramework),
                 expectedPlatforms,
-                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,NET-4.6,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
+                PlatformHelper.RuntimePlatforms + ",NetFramework-1.0,NetFramework-1.1,NetFramework-2.0,NetFramework-3.0,NetFramework-3.5,NetFramework-4.0,NetFramework-4.5,NetFramework-4.6,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
         }
 
         private void CheckPlatforms(PlatformHelper helper,
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(3, 5)),
-                "Net,Net-2.0,Net-3.0,Net-3.5");
+                "NetFramework,DotnetFramework,NetFramework-2.0,NetFramework-3.0,NetFramework-3.5");
         }
 
         [Test]
@@ -272,7 +272,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 0, 30319, 0)),
-                "Net,Net-4.0");
+                "NetFramework,DotnetFramework,NetFramework-4.0");
         }
 
         [Test]
@@ -280,7 +280,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 5, 0, 0)),
-                "Net,Net-4.0,Net-4.5");
+                "NetFramework,DotnetFramework,NetFramework-4.0,NetFramework-4.5");
         }
 
         [Test]
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 6, 0, 0)),
-                "Net,Net-4.0,Net-4.5,Net-4.6");
+                "NetFramework,DotnetFramework,NetFramework-4.0,NetFramework-4.5,NetFramework-4.6");
         }
 
         [Test]
@@ -352,16 +352,23 @@ namespace NUnit.Framework.Tests.Internal
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetCore, new Version(0, 0, 0)),
-                "NetCore");
+                "Net,NetCore,DotNET,DotNETCore");
         }
 
         [Test]
-        public void DetectExactVersion()
+        public void DetectExactFrameworkVersion()
         {
-            Assert.That(WinXPHelper.IsPlatformSupported("net-1.1.4322"), Is.True);
-            Assert.That(WinXPHelper.IsPlatformSupported("net-1.1.4322.0"), Is.True);
-            Assert.That(WinXPHelper.IsPlatformSupported("net-1.1.4323.0"), Is.False);
-            Assert.That(WinXPHelper.IsPlatformSupported("net-1.1.4322.1"), Is.False);
+            Assert.That(WinXPHelper.IsPlatformSupported("netframework-1.1.4322"), Is.True);
+            Assert.That(WinXPHelper.IsPlatformSupported("netframework-1.1.4322.0"), Is.True);
+            Assert.That(WinXPHelper.IsPlatformSupported("netframework-1.1.4323.0"), Is.False);
+            Assert.That(WinXPHelper.IsPlatformSupported("netframework-1.1.4322.1"), Is.False);
+        }
+
+        [Test]
+        public void ModernNetVersionSpecificationIsNotSupported()
+        {
+            Assert.That(() => WinXPHelper.IsPlatformSupported("net-5.0"),
+                Throws.TypeOf<PlatformNotSupportedException>());
         }
 
         [Test]
@@ -399,17 +406,17 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.True);
-            attr.Exclude = PlatformNames.NET;
+            attr.Exclude = PlatformNames.NETFramework;
             Assert.That(Win95Helper.IsPlatformSupported(attr), Is.False);
             Assert.That(Win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
             Assert.That(WinXPHelper.IsPlatformSupported(attr), Is.False);
-            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NET"));
+            Assert.That(WinXPHelper.Reason, Is.EqualTo("Not supported on NETFramework"));
         }
 
         [Test]
         public void PlatformAttribute_InvalidPlatform()
         {
-            PlatformAttribute attr = new PlatformAttribute("Net-1.0,Net11,Mono");
+            PlatformAttribute attr = new PlatformAttribute("NetFramework-1.0,Net11,Mono");
             Assert.Throws<InvalidPlatformException>(
                 () => WinXPHelper.IsPlatformSupported(attr),
                 "Invalid platform name Net11");
