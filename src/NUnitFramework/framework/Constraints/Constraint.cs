@@ -71,12 +71,12 @@ namespace NUnit.Framework.Constraints
         #region Abstract and Virtual Methods
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns
+        /// Applies the constraint to a function that returns
         /// the value to be tested. The default implementation simply evaluates
         /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
-        /// <param name="code">An ActualValueDelegate</param>
+        /// <param name="code">A function that returns the value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(Func<TActual> code)
         {
