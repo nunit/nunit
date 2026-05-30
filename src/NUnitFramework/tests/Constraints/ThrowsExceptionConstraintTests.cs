@@ -70,5 +70,25 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That<Task<int>>(() => throw new Exception(), Throws.Exception);
         }
+
+        [Test]
+        public static void ArgumentExceptionParameterNameAndMessage()
+        {
+            var ex = new ArgumentNullException("myMessage", "myParam");
+
+            Assert.That(
+                () => throw ex,
+                Throws.ArgumentNullException.ParamName.EqualTo(ex.ParamName).And.Message.EqualTo(ex.Message));
+        }
+
+        [Test]
+        public static void DerivedArgumentExceptionParameterNameAndMessage()
+        {
+            var ex = new ArgumentNullException("myMessage", "myParam");
+
+            Assert.That(
+                () => throw ex,
+                Throws.InstanceOf<ArgumentException>().ParamName.EqualTo(ex.ParamName).And.Message.EqualTo(ex.Message));
+        }
     }
 }
