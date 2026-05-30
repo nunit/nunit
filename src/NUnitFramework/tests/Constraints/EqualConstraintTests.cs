@@ -1516,19 +1516,85 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
-            public void UsesProvidedPredicateForComparisonWithSelf()
+            public void UsesProvidedComparersForComparisonWithSelf()
             {
                 var a = new object();
+                var userComparer = new NeverEqual<object>();
 
-                Assert.That(a, Is.Not.EqualTo(a).Using<object>((left, right) => false));
+                Assert.That(a, Is.Not.EqualTo(a).Using<object>(userComparer.Equals));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer<object>));
+                Assert.That(a, Is.Not.EqualTo(a).Using((Comparison<object>)userComparer.Compare));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<object>));
             }
 
             [Test]
-            public void UsesProvidedPredicateForComparisonWithNull()
+            public void UsesProvidedComparisonsForComparisonWithNull()
             {
                 var a = new object();
+                var userComparer = new EverythingIsNull<object>();
 
-                Assert.That(a, Is.EqualTo((object?)null).Using<object>((left, right) => true));
+                Assert.That(a, Is.EqualTo(default(object)).Using<object>(userComparer.Equals));
+                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer));
+                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer<object>));
+                Assert.That(a, Is.EqualTo(default(object)).Using((Comparison<object>)userComparer.Compare));
+                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer));
+                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer<object>));
+            }
+
+            [Test]
+            public void UsesProvidedComparersForComparisonWithSelfGeneric()
+            {
+                var a = "a";
+                var userComparer = new NeverEqual<string>();
+
+                Assert.That(a, Is.Not.EqualTo(a).Using<string?>(userComparer.Equals));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                Assert.That(a, Is.Not.EqualTo(a).Using<string?>(userComparer as IComparer<string?>));
+                Assert.That(a, Is.Not.EqualTo(a).Using<string?>((Comparison<string?>)userComparer.Compare));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<string?>));
+            }
+
+            [Test]
+            public void UsesProvidedComparisonsForComparisonWithNullGeneric()
+            {
+                var a = "a";
+                var userComparer = new EverythingIsNull<string>();
+
+                Assert.That(a, Is.EqualTo(default(string)).Using<string?>(userComparer.Equals));
+                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IComparer));
+                Assert.That(a, Is.EqualTo(default(string)).Using<string?>(userComparer as IComparer<string?>));
+                Assert.That(a, Is.EqualTo(default(string)).Using<string?>((Comparison<string?>)userComparer.Compare));
+                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer));
+                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer<string?>));
+            }
+
+            private sealed class NeverEqual<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
+            {
+                int IComparer.Compare(object? x, object? y) => -1;
+
+                public int Compare(T? x, T? y) => -1;
+
+                bool IEqualityComparer.Equals(object? x, object? y) => false;
+                int IEqualityComparer.GetHashCode(object obj) => obj.GetHashCode();
+
+                public bool Equals(T? x, T? y) => false;
+                public int GetHashCode(T obj) => obj!.GetHashCode();
+            }
+
+            private sealed class EverythingIsNull<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
+            {
+                int IComparer.Compare(object? x, object? y) => x is null || y is null ? 0 : -1;
+
+                public int Compare(T? x, T? y) => x is null || y is null ? 0 : -1;
+
+                bool IEqualityComparer.Equals(object? x, object? y) => x is null || y is null;
+                int IEqualityComparer.GetHashCode(object obj) => obj.GetHashCode();
+
+                public bool Equals(T? x, T? y) => x is null || y is null;
+                public int GetHashCode(T obj) => obj!.GetHashCode();
             }
         }
 

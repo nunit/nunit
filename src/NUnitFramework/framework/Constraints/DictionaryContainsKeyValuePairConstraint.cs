@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
             if (actual is null)
                 throw new ArgumentException("Expected: IDictionary or IEnumerable<KeyValuePair<,>> But was: null", nameof(actual));
 
-            if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
+            if (TypeHelper.TryCast(actual, out IDictionary? dictionary))
             {
                 foreach (var entry in dictionary)
                 {

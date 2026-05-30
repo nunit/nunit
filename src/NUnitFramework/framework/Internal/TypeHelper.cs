@@ -444,7 +444,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="obj">The object to cast.</param>
         /// <param name="value">The value of the object, if the cast succeeded.</param>
-        internal static bool TryCast<T>(object? obj, [NotNullWhen(true)] out T? value)
+        internal static bool TryCast<T>(object? obj, [NotNullIfNotNull(nameof(obj))] out T? value)
         {
             if (obj is T tObj)
             {

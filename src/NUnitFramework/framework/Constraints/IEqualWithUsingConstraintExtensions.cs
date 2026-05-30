@@ -25,7 +25,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
-        public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TExpected, TExpected, bool> comparer)
+        public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TExpected?, TExpected?, bool> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
@@ -72,7 +72,7 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
-        public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Comparison<TExpected> comparer)
+        public static EqualUsingConstraint<TExpected> Using<TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Comparison<TExpected?> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected, comparer), constraint.Builder);
         }
@@ -92,10 +92,10 @@ namespace NUnit.Framework
         /// Equal constraint comparing <see cref="IEqualWithUsingConstraint{TExpected}.Expected"/>
         /// with an actual value using the user supplied comparer.
         /// </returns>
-        public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TActual, TExpected, bool> comparer)
+        public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, Func<TActual?, TExpected?, bool> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected,
-                (object x, object y) => comparer.Invoke((TActual)x, (TExpected)y)), constraint.Builder);
+                (object? x, object? y) => comparer.Invoke((TActual?)x, (TExpected?)y)), constraint.Builder);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace NUnit.Framework
         public static EqualUsingConstraint<TExpected> Using<TActual, TExpected>(this IEqualWithUsingConstraint<TExpected> constraint, IComparer<TActual> comparer)
         {
             return WithUpdatedBuilder(new EqualUsingConstraint<TExpected>(constraint.Expected,
-                (object x, object y) => comparer.Compare((TActual)x, (TActual)y) == 0), constraint.Builder);
+                (object? x, object? y) => comparer.Compare((TActual?)x, (TActual?)y) == 0), constraint.Builder);
         }
 
         #endregion

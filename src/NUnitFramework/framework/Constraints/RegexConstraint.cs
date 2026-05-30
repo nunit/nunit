@@ -70,7 +70,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure.</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            string actualString = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: false);
+            // Require that the actual value is a non-null string. If it's not, an exception will be thrown.
+            string actualString = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: false)!;
 
             return new ConstraintResult(this, actual, _regex.IsMatch(actualString));
         }

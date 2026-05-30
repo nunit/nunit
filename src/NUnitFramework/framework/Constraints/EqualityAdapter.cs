@@ -158,7 +158,7 @@ namespace NUnit.Framework.Constraints
                 return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
             }
 
-            protected void CastOrThrow(object? x, object? y, out T xValue, out T yValue)
+            protected void CastOrThrow(object? x, object? y, out T? xValue, out T? yValue)
             {
                 if (!TypeHelper.TryCast(x, out T? xValueOrNull))
                     throw new ArgumentException($"Cannot compare {x?.ToString() ?? "null"}");
@@ -166,7 +166,6 @@ namespace NUnit.Framework.Constraints
                 if (!TypeHelper.TryCast(y, out T? yValueOrNull))
                     throw new ArgumentException($"Cannot compare {y?.ToString() ?? "null"}");
 
-                // The are now verified to be not null.
                 xValue = xValueOrNull;
                 yValue = yValueOrNull;
             }
@@ -195,7 +194,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object? x, object? y)
             {
-                CastOrThrow(x, y, out var xValue, out var yValue);
+                CastOrThrow(x, y, out T? xValue, out T? yValue);
                 return _comparer.Equals(xValue, yValue);
             }
         }
@@ -226,8 +225,11 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object? x, object? y)
             {
-                CastOrThrow(x, y, out var xValue, out var yValue);
-                return _comparer.Compare(xValue, yValue) == 0;
+                CastOrThrow(x, y, out T? xValue, out T? yValue);
+
+                // The CastOrThrow method ensures that the casts will succeed,
+                // so we can safely use the null-forgiving operator here.
+                return _comparer.Compare(xValue!, yValue!) == 0;
             }
         }
 
@@ -254,8 +256,11 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object? x, object? y)
             {
-                CastOrThrow(x, y, out var xValue, out var yValue);
-                return _comparer.Invoke(xValue, yValue) == 0;
+                CastOrThrow(x, y, out T? xValue, out T? yValue);
+
+                // The CastOrThrow method ensures that the casts will succeed,
+                // so we can safely use the null-forgiving operator here.
+                return _comparer.Invoke(xValue!, yValue!) == 0;
             }
         }
 

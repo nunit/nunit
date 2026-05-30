@@ -290,7 +290,7 @@ namespace NUnit.Framework.Constraints
         /// Returns the constraint provided as an argument - used to allow custom
         /// custom constraints to easily participate in the syntax.
         /// </summary>
-        public Constraint Matches<TActual>(Predicate<TActual> predicate)
+        public Constraint Matches<TActual>(Predicate<TActual?> predicate)
         {
             return Append(new PredicateConstraint<TActual>(predicate));
         }

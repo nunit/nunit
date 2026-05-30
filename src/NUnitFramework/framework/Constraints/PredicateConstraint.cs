@@ -12,12 +12,12 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PredicateConstraint<T> : Constraint
     {
-        private readonly Predicate<T> _predicate;
+        private readonly Predicate<T?> _predicate;
 
         /// <summary>
         /// Construct a PredicateConstraint from a predicate
         /// </summary>
-        public PredicateConstraint(Predicate<T> predicate)
+        public PredicateConstraint(Predicate<T?> predicate)
         {
             _predicate = predicate;
         }

@@ -139,7 +139,9 @@ namespace NUnit.Framework.Constraints
                 if (!TypeHelper.TryCast(actual, out T? actualCast))
                     throw new ArgumentException($"Cannot compare to {actual?.ToString() ?? "null"}");
 
-                return _comparison.Invoke(expectedCast, actualCast);
+                // The TryCast method ensures that the casts will succeed,
+                // so we can safely use the null-forgiving operator here.
+                return _comparison.Invoke(expectedCast!, actualCast!);
             }
         }
     }
