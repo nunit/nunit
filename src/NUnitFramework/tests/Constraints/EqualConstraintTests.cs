@@ -1521,12 +1521,16 @@ namespace NUnit.Framework.Tests.Constraints
                 var a = new object();
                 var userComparer = new NeverEqual<object>();
 
-                Assert.That(a, Is.Not.EqualTo(a).Using<object>(userComparer.Equals));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer<object>));
-                Assert.That(a, Is.Not.EqualTo(a).Using((Comparison<object>)userComparer.Compare));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<object>));
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.Not.EqualTo(a).Using<object, object>(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using<object>(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer<object>));
+                    Assert.That(a, Is.Not.EqualTo(a).Using((Comparison<object>)userComparer.Compare));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<object>));
+                }
             }
 
             [Test]
@@ -1535,40 +1539,131 @@ namespace NUnit.Framework.Tests.Constraints
                 var a = new object();
                 var userComparer = new EverythingIsNull<object>();
 
-                Assert.That(a, Is.EqualTo(default(object)).Using<object>(userComparer.Equals));
-                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer));
-                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer<object>));
-                Assert.That(a, Is.EqualTo(default(object)).Using((Comparison<object>)userComparer.Compare));
-                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer));
-                Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer<object>));
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.EqualTo(default(object)).Using<object>(userComparer.Equals));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer<object>));
+                    Assert.That(a, Is.EqualTo(default(object)).Using((Comparison<object>)userComparer.Compare));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer<object>));
+                }
             }
 
             [Test]
             public void UsesProvidedComparersForComparisonWithSelfGeneric()
             {
                 var a = "a";
-                var userComparer = new NeverEqual<string>();
+                var userComparer = new NeverEqual<string?>();
 
-                Assert.That(a, Is.Not.EqualTo(a).Using<string?>(userComparer.Equals));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
-                Assert.That(a, Is.Not.EqualTo(a).Using<string?>(userComparer as IComparer<string?>));
-                Assert.That(a, Is.Not.EqualTo(a).Using<string?>((Comparison<string?>)userComparer.Compare));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
-                Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<string?>));
+                using (Assert.EnterMultipleScope())
+                {
+                    // Note that the EqualStringConstraint implies string?
+                    Assert.That(a, Is.Not.EqualTo(a).Using<string, string?>(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using<string?>(userComparer as IComparer<string?>));
+                    Assert.That(a, Is.Not.EqualTo(a).Using<string?>((Comparison<string?>)userComparer.Compare));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<string?>));
+                }
             }
 
             [Test]
             public void UsesProvidedComparisonsForComparisonWithNullGeneric()
             {
                 var a = "a";
-                var userComparer = new EverythingIsNull<string>();
+                var userComparer = new EverythingIsNull<string?>();
 
-                Assert.That(a, Is.EqualTo(default(string)).Using<string?>(userComparer.Equals));
-                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IComparer));
-                Assert.That(a, Is.EqualTo(default(string)).Using<string?>(userComparer as IComparer<string?>));
-                Assert.That(a, Is.EqualTo(default(string)).Using<string?>((Comparison<string?>)userComparer.Compare));
-                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer));
-                Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer<string?>));
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.EqualTo(default(string)).Using<string, string?>(userComparer.Equals));
+                    Assert.That(a, Is.EqualTo(default(string)).Using(userComparer.Equals));
+                    Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IComparer));
+                    Assert.That(a, Is.EqualTo(default(string)).Using<string?>(userComparer as IComparer<string?>));
+                    Assert.That(a, Is.EqualTo(default(string)).Using<string?>((Comparison<string?>)userComparer.Compare));
+                    Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.EqualTo(default(string)).Using(userComparer as IEqualityComparer<string?>));
+                }
+            }
+
+            [Test]
+            public void UsesProvidedComparersForComparisonWithSelfValueType()
+            {
+                var a = 1;
+                var userComparer = new NeverEqual<int>();
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using<int>(userComparer as IComparer<int>));
+                    Assert.That(a, Is.Not.EqualTo(a).Using((Comparison<int>)userComparer.Compare));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<int>));
+                }
+            }
+
+            [Test]
+            public void UsesProvidedComparisonsForComparisonWithNullValueType()
+            {
+                var a = 1;
+                var userComparer = new EverythingIsNull<int>();
+
+                using (Assert.EnterMultipleScope())
+                {
+                    // Here the comparers support object so the comparers will be used.
+                    Assert.That(a, Is.EqualTo(default(object)).Using<int, object?>((x, y) => y is null));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IComparer));
+                    Assert.That(a, Is.EqualTo(default(object)).Using(userComparer as IEqualityComparer));
+                }
+
+                using (Assert.EnterMultipleScope())
+                {
+                    // The framework will NOT use the provided comparer for this case as
+                    // the expected value (default(object) is not of the supported type (int)
+                    // so the comparison will fall back to the default Equals which will return false.
+                    // Note that the user is not informed about this fallback.
+                    // NUnit allows specifying multiple comparers and will use the first one that supports the types
+                    Assert.That(a, Is.Not.EqualTo(default(object)).Using<int>(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(default(object)).Using(userComparer as IComparer<int>));
+                    Assert.That(a, Is.Not.EqualTo(default(object)).Using((Comparison<int>)userComparer.Compare));
+                    Assert.That(a, Is.Not.EqualTo(default(object)).Using(userComparer as IEqualityComparer<int>));
+                }
+            }
+
+            [Test]
+            public void UsesProvidedComparersForComparisonWithSelfNullableValueType()
+            {
+                int? a = 1;
+                var userComparer = new NeverEqual<int?>();
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.Not.EqualTo(a).Using<int?>(userComparer.Equals));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IComparer<int?>));
+                    Assert.That(a, Is.Not.EqualTo(a).Using((Comparison<int?>)userComparer.Compare));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.Not.EqualTo(a).Using(userComparer as IEqualityComparer<int?>));
+                }
+            }
+
+            [Test]
+            public void UsesProvidedComparisonsForComparisonWithNullNullableValueType()
+            {
+                int? a = 1;
+                var userComparer = new EverythingIsNull<int?>();
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(a, Is.EqualTo(default(int?)).Using<int?>(userComparer.Equals));
+                    Assert.That(a, Is.EqualTo(default(int?)).Using(userComparer as IComparer));
+                    Assert.That(a, Is.EqualTo(default(int?)).Using(userComparer as IComparer<int?>));
+                    Assert.That(a, Is.EqualTo(default(int?)).Using((Comparison<int?>)userComparer.Compare));
+                    Assert.That(a, Is.EqualTo(default(int?)).Using(userComparer as IEqualityComparer));
+                    Assert.That(a, Is.EqualTo(default(int?)).Using(userComparer as IEqualityComparer<int?>));
+                }
             }
 
             private sealed class NeverEqual<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
