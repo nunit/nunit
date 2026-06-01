@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
         /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
         /// <typeparam name="T">The type to require.</typeparam>
-        public static T RequireActual<T>(object? actual, string paramName, bool allowNull)
+        public static T? RequireActual<T>(object? actual, string paramName, bool allowNull)
         {
             if (TypeHelper.TryCast(actual, out T? result) && (allowNull || result is not null))
             {
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         {
 #pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
             // RequireActual throws ArgumentException if actual is null or not of type T.
-            return RequireActual<T>(actual, paramName, allowNull: false);
+            return RequireActual<T>(actual, paramName, allowNull: false)!;
 #pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
         }
     }

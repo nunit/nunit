@@ -17,8 +17,8 @@ namespace NUnit.Framework.Constraints
 
         private readonly T? _expected;
 
-        private readonly Func<T, T, bool>? _comparer;
-        private readonly Func<object, object, bool>? _nonTypedComparer;
+        private readonly Func<T?, T?, bool>? _comparer;
+        private readonly Func<object?, object?, bool>? _nonTypedComparer;
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
-        public EqualUsingConstraint(T? expected, Func<T, T, bool> comparer)
+        public EqualUsingConstraint(T? expected, Func<T?, T?, bool> comparer)
             : base(expected)
         {
             _expected = expected;
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
-        public EqualUsingConstraint(T? expected, Func<object, object, bool> comparer)
+        public EqualUsingConstraint(T? expected, Func<object?, object?, bool> comparer)
             : base(expected)
         {
             _expected = expected;
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
-        public EqualUsingConstraint(T? expected, Comparison<T> comparer)
+        public EqualUsingConstraint(T? expected, Comparison<T?> comparer)
             : this(expected, (x, y) => comparer.Invoke(x, y) == 0)
         {
         }
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
         public EqualUsingConstraint(T? expected, IEqualityComparer comparer)
-            : this(expected, (object x, object y) => comparer.Equals(x, y))
+            : this(expected, (object? x, object? y) => comparer.Equals(x, y))
         {
         }
 
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         /// <param name="comparer">The comparer to use.</param>
         public EqualUsingConstraint(T? expected, IComparer comparer)
-            : this(expected, (object x, object y) => comparer.Compare(x, y) == 0)
+            : this(expected, (object? x, object? y) => comparer.Compare(x, y) == 0)
         {
         }
 
@@ -112,21 +112,21 @@ namespace NUnit.Framework.Constraints
         {
             bool hasSucceeded;
 
-            if (actual is null)
-            {
-                hasSucceeded = _expected is null;
-            }
-            else if (_expected is null)
-            {
-                hasSucceeded = false;
-            }
-            else if (_comparer is not null)
+            if (_comparer is not null)
             {
                 hasSucceeded = _comparer.Invoke(actual, _expected);
             }
             else if (_nonTypedComparer is not null)
             {
                 hasSucceeded = _nonTypedComparer.Invoke(actual, _expected);
+            }
+            else if (actual is null)
+            {
+                hasSucceeded = _expected is null;
+            }
+            else if (_expected is null)
+            {
+                hasSucceeded = false;
             }
             else
             {
@@ -144,21 +144,21 @@ namespace NUnit.Framework.Constraints
         {
             bool hasSucceeded;
 
-            if (actual is null)
-            {
-                hasSucceeded = _expected is null;
-            }
-            else if (_expected is null)
-            {
-                hasSucceeded = false;
-            }
-            else if (_nonTypedComparer is not null)
+            if (_nonTypedComparer is not null)
             {
                 hasSucceeded = _nonTypedComparer.Invoke(actual, _expected);
             }
             else if (_comparer is not null && actual is T t)
             {
                 hasSucceeded = _comparer.Invoke(t, _expected);
+            }
+            else if (actual is null)
+            {
+                hasSucceeded = _expected is null;
+            }
+            else if (_expected is null)
+            {
+                hasSucceeded = false;
             }
             else
             {

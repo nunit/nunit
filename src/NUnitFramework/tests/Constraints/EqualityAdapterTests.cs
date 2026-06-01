@@ -22,16 +22,12 @@ namespace NUnit.Framework.Tests.Constraints
             };
         }
 
-        // The NUnitFramework will never calls these with 'null'.
-        // NUnitEqualityComparer.AreEqual will test for 'null' first before doing more tests.
         [TestCaseSource(nameof(EqualityAdapters))]
         public static void CanCompareWithNull(EqualityAdapter adapter)
         {
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             Assert.That(adapter.AreEqual(null, "a"), Is.False);
             Assert.That(adapter.AreEqual("a", null), Is.False);
             Assert.That(adapter.AreEqual(null, null), Is.True);
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         }
 
         [TestCaseSource(nameof(EqualityAdapters))]

@@ -41,8 +41,12 @@ namespace NUnit.Framework.Constraints.Comparers
                 _comparisons.Push(new Comparison(x, y)));
         }
 
-        public bool DidCompare(object x, object y)
+        public bool DidCompare(object? x, object? y)
         {
+            // At the moment we only push non-null comparisons.
+            if (x is null || y is null)
+                return false;
+
             foreach (var comparison in _comparisons)
             {
                 if (ReferenceEquals(comparison.X, x) && ReferenceEquals(comparison.Y, y))
