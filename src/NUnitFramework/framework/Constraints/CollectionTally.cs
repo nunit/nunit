@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,42 +11,9 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences
     /// of each object in one or more enumerations.</summary>
+    [Obsolete("This class will be removed in a future release.")]
     public sealed class CollectionTally
     {
-        /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
-        [DebuggerDisplay("Missing = {MissingItems.Count}, Extra = {ExtraItems.Count}")]
-        public sealed class CollectionTallyResult
-        {
-            /// <summary>Items that were not in the expected collection.</summary>
-            public List<object?> ExtraItems { get; }
-
-            /// <summary>Items that were not accounted for in the expected collection.</summary>
-            public List<object?> MissingItems { get; }
-
-            /// <summary>Initializes a new instance of the <see cref="CollectionTallyResult"/> class with the given fields.</summary>
-            public CollectionTallyResult(List<object?> missingItems, List<object?> extraItems)
-            {
-                MissingItems = missingItems;
-                ExtraItems = extraItems;
-            }
-
-            /// <summary>
-            /// Converts a generic CollectionTallyResult to the non-generic version.
-            /// </summary>
-            internal static CollectionTallyResult FromGenericResult<T>(CollectionTally<T>.CollectionTallyResult genericResult)
-            {
-                var missingItems = new List<object?>(genericResult.MissingItems.Count);
-                foreach (var item in genericResult.MissingItems)
-                    missingItems.Add(item);
-
-                var extraItems = new List<object?>(genericResult.ExtraItems.Count);
-                foreach (var item in genericResult.ExtraItems)
-                    extraItems.Add(item);
-
-                return new CollectionTallyResult(missingItems, extraItems);
-            }
-        }
-
         private readonly NUnitEqualityComparer _comparer;
 
         private readonly bool _isSortable;
@@ -75,9 +43,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly List<object> _missingItems = new();
+        private readonly List<object> _missingItems = [];
 
-        private readonly List<object> _extraItems = new();
+        private readonly List<object> _extraItems = [];
 
         /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
         /// <param name="comparer">The comparer to use for equality.</param>
@@ -153,6 +121,40 @@ namespace NUnit.Framework.Constraints
                 list.Add(o);
 
             return list;
+        }
+    }
+
+    /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
+    [DebuggerDisplay("Missing = {MissingItems.Count}, Extra = {ExtraItems.Count}")]
+    public sealed class CollectionTallyResult
+    {
+        /// <summary>Items that were not in the expected collection.</summary>
+        public List<object?> ExtraItems { get; }
+
+        /// <summary>Items that were not accounted for in the expected collection.</summary>
+        public List<object?> MissingItems { get; }
+
+        /// <summary>Initializes a new instance of the <see cref="CollectionTallyResult"/> class with the given fields.</summary>
+        public CollectionTallyResult(List<object?> missingItems, List<object?> extraItems)
+        {
+            MissingItems = missingItems;
+            ExtraItems = extraItems;
+        }
+
+        /// <summary>
+        /// Converts a generic CollectionTallyResult to the non-generic version.
+        /// </summary>
+        internal static CollectionTallyResult FromGenericResult<T>(CollectionTally<T>.CollectionTallyResult genericResult)
+        {
+            var missingItems = new List<object?>(genericResult.MissingItems.Count);
+            foreach (var item in genericResult.MissingItems)
+                missingItems.Add(item);
+
+            var extraItems = new List<object?>(genericResult.ExtraItems.Count);
+            foreach (var item in genericResult.ExtraItems)
+                extraItems.Add(item);
+
+            return new CollectionTallyResult(missingItems, extraItems);
         }
     }
 }

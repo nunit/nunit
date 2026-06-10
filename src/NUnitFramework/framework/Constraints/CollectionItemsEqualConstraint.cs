@@ -231,10 +231,10 @@ namespace NUnit.Framework.Constraints
             return new CollectionTally(_comparer, c);
         }
 
-        private protected CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual)
+        private protected CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual)
             => TallyResult(expected, actual, _comparer);
 
-        private protected static CollectionTally.CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
+        private protected static CollectionTallyResult TallyResult(IEnumerable expected, IEnumerable actual, NUnitEqualityComparer comparer)
         {
             // Add a few explicit cases for extremely commonly used types as there can be a measureable difference
             // if many calls of these types are made for large collections over the lifetime of a single process.
@@ -260,13 +260,13 @@ namespace NUnit.Framework.Constraints
                 if (underlyingType is not null && underlyingType == actual.GetType().FindPrimaryEnumerableInterfaceGenericTypeArgument())
                 {
                     var method = TallyResultCoreMethod.MakeGenericMethod(underlyingType);
-                    return (CollectionTally.CollectionTallyResult)method.Invoke(null, [expected, actual, comparer])!;
+                    return (CollectionTallyResult)method.Invoke(null, [expected, actual, comparer])!;
                 }
 
                 // Fallback to object-based approach for non-generic collections or generic collections of different underlying type.
                 var tally = new CollectionTally<object>(expected, comparer);
                 tally.TryRemove(actual);
-                return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
+                return CollectionTallyResult.FromGenericResult(tally.Result);
             }
 
             static IEnumerable<string?> ToStringList(IEnumerable l)
@@ -276,12 +276,12 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private protected static CollectionTally.CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)
+        private protected static CollectionTallyResult TallyResultCore<T>(IEnumerable<T> expectedItems, IEnumerable<T> actualItems, NUnitEqualityComparer comparer)
         {
             var tally = new CollectionTally<T>(expectedItems, comparer);
 
             tally.TryRemove(actualItems);
-            return CollectionTally.CollectionTallyResult.FromGenericResult(tally.Result);
+            return CollectionTallyResult.FromGenericResult(tally.Result);
         }
     }
 }
