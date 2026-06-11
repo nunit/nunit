@@ -41,13 +41,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private bool Matches(
             IEnumerable actual,
-            out CollectionTally.CollectionTallyResult tallyResult)
+            out CollectionTallyResult tallyResult)
         {
             // Early return if both collections are reference-equal or
             // both collections are in their default or uninitialized state.
             if (actual.Equals(_expected))
             {
-                tallyResult = new CollectionTally.CollectionTallyResult([], []);
+                tallyResult = new CollectionTallyResult([], []);
                 return true;
             }
 
