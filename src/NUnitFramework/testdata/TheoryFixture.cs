@@ -4,6 +4,71 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.TheoryFixture
 {
+    /// <summary>
+    /// Issue #4426: Fixture with non-static DatapointSource and constructor that throws.
+    /// The Theory cannot be expanded into parameterized test cases because the non-static
+    /// DatapointSource field cannot be read without an instance (constructor throws = no instance).
+    /// The Theory is discovered but marked NotRunnable. At execution time, the constructor
+    /// exception causes the test to be reported as Failed (not silently skipped).
+    /// </summary>
+    [TestFixture]
+    public class TheoryWithNonStaticDatapointSourceAndThrowingConstructor
+    {
+        public TheoryWithNonStaticDatapointSourceAndThrowingConstructor()
+        {
+            throw new System.InvalidOperationException("Constructor throws");
+        }
+
+#pragma warning disable IDE0052 // Remove unused private members
+        [DatapointSource]
+        private readonly int[] _intSource = [0, 1, 6, 8, 50];
+#pragma warning restore IDE0052 // Remove unused private members
+
+        [Theory]
+        public void TheoryMethod(int value)
+        {
+            Assert.That(value, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [Test]
+        public void RegularTestMethod()
+        {
+            Assert.Pass();
+        }
+    }
+
+    /// <summary>
+    /// Issue #4426: Fixture with static DatapointSource and constructor that throws.
+    /// Tests should be discovered and report an error (this works correctly).
+    /// </summary>
+    [TestFixture]
+    public class TheoryWithStaticDatapointSourceAndThrowingConstructor
+    {
+        public TheoryWithStaticDatapointSourceAndThrowingConstructor()
+        {
+            throw new System.InvalidOperationException("Constructor throws");
+        }
+
+#pragma warning disable IDE0052 // Remove unused private members
+#pragma warning disable IDE1006 // Naming rule violation
+        [DatapointSource]
+        private static readonly int[] IntSource = [0, 1, 6, 8, 50];
+#pragma warning restore IDE1006 // Naming rule violation
+#pragma warning restore IDE0052 // Remove unused private members
+
+        [Theory]
+        public void TheoryMethod(int value)
+        {
+            Assert.That(value, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [Test]
+        public void RegularTestMethod()
+        {
+            Assert.Pass();
+        }
+    }
+
     [TestFixture]
     public class TheoryFixture
     {
