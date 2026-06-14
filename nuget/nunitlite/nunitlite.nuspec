@@ -4,14 +4,14 @@
     <id>NUnitLite</id>
     <title>NUnitLite</title>
     <version>$version$</version>
-    <authors>Charlie Poole, Rob Prouse</authors>
-    <owners>Charlie Poole, Rob Prouse</owners>
+    <authors>Charlie Poole, Rob Prouse, Terje Sandstrom and contributors</authors>
+    <owners>Charlie Poole, Rob Prouse, Terje Sandstrom</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
+    <summary>NUnitLite is a lightweight runner for tests that use the NUnit testing framework.</summary>
     <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner.
 
 Supported platforms:
@@ -25,7 +25,7 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License.</copyright>
+    <copyright>Copyright (c) 2009-2019 Charlie Poole, 2014-2025 Rob Prouse, 2026 Terje Sandstrom and Contributors. MIT License.</copyright>
     <dependencies>
       <group targetFramework="net462">
         <dependency id="NUnit" version="[$version$]" />

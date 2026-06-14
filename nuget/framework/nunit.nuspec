@@ -4,8 +4,8 @@
         <id>NUnit</id>
         <title>NUnit</title>
         <version>$version$</version>
-        <authors>Charlie Poole, Rob Prouse</authors>
-        <owners>Charlie Poole, Rob Prouse</owners>
+        <authors>Charlie Poole, Rob Prouse, Terje Sandstrom and contributors</authors>
+        <owners>Charlie Poole, Rob Prouse, Terje Sandstrom</owners>
         <license type="expression">MIT</license>
         <projectUrl>https://nunit.org</projectUrl>
         <repository type="git" url="https://github.com/nunit/nunit"/>
@@ -31,7 +31,7 @@
         <releaseNotes>See release notes at https://docs.nunit.org/articles/nunit/release-notes/framework.html</releaseNotes>
         <language>en-US</language>
         <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
-        <copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License.</copyright>
+        <copyright>Copyright (c) 2009-2019 Charlie Poole, 2014-2025 Rob Prouse, 2026 Terje Sandstrom and Contributors. MIT License.</copyright>
         <dependencies>
             <group targetFramework="net462">
                 <dependency id="System.Threading.Tasks.Extensions" version="4.5.4" exclude="Build,Analyzers" />
