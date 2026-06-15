@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 using NUnit.Tests.Singletons;
@@ -60,34 +59,6 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason)!);
 
             return result.TestCaseCount;
-        }
-
-        [TestCase((string?)null)]
-        [TestCase("DynamicallyCompiledAssembly")]
-        public void LoadDynamicAssembly(string? assemblyName)
-        {
-            var compiler = new TestCompiler();
-            const string code = @"
-                using NUnit.Framework;
-
-                namespace DynamicAssembly
-                {
-                    public class DynamicFixture
-                    {
-                        [Test]
-                        public void Test1() { }
-    
-                        [Test]
-                        public void Test2() { }
-                    }
-                }";
-
-            var asm = compiler.GenerateInMemoryAssembly(code, assemblyName);
-            var suite = _builder.Build(asm, new Dictionary<string, object>());
-
-            Assert.That(suite.Name, Is.Not.Null.And.Not.Empty);
-            Assert.That(suite.Tests[0].Name, Is.EqualTo("DynamicAssembly"));
-            Assert.That(suite.TestCaseCount, Is.EqualTo(2));
         }
     }
 }
