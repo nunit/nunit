@@ -898,10 +898,8 @@ namespace NUnit.Framework.Tests.Api
                     {
                         [NUnit.Framework.Test]
                         public void Test1() { }
-
-                        [NUnit.Framework..Test]
+                        [NUnit.Framework.Test]
                         public void Test2() { }
-                    }
                 }
              */
 
@@ -933,10 +931,10 @@ namespace NUnit.Framework.Tests.Api
 
                 // Create method
                 var testMethod = typeBuilder.DefineMethod(
-                methodName,
-                MethodAttributes.Public,
-                typeof(void),
-                Type.EmptyTypes);
+                    methodName,
+                    MethodAttributes.Public,
+                    typeof(void),
+                    Type.EmptyTypes);
 
                 var testMethodIL = testMethod.GetILGenerator();
                 testMethodIL.Emit(OpCodes.Ret);
