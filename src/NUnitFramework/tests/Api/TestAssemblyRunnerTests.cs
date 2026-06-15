@@ -876,6 +876,7 @@ namespace NUnit.Framework.Tests.Api
 
             var suite = _runner.Load(asm, EmptySettings);
 
+            Assert.That(suite.Name, Is.Not.Null.And.Not.Empty);
             Assert.That(suite.Tests[0].Name, Is.EqualTo(DynamicAssemblyName));
             Assert.That(suite.TestCaseCount, Is.EqualTo(ExpectedDynamicTestCount));
 
