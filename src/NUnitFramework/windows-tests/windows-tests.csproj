@@ -10,11 +10,11 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
-  <!-- On non-Windows: disable test infrastructure completely -->
+  <!-- On non-Windows: build empty assembly, no tests -->
   <PropertyGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
     <IsTestProject>false</IsTestProject>
-    <!-- Opt into new testing platform to avoid VSTest compatibility error on .NET 10 SDK -->
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <!-- Don't compile any source files - they depend on Windows-only test utilities -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <ItemGroup>
