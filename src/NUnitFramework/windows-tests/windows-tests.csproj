@@ -8,7 +8,13 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!-- Enable cross-platform build but only test on Windows -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <IsTestProject Condition="!$([MSBuild]::IsOSPlatform('Windows'))">false</IsTestProject>
+  </PropertyGroup>
+
+  <!-- On non-Windows: disable test infrastructure completely -->
+  <PropertyGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+    <IsTestProject>false</IsTestProject>
+    <!-- Opt into new testing platform to avoid VSTest compatibility error on .NET 10 SDK -->
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
   <ItemGroup>
