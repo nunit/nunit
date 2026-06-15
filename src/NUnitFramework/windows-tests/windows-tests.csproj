@@ -21,8 +21,7 @@
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
-  <!-- Only reference nunit.framework.tests on Windows to avoid Microsoft.Testing.Platform.MSBuild
-       targets being imported on non-Windows, which causes VSTest compatibility errors on .NET 10 SDK -->
+  <!-- Only needed on Windows where tests actually run -->
   <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <ProjectReference Include="..\tests\nunit.framework.tests.csproj" />
   </ItemGroup>
