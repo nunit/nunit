@@ -18,7 +18,7 @@ namespace NUnit.Framework.Tests.Constraints
             ExpectedDescription = @"value matching lambda expression";
             StringRepresentation = "<predicate>";
         }
-
+#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
         {
             0,
@@ -28,6 +28,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             new TestCaseData(123, "123")
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanUseConstraintExpressionSyntax()

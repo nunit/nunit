@@ -21,8 +21,10 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<range 5 42>";
         }
 
+#pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 5, 23, 42 };
         private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(null)]
         [TestCase("xxx")]

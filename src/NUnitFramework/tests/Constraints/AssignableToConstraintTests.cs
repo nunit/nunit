@@ -28,9 +28,10 @@ namespace NUnit.Framework.Tests.Constraints
                 ExpectedDescription = $"assignable to <{typeof(TTo)}>";
                 StringRepresentation = $"<assignableto {typeof(TTo)}>";
             }
-
+#pragma warning disable IDE0052 // Remove unread private members
             private static readonly object[] SuccessData = [new TTo(), new TFrom()];
             private static readonly object[] FailureData = [new TestCaseData(new object(), "<" + typeof(object).FullName + ">")];
+#pragma warning restore IDE0052 // Remove unread private members
         }
 
         [TestCaseSource(nameof(SuccessCases))]
@@ -41,14 +42,14 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly TestCaseData[] SuccessCases =
         [
-            new TestCaseData(null, typeof(object)),
-            new TestCaseData(null, typeof(int?)),
-            new TestCaseData(42, typeof(int?)),
-            new TestCaseData(42, typeof(double)),
-            new TestCaseData(42, typeof(double?)),
-            new TestCaseData(42.0f, typeof(double)),
-            new TestCaseData(new D2(), typeof(D1)),
-            new TestCaseData(new D3(), typeof(D1)),
+            new(null, typeof(object)),
+            new(null, typeof(int?)),
+            new(42, typeof(int?)),
+            new(42, typeof(double)),
+            new(42, typeof(double?)),
+            new(42.0f, typeof(double)),
+            new(new D2(), typeof(D1)),
+            new(new D3(), typeof(D1)),
         ];
 
         [TestCaseSource(nameof(FailureCases))]
@@ -75,10 +76,10 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly TestCaseData[] FailureCases =
         [
-            new TestCaseData(null, typeof(int)),
-            new TestCaseData(42.0, typeof(float)),
-            new TestCaseData(new D1(), typeof(D2)),
-            new TestCaseData(new D1(), typeof(D3)),
+            new(null, typeof(int)),
+            new(42.0, typeof(float)),
+            new(new D1(), typeof(D2)),
+            new(new D1(), typeof(D3)),
         ];
 
         private static IEnumerable<TestFixtureData> GetAssignableTestScenarios()

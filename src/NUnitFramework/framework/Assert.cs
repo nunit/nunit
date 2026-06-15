@@ -28,7 +28,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static bool Equals(object a, object b)
+        public static new bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used. Use Assert.AreEqual instead.");
         }
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static void ReferenceEquals(object a, object b)
+        public static new void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used. Use Assert.AreSame instead.");
         }
