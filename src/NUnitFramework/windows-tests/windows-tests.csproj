@@ -21,12 +21,11 @@
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- PrivateAssets prevents Microsoft.Testing.Platform.MSBuild targets from flowing transitively.
-         On Windows, windows-tests has its own Microsoft.NET.Test.Sdk reference.
-         On non-Windows, we don't want any test infrastructure activated. -->
-    <ProjectReference Include="..\tests\nunit.framework.tests.csproj" PrivateAssets="build" />
-   </ItemGroup>
+  <!-- Only reference nunit.framework.tests on Windows to avoid Microsoft.Testing.Platform.MSBuild
+       targets being imported on non-Windows, which causes VSTest compatibility errors on .NET 10 SDK -->
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <ProjectReference Include="..\tests\nunit.framework.tests.csproj" />
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="System.Windows.Forms" />
