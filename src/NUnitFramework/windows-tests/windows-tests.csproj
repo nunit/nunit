@@ -16,7 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\tests\nunit.framework.tests.csproj" />
+    <!-- PrivateAssets prevents Microsoft.Testing.Platform.MSBuild targets from flowing transitively.
+         On Windows, windows-tests has its own Microsoft.NET.Test.Sdk reference.
+         On non-Windows, we don't want any test infrastructure activated. -->
+    <ProjectReference Include="..\tests\nunit.framework.tests.csproj" PrivateAssets="build" />
    </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
