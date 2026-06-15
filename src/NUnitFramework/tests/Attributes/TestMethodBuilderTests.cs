@@ -229,8 +229,8 @@ namespace NUnit.Framework.Tests.Attributes
             new object[] { 12, 6, 2 }
         };
 
-        [DatapointSource]
 #pragma warning disable IDE0052 // Remove unread private members
+        [DatapointSource]
         private readonly int[] _ints = new int[] { 1, 2, 3 };
 #pragma warning restore IDE0052 // Remove unread private members
 
