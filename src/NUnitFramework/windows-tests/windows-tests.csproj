@@ -8,16 +8,23 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!-- Enable cross-platform build but only test on Windows -->
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <IsTestProject Condition="!$([MSBuild]::IsOSPlatform('Windows'))">false</IsTestProject>
+  </PropertyGroup>
+
+  <!-- On non-Windows: build empty assembly, no tests -->
+  <PropertyGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+    <IsTestProject>false</IsTestProject>
+    <!-- Don't compile any source files - they depend on Windows-only test utilities -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- Only needed on Windows where tests actually run -->
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
     <ProjectReference Include="..\tests\nunit.framework.tests.csproj" />
-   </ItemGroup>
+  </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="System.Windows.Forms" />
