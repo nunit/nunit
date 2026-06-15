@@ -79,7 +79,7 @@ namespace NUnit.Framework.Tests.TestUtilities
             }
         }
 
-        private EmitResult CompileCode(string code, Stream stream, string? assemblyName)
+        private EmitResult CompileCode(string code, Stream stream, string assemblyName)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create(
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Tests.TestUtilities
         public Assembly GenerateInMemoryAssembly(string code)
             => GenerateInMemoryAssembly(code, DefaultAssemblyName);
 
-        public Assembly GenerateInMemoryAssembly(string code, string? assemblyName)
+        public Assembly GenerateInMemoryAssembly(string code, string assemblyName)
         {
             using var ms = new MemoryStream();
             var result = CompileCode(code, ms, assemblyName);
