@@ -19,15 +19,15 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<predicate>";
         }
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[]
-        {
+        private static readonly object[] SuccessData =
+        [
             0,
             -5
-        };
-        private static readonly object[] FailureData = new object[]
-        {
+        ];
+        private static readonly object[] FailureData =
+        [
             new TestCaseData(123, "123")
-        };
+        ];
 #pragma warning restore IDE0052 // Remove unread private members
 
         [Test]

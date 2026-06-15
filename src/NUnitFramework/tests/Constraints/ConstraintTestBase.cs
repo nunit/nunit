@@ -52,7 +52,7 @@ namespace NUnit.Framework.Tests.Constraints
             var constraintResult = TheConstraint.ApplyTo(badValue);
             Assert.That(constraintResult.IsSuccess, Is.False);
 
-            TextMessageWriter writer = new TextMessageWriter();
+            var writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That(writer.ToString(), Does.Contain(ExpectedDescription).And.Contains(message));
         }
