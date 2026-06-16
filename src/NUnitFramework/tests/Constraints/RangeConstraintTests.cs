@@ -21,8 +21,10 @@ namespace NUnit.Framework.Tests.Constraints
             StringRepresentation = "<range 5 42>";
         }
 
-        private static readonly object[] SuccessData = new object[] { 5, 23, 42 };
-        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = [5, 23, 42];
+        private static readonly object[] FailureData = [new object[] { 4, "4" }, new object[] { 43, "43" }];
+#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(null)]
         [TestCase("xxx")]
@@ -70,7 +72,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void ChangingComparerTest()
         {
-            RangeConstraint test = new RangeConstraint(5, 42);
+            var test = new RangeConstraint(5, 42);
             Comparison<int> rComparer = (x, y) => y.CompareTo(x);
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
             Assert.DoesNotThrow(() => test.ApplyTo(7));
@@ -84,7 +86,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(NoIComparableTestCase))]
         public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj, object from, object to, System.Collections.IComparer comparer)
         {
-            RangeConstraint test = new RangeConstraint(from, to);
+            var test = new RangeConstraint(from, to);
             test.Using(comparer);
             test.ApplyTo(testObj);
         }

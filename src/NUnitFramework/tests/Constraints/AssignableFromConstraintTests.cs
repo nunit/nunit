@@ -28,9 +28,10 @@ namespace NUnit.Framework.Tests.Constraints
                 ExpectedDescription = $"assignable from <{typeof(TFrom)}>";
                 StringRepresentation = $"<assignablefrom {typeof(TFrom)}>";
             }
-
+#pragma warning disable IDE0052 // Remove unread private members
             private static readonly object[] SuccessData = [new TTo(), new TFrom(), new object()];
             private static readonly object[] FailureData = [new TestCaseData(new B(), "<" + typeof(B).FullName + ">")];
+#pragma warning restore IDE0052 // Remove unread private members
         }
 
         [TestCaseSource(nameof(SuccessCases))]
