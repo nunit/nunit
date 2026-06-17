@@ -842,8 +842,9 @@ namespace NUnit.Framework.Tests.Api
 
         private const int ExpectedDynamicTestCount = 2;
         private const string DynamicAssemblyName = "DynamicAssembly";
+        private const string DynamicNamespaceName = "DynamicNamespace";
         private const string DynamicCode = @"
-                namespace DynamicAssembly
+                namespace " + DynamicNamespaceName + @"
                 {
                     public class DynamicFixture
                     {
@@ -877,7 +878,7 @@ namespace NUnit.Framework.Tests.Api
             var suite = _runner.Load(asm, EmptySettings);
 
             Assert.That(suite.Name, Is.Not.Null.And.Not.Empty);
-            Assert.That(suite.Tests[0].Name, Is.EqualTo(DynamicAssemblyName));
+            Assert.That(suite.Tests[0].Name, Is.EqualTo(DynamicNamespaceName));
             Assert.That(suite.TestCaseCount, Is.EqualTo(ExpectedDynamicTestCount));
 
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
@@ -893,7 +894,7 @@ namespace NUnit.Framework.Tests.Api
                 properties like name, codebase, location, etc.
                 Structure of the contained class:
 
-                namespace DynamicAssembly
+                namespace DynamicNamespace
                 {
                     public class DynamicFixture
                     {
@@ -914,7 +915,7 @@ namespace NUnit.Framework.Tests.Api
 
             // Create the DynamicFixture class
             var typeBuilder = moduleBuilder.DefineType(
-                $"{DynamicAssemblyName}.DynamicFixture",
+                $"{DynamicNamespaceName}.DynamicFixture",
                 TypeAttributes.Public);
 
             CreateEmptyTestMethod(typeBuilder, "Test1");
