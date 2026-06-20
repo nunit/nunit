@@ -10,6 +10,24 @@ namespace NUnit.Framework.Constraints
     /// on a Type or other provider and that the value of the attribute
     /// satisfies some other constraint.
     /// </summary>
+    /// <typeparam name="T">The Type of attribute tested</typeparam>
+    public class AttributeConstraint<T> : AttributeConstraint
+        where T : Attribute
+    {
+        /// <summary>
+        /// Constructs an AttributeConstraint for the specified attribute type and base constraint.
+        /// </summary>
+        /// <param name="baseConstraint">The constraint to apply to the attribute</param>
+        public AttributeConstraint(IConstraint baseConstraint) : base(typeof(T), baseConstraint)
+        {
+        }
+    }
+
+    /// <summary>
+    /// AttributeConstraint tests that a specified attribute is present
+    /// on a Type or other provider and that the value of the attribute
+    /// satisfies some other constraint.
+    /// </summary>
     public class AttributeConstraint : PrefixConstraint
     {
         private readonly Type _expectedType;

@@ -9,6 +9,22 @@ namespace NUnit.Framework.Constraints
     /// AttributeExistsConstraint tests for the presence of a
     /// specified attribute on a Type.
     /// </summary>
+    /// <typeparam name="T">The Type of attribute tested</typeparam>
+    public class AttributeExistsConstraint<T> : AttributeExistsConstraint
+        where T : Attribute
+    {
+        /// <summary>
+        /// Constructs an AttributeExistsConstraint for the specified attribute type.
+        /// </summary>
+        public AttributeExistsConstraint() : base(typeof(T))
+        {
+        }
+    }
+
+    /// <summary>
+    /// AttributeExistsConstraint tests for the presence of a
+    /// specified attribute on a Type.
+    /// </summary>
     public class AttributeExistsConstraint : Constraint
     {
         private readonly Type _expectedType;

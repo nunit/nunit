@@ -7,6 +7,35 @@ namespace NUnit.Framework.Constraints
     /// Operator that tests for the presence of a particular attribute
     /// on a type and optionally applies further tests to the attribute.
     /// </summary>
+    /// <typeparam name="T">The Type of attribute tested</typeparam>
+    public class AttributeOperator<T> : AttributeOperator
+        where T : Attribute
+    {
+        /// <summary>
+        /// Construct an AttributeOperator for the attribute type T
+        /// </summary>
+        public AttributeOperator() : base(typeof(T))
+        {
+        }
+
+        /// <summary>
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
+        /// stack and pushes the resulting constraint on it.
+        /// </summary>
+        public override void Reduce(ConstraintBuilder.ConstraintStack stack)
+        {
+            if (RightContext is null || RightContext is BinaryOperator)
+                stack.Push(new AttributeExistsConstraint<T>());
+            else
+                stack.Push(new AttributeConstraint<T>(stack.Pop()));
+        }
+    }
+
+    /// <summary>
+    /// Operator that tests for the presence of a particular attribute
+    /// on a type and optionally applies further tests to the attribute.
+    /// </summary>
     public class AttributeOperator : SelfResolvingOperator
     {
         private readonly Type _type;
