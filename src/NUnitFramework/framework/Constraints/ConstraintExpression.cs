@@ -230,7 +230,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Message => Property("Message");
+        public ResolvableConstraintExpression Message => Property(nameof(Exception.Message));
 
         #endregion
 
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression InnerException => Property("InnerException");
+        public ResolvableConstraintExpression InnerException => Property(nameof(Exception.InnerException));
 
         #endregion
 
