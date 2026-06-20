@@ -78,12 +78,10 @@ namespace NUnit.Framework.Tests.TestUtilities
                 }
             }
         }
-        private EmitResult CompileCode(string code, Stream stream)
+
+        private EmitResult CompileCode(string code, Stream stream, string assemblyName)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-
-            var assemblyName = $"InMemoryAssembly_{Guid.NewGuid():N}";
-
             var compilation = CSharpCompilation.Create(
                 assemblyName,
                 syntaxTrees: [syntaxTree],
@@ -93,16 +91,21 @@ namespace NUnit.Framework.Tests.TestUtilities
             return compilation.Emit(stream);
         }
 
+        private string DefaultAssemblyName => $"InMemoryAssembly_{Guid.NewGuid():N}";
+
         public EmitResult CompileCode(string code)
         {
             using var ms = new MemoryStream();
-            return CompileCode(code, ms);
+            return CompileCode(code, ms, DefaultAssemblyName);
         }
 
         public Assembly GenerateInMemoryAssembly(string code)
+            => GenerateInMemoryAssembly(code, DefaultAssemblyName);
+
+        public Assembly GenerateInMemoryAssembly(string code, string assemblyName)
         {
             using var ms = new MemoryStream();
-            var result = CompileCode(code, ms);
+            var result = CompileCode(code, ms, assemblyName);
 
             if (result.Success)
             {

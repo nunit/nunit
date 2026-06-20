@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -835,6 +836,116 @@ namespace NUnit.Framework.Tests.Api
             });
         }
 
+        #endregion
+
+        #region Dynamic Assemblies
+
+        private const int ExpectedDynamicTestCount = 2;
+        private const string DynamicAssemblyName = "DynamicAssembly";
+        private const string DynamicNamespaceName = "DynamicNamespace";
+        private const string DynamicCode = @"
+                namespace " + DynamicNamespaceName + @"
+                {
+                    public class DynamicFixture
+                    {
+                        [NUnit.Framework.Test]
+                        public void Test1() { }
+
+                        [NUnit.Framework.Test]
+                        public void Test2() { }
+                    }
+                }
+        ";
+
+        [Test]
+        public void LoadAndRunDynamicAssembly_ReflectionEmit()
+        {
+            LoadAndRunDynamicAssembly(CreateDynamicAssembly_ReflectionEmit);
+        }
+
+        [Test]
+        public void LoadAndRunDynamicAssembly_Roslyn()
+        {
+            LoadAndRunDynamicAssembly(() => new TestCompiler().GenerateInMemoryAssembly(DynamicCode, DynamicAssemblyName));
+        }
+
+        private void LoadAndRunDynamicAssembly(Func<Assembly> assemblyGenerator)
+        {
+            var asm = assemblyGenerator();
+
+            Assert.That(asm.GetName().Name, Is.EqualTo(DynamicAssemblyName));
+
+            var suite = _runner.Load(asm, EmptySettings);
+
+            Assert.That(suite.Name, Is.Not.Null.And.Not.Empty);
+            Assert.That(suite.Tests[0].Name, Is.EqualTo(DynamicNamespaceName));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(ExpectedDynamicTestCount));
+
+            var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
+
+            Assert.That(result.PassCount, Is.EqualTo(ExpectedDynamicTestCount));
+            Assert.That(result.FailCount, Is.Zero);
+        }
+
+        private static Assembly CreateDynamicAssembly_ReflectionEmit()
+        {
+            /*
+                Builds an assembly and class dynamically so that we have full control over assembly attributes and
+                properties like name, codebase, location, etc.
+                Structure of the contained class:
+
+                namespace DynamicNamespace
+                {
+                    public class DynamicFixture
+                    {
+                        [NUnit.Framework.Test]
+                        public void Test1() { }
+                        [NUnit.Framework.Test]
+                        public void Test2() { }
+                }
+             */
+
+            // Create assembly and module
+            var assemblyName = new AssemblyName(DynamicAssemblyName);
+            var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
+                assemblyName,
+                AssemblyBuilderAccess.RunAndCollect);
+
+            var moduleBuilder = assemblyBuilder.DefineDynamicModule(DynamicAssemblyName);
+
+            // Create the DynamicFixture class
+            var typeBuilder = moduleBuilder.DefineType(
+                $"{DynamicNamespaceName}.DynamicFixture",
+                TypeAttributes.Public);
+
+            CreateEmptyTestMethod(typeBuilder, "Test1");
+            CreateEmptyTestMethod(typeBuilder, "Test2");
+
+            // Create the type
+            typeBuilder.CreateType();
+
+            return assemblyBuilder;
+
+            static void CreateEmptyTestMethod(TypeBuilder typeBuilder, string methodName)
+            {
+                var testAttributeType = typeof(TestAttribute);
+                var testAttributeConstructor = testAttributeType.GetConstructor(Type.EmptyTypes)!;
+
+                // Create method
+                var testMethod = typeBuilder.DefineMethod(
+                    methodName,
+                    MethodAttributes.Public,
+                    typeof(void),
+                    Type.EmptyTypes);
+
+                var testMethodIL = testMethod.GetILGenerator();
+                testMethodIL.Emit(OpCodes.Ret);
+
+                // Apply [Test] attribute to method
+                var testAttrBuilder = new CustomAttributeBuilder(testAttributeConstructor, Array.Empty<object>());
+                testMethod.SetCustomAttribute(testAttrBuilder);
+            }
+        }
         #endregion
     }
 }

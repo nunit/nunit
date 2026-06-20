@@ -55,10 +55,22 @@ namespace NUnit.Framework.Api
         {
             Log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
-            string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            string? suiteName = string.IsNullOrEmpty(assemblyPath) || assemblyPath.Equals("<Unknown>")
-                ? AssemblyHelper.GetAssemblyName(assembly).Name
-                : assemblyPath;
+            string? suiteName = assembly.GetName().Name;
+
+            try
+            {
+                string? assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
+
+                // Prioritize naming the suite after the assembly path instead of assembly name if possible
+                if (!string.IsNullOrEmpty(assemblyPath) && !assemblyPath.Equals("<Unknown>"))
+                {
+                    suiteName = assemblyPath;
+                }
+            }
+            catch (NotSupportedException)
+            {
+                // Can not infer assembly path for dynamically generated assemblies
+            }
 
             if (string.IsNullOrEmpty(suiteName))
             {
