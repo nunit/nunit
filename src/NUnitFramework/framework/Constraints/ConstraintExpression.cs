@@ -260,9 +260,13 @@ namespace NUnit.Framework.Constraints
         /// presence of a particular attribute on an object.
         /// </summary>
         public ResolvableConstraintExpression Attribute<TExpected>()
-            where TExpected : Attribute
         {
-            return Append(new AttributeOperator<TExpected>());
+            if (typeof(Attribute).IsAssignableFrom(typeof(TExpected)))
+            {
+                var operatorType = typeof(AttributeOperator<>).MakeGenericType(typeof(TExpected));
+                return Append((SelfResolvingOperator)Activator.CreateInstance(operatorType)!);
+            }
+            return Append(new AttributeOperator(typeof(TExpected)));
         }
 
         #endregion
