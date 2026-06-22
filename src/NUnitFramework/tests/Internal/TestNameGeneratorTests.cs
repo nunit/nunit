@@ -132,6 +132,84 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg });
         }
 
+        #region Issue 4826 - Invalid characters in test names
+
+        /// <summary>
+        /// Issue #4826: The Unicode non-character '\uffff' should be escaped in test names
+        /// to prevent downstream failures in test runners.
+        /// </summary>
+        [Test]
+        public void InvalidUnicodeCharacter_ShouldBeEscaped()
+        {
+            string invalidString = "test\uFFFFvalue";
+            string result = new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new object[] { invalidString });
+
+            // The '\uffff' character should be escaped, not passed through raw
+            Assert.That(result, Does.Not.Contain("\uFFFF"),
+                "Unicode non-character \\uFFFF should be escaped in test names");
+        }
+
+        /// <summary>
+        /// Issue #4826: Character parameters with invalid Unicode should be escaped.
+        /// </summary>
+        [Test]
+        public void InvalidUnicodeChar_ShouldBeEscaped()
+        {
+            char invalidChar = '\uFFFF';
+            string result = new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new object[] { invalidChar });
+
+            // The '\uffff' character should be escaped, not passed through raw
+            Assert.That(result, Does.Not.Contain("\uFFFF"),
+                "Unicode non-character \\uFFFF should be escaped in test names");
+        }
+
+        /// <summary>
+        /// Issue #4826: DEL (0x7F) control character should be escaped.
+        /// </summary>
+        [Test]
+        public void ControlCharacterDEL_ShouldBeEscaped()
+        {
+            // Test DEL character (0x7F) which is not handled by current EscapeControlChar
+            char delChar = '\x7F';
+            string testString = $"test{delChar}value";
+            string result = new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new object[] { testString });
+
+            // DEL character should be escaped, not passed through raw
+            Assert.That(result, Does.Not.Contain(delChar.ToString()),
+                "Control character DEL (\\x7F) should be escaped in test names");
+        }
+
+        /// <summary>
+        /// Issue #4826: SOH (Start of Heading) control character should be escaped.
+        /// </summary>
+        [Test]
+        public void ControlCharacterSOH_ShouldBeEscaped()
+        {
+            char controlChar = '\x01';
+            string testString = $"test{controlChar}value";
+            string result = new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new object[] { testString });
+
+            Assert.That(result, Does.Not.Contain(controlChar.ToString()),
+                "Control character SOH (\\x01) should be escaped in test names");
+        }
+
+        /// <summary>
+        /// Issue #4826: Unicode surrogate characters should be handled properly.
+        /// </summary>
+        [Test]
+        public void UnicodeSurrogateCharacter_ShouldBeEscaped()
+        {
+            // High surrogate without a low surrogate - invalid
+            string invalidSurrogate = "test\uD800value";
+            string result = new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new object[] { invalidSurrogate });
+
+            // Invalid surrogates should be escaped
+            Assert.That(result, Does.Not.Contain("\uD800"),
+                "Invalid surrogate character should be escaped in test names");
+        }
+
+        #endregion
+
         #region Methods Used as Data
 
         private void TestMethod()
