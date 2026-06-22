@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
@@ -246,6 +248,8 @@ namespace NUnit.Framework.Constraints
 
         #region Attribute
 
+        private static readonly ConcurrentDictionary<Type, Func<SelfResolvingOperator>> TypedAttributeOperatorFactories = new();
+
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.
@@ -263,11 +267,21 @@ namespace NUnit.Framework.Constraints
         {
             if (typeof(Attribute).IsAssignableFrom(typeof(TExpected)))
             {
-                var operatorType = typeof(AttributeOperator<>).MakeGenericType(typeof(TExpected));
-                return Append((SelfResolvingOperator)Activator.CreateInstance(operatorType)!);
+                var factory = TypedAttributeOperatorFactories.GetOrAdd(typeof(TExpected), static t =>
+                {
+                    var method = typeof(ConstraintExpression)
+                        .GetMethod(nameof(CreateTypedAttributeOperator), BindingFlags.Static | BindingFlags.NonPublic)!
+                        .MakeGenericMethod(t);
+                    return method.CreateDelegate<Func<SelfResolvingOperator>>();
+                });
+                return Append(factory());
             }
             return Append(new AttributeOperator(typeof(TExpected)));
         }
+
+        private static SelfResolvingOperator CreateTypedAttributeOperator<T>()
+            where T : Attribute
+            => new AttributeOperator<T>();
 
         #endregion
 
