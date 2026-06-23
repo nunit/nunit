@@ -27,6 +27,7 @@
             Supported platforms:
             - .NET Framework 4.6.2+
             - .NET 8.0+
+            - .NET 10.0+
         </description>
         <releaseNotes>See release notes at https://docs.nunit.org/articles/nunit/release-notes/framework.html</releaseNotes>
         <language>en-US</language>
@@ -38,6 +39,7 @@
                 <dependency id="System.ValueTuple" version="4.4.0" exclude="Build,Analyzers" />
             </group>
             <group targetFramework="net8.0" />
+            <group targetFramework="net10.0" />
         </dependencies>
     </metadata>
     <files>
@@ -58,6 +60,12 @@
         <file src="bin/net8.0/nunit.framework.legacy.dll" target="lib\net8.0" />
         <file src="bin/net8.0/nunit.framework.legacy.pdb" target="lib\net8.0" />
         <file src="bin/net8.0/nunit.framework.legacy.xml" target="lib\net8.0" />
+        <file src="bin/net10.0/nunit.framework.dll" target="lib\net10.0" />
+        <file src="bin/net10.0/nunit.framework.xml" target="lib\net10.0" />
+        <file src="bin/net10.0/nunit.framework.pdb" target="lib\net10.0" />
+        <file src="bin/net10.0/nunit.framework.legacy.dll" target="lib\net10.0" />
+        <file src="bin/net10.0/nunit.framework.legacy.xml" target="lib\net10.0" />
+        <file src="bin/net10.0/nunit.framework.legacy.pdb" target="lib\net10.0" />
         <file src="..\..\nuget\framework\NUnit.props" target="build" />
     </files>
 </package>
