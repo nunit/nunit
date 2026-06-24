@@ -356,4 +356,57 @@ namespace NUnit.TestData.RepeatingTests
             Assert.That(Count, Is.Not.EqualTo(2).And.Not.EqualTo(3));
         }
     }
+
+    public class RepeatWithThresholdAllPassFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, RequiredPassPercentage = 80)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    public class RepeatWithThresholdAboveThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 60)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
+
+    public class RepeatWithThresholdExactlyAtThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 80)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
+
+    public class RepeatWithThresholdBelowThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 80)]
+        public void FailsMostRuns()
+        {
+            Count++;
+            if (Count <= 3)
+                Assert.Fail("Deliberate failure");
+        }
+    }
+
+    public class RepeatWithThresholdStopOnFailureIgnoredFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = true, RequiredPassPercentage = 60)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
 }

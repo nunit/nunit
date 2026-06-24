@@ -9,7 +9,6 @@
 // #2 requires infrastructure for dynamic test cases first
 
 using System;
-using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -27,6 +26,13 @@ namespace NUnit.Framework
         /// Whether to stop when a test is not successful or not
         /// </summary>
         public bool StopOnFailure { get; set; }
+
+        /// <summary>
+        /// The minimum percentage of runs that must pass for the test to succeed.
+        /// Valid range is 1–100. Default is 100 (all runs must pass).
+        /// When set below 100, <see cref="StopOnFailure"/> is ignored and all runs always execute.
+        /// </summary>
+        public int RequiredPassPercentage { get; set; } = 100;
 
         /// <summary>
         /// Construct a RepeatAttribute
@@ -56,7 +62,10 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RepeatedTestCommand(command, _count, StopOnFailure);
+            if (RequiredPassPercentage is < 1 or > 100)
+                throw new ArgumentOutOfRangeException(nameof(RequiredPassPercentage), RequiredPassPercentage, "Must be between 1 and 100.");
+
+            return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage);
         }
 
         #endregion
@@ -70,6 +79,7 @@ namespace NUnit.Framework
         {
             private readonly int _repeatCount;
             private readonly bool _stopOnFailure;
+            private readonly int _requiredPassPercentage;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
@@ -77,11 +87,13 @@ namespace NUnit.Framework
             /// <param name="innerCommand">The inner command.</param>
             /// <param name="repeatCount">The number of repetitions</param>
             /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
-            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure)
+            /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage = 100)
                 : base(innerCommand)
             {
                 _repeatCount = repeatCount;
                 _stopOnFailure = stopOnFailure;
+                _requiredPassPercentage = requiredPassPercentage;
             }
 
             /// <summary>
@@ -91,52 +103,97 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
+                return _requiredPassPercentage < 100
+                    ? ExecuteWithThreshold(context)
+                    : ExecuteStandard(context);
+            }
+
+            private TestResult ExecuteStandard(TestExecutionContext context)
+            {
                 TestResult overallResult = context.CurrentTest.MakeTestResult();
-                StringBuilder totalOutput = new();
 
                 for (int count = 0; count < _repeatCount; count++)
                 {
-                    if (count != 0)
-                    {
-                        context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
-                    }
+                    TestResult iterationResult = ExecuteOneIteration(context, count);
 
-                    context.CurrentResult = context.CurrentTest.MakeTestResult();
-
-                    try
-                    {
-                        context.CurrentResult = innerCommand.Execute(context);
-                    }
-                    // Commands are supposed to catch exceptions, but some don't
-                    // and we want to look at restructuring the API in the future.
-                    catch (Exception ex)
-                    {
-                        context.CurrentResult.RecordException(ex);
-                    }
-
-                    // Update overall result
-                    foreach (var assertionResult in context.CurrentResult.AssertionResults)
+                    foreach (var assertionResult in iterationResult.AssertionResults)
                         overallResult.RecordAssertion(assertionResult);
-                    overallResult.AssertCount += context.CurrentResult.AssertCount;
+                    overallResult.AssertCount += iterationResult.AssertCount;
+                    overallResult.OutWriter.Write(iterationResult.Output);
 
-                    overallResult.OutWriter.Write(context.CurrentResult.Output);
+                    if (iterationResult.ResultState != ResultState.Success || count == 0)
+                        overallResult.SetResult(iterationResult.ResultState);
 
-                    if (context.CurrentResult.ResultState != ResultState.Success ||
-                        count == 0)
-                    {
-                        overallResult.SetResult(context.CurrentResult.ResultState);
-                    }
-
-                    if (context.CurrentResult.ResultState != ResultState.Success)
-                    {
-                        if (_stopOnFailure)
-                            break;
-                    }
+                    if (iterationResult.ResultState != ResultState.Success && _stopOnFailure)
+                        break;
                 }
 
                 if (overallResult.AssertionResultCount > 0)
                     overallResult.RecordTestCompletion();
                 context.CurrentResult = overallResult;
+
+                return context.CurrentResult;
+            }
+
+            private TestResult ExecuteWithThreshold(TestExecutionContext context)
+            {
+                int successCount = 0;
+
+                TestResult overallResult = context.CurrentTest.MakeTestResult();
+
+                for (int count = 0; count < _repeatCount; count++)
+                {
+                    TestResult iterationResult = ExecuteOneIteration(context, count);
+
+                    overallResult.AssertCount += iterationResult.AssertCount;
+                    overallResult.OutWriter.Write(iterationResult.Output);
+
+                    if (iterationResult.ResultState.Status == TestStatus.Passed)
+                    {
+                        successCount++;
+                    }
+                    else
+                    {
+                        foreach (var assertionResult in iterationResult.AssertionResults)
+                            overallResult.RecordAssertion(assertionResult);
+                    }
+                }
+
+                int passPercent = successCount * 100 / _repeatCount;
+
+                if (passPercent >= _requiredPassPercentage)
+                {
+                    overallResult.SetResult(ResultState.Success);
+                    if (successCount < _repeatCount)
+                        overallResult.OutWriter.WriteLine($"{successCount} of {_repeatCount} runs passed ({passPercent}%), meeting the required {_requiredPassPercentage}% pass threshold.");
+                }
+                else
+                {
+                    overallResult.SetResult(ResultState.Failure,
+                        $"{successCount} of {_repeatCount} runs passed ({passPercent}%), below the required {_requiredPassPercentage}% pass threshold.");
+                }
+
+                context.CurrentResult = overallResult;
+                return context.CurrentResult;
+            }
+
+            private TestResult ExecuteOneIteration(TestExecutionContext context, int count)
+            {
+                if (count != 0)
+                    context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+
+                context.CurrentResult = context.CurrentTest.MakeTestResult();
+
+                try
+                {
+                    context.CurrentResult = innerCommand.Execute(context);
+                }
+                // Commands are supposed to catch exceptions, but some don't
+                // and we want to look at restructuring the API in the future.
+                catch (Exception ex)
+                {
+                    context.CurrentResult.RecordException(ex);
+                }
 
                 return context.CurrentResult;
             }

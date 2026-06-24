@@ -235,5 +235,98 @@ namespace NUnit.Framework.Tests.Attributes
                                             .Contain("But was:  2").And
                                             .Contain("But was:  3"));
         }
+
+        [Test]
+        public void RepeatWithThresholdAllPassReportsSuccess_Issue5220()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatWithThresholdAllPassFixture));
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(fixture.Count, Is.EqualTo(5));
+                Assert.That(result.Output, Does.Not.Contain("pass threshold"));
+            });
+        }
+
+        [Test]
+        public void RepeatWithThresholdAboveThresholdReportsPassed_Issue5220()
+        {
+            var fixture = new RepeatWithThresholdAboveThresholdFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithThresholdAboveThresholdFixture.FailsOnce));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(fixture.Count, Is.EqualTo(5), "All 5 runs should execute when threshold < 100");
+                Assert.That(result.Output, Does.Contain("4 of 5 runs passed").And.Contain("meeting the required 60% pass threshold"));
+            });
+        }
+
+        [Test]
+        public void RepeatWithThresholdExactlyAtThresholdReportsPassed_Issue5220()
+        {
+            var fixture = new RepeatWithThresholdExactlyAtThresholdFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithThresholdExactlyAtThresholdFixture.FailsOnce));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(fixture.Count, Is.EqualTo(5));
+                Assert.That(result.Output, Does.Contain("4 of 5 runs passed (80%), meeting the required 80% pass threshold"));
+            });
+        }
+
+        [Test]
+        public void RepeatWithThresholdBelowThresholdReportsFailed_Issue5220()
+        {
+            var fixture = new RepeatWithThresholdBelowThresholdFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithThresholdBelowThresholdFixture.FailsMostRuns));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(fixture.Count, Is.EqualTo(5), "All 5 runs should execute even when failing");
+
+                // The threshold message must be the primary message, not the generic "Multiple failures" text
+                // that RecordTestCompletion would produce if it were the final result-setter.
+                Assert.That(result.Message, Does.Contain("below the required 80% pass threshold")
+                                               .And.Not.Contain("Multiple failures or warnings in test"));
+
+                // The individual assertion results from each failing run must be preserved in the result
+                // so that IDE test runners can show per-run failure details.
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(3),
+                    "Expected one AssertionResult per failing run (3 of 5 runs fail)");
+                Assert.That(result.AssertionResults, Has.All.Property(nameof(AssertionResult.Status))
+                                                              .EqualTo(AssertionStatus.Failed));
+            });
+        }
+
+        [Test]
+        public void RepeatWithThresholdStopOnFailureIsIgnoredWhenThresholdSet_Issue5220()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatWithThresholdStopOnFailureIgnoredFixture));
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(fixture.Count, Is.EqualTo(5), "StopOnFailure should be ignored when RequiredPassPercentage < 100");
+            });
+        }
+
+        [TestCase(0)]
+        [TestCase(101)]
+        public void RepeatWithThresholdInvalidPercentageThrows_Issue5220(int invalidPercentage)
+        {
+            var attr = new RepeatAttribute(3) { RequiredPassPercentage = invalidPercentage };
+            var testMethod = TestBuilder.MakeTestCase(
+                typeof(FixtureWithMultipleRepeatAttributesOnSameMethod),
+                nameof(FixtureWithMultipleRepeatAttributesOnSameMethod.MethodWithMultipleRepeatAttributes));
+            var command = new TestMethodCommand(testMethod);
+
+            Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
     }
 }
