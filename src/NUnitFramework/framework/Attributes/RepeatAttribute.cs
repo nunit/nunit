@@ -62,6 +62,9 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
+            if (_count < 1)
+                throw new ArgumentOutOfRangeException("count", _count, "Must be at least 1.");
+
             if (RequiredPassPercentage is < 1 or > 100)
                 throw new ArgumentOutOfRangeException(nameof(RequiredPassPercentage), RequiredPassPercentage, "Must be between 1 and 100.");
 
@@ -87,8 +90,19 @@ namespace NUnit.Framework
             /// <param name="innerCommand">The inner command.</param>
             /// <param name="repeatCount">The number of repetitions</param>
             /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure)
+                : this(innerCommand, repeatCount, stopOnFailure, 100)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+            /// </summary>
+            /// <param name="innerCommand">The inner command.</param>
+            /// <param name="repeatCount">The number of repetitions</param>
+            /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
             /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
-            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage = 100)
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage)
                 : base(innerCommand)
             {
                 _repeatCount = repeatCount;

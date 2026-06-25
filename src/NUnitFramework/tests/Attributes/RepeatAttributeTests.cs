@@ -328,5 +328,18 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void RepeatWithZeroOrNegativeCountThrows(int invalidCount)
+        {
+            var attr = new RepeatAttribute(invalidCount);
+            var testMethod = TestBuilder.MakeTestCase(
+                typeof(FixtureWithMultipleRepeatAttributesOnSameMethod),
+                nameof(FixtureWithMultipleRepeatAttributesOnSameMethod.MethodWithMultipleRepeatAttributes));
+            var command = new TestMethodCommand(testMethod);
+
+            Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
     }
 }
