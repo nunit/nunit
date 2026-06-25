@@ -110,23 +110,13 @@ namespace NUnit.Framework
 
             private TestResult ExecuteStandard(TestExecutionContext context)
             {
-                TestResult overallResult = context.CurrentTest.MakeTestResult();
-
-                for (int count = 0; count < _repeatCount; count++)
+                (TestResult overallResult, _) = RunIterations(context, (overall, iterationResult, count) =>
                 {
-                    TestResult iterationResult = ExecuteOneIteration(context, count);
-
-                    foreach (var assertionResult in iterationResult.AssertionResults)
-                        overallResult.RecordAssertion(assertionResult);
-                    overallResult.AssertCount += iterationResult.AssertCount;
-                    overallResult.OutWriter.Write(iterationResult.Output);
-
                     if (iterationResult.ResultState != ResultState.Success || count == 0)
-                        overallResult.SetResult(iterationResult.ResultState);
+                        overall.SetResult(iterationResult.ResultState);
 
-                    if (iterationResult.ResultState != ResultState.Success && _stopOnFailure)
-                        break;
-                }
+                    return iterationResult.ResultState != ResultState.Success && _stopOnFailure;
+                });
 
                 if (overallResult.AssertionResultCount > 0)
                     overallResult.RecordTestCompletion();
@@ -137,27 +127,7 @@ namespace NUnit.Framework
 
             private TestResult ExecuteWithThreshold(TestExecutionContext context)
             {
-                int successCount = 0;
-
-                TestResult overallResult = context.CurrentTest.MakeTestResult();
-
-                for (int count = 0; count < _repeatCount; count++)
-                {
-                    TestResult iterationResult = ExecuteOneIteration(context, count);
-
-                    overallResult.AssertCount += iterationResult.AssertCount;
-                    overallResult.OutWriter.Write(iterationResult.Output);
-
-                    if (iterationResult.ResultState.Status == TestStatus.Passed)
-                    {
-                        successCount++;
-                    }
-                    else
-                    {
-                        foreach (var assertionResult in iterationResult.AssertionResults)
-                            overallResult.RecordAssertion(assertionResult);
-                    }
-                }
+                (TestResult overallResult, int successCount) = RunIterations(context, (_, _, _) => false);
 
                 int passPercent = successCount * 100 / _repeatCount;
 
@@ -175,6 +145,37 @@ namespace NUnit.Framework
 
                 context.CurrentResult = overallResult;
                 return context.CurrentResult;
+            }
+
+            // processIteration(overallResult, iterationResult, count) returns true to stop early.
+            private (TestResult overallResult, int successCount) RunIterations(
+                TestExecutionContext context, Func<TestResult, TestResult, int, bool> processIteration)
+            {
+                TestResult overallResult = context.CurrentTest.MakeTestResult();
+                int successCount = 0;
+
+                for (int count = 0; count < _repeatCount; count++)
+                {
+                    TestResult iterationResult = ExecuteOneIteration(context, count);
+
+                    overallResult.AssertCount += iterationResult.AssertCount;
+                    overallResult.OutWriter.Write(iterationResult.Output);
+
+                    if (iterationResult.ResultState != ResultState.Success)
+                    {
+                        foreach (var assertionResult in iterationResult.AssertionResults)
+                            overallResult.RecordAssertion(assertionResult);
+                    }
+                    else
+                    {
+                        successCount++;
+                    }
+
+                    if (processIteration(overallResult, iterationResult, count))
+                        break;
+                }
+
+                return (overallResult, successCount);
             }
 
             private TestResult ExecuteOneIteration(TestExecutionContext context, int count)
