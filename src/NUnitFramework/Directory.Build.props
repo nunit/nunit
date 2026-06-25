@@ -19,7 +19,7 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NUnitLibraryFrameworks>net462;net8.0</NUnitLibraryFrameworks>
+    <NUnitLibraryFrameworks>net462;net8.0;net10.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;net8.0;net9.0;net10.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
