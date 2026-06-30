@@ -62,12 +62,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            if (_count < 1)
-                throw new ArgumentOutOfRangeException("count", _count, "Must be at least 1.");
-
-            if (RequiredPassPercentage is < 1 or > 100)
-                throw new ArgumentOutOfRangeException(nameof(RequiredPassPercentage), RequiredPassPercentage, "Must be between 1 and 100.");
-
+            
             return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage);
         }
 
@@ -105,6 +100,12 @@ namespace NUnit.Framework
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage)
                 : base(innerCommand)
             {
+                if (repeatCount < 1)
+                    throw new ArgumentOutOfRangeException("repeatCount", repeatCount, "Must be at least 1.");
+
+                if (requiredPassPercentage is < 1 or > 100)
+                    throw new ArgumentOutOfRangeException(nameof(requiredPassPercentage), requiredPassPercentage, "Must be between 1 and 100.");
+
                 _repeatCount = repeatCount;
                 _stopOnFailure = stopOnFailure;
                 _requiredPassPercentage = requiredPassPercentage;
