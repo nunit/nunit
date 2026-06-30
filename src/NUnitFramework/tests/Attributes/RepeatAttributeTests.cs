@@ -304,15 +304,17 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void RepeatWithThresholdStopOnFailureIsIgnoredWhenThresholdSet_Issue5220()
+        public void RepeatWithThresholdStopOnFailureIsNormalisedToFalse_Issue5220()
         {
-            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatWithThresholdStopOnFailureIgnoredFixture));
-            ITestResult result = TestBuilder.RunTestFixture(fixture);
+            // StopOnFailure defaults to true, so [Repeat(n, RequiredPassPercentage=x)] must work
+            // without requiring the user to also write StopOnFailure=false explicitly.
+            var fixture = new RepeatWithThresholdStopOnFailureIgnoredFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithThresholdStopOnFailureIgnoredFixture.FailsOnce));
 
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                Assert.That(fixture.Count, Is.EqualTo(5), "StopOnFailure should be ignored when RequiredPassPercentage < 100");
+                Assert.That(fixture.Count, Is.EqualTo(5), "All 5 runs must execute — StopOnFailure was normalised to false");
             });
         }
 
