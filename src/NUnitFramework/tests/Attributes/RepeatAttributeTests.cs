@@ -331,6 +331,38 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
+        [Test]
+        public void RepeatWithStopWhenDeterminedStopsEarlyOnGuaranteedSuccess_Issue5220()
+        {
+            // 10 runs, 80% threshold: after 8 passing runs the threshold is guaranteed regardless
+            // of the remaining 2, so iteration stops at run 8.
+            var fixture = new RepeatWithStopWhenDeterminedEarlySuccessFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithStopWhenDeterminedEarlySuccessFixture.AlwaysPasses));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(fixture.Count, Is.EqualTo(8), "Should stop after 8 runs — threshold already guaranteed");
+                Assert.That(result.Output, Does.Contain("Stopped after 8 of 10 runs").And.Contain("already meet the required 80% threshold"));
+            });
+        }
+
+        [Test]
+        public void RepeatWithStopWhenDeterminedStopsEarlyOnImpossibleSuccess_Issue5220()
+        {
+            // 10 runs, 80% threshold: after 3 failing runs the best possible is 7/10=70%, below
+            // the required 80%, so iteration stops at run 3.
+            var fixture = new RepeatWithStopWhenDeterminedEarlyFailureFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithStopWhenDeterminedEarlyFailureFixture.AlwaysFails));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(fixture.Count, Is.EqualTo(3), "Should stop after 3 runs — threshold no longer achievable");
+                Assert.That(result.Message, Does.Contain("Stopped after 3 of 10 runs").And.Contain("no longer achievable"));
+            });
+        }
+
         [TestCase(0)]
         [TestCase(-1)]
         public void RepeatWithZeroOrNegativeCountThrows(int invalidCount)

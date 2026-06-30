@@ -35,6 +35,14 @@ namespace NUnit.Framework
         public int RequiredPassPercentage { get; set; } = 100;
 
         /// <summary>
+        /// When <see langword="true"/> and <see cref="RequiredPassPercentage"/> is below 100,
+        /// stops iterating as soon as the final outcome is determined — either because the
+        /// pass threshold is already guaranteed, or because it is no longer achievable.
+        /// Has no effect when <see cref="RequiredPassPercentage"/> is 100.
+        /// </summary>
+        public bool StopWhenOverallResultDetermined { get; set; }
+
+        /// <summary>
         /// Construct a RepeatAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
@@ -62,7 +70,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage);
+            return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage, StopWhenOverallResultDetermined);
         }
 
         #endregion
@@ -77,6 +85,7 @@ namespace NUnit.Framework
             private readonly int _repeatCount;
             private readonly bool _stopOnFailure;
             private readonly int _requiredPassPercentage;
+            private readonly bool _stopWhenOverallResultDetermined;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
@@ -85,7 +94,7 @@ namespace NUnit.Framework
             /// <param name="repeatCount">The number of repetitions</param>
             /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure)
-                : this(innerCommand, repeatCount, stopOnFailure, 100)
+                : this(innerCommand, repeatCount, stopOnFailure, 100, false)
             {
             }
 
@@ -97,6 +106,19 @@ namespace NUnit.Framework
             /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
             /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage)
+                : this(innerCommand, repeatCount, stopOnFailure, requiredPassPercentage, false)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+            /// </summary>
+            /// <param name="innerCommand">The inner command.</param>
+            /// <param name="repeatCount">The number of repetitions</param>
+            /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
+            /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
+            /// <param name="stopWhenOverallResultDetermined">Stop as soon as success or failure is guaranteed</param>
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage, bool stopWhenOverallResultDetermined)
                 : base(innerCommand)
             {
                 if (repeatCount < 1)
@@ -109,6 +131,7 @@ namespace NUnit.Framework
                 // When a pass threshold is set, all iterations must run regardless of StopOnFailure.
                 _stopOnFailure = requiredPassPercentage == 100 && stopOnFailure;
                 _requiredPassPercentage = requiredPassPercentage;
+                _stopWhenOverallResultDetermined = stopWhenOverallResultDetermined;
             }
 
             /// <summary>
@@ -125,7 +148,7 @@ namespace NUnit.Framework
 
             private TestResult ExecuteStandard(TestExecutionContext context)
             {
-                (TestResult overallResult, _) = RunIterations(context, (overall, iterationResult, count) =>
+                (TestResult overallResult, _, _) = RunIterations(context, (overall, iterationResult, count, _) =>
                 {
                     if (iterationResult.ResultState != ResultState.Success || count == 0)
                         overall.SetResult(iterationResult.ResultState);
@@ -142,32 +165,47 @@ namespace NUnit.Framework
 
             private TestResult ExecuteWithThreshold(TestExecutionContext context)
             {
-                (TestResult overallResult, int successCount) = RunIterations(context, (_, _, _) => false);
+                (TestResult overallResult, int successCount, int runsCompleted) = RunIterations(context,
+                    (_, _, count, currentSuccessCount) =>
+                    {
+                        if (!_stopWhenOverallResultDetermined)
+                            return false;
+                        int completed = count + 1;
+                        int remaining = _repeatCount - completed;
+                        return currentSuccessCount * 100 / _repeatCount >= _requiredPassPercentage
+                            || (currentSuccessCount + remaining) * 100 / _repeatCount < _requiredPassPercentage;
+                    });
 
                 int passPercent = successCount * 100 / _repeatCount;
+                bool stoppedEarly = runsCompleted < _repeatCount;
 
                 if (passPercent >= _requiredPassPercentage)
                 {
                     overallResult.SetResult(ResultState.Success);
-                    if (successCount < _repeatCount)
+                    if (stoppedEarly)
+                        overallResult.OutWriter.WriteLine($"Stopped after {runsCompleted} of {_repeatCount} runs: {successCount} passes already meet the required {_requiredPassPercentage}% threshold.");
+                    else if (successCount < _repeatCount)
                         overallResult.OutWriter.WriteLine($"{successCount} of {_repeatCount} runs passed ({passPercent}%), meeting the required {_requiredPassPercentage}% pass threshold.");
                 }
                 else
                 {
-                    overallResult.SetResult(ResultState.Failure,
-                        $"{successCount} of {_repeatCount} runs passed ({passPercent}%), below the required {_requiredPassPercentage}% pass threshold.");
+                    string message = stoppedEarly
+                        ? $"Stopped after {runsCompleted} of {_repeatCount} runs: the required {_requiredPassPercentage}% threshold is no longer achievable."
+                        : $"{successCount} of {_repeatCount} runs passed ({passPercent}%), below the required {_requiredPassPercentage}% pass threshold.";
+                    overallResult.SetResult(ResultState.Failure, message);
                 }
 
                 context.CurrentResult = overallResult;
                 return context.CurrentResult;
             }
 
-            // processIteration(overallResult, iterationResult, count) returns true to stop early.
-            private (TestResult overallResult, int successCount) RunIterations(
-                TestExecutionContext context, Func<TestResult, TestResult, int, bool> processIteration)
+            // processIteration(overallResult, iterationResult, count, successCount) returns true to stop early.
+            private (TestResult overallResult, int successCount, int runsCompleted) RunIterations(
+                TestExecutionContext context, Func<TestResult, TestResult, int, int, bool> processIteration)
             {
                 TestResult overallResult = context.CurrentTest.MakeTestResult();
                 int successCount = 0;
+                int runsCompleted = 0;
 
                 for (int count = 0; count < _repeatCount; count++)
                 {
@@ -186,11 +224,12 @@ namespace NUnit.Framework
                         successCount++;
                     }
 
-                    if (processIteration(overallResult, iterationResult, count))
+                    runsCompleted = count + 1;
+                    if (processIteration(overallResult, iterationResult, count, successCount))
                         break;
                 }
 
-                return (overallResult, successCount);
+                return (overallResult, successCount, runsCompleted);
             }
 
             private TestResult ExecuteOneIteration(TestExecutionContext context, int count)
@@ -204,7 +243,7 @@ namespace NUnit.Framework
                 {
                     context.CurrentResult = innerCommand.Execute(context);
                 }
-                // Commands are supposed to catch exceptions, but some don't
+                // Commands are supposed to catch exceptions, but some don't,
                 // and we want to look at restructuring the API in the future.
                 catch (Exception ex)
                 {

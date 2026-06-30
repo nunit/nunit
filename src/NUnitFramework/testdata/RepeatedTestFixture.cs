@@ -409,4 +409,25 @@ namespace NUnit.TestData.RepeatingTests
                 Assert.Fail("Deliberate failure on first run");
         }
     }
+
+    // Count=10, threshold=80%: stops early at run 8 (8 successes already guarantee 80% of 10)
+    public class RepeatWithStopWhenDeterminedEarlySuccessFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(10, RequiredPassPercentage = 80, StopWhenOverallResultDetermined = true)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // Count=10, threshold=80%: stops early at run 3 (max achievable drops to 7/10=70%, below 80%)
+    public class RepeatWithStopWhenDeterminedEarlyFailureFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(10, RequiredPassPercentage = 80, StopWhenOverallResultDetermined = true)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("Deliberate failure");
+        }
+    }
 }
