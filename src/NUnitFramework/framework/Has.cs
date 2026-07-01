@@ -150,8 +150,9 @@ namespace NUnit.Framework
         /// presence of a particular attribute on an object.
         /// </summary>
         public static ResolvableConstraintExpression Attribute<T>()
+            where T : Attribute
         {
-            return Attribute(typeof(T));
+            return new ConstraintExpression().Attribute<T>();
         }
 
         #endregion

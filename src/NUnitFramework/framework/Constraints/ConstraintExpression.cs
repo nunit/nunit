@@ -260,6 +260,7 @@ namespace NUnit.Framework.Constraints
         /// presence of a particular attribute on an object.
         /// </summary>
         public ResolvableConstraintExpression Attribute<TExpected>()
+            where TExpected : Attribute
         {
             return Attribute(typeof(TExpected));
         }
