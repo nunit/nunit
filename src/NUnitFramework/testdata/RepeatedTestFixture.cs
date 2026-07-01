@@ -430,4 +430,103 @@ namespace NUnit.TestData.RepeatingTests
             Assert.Fail("Deliberate failure");
         }
     }
+
+    // -------------------------------------------------------------------------
+    // Fixtures for StopOnFailure dual-property behaviour table (Issue #5220)
+    // -------------------------------------------------------------------------
+
+    // Row 1: [Repeat(5)] — StopOnFailure not set; defaults true via constructor chain
+    public class StopOnFailureDualProp_Row1_DefaultFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("deliberate");
+        }
+    }
+
+    // Row 2: [Repeat(5, false)] — false supplied as constructor argument
+    public class StopOnFailureDualProp_Row2_CtorFalseFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, false)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("deliberate");
+        }
+    }
+
+    // Row 3: [Repeat(5, StopOnFailure=false)] — false set via property
+    public class StopOnFailureDualProp_Row3_PropertyFalseFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("deliberate");
+        }
+    }
+
+    // Row 4: [Repeat(5, StopOnFailure=true)] — true set via property
+    public class StopOnFailureDualProp_Row4_PropertyTrueFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = true)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("deliberate");
+        }
+    }
+
+    // Row 5: [Repeat(5, RequiredPassPercentage=80)] — threshold, StopOnFailure not explicitly set
+    public class StopOnFailureDualProp_Row5_ThresholdDefaultFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, RequiredPassPercentage = 80)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // Row 6: [Repeat(5, StopOnFailure=false, RequiredPassPercentage=80)] — threshold, explicit false
+    public class StopOnFailureDualProp_Row6_ThresholdExplicitFalseFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 80)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // Row 7: [Repeat(5, StopOnFailure=true, RequiredPassPercentage=80)] — should produce ResultState.Error
+    public class StopOnFailureDualProp_Row7_ThresholdExplicitTrueFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = true, RequiredPassPercentage = 80)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // RequiredPassPercentage = 0 — out of range, Wrap() throws ArgumentOutOfRangeException
+    // which the framework catches and surfaces as ResultState.Error.
+    public class RepeatWithInvalidPercentageBelowRangeFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, RequiredPassPercentage = 0)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // RequiredPassPercentage = 101 — out of range, same Error path.
+    public class RepeatWithInvalidPercentageAboveRangeFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3, RequiredPassPercentage = 101)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
 }

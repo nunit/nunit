@@ -22,10 +22,24 @@ namespace NUnit.Framework
     public class RepeatAttribute : PropertyAttribute, IRepeatTest
     {
         private readonly int _count;
+        private readonly bool _stopOnFailureDefault;
+        private bool _stopOnFailureExplicit;
+        private bool _stopOnFailureValue;
+
         /// <summary>
-        /// Whether to stop when a test is not successful or not
+        /// Whether to stop when a test is not successful or not.
+        /// Setting this property explicitly is tracked separately from the constructor default
+        /// so that <see cref="Wrap"/> can detect a conflict with <see cref="RequiredPassPercentage"/>.
         /// </summary>
-        public bool StopOnFailure { get; set; }
+        public bool StopOnFailure
+        {
+            get => _stopOnFailureExplicit ? _stopOnFailureValue : _stopOnFailureDefault;
+            set
+            {
+                _stopOnFailureExplicit = true;
+                _stopOnFailureValue = value;
+            }
+        }
 
         /// <summary>
         /// The minimum percentage of runs that must pass for the test to succeed.
@@ -46,8 +60,10 @@ namespace NUnit.Framework
         /// Construct a RepeatAttribute
         /// </summary>
         /// <param name="count">The number of times to run the test</param>
-        public RepeatAttribute(int count) : this(count, true)
+        public RepeatAttribute(int count) : base(count)
         {
+            _count = count;
+            _stopOnFailureDefault = true;
         }
 
         /// <summary>
@@ -58,7 +74,7 @@ namespace NUnit.Framework
         public RepeatAttribute(int count, bool stopOnFailure) : base(count)
         {
             _count = count;
-            StopOnFailure = stopOnFailure;
+            _stopOnFailureDefault = stopOnFailure;
         }
 
         #region IRepeatTest Members
@@ -70,7 +86,11 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage, StopWhenOverallResultDetermined);
+            string? configurationError = null;
+            if (_stopOnFailureExplicit && StopOnFailure && RequiredPassPercentage < 100)
+                configurationError = $"StopOnFailure=true conflicts with RequiredPassPercentage={RequiredPassPercentage}. When a pass threshold is set, all iterations must run. Remove StopOnFailure=true or remove RequiredPassPercentage.";
+
+            return new RepeatedTestCommand(command, _count, StopOnFailure, RequiredPassPercentage, StopWhenOverallResultDetermined, configurationError);
         }
 
         #endregion
@@ -86,6 +106,7 @@ namespace NUnit.Framework
             private readonly bool _stopOnFailure;
             private readonly int _requiredPassPercentage;
             private readonly bool _stopWhenOverallResultDetermined;
+            private readonly string? _configurationError;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
@@ -119,6 +140,20 @@ namespace NUnit.Framework
             /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
             /// <param name="stopWhenOverallResultDetermined">Stop as soon as success or failure is guaranteed</param>
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage, bool stopWhenOverallResultDetermined)
+                : this(innerCommand, repeatCount, stopOnFailure, requiredPassPercentage, stopWhenOverallResultDetermined, null)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.
+            /// </summary>
+            /// <param name="innerCommand">The inner command.</param>
+            /// <param name="repeatCount">The number of repetitions</param>
+            /// <param name="stopOnFailure">Whether to stop when a test is not successful or not</param>
+            /// <param name="requiredPassPercentage">Minimum percentage of runs that must pass (1–100)</param>
+            /// <param name="stopWhenOverallResultDetermined">Stop as soon as success or failure is guaranteed</param>
+            /// <param name="configurationError">When non-null, Execute returns this error without running any iterations</param>
+            public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage, bool stopWhenOverallResultDetermined, string? configurationError)
                 : base(innerCommand)
             {
                 if (repeatCount < 1)
@@ -132,6 +167,7 @@ namespace NUnit.Framework
                 _stopOnFailure = requiredPassPercentage == 100 && stopOnFailure;
                 _requiredPassPercentage = requiredPassPercentage;
                 _stopWhenOverallResultDetermined = stopWhenOverallResultDetermined;
+                _configurationError = configurationError;
             }
 
             /// <summary>
@@ -141,6 +177,12 @@ namespace NUnit.Framework
             /// <returns>A TestResult</returns>
             public override TestResult Execute(TestExecutionContext context)
             {
+                if (_configurationError is not null)
+                {
+                    context.CurrentResult.SetResult(ResultState.Error, _configurationError);
+                    return context.CurrentResult;
+                }
+
                 return _requiredPassPercentage < 100
                     ? ExecuteWithThreshold(context)
                     : ExecuteStandard(context);

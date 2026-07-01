@@ -306,15 +306,16 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void RepeatWithThresholdStopOnFailureIsNormalisedToFalse_Issue5220()
         {
-            // StopOnFailure defaults to true, so [Repeat(n, RequiredPassPercentage=x)] must work
-            // without requiring the user to also write StopOnFailure=false explicitly.
+            // Explicitly setting StopOnFailure=true alongside RequiredPassPercentage < 100
+            // is a configuration error: the two settings contradict each other.
+            // The test must produce ResultState.Error and never run the test method.
             var fixture = new RepeatWithThresholdStopOnFailureIgnoredFixture();
             ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithThresholdStopOnFailureIgnoredFixture.FailsOnce));
 
             Assert.Multiple(() =>
             {
-                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                Assert.That(fixture.Count, Is.EqualTo(5), "All 5 runs must execute — StopOnFailure was normalised to false");
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(fixture.Count, Is.EqualTo(0), "Test method must not run when configuration is invalid");
             });
         }
 
@@ -329,6 +330,36 @@ namespace NUnit.Framework.Tests.Attributes
             var command = new TestMethodCommand(testMethod);
 
             Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void RepeatWithRequiredPassPercentageBelowRange_ProducesError_Issue5220()
+        {
+            // RequiredPassPercentage=0 causes Wrap() to throw; the framework catches it and
+            // records ResultState.Error. The test method must never run.
+            var fixture = new RepeatWithInvalidPercentageBelowRangeFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithInvalidPercentageBelowRangeFixture.AlwaysPasses));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(fixture.Count, Is.EqualTo(0), "Test method must not run when configuration is invalid");
+            });
+        }
+
+        [Test]
+        public void RepeatWithRequiredPassPercentageAboveRange_ProducesError_Issue5220()
+        {
+            // RequiredPassPercentage=101 causes Wrap() to throw; the framework catches it and
+            // records ResultState.Error. The test method must never run.
+            var fixture = new RepeatWithInvalidPercentageAboveRangeFixture();
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatWithInvalidPercentageAboveRangeFixture.AlwaysPasses));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(fixture.Count, Is.EqualTo(0), "Test method must not run when configuration is invalid");
+            });
         }
 
         [Test]
