@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -56,7 +57,12 @@ class SomeClass
             var compiler = new TestCompiler();
             var results = compiler.CompileCode(code);
 
-            Assert.That(results.Success, Is.False, "Code fragment with Has.Attribute<string>() should not compile but it did");
+            Assert.That(results.Success, Is.False, "Code fragment with Has.Attribute<string>() should not compile but it did.");
+
+            var expectedFailure = results.Diagnostics.FirstOrDefault(x => x.Id == "CS0311");
+
+            Assert.That(expectedFailure, Is.Not.Null, "Expected compiler error 'CS0311' for violating generic type constraint.");
+            Assert.That(expectedFailure.GetMessage(), Does.Contain("There is no implicit reference conversion from 'string' to 'System.Attribute'."));
         }
 
         [Custom]
