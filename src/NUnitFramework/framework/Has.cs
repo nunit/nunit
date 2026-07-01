@@ -151,7 +151,7 @@ namespace NUnit.Framework
         /// </summary>
         public static ResolvableConstraintExpression Attribute<T>()
         {
-            return Attribute(typeof(T));
+            return new ConstraintExpression().Attribute<T>();
         }
 
         #endregion
