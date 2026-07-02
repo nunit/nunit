@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable CS3024 // Constraint type is not CLS-compliant
     public class EqualNumericWithoutUsingConstraint<T> : Constraint
 #pragma warning restore CS3024 // Constraint type is not CLS-compliant
-        where T : unmanaged, IConvertible
+        where T : struct, IConvertible
     {
         #region Static and Instance Fields
 
