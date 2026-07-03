@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.TestUtilities
@@ -13,11 +12,11 @@ namespace NUnit.Framework.Tests.TestUtilities
         {
         }
 
-        public override string Description => throw new NotImplementedException();
+        public override string Description => string.Empty;
 
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual);
+            return new ConstraintResult(this, actual, true);
         }
     }
 }
