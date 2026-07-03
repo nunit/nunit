@@ -356,4 +356,78 @@ namespace NUnit.TestData.RepeatingTests
             Assert.That(Count, Is.Not.EqualTo(2).And.Not.EqualTo(3));
         }
     }
+
+    public class RepeatWithThresholdAllPassFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, RequiredPassPercentage = 80)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    public class RepeatWithThresholdAboveThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 60)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
+
+    public class RepeatWithThresholdExactlyAtThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 80)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
+
+    public class RepeatWithThresholdBelowThresholdFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = false, RequiredPassPercentage = 80)]
+        public void FailsMostRuns()
+        {
+            Count++;
+            if (Count <= 3)
+                Assert.Fail("Deliberate failure");
+        }
+    }
+
+    public class RepeatWithThresholdStopOnFailureIgnoredFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(5, StopOnFailure = true, RequiredPassPercentage = 60)]
+        public void FailsOnce()
+        {
+            Count++;
+            if (Count == 1)
+                Assert.Fail("Deliberate failure on first run");
+        }
+    }
+
+    // Count=10, threshold=80%: stops early at run 8 (8 successes already guarantee 80% of 10)
+    public class RepeatWithStopWhenDeterminedEarlySuccessFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(10, RequiredPassPercentage = 80, StopWhenOverallResultDetermined = true)]
+        public void AlwaysPasses()
+        {
+            Count++;
+        }
+    }
+
+    // Count=10, threshold=80%: stops early at run 3 (max achievable drops to 7/10=70%, below 80%)
+    public class RepeatWithStopWhenDeterminedEarlyFailureFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(10, RequiredPassPercentage = 80, StopWhenOverallResultDetermined = true)]
+        public void AlwaysFails()
+        {
+            Count++;
+            Assert.Fail("Deliberate failure");
+        }
+    }
 }
