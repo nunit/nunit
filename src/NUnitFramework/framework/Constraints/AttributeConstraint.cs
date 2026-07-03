@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
             ArgumentNullException.ThrowIfNull(actual);
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             if (attrs.Length == 0)
-                throw new ArgumentException($"Attribute {_expectedType} was not found", nameof(actual));
+                return new AttributeNotFoundConstraintResult(this, actual, _expectedType);
 
             Attribute attrFound = attrs[0];
             return BaseConstraint.ApplyTo(attrFound);
@@ -51,6 +51,22 @@ namespace NUnit.Framework.Constraints
         protected override string GetStringRepresentation()
         {
             return $"<attribute {_expectedType} {BaseConstraint}>";
+        }
+
+        private class AttributeNotFoundConstraintResult : ConstraintResult
+        {
+            private readonly Type _expectedType;
+
+            public AttributeNotFoundConstraintResult(IConstraint constraint, object? actualValue, Type expectedType)
+                : base(constraint, actualValue, false)
+            {
+                _expectedType = expectedType;
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                writer.WriteLine($"Attribute {_expectedType} was not found.");
+            }
         }
     }
 }
