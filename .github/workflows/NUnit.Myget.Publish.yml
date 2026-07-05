@@ -25,7 +25,7 @@ jobs:
         fetch-depth: 0
 
     - name: 🛠️ Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
       with:
         global-json-file: global.json
         dotnet-version: |
