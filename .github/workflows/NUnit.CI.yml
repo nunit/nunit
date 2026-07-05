@@ -45,13 +45,13 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Package
 
     - name: 💾 Upload build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: Package
         path: package
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: Test results (Windows)
         path: TestResults
@@ -94,7 +94,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=false --minimal=true
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: Test results (Linux)
         path: TestResults
@@ -134,7 +134,7 @@ jobs:
       run: dotnet tool run dotnet-cake --target=Test --configuration=Release --quiet=false --minimal=true
 
     - name: 💾 Upload test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
       with:
         name: Test results (macOS)
         path: TestResults
