@@ -199,7 +199,7 @@ namespace NUnit.Framework.Internal
                     break;
             }
 
-            throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
+            throw new ArgumentException("Invalid filter element: " + node.Name, nameof(node));
         }
 
         private static string NodeValue(TNode node)
