@@ -15,8 +15,7 @@ namespace NUnit.Framework.Tests
         /// </summary>
         public static void AssertPassed(this ITestResult result)
         {
-            if (result is null)
-                throw new ArgumentNullException(nameof(result));
+            ArgumentNullException.ThrowIfNull(result);
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
         }

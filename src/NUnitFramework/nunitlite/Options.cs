@@ -355,8 +355,7 @@ namespace NUnit.Options
 
         protected Option(string prototype, string description, int maxValueCount)
         {
-            if (prototype is null)
-                throw new ArgumentNullException(nameof(prototype));
+            ArgumentNullException.ThrowIfNull(prototype);
             if (prototype.Length == 0)
                 throw new ArgumentException("Cannot be the empty string.", nameof(prototype));
             if (maxValueCount < 0)
@@ -607,8 +606,7 @@ namespace NUnit.Options
 
         protected override string GetKeyForItem(Option item)
         {
-            if (item is null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             if (item.Names is not null && item.Names.Length > 0)
                 return item.Names[0];
             // This should never happen, as it's invalid for Option to be
@@ -642,8 +640,7 @@ namespace NUnit.Options
 
         private void AddImpl(Option option)
         {
-            if (option is null)
-                throw new ArgumentNullException(nameof(option));
+            ArgumentNullException.ThrowIfNull(option);
             List<string> added = new List<string>(option.Names.Length);
             try
             {
@@ -675,8 +672,7 @@ namespace NUnit.Options
             public ActionOption(string prototype, string description, int count, Action<OptionValueCollection> action)
                 : base(prototype, description, count)
             {
-                if (action is null)
-                    throw new ArgumentNullException(nameof(action));
+                ArgumentNullException.ThrowIfNull(action);
                 _action = action;
             }
 
@@ -693,8 +689,7 @@ namespace NUnit.Options
 
         public OptionSet Add(string prototype, string description, Action<string> action)
         {
-            if (action is null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
             Option p = new ActionOption(prototype, description, 1,
                     delegate(OptionValueCollection v) { action(v[0]); });
             base.Add(p);
@@ -708,8 +703,7 @@ namespace NUnit.Options
 
         public OptionSet Add(string prototype, string description, OptionAction<string, string> action)
         {
-            if (action is null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
             Option p = new ActionOption(prototype, description, 2,
                     delegate(OptionValueCollection v) { action(v[0], v[1]); });
             base.Add(p);
@@ -723,8 +717,7 @@ namespace NUnit.Options
             public ActionOption(string prototype, string description, Action<T> action)
                 : base(prototype, description, 1)
             {
-                if (action is null)
-                    throw new ArgumentNullException(nameof(action));
+                ArgumentNullException.ThrowIfNull(action);
                 _action = action;
             }
 
@@ -741,8 +734,7 @@ namespace NUnit.Options
             public ActionOption(string prototype, string description, OptionAction<TKey, TValue> action)
                 : base(prototype, description, 2)
             {
-                if (action is null)
-                    throw new ArgumentNullException(nameof(action));
+                ArgumentNullException.ThrowIfNull(action);
                 _action = action;
             }
 
@@ -825,8 +817,7 @@ namespace NUnit.Options
 
         protected bool GetOptionParts(string argument, out string flag, out string name, out string sep, out string value)
         {
-            if (argument is null)
-                throw new ArgumentNullException(nameof(argument));
+            ArgumentNullException.ThrowIfNull(argument);
 
             flag = name = sep = value = null;
             Match m = ValueOption.Match(argument);

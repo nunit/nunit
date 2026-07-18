@@ -98,8 +98,7 @@ namespace NUnit.Common
 
         public Tokenizer(string input)
         {
-            if (input is null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             _input = input;
             _index = 0;
