@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.IO;
-#if !NETFRAMEWORK
+#if NET5_0_OR_GREATER
 using System.Reflection;
 using System.Reflection.Emit;
 #endif
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(localPath, Is.SamePath(expectedPath));
         }
 
-#if !NETFRAMEWORK
+#if NET5_0_OR_GREATER
         [Test]
         public void GetAssemblyPath_ReturnsEmpty_WhenAssemblyHasNoLocation()
         {
