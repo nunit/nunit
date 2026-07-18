@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var result = new List<ITest>();
             Collect(children, result);
-            return result;
+            return result.AsReadOnly();
 
             static void Collect(List<WorkItem> items, List<ITest> accumulator)
             {
