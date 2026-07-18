@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.IO;
+using System.Reflection;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -59,5 +60,27 @@ namespace NUnit.Framework.Tests.Internal
             string localPath = AssemblyHelper.GetAssemblyPathFromCodeBase(uri);
             Assert.That(localPath, Is.SamePath(expectedPath));
         }
+
+        // A dynamic assembly (created via AssemblyBuilder.DefineDynamicAssembly)
+        // has an empty Location, which is the same condition seen in single-file
+        // and AOT publish scenarios. GetAssemblyPath must fall back to
+        // AppContext.BaseDirectory in that case rather than returning an empty
+        // string (which would cause an ArgumentException downstream). See #4987.
+#if !NETFRAMEWORK
+        [Test]
+        public void GetAssemblyPath_FallsBackToBaseDirectoryWhenLocationIsEmpty()
+        {
+            var assemblyName = new AssemblyName("AssemblyHelperTests_EmptyLocationDynamicAssembly");
+            var dynamicAssembly = AssemblyBuilder.DefineDynamicAssembly(
+                assemblyName,
+                AssemblyBuilderAccess.RunAndCollect);
+
+            // Sanity check: a dynamic assembly has no on-disk location.
+            Assert.That(dynamicAssembly.Location, Is.EqualTo(string.Empty));
+
+            string path = AssemblyHelper.GetAssemblyPath(dynamicAssembly);
+            Assert.That(path, Is.EqualTo(AppContext.BaseDirectory));
+        }
+#endif
     }
 }

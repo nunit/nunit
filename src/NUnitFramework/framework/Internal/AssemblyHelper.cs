@@ -22,11 +22,17 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets the path from which an assembly was loaded.
-        /// For builds where this is not possible, returns
-        /// the name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <returns>The path.</returns>
+        /// <returns>
+        /// The path from which the assembly was loaded. When the assembly's
+        /// <see cref="Assembly.Location"/> is available, that file path is
+        /// returned. When <see cref="Assembly.Location"/> is empty — which
+        /// happens in single-file/AOT publish scenarios and in some hosting
+        /// environments such as Blazor — the application base directory (see
+        /// <see cref="AppContext.BaseDirectory"/>) is returned instead, so that
+        /// callers receive a usable directory path rather than an empty string.
+        /// </returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
 #if NETFRAMEWORK
