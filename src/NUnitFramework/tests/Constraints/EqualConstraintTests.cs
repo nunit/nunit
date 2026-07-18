@@ -1701,23 +1701,22 @@ namespace NUnit.Framework.Tests.Constraints
         {
             get
             {
-                var ptr = new System.IntPtr(0);
                 var exampleTestA = new ExampleTest.ClassA(0);
                 var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
-                yield return new object[] { 0, ptr };
                 yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
         }
         [Test]
-        public void SameValueDifferentTypeExactMessageMatch()
+        public void IntPtrNowCoercesAsNumericAndEqualsInt32()
         {
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(ex?.Message, Does.Contain("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL));
+            // Issue #5340: IntPtr (nint) is now a recognized numeric type,
+            // so an IntPtr with value 0 compares equal to the integer 0
+            // via numeric coercion, rather than failing on type mismatch.
+            Assert.That(new IntPtr(0), Is.EqualTo(0));
+            Assert.That((nint)42, Is.EqualTo(42));
         }
 
         private class Dummy
