@@ -1,6 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.IO;
+#if !NETFRAMEWORK
+using System.Reflection;
+using System.Reflection.Emit;
+#endif
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -59,5 +63,18 @@ namespace NUnit.Framework.Tests.Internal
             string localPath = AssemblyHelper.GetAssemblyPathFromCodeBase(uri);
             Assert.That(localPath, Is.SamePath(expectedPath));
         }
+
+#if !NETFRAMEWORK
+        [Test]
+        public void GetAssemblyPath_ReturnsEmpty_WhenAssemblyHasNoLocation()
+        {
+            var dynamicAssembly = AssemblyBuilder.DefineDynamicAssembly(
+                new AssemblyName("AssemblyHelperTests_EmptyLocation"),
+                AssemblyBuilderAccess.RunAndCollect);
+
+            Assert.That(dynamicAssembly.Location, Is.EqualTo(string.Empty));
+            Assert.That(AssemblyHelper.GetAssemblyPath(dynamicAssembly), Is.EqualTo(string.Empty));
+        }
+#endif
     }
 }
