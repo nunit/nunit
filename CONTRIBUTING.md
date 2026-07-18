@@ -118,9 +118,9 @@ If that's TL;DR, here's the short version:
 
 | Action  | Command                |
 | ------- | ---------------------- |
-| Build   | `build`                |
-| Test    | `build --target test`  |
-| Package | `build --target package` |
+| Build   | `build`                 |
+| Test    | `build --target=Test`   |
+| Package | `build --target=Package` |
 
 Of course, you can also do all of this from your IDE, whether that's Visual Studio, Visual Studio Code, or Rider.
 
