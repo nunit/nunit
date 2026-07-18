@@ -49,7 +49,7 @@ Here are a few examples of good GitHub profiles (including some of the NUnit mai
 - [Terje](https://github.com/osiristerje)
 - [Steven](https://github.com/stevenaw)
 
-PS: *We will never discriminate anyone based on who you are or why you want to contribute.*
+PS: *We will never discriminate against anyone based on who you are or why you want to contribute.*
 
 ## Submitting Issues
 
