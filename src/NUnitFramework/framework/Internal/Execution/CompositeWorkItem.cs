@@ -235,6 +235,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void PerformOneTimeSetUp()
         {
+            Context.ActiveTests = CollectActiveTests(Children);
             try
             {
                 _setupCommand?.Execute(Context);
@@ -245,6 +246,24 @@ namespace NUnit.Framework.Internal.Execution
             catch (Exception ex)
             {
                 Result.RecordException(ex.Unwrap(), FailureSite.SetUp);
+            }
+        }
+
+        private static IReadOnlyList<ITest> CollectActiveTests(List<WorkItem> children)
+        {
+            var result = new List<ITest>();
+            Collect(children, result);
+            return result;
+
+            static void Collect(List<WorkItem> items, List<ITest> accumulator)
+            {
+                foreach (var item in items)
+                {
+                    if (item is CompositeWorkItem composite)
+                        Collect(composite.Children, accumulator);
+                    else
+                        accumulator.Add(item.Test);
+                }
             }
         }
 

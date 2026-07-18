@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -21,6 +22,7 @@ namespace NUnit.Framework.Tests.Internal
         public void SetUp()
         {
             TestUtilities.SimpleEventRecorder.Clear();
+            TestData.SetupFixture.Namespace7.ActiveTestsCapture.Clear();
 
             _builder = new DefaultTestAssemblyBuilder();
             _runner = new NUnitTestAssemblyRunner(_builder);
@@ -315,6 +317,44 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         #endregion
+
+        #region ActiveTests
+
+        [Test]
+        public void ActiveTestsContainsAllTestsWhenNoFilterApplied()
+        {
+            RunTests("NUnit.TestData.SetupFixture.Namespace7");
+
+            var captured = TestData.SetupFixture.Namespace7.ActiveTestsCapture.CapturedInSetUp;
+            Assert.That(captured, Is.Not.Null);
+            Assert.That(captured!.Select(t => t.MethodName),
+                Is.EquivalentTo(new[] { "TestA1", "TestA2", "TestB1", "TestB2" }));
+        }
+
+        [Test]
+        public void ActiveTestsContainsOnlyFilteredTests()
+        {
+            RunTests("NUnit.TestData.SetupFixture.Namespace7",
+                new Framework.Internal.Filters.ClassNameFilter("NUnit.TestData.SetupFixture.Namespace7.FixtureA"));
+
+            var captured = TestData.SetupFixture.Namespace7.ActiveTestsCapture.CapturedInSetUp;
+            Assert.That(captured, Is.Not.Null);
+            Assert.That(captured!.Select(t => t.MethodName),
+                Is.EquivalentTo(new[] { "TestA1", "TestA2" }));
+        }
+
+        [Test]
+        public void ActiveTestsIsAvailableDuringTearDown()
+        {
+            RunTests("NUnit.TestData.SetupFixture.Namespace7");
+
+            var captured = TestData.SetupFixture.Namespace7.ActiveTestsCapture.CapturedInTearDown;
+            Assert.That(captured, Is.Not.Null);
+            Assert.That(captured!.Select(t => t.MethodName),
+                Is.EquivalentTo(new[] { "TestA1", "TestA2", "TestB1", "TestB2" }));
+        }
+
+        #endregion ActiveTests
 
         #region NoNamespaceSetupFixture
         [Test]
