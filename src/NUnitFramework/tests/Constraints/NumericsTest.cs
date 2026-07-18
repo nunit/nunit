@@ -24,6 +24,8 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase(123456789UL)]
         [TestCase(1234.5678f)]
         [TestCase(1234.5678)]
+        [TestCase((nint)123456789)]
+        [TestCase((nuint)123456789U)]
         [Test]
         public void CanMatchWithoutToleranceMode(object value)
         {
@@ -49,6 +51,12 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((ulong)9500)]
         [TestCase((ulong)10000)]
         [TestCase((ulong)10500)]
+        [TestCase((nint)9500)]
+        [TestCase((nint)10000)]
+        [TestCase((nint)10500)]
+        [TestCase((nuint)9500)]
+        [TestCase((nuint)10000)]
+        [TestCase((nuint)10500)]
         [Test]
         public void CanMatchIntegralsWithPercentage(object value)
         {
@@ -192,6 +200,57 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
         {
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
+        }
+
+        [Test]
+        public void IntPtrIsRecognizedAsNumeric()
+        {
+            Assert.That(Numerics.IsNumericType((nint)5), Is.True);
+            Assert.That(Numerics.IsNumericType(typeof(nint)), Is.True);
+            Assert.That(Numerics.IsFixedPointNumeric((nint)5), Is.True);
+            Assert.That(Numerics.IsFixedPointNumeric(typeof(nint)), Is.True);
+        }
+
+        [Test]
+        public void UIntPtrIsRecognizedAsNumeric()
+        {
+            Assert.That(Numerics.IsNumericType((nuint)5), Is.True);
+            Assert.That(Numerics.IsNumericType(typeof(nuint)), Is.True);
+            Assert.That(Numerics.IsFixedPointNumeric((nuint)5), Is.True);
+            Assert.That(Numerics.IsFixedPointNumeric(typeof(nuint)), Is.True);
+        }
+
+        [Test]
+        public void IntPtrComparesWithInt32ViaNumericCoercion()
+        {
+            // Issue #5340: nint should coerce against other integer types.
+            Assert.That(Numerics.Compare((nint)5, 5), Is.EqualTo(0));
+            Assert.That(Numerics.Compare((nint)10, 5), Is.GreaterThan(0));
+            Assert.That(Numerics.Compare((nint)3, 5), Is.LessThan(0));
+        }
+
+        [Test]
+        public void UIntPtrComparesWithUInt32ViaNumericCoercion()
+        {
+            Assert.That(Numerics.Compare((nuint)5, 5u), Is.EqualTo(0));
+            Assert.That(Numerics.Compare((nuint)10, 5u), Is.GreaterThan(0));
+            Assert.That(Numerics.Compare((nuint)3, 5u), Is.LessThan(0));
+        }
+
+        [Test]
+        public void IntPtrAndInt32AreEqualViaNumericCoercion()
+        {
+            // Reproduces the core scenario from issue #5340:
+            // Has.Property("Capacity").EqualTo(5) against an nint property.
+            Assert.That(Numerics.AreEqual(5, (nint)5, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual((nint)5, 5, ref _zeroTolerance), Is.True);
+        }
+
+        [Test]
+        public void UIntPtrAndUInt32AreEqualViaNumericCoercion()
+        {
+            Assert.That(Numerics.AreEqual(5u, (nuint)5, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual((nuint)5, 5u, ref _zeroTolerance), Is.True);
         }
     }
 }
