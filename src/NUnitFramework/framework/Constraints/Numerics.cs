@@ -89,6 +89,10 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (obj is char)
                     return true;
+                if (obj is IntPtr)
+                    return true;
+                if (obj is UIntPtr)
+                    return true;
             }
             return false;
         }
@@ -114,6 +118,10 @@ namespace NUnit.Framework.Constraints
                 if (type == typeof(ushort))
                     return true;
                 if (type == typeof(char))
+                    return true;
+                if (type == typeof(IntPtr))
+                    return true;
+                if (type == typeof(UIntPtr))
                     return true;
             }
             return false;
@@ -148,6 +156,12 @@ namespace NUnit.Framework.Constraints
 
             if (expected is decimal || actual is decimal)
                 return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
+
+            if (expected is UIntPtr || actual is UIntPtr)
+                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+
+            if (expected is IntPtr || actual is IntPtr)
+                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
             if (expected is ulong || actual is ulong)
                 return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
@@ -185,6 +199,12 @@ namespace NUnit.Framework.Constraints
 
             if (expected is decimal || actual is decimal)
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+
+            if (expected is UIntPtr || actual is UIntPtr)
+                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
+
+            if (expected is IntPtr || actual is IntPtr)
+                return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
 
             if (expected is ulong || actual is ulong)
                 return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
@@ -460,6 +480,12 @@ namespace NUnit.Framework.Constraints
             if (expected is float || actual is float)
                 return Convert.ToSingle(expected).CompareTo(Convert.ToSingle(actual));
 
+            if (expected is UIntPtr || actual is UIntPtr)
+                return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
+
+            if (expected is IntPtr || actual is IntPtr)
+                return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
+
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
 
@@ -517,6 +543,18 @@ namespace NUnit.Framework.Constraints
             {
                 var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
                 return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+            }
+
+            if (expected is UIntPtr || actual is UIntPtr)
+            {
+                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+            }
+
+            if (expected is IntPtr || actual is IntPtr)
+            {
+                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
             }
 
             if (expected is ulong || actual is ulong)
