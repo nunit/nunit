@@ -18,8 +18,8 @@ Helping out isn't just writing code, it also includes submitting issues, helping
 
 [Documentation](#documentation) Our documentation does always need more work. If you love writing, please help here.
 
-[!NOTE]
-Anyone who contribute with issues or pull requests will be credited in the release notes for the version it is fixed. Check for [how it looks](https://docs.nunit.org/articles/nunit/release-notes/framework.html)
+> [!NOTE]
+> Anyone who contributes issues or pull requests will be credited in the release notes for the version in which the fix ships. See [an example](https://docs.nunit.org/articles/nunit/release-notes/framework.html).
 
 ---------
 
@@ -49,7 +49,7 @@ Here are a few examples of good GitHub profiles (including some of the NUnit mai
 - [Terje](https://github.com/osiristerje)
 - [Steven](https://github.com/stevenaw)
 
-PS: *We will never discriminate anyone based on who you are or why you want to contribute.*
+PS: *We will never discriminate against anyone based on who you are or why you want to contribute.*
 
 ## Submitting Issues
 
@@ -118,9 +118,9 @@ If that's TL;DR, here's the short version:
 
 | Action  | Command                |
 | ------- | ---------------------- |
-| Build   | `build`                |
-| Test    | `build --target test`  |
-| Package | `build --target package` |
+| Build   | `build`                 |
+| Test    | `build --target=Test`   |
+| Package | `build --target=Package` |
 
 Of course, you can also do all of this from your IDE, whether that's Visual Studio, Visual Studio Code, or Rider.
 
