@@ -22,17 +22,11 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets the path from which an assembly was loaded.
+        /// For builds where this is not possible, returns
+        /// the name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <returns>
-        /// The path from which the assembly was loaded. When the assembly's
-        /// <see cref="Assembly.Location"/> is available, that file path is
-        /// returned. When <see cref="Assembly.Location"/> is empty — which
-        /// happens in single-file/AOT publish scenarios and in some hosting
-        /// environments such as Blazor — the application base directory (see
-        /// <see cref="AppContext.BaseDirectory"/>) is returned instead, so that
-        /// callers receive a usable directory path rather than an empty string.
-        /// </returns>
+        /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
 #if NETFRAMEWORK
@@ -46,16 +40,7 @@ namespace NUnit.Framework.Internal
                 return GetAssemblyPathFromCodeBase(codeBase);
 #endif
 
-            var location = assembly.Location;
-            if (!string.IsNullOrEmpty(location))
-                return location;
-
-            // Assembly.Location is empty in single-file/AOT publish scenarios
-            // (and in some other hosting environments such as Blazor). Fall back
-            // to the application base directory so callers don't receive an
-            // empty string, which would otherwise cause an ArgumentException
-            // downstream (e.g. Path.GetDirectoryName("")). See issue #4987.
-            return AppContext.BaseDirectory;
+            return assembly.Location;
         }
 
         #endregion
@@ -69,7 +54,21 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetDirectoryName(Assembly assembly)
         {
-            return Path.GetDirectoryName(GetAssemblyPath(assembly))!;
+            var path = GetAssemblyPath(assembly);
+            // GetAssemblyPath returns an empty string when the assembly has no
+            // on-disk location (single-file/AOT publish, Blazor, dynamic
+            // assemblies). On .NET 5+, Path.GetDirectoryName(string.Empty)
+            // returns null, and the previous null-forgiving `!` suppressed the
+            // warning so the null propagated until a downstream caller (e.g.
+            // Path.Combine(TestContext.TestDirectory, ...)) threw. Fall back to
+            // the application base directory in that case so callers always get
+            // a usable, non-null directory. See issue #4987.
+            if (path.Length == 0)
+            {
+                return AppContext.BaseDirectory;
+            }
+
+            return Path.GetDirectoryName(path)!;
         }
 
         #endregion
