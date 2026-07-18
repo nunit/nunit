@@ -88,7 +88,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Gets the filtered list of tests that will run under the current suite.
-        /// Available from OneTimeSetUp through OneTimeTearDown of a suite; null outside of suite execution.
+        /// Available in a suite's OneTimeSetUp and OneTimeTearDown; null in other contexts.
         /// </summary>
         public IReadOnlyList<ITest>? ActiveTests => _testExecutionContext.ActiveTests;
 
