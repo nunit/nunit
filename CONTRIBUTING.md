@@ -6,7 +6,7 @@ Helping out isn't just writing code, it also includes submitting issues, helping
 
 ## MENU
 
-[Who can contribute]()     Anyone can, but you need to fulfill certain simple requirements.
+[Who can contribute](#who-can-contribute) Anyone can, but you need to fulfill certain simple requirements
 
 [Use of AI]()  AI is a very powerful tool, so yes you, but we have certain guidelines you should follow.
 
