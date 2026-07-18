@@ -40,7 +40,16 @@ namespace NUnit.Framework.Internal
                 return GetAssemblyPathFromCodeBase(codeBase);
 #endif
 
-            return assembly.Location;
+            var location = assembly.Location;
+            if (!string.IsNullOrEmpty(location))
+                return location;
+
+            // Assembly.Location is empty in single-file/AOT publish scenarios
+            // (and in some other hosting environments such as Blazor). Fall back
+            // to the application base directory so callers don't receive an
+            // empty string, which would otherwise cause an ArgumentException
+            // downstream (e.g. Path.GetDirectoryName("")). See issue #4987.
+            return AppContext.BaseDirectory;
         }
 
         #endregion
