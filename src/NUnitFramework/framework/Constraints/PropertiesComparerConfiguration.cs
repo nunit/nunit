@@ -211,10 +211,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public PropertiesComparerConfigurationUntyped WithMaximumGraphDepth(int depth)
         {
-            if (depth < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
-            }
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(depth);
             MaximumGraphDepth = depth;
             return this;
         }
@@ -385,10 +382,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>Self.</returns>
         public PropertiesComparerConfiguration<T> WithMaximumGraphDepth(int depth)
         {
-            if (depth < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be at least 1");
-            }
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(depth);
             MaximumGraphDepth = depth;
             return this;
         }

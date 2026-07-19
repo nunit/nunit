@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public uint NextUInt(uint min, uint max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
+            ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
 
             if (min == max)
                 return min;
@@ -259,7 +259,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public long NextLong(long min, long max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
+            ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
 
             if (min == max)
                 return min;
@@ -306,7 +306,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ulong NextULong(ulong min, ulong max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
+            ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
 
             ulong range = max - min;
 
@@ -401,7 +401,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool NextBool(double probability)
         {
-            Guard.ArgumentInRange(probability is >= 0.0 and <= 1.0, "Probability must be from 0.0 to 1.0", nameof(probability));
+            ArgumentOutOfRangeException.ThrowIfNegative(probability);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(probability, 1.0);
 
             return NextDouble() < probability;
         }
@@ -426,7 +427,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public double NextDouble(double min, double max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
+            ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
 
             if (max == min)
                 return min;
@@ -661,7 +662,7 @@ namespace NUnit.Framework.Internal
         {
             if (max <= 1)
             {
-                Guard.ArgumentInRange(max > 0, "Maximum must be greater than zero.", nameof(max));
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(max);
                 return 0;
             }
 
@@ -736,7 +737,7 @@ namespace NUnit.Framework.Internal
         /// </remarks>
         public decimal NextDecimal(decimal min, decimal max)
         {
-            Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
+            ArgumentOutOfRangeException.ThrowIfLessThan(max, min);
 
             // Check that the range is not greater than MaxValue without
             // first calculating it, since this would cause overflow

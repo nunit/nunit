@@ -39,8 +39,7 @@ namespace NUnit.Framework.Tests.TestUtilities
         /// <exception cref="AssertionException">Thrown when <see cref="OnCallback"/> was not called the expected number of times between beginning and ending.</exception>
         public IDisposable ExpectCallback(int count = 1)
         {
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count), _expectedCount, "Expected callback count must be greater than or equal to zero.");
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             if (_expectedCount != 0)
                 throw new InvalidOperationException($"The previous {nameof(ExpectCallback)} scope must be disposed before calling again.");
