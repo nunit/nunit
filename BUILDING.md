@@ -49,7 +49,7 @@ You can build from your chosen IDE. That will work for the pure building and als
 
 We use command line builds for all aspects, build, test and packaging. You should also use this to ensure all aspects are covered.
 
-For command line builds you can use either our own build scrips or `dotnet`.  (Using dotnet will currently not pack.)
+For command line builds you can use either our own build scripts or `dotnet`. (Using `dotnet` will currently not pack.)
 
 To build the system use `build.cmd` (Windows cmd), `build.ps1` (Powershell on Windows) or `build.sh` (bash on Linux). They all use the same parameters, and invoke the same underlying scripts. We will refer to these just as `build` further on.
 
