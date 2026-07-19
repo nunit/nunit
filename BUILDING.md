@@ -93,7 +93,7 @@ The `--quiet=true` option shows only per-assembly summaries without individual t
 
 Any failures will be shown for all commands.
 
-### The tests projects
+### The test projects
 
 The tests that should be run in the solution are grouped by project name:
 
