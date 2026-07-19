@@ -18,6 +18,8 @@ Helping out isn't just writing code, it also includes submitting issues, helping
 
 [Documentation](#documentation) Our documentation does always need more work. If you love writing, please help here.
 
+[Licensing](#license) Please read this so you are aware of the licensing.
+
 > [!NOTE]
 > Anyone who contributes issues or pull requests will be credited in the release notes for the version in which the fix ships. See [an example](https://docs.nunit.org/articles/nunit/release-notes/framework.html).
 
