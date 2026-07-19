@@ -172,6 +172,16 @@ If that's TL;DR, here's the short version:
 
 Of course, you can also do all of this from your IDE, whether that's Visual Studio, Visual Studio Code, or Rider.
 
+### Inactive Pull Requests
+
+Please keep an eye on your pull request after you've submitted it. We may have questions, request changes, or ask for clarification before it can be merged.
+
+If we don't hear back from you within **7 days** after requesting changes or additional information, we may close the pull request to keep the review queue manageable.
+
+If you know you'll be unavailable for longer than that, just let us know. We're happy to keep the pull request open if we know you're planning to return.
+
+Closing a pull request doesn't mean your contribution is rejected. Your changes remain in your local Git repository, and you're welcome to reopen the work later by submitting a new pull request or asking us to reopen the original one if appropriate.
+
 ## License
 
 NUnit is under the [MIT license](https://github.com/nunit/nunit/blob/master/LICENSE.txt). By contributing to NUnit, you assert that:
