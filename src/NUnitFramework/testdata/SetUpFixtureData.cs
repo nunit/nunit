@@ -608,7 +608,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class FixtureA
         {
-            [Test]
+            [Test, Category("NS7Category")]
             public void TestA1()
             {
             }
@@ -622,7 +622,7 @@ namespace NUnit.TestData.SetupFixture
         [TestFixture]
         public class FixtureB
         {
-            [Test]
+            [Test, Category("NS7Category")]
             public void TestB1()
             {
             }

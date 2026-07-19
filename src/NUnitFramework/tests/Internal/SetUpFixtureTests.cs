@@ -354,6 +354,18 @@ namespace NUnit.Framework.Tests.Internal
                 Is.EquivalentTo(["TestA1", "TestA2", "TestB1", "TestB2"]));
         }
 
+        [Test]
+        public void ActiveTestsContainsCategoryFilteredTestsAcrossMultipleFixtures()
+        {
+            RunTests("NUnit.TestData.SetupFixture.Namespace7",
+                new Framework.Internal.Filters.CategoryFilter("NS7Category"));
+
+            var captured = TestData.SetupFixture.Namespace7.ActiveTestsCapture.CapturedInSetUp;
+            Assert.That(captured, Is.Not.Null);
+            Assert.That(captured.Select(t => t.MethodName),
+                Is.EquivalentTo(["TestA1", "TestB1"]));
+        }
+
         #endregion ActiveTests
 
         #region NoNamespaceSetupFixture
