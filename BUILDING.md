@@ -101,7 +101,7 @@ The tests that should be run in the solution are grouped by project name:
 * `nunit.framework.legacy.tests-*`
 * `nunitlite.tests-*`
 
-The other test projects contain tests designed to fail purposely for integration tests, and is not intended to be run seperately.
+The other test projects contain tests designed to fail purposely for integration tests and are not intended to be run separately.
 
 ### Notes
 
