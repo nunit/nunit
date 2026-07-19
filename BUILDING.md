@@ -1,15 +1,15 @@
 # Building NUnit
 
-NUnit consists of multiple components across separate layers: the Framework, the Engine, the Adapter, and the Console Runner. The source code for the main NUnit components is kept in four different GitHub repositories
+NUnit consists of multiple components across separate layers: the Framework, the Engine, the Adapter, and the Console Runner. The source code for the main NUnit components is kept in four different GitHub repositories:
 
 - [NUnit Framework](https://github.com/nunit/nunit) The repo we're working on now.
 - [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter)  The Visual Studio/Dotnet adapter for NUnit
 - [NUnit Roslyn Analyzer](https://github.com/nunit/nunit.analyzers) Roslyn Code analysis and quick fixes for NUnit.
 - [NUnit Console and Engine](https://github.com/nunit/nunit-console)  The Console is a separate runner. The engine is used also by the adapter.
 
-## How to get the source Code
+## How to get the source code
 
-You will not have permission to create branches directly in either of the above repositories so you will need to work on a local fork.
+You will not have permission to create branches directly in any of the above repositories, so you will need to work on a local fork.
 
 The development process for making code changes and submitting Pull Requests (PRs) is as follows:
 
@@ -17,7 +17,7 @@ The development process for making code changes and submitting Pull Requests (PR
 2. Clone the fork to your computer
 3. Create a new branch, name of your choosing
 4. Work with the code to fix the issue you have
-5. Ensure the code build
+5. Ensure the code builds
 6. Ensure all NUnit tests pass locally (ie. run them on all targeted frameworks and on as many platforms that you have ie. Windows, Linux, Mac). The [Script Build](#script-build) section below gives exact instructions on how to do this from the Command Prompt / Terminal.
 7. Commit the code and push the branch to your fork
 8. Create the PR to NUnit (this is described in more detail [here](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/))
@@ -49,7 +49,7 @@ You can build from your chosen IDE. That will work for the pure building and als
 
 We use command line builds for all aspects, build, test and packaging. You should also use this to ensure all aspects are covered.
 
-For command line builds you can use either our own build scrips or `dotnet`.  (Using dotnet will currently not pack.)
+For command line builds you can use either our own build scripts or `dotnet`. (Using `dotnet` will currently not pack.)
 
 To build the system use `build.cmd` (Windows cmd), `build.ps1` (Powershell on Windows) or `build.sh` (bash on Linux). They all use the same parameters, and invoke the same underlying scripts. We will refer to these just as `build` further on.
 
@@ -93,7 +93,7 @@ The `--quiet=true` option shows only per-assembly summaries without individual t
 
 Any failures will be shown for all commands.
 
-### The tests projects
+### The test projects
 
 The tests that should be run in the solution are grouped by project name:
 
@@ -101,7 +101,7 @@ The tests that should be run in the solution are grouped by project name:
 * `nunit.framework.legacy.tests-*`
 * `nunitlite.tests-*`
 
-The other test projects contain tests designed to fail purposely for integration tests, and is not intended to be run seperately.
+The other test projects contain tests designed to fail purposely for integration tests and are not intended to be run separately.
 
 ### Notes
 
