@@ -121,11 +121,9 @@ namespace NUnit.Framework
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount, bool stopOnFailure, int requiredPassPercentage, bool stopWhenOverallResultDetermined)
                 : base(innerCommand)
             {
-                if (repeatCount < 1)
-                    throw new ArgumentOutOfRangeException(nameof(repeatCount), repeatCount, "Must be at least 1.");
-
-                if (requiredPassPercentage is < 1 or > 100)
-                    throw new ArgumentOutOfRangeException(nameof(requiredPassPercentage), requiredPassPercentage, "Must be between 1 and 100.");
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(repeatCount);
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(requiredPassPercentage);
+                ArgumentOutOfRangeException.ThrowIfGreaterThan(requiredPassPercentage, 100);
 
                 _repeatCount = repeatCount;
                 // When a pass threshold is set, all iterations must run regardless of StopOnFailure.

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -183,8 +184,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="priority">The priority at which to process the item</param>
         internal void Enqueue(WorkItem work, int priority)
         {
-            Guard.ArgumentInRange(priority >= 0 && priority < PRIORITY_LEVELS,
-                "Invalid priority specified", nameof(priority));
+            ArgumentOutOfRangeException.ThrowIfNegative(priority);
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(priority, PRIORITY_LEVELS);
 
             do
             {

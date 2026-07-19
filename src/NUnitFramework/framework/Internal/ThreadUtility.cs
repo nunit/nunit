@@ -114,8 +114,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private static void DislodgeThreadInNativeMessageWait(Thread thread, int nativeId)
         {
-            if (nativeId == 0)
-                throw new ArgumentOutOfRangeException(nameof(nativeId), "Native thread ID must not be zero.");
+            ArgumentOutOfRangeException.ThrowIfZero(nativeId);
 
             // Schedule a thread pool thread to check on the aborting thread in case it's in a message pump native blocking wait
             Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, new CheckOnAbortingThreadState(thread, nativeId));

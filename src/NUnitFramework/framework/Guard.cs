@@ -15,22 +15,6 @@ namespace NUnit.Framework
     internal static class Guard
     {
         /// <summary>
-        /// Throws an ArgumentOutOfRangeException if the specified condition is not met.
-        /// </summary>
-        /// <param name="condition">The condition that must be met</param>
-        /// <param name="message">The exception message to be used</param>
-        /// <param name="paramName">The name of the argument</param>
-        public static void ArgumentInRange([DoesNotReturnIf(false)] bool condition, string message, string paramName)
-        {
-            if (!condition)
-                ThrowArgumentOutOfRangeException(message, paramName);
-
-            [DoesNotReturn]
-            [MethodImpl(MethodImplOptions.NoInlining)]
-            static void ThrowArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(paramName, message);
-        }
-
-        /// <summary>
         /// Throws an ArgumentException if the specified condition is not met.
         /// </summary>
         /// <param name="condition">The condition that must be met</param>

@@ -257,8 +257,7 @@ namespace NUnit.Options
         {
             if (_c.Option is null)
                 throw new InvalidOperationException("OptionContext.Option is null.");
-            if (index >= _c.Option.MaxValueCount)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, _c.Option.MaxValueCount);
             if (_c.Option.OptionValueType == OptionValueType.Required &&
                     index >= _values.Count)
             {
@@ -358,8 +357,7 @@ namespace NUnit.Options
             ArgumentNullException.ThrowIfNull(prototype);
             if (prototype.Length == 0)
                 throw new ArgumentException("Cannot be the empty string.", nameof(prototype));
-            if (maxValueCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(maxValueCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(maxValueCount);
 
             _prototype = prototype;
             _names = prototype.Split('|');

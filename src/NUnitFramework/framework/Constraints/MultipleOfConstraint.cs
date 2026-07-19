@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="multiple">An integer value greater than zero</param>
         public MultipleOfConstraint(int multiple)
         {
-            Guard.ArgumentInRange(multiple > 0, "Multiple must be greater than zero", nameof(multiple));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(multiple);
             _multiple = (uint)multiple;
         }
 
