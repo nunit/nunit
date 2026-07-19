@@ -7,7 +7,7 @@ NUnit consists of multiple components across separate layers: the Framework, the
 - [NUnit Roslyn Analyzer](https://github.com/nunit/nunit.analyzers) Roslyn Code analysis and quick fixes for NUnit.
 - [NUnit Console and Engine](https://github.com/nunit/nunit-console)  The Console is a separate runner. The engine is used also by the adapter.
 
-## How to get the source Code
+## How to get the source code
 
 You will not have permission to create branches directly in any of the above repositories, so you will need to work on a local fork.
 
