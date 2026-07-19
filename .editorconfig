@@ -142,6 +142,9 @@ csharp_style_expression_bodied_properties = when_on_single_line:suggestion
 # Microsofts own MemberNotNull attribute expects an array
 dotnet_diagnostic.CS3016.severity = none
 
+# CA1510: Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1510.severity = warning
+
 ############################################################################################
 # IDE Analysis
 ############################################################################################
