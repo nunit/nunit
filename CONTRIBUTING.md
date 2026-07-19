@@ -8,7 +8,7 @@ Helping out isn't just writing code, it also includes submitting issues, helping
 
 [Who can contribute](#who-can-contribute) Anyone can, but you need to fulfill certain simple requirements
 
-[Use of AI]()  AI is a very powerful tool, so yes you, but we have certain guidelines you should follow.
+[Use of AI and prevention of AI Slop](#use-of-ai-and-prevention-of-ai-slop)  AI is a very powerful tool, so yes you can use it, but we have certain guidelines you should follow.
 
 [Submitting issues](#submitting-issues)  Requests for new features and bug reports keep the project moving forward.  
 
@@ -50,6 +50,52 @@ Here are a few examples of good GitHub profiles (including some of the NUnit mai
 - [Steven](https://github.com/stevenaw)
 
 PS: *We will never discriminate against anyone based on who you are or why you want to contribute.*
+
+## Use of AI and Prevention of AI Slop
+
+AI is here to stay, and yes, we know you'll use it — we do too. The important part is **how** you use it. AI is a powerful tool when used wisely, and it can make you both more productive and a better contributor.
+
+> [!IMPORTANT]
+> We don't accept [AI Slop](https://arxiv.org/html/2603.27249v1): large amounts of AI-generated content that has not been properly reviewed, understood, or validated by the contributor.
+>
+> Contributions generated and submitted entirely by AI agents, without meaningful human review and ownership, are not accepted.
+>
+> **You are responsible for everything you submit**, regardless of whether it was written by you or generated with the help of AI.  Please don't create unnecessary work for the maintainers by submitting content that hasn't been properly reviewed, understood, or tested.
+>
+> Repeated violations may result in you being blocked from contributing.
+
+### These are easy wins
+
+- Use AI to improve spelling, grammar, and sentence structure.
+- Use AI to analyze existing code and explain how it works.
+- Use AI to help you understand an issue or come up with a plan before you start coding.
+- Use AI to review your own work before submitting it.
+
+### But be more careful with coding and documentation
+
+- Use AI to write code, but keep the context small and generate small, focused changes. **You** should know what you want to achieve and **you** should drive the AI—not the other way around.
+- Use AI to write unit tests, but keep in mind that you must explicitly steer it to test the **problem**, not just verify the fix it suggested.
+- Use AI to help write documentation, but always read it carefully yourself and verify that it is actually correct.
+- Treat AI-generated code as a first draft. Review it just as carefully as you would review code from another contributor.
+- Don't submit code that you can't explain, debug, or maintain yourself.
+- Avoid large AI-generated rewrites or broad refactorings unless they've first been discussed with a maintainer.
+- AI can confidently provide incorrect explanations. Always verify technical details before including them in code comments, documentation, issues, or pull requests.
+
+### AI works best when you stay in control
+
+The best AI-assisted contributions are usually those where the contributor already understands the problem and uses AI to speed up the work—not to replace their own thinking.
+
+**Think of AI as an assistant, not as the contributor.** It can help you work faster, but it should never replace your understanding, judgment, or responsibility.
+
+Small, well-understood, carefully reviewed contributions are almost always better than large AI-generated ones.
+
+Remember that maintainer time is one of the project's most valuable resources. Please help us spend it improving NUnit rather than reviewing AI-generated mistakes.
+
+### Further reading
+
+- LLVM's excellent
+  [AI Tool Use Policy](https://llvm.org/docs/AIToolPolicy.html),
+  which follows many of the same principles as ours.
 
 ## Submitting Issues
 
@@ -105,7 +151,7 @@ We love pull requests, but we do need them to follow a few guidelines.
 - In the issue, outline how you plan to fix it and discuss your approach with a maintainer to make sure you're heading in the right direction.
 - Before you start coding, please get confirmation from a maintainer to go ahead with the PR, or ask to have the issue assigned to you.
 - Always include unit tests with your PR. Make sure you test the problem itself, not just the specific fix you've implemented.
-- To help new contributors get their feet wet, we've marked a number of issues with the `good first issue` label. These are great places to start.
+- To help new contributors get their feet wet, we've marked a number of issues with the `good first issue` label. These are great places to start and are intended as learning opportunities. We encourage you to use AI to help you understand the problem or the code, but not to do the work for you. The goal is to learn how NUnit works, not just to get the issue closed.
 - It's also a good idea to leave a comment on the issue to let everyone know you're working on it. If you decide to stop, please let us know. Taking a break is perfectly normal, but it gives someone else the opportunity to pick up the work.
 
 Feel free to read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html#technical-practices) before contributing to get familiar with our coding standards and development practices.
