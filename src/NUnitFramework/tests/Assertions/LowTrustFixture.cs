@@ -161,8 +161,7 @@ namespace NUnit.Framework.Tests.Assertions
         }
         public object? Run(MethodInfo method, params object[] parameters)
         {
-            if (method is null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
             if (_appDomain is null)
                 throw new ObjectDisposedException(null);
 

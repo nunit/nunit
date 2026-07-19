@@ -160,8 +160,10 @@ namespace NUnit.Framework.Tests.Syntax
         {
             public MyClass(string s)
             {
+#pragma warning disable CA1510 // Use ArgumentNullException throw helper -- Intentionally parameterless for test assertions
                 if (s is null)
                     throw new ArgumentNullException();
+#pragma warning restore CA1510
             }
         }
     }
