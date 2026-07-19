@@ -1,11 +1,14 @@
-# Building NUnit
+# Building NUnit Framework
 
-NUnit consists of multiple components across separate layers: the Framework, the Engine, the Adapter, and the Console Runner. The source code for the main NUnit components is kept in four different GitHub repositories:
-
-- [NUnit Framework](https://github.com/nunit/nunit) The repo we're working on now.
-- [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter)  The Visual Studio/Dotnet adapter for NUnit
-- [NUnit Roslyn Analyzer](https://github.com/nunit/nunit.analyzers) Roslyn Code analysis and quick fixes for NUnit.
-- [NUnit Console and Engine](https://github.com/nunit/nunit-console)  The Console is a separate runner. The engine is used also by the adapter.
+> **Note**
+>
+> This document describes how to build the **NUnit Framework**, whose source code is maintained in the [NUnit Framework](https://github.com/nunit/nunit) repository.
+>
+> Other NUnit components are maintained in separate repositories:
+>
+> - [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter) – Integrates NUnit with Visual Studio and `dotnet test`.
+> - [NUnit Roslyn Analyzers](https://github.com/nunit/nunit.analyzers) – Roslyn analyzers and code fixes for NUnit projects.
+> - [NUnit Console and Engine](https://github.com/nunit/nunit-console) – The NUnit Console Runner and the underlying engine used by the console and adapter.
 
 ## How to get the source code
 
