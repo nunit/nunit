@@ -17,7 +17,7 @@ The development process for making code changes and submitting Pull Requests (PR
 2. Clone the fork to your computer
 3. Create a new branch, name of your choosing
 4. Work with the code to fix the issue you have
-5. Ensure the code build
+5. Ensure the code builds
 6. Ensure all NUnit tests pass locally (ie. run them on all targeted frameworks and on as many platforms that you have ie. Windows, Linux, Mac). The [Script Build](#script-build) section below gives exact instructions on how to do this from the Command Prompt / Terminal.
 7. Commit the code and push the branch to your fork
 8. Create the PR to NUnit (this is described in more detail [here](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/))
