@@ -65,7 +65,7 @@ The essential tasks are:
 
 | Task | build command |dotnet command |Description |
 |---|---|---| --- |
-| Restore |  --- | dotnet restore  |  Restore all dependencies. | 
+| Restore |  build --target restore | dotnet restore  |  Restore all dependencies. | 
 | Build | build    | dotnet build | Builds everything, also restore. This is the default if no target is given. |
 | Rebuild| build --target Rebuild  | dotnet clean && dotnet build | Cleans the output directory and builds everything |
 | Test | build --target Test     | dotnet test | Runs all tests. Dependent on Build. |
