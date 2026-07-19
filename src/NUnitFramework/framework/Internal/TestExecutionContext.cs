@@ -423,7 +423,12 @@ namespace NUnit.Framework.Internal
         /// The filtered list of tests that will run under the current suite.
         /// Set immediately before OneTimeSetUp executes; null at all other times.
         /// </summary>
-        internal IReadOnlyList<ITest>? ActiveTests { get; set; }
+        internal IReadOnlyList<ITest>? ActiveTests => _activeTests?.Value;
+
+        private Lazy<IReadOnlyList<ITest>>? _activeTests;
+
+        internal void SetActiveTests(Func<IReadOnlyList<ITest>> factory)
+            => _activeTests = new Lazy<IReadOnlyList<ITest>>(factory);
 
         #endregion
 

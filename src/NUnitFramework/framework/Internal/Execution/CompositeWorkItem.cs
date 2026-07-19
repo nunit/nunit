@@ -235,7 +235,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void PerformOneTimeSetUp()
         {
-            Context.ActiveTests = CollectActiveTests(Children);
+            Context.SetActiveTests(() => CollectActiveTests(Children));
             try
             {
                 _setupCommand?.Execute(Context);
