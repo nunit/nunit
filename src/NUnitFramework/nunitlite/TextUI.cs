@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using NUnit;
 using NUnit.Common;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -230,7 +231,7 @@ namespace NUnitLite
                 WriteRunSetting(setting.Key, setting.Value);
 
             if (!runSettings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers))
-                WriteRunSetting(FrameworkPackageSettings.NumberOfTestWorkers, Math.Max(Environment.ProcessorCount, 2));
+                WriteRunSetting(FrameworkPackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
 
 #if !NETFRAMEWORK
             if (_options.DefaultTimeout >= 0)
