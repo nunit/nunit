@@ -9,7 +9,7 @@ NUnit consists of multiple components across separate layers: the Framework, the
 
 ## How to get the source Code
 
-You will not have permission to create branches directly in either of the above repositories so you will need to work on a local fork.
+You will not have permission to create branches directly in any of the above repositories, so you will need to work on a local fork.
 
 The development process for making code changes and submitting Pull Requests (PRs) is as follows:
 
