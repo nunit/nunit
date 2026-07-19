@@ -1,6 +1,6 @@
 # Building NUnit
 
-NUnit consists of multiple components across separate layers: the Framework, the Engine, the Adapter, and the Console Runner. The source code for the main NUnit components is kept in four different GitHub repositories
+NUnit consists of multiple components across separate layers: the Framework, the Engine, the Adapter, and the Console Runner. The source code for the main NUnit components is kept in four different GitHub repositories:
 
 - [NUnit Framework](https://github.com/nunit/nunit) The repo we're working on now.
 - [NUnit Visual Studio Adapter](https://github.com/nunit/nunit3-vs-adapter)  The Visual Studio/Dotnet adapter for NUnit
