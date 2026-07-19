@@ -17,9 +17,10 @@ namespace System
             /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
             /// <param name="value">The argument to validate as non-negative.</param>
             /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
-            public static void ThrowIfNegative(int value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+            public static void ThrowIfNegative<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+                where T : IComparable<T>
             {
-                if (value < 0)
+                if (value.CompareTo(default(T)) < 0)
                 {
                     ThrowNegative(value, paramName);
                 }
@@ -40,7 +41,7 @@ namespace System
         }
 
         [DoesNotReturn]
-        private static void ThrowNegative(int value, string? paramName) =>
+        private static void ThrowNegative<T>(T value, string? paramName) =>
             throw new ArgumentOutOfRangeException(paramName, value, "Value must be non-negative.");
 
         [DoesNotReturn]
