@@ -158,7 +158,7 @@ We love pull requests, but we do need them to follow a few guidelines.
 
 Feel free to read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html#technical-practices) before contributing to get familiar with our coding standards and development practices.
 
-Always build the project locally before submitting a PR. If you've broken one of our coding standards, you should see a warning in your IDE or an error if building from command line. You can build on the command line using [our build script](BUILDING.md#script-build) via `dotnet build`.
+Always build the project locally before submitting a PR. If you've broken one of our coding standards, you should see a warning in your IDE or an error if building from command line. You can build on the command line using [our build script](BUILDING.md#building-the-solution) or via `dotnet build`.
 
 When you're ready to contribute, instructions for building the project and running the tests can be found in [BUILDING.md](https://github.com/nunit/nunit/blob/master/BUILDING.md).
 
