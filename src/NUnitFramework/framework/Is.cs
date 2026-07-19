@@ -322,22 +322,6 @@ namespace NUnit.Framework
             return new EqualNumericConstraint<sbyte>(expected);
         }
 
-        /// <summary>
-        /// Returns a constraint that tests two numbers for equality
-        /// </summary>
-        public static EqualNumericConstraint<nint> EqualTo(nint expected)
-        {
-            return new EqualNumericConstraint<nint>(expected);
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests two numbers for equality
-        /// </summary>
-        public static EqualNumericConstraint<nuint> EqualTo(nuint expected)
-        {
-            return new EqualNumericConstraint<nuint>(expected);
-        }
-
 #pragma warning restore CS3001 // Argument type is not CLS-compliant
 #pragma warning restore CS3002 // Return type is not CLS-compliant
 
