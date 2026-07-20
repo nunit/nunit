@@ -87,6 +87,12 @@ namespace NUnit.Framework
         public ResultAdapter Result => _result ??= new(_testExecutionContext.CurrentResult);
 
         /// <summary>
+        /// Gets the filtered list of tests that will run under the current suite.
+        /// Available in a suite's OneTimeSetUp and OneTimeTearDown; null in other contexts.
+        /// </summary>
+        public IReadOnlyList<ITest>? ActiveTests => _testExecutionContext.ActiveTests;
+
+        /// <summary>
         /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
         public string? WorkerId => _testExecutionContext.TestWorker?.Name;

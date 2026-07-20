@@ -419,6 +419,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal bool ExecutionHooksEnabled => _executionHooks is not null;
 
+        /// <summary>
+        /// The filtered list of tests that will run under the current suite.
+        /// Set immediately before OneTimeSetUp executes; null at all other times.
+        /// </summary>
+        internal IReadOnlyList<ITest>? ActiveTests => _activeTests?.Value;
+
+        private Lazy<IReadOnlyList<ITest>>? _activeTests;
+
+        internal void SetActiveTests(Func<IReadOnlyList<ITest>> factory)
+            => _activeTests = new Lazy<IReadOnlyList<ITest>>(factory);
+
         #endregion
 
         #region Instance Methods

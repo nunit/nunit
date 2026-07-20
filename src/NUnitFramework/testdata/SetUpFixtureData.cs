@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.TestUtilities
@@ -570,6 +571,65 @@ namespace NUnit.TestData.SetupFixture
             public static void DoNamespaceTearDown()
             {
                 SimpleEventRecorder.RegisterEvent("NS5.OneTimeTearDown");
+            }
+        }
+    }
+
+    namespace Namespace7
+    {
+        public static class ActiveTestsCapture
+        {
+            public static IReadOnlyList<ITest>? CapturedInSetUp;
+            public static IReadOnlyList<ITest>? CapturedInTearDown;
+
+            public static void Clear()
+            {
+                CapturedInSetUp = null;
+                CapturedInTearDown = null;
+            }
+        }
+
+        [SetUpFixture]
+        public class NUnitNamespaceSetUpFixture
+        {
+            [OneTimeSetUp]
+            public void DoNamespaceSetUp()
+            {
+                ActiveTestsCapture.CapturedInSetUp = TestContext.CurrentContext.ActiveTests;
+            }
+
+            [OneTimeTearDown]
+            public void DoNamespaceTearDown()
+            {
+                ActiveTestsCapture.CapturedInTearDown = TestContext.CurrentContext.ActiveTests;
+            }
+        }
+
+        [TestFixture]
+        public class FixtureA
+        {
+            [Test, Category("NS7Category")]
+            public void TestA1()
+            {
+            }
+
+            [Test]
+            public void TestA2()
+            {
+            }
+        }
+
+        [TestFixture]
+        public class FixtureB
+        {
+            [Test, Category("NS7Category")]
+            public void TestB1()
+            {
+            }
+
+            [Test]
+            public void TestB2()
+            {
             }
         }
     }
