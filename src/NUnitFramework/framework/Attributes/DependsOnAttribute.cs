@@ -18,9 +18,6 @@ namespace NUnit.Framework
         /// <param name="dependencyType">The type of fixture that must finish before this fixture starts.</param>
         public DependsOnAttribute(Type dependencyType)
         {
-            if (dependencyType is null)
-                throw new ArgumentNullException(nameof(dependencyType));
-
             DependencyType = dependencyType;
         }
 
