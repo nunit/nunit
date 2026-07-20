@@ -106,6 +106,8 @@ namespace NUnit.Framework.Internal.Execution
                     dependencyByFixture[fixture] = dependencyType;
             }
 
+            MarkCircularDependenciesAsInvalid(fixturesByType, dependencyByFixture);
+
             foreach (var dependency in dependencyByFixture)
             {
                 if (!fixturesByType.TryGetValue(dependency.Value, out var dependencyFixture))
@@ -113,6 +115,52 @@ namespace NUnit.Framework.Internal.Execution
 
                 dependency.Key.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
                 dependencyFixture.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
+            }
+        }
+
+        private static void MarkCircularDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        {
+            var visited = new HashSet<Test>();
+            var visiting = new HashSet<Test>();
+            var stack = new List<Test>();
+
+            foreach (var fixture in dependencyByFixture.Keys)
+                Visit(fixture);
+
+            void Visit(Test fixture)
+            {
+                if (visited.Contains(fixture))
+                    return;
+
+                visited.Add(fixture);
+                visiting.Add(fixture);
+                stack.Add(fixture);
+
+                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType)
+                    && fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                {
+                    if (visiting.Contains(dependencyFixture))
+                    {
+                        int cycleStartIndex = stack.IndexOf(dependencyFixture);
+                        if (cycleStartIndex >= 0)
+                            MarkCycle(stack, cycleStartIndex);
+                    }
+                    else
+                    {
+                        Visit(dependencyFixture);
+                    }
+                }
+
+                stack.RemoveAt(stack.Count - 1);
+                visiting.Remove(fixture);
+            }
+
+            static void MarkCycle(List<Test> dependencyPath, int cycleStartIndex)
+            {
+                const string reason = "Circular DependsOn dependency detected.";
+
+                for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
+                    dependencyPath[i].MakeInvalid(reason);
             }
         }
 
@@ -137,10 +185,13 @@ namespace NUnit.Framework.Internal.Execution
 
                 for (int i = 0; i < children.Count; i++)
                 {
-                    if (children[i].Test is not Test fixture || fixture.Properties.Get(PropertyNames.DependsOn) is not Type dependencyType)
+                    if (children[i].Test is not Test fixture || fixture.RunState == RunState.NotRunnable || fixture.Properties.Get(PropertyNames.DependsOn) is not Type dependencyType)
                         continue;
 
                     if (!indexByType.TryGetValue(dependencyType, out int dependencyIndex) || dependencyIndex < i)
+                        continue;
+
+                    if (children[dependencyIndex].Test is Test dependencyFixture && dependencyFixture.RunState == RunState.NotRunnable)
                         continue;
 
                     if (dependencyIndex == i)

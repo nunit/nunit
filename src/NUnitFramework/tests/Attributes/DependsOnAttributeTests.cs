@@ -82,5 +82,30 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
             });
         }
+
+        [Test]
+        public void CycleMarksAllFixturesAsNotRunnable()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyCycleA), typeof(FixtureDependencyCycleB));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
+            var cycleBResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleB));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(cycleAResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(cycleBResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(cycleAResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(cycleBResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(cycleAResult.Message, Does.Contain("Circular DependsOn dependency detected."));
+                Assert.That(cycleBResult.Message, Does.Contain("Circular DependsOn dependency detected."));
+                Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+            });
+        }
     }
 }

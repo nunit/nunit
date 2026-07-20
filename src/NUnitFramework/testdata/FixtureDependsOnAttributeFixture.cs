@@ -104,4 +104,38 @@ namespace NUnit.TestData
             FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailing) + ".OneTimeTearDown");
         }
     }
+
+    [TestFixture]
+    [DependsOn(typeof(FixtureDependencyCycleB))]
+    public class FixtureDependencyCycleA
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyCycleA) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void A()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(FixtureDependencyCycleA))]
+    public class FixtureDependencyCycleB
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyCycleB) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void B()
+        {
+            Assert.Pass();
+        }
+    }
 }
