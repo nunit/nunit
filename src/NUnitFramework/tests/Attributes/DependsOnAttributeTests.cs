@@ -53,8 +53,8 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(work!.Children, Has.Count.EqualTo(2));
                 Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(FixtureDependencyBefore)));
                 Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(FixtureDependencyAfter)));
-                Assert.That(work.Children[0].ParallelScope, Is.EqualTo(ParallelScope.None));
-                Assert.That(work.Children[1].ParallelScope, Is.EqualTo(ParallelScope.None));
+                Assert.That(work.Children[0].ParallelScope, Is.EqualTo(ParallelScope.Default));
+                Assert.That(work.Children[1].ParallelScope, Is.EqualTo(ParallelScope.Default));
             });
         }
 
@@ -149,6 +149,44 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(targetResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(targetResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(targetResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
+            });
+        }
+
+        [Test]
+        public void ParallelConfiguredFixtureInvalidatesDependencyChain()
+        {
+            var suite = new TestSuite("dummy")
+                .Containing(typeof(FixtureDependencyParallelAfter), typeof(FixtureDependencyParallelBeforeSlow), typeof(FixtureDependencyParallelIndependent));
+            suite.Properties.Set(PropertyNames.ParallelScope, ParallelScope.Fixtures);
+
+            var dispatcher = new ParallelWorkItemDispatcher(4);
+            var context = new TestExecutionContext
+            {
+                Dispatcher = dispatcher
+            };
+
+            var work = TestBuilder.CreateWorkItem(suite, context) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            dispatcher.Start(work!);
+            work!.WaitForCompletion();
+
+            var result = work.Result;
+            var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelBeforeSlow));
+            var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelAfter));
+            var independentResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelIndependent));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(beforeResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(beforeResult.Message, Does.Contain("Fixture dependency chains may not include fixtures configured for parallel execution."));
+                Assert.That(afterResult.Message, Does.Contain("Fixture dependency chains may not include fixtures configured for parallel execution."));
+                Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeSetUp"));
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelAfter) + ".OneTimeSetUp"));
             });
         }
     }

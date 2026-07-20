@@ -107,16 +107,7 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             MarkCircularDependenciesAsInvalid(fixturesByType, dependencyByFixture);
-            MarkDependencyAndOrderConflictsAsInvalid(fixturesByType, dependencyByFixture);
-
-            foreach (var dependency in dependencyByFixture)
-            {
-                if (!fixturesByType.TryGetValue(dependency.Value, out var dependencyFixture))
-                    continue;
-
-                dependency.Key.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
-                dependencyFixture.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
-            }
+            MarkDependencyConflictsAsInvalid(fixturesByType, dependencyByFixture);
         }
 
         private static void MarkCircularDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
@@ -165,9 +156,10 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private static void MarkDependencyAndOrderConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        private static void MarkDependencyConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
         {
-            const string reason = "Fixture may not participate in both DependsOn and Order chains.";
+            const string orderReason = "Fixture may not participate in both DependsOn and Order chains.";
+            const string parallelReason = "Fixture dependency chains may not include fixtures configured for parallel execution.";
 
             var dependencyParticipants = new HashSet<Test>(dependencyByFixture.Keys);
 
@@ -180,7 +172,15 @@ namespace NUnit.Framework.Internal.Execution
             foreach (var fixture in dependencyParticipants)
             {
                 if (fixture.Properties.ContainsKey(PropertyNames.Order))
-                    fixture.MakeInvalid(reason);
+                    fixture.MakeInvalid(orderReason);
+                if (IsConfiguredParallelWithOtherFixtures(fixture))
+                    fixture.MakeInvalid(parallelReason);
+            }
+
+            static bool IsConfiguredParallelWithOtherFixtures(Test fixture)
+            {
+                var scope = fixture.Properties.TryGet(PropertyNames.ParallelScope, ParallelScope.Default);
+                return scope.HasFlag(ParallelScope.Self) && !scope.HasFlag(ParallelScope.None);
             }
         }
 

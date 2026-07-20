@@ -1,17 +1,27 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
+using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData
 {
     public static class FixtureDependencyEvents
     {
+        private static readonly object SyncRoot = new();
+
         public static List<string> Events { get; } = new();
 
         public static void Reset()
         {
-            Events.Clear();
+            lock (SyncRoot)
+                Events.Clear();
+        }
+
+        public static void Record(string value)
+        {
+            lock (SyncRoot)
+                Events.Add(value);
         }
     }
 
@@ -178,6 +188,65 @@ namespace NUnit.TestData
     {
         [Test]
         public void Referrer()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public class FixtureDependencyParallelBeforeSlow
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void BeforeSlowTest()
+        {
+            Thread.Sleep(150);
+            Assert.Pass();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeTearDown");
+        }
+    }
+
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    [DependsOn(typeof(FixtureDependencyParallelBeforeSlow))]
+    public class FixtureDependencyParallelAfter
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelAfter) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void AfterParallelDependency()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public class FixtureDependencyParallelIndependent
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelIndependent) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void IndependentTest()
         {
             Assert.Pass();
         }
