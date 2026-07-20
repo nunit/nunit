@@ -77,7 +77,7 @@ Task("Clean")
 // NUGET RESTORE
 //////////////////////////////////////////////////////////////////////
 
-Task("NuGetRestore")
+Task("Restore")
     .Description("Restores NuGet Packages")
     .Does(() =>
     {
@@ -90,7 +90,7 @@ Task("NuGetRestore")
 
 Task("Build")
     .Description("Builds the Solution")
-    .IsDependentOn("NuGetRestore")
+    .IsDependentOn("Restore")
     .Does(() =>
     {
         DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
