@@ -10,7 +10,7 @@ namespace NUnit.TestData
     {
         private static readonly object SyncRoot = new();
 
-        public static List<string> Events { get; } = new();
+        public static List<string> Events { get; } = [];
 
         public static void Reset()
         {

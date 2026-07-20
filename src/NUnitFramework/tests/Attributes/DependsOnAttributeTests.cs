@@ -24,18 +24,18 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var usage = (AttributeUsageAttribute)Attribute.GetCustomAttribute(typeof(DependsOnAttribute), typeof(AttributeUsageAttribute))!;
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(usage.ValidOn, Is.EqualTo(AttributeTargets.Class));
                 Assert.That(usage.AllowMultiple, Is.False);
                 Assert.That(usage.Inherited, Is.False);
-            });
+            }
         }
 
         [Test]
         public void AppliesDependencyTypeToFixtureProperties()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(FixtureDependencyAfter));
+            var fixture = TestBuilder.MakeFixture<FixtureDependencyAfter>();
 
             Assert.That(fixture.Properties.Get(PropertyNames.DependsOn), Is.EqualTo(typeof(FixtureDependencyBefore)));
         }
@@ -48,14 +48,14 @@ namespace NUnit.Framework.Tests.Attributes
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
             Assert.That(work, Is.Not.Null);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(work!.Children, Has.Count.EqualTo(2));
                 Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(FixtureDependencyBefore)));
                 Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(FixtureDependencyAfter)));
                 Assert.That(work.Children[0].ParallelScope, Is.EqualTo(ParallelScope.Default));
                 Assert.That(work.Children[1].ParallelScope, Is.EqualTo(ParallelScope.Default));
-            });
+            }
         }
 
         [Test]
@@ -74,13 +74,13 @@ namespace NUnit.Framework.Tests.Attributes
             var beforeTearDownIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyBeforeFailing) + ".OneTimeTearDown");
             var afterSetUpIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyAfterFailing) + ".OneTimeSetUp");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
                 Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
-            });
+            }
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Tests.Attributes
             var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
             var cycleBResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleB));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(cycleAResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(cycleBResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(cycleAResult.Message, Does.Contain("Circular DependsOn dependency detected."));
                 Assert.That(cycleBResult.Message, Does.Contain("Circular DependsOn dependency detected."));
                 Assert.That(FixtureDependencyEvents.Events, Is.Empty);
-            });
+            }
         }
 
         [Test]
@@ -121,13 +121,13 @@ namespace NUnit.Framework.Tests.Attributes
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderBefore));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderAfter));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(afterResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
-            });
+            }
         }
 
         [Test]
@@ -143,13 +143,13 @@ namespace NUnit.Framework.Tests.Attributes
             var referrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderReferrer));
             var targetResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderTarget));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(targetResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(targetResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(targetResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
-            });
+            }
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Tests.Attributes
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelAfter));
             var independentResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelIndependent));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeSetUp"));
                 Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelAfter) + ".OneTimeSetUp"));
-            });
+            }
         }
     }
 }

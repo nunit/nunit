@@ -15,16 +15,16 @@ namespace NUnit.Framework
         /// <summary>
         /// Initializes a new instance of the <see cref="DependsOnAttribute"/> class.
         /// </summary>
-        /// <param name="dependencyType">The type of fixture that must finish before this fixture starts.</param>
-        public DependsOnAttribute(Type dependencyType)
+        /// <param name="dependantFixture">The test fixture that must finish before this fixture starts.</param>
+        public DependsOnAttribute(Type dependantFixture)
         {
-            DependencyType = dependencyType;
+            DependantFixture = dependantFixture;
         }
 
         /// <summary>
-        /// Gets the type of fixture that must finish before this fixture starts.
+        /// Gets the test fixture that must finish before this fixture starts.
         /// </summary>
-        public Type DependencyType { get; }
+        public Type DependantFixture { get; }
 
         /// <summary>
         /// Applies dependency metadata to a test.
@@ -32,7 +32,7 @@ namespace NUnit.Framework
         /// <param name="test">The test.</param>
         public void ApplyToTest(Test test)
         {
-            test.Properties.Set(PropertyNames.DependsOn, DependencyType);
+            test.Properties.Set(PropertyNames.DependsOn, DependantFixture);
         }
 
         /// <summary>
