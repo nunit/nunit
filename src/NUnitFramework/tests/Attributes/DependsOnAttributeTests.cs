@@ -107,5 +107,49 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(FixtureDependencyEvents.Events, Is.Empty);
             });
         }
+
+        [Test]
+        public void FixtureUsingDependsOnAndOrderIsMarkedInvalid()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderBefore), typeof(FixtureDependencyOrderAfter));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderBefore));
+            var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderAfter));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(afterResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
+            });
+        }
+
+        [Test]
+        public void DependencyTargetWithOrderIsMarkedInvalid()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderReferrer), typeof(FixtureDependencyOrderTarget));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var referrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderReferrer));
+            var targetResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderTarget));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(targetResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(targetResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(targetResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
+            });
+        }
     }
 }

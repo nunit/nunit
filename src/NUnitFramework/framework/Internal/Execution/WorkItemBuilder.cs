@@ -107,6 +107,7 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             MarkCircularDependenciesAsInvalid(fixturesByType, dependencyByFixture);
+            MarkDependencyAndOrderConflictsAsInvalid(fixturesByType, dependencyByFixture);
 
             foreach (var dependency in dependencyByFixture)
             {
@@ -161,6 +162,25 @@ namespace NUnit.Framework.Internal.Execution
 
                 for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
                     dependencyPath[i].MakeInvalid(reason);
+            }
+        }
+
+        private static void MarkDependencyAndOrderConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        {
+            const string reason = "Fixture may not participate in both DependsOn and Order chains.";
+
+            var dependencyParticipants = new HashSet<Test>(dependencyByFixture.Keys);
+
+            foreach (var dependency in dependencyByFixture.Values)
+            {
+                if (fixturesByType.TryGetValue(dependency, out Test? dependencyFixture))
+                    dependencyParticipants.Add(dependencyFixture);
+            }
+
+            foreach (var fixture in dependencyParticipants)
+            {
+                if (fixture.Properties.ContainsKey(PropertyNames.Order))
+                    fixture.MakeInvalid(reason);
             }
         }
 

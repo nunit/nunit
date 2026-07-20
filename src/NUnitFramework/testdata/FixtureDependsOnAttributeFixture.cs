@@ -138,4 +138,48 @@ namespace NUnit.TestData
             Assert.Pass();
         }
     }
+
+    [TestFixture]
+    public class FixtureDependencyOrderBefore
+    {
+        [Test]
+        public void Before()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(FixtureDependencyOrderBefore))]
+    [Order(1)]
+    public class FixtureDependencyOrderAfter
+    {
+        [Test]
+        public void After()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [Order(2)]
+    public class FixtureDependencyOrderTarget
+    {
+        [Test]
+        public void Target()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(FixtureDependencyOrderTarget))]
+    public class FixtureDependencyOrderReferrer
+    {
+        [Test]
+        public void Referrer()
+        {
+            Assert.Pass();
+        }
+    }
 }
