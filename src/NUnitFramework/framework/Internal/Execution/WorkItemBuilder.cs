@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -54,6 +55,8 @@ namespace NUnit.Framework.Internal.Execution
 
             if (recursive)
             {
+                PrepareFixtureDependencies(suite);
+
                 int countOrderedItems = 0;
 
                 foreach (var childTest in suite.Tests)
@@ -80,8 +83,81 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (countOrderedItems > 0)
                     work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
+
+                if (work is not null)
+                    ReorderChildrenByDependency(work.Children);
             }
             return work;
+        }
+
+        private static void PrepareFixtureDependencies(TestSuite suite)
+        {
+            var fixturesByType = new Dictionary<Type, Test>();
+            var dependencyByFixture = new Dictionary<Test, Type>();
+
+            foreach (var child in suite.Tests)
+            {
+                if (child is not Test fixture || fixture.TypeInfo?.Type is null)
+                    continue;
+
+                fixturesByType[fixture.TypeInfo.Type] = fixture;
+
+                if (fixture.Properties.Get(PropertyNames.DependsOn) is Type dependencyType)
+                    dependencyByFixture[fixture] = dependencyType;
+            }
+
+            foreach (var dependency in dependencyByFixture)
+            {
+                if (!fixturesByType.TryGetValue(dependency.Value, out var dependencyFixture))
+                    continue;
+
+                dependency.Key.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
+                dependencyFixture.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
+            }
+        }
+
+        private static void ReorderChildrenByDependency(List<WorkItem> children)
+        {
+            if (children.Count < 2)
+                return;
+
+            bool moved;
+            int remainingPasses = children.Count * children.Count;
+
+            do
+            {
+                moved = false;
+
+                var indexByType = new Dictionary<Type, int>();
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i].Test is Test fixture && fixture.TypeInfo?.Type is Type fixtureType)
+                        indexByType[fixtureType] = i;
+                }
+
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i].Test is not Test fixture || fixture.Properties.Get(PropertyNames.DependsOn) is not Type dependencyType)
+                        continue;
+
+                    if (!indexByType.TryGetValue(dependencyType, out int dependencyIndex) || dependencyIndex < i)
+                        continue;
+
+                    if (dependencyIndex == i)
+                        continue;
+
+                    var dependentChild = children[i];
+                    children.RemoveAt(i);
+
+                    if (dependencyIndex > i)
+                        dependencyIndex--;
+
+                    children.Insert(dependencyIndex + 1, dependentChild);
+                    moved = true;
+                    break;
+                }
+            }
+            while (moved && remainingPasses-- > 0);
         }
 
         #endregion

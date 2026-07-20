@@ -121,6 +121,11 @@ namespace NUnit.Framework.Internal
         public const string Order = "Order";
 
         /// <summary>
+        /// The fixture type that this fixture depends on
+        /// </summary>
+        public const string DependsOn = "DependsOn";
+
+        /// <summary>
         /// The default status for a test with no runnable children
         /// </summary>
         public const string NoTests = "NoTests";
