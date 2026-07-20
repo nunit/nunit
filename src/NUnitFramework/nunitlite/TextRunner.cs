@@ -272,7 +272,7 @@ namespace NUnitLite
         {
             ITestResult result = _runner.Run(this, filter);
 
-            ReportResults(result);
+            ReportResults(result, runSettings);
 
             if (_options.ResultOutputSpecifications.Count > 0)
             {
@@ -289,6 +289,11 @@ namespace NUnitLite
 
         public void ReportResults(ITestResult result)
         {
+            ReportResults(result, MakeRunSettings(_options));
+        }
+
+        private void ReportResults(ITestResult result, IDictionary<string, object> runSettings)
+        {
             Summary = new ResultSummary(result);
 
             if (Summary.ExplicitCount + Summary.SkipCount + Summary.IgnoreCount > 0)
@@ -302,7 +307,7 @@ namespace NUnitLite
                 _textUI.PrintFullReport(_result);
 #endif
 
-            _textUI.DisplayRunSettings();
+            _textUI.DisplayRunSettings(runSettings);
 
             _textUI.DisplaySummaryReport(Summary);
         }

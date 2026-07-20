@@ -1,11 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using NUnit;
 using NUnit.Common;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -214,31 +217,46 @@ namespace NUnitLite
 
         public void DisplayRunSettings()
         {
+            DisplayRunSettings(TextRunner.MakeRunSettings(_options));
+        }
+
+        internal void DisplayRunSettings(IDictionary<string, object> runSettings)
+        {
             if (_quiet)
                 return;
 
             WriteSectionHeader("Run Settings");
 
+            foreach (KeyValuePair<string, object> setting in runSettings)
+                WriteRunSetting(setting.Key, setting.Value);
+
+            if (!runSettings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers))
+                WriteRunSetting(FrameworkPackageSettings.NumberOfTestWorkers, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+
+#if !NETFRAMEWORK
             if (_options.DefaultTimeout >= 0)
-#if NETFRAMEWORK
-                Writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
-#else
                 Writer.WriteLine(ColorStyle.Warning, $"    Default timeout ({_options.DefaultTimeout}) is only supported on .NET Framework; use CancelAfter on modern .NET.");
 #endif
-
-            Writer.WriteLabelLine(
-                "    Number of Test Workers: ",
-                _options.NumberOfTestWorkers >= 0
-                    ? _options.NumberOfTestWorkers
-                    : Math.Max(Environment.ProcessorCount, 2));
-
-            Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
-            Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");
 
             if (_options.TeamCity)
                 Writer.WriteLine(ColorStyle.Value, "    Display TeamCity Service Messages");
 
             Writer.WriteLine();
+        }
+
+        private void WriteRunSetting(string name, object value)
+        {
+            if (value is IDictionary dictionary)
+            {
+                Writer.WriteLabelLine($"    {name}:", string.Empty);
+
+                foreach (DictionaryEntry entry in dictionary)
+                    Writer.WriteLine(ColorStyle.Value, $"        {entry.Key} -> |{entry.Value}|");
+            }
+            else
+            {
+                Writer.WriteLabelLine($"    {name}: ", $"|{value}|");
+            }
         }
 
         #endregion

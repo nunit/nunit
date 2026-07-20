@@ -85,6 +85,29 @@ namespace NUnitLite.Tests
             Assert.That(Report, Does.Match("^Runtime Environment\n   OS Version:.*\n  CLR Version:.*\n\n$"));
         }
 
+        [Test]
+        public void DisplayRunSettingsIncludesEveryFrameworkSetting()
+        {
+            var settings = new Dictionary<string, object>
+            {
+                ["CustomFrameworkSetting"] = "enabled",
+                ["NumberOfTestWorkers"] = 4,
+                ["TestParametersDictionary"] = new Dictionary<string, string>
+                {
+                    ["environment"] = "ci"
+                }
+            };
+
+            CreateTextUI().DisplayRunSettings(settings);
+
+            Assert.That(Report, Is.EqualTo(
+                "Run Settings\n" +
+                "    CustomFrameworkSetting: |enabled|\n" +
+                "    NumberOfTestWorkers: |4|\n" +
+                "    TestParametersDictionary:\n" +
+                "        environment -> |ci|\n\n"));
+        }
+
         [TestCase("Off", "")]
         [TestCase("On", "")]
         [TestCase("All", "=> NUnitLite.Tests.TextUITests.MyFakeMethod\n")]
