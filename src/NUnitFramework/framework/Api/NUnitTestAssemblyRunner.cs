@@ -319,6 +319,7 @@ namespace NUnit.Framework.Api
             return _runComplete.Wait(timeout);
         }
 
+#if THREAD_ABORT
         /// <summary>
         /// Signal any test run that is in process to stop. Return without error if no test is running.
         /// </summary>
@@ -334,6 +335,20 @@ namespace NUnit.Framework.Api
                 Context.Dispatcher.CancelRun(force);
             }
         }
+#else
+        /// <summary>
+        /// Signal any test run that is in process to stop. Return without error if no test is running.
+        /// </summary>
+        public void StopRun()
+        {
+            if (IsTestRunning && Context is not null)
+            {
+                Context.ExecutionStatus = TestExecutionStatus.StopRequested;
+
+                Context.Dispatcher.CancelRun(false);
+            }
+        }
+#endif
 
         #endregion
 

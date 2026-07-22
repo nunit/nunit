@@ -100,11 +100,18 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         bool WaitForCompletion(int timeout);
 
+#if THREAD_ABORT
         /// <summary>
         /// Signal any test run that is in process to stop. Return without error if no test is running.
         /// </summary>
         /// <param name="force">If true, kill any test-running threads</param>
         void StopRun(bool force);
+#else
+        /// <summary>
+        /// Signal any test run that is in process to stop. Return without error if no test is running.
+        /// </summary>
+        void StopRun();
+#endif
 
         #endregion
     }
