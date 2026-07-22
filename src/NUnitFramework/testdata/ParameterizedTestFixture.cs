@@ -71,4 +71,18 @@ namespace NUnit.TestData
         {
         }
     }
+
+    [TestFixture(typeof(string))]
+    [TestFixture(typeof(int))]
+    public static class GenericClassWith<T>
+    {
+        public class NestedClass
+        {
+            [Test]
+            public void Test()
+            {
+                Assert.That(typeof(T).IsClass, Is.True);
+            }
+        }
+    }
 }

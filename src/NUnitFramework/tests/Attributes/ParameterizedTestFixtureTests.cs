@@ -244,6 +244,44 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(
                 "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments."));
         }
+
+        [Test]
+        public void GenericTestWithNestedClassTests()
+        {
+            var suiteBuilder = new Framework.Internal.Builders.DefaultSuiteBuilder();
+            var typeInfo = new TypeWrapper(typeof(GenericClassWith<>.NestedClass));
+            Assert.That(suiteBuilder.CanBuildFrom(typeInfo), Is.True,
+                "Nested generic fixtures should be discoverable when the declaring type provides TestFixtureAttribute(s).");
+            TestSuite parameterizedFixture = suiteBuilder.BuildFrom(typeInfo);
+
+            Assert.That(parameterizedFixture.Tests, Has.Count.EqualTo(2));
+            var fixturesByName = parameterizedFixture.Tests.ToDictionary(t => t.Name);
+
+            const string successfulName = "GenericClassWith<String>+NestedClass";
+            const string unsuccessfulName = "GenericClassWith<Int32>+NestedClass";
+
+            Assert.That(fixturesByName.Keys, Is.EquivalentTo([successfulName, unsuccessfulName]));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(parameterizedFixture.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(fixturesByName[successfulName].RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(fixturesByName[unsuccessfulName].RunState, Is.EqualTo(RunState.Runnable));
+            }
+
+            ITestResult fixtureResult = TestBuilder.RunTest(parameterizedFixture);
+            Assert.That(fixtureResult.ResultState, Is.EqualTo(ResultState.ChildFailure), "Overall result");
+
+            var resultsByName = fixtureResult.Children.ToDictionary(r => r.Name);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultsByName[successfulName].ResultState, Is.EqualTo(ResultState.Success), successfulName);
+                ITestResult testResult = resultsByName[unsuccessfulName];
+                Assert.That(testResult.ResultState, Is.EqualTo(ResultState.ChildFailure), unsuccessfulName);
+                Assert.That(testResult.Children.First().ResultState, Is.EqualTo(ResultState.Failure), "Test");
+            }
+        }
     }
 
     [TestFixture(typeof(int))]

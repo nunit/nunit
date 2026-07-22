@@ -39,7 +39,10 @@ namespace NUnit.Framework.Internal.Builders
             // TODO: What about automatic fixtures? Should there
             // be some kind of error shown?
             if (typeInfo.IsGenericTypeDefinition)
-                return false;
+            {
+                return typeInfo.Type.DeclaringType is not null &&
+                       typeInfo.Type.DeclaringType.HasAttribute<IFixtureBuilder>(true);
+            }
 
             return typeInfo.HasMethodWithAttribute(typeof(IImplyFixture));
         }
@@ -66,6 +69,17 @@ namespace NUnit.Framework.Internal.Builders
             try
             {
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
+
+                if (builders.Length == 0 && typeInfo.IsGenericTypeDefinition)
+                {
+                    // If no fixture builder attributes are found on the type, we look for them on the declaring type, if any.
+                    Type? declaringType = typeInfo.Type.DeclaringType;
+                    while (builders.Length == 0 && declaringType is not null)
+                    {
+                        builders = GetFixtureBuilderAttributes(new TypeWrapper(declaringType));
+                        declaringType = declaringType.DeclaringType;
+                    }
+                }
 
                 foreach (var builder in builders)
                 {
