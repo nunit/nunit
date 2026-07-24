@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Diagnostics;
+using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.Tests
@@ -8,6 +10,7 @@ namespace NUnit.Tests
     {
         public const int SINGLE_TEST_DELAY = 1000;
 
+        [Category("Interruptable")]
         public class AAA
         {
             [Test]
@@ -27,6 +30,7 @@ namespace NUnit.Tests
             }
         }
 
+        [Category("Interruptable")]
         public class BBB
         {
             [Test]
@@ -46,28 +50,62 @@ namespace NUnit.Tests
             }
         }
 
+        [Category("Hanging")]
         public class CCC
         {
             [Test]
             public void Test1()
             {
-                SlowTests.Delay();
+                SlowTests.Hanging();
             }
             [Test]
             public void Test2()
             {
-                SlowTests.Delay();
+                SlowTests.Hanging();
             }
             [Test]
             public void Test3()
             {
-                SlowTests.Delay();
+                SlowTests.Hanging();
+            }
+        }
+
+        [Category("HangingOnOwnThread")]
+        public class DDD
+        {
+            [Test]
+            [RequiresThread]
+            public void Test1()
+            {
+                SlowTests.Hanging();
+            }
+            [Test]
+            [RequiresThread]
+            public void Test2()
+            {
+                SlowTests.Hanging();
+            }
+            [Test]
+            [RequiresThread]
+            public void Test3()
+            {
+                SlowTests.Hanging();
             }
         }
 
         private static void Delay()
         {
-            System.Threading.Thread.Sleep(SINGLE_TEST_DELAY);
+            Thread.Sleep(SINGLE_TEST_DELAY);
+        }
+
+        private static void Hanging()
+        {
+            const int numberOfRepeats = 10;
+
+            for (int i = 0; i < numberOfRepeats || Debugger.IsAttached; i++)
+            {
+                Delay();
+            }
         }
     }
 }

@@ -605,13 +605,45 @@ namespace NUnit.Framework.Tests.Api
         ];
 
         [TestCaseSource(nameof(StopRunCases))]
-        public void StopRun_WhenTestIsRunning_StopsTest(int workers, bool force)
+        public void StopRun_WhenInterruptibleTestIsRunning_StopsTest(int workers, bool force)
+        {
+            StopRun_WhenTestIsRunning_StopsTest(workers, "Interruptable", force);
+        }
+
+        #region Issue 3682 - StopRun not cancelling non-cooperative tests
+
+        /// <summary>
+        /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
+        /// </summary>
+        [Test]
+        [Explicit("This fails because only own threads are aborted, not worker threads")]
+        public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_OnWorkerThread()
+        {
+            // This test verifies that on .NET Framework, forced stop actually terminates tests
+            // On .NET Core/5+, this test is skipped because Thread.Abort is not available
+            StopRun_WhenTestIsRunning_StopsTest(0, "Hanging", true);
+        }
+
+        /// <summary>
+        /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
+        /// </summary>
+        [Test]
+        public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_RunningOwnThread()
+        {
+            // This test verifies that on .NET Framework, forced stop actually terminates tests
+            // On .NET Core/5+, this test is skipped because Thread.Abort is not available
+            StopRun_WhenTestIsRunning_StopsTest(0, "HangingOnOwnThread", true);
+        }
+
+        #endregion
+
+        private void StopRun_WhenTestIsRunning_StopsTest(int workers, string category, bool force)
         {
             var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
             var stopType = force ? "forced stop" : "cooperative stop";
 
-            _runner.RunAsync(this, TestFilter.Empty);
+            _runner.RunAsync(this, new CategoryFilter(category));
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
@@ -653,40 +685,15 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             }
         }
-#endif
 
-        #region Issue 3682 - StopRun not cancelling non-cooperative tests
-
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
-        /// <summary>
-        /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
-        /// On .NET Framework, this works via Thread.Abort.
-        /// On .NET Core/5+, Thread.Abort is not available, so non-cooperative tests
-        /// cannot be forcibly terminated.
-        /// </summary>
-        [Test]
-        public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_OnNetFramework()
+        private ITest LoadSlowTests(int workers)
         {
-            // This test verifies that on .NET Framework, forced stop actually terminates tests
-            // On .NET Core/5+, this test is skipped because Thread.Abort is not available
+            var settings = new Dictionary<string, object> { { FrameworkPackageSettings.NumberOfTestWorkers, workers } };
 
-            _ = LoadSlowTests(0); // Simple dispatcher
-            _runner.RunAsync(this, TestFilter.Empty);
-
-            // Wait for test to start
-            SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
-
-            // Force stop
-            _runner.StopRun(force: true);
-
-            // Should complete within reasonable time on .NET Framework
-            var completed = _runner.WaitForCompletion(CancelTestDelay);
-
-            Assert.That(completed, Is.True,
-                "StopRun(true) should terminate tests on .NET Framework");
+            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SlowTestsFile), settings);
         }
+
 #endif
-        #endregion
 
         #endregion
 
@@ -799,13 +806,6 @@ namespace NUnit.Framework.Tests.Api
 
         private static Assembly GetMockAssembly() =>
             AssemblyHelper.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, MockAssemblyFile));
-
-        private ITest LoadSlowTests(int workers)
-        {
-            var settings = new Dictionary<string, object> { { FrameworkPackageSettings.NumberOfTestWorkers, workers } };
-
-            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SlowTestsFile), settings);
-        }
 
         private void CheckParameterOutput(ITestResult result)
         {
