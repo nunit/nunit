@@ -83,11 +83,26 @@ namespace NUnit.Framework.Tests.Attributes
         [TestFixture, RequiresThread]
         public class FixtureRequiresThread
         {
-            [Test]
-            public void RequiresThreadCanBeSetOnTestFixture()
+            private Thread _thread;
+
+            [OneTimeSetUp]
+            public void SetUp()
             {
-                // TODO: Figure out how to test this
-                // Assert.That(Environment.StackTrace, Contains.Substring("RunTestProc"));
+                _thread = Thread.CurrentThread;
+                Assert.That(Thread.CurrentThread.Name, Is.EqualTo("NUnit.Fw.WorkItemThread"));
+                Assert.That(Environment.StackTrace, Contains.Substring("WorkItem.Start"));
+            }
+
+            [Test]
+            public void RequiresThreadCanBeSetOnTestFixture1()
+            {
+                Assert.That(Thread.CurrentThread, Is.EqualTo(_thread));
+            }
+
+            [Test]
+            public void RequiresThreadCanBeSetOnTestFixture2()
+            {
+                Assert.That(Thread.CurrentThread, Is.EqualTo(_thread));
             }
         }
 
