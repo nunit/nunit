@@ -283,6 +283,29 @@ namespace NUnit.Framework.Internal.Execution
                 if (CheckForCancellation())
                     break;
 
+                if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
+                {
+                    TestStatus? dependencyStatus = GetDependencyStatus(child);
+                    if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
+                    {
+                        Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
+                        string dependencyName = dependsOnType?.Name ?? "Unknown";
+                        string message = $"Dependency on {dependencyName} did not pass";
+                        SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
+
+                        lock (_childCompletionLock)
+                        {
+                            _suiteResult.AddResult(child.Result);
+                            _childTestCountdown!.Signal();
+                            if (_childTestCountdown.CurrentCount == 0)
+                                OnAllChildItemsCompleted();
+                        }
+
+                        childCount--;
+                        continue;
+                    }
+                }
+
                 child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
 
@@ -334,6 +357,30 @@ namespace NUnit.Framework.Internal.Execution
             result.StartTime = Context.StartTime;
             result.EndTime = DateTime.UtcNow;
             result.Duration = Context.Duration;
+        }
+
+        /// <summary>
+        /// Gets the status of a child's dependency, if any.
+        /// Returns null if the child has no dependency or the dependency hasn't been run yet.
+        /// </summary>
+        private TestStatus? GetDependencyStatus(WorkItem child)
+        {
+            var dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
+            if (dependsOnType is null)
+                return null;
+
+            // Find the dependency fixture in our children
+            foreach (var potentialDependency in Children)
+            {
+                if (potentialDependency.Test is Test fixture && fixture.TypeInfo?.Type == dependsOnType)
+                {
+                    // Return the status of the dependency if it has a result
+                    if (potentialDependency.Result.ResultState is ResultState resultState)
+                        return resultState.Status;
+                }
+            }
+
+            return null;
         }
 
         private void PerformOneTimeTearDown()

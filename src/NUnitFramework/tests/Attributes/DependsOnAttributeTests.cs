@@ -10,7 +10,7 @@ using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    [TestFixture]
+    [TestFixture, NonParallelizable]
     public class DependsOnAttributeTests
     {
         [SetUp]
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void DependentFixtureRunsAfterDependencyCompletesEvenIfDependencyFails()
+        public void DependentFixtureIsSkippedIfDependencyFails()
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailing), typeof(FixtureDependencyBeforeFailing));
 
@@ -77,9 +77,10 @@ namespace NUnit.Framework.Tests.Attributes
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
                 Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
-                Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
+                // The dependent fixture should not have run at all, so its SetUp should not be in the events
+                Assert.That(afterSetUpIndex, Is.EqualTo(-1));
             }
         }
 
@@ -145,7 +146,8 @@ namespace NUnit.Framework.Tests.Attributes
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(referrerResult.Message, Does.Contain("did not pass"));
                 Assert.That(targetResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(targetResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(targetResult.Message, Does.Contain("Fixture may not participate in both DependsOn and Order chains."));
