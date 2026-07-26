@@ -37,7 +37,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var fixture = TestBuilder.MakeFixture<FixtureDependencyAfter>();
 
-            Assert.That(fixture.Properties.Get(PropertyNames.DependsOn), Is.EqualTo(typeof(FixtureDependencyBefore)));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(fixture.Properties.Get(PropertyNames.DependsOn), Is.EqualTo(typeof(FixtureDependencyBefore)));
+                Assert.That(fixture.Properties.Get(PropertyNames.DependsOnRequiresSuccess), Is.EqualTo(true));
+            }
         }
 
         [Test]
@@ -81,6 +85,31 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
                 // The dependent fixture should not have run at all, so its SetUp should not be in the events
                 Assert.That(afterSetUpIndex, Is.EqualTo(-1));
+            }
+        }
+
+        [Test]
+        public void DependentFixtureRunsWhenDependencyFailsAndRequiresSuccessIsFalse()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailingAllowed), typeof(FixtureDependencyBeforeFailing));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
+            var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfterFailingAllowed));
+
+            var beforeTearDownIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyBeforeFailing) + ".OneTimeTearDown");
+            var afterSetUpIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeSetUp");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
+                Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
             }
         }
 

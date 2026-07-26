@@ -361,16 +361,20 @@ namespace NUnit.Framework.Internal.Execution
 
         /// <summary>
         /// Gets the status of a child's dependency, if any.
-        /// Returns null if the child has no dependency or the dependency hasn't been run yet.
+        /// Returns null if the child has no dependency, does not require a passing dependency,
+        /// or the dependency hasn't been run yet.
         /// </summary>
         private TestStatus? GetDependencyStatus(WorkItem child)
         {
-            var dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
+            if (!child.Test.Properties.TryGet(PropertyNames.DependsOnRequiresSuccess, true))
+                return null;
+
+            Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
             if (dependsOnType is null)
                 return null;
 
             // Find the dependency fixture in our children
-            foreach (var potentialDependency in Children)
+            foreach (WorkItem potentialDependency in Children)
             {
                 if (potentialDependency.Test is Test fixture && fixture.TypeInfo?.Type == dependsOnType)
                 {

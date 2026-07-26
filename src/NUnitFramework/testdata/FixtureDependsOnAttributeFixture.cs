@@ -116,6 +116,29 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    [DependsOn(typeof(FixtureDependencyBeforeFailing), RequiresSuccess = false)]
+    public class FixtureDependencyAfterFailingAllowed
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void AfterFailingDependencyAllowedTest()
+        {
+            Assert.Pass();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeTearDown");
+        }
+    }
+
+    [TestFixture]
     [DependsOn(typeof(FixtureDependencyCycleB))]
     public class FixtureDependencyCycleA
     {

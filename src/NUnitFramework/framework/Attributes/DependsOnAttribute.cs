@@ -13,6 +13,11 @@ namespace NUnit.Framework
     public sealed class DependsOnAttribute : NUnitAttribute, IApplyToTest, IApplyToTestSuite
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the dependent fixture must succeed for this fixture to run.
+        /// </summary>
+        public bool RequiresSuccess { get; set; } = true;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DependsOnAttribute"/> class.
         /// </summary>
         /// <param name="dependantFixture">The test fixture that must finish before this fixture starts.</param>
@@ -33,6 +38,7 @@ namespace NUnit.Framework
         public void ApplyToTest(Test test)
         {
             test.Properties.Set(PropertyNames.DependsOn, DependantFixture);
+            test.Properties.Set(PropertyNames.DependsOnRequiresSuccess, RequiresSuccess);
         }
 
         /// <summary>
