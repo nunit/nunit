@@ -139,6 +139,27 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void SelfReferentialMarksFixtureAsNotRunnable()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferential));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferential));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(selfReferentialResult.Message, Does.Contain("Circular DependsOn dependency detected."));
+                Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+            }
+        }
+
+        [Test]
         public void FixtureUsingDependsOnAndOrderIsMarkedInvalid()
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderBefore), typeof(FixtureDependencyOrderAfter));

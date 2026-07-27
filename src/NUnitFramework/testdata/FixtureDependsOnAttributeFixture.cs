@@ -183,6 +183,23 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    [DependsOn(typeof(FixtureDependencySelfReferential))]
+    public class FixtureDependencySelfReferential
+    {
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencySelfReferential) + ".OneTimeSetUp");
+        }
+
+        [Test]
+        public void B()
+        {
+            Assert.Pass();
+        }
+    }
+
+    [TestFixture]
     [DependsOn(typeof(FixtureDependencyOrderBefore))]
     [Order(1)]
     public class FixtureDependencyOrderAfter
