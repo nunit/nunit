@@ -81,7 +81,7 @@ namespace NUnit.Framework.Internal.Execution
                     }
                 }
 
-                if (countOrderedItems > 0)
+                if (countOrderedItems > 1)
                     work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
 
                 if (work is not null)

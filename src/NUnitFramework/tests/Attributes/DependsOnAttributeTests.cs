@@ -54,7 +54,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(work!.Children, Has.Count.EqualTo(2));
+                Assert.That(work.Children, Has.Count.EqualTo(2));
                 Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(FixtureDependencyBefore)));
                 Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(FixtureDependencyAfter)));
                 Assert.That(work.Children[0].ParallelScope, Is.EqualTo(ParallelScope.Default));
