@@ -128,7 +128,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Indicates whether the dependent fixture must succeed before the test can run
         /// </summary>
-        public const string DependsOnRequiresSuccess = "DependsOn.RequiresSuccess";
+        public const string DependsOnRequiresSuccess = $"{DependsOn}.RequiresSuccess";
 
         /// <summary>
         /// The default status for a test with no runnable children

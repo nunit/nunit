@@ -25,25 +25,29 @@ namespace NUnit.TestData
         }
     }
 
-    [TestFixture]
-    public class FixtureDependencyBefore
+    public class FixtureDependencyBase
     {
         [OneTimeSetUp]
         public void SetUp()
         {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyBefore) + ".OneTimeSetUp");
-        }
-
-        [Test]
-        public void BeforeTest()
-        {
-            Assert.Pass();
+            FixtureDependencyEvents.Record(GetType().Name + ".OneTimeSetUp");
         }
 
         [OneTimeTearDown]
         public void TearDown()
         {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyBefore) + ".OneTimeTearDown");
+            FixtureDependencyEvents.Record(GetType().Name + ".OneTimeTearDown");
+        }
+    }
+
+    #region Basic Functionality
+    [TestFixture]
+    public class FixtureDependencyBefore
+    {
+        [Test]
+        public void BeforeTest()
+        {
+            Assert.That(true, Is.True);
         }
     }
 
@@ -51,107 +55,88 @@ namespace NUnit.TestData
     [DependsOn(typeof(FixtureDependencyBefore))]
     public class FixtureDependencyAfter
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfter) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void AfterTest()
         {
-            Assert.Pass();
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfter) + ".OneTimeTearDown");
+            Assert.That(true, Is.True);
         }
     }
 
     [TestFixture]
-    public class FixtureDependencyBeforeFailing
+    public class FixtureDependencyBeforeFailing : FixtureDependencyBase
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyBeforeFailing) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void BeforeFailingTest()
         {
             Assert.Fail("Intentional failure for dependency behavior testing");
         }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyBeforeFailing) + ".OneTimeTearDown");
-        }
     }
 
     [TestFixture]
     [DependsOn(typeof(FixtureDependencyBeforeFailing))]
-    public class FixtureDependencyAfterFailing
+    public class FixtureDependencyAfterFailing : FixtureDependencyBase
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailing) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void AfterFailingDependencyTest()
         {
-            Assert.Pass();
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailing) + ".OneTimeTearDown");
+            Assert.That(true, Is.True);
         }
     }
 
     [TestFixture]
     [DependsOn(typeof(FixtureDependencyBeforeFailing), RequiresSuccess = false)]
-    public class FixtureDependencyAfterFailingAllowed
+    public class FixtureDependencyAfterFailingAllowed : FixtureDependencyBase
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void AfterFailingDependencyAllowedTest()
         {
-            Assert.Pass();
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeTearDown");
+            Assert.That(true, Is.True);
         }
     }
 
     [TestFixture]
+    public class ForkingDependencyRoot : FixtureDependencyBase
+    {
+        [Test]
+        public void RootTest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(ForkingDependencyRoot))]
+    public class ForkingDependencyNodeA : FixtureDependencyBase
+    {
+        [Test]
+        public void NodeATest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(ForkingDependencyRoot))]
+    public class ForkingDependencyNodeB : FixtureDependencyBase
+    {
+        [Test]
+        public void NodeBTest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    #endregion
+
+    #region Referential Integrity
+    [TestFixture]
     [DependsOn(typeof(FixtureDependencyCycleB))]
     public class FixtureDependencyCycleA
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyCycleA) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void A()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -159,26 +144,10 @@ namespace NUnit.TestData
     [DependsOn(typeof(FixtureDependencyCycleA))]
     public class FixtureDependencyCycleB
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencyCycleB) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void B()
         {
-            Assert.Pass();
-        }
-    }
-
-    [TestFixture]
-    public class FixtureDependencyOrderBefore
-    {
-        [Test]
-        public void Before()
-        {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -186,16 +155,22 @@ namespace NUnit.TestData
     [DependsOn(typeof(FixtureDependencySelfReferential))]
     public class FixtureDependencySelfReferential
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Events.Add(nameof(FixtureDependencySelfReferential) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void B()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
+        }
+    }
+    #endregion
+
+    #region Feature Compatibility
+    [TestFixture]
+    public class FixtureDependencyOrderBefore
+    {
+        [Test]
+        public void Before()
+        {
+            Assert.That(true, Is.True);
         }
     }
 
@@ -207,7 +182,7 @@ namespace NUnit.TestData
         [Test]
         public void After()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -218,7 +193,7 @@ namespace NUnit.TestData
         [Test]
         public void Target()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -229,7 +204,7 @@ namespace NUnit.TestData
         [Test]
         public void Referrer()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -237,23 +212,11 @@ namespace NUnit.TestData
     [Parallelizable(ParallelScope.All)]
     public class FixtureDependencyParallelBeforeSlow
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void BeforeSlowTest()
         {
             Thread.Sleep(150);
-            Assert.Pass();
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeTearDown");
+            Assert.That(true, Is.True);
         }
     }
 
@@ -262,16 +225,10 @@ namespace NUnit.TestData
     [DependsOn(typeof(FixtureDependencyParallelBeforeSlow))]
     public class FixtureDependencyParallelAfter
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelAfter) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void AfterParallelDependency()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
 
@@ -279,16 +236,11 @@ namespace NUnit.TestData
     [Parallelizable(ParallelScope.All)]
     public class FixtureDependencyParallelIndependent
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            FixtureDependencyEvents.Record(nameof(FixtureDependencyParallelIndependent) + ".OneTimeSetUp");
-        }
-
         [Test]
         public void IndependentTest()
         {
-            Assert.Pass();
+            Assert.That(true, Is.True);
         }
     }
+    #endregion
 }

@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests.Attributes
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(fixture.Properties.Get(PropertyNames.DependsOn), Is.EqualTo(typeof(FixtureDependencyBefore)));
-                Assert.That(fixture.Properties.Get(PropertyNames.DependsOnRequiresSuccess), Is.EqualTo(true));
+                Assert.That(fixture.Properties.Get(PropertyNames.DependsOnRequiresSuccess), Is.True);
             }
         }
 
@@ -110,6 +110,23 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
                 Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
+            }
+        }
+
+        [Test]
+        public void DependencyFixturesAreOrderedWhenDependeciesFork()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(ForkingDependencyRoot), typeof(ForkingDependencyNodeA), typeof(ForkingDependencyNodeB));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(work.Children, Has.Count.EqualTo(3));
+                Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(ForkingDependencyRoot)));
+                Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(ForkingDependencyNodeA)));
+                Assert.That(work.Children[2].Test.Name, Is.EqualTo(nameof(ForkingDependencyNodeB)));
             }
         }
 
