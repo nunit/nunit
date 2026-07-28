@@ -84,7 +84,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyBeforeFailing), RequiresSuccess = false)]
+    [DependsOn(typeof(FixtureDependencyBeforeFailing), AllowFailure = true)]
     public class FixtureDependencyAfterFailingAllowed : FixtureDependencyBase
     {
         [Test]

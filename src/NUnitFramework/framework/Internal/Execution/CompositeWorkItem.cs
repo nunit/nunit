@@ -366,7 +366,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private TestStatus? GetDependencyStatus(WorkItem child)
         {
-            if (!child.Test.Properties.TryGet(PropertyNames.DependsOnRequiresSuccess, true))
+            if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
                 return null;
 
             Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;

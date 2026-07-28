@@ -11,28 +11,28 @@ namespace NUnit.Framework.Internal
         #region Internal Properties
 
         /// <summary>
-        /// The FriendlyName of the AppDomain in which the assembly is running
+        /// The FriendlyName of the AppDomain in which the assembly is running.
         /// </summary>
         public const string AppDomain = "_APPDOMAIN";
 
         /// <summary>
-        /// The selected strategy for joining parameter data into test cases
+        /// The selected strategy for joining parameter data into test cases.
         /// </summary>
         public const string JoinType = "_JOINTYPE";
 
         /// <summary>
-        /// The process ID of the executing assembly
+        /// The process ID of the executing assembly.
         /// </summary>
         public const string ProcessId = "_PID";
 
         /// <summary>
-        /// The stack trace from any data provider that threw
+        /// The stack trace from any data provider that threw.
         /// an exception.
         /// </summary>
         public const string ProviderStackTrace = "_PROVIDERSTACKTRACE";
 
         /// <summary>
-        /// The reason a test was not run
+        /// The reason a test was not run.
         /// </summary>
         public const string SkipReason = "_SKIPREASON";
 
@@ -41,97 +41,97 @@ namespace NUnit.Framework.Internal
         #region Standard Properties
 
         /// <summary>
-        /// The author of the tests
+        /// The author of the tests.
         /// </summary>
         public const string Author = "Author";
 
         /// <summary>
-        /// The ApartmentState required for running the test
+        /// The ApartmentState required for running the test.
         /// </summary>
         public const string ApartmentState = "ApartmentState";
 
         /// <summary>
-        /// The categories applying to a test
+        /// The categories applying to a test.
         /// </summary>
         public const string Category = "Category";
 
         /// <summary>
-        /// The Description of a test
+        /// The Description of a test.
         /// </summary>
         public const string Description = "Description";
 
         /// <summary>
-        /// The number of threads to be used in running tests
+        /// The number of threads to be used in running tests.
         /// </summary>
         public const string LevelOfParallelism = "LevelOfParallelism";
 
         /// <summary>
-        /// The maximum time in ms, above which the test is considered to have failed
+        /// The maximum time in ms, above which the test is considered to have failed.
         /// </summary>
         public const string MaxTime = "MaxTime";
 
         /// <summary>
-        /// The ParallelScope associated with a test
+        /// The ParallelScope associated with a test.
         /// </summary>
         public const string ParallelScope = "ParallelScope";
 
         /// <summary>
-        /// The number of times the test should be repeated
+        /// The number of times the test should be repeated.
         /// </summary>
         public const string RepeatCount = "Repeat";
 
         /// <summary>
-        /// Indicates that the test should be run on a separate thread
+        /// Indicates that the test should be run on a separate thread.
         /// </summary>
         public const string RequiresThread = "RequiresThread";
 
         /// <summary>
-        /// The culture to be set for a test
+        /// The culture to be set for a test.
         /// </summary>
         public const string SetCulture = "SetCulture";
 
         /// <summary>
-        /// The UI culture to be set for a test
+        /// The UI culture to be set for a test.
         /// </summary>
         public const string SetUICulture = "SetUICulture";
 
         /// <summary>
-        /// The type that is under test
+        /// The type that is under test.
         /// </summary>
         public const string TestOf = "TestOf";
 
         /// <summary>
-        /// The timeout value for the test
+        /// The timeout value for the test.
         /// </summary>
         public const string Timeout = "Timeout";
 
         /// <summary>
-        /// The timeout value for the test
+        /// The timeout value for the test.
         /// </summary>
         public const string UseCancellation = "UseCancellation";
 
         /// <summary>
-        /// The test will be ignored until the given date
+        /// The test will be ignored until the given date.
         /// </summary>
         public const string IgnoreUntilDate = "IgnoreUntilDate";
 
         /// <summary>
-        /// The optional Order the test will run in
+        /// The optional Order the test will run in.
         /// </summary>
         public const string Order = "Order";
 
         /// <summary>
-        /// The fixture type that this fixture depends on
+        /// The fixture type that this fixture depends on.
         /// </summary>
         public const string DependsOn = "DependsOn";
 
         /// <summary>
-        /// Indicates whether the dependent fixture must succeed before the test can run
+        /// Indicates whether the dependent fixture is allowed to fail without affecting this fixture.
         /// </summary>
-        public const string DependsOnRequiresSuccess = $"{DependsOn}.RequiresSuccess";
+        public const string DependsOnAllowFailure = $"{DependsOn}.AllowFailure";
 
         /// <summary>
-        /// The default status for a test with no runnable children
+        /// The default status for a test with no runnable children.
         /// </summary>
         public const string NoTests = "NoTests";
 
