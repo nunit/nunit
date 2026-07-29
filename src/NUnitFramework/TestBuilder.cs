@@ -240,7 +240,7 @@ internal static class TestBuilder
             work.Execute();
         }
 
-        public void CancelRun(bool force)
+        public void CancelRun()
         {
             throw new NotImplementedException();
         }

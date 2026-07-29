@@ -75,20 +75,14 @@ namespace NUnit.Framework.Internal.Execution
         private readonly object _cancelLock = new();
 
         /// <summary>
-        /// Cancel (abort or stop) the ongoing run.
+        /// Cancel the ongoing run.
         /// If no run is in process, the call has no effect.
         /// </summary>
-        /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
-        public void CancelRun(bool force)
+        public void CancelRun()
         {
             lock (_cancelLock)
             {
-                if (_topLevelWorkItem is not null)
-                {
-                    _topLevelWorkItem.Cancel(force);
-                    if (force)
-                        _topLevelWorkItem = null;
-                }
+                _topLevelWorkItem?.Cancel();
             }
         }
         #endregion

@@ -585,39 +585,37 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
-
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
 
         [Test]
-        public void StopRun_WhenNoTestIsRunning_DoesNotThrow([Values] bool force)
+        public void StopRun_WhenNoTestIsRunning_DoesNotThrow()
         {
-            Assert.DoesNotThrow(() => _runner.StopRun(force));
+            Assert.DoesNotThrow(() => _runner.StopRun());
         }
 
         private static readonly TestCaseData[] StopRunCases =
         [
-            new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
-            new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
-            new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
-            new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
+            new TestCaseData(0).SetName("{m}(Simple dispatcher, cooperative stop)"),
+            new TestCaseData(2).SetName("{m}(Parallel dispatcher, cooperative stop)"),
         ];
 
         [TestCaseSource(nameof(StopRunCases))]
-        public void StopRun_WhenTestIsRunning_StopsTest(int workers, bool force)
+        public void StopRun_WhenTestIsRunning_StopsTest(int workers)
         {
             var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
-            var stopType = force ? "forced stop" : "cooperative stop";
+            var stopType = "cooperative stop";
 
             _runner.RunAsync(this, TestFilter.Empty);
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
 
-            _runner.StopRun(force);
+            _runner.StopRun();
 
+            // A single test takes SINGLE_TEST_DELAY,
+            // If we wait twice as long, the test should be finished and not other should be started.
             var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
 
             // Write out status for debugging
@@ -653,40 +651,6 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             }
         }
-#endif
-
-        #region Issue 3682 - StopRun not cancelling non-cooperative tests
-
-#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
-        /// <summary>
-        /// Issue #3682: StopRun(true) should forcibly terminate non-cooperative tests.
-        /// On .NET Framework, this works via Thread.Abort.
-        /// On .NET Core/5+, Thread.Abort is not available, so non-cooperative tests
-        /// cannot be forcibly terminated.
-        /// </summary>
-        [Test]
-        public void StopRun_WithForce_ShouldTerminateNonCooperativeTests_OnNetFramework()
-        {
-            // This test verifies that on .NET Framework, forced stop actually terminates tests
-            // On .NET Core/5+, this test is skipped because Thread.Abort is not available
-
-            _ = LoadSlowTests(0); // Simple dispatcher
-            _runner.RunAsync(this, TestFilter.Empty);
-
-            // Wait for test to start
-            SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
-
-            // Force stop
-            _runner.StopRun(force: true);
-
-            // Should complete within reasonable time on .NET Framework
-            var completed = _runner.WaitForCompletion(CancelTestDelay);
-
-            Assert.That(completed, Is.True,
-                "StopRun(true) should terminate tests on .NET Framework");
-        }
-#endif
-        #endregion
 
         #endregion
 

@@ -156,19 +156,13 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem
         /// </summary>
-        /// <param name="force">true if the thread should be aborted, false if it should allow the currently running test to complete</param>
-        public void Cancel(bool force)
+        public void Cancel()
         {
-            if (force)
-                _running = false;
-
             lock (_cancelLock)
             {
                 if (_workerThread is not null && _currentWorkItem is not null)
                 {
-                    _currentWorkItem.Cancel(force);
-                    if (force)
-                        _currentWorkItem = null;
+                    _currentWorkItem.Cancel();
                 }
             }
         }
