@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -15,7 +16,7 @@ namespace NUnit.Framework
     /// Identifies the source used to provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilderForNestedGeneric
     {
         private readonly NUnitTestFixtureBuilder _builder = new();
 
@@ -93,10 +94,6 @@ namespace NUnit.Framework
             return BuildFrom(typeInfo, PreFilter.Empty);
         }
 
-        #endregion
-
-        #region IFixtureBuilder2 Members
-
         /// <summary>
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
@@ -104,8 +101,17 @@ namespace NUnit.Framework
         /// <param name="filter">PreFilter used to select methods as tests.</param>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            Type sourceType = SourceType ?? typeInfo.Type;
+            return BuildFrom(typeInfo, filter, NUnitTestFixtureBuilder.NoOuterTypeArgs);
+        }
 
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
+        /// <param name="filter">PreFilter to be used to select methods.</param>
+        /// <param name="outerTypeArgsSets">Sets of Type Arguments for the outer fixture to be used for nested generic classes.</param>
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter, Type[]?[] outerTypeArgsSets)
+        {
             var fixtureSuite = new ParameterizedFixtureSuite(typeInfo);
             fixtureSuite.ApplyAttributesToTest(typeInfo.Type);
             var assemblyLifeCycleAttributeProvider = typeInfo.Type.Assembly.GetAttributes<FixtureLifeCycleAttribute>();
@@ -113,17 +119,34 @@ namespace NUnit.Framework
             var parallelizableAttributeProvider = typeInfo.Type.GetAttributes<ParallelizableAttribute>(inherit: true);
             var noTestsAttributeProvider = typeInfo.Assembly.GetAttributes<NoTestsAttribute>(inherit: true);
 
-            foreach (ITestFixtureData parms in GetParametersFor(sourceType))
+            ITestFixtureData[] testFixtureDatas = GetParametersFor(SourceType ?? typeInfo.Type).ToArray();
+
+            foreach (var outerTypeArgs in outerTypeArgsSets)
             {
-                TestSuite fixture = _builder.BuildFrom(typeInfo, filter, parms);
-                fixture.ApplyAttributesToTest(assemblyLifeCycleAttributeProvider);
-                fixture.ApplyAttributesToTest(typeLifeCycleAttributeProvider);
-                fixture.ApplyAttributesToTest(parallelizableAttributeProvider);
-                fixture.ApplyAttributesToTest(noTestsAttributeProvider);
-                fixtureSuite.Add(fixture);
+                foreach (ITestFixtureData testFixtureData in testFixtureDatas)
+                {
+                    if (typeInfo.Type.ContainsGenericParameters &&
+                        testFixtureData is TestFixtureParameters testFixtureParameters)
+                    {
+                        testFixtureParameters.DeduceTypeArgumentsFromArguments(typeInfo.Type);
+                    }
+
+                    TestSuite fixture = _builder.BuildFrom(typeInfo, filter, testFixtureData, outerTypeArgs);
+                    fixture.ApplyAttributesToTest(assemblyLifeCycleAttributeProvider);
+                    fixture.ApplyAttributesToTest(typeLifeCycleAttributeProvider);
+                    fixture.ApplyAttributesToTest(parallelizableAttributeProvider);
+                    fixture.ApplyAttributesToTest(noTestsAttributeProvider);
+                    fixtureSuite.Add(fixture);
+                }
             }
 
             yield return fixtureSuite;
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<ITestFixtureData> GetFixtureData(ITypeInfo typeInfo)
+        {
+            return GetParametersFor(SourceType ?? typeInfo.Type).OfType<ITestFixtureData>();
         }
 
         #endregion
@@ -138,7 +161,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public IEnumerable<ITestFixtureData> GetParametersFor(Type sourceType)
         {
-            List<ITestFixtureData> data = new();
+            List<ITestFixtureData> data = [];
 
             try
             {
@@ -148,15 +171,9 @@ namespace NUnit.Framework
                 {
                     foreach (object? item in source)
                     {
-                        var parms = item as ITestFixtureData;
-
-                        if (parms is null)
+                        if (item is not ITestFixtureData parms)
                         {
-                            object?[]? args = item as object?[];
-                            if (args is null)
-                            {
-                                args = new[] { item };
-                            }
+                            object?[] args = item as object?[] ?? [item];
 
                             parms = new TestFixtureParameters(args)
                             {
@@ -225,12 +242,14 @@ namespace NUnit.Framework
             return null;
         }
 
-        private static IEnumerable SourceMustBeStaticError()
+        private static TestFixtureParameters[] SourceMustBeStaticError()
         {
-            var parms = new TestFixtureParameters();
-            parms.RunState = RunState.NotRunnable;
+            var parms = new TestFixtureParameters
+            {
+                RunState = RunState.NotRunnable
+            };
             parms.Properties.Set(PropertyNames.SkipReason, MUST_BE_STATIC);
-            return new[] { parms };
+            return [parms];
         }
 
         #endregion

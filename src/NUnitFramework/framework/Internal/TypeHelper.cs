@@ -158,6 +158,69 @@ namespace NUnit.Framework.Internal
             }
 
             /// <summary>
+            /// Gets the type arguments from the supplied arguments, if any, and removes them from the argument list.
+            /// </summary>
+            /// <returns>Array of type arguments if found or can be deduced; otherwise, an empty array.</returns>
+            public Type[] GetTypeArgumentsFromArguments(ITestFixtureData fixtureData)
+            {
+                if (fixtureData.TypeArgs is Type[] typeArgs && typeArgs.Length > 0)
+                    return typeArgs;
+
+                if (fixtureData.Arguments.Length > 0)
+                {
+                    object?[]? arguments = fixtureData.Arguments;
+                    if (type.GetTypeArgumentsFromArguments(ref arguments, out Type[]? deducedTypeArgs))
+                    {
+                        return deducedTypeArgs;
+                    }
+                }
+
+                return [];
+            }
+
+            /// <summary>
+            /// Attempts to get the type arguments for a generic type from the supplied arguments.
+            /// </summary>
+            /// <param name="arguments">The arguments to be used to deduce the type arguments.</param>
+            /// <param name="typeArgs">The type arguments found.</param>
+            /// <returns>True if type arguments were found or can be deduced; otherwise, false.</returns>
+            public bool GetTypeArgumentsFromArguments(ref object?[] arguments, [NotNullWhen(true)] out Type[]? typeArgs)
+            {
+                Guard.OperationValid(type.IsGenericTypeDefinition, "Type must be a generic type definition");
+
+                int n = type.GetGenericArguments().Length;
+
+                // Check for Type arguments at start of argument list
+                // from which to infer and construct the generic type
+                int cnt = 0;
+                foreach (object? o in arguments)
+                {
+                    if (o is Type)
+                        cnt++;
+                    else
+                        break;
+                }
+
+                if (cnt > 0)
+                {
+                    cnt = Math.Min(cnt, n);
+                    typeArgs = new Type[cnt];
+
+                    Array.Copy(arguments, typeArgs, cnt);
+
+                    object?[] args = new object?[arguments.Length - cnt];
+                    Array.Copy(arguments, cnt, args, 0, args.Length);
+
+                    arguments = args;
+                    return true;
+                }
+                else
+                {
+                    return type.CanDeduceTypeArgsFromArgs(arguments, out typeArgs);
+                }
+            }
+
+            /// <summary>
             /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
             /// </summary>
             /// <param name="arglist">The arglist.</param>
@@ -165,9 +228,9 @@ namespace NUnit.Framework.Internal
             /// <returns>
             /// <see langword="true"/> if this the provided args give sufficient information to determine the type args to be used; otherwise, <see langword="false"/>.
             /// </returns>
-            public bool CanDeduceTypeArgsFromArgs(object?[] arglist, [NotNullWhen(true)] ref Type[]? typeArgsOut)
+            public bool CanDeduceTypeArgsFromArgs(object?[] arglist, [NotNullWhen(true)] out Type[]? typeArgsOut)
             {
-                Type[] typeParameters = type.GetGenericArguments();
+                Type[] typeParameters = type.GetOwnGenericArguments();
 
                 foreach (ConstructorInfo ctor in type.GetConstructors())
                 {
@@ -175,37 +238,63 @@ namespace NUnit.Framework.Internal
                     if (parameters.Length != arglist.Length)
                         continue;
 
-                    var typeArgs = new Type?[typeParameters.Length];
+                    var typeArgs = new Type[typeParameters.Length];
                     for (int i = 0; i < typeArgs.Length; i++)
                     {
+                        Type? foundType = null;
                         for (int j = 0; j < arglist.Length; j++)
                         {
                             if (parameters[j].ParameterType.Equals(typeParameters[i]) &&
                                 !TryGetBestCommonType(
-                                    typeArgs[i],
+                                    foundType,
                                     arglist[j]?.GetType(),
-                                    out typeArgs[i]))
+                                    out foundType))
                             {
-                                typeArgs[i] = null;
                                 break;
                             }
                         }
 
-                        if (typeArgs[i] is null)
+                        if (foundType is null)
                         {
                             typeArgs = null;
                             break;
                         }
+
+                        typeArgs[i] = foundType;
                     }
 
                     if (typeArgs is not null)
                     {
-                        typeArgsOut = typeArgs!;
+                        typeArgsOut = typeArgs;
                         return true;
                     }
                 }
 
+                typeArgsOut = null;
                 return false;
+            }
+
+            /// <summary>
+            /// Gets the generic arguments that are declared on this type itself,
+            /// excluding any generic arguments declared on a containing type.
+            /// </summary>
+            /// <returns></returns>
+            public Type[] GetOwnGenericArguments()
+            {
+                Type[] totalArgs = type.GetGenericArguments();
+
+                if (!type.IsGenericType ||
+                    type.DeclaringType is not Type declaringType ||
+                    !declaringType.IsGenericType)
+                {
+                    return totalArgs;
+                }
+
+                Type[] declaringArgs = declaringType.GetGenericArguments();
+
+                Type[] ownArgs = new Type[totalArgs.Length - declaringArgs.Length];
+                Array.Copy(totalArgs, declaringArgs.Length, ownArgs, 0, ownArgs.Length);
+                return ownArgs;
             }
 
             /// <summary>
