@@ -68,8 +68,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailing), typeof(FixtureDependencyBeforeFailing));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
@@ -94,8 +92,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailingAllowed), typeof(FixtureDependencyBeforeFailing));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
@@ -136,8 +132,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyCycleA), typeof(FixtureDependencyCycleB));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
@@ -149,8 +143,32 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(cycleBResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(cycleAResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(cycleBResult.ResultState.Label, Is.EqualTo("Invalid"));
-                Assert.That(cycleAResult.Message, Does.Contain("Circular DependsOn dependency detected."));
-                Assert.That(cycleBResult.Message, Does.Contain("Circular DependsOn dependency detected."));
+                Assert.That(cycleAResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
+                Assert.That(cycleBResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
+                Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void FixtureReferencingCycleIsMarkedAsNotRunnable()
+        {
+            var suite = new TestSuite("dummy")
+                .Containing(typeof(FixtureDependencyCycleReferrer), typeof(FixtureDependencyCycleA), typeof(FixtureDependencyCycleB));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var cycleReferrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleReferrer));
+            var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
+            var cycleBResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleB));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(cycleReferrerResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(cycleAResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(cycleBResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(cycleReferrerResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(cycleReferrerResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
                 Assert.That(FixtureDependencyEvents.Events, Is.Empty);
             }
         }
@@ -161,8 +179,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferential));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferential));
@@ -171,7 +187,26 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
-                Assert.That(selfReferentialResult.Message, Does.Contain("Circular DependsOn dependency detected."));
+                Assert.That(selfReferentialResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
+                Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void SelfReferentialBaseMarksFixtureAsNotRunnable()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferentialBase));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferentialBase));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(selfReferentialResult.Message, Does.Contain("Circular or self-referential test dependency detected via base class."));
                 Assert.That(FixtureDependencyEvents.Events, Is.Empty);
             }
         }
@@ -182,8 +217,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderBefore), typeof(FixtureDependencyOrderAfter));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderBefore));
@@ -204,8 +237,6 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderReferrer), typeof(FixtureDependencyOrderTarget));
 
             var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            Assert.That(work, Is.Not.Null);
-
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var referrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderReferrer));
@@ -237,8 +268,8 @@ namespace NUnit.Framework.Tests.Attributes
             var work = TestBuilder.CreateWorkItem(suite, context) as CompositeWorkItem;
             Assert.That(work, Is.Not.Null);
 
-            dispatcher.Start(work!);
-            work!.WaitForCompletion();
+            dispatcher.Start(work);
+            work.WaitForCompletion();
 
             var result = work.Result;
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyParallelBeforeSlow));

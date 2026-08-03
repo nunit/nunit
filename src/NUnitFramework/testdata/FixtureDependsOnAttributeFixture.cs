@@ -152,8 +152,30 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    [DependsOn(typeof(FixtureDependencyCycleA))]
+    public class FixtureDependencyCycleReferrer : FixtureDependencyBase
+    {
+        [Test]
+        public void C()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
     [DependsOn(typeof(FixtureDependencySelfReferential))]
     public class FixtureDependencySelfReferential
+    {
+        [Test]
+        public void B()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(FixtureDependencyBase))]
+    public class FixtureDependencySelfReferentialBase : FixtureDependencyBase
     {
         [Test]
         public void B()

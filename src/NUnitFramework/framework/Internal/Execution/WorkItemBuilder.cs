@@ -112,6 +112,10 @@ namespace NUnit.Framework.Internal.Execution
 
         private static void MarkCircularDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
         {
+            const string directReferenceReason = "Circular or self-referential test dependency detected.";
+            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
+
+            var invalidCircularDependencies = new HashSet<Test>();
             var visited = new HashSet<Test>();
             var visiting = new HashSet<Test>();
             var stack = new List<Test>();
@@ -121,25 +125,33 @@ namespace NUnit.Framework.Internal.Execution
 
             void Visit(Test fixture)
             {
-                if (visited.Contains(fixture))
+                if (!visited.Add(fixture))
                     return;
 
-                visited.Add(fixture);
                 visiting.Add(fixture);
                 stack.Add(fixture);
 
-                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType)
-                    && fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType))
                 {
-                    if (visiting.Contains(dependencyFixture))
+                    if (IsSelfReferentialBaseDependency(fixture, dependencyType))
                     {
-                        int cycleStartIndex = stack.IndexOf(dependencyFixture);
-                        if (cycleStartIndex >= 0)
-                            MarkCycle(stack, cycleStartIndex);
+                        MarkInvalidCircularDependency(fixture, baseReferenceReason);
                     }
-                    else
+                    else if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
                     {
-                        Visit(dependencyFixture);
+                        if (visiting.Contains(dependencyFixture))
+                        {
+                            int cycleStartIndex = stack.IndexOf(dependencyFixture);
+                            if (cycleStartIndex >= 0)
+                                MarkCycle(stack, cycleStartIndex);
+                        }
+                        else
+                        {
+                            Visit(dependencyFixture);
+                        }
+
+                        if (invalidCircularDependencies.Contains(dependencyFixture))
+                            MarkInvalidCircularDependency(fixture, directReferenceReason);
                     }
                 }
 
@@ -147,12 +159,24 @@ namespace NUnit.Framework.Internal.Execution
                 visiting.Remove(fixture);
             }
 
-            static void MarkCycle(List<Test> dependencyPath, int cycleStartIndex)
+            static bool IsSelfReferentialBaseDependency(Test fixture, Type dependencyType)
             {
-                const string reason = "Circular DependsOn dependency detected.";
+                if (fixture.TypeInfo?.Type is not Type fixtureType)
+                    return false;
 
+                return fixtureType.IsSubclassOf(dependencyType);
+            }
+
+            void MarkInvalidCircularDependency(Test fixture, string reason)
+            {
+                if (invalidCircularDependencies.Add(fixture))
+                    fixture.MakeInvalid(reason);
+            }
+
+            void MarkCycle(List<Test> dependencyPath, int cycleStartIndex)
+            {
                 for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
-                    dependencyPath[i].MakeInvalid(reason);
+                    MarkInvalidCircularDependency(dependencyPath[i], directReferenceReason);
             }
         }
 
