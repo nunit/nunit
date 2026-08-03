@@ -106,11 +106,11 @@ namespace NUnit.Framework.Internal.Execution
                     dependencyByFixture[fixture] = dependencyType;
             }
 
-            MarkCircularDependenciesAsInvalid(fixturesByType, dependencyByFixture);
-            MarkDependencyConflictsAsInvalid(fixturesByType, dependencyByFixture);
+            MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
+            MarkDependencyFeatureConflictsAsInvalid(fixturesByType, dependencyByFixture);
         }
 
-        private static void MarkCircularDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        private static void MarkInvalidDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
         {
             const string directReferenceReason = "Circular or self-referential test dependency detected.";
             const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
@@ -153,6 +153,11 @@ namespace NUnit.Framework.Internal.Execution
                         if (invalidCircularDependencies.Contains(dependencyFixture))
                             MarkInvalidCircularDependency(fixture, directReferenceReason);
                     }
+                    else
+                    {
+                        // Dependency not found in the suite
+                        fixture.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
+                    }
                 }
 
                 stack.RemoveAt(stack.Count - 1);
@@ -180,7 +185,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private static void MarkDependencyConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
         {
             const string orderReason = "Fixture may not participate in both DependsOn and Order chains.";
             const string parallelReason = "Fixture dependency chains may not include fixtures configured for parallel execution.";

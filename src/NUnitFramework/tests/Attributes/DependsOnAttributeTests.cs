@@ -85,6 +85,26 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(afterSetUpIndex, Is.EqualTo(-1));
             }
         }
+        [Test]
+        public void DependentFixtureIsNotRunnableIfDependencyAbsent()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfter));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfter));
+            var afterSetUpRan = FixtureDependencyEvents.Events.Contains(nameof(FixtureDependencyAfter) + ".OneTimeSetUp");
+            var expectedMsg = $"Test dependency {typeof(FixtureDependencyBefore)} can not be found. Please verify it was configured correctly and was not filtered out.";
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(afterResult.Message, Does.Contain(expectedMsg));
+                Assert.That(afterSetUpRan, Is.False);
+            }
+        }
 
         [Test]
         public void DependentFixtureRunsWhenDependencyFailsAndRequiresSuccessIsFalse()
