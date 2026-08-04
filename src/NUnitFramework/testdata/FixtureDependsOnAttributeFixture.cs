@@ -30,13 +30,15 @@ namespace NUnit.TestData
         [OneTimeSetUp]
         public void SetUp()
         {
-            FixtureDependencyEvents.Record(GetType().Name + ".OneTimeSetUp");
+            var testName = TestContext.CurrentContext.Test.Name;
+            FixtureDependencyEvents.Record($"{testName}.OneTimeSetUp");
         }
 
         [OneTimeTearDown]
         public void TearDown()
         {
-            FixtureDependencyEvents.Record(GetType().Name + ".OneTimeTearDown");
+            var testName = TestContext.CurrentContext.Test.Name;
+            FixtureDependencyEvents.Record($"{testName}.OneTimeTearDown");
         }
     }
 

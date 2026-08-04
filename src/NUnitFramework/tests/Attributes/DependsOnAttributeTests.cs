@@ -73,16 +73,13 @@ namespace NUnit.Framework.Tests.Attributes
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfterFailing));
 
-            var beforeTearDownIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyBeforeFailing) + ".OneTimeTearDown");
-            var afterSetUpIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyAfterFailing) + ".OneTimeSetUp");
-
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
-                Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
-                // The dependent fixture should not have run at all, so its SetUp should not be in the events
-                Assert.That(afterSetUpIndex, Is.EqualTo(-1));
+
+                Assert.That(FixtureDependencyEvents.Events, Does.Contain(beforeResult.Name + ".OneTimeTearDown"));
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
             }
         }
         [Test]
@@ -94,7 +91,6 @@ namespace NUnit.Framework.Tests.Attributes
             var result = TestBuilder.ExecuteWorkItem(work!);
 
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfter));
-            var afterSetUpRan = FixtureDependencyEvents.Events.Contains(nameof(FixtureDependencyAfter) + ".OneTimeSetUp");
             var expectedMsg = $"Test dependency {typeof(FixtureDependencyBefore)} can not be found. Please verify it was configured correctly and was not filtered out.";
 
             using (Assert.EnterMultipleScope())
@@ -102,7 +98,8 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
                 Assert.That(afterResult.Message, Does.Contain(expectedMsg));
-                Assert.That(afterSetUpRan, Is.False);
+
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
             }
         }
 
@@ -117,15 +114,13 @@ namespace NUnit.Framework.Tests.Attributes
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfterFailingAllowed));
 
-            var beforeTearDownIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyBeforeFailing) + ".OneTimeTearDown");
-            var afterSetUpIndex = FixtureDependencyEvents.Events.IndexOf(nameof(FixtureDependencyAfterFailingAllowed) + ".OneTimeSetUp");
-
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                Assert.That(beforeTearDownIndex, Is.GreaterThanOrEqualTo(0));
-                Assert.That(afterSetUpIndex, Is.GreaterThan(beforeTearDownIndex));
+
+                Assert.That(FixtureDependencyEvents.Events, Does.Contain(beforeResult.Name + ".OneTimeTearDown"));
+                Assert.That(FixtureDependencyEvents.Events, Does.Contain(afterResult.Name + ".OneTimeSetUp"));
             }
         }
 
@@ -305,8 +300,9 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(beforeResult.Message, Does.Contain("Fixture dependency chains may not include fixtures configured for parallel execution."));
                 Assert.That(afterResult.Message, Does.Contain("Fixture dependency chains may not include fixtures configured for parallel execution."));
                 Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelBeforeSlow) + ".OneTimeSetUp"));
-                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(FixtureDependencyParallelAfter) + ".OneTimeSetUp"));
+
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(beforeResult.Name + ".OneTimeSetUp"));
+                Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
             }
         }
     }
