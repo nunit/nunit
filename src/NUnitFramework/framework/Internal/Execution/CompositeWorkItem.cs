@@ -289,8 +289,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
                     {
                         Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
-                        string dependencyName = dependsOnType?.Name ?? "Unknown";
-                        string message = $"Dependency on {dependencyName} did not pass";
+                        string message = $"Dependency on {dependsOnType!.FullName} did not pass";
                         SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
 
                         lock (_childCompletionLock)

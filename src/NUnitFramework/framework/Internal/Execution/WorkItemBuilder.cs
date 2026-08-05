@@ -117,8 +117,7 @@ namespace NUnit.Framework.Internal.Execution
 
             var invalidCircularDependencies = new HashSet<Test>();
             var visited = new HashSet<Test>();
-            var visiting = new HashSet<Test>();
-            var stack = new List<Test>();
+            var visiting = new List<Test>();
 
             foreach (var fixture in dependencyByFixture.Keys)
                 Visit(fixture);
@@ -129,7 +128,6 @@ namespace NUnit.Framework.Internal.Execution
                     return;
 
                 visiting.Add(fixture);
-                stack.Add(fixture);
 
                 if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType))
                 {
@@ -141,9 +139,9 @@ namespace NUnit.Framework.Internal.Execution
                     {
                         if (visiting.Contains(dependencyFixture))
                         {
-                            int cycleStartIndex = stack.IndexOf(dependencyFixture);
+                            int cycleStartIndex = visiting.IndexOf(dependencyFixture);
                             if (cycleStartIndex >= 0)
-                                MarkCycle(stack, cycleStartIndex);
+                                MarkCycle(visiting, cycleStartIndex);
                         }
                         else
                         {
@@ -160,8 +158,7 @@ namespace NUnit.Framework.Internal.Execution
                     }
                 }
 
-                stack.RemoveAt(stack.Count - 1);
-                visiting.Remove(fixture);
+                visiting.RemoveAt(visiting.Count - 1);
             }
 
             static bool IsSelfReferentialBaseDependency(Test fixture, Type dependencyType)
