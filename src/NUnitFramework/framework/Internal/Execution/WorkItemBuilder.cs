@@ -55,11 +55,12 @@ namespace NUnit.Framework.Internal.Execution
 
             if (recursive)
             {
-                PrepareFixtureDependencies(suite);
+                var testDependencies = PrepareTestDependencies(suite);
+                var sortedDependencies = TopologicalSort(testDependencies);
 
                 int countOrderedItems = 0;
 
-                foreach (var childTest in suite.Tests)
+                foreach (var childTest in sortedDependencies)
                 {
                     var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
                     if (childItem is null)
@@ -83,20 +84,38 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (countOrderedItems > 1)
                     work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
-
-                if (work is not null)
-                    ReorderChildrenByDependency(work.Children);
             }
             return work;
         }
 
-        private static void PrepareFixtureDependencies(TestSuite suite)
+        private static List<ITest> TopologicalSort(Dictionary<ITest, ITest?> dependencyGraph)
+        {
+            var sorted = new List<ITest>();
+            var visited = new HashSet<ITest>();
+            foreach (var fixture in dependencyGraph.Keys)
+                Visit(fixture);
+            void Visit(ITest fixture)
+            {
+                if (!visited.Add(fixture))
+                    return;
+                if (dependencyGraph.TryGetValue(fixture, out ITest? dependency) && dependency is not null)
+                    Visit(dependency);
+                sorted.Add(fixture);
+            }
+            return sorted;
+        }
+
+        private static Dictionary<ITest, ITest?> PrepareTestDependencies(TestSuite suite)
         {
             var fixturesByType = new Dictionary<Type, Test>();
             var dependencyByFixture = new Dictionary<Test, Type>();
 
+            var dependencyGraph = new Dictionary<ITest, ITest?>();
+
             foreach (var child in suite.Tests)
             {
+                dependencyGraph[child] = null;
+
                 if (child is not Test fixture || fixture.TypeInfo?.Type is null)
                     continue;
 
@@ -108,6 +127,20 @@ namespace NUnit.Framework.Internal.Execution
 
             MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
             MarkDependencyFeatureConflictsAsInvalid(fixturesByType, dependencyByFixture);
+
+            foreach (var pair in dependencyByFixture)
+            {
+                var fixture = pair.Key;
+
+                if (fixture.RunState == RunState.Runnable
+                    && fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture)
+                    && dependencyFixture.RunState == RunState.Runnable)
+                {
+                    dependencyGraph[fixture] = dependencyFixture;
+                }
+            }
+
+            return dependencyGraph;
         }
 
         private static void MarkInvalidDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
@@ -209,54 +242,6 @@ namespace NUnit.Framework.Internal.Execution
                 return scope.HasFlag(ParallelScope.Self) && !scope.HasFlag(ParallelScope.None);
             }
         }
-
-        private static void ReorderChildrenByDependency(List<WorkItem> children)
-        {
-            if (children.Count < 2)
-                return;
-
-            bool moved;
-            int remainingPasses = children.Count * children.Count;
-
-            do
-            {
-                moved = false;
-
-                var indexByType = new Dictionary<Type, int>();
-                for (int i = 0; i < children.Count; i++)
-                {
-                    if (children[i].Test is Test fixture && fixture.TypeInfo?.Type is Type fixtureType)
-                        indexByType[fixtureType] = i;
-                }
-
-                for (int i = 0; i < children.Count; i++)
-                {
-                    if (children[i].Test is not Test fixture || fixture.RunState == RunState.NotRunnable || fixture.Properties.Get(PropertyNames.DependsOn) is not Type dependencyType)
-                        continue;
-
-                    if (!indexByType.TryGetValue(dependencyType, out int dependencyIndex) || dependencyIndex < i)
-                        continue;
-
-                    if (children[dependencyIndex].Test is Test dependencyFixture && dependencyFixture.RunState == RunState.NotRunnable)
-                        continue;
-
-                    if (dependencyIndex == i)
-                        continue;
-
-                    var dependentChild = children[i];
-                    children.RemoveAt(i);
-
-                    if (dependencyIndex > i)
-                        dependencyIndex--;
-
-                    children.Insert(dependencyIndex + 1, dependentChild);
-                    moved = true;
-                    break;
-                }
-            }
-            while (moved && remainingPasses-- > 0);
-        }
-
         #endregion
 
         private class WorkItemOrderComparer : IComparer<WorkItem>
