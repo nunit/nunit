@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -14,8 +13,6 @@ namespace NUnit.Framework.Internal.Execution
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
         private static readonly Logger Log = InternalTrace.GetLogger("Dispatcher");
-
-        private const int WaitForForcedTermination = 5000;
 
         private WorkItem? _topLevelWorkItem;
         private readonly Stack<WorkItem> _savedWorkItems = new();
@@ -239,7 +236,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Cancel the ongoing run completely.
         /// If no run is in process, the call has no effect.
         /// </summary>
-        public void CancelRun(bool force)
+        public void CancelRun()
         {
             if (_topLevelWorkItem is null)
             {
@@ -247,22 +244,7 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             foreach (var shift in Shifts)
-                shift.Cancel(force);
-
-            if (!force)
-                return;
-
-            SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WaitForForcedTermination);
-
-            // Notify termination of any remaining in-process suites
-            // Note this must be done in reserve order to match the stack-like behavior
-            // That way tests are marked cancelled before suites before assemblies.
-            IEnumerable<CompositeWorkItem> snapShotActiveWorkItems = SnapshotActiveWorkItems();
-            foreach (var work in snapShotActiveWorkItems.Reverse())
-            {
-                if (work.State == WorkItemState.Running)
-                    new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
-            }
+                shift.Cancel();
         }
 
         private readonly object _queueLock = new();

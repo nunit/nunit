@@ -198,16 +198,12 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Cancel (abort or stop) the shift without completing all work
+        /// Cancel the shift without completing all work
         /// </summary>
-        /// <param name="force">true if the WorkShift should be aborted, false if it should allow its currently running tests to complete</param>
-        public void Cancel(bool force)
+        public void Cancel()
         {
-            if (force)
-                IsActive = false;
-
             foreach (var w in Workers)
-                w.Cancel(force);
+                w.Cancel();
         }
 
         #endregion

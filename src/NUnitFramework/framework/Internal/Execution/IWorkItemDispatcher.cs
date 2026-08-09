@@ -30,7 +30,6 @@ namespace NUnit.Framework.Internal.Execution
         /// Cancel the ongoing run completely.
         /// If no run is in process, the call has no effect.
         /// </summary>
-        /// <param name="force">true if the IWorkItemDispatcher should abort all currently running WorkItems, false if it should allow all currently running WorkItems to complete</param>
-        void CancelRun(bool force);
+        void CancelRun();
     }
 }

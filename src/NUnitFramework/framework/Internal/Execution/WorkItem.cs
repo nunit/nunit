@@ -242,50 +242,13 @@ namespace NUnit.Framework.Internal.Execution
             WorkItemComplete();
         }
 
-#if THREAD_ABORT
-        private readonly object _threadLock = new();
-        private int _nativeThreadId;
-#endif
-
         /// <summary>
-        /// Cancel (abort or stop) a WorkItem
+        /// Cancel a WorkItem
         /// </summary>
-        /// <param name="force">true if the WorkItem should be aborted, false if it should run to completion</param>
-        public virtual void Cancel(bool force)
+        public virtual void Cancel()
         {
             if (Context is not null)
-                Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
-
-#if THREAD_ABORT
-            if (force)
-            {
-                Thread tThread;
-                int tNativeThreadId;
-
-                lock (_threadLock)
-                {
-                    // Exit if not running on a separate thread
-                    if (_thread is null)
-                        return;
-
-                    tThread = _thread;
-                    tNativeThreadId = _nativeThreadId;
-                    _thread = null;
-                }
-
-                if (!tThread.Join(0))
-                {
-                    Log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
-                    ThreadUtility.Kill(tThread, tNativeThreadId);
-
-                    tThread.Join();
-
-                    ChangeResult(ResultState.Cancelled, "Cancelled by user");
-
-                    WorkItemComplete();
-                }
-            }
-#endif
+                Context.ExecutionStatus = TestExecutionStatus.StopRequested;
         }
 
         #endregion
@@ -475,10 +438,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
             Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
-#if THREAD_ABORT
-            lock (_threadLock)
-                _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
-#endif
             RunOnCurrentThread();
         }
 

@@ -319,23 +319,6 @@ namespace NUnit.Framework.Api
             return _runComplete.Wait(timeout);
         }
 
-#if THREAD_ABORT
-        /// <summary>
-        /// Signal any test run that is in process to stop. Return without error if no test is running.
-        /// </summary>
-        /// <param name="force">If true, kill any tests that are currently running</param>
-        public void StopRun(bool force)
-        {
-            if (IsTestRunning && Context is not null)
-            {
-                Context.ExecutionStatus = force
-                    ? TestExecutionStatus.AbortRequested
-                    : TestExecutionStatus.StopRequested;
-
-                Context.Dispatcher.CancelRun(force);
-            }
-        }
-#else
         /// <summary>
         /// Signal any test run that is in process to stop. Return without error if no test is running.
         /// </summary>
@@ -345,10 +328,9 @@ namespace NUnit.Framework.Api
             {
                 Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
-                Context.Dispatcher.CancelRun(false);
+                Context.Dispatcher.CancelRun();
             }
         }
-#endif
 
         #endregion
 

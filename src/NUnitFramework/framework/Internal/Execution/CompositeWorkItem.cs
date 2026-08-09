@@ -398,10 +398,9 @@ namespace NUnit.Framework.Internal.Execution
         private readonly object _cancelLock = new();
 
         /// <summary>
-        /// Cancel (abort or stop) a CompositeWorkItem and all of its children
+        /// Cancel a CompositeWorkItem and all of its children
         /// </summary>
-        /// <param name="force">true if the CompositeWorkItem and all of its children should be aborted, false if it should allow all currently running tests to complete</param>
-        public override void Cancel(bool force)
+        public override void Cancel()
         {
             lock (_cancelLock)
             {
@@ -409,10 +408,10 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     var ctx = child.Context;
                     if (ctx is not null)
-                        ctx.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
+                        ctx.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                     if (child.State == WorkItemState.Running)
-                        child.Cancel(force);
+                        child.Cancel();
                 }
             }
         }

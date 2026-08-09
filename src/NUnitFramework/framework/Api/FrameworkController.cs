@@ -246,16 +246,6 @@ namespace NUnit.Framework.Api
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 
-#if THREAD_ABORT
-        /// <summary>
-        /// Stops the test run
-        /// </summary>
-        /// <param name="force">True to force the stop, false for a cooperative stop</param>
-        public void StopRun(bool force)
-        {
-            Runner.StopRun(force);
-        }
-#else
         /// <summary>
         /// Stops the test run
         /// </summary>
@@ -263,7 +253,6 @@ namespace NUnit.Framework.Api
         {
             Runner.StopRun();
         }
-#endif
 
         /// <summary>
         /// Counts the number of test cases in the loaded TestSuite
@@ -275,7 +264,7 @@ namespace NUnit.Framework.Api
             return Runner.CountTestCases(TestFilter.FromXml(filter));
         }
 
-#endregion
+        #endregion
 
         #region Private Action Methods Used by Nested Classes
 
@@ -304,11 +293,7 @@ namespace NUnit.Framework.Api
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 
-#if THREAD_ABORT
-        private void StopRun(ICallbackEventHandler handler, bool force) => StopRun(force);
-#else
         private void StopRun(ICallbackEventHandler handler) => StopRun();
-#endif
 
         private void CountTests(ICallbackEventHandler handler, string? filter)
         {
@@ -547,33 +532,18 @@ namespace NUnit.Framework.Api
         /// </summary>
         public class StopRunAction : FrameworkControllerAction
         {
-#if THREAD_ABORT
             /// <summary>
             /// Construct a StopRunAction and stop any ongoing run. If no
             /// run is in process, no error is raised.
             /// </summary>
             /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
-            /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
-            /// <param name="handler">>A callback handler used to report results</param>
-            /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
+            /// <param name="force">Must be <see langword="false"/>, left in for compatibility with existing runners/engines.</param>
+            /// <param name="handler">A callback handler used to report results</param>
             public StopRunAction(FrameworkController controller, bool force, object handler)
             {
-                controller.StopRun((ICallbackEventHandler)handler, force);
-            }
-#else
-            /// <summary>
-            /// Construct a StopRunAction and stop any ongoing run. If no
-            /// run is in process, no error is raised.
-            /// </summary>
-            /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
-            /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
-            /// <param name="handler">>A callback handler used to report results</param>
-            /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
-            public StopRunAction(FrameworkController controller, bool force, object handler)
-            {
+                Guard.ArgumentValid(force is false, "Force stop no longer supported", nameof(force));
                 controller.StopRun((ICallbackEventHandler)handler);
             }
-#endif
         }
 
         #endregion
