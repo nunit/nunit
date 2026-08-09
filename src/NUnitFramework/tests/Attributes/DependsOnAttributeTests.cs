@@ -268,6 +268,26 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void OrderAndDependsOnCoexistIndependently()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfter), typeof(FixtureDependencyBefore), typeof(FixtureDependencyOrderTarget));
+
+            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var result = TestBuilder.ExecuteWorkItem(work!);
+
+            var dependencyAfter = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfter));
+            var dependencyBefore = result.Children.Single(x => x.Name == nameof(FixtureDependencyBefore));
+            var order = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderTarget));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(dependencyBefore.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(dependencyAfter.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(order.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            }
+        }
+
+        [Test]
         public void ParallelConfiguredFixtureInvalidatesDependencyChain()
         {
             var suite = new TestSuite("dummy")
