@@ -125,18 +125,24 @@ namespace NUnit.Framework.Internal.Execution
                     dependencyByFixture[fixture] = dependencyType;
             }
 
+            foreach (var pair in dependencyByFixture)
+            {
+                if (fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture))
+                    dependencyGraph[pair.Key] = dependencyFixture;
+            }
+
             MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
-            MarkDependencyFeatureConflictsAsInvalid(fixturesByType, dependencyByFixture);
+            MarkDependencyFeatureConflictsAsInvalid(dependencyGraph);
 
             foreach (var pair in dependencyByFixture)
             {
                 var fixture = pair.Key;
 
-                if (fixture.RunState == RunState.Runnable
-                    && fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture)
-                    && dependencyFixture.RunState == RunState.Runnable)
+                if (fixture.RunState != RunState.Runnable
+                    || !fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture)
+                    || dependencyFixture.RunState != RunState.Runnable)
                 {
-                    dependencyGraph[fixture] = dependencyFixture;
+                    dependencyGraph[fixture] = null;
                 }
             }
 
@@ -215,23 +221,28 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<ITest, ITest?> dependencyGraph)
         {
             const string orderReason = "Fixture may not participate in both DependsOn and Order chains.";
             const string parallelReason = "Fixture dependency chains may not include fixtures configured for parallel execution.";
 
-            var dependencyParticipants = new HashSet<Test>(dependencyByFixture.Keys);
-
-            foreach (var dependency in dependencyByFixture.Values)
+            foreach (var pair in dependencyGraph)
             {
-                if (fixturesByType.TryGetValue(dependency, out Test? dependencyFixture))
-                    dependencyParticipants.Add(dependencyFixture);
+                if (pair.Key is not Test fixture || pair.Value is not Test dependencyFixture)
+                    continue;
+
+                MarkDependencyFeatureConflictsAsInvalid(fixture);
+                MarkDependencyFeatureConflictsAsInvalid(dependencyFixture);
             }
 
-            foreach (var fixture in dependencyParticipants)
+            static void MarkDependencyFeatureConflictsAsInvalid(Test? fixture)
             {
+                if (fixture is null)
+                    return;
+
                 if (fixture.Properties.ContainsKey(PropertyNames.Order))
                     fixture.MakeInvalid(orderReason);
+
                 if (IsConfiguredParallelWithOtherFixtures(fixture))
                     fixture.MakeInvalid(parallelReason);
             }
