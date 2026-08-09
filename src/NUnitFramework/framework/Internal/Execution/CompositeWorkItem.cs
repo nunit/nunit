@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal.Execution
                     TestStatus? dependencyStatus = GetDependencyStatus(child);
                     if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
                     {
-                        Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
+                        Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOnType) as Type;
                         string message = $"Dependency on {dependsOnType!.FullName} did not pass";
                         SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
 
@@ -368,7 +368,7 @@ namespace NUnit.Framework.Internal.Execution
             if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
                 return null;
 
-            Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOn) as Type;
+            Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOnType) as Type;
             if (dependsOnType is null)
                 return null;
 

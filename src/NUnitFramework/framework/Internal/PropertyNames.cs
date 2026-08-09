@@ -123,12 +123,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The fixture type that this fixture depends on.
         /// </summary>
-        public const string DependsOn = "DependsOn";
+        public const string DependsOnType = "DependsOn.Type";
 
         /// <summary>
         /// Indicates whether the dependent fixture is allowed to fail without affecting this fixture.
         /// </summary>
-        public const string DependsOnAllowFailure = $"{DependsOn}.AllowFailure";
+        public const string DependsOnAllowFailure = $"DependsOn.AllowFailure";
 
         /// <summary>
         /// The default status for a test with no runnable children.

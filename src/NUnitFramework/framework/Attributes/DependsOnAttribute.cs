@@ -37,7 +37,7 @@ namespace NUnit.Framework
         /// <param name="test">The test.</param>
         public void ApplyToTest(Test test)
         {
-            test.Properties.Set(PropertyNames.DependsOn, DependantFixture);
+            test.Properties.Set(PropertyNames.DependsOnType, DependantFixture);
             test.Properties.Set(PropertyNames.DependsOnAllowFailure, AllowFailure);
         }
 

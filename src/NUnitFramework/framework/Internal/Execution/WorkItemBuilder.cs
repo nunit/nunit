@@ -121,7 +121,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 fixturesByType[fixture.TypeInfo.Type] = fixture;
 
-                if (fixture.Properties.Get(PropertyNames.DependsOn) is Type dependencyType)
+                if (fixture.Properties.Get(PropertyNames.DependsOnType) is Type dependencyType)
                     dependencyByFixture[fixture] = dependencyType;
             }
 
