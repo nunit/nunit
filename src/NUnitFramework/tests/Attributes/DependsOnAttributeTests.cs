@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(fixture.Properties.Get(PropertyNames.DependsOnType), Is.EqualTo(typeof(FixtureDependencyBefore)));
+                Assert.That(fixture.Properties.Get(PropertyNames.DependsOnFixture), Is.EqualTo(typeof(FixtureDependencyBefore)));
                 Assert.That(fixture.Properties.Get(PropertyNames.DependsOnAllowFailure), Is.False);
             }
         }

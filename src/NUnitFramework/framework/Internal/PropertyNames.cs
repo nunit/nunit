@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The fixture type that this fixture depends on.
         /// </summary>
-        public const string DependsOnType = "DependsOn.Type";
+        public const string DependsOnFixture = "DependsOn.Fixture";
 
         /// <summary>
         /// Indicates whether the dependent fixture is allowed to fail without affecting this fixture.
