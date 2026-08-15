@@ -56,11 +56,11 @@ namespace NUnit.Framework.Internal.Execution
             if (recursive)
             {
                 var testDependencies = PrepareTestDependencies(suite);
-                var sortedDependencies = TopologicalSort(testDependencies);
+                var children = testDependencies is null ? suite.Tests : TopologicalSort(testDependencies);
 
                 int countOrderedItems = 0;
 
-                foreach (var childTest in sortedDependencies)
+                foreach (var childTest in children)
                 {
                     var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
                     if (childItem is null)
@@ -90,32 +90,33 @@ namespace NUnit.Framework.Internal.Execution
 
         private static List<ITest> TopologicalSort(Dictionary<ITest, ITest?> dependencyGraph)
         {
-            var sorted = new List<ITest>();
+            var sorted = new List<ITest>(dependencyGraph.Count);
             var visited = new HashSet<ITest>();
+
             foreach (var fixture in dependencyGraph.Keys)
                 Visit(fixture);
+
             void Visit(ITest fixture)
             {
                 if (!visited.Add(fixture))
                     return;
+
                 if (dependencyGraph.TryGetValue(fixture, out ITest? dependency) && dependency is not null)
                     Visit(dependency);
+
                 sorted.Add(fixture);
             }
+
             return sorted;
         }
 
-        private static Dictionary<ITest, ITest?> PrepareTestDependencies(TestSuite suite)
+        private static Dictionary<ITest, ITest?>? PrepareTestDependencies(TestSuite suite)
         {
             var fixturesByType = new Dictionary<Type, Test>();
             var dependencyByFixture = new Dictionary<Test, Type>();
 
-            var dependencyGraph = new Dictionary<ITest, ITest?>();
-
             foreach (var child in suite.Tests)
             {
-                dependencyGraph[child] = null;
-
                 if (child is not Test fixture || fixture.TypeInfo?.Type is null)
                     continue;
 
@@ -125,10 +126,28 @@ namespace NUnit.Framework.Internal.Execution
                     dependencyByFixture[fixture] = dependencyType;
             }
 
-            foreach (var pair in dependencyByFixture)
+            // No need to create a dependency graph if there are no dependencies
+            if (dependencyByFixture.Count == 0)
             {
-                if (fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture))
-                    dependencyGraph[pair.Key] = dependencyFixture;
+                return null;
+            }
+
+            var dependencyGraph = new Dictionary<ITest, ITest?>(suite.Tests.Count);
+
+            foreach (var child in suite.Tests)
+            {
+                if (child is not Test fixture || fixture.TypeInfo?.Type is null)
+                    continue;
+
+                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType)
+                    && fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                {
+                    dependencyGraph[child] = dependencyFixture;
+                }
+                else
+                {
+                    dependencyGraph[child] = null;
+                }
             }
 
             MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);

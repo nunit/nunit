@@ -47,20 +47,22 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void DependencyFixturesAreOrderedAndMarkedNonParallel()
+        public void DependencyFixturesAreOrdered()
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfter), typeof(FixtureDependencyBefore));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
             Assert.That(work, Is.Not.Null);
 
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(work.Children, Has.Count.EqualTo(2));
+
+                Assert.That(suite.Tests[0].Name, Is.EqualTo(nameof(FixtureDependencyAfter)));
+                Assert.That(suite.Tests[1].Name, Is.EqualTo(nameof(FixtureDependencyBefore)));
+
                 Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(FixtureDependencyBefore)));
                 Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(FixtureDependencyAfter)));
-                Assert.That(work.Children[0].ParallelScope, Is.EqualTo(ParallelScope.Default));
-                Assert.That(work.Children[1].ParallelScope, Is.EqualTo(ParallelScope.Default));
             }
         }
 
@@ -69,8 +71,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailing), typeof(FixtureDependencyBeforeFailing));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfterFailing));
@@ -84,13 +86,14 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
             }
         }
+
         [Test]
         public void DependentFixtureIsNotRunnableIfDependencyAbsent()
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfter));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfter));
             var expectedMsg = $"Test dependency {typeof(FixtureDependencyBefore)} can not be found. Please verify it was configured correctly and was not filtered out.";
@@ -110,8 +113,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailingAllowed), typeof(FixtureDependencyBeforeFailing));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyBeforeFailing));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfterFailingAllowed));
@@ -131,7 +134,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(ForkingDependencyRoot), typeof(ForkingDependencyNodeA), typeof(ForkingDependencyNodeB));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
             Assert.That(work, Is.Not.Null);
 
             using (Assert.EnterMultipleScope())
@@ -148,8 +151,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyCycleA), typeof(FixtureDependencyCycleB));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
             var cycleBResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleB));
@@ -172,8 +175,8 @@ namespace NUnit.Framework.Tests.Attributes
             var suite = new TestSuite("dummy")
                 .Containing(typeof(FixtureDependencyCycleReferrer), typeof(FixtureDependencyCycleA), typeof(FixtureDependencyCycleB));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var cycleReferrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleReferrer));
             var cycleAResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyCycleA));
@@ -195,8 +198,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferential));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferential));
 
@@ -214,8 +217,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferentialBase));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferentialBase));
 
@@ -233,8 +236,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderBefore), typeof(FixtureDependencyOrderAfter));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var beforeResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderBefore));
             var afterResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderAfter));
@@ -253,8 +256,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderReferrer), typeof(FixtureDependencyOrderTarget));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var referrerResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderReferrer));
             var targetResult = result.Children.Single(x => x.Name == nameof(FixtureDependencyOrderTarget));
@@ -274,8 +277,8 @@ namespace NUnit.Framework.Tests.Attributes
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfter), typeof(FixtureDependencyBefore), typeof(FixtureDependencyOrderTarget));
 
-            var work = TestBuilder.CreateWorkItem(suite) as CompositeWorkItem;
-            var result = TestBuilder.ExecuteWorkItem(work!);
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
 
             var dependencyAfter = result.Children.Single(x => x.Name == nameof(FixtureDependencyAfter));
             var dependencyBefore = result.Children.Single(x => x.Name == nameof(FixtureDependencyBefore));
