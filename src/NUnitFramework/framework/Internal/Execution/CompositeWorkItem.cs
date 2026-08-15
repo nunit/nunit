@@ -288,14 +288,14 @@ namespace NUnit.Framework.Internal.Execution
                     TestStatus? dependencyStatus = GetDependencyStatus(child);
                     if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
                     {
-                        Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOnType) as Type;
-                        string message = $"Dependency on {dependsOnType!.FullName} did not pass";
+                        var dependsOnType = (Type)child.Test.Properties.Get(PropertyNames.DependsOnType)!;
+                        string message = $"Dependency on {dependsOnType.FullName} did not pass";
                         SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
 
                         lock (_childCompletionLock)
                         {
                             _suiteResult.AddResult(child.Result);
-                            _childTestCountdown!.Signal();
+                            _childTestCountdown.Signal();
                             if (_childTestCountdown.CurrentCount == 0)
                                 OnAllChildItemsCompleted();
                         }

@@ -22,7 +22,9 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void AttributeUsageIsClassLevelSingleUse()
         {
-            var usage = (AttributeUsageAttribute)Attribute.GetCustomAttribute(typeof(DependsOnAttribute), typeof(AttributeUsageAttribute))!;
+            var usage = (AttributeUsageAttribute?)Attribute.GetCustomAttribute(typeof(DependsOnAttribute), typeof(AttributeUsageAttribute));
+
+            Assert.That(usage, Is.Not.Null, "DependsOnAttribute should have an AttributeUsage attribute.");
 
             using (Assert.EnterMultipleScope())
             {
