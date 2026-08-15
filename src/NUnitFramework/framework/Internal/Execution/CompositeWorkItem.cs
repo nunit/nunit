@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal.Execution
                     TestStatus? dependencyStatus = GetDependencyStatus(child);
                     if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
                     {
-                        var dependsOnType = (Type)child.Test.Properties.Get(PropertyNames.DependsOnType)!;
+                        var dependsOnType = child.Test.TypeInfo!.Type;
                         string message = $"Dependency on {dependsOnType.FullName} did not pass";
                         SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
 
@@ -368,14 +368,14 @@ namespace NUnit.Framework.Internal.Execution
             if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
                 return null;
 
-            Type? dependsOnType = child.Test.Properties.Get(PropertyNames.DependsOnType) as Type;
-            if (dependsOnType is null)
+            Test? dependantTest = child.Test.DependantTest;
+            if (dependantTest is null)
                 return null;
 
             // Find the dependency fixture in our children
             foreach (WorkItem potentialDependency in Children)
             {
-                if (potentialDependency.Test is Test fixture && fixture.TypeInfo?.Type == dependsOnType)
+                if (potentialDependency.Test is Test test && test == dependantTest)
                 {
                     // Return the status of the dependency if it has completed
                     // Otherwise, return null to indicate that the dependency hasn't been run yet or hasn't finished running

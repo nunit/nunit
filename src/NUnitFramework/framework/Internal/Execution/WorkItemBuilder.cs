@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
             return work;
         }
 
-        private static List<ITest> TopologicalSort(Dictionary<ITest, ITest?> dependencyGraph)
+        private static List<ITest> TopologicalSort(Dictionary<Test, Test?> dependencyGraph)
         {
             var sorted = new List<ITest>(dependencyGraph.Count);
             var visited = new HashSet<ITest>();
@@ -96,12 +96,12 @@ namespace NUnit.Framework.Internal.Execution
             foreach (var fixture in dependencyGraph.Keys)
                 Visit(fixture);
 
-            void Visit(ITest fixture)
+            void Visit(Test fixture)
             {
                 if (!visited.Add(fixture))
                     return;
 
-                if (dependencyGraph.TryGetValue(fixture, out ITest? dependency) && dependency is not null)
+                if (dependencyGraph.TryGetValue(fixture, out Test? dependency) && dependency is not null)
                     Visit(dependency);
 
                 sorted.Add(fixture);
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Internal.Execution
             return sorted;
         }
 
-        private static Dictionary<ITest, ITest?>? PrepareTestDependencies(TestSuite suite)
+        private static Dictionary<Test, Test?>? PrepareTestDependencies(TestSuite suite)
         {
             var fixturesByType = new Dictionary<Type, Test>();
             var dependencyByFixture = new Dictionary<Test, Type>();
@@ -132,7 +132,8 @@ namespace NUnit.Framework.Internal.Execution
                 return null;
             }
 
-            var dependencyGraph = new Dictionary<ITest, ITest?>(suite.Tests.Count);
+            // Build the dependency graph, which maps each fixture to its dependent fixture (if any)
+            var dependencyGraph = new Dictionary<Test, Test?>(suite.Tests.Count);
 
             foreach (var child in suite.Tests)
             {
@@ -142,26 +143,25 @@ namespace NUnit.Framework.Internal.Execution
                 if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType)
                     && fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
                 {
-                    dependencyGraph[child] = dependencyFixture;
+                    dependencyGraph[fixture] = dependencyFixture;
+                    fixture.DependantTest = dependencyFixture;
                 }
                 else
                 {
-                    dependencyGraph[child] = null;
+                    dependencyGraph[fixture] = null;
                 }
             }
 
+            // Validate dependency graph
             MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
             MarkDependencyFeatureConflictsAsInvalid(dependencyGraph);
 
-            foreach (var pair in dependencyByFixture)
+            // Update the graph to reflect any dependencies found to be invalid
+            foreach (var test in dependencyByFixture.Keys)
             {
-                var fixture = pair.Key;
-
-                if (fixture.RunState != RunState.Runnable
-                    || !fixturesByType.TryGetValue(pair.Value, out Test? dependencyFixture)
-                    || dependencyFixture.RunState != RunState.Runnable)
+                if (test.RunState != RunState.Runnable || dependencyGraph[test]?.RunState != RunState.Runnable)
                 {
-                    dependencyGraph[fixture] = null;
+                    dependencyGraph[test] = null;
                 }
             }
 
@@ -240,35 +240,32 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<ITest, ITest?> dependencyGraph)
+        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<Test, Test?> dependencyGraph)
         {
             const string orderReason = "Fixture may not participate in both DependsOn and Order chains.";
             const string parallelReason = "Fixture dependency chains may not include fixtures configured for parallel execution.";
 
             foreach (var pair in dependencyGraph)
             {
-                if (pair.Key is not Test fixture || pair.Value is not Test dependencyFixture)
+                if (pair.Key is not Test test || pair.Value is not Test dependantTest)
                     continue;
 
-                MarkDependencyFeatureConflictsAsInvalid(fixture);
-                MarkDependencyFeatureConflictsAsInvalid(dependencyFixture);
+                MarkDependencyFeatureConflictsAsInvalid(test);
+                MarkDependencyFeatureConflictsAsInvalid(dependantTest);
             }
 
-            static void MarkDependencyFeatureConflictsAsInvalid(Test? fixture)
+            static void MarkDependencyFeatureConflictsAsInvalid(Test test)
             {
-                if (fixture is null)
-                    return;
+                if (test.Properties.ContainsKey(PropertyNames.Order))
+                    test.MakeInvalid(orderReason);
 
-                if (fixture.Properties.ContainsKey(PropertyNames.Order))
-                    fixture.MakeInvalid(orderReason);
-
-                if (IsConfiguredParallelWithOtherFixtures(fixture))
-                    fixture.MakeInvalid(parallelReason);
+                if (IsConfiguredParallelWithOtherFixtures(test))
+                    test.MakeInvalid(parallelReason);
             }
 
-            static bool IsConfiguredParallelWithOtherFixtures(Test fixture)
+            static bool IsConfiguredParallelWithOtherFixtures(Test test)
             {
-                var scope = fixture.Properties.TryGet(PropertyNames.ParallelScope, ParallelScope.Default);
+                var scope = test.GetEffectiveProperty(PropertyNames.ParallelScope, ParallelScope.Default);
                 return scope.HasFlag(ParallelScope.Self) && !scope.HasFlag(ParallelScope.None);
             }
         }
