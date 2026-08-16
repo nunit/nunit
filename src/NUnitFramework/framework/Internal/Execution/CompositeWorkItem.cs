@@ -283,6 +283,22 @@ namespace NUnit.Framework.Internal.Execution
                 if (CheckForCancellation())
                     break;
 
+                if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
+                {
+                    TestStatus? dependencyStatus = GetDependencyStatus(child);
+                    if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
+                    {
+                        var dependant = child.Test.DependantTest!;
+                        var message = $"Dependency on {dependant.Name} did not pass";
+
+                        SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
+                        OnChildItemCompleted(child, EventArgs.Empty);
+
+                        childCount--;
+                        continue;
+                    }
+                }
+
                 child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
 
@@ -334,6 +350,34 @@ namespace NUnit.Framework.Internal.Execution
             result.StartTime = Context.StartTime;
             result.EndTime = DateTime.UtcNow;
             result.Duration = Context.Duration;
+        }
+
+        /// <summary>
+        /// Gets the status of a child's dependency, if any.
+        /// Returns null if the child has no dependency, does not require a passing dependency,
+        /// or the dependency hasn't been run yet.
+        /// </summary>
+        private TestStatus? GetDependencyStatus(WorkItem child)
+        {
+            if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
+                return null;
+
+            ITest? dependantTest = child.Test.DependantTest;
+            if (dependantTest is null)
+                return null;
+
+            // Find the dependency fixture in our children
+            WorkItem? dependency = Children.Find(c => c.Test == dependantTest);
+            if (dependency is not null)
+            {
+                // Return the status of the dependency
+                return dependency.Result.ResultState.Status;
+            }
+
+            // This would indicate an error in the framework,
+            // when the test is runnable,
+            // but the dependency is not found in the same suite.
+            return null;
         }
 
         private void PerformOneTimeTearDown()
