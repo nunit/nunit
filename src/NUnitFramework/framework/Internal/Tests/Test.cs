@@ -261,7 +261,7 @@ namespace NUnit.Framework.Internal
 
         #region Internal Properties
 
-        internal Test? DependantTest { get; set; }
+        internal ITest? DependantTest { get; set; }
 
         internal bool RequiresThread { get; set; }
 

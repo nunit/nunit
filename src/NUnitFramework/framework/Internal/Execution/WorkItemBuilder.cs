@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Execution
             if (recursive)
             {
                 var testDependencies = PrepareTestDependencies(suite);
-                var children = testDependencies is null ? suite.Tests : TopologicalSort(testDependencies);
+                var children = testDependencies is null ? suite.Tests : TopologicalSort(suite.Tests, testDependencies);
 
                 int countOrderedItems = 0;
 
@@ -88,20 +88,20 @@ namespace NUnit.Framework.Internal.Execution
             return work;
         }
 
-        private static List<ITest> TopologicalSort(Dictionary<Test, Test?> dependencyGraph)
+        private static List<ITest> TopologicalSort(IList<ITest> tests, Dictionary<ITest, ITest> dependencyGraph)
         {
             var sorted = new List<ITest>(dependencyGraph.Count);
             var visited = new HashSet<ITest>();
 
-            foreach (var fixture in dependencyGraph.Keys)
+            foreach (var fixture in tests)
                 Visit(fixture);
 
-            void Visit(Test fixture)
+            void Visit(ITest fixture)
             {
                 if (!visited.Add(fixture))
                     return;
 
-                if (dependencyGraph.TryGetValue(fixture, out Test? dependency) && dependency is not null)
+                if (dependencyGraph.TryGetValue(fixture, out ITest? dependency))
                     Visit(dependency);
 
                 sorted.Add(fixture);
@@ -110,9 +110,9 @@ namespace NUnit.Framework.Internal.Execution
             return sorted;
         }
 
-        private static Dictionary<Test, Test?>? PrepareTestDependencies(TestSuite suite)
+        private static Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite suite)
         {
-            var fixturesByType = new Dictionary<Type, Test>();
+            var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
             var dependencyByFixture = new Dictionary<Test, Type>();
 
             foreach (var child in suite.Tests)
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             // Build the dependency graph, which maps each fixture to its dependent fixture (if any)
-            var dependencyGraph = new Dictionary<Test, Test?>(suite.Tests.Count);
+            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
 
             foreach (var child in suite.Tests)
             {
@@ -146,24 +146,11 @@ namespace NUnit.Framework.Internal.Execution
                     dependencyGraph[fixture] = dependencyFixture;
                     fixture.DependantTest = dependencyFixture;
                 }
-                else
-                {
-                    dependencyGraph[fixture] = null;
-                }
             }
 
             // Validate dependency graph
             MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
             MarkDependencyFeatureConflictsAsInvalid(dependencyGraph);
-
-            // Update the graph to reflect any dependencies found to be invalid
-            foreach (var test in dependencyByFixture.Keys)
-            {
-                if (test.RunState != RunState.Runnable || dependencyGraph[test]?.RunState != RunState.Runnable)
-                {
-                    dependencyGraph[test] = null;
-                }
-            }
 
             return dependencyGraph;
         }
@@ -240,7 +227,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<Test, Test?> dependencyGraph)
+        private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
             const string orderReason = "Fixture may not participate in both DependsOn and Order chains.";
             const string parallelReason = "Fixture dependency chains may not include fixtures configured for parallel execution.";

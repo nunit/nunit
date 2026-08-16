@@ -362,22 +362,21 @@ namespace NUnit.Framework.Internal.Execution
             if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
                 return null;
 
-            Test? dependantTest = child.Test.DependantTest;
+            ITest? dependantTest = child.Test.DependantTest;
             if (dependantTest is null)
                 return null;
 
             // Find the dependency fixture in our children
-            foreach (WorkItem potentialDependency in Children)
+            WorkItem? dependency = Children.Find(c => c.Test == dependantTest);
+            if (dependency is not null)
             {
-                if (potentialDependency.Test is Test test && test == dependantTest)
-                {
-                    // Return the status of the dependency if it has completed
-                    // Otherwise, return null to indicate that the dependency hasn't been run yet or hasn't finished running
-                    if (potentialDependency.Result.ResultState is ResultState resultState)
-                        return resultState.Status;
-                }
+                // Return the status of the dependency
+                return dependency.Result.ResultState.Status;
             }
 
+            // This would indicate an error in the framework,
+            // when the test is runnable,
+            // but the dependency is not found in the same suite.
             return null;
         }
 

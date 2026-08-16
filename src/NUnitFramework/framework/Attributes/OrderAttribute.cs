@@ -10,7 +10,7 @@ namespace NUnit.Framework
     /// Defines the order that the test will run in
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class OrderAttribute : NUnitAttribute, IApplyToTest, IApplyToTestSuite
+    public class OrderAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
         /// The order that the test will run in
@@ -34,16 +34,6 @@ namespace NUnit.Framework
         {
             if (!test.Properties.ContainsKey(PropertyNames.Order))
                 test.Properties.Set(PropertyNames.Order, Order);
-        }
-
-        /// <summary>
-        /// Modifies a test suite as defined for the specific attribute.
-        /// </summary>
-        /// <param name="testSuite">The test suite to modify</param>
-        public void ApplyToTestSuite(TestSuite testSuite)
-        {
-            if (!testSuite.Properties.ContainsKey(PropertyNames.Order))
-                testSuite.Properties.Set(PropertyNames.Order, Order);
         }
     }
 }

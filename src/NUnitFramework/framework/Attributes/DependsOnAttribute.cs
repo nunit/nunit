@@ -10,7 +10,7 @@ namespace NUnit.Framework
     /// Specifies that a test fixture must run after another fixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class DependsOnAttribute : NUnitAttribute, IApplyToTest, IApplyToTestSuite
+    public sealed class DependsOnAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DependsOnAttribute"/> class.
@@ -39,15 +39,6 @@ namespace NUnit.Framework
         {
             test.Properties.Set(PropertyNames.DependsOnFixture, DependantFixture);
             test.Properties.Set(PropertyNames.DependsOnAllowFailure, AllowFailure);
-        }
-
-        /// <summary>
-        /// Applies dependency metadata to the fixture suite.
-        /// </summary>
-        /// <param name="testSuite">The fixture suite.</param>
-        public void ApplyToTestSuite(TestSuite testSuite)
-        {
-            ApplyToTest(testSuite);
         }
     }
 }
