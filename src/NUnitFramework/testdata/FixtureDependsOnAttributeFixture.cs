@@ -266,5 +266,169 @@ namespace NUnit.TestData
             Assert.That(true, Is.True);
         }
     }
+
+    #endregion
+
+    #region Method Dependencies
+    [TestFixture]
+    public class MethodDependencyOrdered
+    {
+        [Test]
+        [DependsOn(nameof(Before))]
+        public void After()
+        {
+            FixtureDependencyEvents.Record(nameof(After));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void Before()
+        {
+            FixtureDependencyEvents.Record(nameof(Before));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyFailing
+    {
+        [Test]
+        public void BeforeFailing()
+        {
+            FixtureDependencyEvents.Record(nameof(BeforeFailing));
+            Assert.Fail("Intentional failure for method dependency behavior testing");
+        }
+
+        [Test]
+        [DependsOn(nameof(BeforeFailing))]
+        public void AfterFailing()
+        {
+            FixtureDependencyEvents.Record(nameof(AfterFailing));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyFailingAllowed
+    {
+        [Test]
+        public void BeforeFailing()
+        {
+            FixtureDependencyEvents.Record(nameof(BeforeFailing));
+            Assert.Fail("Intentional failure for method dependency behavior testing");
+        }
+
+        [Test]
+        [DependsOn(nameof(BeforeFailing), AllowFailure = true)]
+        public void AfterFailingAllowed()
+        {
+            FixtureDependencyEvents.Record(nameof(AfterFailingAllowed));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyMissing
+    {
+        [Test]
+        [DependsOn(nameof(NotATestMethod))]
+        public void DependsOnMissingMethod()
+        {
+            FixtureDependencyEvents.Record(nameof(DependsOnMissingMethod));
+            Assert.That(true, Is.True);
+        }
+
+        private void NotATestMethod()
+        {
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyCycle
+    {
+        [Test]
+        [DependsOn(nameof(B))]
+        public void A()
+        {
+            FixtureDependencyEvents.Record(nameof(A));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(A))]
+        public void B()
+        {
+            FixtureDependencyEvents.Record(nameof(B));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(A))]
+        public void Referrer()
+        {
+            FixtureDependencyEvents.Record(nameof(Referrer));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencySelfReferential
+    {
+        [Test]
+        [DependsOn(nameof(Self))]
+        public void Self()
+        {
+            FixtureDependencyEvents.Record(nameof(Self));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyOrderTarget
+    {
+        [Test]
+        [Order(1)]
+        public void Target()
+        {
+            FixtureDependencyEvents.Record(nameof(Target));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(Target))]
+        public void Referrer()
+        {
+            FixtureDependencyEvents.Record(nameof(Referrer));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(nameof(FixtureMethod))]
+    public class MethodDependencyInvalidStringOnFixture
+    {
+        [Test]
+        public void FixtureMethod()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyInvalidTypeOnMethod
+    {
+        [Test]
+        public void DependencyTarget()
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(typeof(MethodDependencyInvalidTypeOnMethod))]
+        public void DependantMethod()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
     #endregion
 }

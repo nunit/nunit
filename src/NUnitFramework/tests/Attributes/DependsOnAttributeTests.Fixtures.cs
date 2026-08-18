@@ -316,6 +316,25 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
                 }
             }
+
+            [Test]
+            public void StringConstructorOnFixtureMarksFixtureInvalid()
+            {
+                var suite = new TestSuite("dummy").Containing(typeof(MethodDependencyInvalidStringOnFixture));
+
+                var work = TestBuilder.CreateWorkItem(suite);
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var fixtureResult = result.Children.Single(x => x.Name == nameof(MethodDependencyInvalidStringOnFixture));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(fixtureResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(fixtureResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(fixtureResult.Message, Does.Contain("DependsOnAttribute string constructor may only be used on methods."));
+                }
+            }
+
         }
     }
 }

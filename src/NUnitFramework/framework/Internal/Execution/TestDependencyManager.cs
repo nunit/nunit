@@ -12,63 +12,102 @@ namespace NUnit.Framework.Tests
     {
         public Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite suite)
         {
-            var dependencyGraph = BuildFixtureDependencyGraph(suite);
+            var dependencyGraph = BuildFixtureDependencyGraph(suite) ?? BuildMethodDependencyGraph(suite);
             if (dependencyGraph is null)
-            {
                 return null;
-            }
 
             // Validate dependency graph
             MarkInvalidDependenciesAsInvalid(dependencyGraph);
             MarkDependencyFeatureConflictsAsInvalid(dependencyGraph);
 
             return dependencyGraph;
+        }
 
-            static Dictionary<ITest, ITest>? BuildFixtureDependencyGraph(TestSuite suite)
+        private static Dictionary<ITest, ITest>? BuildFixtureDependencyGraph(TestSuite suite)
+        {
+            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
+
+            var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
+            var dependencyByFixture = new Dictionary<Test, Type>();
+
+            foreach (var child in suite.Tests)
             {
-                var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
-                var dependencyByFixture = new Dictionary<Test, Type>();
+                if (child is not Test test)
+                    continue;
 
-                foreach (var child in suite.Tests)
-                {
-                    if (child is not Test fixture || fixture.TypeInfo?.Type is null)
-                        continue;
+                if (test.TypeInfo?.Type is Type fixtureType)
+                    fixturesByType[fixtureType] = test;
 
-                    fixturesByType[fixture.TypeInfo.Type] = fixture;
-
-                    if (fixture.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
-                        dependencyByFixture[fixture] = dependencyType;
-                }
-
-                // No need to create a dependency graph if there are no dependencies
-                if (dependencyByFixture.Count == 0)
-                {
-                    return null;
-                }
-
-                // Build the dependency graph, which maps each fixture to its dependent fixture (if any)
-                var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
-
-                foreach (var child in suite.Tests)
-                {
-                    if (child is not Test fixture || fixture.TypeInfo?.Type is null)
-                        continue;
-
-                    if (!dependencyByFixture.TryGetValue(fixture, out Type? dependencyType))
-                        continue;
-
-                    if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
-                    {
-                        dependencyGraph[fixture] = dependencyFixture;
-                        fixture.DependantTest = dependencyFixture;
-                        continue;
-                    }
-
-                    fixture.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
-                }
-
-                return dependencyGraph;
+                if (test.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
+                    dependencyByFixture[test] = dependencyType;
             }
+
+            if (dependencyByFixture.Count == 0)
+                return null;
+
+            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
+
+            foreach (var child in suite.Tests)
+            {
+                if (child is not Test test || !dependencyByFixture.TryGetValue(test, out Type? dependencyType))
+                    continue;
+
+                if (test.TypeInfo?.Type is Type fixtureType && fixtureType.IsSubclassOf(dependencyType))
+                {
+                    test.MakeInvalid(baseReferenceReason);
+                    continue;
+                }
+
+                if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                {
+                    dependencyGraph[test] = dependencyFixture;
+                    test.DependantTest = dependencyFixture;
+                    continue;
+                }
+
+                test.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
+            }
+
+            return dependencyGraph;
+        }
+
+        private static Dictionary<ITest, ITest>? BuildMethodDependencyGraph(TestSuite suite)
+        {
+            var testsByName = new Dictionary<string, Test>(suite.Tests.Count);
+            var dependencyByMethod = new Dictionary<Test, string>();
+
+            foreach (var child in suite.Tests)
+            {
+                if (child is not Test test)
+                    continue;
+
+                testsByName[test.Name] = test;
+
+                if (test.Properties.Get(PropertyNames.DependsOnMethod) is string dependencyMethod)
+                    dependencyByMethod[test] = dependencyMethod;
+            }
+
+            if (dependencyByMethod.Count == 0)
+                return null;
+
+            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
+
+            foreach (var child in suite.Tests)
+            {
+                if (child is not Test test || !dependencyByMethod.TryGetValue(test, out string? dependencyMethod))
+                    continue;
+
+                if (testsByName.TryGetValue(dependencyMethod, out Test? dependencyTest))
+                {
+                    dependencyGraph[test] = dependencyTest;
+                    test.DependantTest = dependencyTest;
+                    continue;
+                }
+
+                test.MakeInvalid($"Test dependency {dependencyMethod} can not be found. Please verify it was configured correctly and was not filtered out.");
+            }
+
+            return dependencyGraph;
         }
 
         private static void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)

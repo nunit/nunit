@@ -55,10 +55,22 @@ namespace NUnit.Framework
         {
             if (DependantFixture is not null)
             {
+                if (test is TestMethod)
+                {
+                    test.MakeInvalid("DependsOnAttribute Type constructor may only be used on fixtures.");
+                    return;
+                }
+
                 test.Properties.Set(PropertyNames.DependsOnFixture, DependantFixture);
             }
             else if (DependantMethod is not null)
             {
+                if (test is not TestMethod)
+                {
+                    test.MakeInvalid("DependsOnAttribute string constructor may only be used on methods.");
+                    return;
+                }
+
                 test.Properties.Set(PropertyNames.DependsOnMethod, DependantMethod);
             }
 
