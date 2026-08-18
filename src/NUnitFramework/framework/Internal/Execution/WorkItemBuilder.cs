@@ -55,8 +55,8 @@ namespace NUnit.Framework.Internal.Execution
 
             if (recursive)
             {
-                var manager = new TestDependencyManager();
-                var testDependencies = manager.PrepareTestDependencies(suite);
+                var manager = TestDependencyManager.Create(suite);
+                var testDependencies = manager?.PrepareTestDependencies(suite);
                 var children = testDependencies is null ? suite.Tests : TopologicalSort(suite.Tests, testDependencies);
 
                 int countOrderedItems = 0;

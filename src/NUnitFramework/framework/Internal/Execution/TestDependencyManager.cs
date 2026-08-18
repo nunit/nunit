@@ -8,11 +8,39 @@ using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Tests
 {
-    internal class TestDependencyManager
+    internal abstract class TestDependencyManager
     {
-        public Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite suite)
+        protected abstract Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent);
+
+        public static TestDependencyManager? Create(TestSuite test)
         {
-            var dependencyGraph = BuildFixtureDependencyGraph(suite) ?? BuildMethodDependencyGraph(suite);
+            var childType = PeekChildrenType(test);
+
+            if (childType == "TestFixture" || childType == "ParameterizedFixtureSuite")
+            {
+                return new FixtureDependencyManager();
+            }
+            else if (childType == "TestMethod")
+            {
+                return new MethodDependencyManager();
+            }
+
+            return null;
+
+            static string? PeekChildrenType(ITest parent)
+            {
+                foreach (var child in parent.Tests)
+                {
+                    return child.TestType;
+                }
+
+                return null;
+            }
+        }
+
+        public Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite test)
+        {
+            Dictionary<ITest, ITest>? dependencyGraph = BuildDependencyGraph(test);
             if (dependencyGraph is null)
                 return null;
 
@@ -23,96 +51,10 @@ namespace NUnit.Framework.Tests
             return dependencyGraph;
         }
 
-        private static Dictionary<ITest, ITest>? BuildFixtureDependencyGraph(TestSuite suite)
-        {
-            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
-
-            var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
-            var dependencyByFixture = new Dictionary<Test, Type>();
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test test)
-                    continue;
-
-                if (test.TypeInfo?.Type is Type fixtureType)
-                    fixturesByType[fixtureType] = test;
-
-                if (test.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
-                    dependencyByFixture[test] = dependencyType;
-            }
-
-            if (dependencyByFixture.Count == 0)
-                return null;
-
-            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test test || !dependencyByFixture.TryGetValue(test, out Type? dependencyType))
-                    continue;
-
-                if (test.TypeInfo?.Type is Type fixtureType && fixtureType.IsSubclassOf(dependencyType))
-                {
-                    test.MakeInvalid(baseReferenceReason);
-                    continue;
-                }
-
-                if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
-                {
-                    dependencyGraph[test] = dependencyFixture;
-                    test.DependantTest = dependencyFixture;
-                    continue;
-                }
-
-                test.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
-            }
-
-            return dependencyGraph;
-        }
-
-        private static Dictionary<ITest, ITest>? BuildMethodDependencyGraph(TestSuite suite)
-        {
-            var testsByName = new Dictionary<string, Test>(suite.Tests.Count);
-            var dependencyByMethod = new Dictionary<Test, string>();
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test test)
-                    continue;
-
-                testsByName[test.Name] = test;
-
-                if (test.Properties.Get(PropertyNames.DependsOnMethod) is string dependencyMethod)
-                    dependencyByMethod[test] = dependencyMethod;
-            }
-
-            if (dependencyByMethod.Count == 0)
-                return null;
-
-            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test test || !dependencyByMethod.TryGetValue(test, out string? dependencyMethod))
-                    continue;
-
-                if (testsByName.TryGetValue(dependencyMethod, out Test? dependencyTest))
-                {
-                    dependencyGraph[test] = dependencyTest;
-                    test.DependantTest = dependencyTest;
-                    continue;
-                }
-
-                test.MakeInvalid($"Test dependency {dependencyMethod} can not be found. Please verify it was configured correctly and was not filtered out.");
-            }
-
-            return dependencyGraph;
-        }
-
-        private static void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
+        private void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
             const string directReferenceReason = "Circular or self-referential test dependency detected.";
+            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
 
             var invalidCircularDependencies = new HashSet<ITest>();
             var visited = new HashSet<ITest>();
@@ -130,7 +72,11 @@ namespace NUnit.Framework.Tests
 
                 if (dependencyGraph.TryGetValue(test, out ITest? dependencyTest))
                 {
-                    if (visiting.Contains(dependencyTest))
+                    if (IsSelfReferentialBaseDependency(test, dependencyTest))
+                    {
+                        MarkInvalidCircularDependency(test, baseReferenceReason);
+                    }
+                    else if (visiting.Contains(dependencyTest))
                     {
                         int cycleStartIndex = visiting.IndexOf(dependencyTest);
                         if (cycleStartIndex >= 0)
@@ -146,6 +92,15 @@ namespace NUnit.Framework.Tests
                 }
 
                 visiting.RemoveAt(visiting.Count - 1);
+            }
+
+            static bool IsSelfReferentialBaseDependency(ITest test, ITest dependencyTest)
+            {
+                if (test.TypeInfo?.Type is not Type fixtureType)
+                    return false;
+
+                var dependencyType = dependencyTest.TypeInfo?.Type;
+                return dependencyType is not null && fixtureType.IsSubclassOf(dependencyType);
             }
 
             void MarkInvalidCircularDependency(ITest test, string reason)
@@ -189,6 +144,91 @@ namespace NUnit.Framework.Tests
                 var scope = test.GetEffectiveProperty(PropertyNames.ParallelScope, ParallelScope.Default);
                 return scope.HasFlag(ParallelScope.Self) && !scope.HasFlag(ParallelScope.None);
             }
+        }
+    }
+
+    internal class MethodDependencyManager : TestDependencyManager
+    {
+        protected override Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent)
+        {
+            var testsByName = new Dictionary<string, Test>(parent.Tests.Count);
+            var dependencyByMethod = new Dictionary<Test, string>();
+
+            foreach (var child in parent.Tests)
+            {
+                if (child is not Test test)
+                    continue;
+
+                testsByName[test.Name] = test;
+
+                if (test.Properties.Get(PropertyNames.DependsOnMethod) is string dependencyMethod)
+                    dependencyByMethod[test] = dependencyMethod;
+            }
+
+            if (dependencyByMethod.Count == 0)
+                return null;
+
+            var dependencyGraph = new Dictionary<ITest, ITest>(parent.Tests.Count);
+
+            foreach (var child in parent.Tests)
+            {
+                if (child is not Test test || !dependencyByMethod.TryGetValue(test, out string? dependencyMethod))
+                    continue;
+
+                if (testsByName.TryGetValue(dependencyMethod, out Test? dependencyTest))
+                {
+                    dependencyGraph[test] = dependencyTest;
+                    test.DependantTest = dependencyTest;
+                    continue;
+                }
+
+                test.MakeInvalid($"Test dependency {dependencyMethod} can not be found. Please verify it was configured correctly and was not filtered out.");
+            }
+
+            return dependencyGraph;
+        }
+    }
+
+    internal class FixtureDependencyManager : TestDependencyManager
+    {
+        protected override Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent)
+        {
+            var fixturesByType = new Dictionary<Type, Test>(parent.Tests.Count);
+            var dependencyByFixture = new Dictionary<Test, Type>();
+
+            foreach (var child in parent.Tests)
+            {
+                if (child is not Test test)
+                    continue;
+
+                if (test.TypeInfo?.Type is Type fixtureType)
+                    fixturesByType[fixtureType] = test;
+
+                if (test.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
+                    dependencyByFixture[test] = dependencyType;
+            }
+
+            if (dependencyByFixture.Count == 0)
+                return null;
+
+            var dependencyGraph = new Dictionary<ITest, ITest>(parent.Tests.Count);
+
+            foreach (var child in parent.Tests)
+            {
+                if (child is not Test test || !dependencyByFixture.TryGetValue(test, out Type? dependencyType))
+                    continue;
+
+                if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                {
+                    dependencyGraph[test] = dependencyFixture;
+                    test.DependantTest = dependencyFixture;
+                    continue;
+                }
+
+                test.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
+            }
+
+            return dependencyGraph;
         }
     }
 }
