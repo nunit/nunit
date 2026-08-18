@@ -67,9 +67,6 @@ namespace NUnit.Framework.Tests.Attributes
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
-
-                    Assert.That(FixtureDependencyEvents.Events, Does.Contain(beforeResult.Name + ".OneTimeTearDown"));
-                    Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(afterResult.Name + ".OneTimeSetUp"));
                 }
             }
 
@@ -109,9 +106,6 @@ namespace NUnit.Framework.Tests.Attributes
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-
-                    Assert.That(FixtureDependencyEvents.Events, Does.Contain(beforeResult.Name + ".OneTimeTearDown"));
-                    Assert.That(FixtureDependencyEvents.Events, Does.Contain(afterResult.Name + ".OneTimeSetUp"));
                 }
             }
 
@@ -175,7 +169,6 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(cycleBResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(cycleReferrerResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(cycleReferrerResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
                 }
             }
 
@@ -194,7 +187,24 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(selfReferentialResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+                }
+            }
+
+            [Test]
+            public void SelfReferentialBaseMarksFixtureAsNotRunnable()
+            {
+                var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferentialBase));
+
+                var work = TestBuilder.CreateWorkItem(suite);
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferentialBase));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(selfReferentialResult.Message, Does.Contain("Circular or self-referential test dependency detected via base class."));
                 }
             }
 

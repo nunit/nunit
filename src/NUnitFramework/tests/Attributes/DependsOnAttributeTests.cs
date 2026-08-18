@@ -5,7 +5,8 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Attributes
 {
-    [TestFixture, NonParallelizable]
+    [TestFixture]
+    [NonParallelizable]
     public partial class DependsOnAttributeTests
     {
         [Test]

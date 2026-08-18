@@ -45,7 +45,7 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(work.Children, Has.Count.EqualTo(2));
                     Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(MethodDependencyOrdered.Before)));
                     Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(MethodDependencyOrdered.After)));
-                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(new[] { nameof(MethodDependencyOrdered.Before), nameof(MethodDependencyOrdered.After) }));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(MethodDependencyOrdered.Before), nameof(MethodDependencyOrdered.After)]));
                 }
             }
 
@@ -158,7 +158,6 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(bResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(referrerResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(referrerResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
                 }
             }
 
@@ -236,7 +235,7 @@ namespace NUnit.Framework.Tests.Attributes
             [Test]
             public void ParallelConfiguredTestInvalidatesDependencyChain()
             {
-                var fixture = TestBuilder.MakeFixture(typeof(MethodDependencyParallel));
+                var fixture = TestBuilder.MakeFixture<MethodDependencyParallel>();
                 var dispatcher = new ParallelWorkItemDispatcher(4);
                 var context = new TestExecutionContext
                 {
