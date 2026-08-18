@@ -18,26 +18,21 @@ namespace NUnit.Framework.Internal.Execution
 
         public static TestDependencyManager? Create(TestSuite test)
         {
-            var childType = PeekChildrenType(test);
+            if (test.Tests.Count == 0)
+                return null;
 
-            if (childType == "TestFixture")
+            var child = test.Tests[0];
+
+            if (child is TestFixture)
             {
                 return new FixtureDependencyManager();
             }
-            else if (childType == "TestMethod")
+            else if (child is TestMethod)
             {
                 return new MethodDependencyManager();
             }
 
             return null;
-
-            static string? PeekChildrenType(ITest parent)
-            {
-                if (parent.Tests.Count == 0)
-                    return null;
-
-                return parent.Tests[0].TestType;
-            }
         }
 
         public Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite test)
