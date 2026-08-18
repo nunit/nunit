@@ -33,7 +33,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void MethodDependenciesAreOrdered()
+            public void TestDependenciesAreOrdered()
             {
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOrdered)) as CompositeWorkItem;
                 Assert.That(work, Is.Not.Null);
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void DependentMethodIsSkippedIfDependencyFails()
+            public void DependentTestIsSkippedIfDependencyFails()
             {
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyFailing));
                 var result = TestBuilder.ExecuteWorkItem(work);
@@ -68,7 +68,24 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void DependentMethodRunsWhenDependencyFailsAndRequiresSuccessIsFalse()
+            public void DependentTestsAreOrderedWhenDependenciesFork()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyFork)) as CompositeWorkItem;
+                Assert.That(work, Is.Not.Null);
+
+                TestBuilder.ExecuteWorkItem(work);
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(work.Children, Has.Count.EqualTo(3));
+                    Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(MethodDependencyFork.Root)));
+                    Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(MethodDependencyFork.NodeA)));
+                    Assert.That(work.Children[2].Test.Name, Is.EqualTo(nameof(MethodDependencyFork.NodeB)));
+                }
+            }
+
+            [Test]
+            public void DependentTestRunsWhenDependencyFailsAndRequiresSuccessIsFalse()
             {
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyFailingAllowed));
                 var result = TestBuilder.ExecuteWorkItem(work);
@@ -86,7 +103,7 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void DependentMethodIsNotRunnableIfDependencyAbsent()
+            public void DependentTestIsNotRunnableIfDependencyAbsent()
             {
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyMissing));
                 var result = TestBuilder.ExecuteWorkItem(work);
@@ -111,18 +128,35 @@ namespace NUnit.Framework.Tests.Attributes
 
                 var aResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.A));
                 var bResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.B));
-                var referrerResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.Referrer));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(aResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(bResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                    Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(aResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(bResult.ResultState.Label, Is.EqualTo("Invalid"));
-                    Assert.That(referrerResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(aResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
                     Assert.That(bResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
+                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+                }
+            }
+
+            [Test]
+            public void DependentTestReferencingCycleIsMarkedAsNotRunnable()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyCycle));
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var referrerResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.Referrer));
+                var aResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.A));
+                var bResult = result.Children.Single(x => x.Name == nameof(MethodDependencyCycle.B));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(referrerResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(aResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(bResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(referrerResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(referrerResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
                     Assert.That(FixtureDependencyEvents.Events, Is.Empty);
                 }
@@ -161,6 +195,77 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(targetResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(targetResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(targetResult.Message, Does.Contain("Test may not participate in both DependsOn and Order chains."));
+                }
+            }
+
+            [Test]
+            public void OrderAndDependsOnCoexistIndependently()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOrderIndependent));
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var dependencyAfter = result.Children.Single(x => x.Name == nameof(MethodDependencyOrderIndependent.After));
+                var dependencyBefore = result.Children.Single(x => x.Name == nameof(MethodDependencyOrderIndependent.Before));
+                var order = result.Children.Single(x => x.Name == nameof(MethodDependencyOrderIndependent.OrderedIndependent));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(dependencyBefore.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(dependencyAfter.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(order.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                }
+            }
+
+            [Test]
+            public void ParallelConfiguredTestInvalidatesDependencyChain()
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(MethodDependencyParallel));
+                var dispatcher = new ParallelWorkItemDispatcher(4);
+                var context = new TestExecutionContext
+                {
+                    Dispatcher = dispatcher
+                };
+
+                var work = TestBuilder.CreateWorkItem(fixture, context) as CompositeWorkItem;
+                Assert.That(work, Is.Not.Null);
+
+                dispatcher.Start(work);
+                work.WaitForCompletion();
+
+                var result = work.Result;
+                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependencyParallel.BeforeSlow));
+                var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependencyParallel.AfterParallelDependency));
+                var independentResult = result.Children.Single(x => x.Name == nameof(MethodDependencyParallel.IndependentTest));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(beforeResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(beforeResult.Message, Does.Contain("Test dependency chains may not include tests configured for parallel execution."));
+                    Assert.That(afterResult.Message, Does.Contain("Test dependency chains may not include tests configured for parallel execution."));
+                    Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(MethodDependencyParallel.BeforeSlow)));
+                    Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(MethodDependencyParallel.AfterParallelDependency)));
+                }
+            }
+
+            [Test]
+            public void DependentTestUsingDependsOnAndOrderIsMarkedInvalid()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOrderReferrer));
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOrderReferrer.Before));
+                var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOrderReferrer.After));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(afterResult.Message, Does.Contain("Test may not participate in both DependsOn and Order chains."));
                 }
             }
 

@@ -309,6 +309,33 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    public class MethodDependencyFork
+    {
+        [Test]
+        public void Root()
+        {
+            FixtureDependencyEvents.Record(nameof(Root));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(Root))]
+        public void NodeA()
+        {
+            FixtureDependencyEvents.Record(nameof(NodeA));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(Root))]
+        public void NodeB()
+        {
+            FixtureDependencyEvents.Record(nameof(NodeB));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
     public class MethodDependencyFailingAllowed
     {
         [Test]
@@ -399,6 +426,82 @@ namespace NUnit.TestData
         public void Referrer()
         {
             FixtureDependencyEvents.Record(nameof(Referrer));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyOrderReferrer
+    {
+        [Test]
+        public void Before()
+        {
+            FixtureDependencyEvents.Record(nameof(Before));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(Before))]
+        [Order(1)]
+        public void After()
+        {
+            FixtureDependencyEvents.Record(nameof(After));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyOrderIndependent
+    {
+        [Test]
+        public void Before()
+        {
+            FixtureDependencyEvents.Record(nameof(Before));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(Before))]
+        public void After()
+        {
+            FixtureDependencyEvents.Record(nameof(After));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [Order(1)]
+        public void OrderedIndependent()
+        {
+            FixtureDependencyEvents.Record(nameof(OrderedIndependent));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencyParallel
+    {
+        [Test]
+        [Parallelizable(ParallelScope.Self)]
+        public void BeforeSlow()
+        {
+            Thread.Sleep(150);
+            FixtureDependencyEvents.Record(nameof(BeforeSlow));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [Parallelizable(ParallelScope.Self)]
+        [DependsOn(nameof(BeforeSlow))]
+        public void AfterParallelDependency()
+        {
+            FixtureDependencyEvents.Record(nameof(AfterParallelDependency));
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void IndependentTest()
+        {
+            FixtureDependencyEvents.Record(nameof(IndependentTest));
             Assert.That(true, Is.True);
         }
     }
