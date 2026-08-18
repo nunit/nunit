@@ -533,5 +533,28 @@ namespace NUnit.TestData
             Assert.That(true, Is.True);
         }
     }
+
+    [TestFixture]
+    public class MethodDependencyBase
+    {
+        [Test]
+        public virtual void B()
+        {
+            FixtureDependencyEvents.Record(nameof(B));
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependencySelfReferentialBase : MethodDependencyBase
+    {
+        [Test]
+        [DependsOn(nameof(B))]
+        public override void B()
+        {
+            FixtureDependencyEvents.Record(nameof(B));
+            Assert.That(true, Is.True);
+        }
+    }
     #endregion
 }

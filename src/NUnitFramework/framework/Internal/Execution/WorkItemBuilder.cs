@@ -5,7 +5,6 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
-using NUnit.Framework.Tests;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -86,6 +85,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (countOrderedItems > 1)
                     work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
             }
+
             return work;
         }
 

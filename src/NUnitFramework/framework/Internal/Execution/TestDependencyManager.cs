@@ -3,16 +3,14 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework.Internal.Execution
 {
     internal abstract class TestDependencyManager
     {
         protected const string FileCycleReason = "Circular or self-referential test dependency detected.";
         protected const string FailCycleBaseReason = "Circular or self-referential test dependency detected via base class.";
-
 
         protected abstract Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent);
 
@@ -20,7 +18,7 @@ namespace NUnit.Framework.Tests
         {
             var childType = PeekChildrenType(test);
 
-            if (childType == "TestFixture" || childType == "ParameterizedFixtureSuite")
+            if (childType == "TestFixture")
             {
                 return new FixtureDependencyManager();
             }
@@ -33,12 +31,10 @@ namespace NUnit.Framework.Tests
 
             static string? PeekChildrenType(ITest parent)
             {
-                foreach (var child in parent.Tests)
-                {
-                    return child.TestType;
-                }
+                if (parent.Tests.Count == 0)
+                    return null;
 
-                return null;
+                return parent.Tests[0].TestType;
             }
         }
 
@@ -55,7 +51,7 @@ namespace NUnit.Framework.Tests
             return dependencyGraph;
         }
 
-        private void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
+        private static void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
             var invalidCircularDependencies = new HashSet<ITest>();
             var visited = new HashSet<ITest>();

@@ -199,25 +199,6 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void SelfReferentialBaseClassMarksTestAsNotRunnable()
-            {
-                var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencySelfReferentialBase));
-
-                var work = TestBuilder.CreateWorkItem(suite);
-                var result = TestBuilder.ExecuteWorkItem(work);
-
-                var selfReferentialResult = result.Children.Single(x => x.Name == nameof(FixtureDependencySelfReferentialBase));
-
-                using (Assert.EnterMultipleScope())
-                {
-                    Assert.That(selfReferentialResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                    Assert.That(selfReferentialResult.ResultState.Label, Is.EqualTo("Invalid"));
-                    Assert.That(selfReferentialResult.Message, Does.Contain("Circular or self-referential test dependency detected via base class."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
-                }
-            }
-
-            [Test]
             public void DependentTestUsingDependsOnAndOrderIsMarkedInvalid()
             {
                 var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyOrderBefore), typeof(FixtureDependencyOrderAfter));
@@ -334,7 +315,6 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(fixtureResult.Message, Does.Contain("DependsOnAttribute string constructor may only be used on methods."));
                 }
             }
-
         }
     }
 }

@@ -180,6 +180,23 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
+            public void SelfReferentialBaseClassMarksTestAsNotRunnable()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencySelfReferentialBase));
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var selfResult = result.Children.Single(x => x.Name == nameof(MethodDependencySelfReferentialBase.B));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(selfResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(selfResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(selfResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
+                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+                }
+            }
+
+            [Test]
             public void DependencyTargetWithOrderIsMarkedInvalid()
             {
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOrderTarget));
