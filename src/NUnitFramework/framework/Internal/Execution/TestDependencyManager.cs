@@ -12,115 +12,110 @@ namespace NUnit.Framework.Tests
     {
         public Dictionary<ITest, ITest>? PrepareTestDependencies(TestSuite suite)
         {
-            var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
-            var dependencyByFixture = new Dictionary<Test, Type>();
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test fixture || fixture.TypeInfo?.Type is null)
-                    continue;
-
-                fixturesByType[fixture.TypeInfo.Type] = fixture;
-
-                if (fixture.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
-                    dependencyByFixture[fixture] = dependencyType;
-            }
-
-            // No need to create a dependency graph if there are no dependencies
-            if (dependencyByFixture.Count == 0)
+            var dependencyGraph = BuildFixtureDependencyGraph(suite);
+            if (dependencyGraph is null)
             {
                 return null;
             }
 
-            // Build the dependency graph, which maps each fixture to its dependent fixture (if any)
-            var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
-
-            foreach (var child in suite.Tests)
-            {
-                if (child is not Test fixture || fixture.TypeInfo?.Type is null)
-                    continue;
-
-                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType)
-                    && fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
-                {
-                    dependencyGraph[fixture] = dependencyFixture;
-                    fixture.DependantTest = dependencyFixture;
-                }
-            }
-
             // Validate dependency graph
-            MarkInvalidDependenciesAsInvalid(fixturesByType, dependencyByFixture);
+            MarkInvalidDependenciesAsInvalid(dependencyGraph);
             MarkDependencyFeatureConflictsAsInvalid(dependencyGraph);
 
             return dependencyGraph;
+
+            static Dictionary<ITest, ITest>? BuildFixtureDependencyGraph(TestSuite suite)
+            {
+                var fixturesByType = new Dictionary<Type, Test>(suite.Tests.Count);
+                var dependencyByFixture = new Dictionary<Test, Type>();
+
+                foreach (var child in suite.Tests)
+                {
+                    if (child is not Test fixture || fixture.TypeInfo?.Type is null)
+                        continue;
+
+                    fixturesByType[fixture.TypeInfo.Type] = fixture;
+
+                    if (fixture.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
+                        dependencyByFixture[fixture] = dependencyType;
+                }
+
+                // No need to create a dependency graph if there are no dependencies
+                if (dependencyByFixture.Count == 0)
+                {
+                    return null;
+                }
+
+                // Build the dependency graph, which maps each fixture to its dependent fixture (if any)
+                var dependencyGraph = new Dictionary<ITest, ITest>(suite.Tests.Count);
+
+                foreach (var child in suite.Tests)
+                {
+                    if (child is not Test fixture || fixture.TypeInfo?.Type is null)
+                        continue;
+
+                    if (!dependencyByFixture.TryGetValue(fixture, out Type? dependencyType))
+                        continue;
+
+                    if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
+                    {
+                        dependencyGraph[fixture] = dependencyFixture;
+                        fixture.DependantTest = dependencyFixture;
+                        continue;
+                    }
+
+                    fixture.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
+                }
+
+                return dependencyGraph;
+            }
         }
 
-        private static void MarkInvalidDependenciesAsInvalid(Dictionary<Type, Test> fixturesByType, Dictionary<Test, Type> dependencyByFixture)
+        private static void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
             const string directReferenceReason = "Circular or self-referential test dependency detected.";
-            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
 
-            var invalidCircularDependencies = new HashSet<Test>();
-            var visited = new HashSet<Test>();
-            var visiting = new List<Test>();
+            var invalidCircularDependencies = new HashSet<ITest>();
+            var visited = new HashSet<ITest>();
+            var visiting = new List<ITest>();
 
-            foreach (var fixture in dependencyByFixture.Keys)
-                Visit(fixture);
+            foreach (ITest test in dependencyGraph.Keys)
+                Visit(test);
 
-            void Visit(Test fixture)
+            void Visit(ITest test)
             {
-                if (!visited.Add(fixture))
+                if (!visited.Add(test))
                     return;
 
-                visiting.Add(fixture);
+                visiting.Add(test);
 
-                if (dependencyByFixture.TryGetValue(fixture, out Type? dependencyType))
+                if (dependencyGraph.TryGetValue(test, out ITest? dependencyTest))
                 {
-                    if (IsSelfReferentialBaseDependency(fixture, dependencyType))
+                    if (visiting.Contains(dependencyTest))
                     {
-                        MarkInvalidCircularDependency(fixture, baseReferenceReason);
-                    }
-                    else if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
-                    {
-                        if (visiting.Contains(dependencyFixture))
-                        {
-                            int cycleStartIndex = visiting.IndexOf(dependencyFixture);
-                            if (cycleStartIndex >= 0)
-                                MarkCycle(visiting, cycleStartIndex);
-                        }
-                        else
-                        {
-                            Visit(dependencyFixture);
-                        }
-
-                        if (invalidCircularDependencies.Contains(dependencyFixture))
-                            MarkInvalidCircularDependency(fixture, directReferenceReason);
+                        int cycleStartIndex = visiting.IndexOf(dependencyTest);
+                        if (cycleStartIndex >= 0)
+                            MarkCycle(visiting, cycleStartIndex);
                     }
                     else
                     {
-                        // Dependency not found in the suite
-                        fixture.MakeInvalid($"Test dependency {dependencyType} can not be found. Please verify it was configured correctly and was not filtered out.");
+                        Visit(dependencyTest);
                     }
+
+                    if (invalidCircularDependencies.Contains(dependencyTest))
+                        MarkInvalidCircularDependency(test, directReferenceReason);
                 }
 
                 visiting.RemoveAt(visiting.Count - 1);
             }
 
-            static bool IsSelfReferentialBaseDependency(Test fixture, Type dependencyType)
+            void MarkInvalidCircularDependency(ITest test, string reason)
             {
-                if (fixture.TypeInfo?.Type is not Type fixtureType)
-                    return false;
-
-                return fixtureType.IsSubclassOf(dependencyType);
+                if (invalidCircularDependencies.Add(test) && test is Test t)
+                    t.MakeInvalid(reason);
             }
 
-            void MarkInvalidCircularDependency(Test fixture, string reason)
-            {
-                if (invalidCircularDependencies.Add(fixture))
-                    fixture.MakeInvalid(reason);
-            }
-
-            void MarkCycle(List<Test> dependencyPath, int cycleStartIndex)
+            void MarkCycle(List<ITest> dependencyPath, int cycleStartIndex)
             {
                 for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
                     MarkInvalidCircularDependency(dependencyPath[i], directReferenceReason);
