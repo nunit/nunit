@@ -11,6 +11,8 @@ namespace NUnit.Framework.Internal.Execution
     {
         protected const string FileCycleReason = "Circular or self-referential test dependency detected.";
         protected const string FailCycleBaseReason = "Circular or self-referential test dependency detected via base class.";
+        protected const string InvalidOrderReason = "Test may not participate in both DependsOn and Order chains.";
+        protected const string InvalidParallelReason = "Test dependency chains may not include tests configured for parallel execution.";
 
         protected abstract Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent);
 
@@ -102,9 +104,6 @@ namespace NUnit.Framework.Internal.Execution
 
         private static void MarkDependencyFeatureConflictsAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
-            const string orderReason = "Test may not participate in both DependsOn and Order chains.";
-            const string parallelReason = "Test dependency chains may not include tests configured for parallel execution.";
-
             foreach (var pair in dependencyGraph)
             {
                 if (pair.Key is not Test test || pair.Value is not Test dependantTest)
@@ -117,10 +116,10 @@ namespace NUnit.Framework.Internal.Execution
             static void MarkDependencyFeatureConflictsAsInvalid(Test test)
             {
                 if (test.Properties.ContainsKey(PropertyNames.Order))
-                    test.MakeInvalid(orderReason);
+                    test.MakeInvalid(InvalidOrderReason);
 
                 if (IsConfiguredParallelWithOtherTests(test))
-                    test.MakeInvalid(parallelReason);
+                    test.MakeInvalid(InvalidParallelReason);
             }
 
             static bool IsConfiguredParallelWithOtherTests(Test test)
