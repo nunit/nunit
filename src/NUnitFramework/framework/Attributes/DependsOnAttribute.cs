@@ -55,7 +55,7 @@ namespace NUnit.Framework
         {
             if (DependantFixture is not null)
             {
-                if (test is TestMethod)
+                if (test is not TestFixture)
                 {
                     test.MakeInvalid("DependsOnAttribute Type constructor may only be used on fixtures.");
                     return;

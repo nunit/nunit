@@ -274,9 +274,9 @@ namespace NUnit.TestData
     public class MethodDependencyBase
     {
         [Test]
-        public virtual void B()
+        public virtual void BaseMethod()
         {
-            FixtureDependencyEvents.Record(nameof(B));
+            FixtureDependencyEvents.Record(nameof(BaseMethod));
             Assert.That(true, Is.True);
         }
     }
@@ -285,10 +285,10 @@ namespace NUnit.TestData
     public class MethodDependencySelfReferentialBase : MethodDependencyBase
     {
         [Test]
-        [DependsOn(nameof(B))]
-        public override void B()
+        [DependsOn(nameof(BaseMethod))]
+        public void Self()
         {
-            FixtureDependencyEvents.Record(nameof(B));
+            FixtureDependencyEvents.Record(nameof(Self));
             Assert.That(true, Is.True);
         }
     }

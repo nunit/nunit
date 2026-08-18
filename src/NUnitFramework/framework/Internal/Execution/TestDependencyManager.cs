@@ -160,6 +160,16 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (testsByName.TryGetValue(dependencyMethod, out Test? dependencyTest))
                 {
+                    // Check for self-referential base dependency first
+                    if (test.Method?.MethodInfo.DeclaringType is Type testType &&
+                        dependencyTest.Method?.MethodInfo.DeclaringType is Type dependencyTestType &&
+                        testType != dependencyTestType &&
+                        testType.IsSubclassOf(dependencyTestType))
+                    {
+                        test.MakeInvalid(FailCycleBaseReason);
+                        continue;
+                    }
+
                     dependencyGraph[test] = dependencyTest;
                     test.DependantTest = dependencyTest;
                     continue;

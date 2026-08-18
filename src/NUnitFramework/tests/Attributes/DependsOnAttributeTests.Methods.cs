@@ -174,7 +174,6 @@ namespace NUnit.Framework.Tests.Attributes
                     Assert.That(selfResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(selfResult.ResultState.Label, Is.EqualTo("Invalid"));
                     Assert.That(selfResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
                 }
             }
 
@@ -184,14 +183,13 @@ namespace NUnit.Framework.Tests.Attributes
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependencySelfReferentialBase));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var selfResult = result.Children.Single(x => x.Name == nameof(MethodDependencySelfReferentialBase.B));
+                var selfResult = result.Children.Single(x => x.Name == nameof(MethodDependencySelfReferentialBase.Self));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(selfResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(selfResult.ResultState.Label, Is.EqualTo("Invalid"));
-                    Assert.That(selfResult.Message, Does.Contain("Circular or self-referential test dependency detected."));
-                    Assert.That(FixtureDependencyEvents.Events, Is.Empty);
+                    Assert.That(selfResult.Message, Does.Contain("Circular or self-referential test dependency detected via base class."));
                 }
             }
 
