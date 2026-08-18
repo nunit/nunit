@@ -10,6 +10,10 @@ namespace NUnit.Framework.Tests
 {
     internal abstract class TestDependencyManager
     {
+        protected const string FileCycleReason = "Circular or self-referential test dependency detected.";
+        protected const string FailCycleBaseReason = "Circular or self-referential test dependency detected via base class.";
+
+
         protected abstract Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent);
 
         public static TestDependencyManager? Create(TestSuite test)
@@ -53,9 +57,6 @@ namespace NUnit.Framework.Tests
 
         private void MarkInvalidDependenciesAsInvalid(Dictionary<ITest, ITest> dependencyGraph)
         {
-            const string directReferenceReason = "Circular or self-referential test dependency detected.";
-            const string baseReferenceReason = "Circular or self-referential test dependency detected via base class.";
-
             var invalidCircularDependencies = new HashSet<ITest>();
             var visited = new HashSet<ITest>();
             var visiting = new List<ITest>();
@@ -72,11 +73,7 @@ namespace NUnit.Framework.Tests
 
                 if (dependencyGraph.TryGetValue(test, out ITest? dependencyTest))
                 {
-                    if (IsSelfReferentialBaseDependency(test, dependencyTest))
-                    {
-                        MarkInvalidCircularDependency(test, baseReferenceReason);
-                    }
-                    else if (visiting.Contains(dependencyTest))
+                    if (visiting.Contains(dependencyTest))
                     {
                         int cycleStartIndex = visiting.IndexOf(dependencyTest);
                         if (cycleStartIndex >= 0)
@@ -88,19 +85,10 @@ namespace NUnit.Framework.Tests
                     }
 
                     if (invalidCircularDependencies.Contains(dependencyTest))
-                        MarkInvalidCircularDependency(test, directReferenceReason);
+                        MarkInvalidCircularDependency(test, FileCycleReason);
                 }
 
                 visiting.RemoveAt(visiting.Count - 1);
-            }
-
-            static bool IsSelfReferentialBaseDependency(ITest test, ITest dependencyTest)
-            {
-                if (test.TypeInfo?.Type is not Type fixtureType)
-                    return false;
-
-                var dependencyType = dependencyTest.TypeInfo?.Type;
-                return dependencyType is not null && fixtureType.IsSubclassOf(dependencyType);
             }
 
             void MarkInvalidCircularDependency(ITest test, string reason)
@@ -112,7 +100,7 @@ namespace NUnit.Framework.Tests
             void MarkCycle(List<ITest> dependencyPath, int cycleStartIndex)
             {
                 for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
-                    MarkInvalidCircularDependency(dependencyPath[i], directReferenceReason);
+                    MarkInvalidCircularDependency(dependencyPath[i], FileCycleReason);
             }
         }
 
@@ -217,6 +205,13 @@ namespace NUnit.Framework.Tests
             {
                 if (child is not Test test || !dependencyByFixture.TryGetValue(test, out Type? dependencyType))
                     continue;
+
+                // Check for self-referential base dependency first
+                if (test.TypeInfo?.Type is Type fixtureType && fixtureType.IsSubclassOf(dependencyType))
+                {
+                    test.MakeInvalid(FailCycleBaseReason);
+                    continue;
+                }
 
                 if (fixturesByType.TryGetValue(dependencyType, out Test? dependencyFixture))
                 {
