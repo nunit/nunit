@@ -34,7 +34,7 @@
   </ItemGroup>
   <!-- Analyzers -->
   <ItemGroup>
-    <PackageVersion Include="CSharpIsNullAnalyzer" Version="0.1.593" />
+    <PackageVersion Include="CSharpIsNullAnalyzer" Version="0.2.19" />
     <PackageVersion Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="5.9.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.14.0" />
