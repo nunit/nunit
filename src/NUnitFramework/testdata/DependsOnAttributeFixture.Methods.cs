@@ -282,7 +282,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    public class MethodDependencySelfReferentialBase : MethodDependencyBase
+    public class MethodDependencyOnBaseClass : MethodDependencyBase
     {
         [Test]
         [DependsOn(nameof(BaseMethod))]

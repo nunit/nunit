@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Attributes
     public partial class DependsOnAttributeTests
     {
         [Test]
-        public void AttributeUsageIsClassLevelSingleUse()
+        public void AttributeUsageIsClassOrMethodLevelSingleUse()
         {
             var usage = (AttributeUsageAttribute?)Attribute.GetCustomAttribute(typeof(DependsOnAttribute), typeof(AttributeUsageAttribute));
 

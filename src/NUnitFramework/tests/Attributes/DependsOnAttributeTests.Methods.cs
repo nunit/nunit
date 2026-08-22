@@ -178,18 +178,18 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void SelfReferentialBaseClassMarksTestAsNotRunnable()
+            public void BaseClassReferenceMarksTestAsRunnable()
             {
-                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencySelfReferentialBase));
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOnBaseClass));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var selfResult = result.Children.Single(x => x.Name == nameof(MethodDependencySelfReferentialBase.Self));
+                var selfResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOnBaseClass.Self));
+                var baseResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOnBaseClass.BaseMethod));
 
                 using (Assert.EnterMultipleScope())
                 {
-                    Assert.That(selfResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                    Assert.That(selfResult.ResultState.Label, Is.EqualTo("Invalid"));
-                    Assert.That(selfResult.Message, Does.Contain("Circular or self-referential test dependency detected via base class."));
+                    Assert.That(selfResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(baseResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 }
             }
 
