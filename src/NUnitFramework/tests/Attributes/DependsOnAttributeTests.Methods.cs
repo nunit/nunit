@@ -193,6 +193,31 @@ namespace NUnit.Framework.Tests.Attributes
                 }
             }
 
+
+            [Test]
+            public void DependencyOnMethodInAnotherFixtureMarksTestAsNotRunnable()
+            {
+                var suite = new TestSuite("dummy").Containing(typeof(MethodDependenciesBetweenClasses.FixtureA), typeof(MethodDependenciesBetweenClasses.FixtureB));
+                var work = TestBuilder.CreateWorkItem(suite);
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+
+                var resultFixtureA = result.Children.Single(x => x.Name == "MethodDependenciesBetweenClasses+FixtureA");
+                var resultMethodA = resultFixtureA.Children.Single(x => x.Name == nameof(MethodDependenciesBetweenClasses.FixtureA.A_Self));
+
+                var resultFixtureB = result.Children.Single(x => x.Name == "MethodDependenciesBetweenClasses+FixtureB");
+                var resultMethodB = resultFixtureB.Children.Single(x => x.Name == nameof(MethodDependenciesBetweenClasses.FixtureB.B_Self));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(resultMethodA.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+                    Assert.That(resultMethodB.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(resultMethodB.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(resultMethodB.Message, Does.Contain("Test dependency A_Self can not be found. Please verify it was configured correctly and was not filtered out."));
+                }
+            }
+
             [Test]
             public void DependencyTargetWithOrderIsMarkedInvalid()
             {

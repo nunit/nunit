@@ -276,7 +276,6 @@ namespace NUnit.TestData
         [Test]
         public virtual void BaseMethod()
         {
-            FixtureDependencyEvents.Record(nameof(BaseMethod));
             Assert.That(true, Is.True);
         }
     }
@@ -288,8 +287,32 @@ namespace NUnit.TestData
         [DependsOn(nameof(BaseMethod))]
         public void Self()
         {
-            FixtureDependencyEvents.Record(nameof(Self));
             Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependenciesBetweenClasses
+    {
+        [TestFixture]
+        public class FixtureA
+        {
+            [Test]
+            public void A_Self()
+            {
+                Assert.That(true, Is.True);
+            }
+        }
+
+        [TestFixture]
+        public class FixtureB
+        {
+            [Test]
+            [DependsOn("A_Self")]
+            public void B_Self()
+            {
+                Assert.That(true, Is.True);
+            }
         }
     }
     #endregion
