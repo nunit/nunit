@@ -13,14 +13,14 @@ namespace NUnit.TestData
         [DependsOn(nameof(Before))]
         public void After()
         {
-            FixtureDependencyEvents.Record(nameof(After));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
         [Test]
         public void Before()
         {
-            FixtureDependencyEvents.Record(nameof(Before));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -31,7 +31,7 @@ namespace NUnit.TestData
         [Test]
         public void BeforeFailing()
         {
-            FixtureDependencyEvents.Record(nameof(BeforeFailing));
+            FixtureDependencyEvents.Record();
             Assert.Fail("Intentional failure for method dependency behavior testing");
         }
 
@@ -39,7 +39,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(BeforeFailing))]
         public void AfterFailing()
         {
-            FixtureDependencyEvents.Record(nameof(AfterFailing));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -50,7 +50,7 @@ namespace NUnit.TestData
         [Test]
         public void Root()
         {
-            FixtureDependencyEvents.Record(nameof(Root));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -58,7 +58,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(Root))]
         public void NodeA()
         {
-            FixtureDependencyEvents.Record(nameof(NodeA));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -66,7 +66,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(Root))]
         public void NodeB()
         {
-            FixtureDependencyEvents.Record(nameof(NodeB));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -77,7 +77,7 @@ namespace NUnit.TestData
         [Test]
         public void BeforeFailing()
         {
-            FixtureDependencyEvents.Record(nameof(BeforeFailing));
+            FixtureDependencyEvents.Record();
             Assert.Fail("Intentional failure for method dependency behavior testing");
         }
 
@@ -85,7 +85,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(BeforeFailing), AllowFailure = true)]
         public void AfterFailingAllowed()
         {
-            FixtureDependencyEvents.Record(nameof(AfterFailingAllowed));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -97,7 +97,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(NotATestMethod))]
         public void DependsOnMissingMethod()
         {
-            FixtureDependencyEvents.Record(nameof(DependsOnMissingMethod));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -113,7 +113,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(B))]
         public void A()
         {
-            FixtureDependencyEvents.Record(nameof(A));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -121,7 +121,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(A))]
         public void B()
         {
-            FixtureDependencyEvents.Record(nameof(B));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -129,7 +129,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(A))]
         public void Referrer()
         {
-            FixtureDependencyEvents.Record(nameof(Referrer));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -141,7 +141,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(Self))]
         public void Self()
         {
-            FixtureDependencyEvents.Record(nameof(Self));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -153,7 +153,7 @@ namespace NUnit.TestData
         [Order(1)]
         public void Target()
         {
-            FixtureDependencyEvents.Record(nameof(Target));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -161,7 +161,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(Target))]
         public void Referrer()
         {
-            FixtureDependencyEvents.Record(nameof(Referrer));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -172,7 +172,7 @@ namespace NUnit.TestData
         [Test]
         public void Before()
         {
-            FixtureDependencyEvents.Record(nameof(Before));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -181,7 +181,7 @@ namespace NUnit.TestData
         [Order(1)]
         public void After()
         {
-            FixtureDependencyEvents.Record(nameof(After));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -192,7 +192,7 @@ namespace NUnit.TestData
         [Test]
         public void Before()
         {
-            FixtureDependencyEvents.Record(nameof(Before));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -200,7 +200,7 @@ namespace NUnit.TestData
         [DependsOn(nameof(Before))]
         public void After()
         {
-            FixtureDependencyEvents.Record(nameof(After));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -208,7 +208,7 @@ namespace NUnit.TestData
         [Order(1)]
         public void OrderedIndependent()
         {
-            FixtureDependencyEvents.Record(nameof(OrderedIndependent));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -221,7 +221,7 @@ namespace NUnit.TestData
         public void BeforeSlow()
         {
             Thread.Sleep(150);
-            FixtureDependencyEvents.Record(nameof(BeforeSlow));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
@@ -230,25 +230,14 @@ namespace NUnit.TestData
         [DependsOn(nameof(BeforeSlow))]
         public void AfterParallelDependency()
         {
-            FixtureDependencyEvents.Record(nameof(AfterParallelDependency));
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
         [Test]
         public void IndependentTest()
         {
-            FixtureDependencyEvents.Record(nameof(IndependentTest));
-            Assert.That(true, Is.True);
-        }
-    }
-
-    [TestFixture]
-    [DependsOn(nameof(FixtureMethod))]
-    public class MethodDependencyInvalidStringOnFixture
-    {
-        [Test]
-        public void FixtureMethod()
-        {
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
     }
@@ -292,10 +281,48 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    public class MethodCantDependOnParameterizedTest
+    public class MethodDependsOnParameterizedTest
     {
         [Test]
         [DependsOn(nameof(ParameterizedTestA))]
+        public void A()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void ParameterizedTestA([Values(1, 2)] int x)
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodParameterizedTestDependsOnMethod
+    {
+        [Test]
+        public void A()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(A))]
+        public void ParameterizedTestA([Values(1, 2)] int x)
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class MethodDependsOnParameterizedTestWithFailure
+    {
+        [Test]
+        [DependsOn(nameof(A))]
         public void A()
         {
             Assert.That(true, Is.True);
@@ -304,20 +331,7 @@ namespace NUnit.TestData
         [Test]
         public void ParameterizedTestA([Values(1, 2)] int x)
         {
-            Assert.That(true, Is.True);
-        }
-
-        [Test]
-        [DependsOn(nameof(B))]
-        public void ParameterizedTestB([Values(1, 2)] int x)
-        {
-            Assert.That(true, Is.True);
-        }
-
-        [Test]
-        public void B()
-        {
-            Assert.That(true, Is.True);
+            Assert.That(x, Is.Odd);
         }
     }
 

@@ -18,7 +18,9 @@ namespace NUnit.TestData
                 Events.Clear();
         }
 
-        public static void Record(string value)
+        public static void Record() => Record(TestContext.CurrentContext.Test.Name);
+
+        private static void Record(string value)
         {
             lock (SyncRoot)
                 Events.Add(value);
@@ -115,6 +117,28 @@ namespace NUnit.TestData
         }
     }
 
+    [TestFixture]
+    [DependsOn(nameof(FixtureMethod))]
+    public class MethodDependencyInvalidStringOnFixture
+    {
+        [Test]
+        public void FixtureMethod()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(MethodDependencyOrdered))]
+    public class FixtureDependsOnFixtureWithInternalMethodDependencies
+    {
+        [Test]
+        public void AfterTest()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
     #endregion
 
     #region Referential Integrity

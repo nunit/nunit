@@ -325,34 +325,54 @@ namespace NUnit.Framework.Tests.Attributes
             }
 
             [Test]
-            public void ParameterizedTestDependsOnRegularTestIsMarkedInvalid()
+            public void ParameterizedTestDependsOnRegularTest()
             {
-                var work = TestBuilder.CreateWorkItem(typeof(MethodCantDependOnParameterizedTest));
+                var work = TestBuilder.CreateWorkItem(typeof(MethodParameterizedTestDependsOnMethod));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodCantDependOnParameterizedTest.B));
-                var afterResult = result.Children.Single(x => x.Name == nameof(MethodCantDependOnParameterizedTest.ParameterizedTestB));
+                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodParameterizedTestDependsOnMethod.ParameterizedTestA));
+                var afterResult = result.Children.Single(x => x.Name == nameof(MethodParameterizedTestDependsOnMethod.A));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(["A", "ParameterizedTestA(1)", "ParameterizedTestA(2)"]));
                 }
             }
 
             [Test]
-            public void RegularTestDependsOnParameterizedTestIsValid()
+            public void RegularTestDependsOnParameterizedTest()
             {
-                var work = TestBuilder.CreateWorkItem(typeof(MethodCantDependOnParameterizedTest));
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependsOnParameterizedTest));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodCantDependOnParameterizedTest.ParameterizedTestA));
-                var afterResult = result.Children.Single(x => x.Name == nameof(MethodCantDependOnParameterizedTest.A));
+                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTest.ParameterizedTestA));
+                var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTest.A));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(["ParameterizedTestA(1)", "ParameterizedTestA(2)", "A"]));
+                }
+            }
+
+            [Test]
+            public void RegularTestDependsOnFailingParameterizedTest()
+            {
+                var work = TestBuilder.CreateWorkItem(typeof(MethodDependsOnParameterizedTestWithFailure));
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTestWithFailure.ParameterizedTestA));
+                var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTestWithFailure.A));
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(beforeResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                    Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                    Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
                 }
             }
         }
