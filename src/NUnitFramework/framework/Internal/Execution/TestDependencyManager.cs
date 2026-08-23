@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 return new FixtureDependencyManager();
             }
-            else if (child is TestMethod)
+            else if (child is TestMethod or ParameterizedMethodSuite)
             {
                 return new MethodDependencyManager();
             }

@@ -65,9 +65,9 @@ namespace NUnit.Framework
             }
             else if (DependantMethod is not null)
             {
-                if (test is not TestMethod)
+                if (test is not TestMethod and not ParameterizedMethodSuite)
                 {
-                    test.MakeInvalid("DependsOnAttribute string constructor may only be used on methods.");
+                    test.MakeInvalid("DependsOnAttribute string constructor may only be used on test methods.");
                     return;
                 }
 

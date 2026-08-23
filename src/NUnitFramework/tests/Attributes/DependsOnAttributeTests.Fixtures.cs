@@ -322,7 +322,7 @@ namespace NUnit.Framework.Tests.Attributes
                 {
                     Assert.That(fixtureResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(fixtureResult.ResultState.Label, Is.EqualTo("Invalid"));
-                    Assert.That(fixtureResult.Message, Does.Contain("DependsOnAttribute string constructor may only be used on methods."));
+                    Assert.That(fixtureResult.Message, Does.Contain("DependsOnAttribute string constructor may only be used on test methods."));
                 }
             }
         }

@@ -292,6 +292,36 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    public class MethodCantDependOnParameterizedTest
+    {
+        [Test]
+        [DependsOn(nameof(ParameterizedTestA))]
+        public void A()
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void ParameterizedTestA([Values(1, 2)] int x)
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOn(nameof(B))]
+        public void ParameterizedTestB([Values(1, 2)] int x)
+        {
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void B()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
     public class MethodDependenciesBetweenClasses
     {
         [TestFixture]
