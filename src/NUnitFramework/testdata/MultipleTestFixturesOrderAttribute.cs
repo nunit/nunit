@@ -4,7 +4,9 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class NoTestFixtureAttributeOrder2
     {
         [Test]
@@ -16,7 +18,9 @@ namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
 
     [TestFixture("1")]
     [TestFixture("2")]
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class MultipleTestFixtureAttributesOrder1
     {
 #pragma warning disable IDE0052 // Remove unread private members
@@ -34,7 +38,9 @@ namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
         }
     }
 
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(0)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class NoTestFixtureAttributeOrder0
     {
         [Test]

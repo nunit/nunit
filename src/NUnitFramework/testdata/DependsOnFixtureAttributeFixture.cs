@@ -201,6 +201,7 @@ namespace NUnit.TestData
     [TestFixture]
     [DependsOnFixture(typeof(FixtureDependencyOrderBefore))]
     [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class FixtureDependencyOrderAfter
     {
         [Test]
@@ -211,7 +212,9 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class FixtureDependencyOrderTarget
     {
         [Test]
