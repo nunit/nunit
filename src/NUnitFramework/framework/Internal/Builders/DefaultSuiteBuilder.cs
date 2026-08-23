@@ -70,11 +70,11 @@ namespace NUnit.Framework.Internal.Builders
             {
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
 
-                if (builders.Length == 0 && typeInfo.IsGenericTypeDefinition)
+                if (HasNoneOrSingleTestFixtureAttributeWithNoArguments(builders) && typeInfo.IsGenericTypeDefinition)
                 {
                     // If no fixture builder attributes are found on the type, we look for them on the declaring type, if any.
                     Type? declaringType = typeInfo.Type.DeclaringType;
-                    while (builders.Length == 0 && declaringType is not null)
+                    while (HasNoneOrSingleTestFixtureAttributeWithNoArguments(builders) && declaringType is not null)
                     {
                         builders = GetFixtureBuilderAttributes(new TypeWrapper(declaringType));
                         declaringType = declaringType.DeclaringType;
@@ -125,6 +125,13 @@ namespace NUnit.Framework.Internal.Builders
                 suite.Add(fixture);
 
             return suite;
+        }
+
+        private static bool HasNoneOrSingleTestFixtureAttributeWithNoArguments(IFixtureBuilder[] builders)
+        {
+            return builders.Length == 0 ||
+                   builders.Length == 1 && builders[0] is TestFixtureAttribute testFixture &&
+                                           testFixture.Arguments.Length == 0 && testFixture.TypeArgs.Length == 0;
         }
 
         /// <summary>

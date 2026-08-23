@@ -245,11 +245,12 @@ namespace NUnit.Framework.Tests.Attributes
                 "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments."));
         }
 
-        [Test]
-        public void GenericTestWithNestedClassTests()
+        [TestCase(typeof(GenericClassWith<>.NestedClassImplicitTextFixtureAttribute))]
+        [TestCase(typeof(GenericClassWith<>.NestedClassExplicitTestFixtureAttribute))]
+        public void GenericClassWithNonParameterizedNestedClassTest(Type nestedClass)
         {
             var suiteBuilder = new Framework.Internal.Builders.DefaultSuiteBuilder();
-            var typeInfo = new TypeWrapper(typeof(GenericClassWith<>.NestedClass));
+            var typeInfo = new TypeWrapper(nestedClass);
             Assert.That(suiteBuilder.CanBuildFrom(typeInfo), Is.True,
                 "Nested generic fixtures should be discoverable when the declaring type provides TestFixtureAttribute(s).");
             TestSuite parameterizedFixture = suiteBuilder.BuildFrom(typeInfo);
@@ -257,8 +258,9 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(parameterizedFixture.Tests, Has.Count.EqualTo(2));
             var fixturesByName = parameterizedFixture.Tests.ToDictionary(t => t.Name);
 
-            const string successfulName = "GenericClassWith<String>+NestedClass";
-            const string unsuccessfulName = "GenericClassWith<Int32>+NestedClass";
+            string nestedClassName = nestedClass.Name;
+            string successfulName = $"GenericClassWith<String>+{nestedClassName}";
+            string unsuccessfulName = $"GenericClassWith<Int32>+{nestedClassName}";
 
             Assert.That(fixturesByName.Keys, Is.EquivalentTo([successfulName, unsuccessfulName]));
 
