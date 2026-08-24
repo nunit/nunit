@@ -62,6 +62,7 @@ namespace NUnit.Framework.Tests.Attributes
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                    Assert.That(afterResult.Message, Does.Contain($"Dependency on {nameof(MethodDependencyFailing.BeforeFailing)} did not pass"));
                     Assert.That(FixtureDependencyEvents.Events, Does.Contain(nameof(MethodDependencyFailing.BeforeFailing)));
                     Assert.That(FixtureDependencyEvents.Events, Does.Not.Contain(nameof(MethodDependencyFailing.AfterFailing)));
                 }
@@ -330,14 +331,16 @@ namespace NUnit.Framework.Tests.Attributes
                 var work = TestBuilder.CreateWorkItem(typeof(MethodParameterizedTestDependsOnMethod));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodParameterizedTestDependsOnMethod.ParameterizedTestA));
+                const string parameterizedTestA = nameof(MethodParameterizedTestDependsOnMethod.ParameterizedTestA);
+
+                var beforeResult = result.Children.Single(x => x.Name == parameterizedTestA);
                 var afterResult = result.Children.Single(x => x.Name == nameof(MethodParameterizedTestDependsOnMethod.A));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(["A", "ParameterizedTestA(1)", "ParameterizedTestA(2)"]));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(["A", $"{parameterizedTestA}(1)", $"{parameterizedTestA}(2)"]));
                 }
             }
 
@@ -347,14 +350,16 @@ namespace NUnit.Framework.Tests.Attributes
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependsOnParameterizedTest));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTest.ParameterizedTestA));
+                const string parameterizedTestA = nameof(MethodDependsOnParameterizedTest.ParameterizedTestA);
+
+                var beforeResult = result.Children.Single(x => x.Name == parameterizedTestA);
                 var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTest.A));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo(["ParameterizedTestA(1)", "ParameterizedTestA(2)", "A"]));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([$"{parameterizedTestA}(1)", $"{parameterizedTestA}(2)", "A"]));
                 }
             }
 
@@ -364,15 +369,18 @@ namespace NUnit.Framework.Tests.Attributes
                 var work = TestBuilder.CreateWorkItem(typeof(MethodDependsOnParameterizedTestWithFailure));
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTestWithFailure.ParameterizedTestA));
+                const string parameterizedTestA = nameof(MethodDependsOnParameterizedTestWithFailure.ParameterizedTestA);
+
+                var beforeResult = result.Children.Single(x => x.Name == parameterizedTestA);
                 var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnParameterizedTestWithFailure.A));
 
                 using (Assert.EnterMultipleScope())
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(beforeResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-                    Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                    Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                    Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                    Assert.That(afterResult.Message, Does.Contain($"Dependency on {parameterizedTestA} did not pass"));
+                    Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([$"{parameterizedTestA}(1)", $"{parameterizedTestA}(2)"]));
                 }
             }
         }

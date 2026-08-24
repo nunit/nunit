@@ -289,7 +289,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
                     {
                         var dependant = child.Test.DependantTest!;
-                        var message = $"Dependency on {dependant.Name} did not pass";
+                        var message = $"Dependency on {dependant.Name} did not pass.";
 
                         SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
                         OnChildItemCompleted(child, EventArgs.Empty);

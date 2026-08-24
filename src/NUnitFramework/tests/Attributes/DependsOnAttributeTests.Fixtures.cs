@@ -67,6 +67,7 @@ namespace NUnit.Framework.Tests.Attributes
                 {
                     Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                     Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                    Assert.That(afterResult.Message, Does.Contain($"Dependency on {nameof(FixtureDependencyBeforeFailing)} did not pass"));
                 }
             }
 

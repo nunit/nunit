@@ -322,15 +322,17 @@ namespace NUnit.TestData
     public class MethodDependsOnParameterizedTestWithFailure
     {
         [Test]
-        [DependsOn(nameof(A))]
+        [DependsOn(nameof(ParameterizedTestA))]
         public void A()
         {
+            FixtureDependencyEvents.Record();
             Assert.That(true, Is.True);
         }
 
         [Test]
         public void ParameterizedTestA([Values(1, 2)] int x)
         {
+            FixtureDependencyEvents.Record();
             Assert.That(x, Is.Odd);
         }
     }
