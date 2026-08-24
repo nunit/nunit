@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal.Execution
 {
     internal abstract class TestDependencyManager
     {
-        protected const string FileCycleReason = "Circular or self-referential test dependency detected.";
+        protected const string FailCycleReason = "Circular or self-referential test dependency detected.";
         protected const string FailCycleBaseReason = "Circular or self-referential test dependency detected via base class.";
         protected const string InvalidOrderReason = "Test may not participate in both DependsOn and Order chains.";
         protected const string InvalidParallelReason = "Test dependency chains may not include tests configured for parallel execution.";
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Execution
                     }
 
                     if (invalidCircularDependencies.Contains(dependencyTest))
-                        MarkInvalidCircularDependency(test, FileCycleReason);
+                        MarkInvalidCircularDependency(test, FailCycleReason);
                 }
 
                 visiting.RemoveAt(visiting.Count - 1);
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
             void MarkCycle(List<ITest> dependencyPath, int cycleStartIndex)
             {
                 for (int i = cycleStartIndex; i < dependencyPath.Count; i++)
-                    MarkInvalidCircularDependency(dependencyPath[i], FileCycleReason);
+                    MarkInvalidCircularDependency(dependencyPath[i], FailCycleReason);
             }
         }
 
