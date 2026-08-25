@@ -126,7 +126,12 @@ namespace NUnit.Framework.Internal
         public const string DependsOnFixture = "DependsOn.Fixture";
 
         /// <summary>
-        /// Indicates whether the dependent fixture is allowed to fail without affecting this fixture.
+        /// The test method that this test method depends on.
+        /// </summary>
+        public const string DependsOnMethod = "DependsOn.Method";
+
+        /// <summary>
+        /// Indicates whether the dependent test is allowed to fail without affecting this test.
         /// </summary>
         public const string DependsOnAllowFailure = $"DependsOn.AllowFailure";
 

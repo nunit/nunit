@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Specifies that a test fixture must run after another fixture.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class DependsOnAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
@@ -18,7 +18,18 @@ namespace NUnit.Framework
         /// <param name="dependantFixture">The test fixture that must finish before this fixture starts.</param>
         public DependsOnAttribute(Type dependantFixture)
         {
+            ArgumentNullException.ThrowIfNull(dependantFixture);
             DependantFixture = dependantFixture;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DependsOnAttribute"/> class.
+        /// </summary>
+        /// <param name="methodName">The name of the test method that must finish before this test method starts.</param>
+        public DependsOnAttribute(string methodName)
+        {
+            ArgumentNullException.ThrowIfNull(methodName);
+            DependantMethod = methodName;
         }
 
         /// <summary>
@@ -29,7 +40,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the test fixture that must finish before this fixture starts.
         /// </summary>
-        public Type DependantFixture { get; }
+        public Type? DependantFixture { get; }
+
+        /// <summary>
+        /// Gets the test method that must finish before this test method starts.
+        /// </summary>
+        public string? DependantMethod { get; }
 
         /// <summary>
         /// Applies dependency metadata to a test.
@@ -37,7 +53,27 @@ namespace NUnit.Framework
         /// <param name="test">The test.</param>
         public void ApplyToTest(Test test)
         {
-            test.Properties.Set(PropertyNames.DependsOnFixture, DependantFixture);
+            if (DependantFixture is not null)
+            {
+                if (test is not TestFixture)
+                {
+                    test.MakeInvalid("DependsOnAttribute Type constructor may only be used on fixtures.");
+                    return;
+                }
+
+                test.Properties.Set(PropertyNames.DependsOnFixture, DependantFixture);
+            }
+            else if (DependantMethod is not null)
+            {
+                if (test is not TestMethod and not ParameterizedMethodSuite)
+                {
+                    test.MakeInvalid("DependsOnAttribute string constructor may only be used on test methods.");
+                    return;
+                }
+
+                test.Properties.Set(PropertyNames.DependsOnMethod, DependantMethod);
+            }
+
             test.Properties.Set(PropertyNames.DependsOnAllowFailure, AllowFailure);
         }
     }

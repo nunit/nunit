@@ -18,7 +18,9 @@ namespace NUnit.TestData
                 Events.Clear();
         }
 
-        public static void Record(string value)
+        public static void Record() => Record(TestContext.CurrentContext.Test.Name);
+
+        private static void Record(string value)
         {
             lock (SyncRoot)
                 Events.Add(value);
@@ -27,19 +29,6 @@ namespace NUnit.TestData
 
     public class FixtureDependencyBase
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            var testName = TestContext.CurrentContext.Test.Name;
-            FixtureDependencyEvents.Record($"{testName}.OneTimeSetUp");
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            var testName = TestContext.CurrentContext.Test.Name;
-            FixtureDependencyEvents.Record($"{testName}.OneTimeTearDown");
-        }
     }
 
     #region Basic Functionality
@@ -65,7 +54,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    public class FixtureDependencyBeforeFailing : FixtureDependencyBase
+    public class FixtureDependencyBeforeFailing
     {
         [Test]
         public void BeforeFailingTest()
@@ -76,7 +65,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [DependsOn(typeof(FixtureDependencyBeforeFailing))]
-    public class FixtureDependencyAfterFailing : FixtureDependencyBase
+    public class FixtureDependencyAfterFailing
     {
         [Test]
         public void AfterFailingDependencyTest()
@@ -87,7 +76,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [DependsOn(typeof(FixtureDependencyBeforeFailing), AllowFailure = true)]
-    public class FixtureDependencyAfterFailingAllowed : FixtureDependencyBase
+    public class FixtureDependencyAfterFailingAllowed
     {
         [Test]
         public void AfterFailingDependencyAllowedTest()
@@ -97,7 +86,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    public class ForkingDependencyRoot : FixtureDependencyBase
+    public class ForkingDependencyRoot
     {
         [Test]
         public void RootTest()
@@ -108,7 +97,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [DependsOn(typeof(ForkingDependencyRoot))]
-    public class ForkingDependencyNodeA : FixtureDependencyBase
+    public class ForkingDependencyNodeA
     {
         [Test]
         public void NodeATest()
@@ -119,7 +108,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [DependsOn(typeof(ForkingDependencyRoot))]
-    public class ForkingDependencyNodeB : FixtureDependencyBase
+    public class ForkingDependencyNodeB
     {
         [Test]
         public void NodeBTest()
@@ -128,6 +117,28 @@ namespace NUnit.TestData
         }
     }
 
+    [TestFixture]
+    [DependsOn(nameof(FixtureMethod))]
+    public class MethodDependencyInvalidStringOnFixture
+    {
+        [Test]
+        public void FixtureMethod()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOn(typeof(MethodDependencyOrdered))]
+    public class FixtureDependsOnFixtureWithInternalMethodDependencies
+    {
+        [Test]
+        public void AfterTest()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
     #endregion
 
     #region Referential Integrity
@@ -155,7 +166,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [DependsOn(typeof(FixtureDependencyCycleA))]
-    public class FixtureDependencyCycleReferrer : FixtureDependencyBase
+    public class FixtureDependencyCycleReferrer
     {
         [Test]
         public void C()
@@ -266,5 +277,6 @@ namespace NUnit.TestData
             Assert.That(true, Is.True);
         }
     }
+
     #endregion
 }
