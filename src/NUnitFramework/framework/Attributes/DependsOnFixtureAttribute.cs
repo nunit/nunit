@@ -38,12 +38,6 @@ namespace NUnit.Framework
         /// <param name="test">The test.</param>
         public void ApplyToTest(Test test)
         {
-            if (test is not TestFixture)
-            {
-                test.MakeInvalid($"{nameof(DependsOnFixtureAttribute)} may only be used on fixtures.");
-                return;
-            }
-
             test.Properties.Set(PropertyNames.DependsOnFixture, DependantFixture);
             test.Properties.Set(PropertyNames.DependsOnAllowFailure, AllowFailure);
         }

@@ -38,12 +38,6 @@ namespace NUnit.Framework
         /// <param name="test">The test.</param>
         public void ApplyToTest(Test test)
         {
-            if (test is not TestMethod and not ParameterizedMethodSuite)
-            {
-                test.MakeInvalid($"{nameof(DependsOnTestAttribute)} may only be used on test methods.");
-                return;
-            }
-
             test.Properties.Set(PropertyNames.DependsOnTest, DependantTest);
             test.Properties.Set(PropertyNames.DependsOnAllowFailure, AllowFailure);
         }
