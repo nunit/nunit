@@ -13,7 +13,7 @@ internal sealed class Lock
 
     public void Enter() => Monitor.Enter(_lock);
     public bool TryEnter() => Monitor.TryEnter(_lock);
-    public bool TryEnter(TimeSpan timeout) => Monitor.TryEnter(_lock, timeout);
+    public bool TryEnter(System.TimeSpan timeout) => Monitor.TryEnter(_lock, timeout);
     public bool TryEnter(int millisecondsTimeout) => Monitor.TryEnter(_lock, millisecondsTimeout);
     public void Exit() => Monitor.Exit(_lock);
 
