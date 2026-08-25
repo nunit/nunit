@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Start();
         }
 
-        private readonly object _cancelLock = new();
+        private readonly Lock _cancelLock = new();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem

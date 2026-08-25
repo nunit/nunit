@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 using System.IO;
+using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
@@ -10,7 +11,7 @@ namespace NUnit.Framework.Internal
     public class InternalTraceWriter : TextWriter
     {
         private readonly TextWriter _writer;
-        private readonly object _myLock = new();
+        private readonly Lock _myLock = new();
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.
