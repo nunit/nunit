@@ -345,18 +345,13 @@ namespace NUnit.TestData.LifeCycleTests
             private int _value;
 
             [Test]
-#pragma warning disable CS0618 // Type or member is obsolete
-            [Order(0)]
-#pragma warning restore CS0618 // Type or member is obsolete
             public void Test1()
             {
                 Assert.That(_value++, Is.EqualTo(0));
             }
 
             [Test]
-#pragma warning disable CS0618 // Type or member is obsolete
-            [Order(1)]
-#pragma warning restore CS0618 // Type or member is obsolete
+            [DependsOnTest(nameof(Test1))]
             public void Test2()
             {
                 Assert.That(_value++, Is.EqualTo(1));
@@ -400,18 +395,13 @@ namespace NUnit.TestData.LifeCycleTests
         private int _value;
 
         [Test]
-#pragma warning disable CS0618 // Type or member is obsolete
-        [Order(0)]
-#pragma warning restore CS0618 // Type or member is obsolete
         public void Test1()
         {
             Assert.That(_value++, Is.EqualTo(0));
         }
 
         [Test]
-#pragma warning disable CS0618 // Type or member is obsolete
-        [Order(1)]
-#pragma warning restore CS0618 // Type or member is obsolete
+        [DependsOnTest(nameof(Test1))]
         public void Test2()
         {
             Assert.That(_value++, Is.EqualTo(1));

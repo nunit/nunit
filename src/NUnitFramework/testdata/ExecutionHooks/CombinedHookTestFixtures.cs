@@ -57,14 +57,10 @@ namespace NUnit.TestData.ExecutionHooks
 
     public class OneTestWithLoggingHooksAndOneWithoutFixture
     {
-#pragma warning disable CS0618 // Type or member is obsolete
-        [Test, ActivateTestHook, Order(1)]
-#pragma warning restore CS0618 // Type or member is obsolete
+        [Test, ActivateTestHook]
         public void TestWithHookLogging() => TestLog.LogCurrentMethod();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        [Test, Order(2)]
-#pragma warning restore CS0618 // Type or member is obsolete
+        [Test, DependsOnTest(nameof(TestWithHookLogging))]
         public void TestWithoutHookLogging() => TestLog.LogCurrentMethod();
     }
 
