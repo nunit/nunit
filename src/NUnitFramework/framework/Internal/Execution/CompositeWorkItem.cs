@@ -401,7 +401,7 @@ namespace NUnit.Framework.Internal.Execution
             return (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private readonly object _childCompletionLock = new();
+        private readonly Lock _childCompletionLock = new();
 
         private void OnChildItemCompleted(object? sender, EventArgs e)
         {
@@ -439,7 +439,7 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
-        private readonly object _cancelLock = new();
+        private readonly Lock _cancelLock = new();
 
         /// <summary>
         /// Cancel a CompositeWorkItem and all of its children
@@ -472,7 +472,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             private readonly CompositeWorkItem _originalWorkItem;
 
-            private readonly object _teardownLock = new();
+            private readonly Lock _teardownLock = new();
 
             /// <summary>
             /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem
