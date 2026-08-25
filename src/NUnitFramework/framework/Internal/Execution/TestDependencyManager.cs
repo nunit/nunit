@@ -25,11 +25,11 @@ namespace NUnit.Framework.Internal.Execution
 
             if (child is TestFixture)
             {
-                return new FixtureDependencyManager();
+                return new TestFixtureDependencyManager();
             }
             else if (child is TestMethod or ParameterizedMethodSuite)
             {
-                return new MethodDependencyManager();
+                return new TestMethodDependencyManager();
             }
 
             return null;
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-    internal class MethodDependencyManager : TestDependencyManager
+    internal class TestMethodDependencyManager : TestDependencyManager
     {
         protected override Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent)
         {
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 testsByName[test.Name] = test;
 
-                if (test.Properties.Get(PropertyNames.DependsOnMethod) is string dependencyMethod)
+                if (test.Properties.Get(PropertyNames.DependsOnTest) is string dependencyMethod)
                     dependencyByMethod[test] = dependencyMethod;
             }
 
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
-    internal class FixtureDependencyManager : TestDependencyManager
+    internal class TestFixtureDependencyManager : TestDependencyManager
     {
         protected override Dictionary<ITest, ITest>? BuildDependencyGraph(TestSuite parent)
         {

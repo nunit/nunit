@@ -43,7 +43,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyBefore))]
+    [DependsOnFixture(typeof(FixtureDependencyBefore))]
     public class FixtureDependencyAfter
     {
         [Test]
@@ -64,7 +64,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyBeforeFailing))]
+    [DependsOnFixture(typeof(FixtureDependencyBeforeFailing))]
     public class FixtureDependencyAfterFailing
     {
         [Test]
@@ -75,7 +75,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyBeforeFailing), AllowFailure = true)]
+    [DependsOnFixture(typeof(FixtureDependencyBeforeFailing), AllowFailure = true)]
     public class FixtureDependencyAfterFailingAllowed
     {
         [Test]
@@ -96,7 +96,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(ForkingDependencyRoot))]
+    [DependsOnFixture(typeof(ForkingDependencyRoot))]
     public class ForkingDependencyNodeA
     {
         [Test]
@@ -107,7 +107,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(ForkingDependencyRoot))]
+    [DependsOnFixture(typeof(ForkingDependencyRoot))]
     public class ForkingDependencyNodeB
     {
         [Test]
@@ -118,18 +118,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(nameof(FixtureMethod))]
-    public class MethodDependencyInvalidStringOnFixture
-    {
-        [Test]
-        public void FixtureMethod()
-        {
-            Assert.That(true, Is.True);
-        }
-    }
-
-    [TestFixture]
-    [DependsOn(typeof(MethodDependencyOrdered))]
+    [DependsOnFixture(typeof(MethodDependencyOrdered))]
     public class FixtureDependsOnFixtureWithInternalMethodDependencies
     {
         [Test]
@@ -143,7 +132,7 @@ namespace NUnit.TestData
 
     #region Referential Integrity
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyCycleB))]
+    [DependsOnFixture(typeof(FixtureDependencyCycleB))]
     public class FixtureDependencyCycleA
     {
         [Test]
@@ -154,7 +143,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyCycleA))]
+    [DependsOnFixture(typeof(FixtureDependencyCycleA))]
     public class FixtureDependencyCycleB
     {
         [Test]
@@ -165,7 +154,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyCycleA))]
+    [DependsOnFixture(typeof(FixtureDependencyCycleA))]
     public class FixtureDependencyCycleReferrer
     {
         [Test]
@@ -176,7 +165,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencySelfReferential))]
+    [DependsOnFixture(typeof(FixtureDependencySelfReferential))]
     public class FixtureDependencySelfReferential
     {
         [Test]
@@ -187,7 +176,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyBase))]
+    [DependsOnFixture(typeof(FixtureDependencyBase))]
     public class FixtureDependencySelfReferentialBase : FixtureDependencyBase
     {
         [Test]
@@ -210,7 +199,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyOrderBefore))]
+    [DependsOnFixture(typeof(FixtureDependencyOrderBefore))]
     [Order(1)]
     public class FixtureDependencyOrderAfter
     {
@@ -233,7 +222,7 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
-    [DependsOn(typeof(FixtureDependencyOrderTarget))]
+    [DependsOnFixture(typeof(FixtureDependencyOrderTarget))]
     public class FixtureDependencyOrderReferrer
     {
         [Test]
@@ -257,7 +246,7 @@ namespace NUnit.TestData
 
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
-    [DependsOn(typeof(FixtureDependencyParallelBeforeSlow))]
+    [DependsOnFixture(typeof(FixtureDependencyParallelBeforeSlow))]
     public class FixtureDependencyParallelAfter
     {
         [Test]
