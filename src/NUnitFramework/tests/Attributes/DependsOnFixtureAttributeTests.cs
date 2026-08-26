@@ -352,5 +352,63 @@ namespace NUnit.Framework.Tests.Attributes
                 ]));
             }
         }
+
+        [Test]
+        public void ParameterizedFixtureDependenciesAreOrdered()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(ParameterizedFixtureDependencyAfter), typeof(ParameterizedFixtureDependencyBefore));
+
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
+            Assert.That(work, Is.Not.Null);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(work.Children, Has.Count.EqualTo(2));
+
+                Assert.That(suite.Tests[0].Name, Is.EqualTo(nameof(ParameterizedFixtureDependencyAfter)));
+                Assert.That(suite.Tests[1].Name, Is.EqualTo(nameof(ParameterizedFixtureDependencyBefore)));
+
+                Assert.That(work.Children[0].Test.Name, Is.EqualTo(nameof(ParameterizedFixtureDependencyBefore)));
+                Assert.That(work.Children[1].Test.Name, Is.EqualTo(nameof(ParameterizedFixtureDependencyAfter)));
+            }
+        }
+
+        [Test]
+        public void ParameterizedFixtureDependentTestIsSkippedIfDependencyFails()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(ParameterizedFixtureDependencyAfterFailing), typeof(ParameterizedFixtureDependencyBeforeFailing));
+
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var beforeResult = result.Children.Single(x => x.Name == nameof(ParameterizedFixtureDependencyBeforeFailing));
+            var afterResult = result.Children.Single(x => x.Name == nameof(ParameterizedFixtureDependencyAfterFailing));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(afterResult.Message, Does.Contain($"Dependency on {nameof(ParameterizedFixtureDependencyBeforeFailing)} did not pass"));
+            }
+        }
+
+        [Test]
+        public void ParameterizedFixtureDependentTestIsNotRunnableIfDependencyAbsent()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(ParameterizedFixtureDependencyAfter));
+
+            var work = TestBuilder.CreateWorkItem(suite);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var afterResult = result.Children.Single(x => x.Name == nameof(ParameterizedFixtureDependencyAfter));
+            var expectedMsg = $"Test dependency {typeof(ParameterizedFixtureDependencyBefore)} can not be found. Please verify it was configured correctly and was not filtered out.";
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(afterResult.ResultState.Label, Is.EqualTo("Invalid"));
+                Assert.That(afterResult.Message, Does.Contain(expectedMsg));
+            }
+        }
     }
 }

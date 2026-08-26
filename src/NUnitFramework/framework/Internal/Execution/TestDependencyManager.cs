@@ -23,7 +23,7 @@ namespace NUnit.Framework.Internal.Execution
 
             var child = test.Tests[0];
 
-            if (child is TestFixture)
+            if (child is TestFixture or ParameterizedFixtureSuite)
             {
                 return new TestFixtureDependencyManager();
             }
@@ -179,10 +179,10 @@ namespace NUnit.Framework.Internal.Execution
                 if (child is not Test test)
                     continue;
 
-                if (test.TypeInfo?.Type is Type fixtureType)
+                if (GetFixtureType(test) is Type fixtureType)
                     fixturesByType[fixtureType] = test;
 
-                if (test.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
+                if (GetDependencyType(test) is Type dependencyType)
                     dependencyByFixture[test] = dependencyType;
             }
 
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal.Execution
                     continue;
 
                 // Check for self-referential base dependency first
-                if (test.TypeInfo?.Type is Type fixtureType && fixtureType.IsSubclassOf(dependencyType))
+                if (GetFixtureType(test) is Type fixtureType && fixtureType.IsSubclassOf(dependencyType))
                 {
                     test.MakeInvalid(FailCycleBaseReason);
                     continue;
@@ -214,6 +214,30 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             return dependencyGraph;
+        }
+
+        private static Type? GetFixtureType(Test test)
+        {
+            if (test.TypeInfo?.Type is Type type)
+                return type;
+
+            // For ParameterizedFixtureSuite, derive the type from the first child fixture
+            if (test is ParameterizedFixtureSuite && test.Tests.Count > 0 && test.Tests[0] is Test firstChild)
+                return firstChild.TypeInfo?.Type;
+
+            return null;
+        }
+
+        private static Type? GetDependencyType(Test test)
+        {
+            if (test.Properties.Get(PropertyNames.DependsOnFixture) is Type dependencyType)
+                return dependencyType;
+
+            // For ParameterizedFixtureSuite, the dependency attribute is applied to the child fixtures
+            if (test is ParameterizedFixtureSuite && test.Tests.Count > 0 && test.Tests[0] is Test firstChild)
+                return firstChild.Properties.Get(PropertyNames.DependsOnFixture) as Type;
+
+            return null;
         }
     }
 }

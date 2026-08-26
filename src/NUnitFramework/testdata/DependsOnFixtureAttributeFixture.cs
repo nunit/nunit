@@ -268,4 +268,68 @@ namespace NUnit.TestData
     }
 
     #endregion
+
+    #region Parameterized Fixtures
+
+    [TestFixture("a")]
+    [TestFixture("b")]
+    public class ParameterizedFixtureDependencyBefore
+    {
+        public ParameterizedFixtureDependencyBefore(string _)
+        {
+        }
+
+        [Test]
+        public void BeforeTest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture("x")]
+    [TestFixture("y")]
+    [DependsOnFixture(typeof(ParameterizedFixtureDependencyBefore))]
+    public class ParameterizedFixtureDependencyAfter
+    {
+        public ParameterizedFixtureDependencyAfter(string _)
+        {
+        }
+
+        [Test]
+        public void AfterTest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture("fail")]
+    public class ParameterizedFixtureDependencyBeforeFailing
+    {
+        public ParameterizedFixtureDependencyBeforeFailing(string _)
+        {
+        }
+
+        [Test]
+        public void BeforeFailingTest()
+        {
+            Assert.Fail("Intentional failure for parameterized dependency testing");
+        }
+    }
+
+    [TestFixture("after")]
+    [DependsOnFixture(typeof(ParameterizedFixtureDependencyBeforeFailing))]
+    public class ParameterizedFixtureDependencyAfterFailing
+    {
+        public ParameterizedFixtureDependencyAfterFailing(string _)
+        {
+        }
+
+        [Test]
+        public void AfterFailingDependencyTest()
+        {
+            Assert.That(true, Is.True);
+        }
+    }
+
+    #endregion
 }
