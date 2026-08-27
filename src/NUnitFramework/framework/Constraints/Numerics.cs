@@ -46,6 +46,10 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (obj is decimal)
                     return true;
+#if !NETFRAMEWORK
+                if (obj is Half)
+                    return true;
+#endif
             }
             return false;
         }
@@ -60,6 +64,10 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(decimal))
                     return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Half))
+                    return true;
+#endif
             }
             return false;
         }
@@ -92,6 +100,16 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (obj is char)
                     return true;
+                if (obj is nint)
+                    return true;
+                if (obj is nuint)
+                    return true;
+#if !NETFRAMEWORK
+                if (obj is Int128)
+                    return true;
+                if (obj is UInt128)
+                    return true;
+#endif
             }
             return false;
         }
@@ -118,6 +136,16 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(char))
                     return true;
+                if (type == typeof(nint))
+                    return true;
+                if (type == typeof(nuint))
+                    return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Int128))
+                    return true;
+                if (type == typeof(UInt128))
+                    return true;
+#endif
             }
             return false;
         }
@@ -126,7 +154,7 @@ namespace NUnit.Framework.Constraints
         {
             return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
         }
-        #endregion
+#endregion
 
         #region Numeric Equality
         /// <summary>
