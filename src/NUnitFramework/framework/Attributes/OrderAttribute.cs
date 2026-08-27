@@ -9,6 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Defines the order that the test will run in
     /// </summary>
+    [Obsolete("OrderAttribute is deprecated and may be removed in a future version of NUnit. Please use DependsOnTest or DependsOnFixture instead.")]
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class OrderAttribute : NUnitAttribute, IApplyToTest
     {

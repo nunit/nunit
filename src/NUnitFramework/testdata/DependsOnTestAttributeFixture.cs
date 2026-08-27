@@ -150,7 +150,9 @@ namespace NUnit.TestData
     public class MethodDependencyOrderTarget
     {
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Target()
         {
             FixtureDependencyEvents.Record();
@@ -178,7 +180,9 @@ namespace NUnit.TestData
 
         [Test]
         [DependsOnTest(nameof(Before))]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void After()
         {
             FixtureDependencyEvents.Record();
@@ -205,7 +209,9 @@ namespace NUnit.TestData
         }
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void OrderedIndependent()
         {
             FixtureDependencyEvents.Record();

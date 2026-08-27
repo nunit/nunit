@@ -345,14 +345,13 @@ namespace NUnit.TestData.LifeCycleTests
             private int _value;
 
             [Test]
-            [Order(0)]
             public void Test1()
             {
                 Assert.That(_value++, Is.EqualTo(0));
             }
 
             [Test]
-            [Order(1)]
+            [DependsOnTest(nameof(Test1))]
             public void Test2()
             {
                 Assert.That(_value++, Is.EqualTo(1));
@@ -396,14 +395,13 @@ namespace NUnit.TestData.LifeCycleTests
         private int _value;
 
         [Test]
-        [Order(0)]
         public void Test1()
         {
             Assert.That(_value++, Is.EqualTo(0));
         }
 
         [Test]
-        [Order(1)]
+        [DependsOnTest(nameof(Test1))]
         public void Test2()
         {
             Assert.That(_value++, Is.EqualTo(1));
@@ -425,11 +423,15 @@ namespace NUnit.TestData.LifeCycleTests
         }
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Test() => Assert.Pass();
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void VerifyDisposed() => Assert.That(DisposeCount, Is.EqualTo(1));
     }
 
@@ -446,11 +448,15 @@ namespace NUnit.TestData.LifeCycleTests
         }
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Test() => Assert.Pass();
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void VerifyDisposed() => Assert.That(DisposeCount, Is.EqualTo(1));
     }
 

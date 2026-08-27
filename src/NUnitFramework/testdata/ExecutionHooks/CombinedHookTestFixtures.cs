@@ -57,10 +57,10 @@ namespace NUnit.TestData.ExecutionHooks
 
     public class OneTestWithLoggingHooksAndOneWithoutFixture
     {
-        [Test, ActivateTestHook, Order(1)]
+        [Test, ActivateTestHook]
         public void TestWithHookLogging() => TestLog.LogCurrentMethod();
 
-        [Test, Order(2)]
+        [Test, DependsOnTest(nameof(TestWithHookLogging))]
         public void TestWithoutHookLogging() => TestLog.LogCurrentMethod();
     }
 

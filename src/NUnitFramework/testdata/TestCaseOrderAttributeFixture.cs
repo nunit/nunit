@@ -5,25 +5,33 @@ using NUnit.Framework;
 namespace NUnit.TestData
 {
     [TestFixture]
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(3)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class TestCaseOrderAttributeFixture
     {
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(3)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Z_ThirdTest()
         {
             Assert.Pass("Z_ThirdTestWithSameOrderAsSecond");
         }
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Y_FirstTest()
         {
             Assert.Pass("Y_FirstTest");
         }
 
         [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
         [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
         public void Y_SecondTest()
         {
             Assert.Pass("Y_SecondTest");
@@ -43,7 +51,9 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class AnotherTestCaseOrderAttributeFixture
     {
         [Test]
@@ -54,7 +64,9 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+#pragma warning disable CS0618 // Type or member is obsolete
     [Order(2)]
+#pragma warning restore CS0618 // Type or member is obsolete
     public class ThirdTestCaseOrderAttributeFixture
     {
         [Test]
