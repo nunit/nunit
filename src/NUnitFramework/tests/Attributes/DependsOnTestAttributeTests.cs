@@ -380,5 +380,24 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([$"{parameterizedTestA}(1)", $"{parameterizedTestA}(2)"]));
             }
         }
+
+        [Test]
+        public void RegularTestDependsOnGenericParameterizedTest()
+        {
+            var work = TestBuilder.CreateWorkItem(typeof(MethodDependsOnGenericParameterizedTest));
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            const string parameterizedTestA = nameof(MethodDependsOnGenericParameterizedTest.ParameterizedTestA);
+
+            var beforeResult = result.Children.Single(x => x.Name == parameterizedTestA);
+            var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependsOnGenericParameterizedTest.A));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([$"{parameterizedTestA}<Int32>(1)", $"{parameterizedTestA}<Int32>(2)", "A"]));
+            }
+        }
     }
 }
