@@ -151,14 +151,30 @@ namespace NUnit.Framework.Constraints
 
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
-                return AreGenericEqual((Half)expected, (Half)actual, tolerance);
+            {
+                return AreGenericEqual(
+                    ConvertFloating<Half>(expected),
+                    ConvertFloating<Half>(actual),
+                    tolerance);
+            }
 
             if (expected is UInt128 || actual is UInt128)
-                return AreGenericEqual((UInt128)expected, (UInt128)actual, tolerance);
+            {
+                return AreGenericEqual(
+                    ConvertUnsignedInteger<UInt128>(expected),
+                    ConvertUnsignedInteger<UInt128>(actual),
+                    tolerance);
+            }
 
             if (expected is Int128 || actual is Int128)
-                return AreGenericEqual((Int128)expected, (Int128)actual, tolerance);
+            {
+                return AreGenericEqual(
+                    ConvertSignedInteger<Int128>(expected),
+                    ConvertSignedInteger<Int128>(actual),
+                    tolerance);
+            }
 #endif
+
             if (expected is decimal || actual is decimal)
                 return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
 
@@ -369,6 +385,32 @@ namespace NUnit.Framework.Constraints
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
+        }
+
+        private static T ConvertFloating<T>(object value)
+            where T : IFloatingPoint<T>
+        {
+            if (value is T t)
+                return t;
+            if (value is decimal d)
+                return T.CreateChecked(d);
+            return T.CreateChecked(Convert.ToDouble(value));
+        }
+
+        private static T ConvertSignedInteger<T>(object value)
+            where T : INumber<T>
+        {
+            if (value is T t)
+                return t;
+            return T.CreateChecked(Convert.ToInt64(value));
+        }
+
+        private static T ConvertUnsignedInteger<T>(object value)
+            where T : INumber<T>
+        {
+            if (value is T t)
+                return t;
+            return T.CreateChecked(Convert.ToUInt64(value));
         }
 #endif
 
