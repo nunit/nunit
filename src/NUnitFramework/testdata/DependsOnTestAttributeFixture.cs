@@ -289,6 +289,25 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    public class MethodDependsOnGenericParameterizedTest
+    {
+        [Test]
+        [DependsOnTest(nameof(ParameterizedTestA))]
+        public void A()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        public void ParameterizedTestA<T>([Values(1, 2)] T x)
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
     public class MethodParameterizedTestDependsOnMethod
     {
         [Test]
