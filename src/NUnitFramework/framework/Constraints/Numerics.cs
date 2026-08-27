@@ -158,6 +158,12 @@ namespace NUnit.Framework.Constraints
             if (expected is uint || actual is uint)
                 return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
 
+            if (expected is nint || actual is nint)
+                return AreEqual((nint)expected, (nint)actual, tolerance);
+
+            if (expected is nuint || actual is nuint)
+                return AreEqual((nuint)expected, (nuint)actual, tolerance);
+
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
 
@@ -171,31 +177,31 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
-            where T1 : unmanaged, IConvertible
-            where T2 : unmanaged, IConvertible
+            where T1 : struct, IConvertible
+            where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
-                return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
+                return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
 
             if (expected is float || actual is float)
-                return AreEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
+                return AreEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
             if (expected is decimal || actual is decimal)
-                return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
 
             if (expected is ulong || actual is ulong)
-                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
+                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
 
             if (expected is long || actual is long)
-                return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
+                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
             if (expected is uint || actual is uint)
-                return AreEqual(expected.ToUInt32(null), actual.ToUInt32(null), tolerance);
+                return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
 
-            return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
+            return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
 
         private static bool AreEqual(double expected, double actual, ref Tolerance tolerance)

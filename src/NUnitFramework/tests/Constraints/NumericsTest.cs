@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -24,17 +26,39 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase(123456789UL)]
         [TestCase(1234.5678f)]
         [TestCase(1234.5678)]
-        [Test]
+        [TestCaseSource(nameof(FloatingPointEqualsTestCases))]
+        [TestCaseSource(nameof(IntegerEqualsTestCases))]
         public void CanMatchWithoutToleranceMode(object value)
         {
             Assert.That(Numerics.AreEqual(value, value, ref _zeroTolerance), Is.True);
         }
 
-        // Separate test case because you can't use decimal in an attribute (24.1.3)
-        [Test]
-        public void CanMatchDecimalWithoutToleranceMode()
+        private static TestCaseData[] FloatingPointEqualsTestCases
         {
-            Assert.That(Numerics.AreEqual(123m, 123m, ref _zeroTolerance), Is.True);
+            get
+            {
+                return [
+                    new TestCaseData(123m),
+#if !NETFRAMEWORK
+                    BuildTestCaseData((Half)124),
+#endif
+                ];
+            }
+        }
+
+        private static TestCaseData[] IntegerEqualsTestCases
+        {
+            get
+            {
+                return [
+                    BuildTestCaseData((nint)130),
+                    BuildTestCaseData((nuint)131),
+#if !NETFRAMEWORK
+                    BuildTestCaseData((Int128)132),
+                    BuildTestCaseData((UInt128)133),
+#endif
+                ];
+            }
         }
 
         [TestCase((int)9500)]
@@ -49,18 +73,52 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((ulong)9500)]
         [TestCase((ulong)10000)]
         [TestCase((ulong)10500)]
-        [Test]
+        [TestCaseSource(nameof(IntegerToleranceTestCases))]
         public void CanMatchIntegralsWithPercentage(object value)
         {
             Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True);
         }
 
-        [Test]
-        public void CanMatchDecimalWithPercentage()
+        private static TestCaseData[] IntegerToleranceTestCases
         {
-            Assert.That(Numerics.AreEqual(10000m, 9500m, ref _tenPercent), Is.True);
-            Assert.That(Numerics.AreEqual(10000m, 10000m, ref _tenPercent), Is.True);
-            Assert.That(Numerics.AreEqual(10000m, 10500m, ref _tenPercent), Is.True);
+            get
+            {
+                return [
+                    BuildTestCaseData((nint)10500),
+                    BuildTestCaseData((nint)9500),
+                    BuildTestCaseData((nuint)10500),
+                    BuildTestCaseData((nuint)9500),
+#if !NETFRAMEWORK
+                    BuildTestCaseData((Int128)10500),
+                    BuildTestCaseData((Int128)9500),
+                    BuildTestCaseData((UInt128)10500),
+                    BuildTestCaseData((UInt128)9500),
+#endif
+                ];
+            }
+        }
+
+        [TestCaseSource(nameof(FloatingPointToleranceTestCases))]
+        public void CanMatchFloatingPointWithPercentage(object value)
+        {
+            Assert.That(Numerics.AreEqual(10000m, value, ref _tenPercent), Is.True);
+        }
+
+        private static TestCaseData[] FloatingPointToleranceTestCases
+        {
+            get
+            {
+                return [
+                    new TestCaseData(9500m),
+                    new TestCaseData(10000m),
+                    new TestCaseData(10500m),
+#if !NETFRAMEWORK
+                    new TestCaseData((Half)9500m),
+                    new TestCaseData((Half)10000m),
+                    new TestCaseData((Half)10500m),
+#endif
+                ];
+            }
         }
 
         [Test]
@@ -171,7 +229,8 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((long)11500)]
         [TestCase((ulong)8500)]
         [TestCase((ulong)11500)]
-        public void FailsOnIntegralsOutsideOfPercentage(object value)
+        public void FailsOnIntegralsOutsideOfPercentage<T>(T value)
+            where T : struct, IEquatable<T>
         {
             Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True));
         }
@@ -192,6 +251,26 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
         {
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
+        }
+
+        private static TestCaseData BuildTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string argDisplayName = null)
+        {
+            var data = new TestCaseData<T>(value);
+
+            if (value is null)
+            {
+                return data.SetArgDisplayNames("null");
+            }
+            else
+            {
+                // Workaround for:
+                // There is no primitive literal for some types (ex: nint)
+                // We must construct these with a cast (ex: (nint)1) but not 'as' since they are not reference types
+                // Yet parentheses within arg names have issues displaying in Test Explorer
+                // So we extract the 'cast' type and represent it as 'as' in the display name to avoid parentheses
+                var castType = Regex.Match(argDisplayName, @"^(\(.+\)).+$").Groups[1].Value.ToString().AsSpan();
+                return data.SetArgDisplayNames($"{value} as {castType.Slice(1, castType.Length - 2).ToString()}");
+            }
         }
     }
 }
