@@ -253,7 +253,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
 
-        private static TestCaseData BuildTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string argDisplayName = null)
+        private static TestCaseData BuildTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string argDisplayName = null!)
         {
             var data = new TestCaseData<T>(value);
 

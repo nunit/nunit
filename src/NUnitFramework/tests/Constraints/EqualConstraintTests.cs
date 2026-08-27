@@ -8,11 +8,14 @@ using System.IO.Compression;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
 using NUnit.Framework.Constraints.Comparers;
 using System.Threading.Tasks;
+
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -1025,6 +1028,37 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(testValue, Is.EqualTo(50).Within(50).Percent, "Doesn't work with generic numeric constraints.");
                 Assert.That(testValue, Is.EqualTo((object)50).Within(50).Percent, "Doesn't work with object-based constraints.");
             }
+
+#if !NETFRAMEWORK
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
+            [TestCaseSource(nameof(GetNumericToleranceValues))]
+            public void CanMatchRelativeTolerance<T>(T actualValue, T expectedValue)
+                where T : INumber<T>
+            {
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(expectedValue).Percent, "Doesn't work with generic numeric constraints.");
+                Assert.That(actualValue, Is.EqualTo((object)expectedValue).Within(expectedValue).Percent, "Doesn't work with object-based constraints.");
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(int.CreateChecked(expectedValue)).Percent, "Doesn't work with type variant tolerances.");
+            }
+
+            [TestCaseSource(nameof(GetNumericToleranceValues))]
+            public void CanMatchAbsoluteTolerance<T>(T actualValue, T expectedValue)
+                where T : INumber<T>
+            {
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(expectedValue), "Doesn't work with generic numeric constraints.");
+                Assert.That(actualValue, Is.EqualTo((object)expectedValue).Within(expectedValue), "Doesn't work with object-based constraints.");
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(int.CreateChecked(expectedValue)), "Doesn't work with type variant tolerances.");
+            }
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
+
+            private static IEnumerable<TestCaseData> GetNumericToleranceValues()
+            {
+                yield return new TestCaseData<Half>((Half)30, (Half)50);
+                yield return new TestCaseData<Int128>((Int128)30, (Int128)50);
+                yield return new TestCaseData<UInt128>((UInt128)30, (UInt128)50);
+                yield return new TestCaseData<nint>((nint)30, (nint)50);
+                yield return new TestCaseData<nuint>((nuint)30, (nuint)50);
+            }
+#endif
 
             [TestCase(9500.0f)]
             [TestCase(10000.0f)]

@@ -125,7 +125,7 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
             {
-                return AreGenericEqual(
+                return AreEqual(
                     ConvertFloating<Half>(expected),
                     ConvertFloating<Half>(actual),
                     tolerance);
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Constraints
 
             if (expected is UInt128 || actual is UInt128)
             {
-                return AreGenericEqual(
+                return AreEqual(
                     ConvertUnsignedInteger<UInt128>(expected),
                     ConvertUnsignedInteger<UInt128>(actual),
                     tolerance);
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints
 
             if (expected is Int128 || actual is Int128)
             {
-                return AreGenericEqual(
+                return AreEqual(
                     ConvertSignedInteger<Int128>(expected),
                     ConvertSignedInteger<Int128>(actual),
                     tolerance);
@@ -330,7 +330,7 @@ namespace NUnit.Framework.Constraints
         }
 
 #if !NETFRAMEWORK
-        private static bool AreGenericEqual<T>(T expected, T actual, Tolerance tolerance)
+        private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
             where T : INumber<T>
         {
             switch (tolerance.Mode)
@@ -340,7 +340,7 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     {
-                        T toleranceValue = T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+                        T toleranceValue = GetToleranceValue(tolerance);
                         if (toleranceValue > T.Zero)
                         {
                             T diff = expected >= actual ? expected - actual : actual - expected;
@@ -352,7 +352,7 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Percent:
                     {
-                        T toleranceValue = T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+                        T toleranceValue = GetToleranceValue(tolerance);
                         if (expected == T.Zero)
                             return expected.Equals(actual);
 
@@ -365,6 +365,13 @@ namespace NUnit.Framework.Constraints
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+
+            static T GetToleranceValue(Tolerance tolerance)
+            {
+                if (tolerance.Amount is T tol)
+                    return tol;
+                return T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
             }
         }
 
@@ -551,7 +558,54 @@ namespace NUnit.Framework.Constraints
             if (expected is uint || actual is uint)
                 return Convert.ToUInt32(expected).CompareTo(Convert.ToUInt32(actual));
 
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+                return ConvertFloating<Half>(expected).CompareTo(ConvertFloating<Half>(actual));
+
+            if (expected is UInt128 || actual is UInt128)
+                return ConvertUnsignedInteger<UInt128>(expected).CompareTo(ConvertUnsignedInteger<UInt128>(actual));
+
+            if (expected is Int128 || actual is Int128)
+                return ConvertSignedInteger<Int128>(expected).CompareTo(ConvertSignedInteger<Int128>(actual));
+#endif
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                return CompareToNint(expectedValue, actualValue);
+            }
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                return CompareToNuint(expectedValue, actualValue);
+            }
+
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
+
+            static int CompareToNint(nint expected, nint actual)
+            {
+                if (expected < actual)
+                    return -1;
+                else if (expected > actual)
+                    return 1;
+
+                return 0;
+            }
+
+            static int CompareToNuint(nuint expected, nuint actual)
+            {
+                if (expected < actual)
+                    return -1;
+                else if (expected > actual)
+                    return 1;
+
+                return 0;
+            }
         }
         #endregion
 
