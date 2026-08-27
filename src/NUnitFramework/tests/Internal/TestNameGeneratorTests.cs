@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -11,7 +13,7 @@ namespace NUnit.Framework.Tests.Internal
         private TestMethod _simpleTestWithArgs;
         private TestMethod _genericTest;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void InitializeMethodInfos()
         {
             Type thisType = GetType();
@@ -65,6 +67,28 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
         }
 
+        [TestCase(-500, Description = "Validate negative sign", TypeArgs = [typeof(int)], ExpectedResult = "-500")]
+        [TestCase(0.5, Description = "Validate decimal separator", TypeArgs = [typeof(double)], ExpectedResult = "0.5d")]
+        public string ParameterizedTestsUseInvariantCulture<T>(T value)
+        {
+            CultureInfo culture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo customCulture = new CultureInfo("en-US");
+                customCulture.NumberFormat.NegativeSign = "NEGATIVE_SIGN";
+                customCulture.NumberFormat.NumberDecimalSeparator = "DECIMAL_SEPARATOR";
+
+                CultureInfo.CurrentCulture = customCulture;
+
+                return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, [value]);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = culture;
+            }
+        }
+
         [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethodWithArgs(a: 1)")]
         [TestCase("{m}{p}", new object[] { 1, 2 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2)")]
         [TestCase("{m}{p}", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3)")]
@@ -72,6 +96,36 @@ namespace NUnit.Framework.Tests.Internal
         public string ParameterizedTestsWithArgs(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
+        }
+
+        [TestCaseSource(nameof(GetNumericFormattingTestCases))]
+        public string ParameterizedTestsWithNumericFormatting<T>(T arg)
+        {
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTestWithArgs, [arg]);
+        }
+
+        private static TestCaseData[] GetNumericFormattingTestCases()
+        {
+            return [
+                TestCaseData.Create(123456789).Returns("123456789"),
+                TestCaseData.Create((nint)123456789).Returns("123456789"),
+                TestCaseData.Create((nuint)123456789).Returns("123456789"),
+                TestCaseData.Create(1m).Returns("1m"),
+                TestCaseData.Create(1.1m).Returns("1.1m"),
+                TestCaseData.Create(1f).Returns("1.0f"),
+                TestCaseData.Create(1d).Returns("1.0d"),
+                TestCaseData.Create(1E+20).Returns("1E+20d"),
+                TestCaseData.Create(1E+5).Returns("100000.0d"),
+                TestCaseData.Create(1e-21).Returns("1E-21d"),
+                TestCaseData.Create(1e-5).Returns("1E-05d"),
+#if !NETFRAMEWORK
+                TestCaseData.Create((Half)1e5).Returns("Half.PositiveInfinity"),
+                TestCaseData.Create((Half)1e3).Returns("1000.0h"),
+                TestCaseData.Create((Half)1e-3).Returns("0.001h"),
+                TestCaseData.Create((Int128)123456789).Returns("123456789i128"),
+                TestCaseData.Create((UInt128)123456789).Returns("123456789u128"),
+#endif
+            ];
         }
 
         [TestCase("FIXED", ExpectedResult = "FIXED")]
@@ -101,35 +155,62 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
         }
 
-        [TestCase(double.MaxValue, ExpectedResult = "double.MaxValue")]
-        [TestCase(double.MinValue, ExpectedResult = "double.MinValue")]
-        [TestCase(double.NaN, ExpectedResult = "double.NaN")]
-        [TestCase(double.PositiveInfinity, ExpectedResult = "double.PositiveInfinity")]
-        [TestCase(double.NegativeInfinity, ExpectedResult = "double.NegativeInfinity")]
-        [TestCase(float.MaxValue, ExpectedResult = "float.MaxValue")]
-        [TestCase(float.MinValue, ExpectedResult = "float.MinValue")]
-        [TestCase(float.NaN, ExpectedResult = "float.NaN")]
-        [TestCase(float.PositiveInfinity, ExpectedResult = "float.PositiveInfinity")]
-        [TestCase(float.NegativeInfinity, ExpectedResult = "float.NegativeInfinity")]
-        [TestCase(int.MaxValue, ExpectedResult = "int.MaxValue")]
-        [TestCase(int.MinValue, ExpectedResult = "int.MinValue")]
-        [TestCase(uint.MaxValue, ExpectedResult = "uint.MaxValue")]
-        [TestCase(uint.MinValue, ExpectedResult = "uint.MinValue")]
-        [TestCase(long.MaxValue, ExpectedResult = "long.MaxValue")]
-        [TestCase(long.MinValue, ExpectedResult = "long.MinValue")]
-        [TestCase(ulong.MaxValue, ExpectedResult = "ulong.MaxValue")]
-        [TestCase(ulong.MinValue, ExpectedResult = "ulong.MinValue")]
-        [TestCase(short.MaxValue, ExpectedResult = "short.MaxValue")]
-        [TestCase(short.MinValue, ExpectedResult = "short.MinValue")]
-        [TestCase(ushort.MaxValue, ExpectedResult = "ushort.MaxValue")]
-        [TestCase(ushort.MinValue, ExpectedResult = "ushort.MinValue")]
-        [TestCase(byte.MaxValue, ExpectedResult = "byte.MaxValue")]
-        [TestCase(byte.MinValue, ExpectedResult = "byte.MinValue")]
-        [TestCase(sbyte.MaxValue, ExpectedResult = "sbyte.MaxValue")]
-        [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
+        [TestCaseSource(nameof(GetSpecialNamedValuesTestCases))]
         public string SpecialNamedValues(object arg)
         {
-            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg });
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, [arg]);
+        }
+
+        private static TestCaseData[] GetSpecialNamedValuesTestCases()
+        {
+            return [
+                CreateTestCaseData(double.MaxValue),
+                CreateTestCaseData(double.MinValue),
+                CreateTestCaseData(double.NaN),
+                CreateTestCaseData(double.PositiveInfinity),
+                CreateTestCaseData(double.NegativeInfinity),
+                CreateTestCaseData(float.MaxValue),
+                CreateTestCaseData(float.MinValue),
+                CreateTestCaseData(float.NaN),
+                CreateTestCaseData(float.PositiveInfinity),
+                CreateTestCaseData(float.NegativeInfinity),
+                CreateTestCaseData(int.MaxValue),
+                CreateTestCaseData(int.MinValue),
+                CreateTestCaseData(uint.MaxValue),
+                CreateTestCaseData(uint.MinValue),
+                CreateTestCaseData(long.MaxValue),
+                CreateTestCaseData(long.MinValue),
+                CreateTestCaseData(ulong.MaxValue),
+                CreateTestCaseData(ulong.MinValue),
+                CreateTestCaseData(short.MaxValue),
+                CreateTestCaseData(short.MinValue),
+                CreateTestCaseData(ushort.MaxValue),
+                CreateTestCaseData(ushort.MinValue),
+                CreateTestCaseData(byte.MaxValue),
+                CreateTestCaseData(byte.MinValue),
+                CreateTestCaseData(sbyte.MaxValue),
+                CreateTestCaseData(sbyte.MinValue),
+                CreateTestCaseData(decimal.MaxValue),
+                CreateTestCaseData(decimal.MinValue),
+                CreateTestCaseData(nint.MaxValue),
+                CreateTestCaseData(nint.MinValue),
+                CreateTestCaseData(nuint.MaxValue),
+                CreateTestCaseData(nuint.MinValue),
+#if !NETFRAMEWORK
+                CreateTestCaseData(Half.MaxValue),
+                CreateTestCaseData(Half.MinValue),
+                CreateTestCaseData(Half.NaN),
+                CreateTestCaseData(Half.PositiveInfinity),
+                CreateTestCaseData(Half.NegativeInfinity),
+                CreateTestCaseData(Int128.MaxValue),
+                CreateTestCaseData(Int128.MinValue),
+                CreateTestCaseData(UInt128.MaxValue),
+                CreateTestCaseData(UInt128.MinValue),
+#endif
+                ];
+
+            static TestCaseData CreateTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string displayName = "")
+                => new TestCaseData(value).SetArgDisplayNames(displayName).Returns(displayName);
         }
 
         #region Methods Used as Data
