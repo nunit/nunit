@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -146,6 +149,16 @@ namespace NUnit.Framework.Constraints
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+                return AreGenericEqual((Half)expected, (Half)actual, tolerance);
+
+            if (expected is UInt128 || actual is UInt128)
+                return AreGenericEqual((UInt128)expected, (UInt128)actual, tolerance);
+
+            if (expected is Int128 || actual is Int128)
+                return AreGenericEqual((Int128)expected, (Int128)actual, tolerance);
+#endif
             if (expected is decimal || actual is decimal)
                 return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
 
@@ -318,6 +331,46 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+
+#if !NETFRAMEWORK
+        private static bool AreGenericEqual<T>(T expected, T actual, Tolerance tolerance)
+            where T : INumber<T>
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return expected.Equals(actual);
+
+                case ToleranceMode.Linear:
+                    {
+                        T toleranceValue = T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+                        if (toleranceValue > T.Zero)
+                        {
+                            T diff = expected >= actual ? expected - actual : actual - expected;
+                            return diff <= toleranceValue;
+                        }
+
+                        return expected.Equals(actual);
+                    }
+
+                case ToleranceMode.Percent:
+                    {
+                        T toleranceValue = T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+                        if (expected == T.Zero)
+                            return expected.Equals(actual);
+
+                        // Find the absolute difference. Can't do a simple Math.Abs() here since it's unsigned
+                        T difference = expected >= actual ? expected - actual : actual - expected;
+                        T relativeError = T.Abs(difference / expected);
+
+                        return (relativeError <= toleranceValue / T.CreateChecked(100));
+                    }
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+#endif
 
         private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
         {

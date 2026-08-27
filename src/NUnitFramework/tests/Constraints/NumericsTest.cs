@@ -113,9 +113,9 @@ namespace NUnit.Framework.Tests.Constraints
                     new TestCaseData(10000m),
                     new TestCaseData(10500m),
 #if !NETFRAMEWORK
-                    new TestCaseData((Half)9500m),
-                    new TestCaseData((Half)10000m),
-                    new TestCaseData((Half)10500m),
+                    BuildTestCaseData((Half)9500m),
+                    BuildTestCaseData((Half)10000m),
+                    BuildTestCaseData((Half)10500m)
 #endif
                 ];
             }
