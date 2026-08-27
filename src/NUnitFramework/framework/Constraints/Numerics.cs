@@ -188,10 +188,18 @@ namespace NUnit.Framework.Constraints
                 return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
 
             if (expected is nint || actual is nint)
-                return AreEqual((nint)expected, (nint)actual, tolerance);
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
 
             if (expected is nuint || actual is nuint)
-                return AreEqual((nuint)expected, (nuint)actual, tolerance);
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
 
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
