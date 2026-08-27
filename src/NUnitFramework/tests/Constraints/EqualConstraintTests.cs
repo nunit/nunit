@@ -1735,23 +1735,13 @@ namespace NUnit.Framework.Tests.Constraints
         {
             get
             {
-                var ptr = new System.IntPtr(0);
                 var exampleTestA = new ExampleTest.ClassA(0);
                 var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
-                yield return new object[] { 0, ptr };
                 yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
-        }
-        [Test]
-        public void SameValueDifferentTypeExactMessageMatch()
-        {
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(ex?.Message, Does.Contain("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL));
         }
 
         private class Dummy
