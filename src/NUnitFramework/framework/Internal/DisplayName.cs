@@ -1,7 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Text;
 using System;
+#if !NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+#endif
+using System.Text;
 
 namespace NUnit.Framework.Internal
 {
@@ -55,6 +59,12 @@ namespace NUnit.Framework.Internal
                     display = builder.ToString();
                 }
             }
+#if !NETFRAMEWORK
+            else if (arg is not null && TryFormatNumeric(arg, out var displayValue))
+            {
+                display = displayValue;
+            }
+#else
             else if (arg is double dbl)
             {
                 if (double.IsNaN(dbl))
@@ -140,39 +150,6 @@ namespace NUnit.Framework.Internal
                 else
                     display += "UL";
             }
-            else if (arg is string str)
-            {
-                bool tooLong = stringMax > 0 && str.Length > stringMax;
-                int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
-
-                if (!tooLong && !MayNeedEscape(str))
-                {
-                    // common case, no need to process with string builder
-                    display = "\"" + str + "\"";
-                }
-                else
-                {
-                    // cleanup
-                    var sb = new StringBuilder();
-                    sb.Append('\"');
-                    foreach (char c in str)
-                    {
-                        sb.Append(EscapeCharInString(c));
-
-                        if (tooLong && sb.Length > limit)
-                        {
-                            sb.Append(THREE_DOTS);
-                            break;
-                        }
-                    }
-                    sb.Append('\"');
-                    display = sb.ToString();
-                }
-            }
-            else if (arg is char c)
-            {
-                display = "\'" + EscapeSingleChar(c) + "\'";
-            }
             else if (arg is int i)
             {
                 if (i.Equals(int.MaxValue))
@@ -186,6 +163,20 @@ namespace NUnit.Framework.Internal
                     display = "uint.MaxValue";
                 else if (ui.Equals(uint.MinValue))
                     display = "uint.MinValue";
+            }
+            else if (arg is nint ni)
+            {
+                if (ni.Equals(nint.MaxValue))
+                    display = "nint.MaxValue";
+                else if (ni.Equals(nint.MinValue))
+                    display = "nint.MinValue";
+            }
+            else if (arg is nuint nui)
+            {
+                if (nui.Equals(nuint.MaxValue))
+                    display = "nuint.MaxValue";
+                else if (nui.Equals(nuint.MinValue))
+                    display = "nuint.MinValue";
             }
             else if (arg is short s)
             {
@@ -215,6 +206,40 @@ namespace NUnit.Framework.Internal
                 else if (sb.Equals(sbyte.MinValue))
                     display = "sbyte.MinValue";
             }
+#endif
+            else if (arg is string str)
+            {
+                bool tooLong = stringMax > 0 && str.Length > stringMax;
+                int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
+
+                if (!tooLong && !MayNeedEscape(str))
+                {
+                    // common case, no need to process with string builder
+                    display = "\"" + str + "\"";
+                }
+                else
+                {
+                    // cleanup
+                    var builder = new StringBuilder();
+                    builder.Append('\"');
+                    foreach (char c in str)
+                    {
+                        builder.Append(EscapeCharInString(c));
+
+                        if (tooLong && builder.Length > limit)
+                        {
+                            builder.Append(THREE_DOTS);
+                            break;
+                        }
+                    }
+                    builder.Append('\"');
+                    display = builder.ToString();
+                }
+            }
+            else if (arg is char c)
+            {
+                display = "\'" + EscapeSingleChar(c) + "\'";
+            }
             else if (arg is Exception e)
             {
                 display = FormatException(e);
@@ -222,6 +247,117 @@ namespace NUnit.Framework.Internal
 
             return display;
         }
+
+#if !NETFRAMEWORK
+        private static bool TryFormatNumeric(object arg, [NotNullWhen(true)] out string? displayValue)
+        {
+            switch (arg)
+            {
+                case float f:
+                    displayValue = DisplayFloat(f, "float", "f");
+                    return true;
+                case double dbl:
+                    displayValue = DisplayFloat(dbl, "double", "d");
+                    return true;
+                case decimal dec:
+                    displayValue = DisplayNumeric(dec, "decimal", "m");
+                    return true;
+                case Half h:
+                    displayValue = DisplayFloat(h, "Half", "h");
+                    return true;
+                case Int128 i128:
+                    displayValue = DisplayNumeric(i128, "Int128", "i128");
+                    return true;
+                case UInt128 ui128:
+                    displayValue = DisplayNumeric(ui128, "UInt128", "u128");
+                    return true;
+                case long l:
+                    displayValue = DisplayNumeric(l, "long", "L");
+                    return true;
+                case ulong ul:
+                    displayValue = DisplayNumeric(ul, "ulong", "UL");
+                    return true;
+                case int i:
+                    displayValue = DisplayNumeric(i, "int");
+                    return true;
+                case uint ui:
+                    displayValue = DisplayNumeric(ui, "uint");
+                    return true;
+                case nint ni:
+                    displayValue = DisplayNumeric(ni, "nint");
+                    return true;
+                case nuint nui:
+                    displayValue = DisplayNumeric(nui, "nuint");
+                    return true;
+                case short s:
+                    displayValue = DisplayNumeric(s, "short");
+                    return true;
+                case ushort us:
+                    displayValue = DisplayNumeric(us, "ushort");
+                    return true;
+                case byte b:
+                    displayValue = DisplayNumeric(b, "byte");
+                    return true;
+                case sbyte sb:
+                    displayValue = DisplayNumeric(sb, "sbyte");
+                    return true;
+                default:
+                    displayValue = null;
+                    return false;
+            }
+
+            static string DisplayNumeric<T>(T arg, string typeName, string? literalSuffix = null)
+                where T : INumber<T>, IMinMaxValue<T>
+            {
+                if (arg.Equals(T.MaxValue))
+                {
+                    return $"{typeName}.MaxValue";
+                }
+                else if (arg.Equals(T.MinValue))
+                {
+                    return $"{typeName}.MinValue";
+                }
+                else
+                {
+                    var display = arg.ToString()!;
+                    return literalSuffix is null ? display : display + literalSuffix;
+                }
+            }
+
+            static string DisplayFloat<T>(T arg, string typeName, string? literalSuffix = null)
+                where T : IFloatingPoint<T>, IMinMaxValue<T>
+            {
+                if (T.IsNaN(arg))
+                {
+                    return $"{typeName}.NaN";
+                }
+                else if (T.IsPositiveInfinity(arg))
+                {
+                    return $"{typeName}.PositiveInfinity";
+                }
+                else if (T.IsNegativeInfinity(arg))
+                {
+                    return $"{typeName}.NegativeInfinity";
+                }
+                else if (arg.Equals(T.MaxValue))
+                {
+                    return $"{typeName}.MaxValue";
+                }
+                else if (arg.Equals(T.MinValue))
+                {
+                    return $"{typeName}.MinValue";
+                }
+                else
+                {
+                    var display = arg.ToString()!;
+                    if (!display.Contains('.'))
+                        display += ".0";
+
+                    return literalSuffix is null ? display : display + literalSuffix;
+                }
+            }
+        }
+#endif
 
         private static string FormatException(Exception ex)
         {
