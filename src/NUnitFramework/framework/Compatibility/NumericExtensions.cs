@@ -17,6 +17,16 @@ internal static class NintExtensions
         {
             get => unchecked((nint)Int64.MinValue);
         }
+
+        public int CompareTo(nint value)
+        {
+            if (x < value)
+                return -1;
+            else if (x > value)
+                return 1;
+
+            return 0;
+        }
     }
 }
 
@@ -32,6 +42,16 @@ internal static class NuintExtensions
         public static nuint MinValue
         {
             get => unchecked((nuint)UInt64.MinValue);
+        }
+
+        public int CompareTo(nuint value)
+        {
+            if (x < value)
+                return -1;
+            else if (x > value)
+                return 1;
+
+            return 0;
         }
     }
 }

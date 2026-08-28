@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -291,24 +289,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
 
-        private static TestCaseData BuildTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string argDisplayName = null!)
-        {
-            var data = new TestCaseData<T>(value);
-
-            if (value is null)
-            {
-                return data.SetArgDisplayNames("null");
-            }
-            else
-            {
-                // Workaround for:
-                // There is no primitive literal for some types (ex: nint)
-                // We must construct these with a cast (ex: (nint)1) but not 'as' since they are not reference types
-                // Yet parentheses within arg names have issues displaying in Test Explorer
-                // So we extract the 'cast' type and represent it as 'as' in the display name to avoid parentheses
-                var castType = Regex.Match(argDisplayName, @"^(\(.+\)).+$").Groups[1].Value.ToString().AsSpan();
-                return data.SetArgDisplayNames($"{value} as {castType.Slice(1, castType.Length - 2).ToString()}");
-            }
-        }
+        private static TestCaseData BuildTestCaseData<T>(T value)
+            => new TestCaseData<T>(value);
     }
 }
