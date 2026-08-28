@@ -351,9 +351,7 @@ namespace NUnit.Framework.Constraints
                     }
 
                 case ToleranceMode.Percent:
-                    {
-                        return IsWithinTolerancePercent(expected, actual, GetToleranceValue(tolerance));
-                    }
+                    return IsWithinTolerancePercent(expected, actual, GetToleranceValue(tolerance));
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
