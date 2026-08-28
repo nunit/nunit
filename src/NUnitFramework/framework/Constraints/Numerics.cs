@@ -331,7 +331,7 @@ namespace NUnit.Framework.Constraints
 
 #if !NETFRAMEWORK
         private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
-            where T : INumber<T>
+            where T : INumber<T>, IMinMaxValue<T>
         {
             switch (tolerance.Mode)
             {
@@ -352,9 +352,6 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Percent:
                     {
-                        if (expected == T.Zero)
-                            return expected.Equals(actual);
-
                         return IsWithinTolerancePercent(expected, actual, GetToleranceValue(tolerance));
                     }
 
@@ -369,27 +366,66 @@ namespace NUnit.Framework.Constraints
                 return T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
             }
 
-            static bool IsWithinTolerancePercent(T expected, T actual, T tolerance)
+            static bool IsWithinTolerancePercent(T expected, T actual, T toleranceAmount)
             {
+                // 1. Guard against division-by-zero
+                if (expected == T.Zero)
+                    return expected.Equals(actual);
+
+                // 1b. Compile-time friendly fastpaths
                 // If it's already a floating-point type (double/float), overflow isn't an issue,
-                // and cross-multiplication works perfectly out of the box.
-                if (typeof(T) == typeof(double) || typeof(T) == typeof(float) || typeof(T) == typeof(decimal))
+                if (typeof(T) == typeof(double) || typeof(T) == typeof(float) || typeof(T) == typeof(decimal) || typeof(T) == typeof(Half))
                 {
                     T floatDiff = T.Max(expected, actual) - T.Min(expected, actual);
                     T floatHundred = T.CreateChecked(100);
-                    return (floatDiff * floatHundred) <= (tolerance * T.Abs(expected));
+                    return (floatDiff * floatHundred) <= (toleranceAmount * T.Abs(expected));
                 }
 
-                // For integer types, upscale to 128-bit integers to guarantee zero overflow
-                Int128 expected128 = Int128.CreateChecked(T.Abs(expected));
-                Int128 tolerance128 = Int128.CreateChecked(tolerance);
+                T difference = T.Max(expected, actual) - T.Min(expected, actual);
+                T hundred = T.CreateChecked(100);
 
-                T nativeDiff = T.Max(expected, actual) - T.Min(expected, actual);
-                Int128 diff128 = Int128.CreateChecked(nativeDiff);
-                Int128 hundred128 = 100;
+                // 2. Safely determine the absolute threshold without calling T.Abs(expected)
+                // If expected is negative, its magnitude is (-expected).
+                // If expected == T.MinValue, we handle it as a special fallback case.
+                bool isMinVal = expected < T.Zero && expected == T.MinValue;
 
-                // 128-bit math guarantees no overflow for 64-bit inputs (like ulong or long)
-                return (diff128 * hundred128) <= (tolerance128 * expected128);
+                // Check if (difference * 100) overflows: Is difference > (Max / 100)?
+                bool leftSideSafe = difference <= (T.MaxValue / hundred);
+
+                // Check if (tolerance * |expected|) overflows.
+                bool rightSideSafe;
+                if (isMinVal)
+                {
+                    // If it's T.MinValue, we can't do T.MaxValue / T.Abs(expected).
+                    // Instead, check if toleranceAmount > (T.MaxValue / T.MinValue) wrapped carefully,
+                    // or simply flag it unsafe to force the fallback to handle this edge case.
+                    rightSideSafe = false;
+                }
+                else
+                {
+                    T absExpected = expected < T.Zero ? -expected : expected;
+                    rightSideSafe = toleranceAmount <= (T.MaxValue / absExpected);
+                }
+
+                // 3. Execute the branch
+                if (leftSideSafe && rightSideSafe)
+                {
+                    // Because we passed the checks, we know expected is NOT T.MinValue here.
+                    T absExpected = expected < T.Zero ? -expected : expected;
+                    return (difference * hundred) <= (toleranceAmount * absExpected);
+                }
+                else
+                {
+                    // Fallback: The numbers are either massive or hitting T.MinValue bounds.
+                    // Truncation doesn't matter at this massive scale, so double casting is perfectly accurate.
+                    double fallbackDiff = double.CreateChecked(difference);
+                    double fallbackTolerance = double.CreateChecked(toleranceAmount);
+
+                    // Use double to naturally hold the absolute value of int.MinValue (2147483648.0) without crashing
+                    double fallbackExpected = Math.Abs(double.CreateChecked(expected));
+
+                    return (fallbackDiff / fallbackExpected) <= (fallbackTolerance / 100.0);
+                }
             }
         }
 

@@ -121,6 +121,44 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        [TestCaseSource(nameof(GetEqualsWithPercentageEdgeCases))]
+        public void EqualsWithPercentageEdgeCases<T>(T value)
+            where T : notnull
+        {
+            var tolerance = new Tolerance(0.0).Percent;
+            Assert.That(Numerics.AreEqual(value, value, ref tolerance), Is.True);
+        }
+
+        private static TestCaseData[] GetEqualsWithPercentageEdgeCases
+        {
+            get
+            {
+                return [
+                    new TestCaseData(int.MaxValue),
+                    new TestCaseData(int.MinValue),
+                    new TestCaseData(long.MaxValue),
+                    new TestCaseData(long.MinValue),
+                    new TestCaseData(ulong.MaxValue),
+                    new TestCaseData(ulong.MinValue),
+                    new TestCaseData(decimal.MaxValue),
+                    new TestCaseData(decimal.MinValue),
+                    new TestCaseData(float.MaxValue),
+                    new TestCaseData(float.MinValue),
+                    new TestCaseData(double.MaxValue),
+                    new TestCaseData(double.MinValue),
+#if !NETFRAMEWORK
+                    new TestCaseData(Half.MaxValue),
+                    new TestCaseData(Half.MinValue),
+                    new TestCaseData(Int128.MaxValue - 5),
+                    new TestCaseData(Int128.MaxValue),
+                    new TestCaseData(Int128.MinValue),
+                    new TestCaseData(UInt128.MaxValue),
+                    new TestCaseData(UInt128.MinValue),
+#endif
+                ];
+            }
+        }
+
         [Test]
         public void CanCalculateAbsoluteDifference()
         {
