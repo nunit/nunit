@@ -8,15 +8,9 @@ internal static class NintExtensions
 {
     extension(nint x)
     {
-        public static nint MaxValue
-        {
-            get => unchecked((nint)Int64.MaxValue);
-        }
+        public static nint MaxValue => UIntPtr.Size == 8 ? unchecked((nint)Int64.MaxValue) : unchecked((nint)Int32.MaxValue);
 
-        public static nint MinValue
-        {
-            get => unchecked((nint)Int64.MinValue);
-        }
+        public static nint MinValue => UIntPtr.Size == 8 ? unchecked((nint)Int64.MinValue) : unchecked((nint)Int32.MinValue);
 
         public int CompareTo(nint value)
         {
@@ -34,15 +28,9 @@ internal static class NuintExtensions
 {
     extension(nuint x)
     {
-        public static nuint MaxValue
-        {
-            get => unchecked((nuint)UInt64.MaxValue);
-        }
+        public static nuint MaxValue => UIntPtr.Size == 8 ? unchecked((nuint)UInt64.MaxValue) : unchecked((nuint)UInt32.MaxValue);
 
-        public static nuint MinValue
-        {
-            get => unchecked((nuint)UInt64.MinValue);
-        }
+        public static nuint MinValue => UIntPtr.Size == 8 ? unchecked((nuint)UInt64.MinValue) : unchecked((nuint)UInt32.MinValue);
 
         public int CompareTo(nuint value)
         {
