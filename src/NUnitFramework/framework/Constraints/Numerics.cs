@@ -352,15 +352,10 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Percent:
                     {
-                        T toleranceValue = GetToleranceValue(tolerance);
                         if (expected == T.Zero)
                             return expected.Equals(actual);
 
-                        // Find the absolute difference. Can't do a simple Math.Abs() here since it's unsigned
-                        T difference = expected >= actual ? expected - actual : actual - expected;
-                        T relativeError = T.Abs(difference / expected);
-
-                        return (relativeError <= toleranceValue / T.CreateChecked(100));
+                        return IsWithinTolerancePercent(expected, actual, GetToleranceValue(tolerance));
                     }
 
                 default:
@@ -372,6 +367,29 @@ namespace NUnit.Framework.Constraints
                 if (tolerance.Amount is T tol)
                     return tol;
                 return T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+            }
+
+            static bool IsWithinTolerancePercent(T expected, T actual, T tolerance)
+            {
+                // If it's already a floating-point type (double/float), overflow isn't an issue,
+                // and cross-multiplication works perfectly out of the box.
+                if (typeof(T) == typeof(double) || typeof(T) == typeof(float) || typeof(T) == typeof(decimal))
+                {
+                    T floatDiff = T.Max(expected, actual) - T.Min(expected, actual);
+                    T floatHundred = T.CreateChecked(100);
+                    return (floatDiff * floatHundred) <= (tolerance * T.Abs(expected));
+                }
+
+                // For integer types, upscale to 128-bit integers to guarantee zero overflow
+                Int128 expected128 = Int128.CreateChecked(T.Abs(expected));
+                Int128 tolerance128 = Int128.CreateChecked(tolerance);
+
+                T nativeDiff = T.Max(expected, actual) - T.Min(expected, actual);
+                Int128 diff128 = Int128.CreateChecked(nativeDiff);
+                Int128 hundred128 = 100;
+
+                // 128-bit math guarantees no overflow for 64-bit inputs (like ulong or long)
+                return (diff128 * hundred128) <= (tolerance128 * expected128);
             }
         }
 
@@ -400,8 +418,7 @@ namespace NUnit.Framework.Constraints
                 return t;
             return T.CreateChecked(Convert.ToUInt64(value));
         }
-#endif
-
+#else
         private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
         {
             switch (tolerance.Mode)
@@ -517,6 +534,7 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+#endif
         #endregion
 
         #region Numeric Comparisons
