@@ -330,7 +330,7 @@ namespace NUnit.Framework.Constraints
         }
 
 #if !NETFRAMEWORK
-        private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
+        public static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
             where T : INumber<T>, IMinMaxValue<T>
         {
             switch (tolerance.Mode)
