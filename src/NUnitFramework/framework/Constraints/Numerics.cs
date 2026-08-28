@@ -574,7 +574,7 @@ namespace NUnit.Framework.Constraints
                 nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
                 nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
 
-                return CompareToNint(expectedValue, actualValue);
+                return expectedValue.CompareTo(actualValue);
             }
 
             if (expected is nuint || actual is nuint)
@@ -582,30 +582,10 @@ namespace NUnit.Framework.Constraints
                 nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
                 nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
 
-                return CompareToNuint(expectedValue, actualValue);
+                return expectedValue.CompareTo(actualValue);
             }
 
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
-
-            static int CompareToNint(nint expected, nint actual)
-            {
-                if (expected < actual)
-                    return -1;
-                else if (expected > actual)
-                    return 1;
-
-                return 0;
-            }
-
-            static int CompareToNuint(nuint expected, nuint actual)
-            {
-                if (expected < actual)
-                    return -1;
-                else if (expected > actual)
-                    return 1;
-
-                return 0;
-            }
         }
         #endregion
 
