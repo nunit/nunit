@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework.Legacy.Tests
 {
-    public class ClassicAssertExtensions_TypeTests
+    public class ClassicAssertExtensionsTypeTests
     {
         private class Base
         {

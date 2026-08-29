@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework.Legacy.Tests
 {
-    public class ClassicAssertExtensions_NumericTests
+    public class ClassicAssertExtensionsNumericTests
     {
         [Test]
         public void Zero_Positive_Negative_Int()

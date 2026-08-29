@@ -11,7 +11,7 @@ namespace NUnit.Framework.Legacy.Tests
     {
         private TestDirectory _goodDir1;
         private TestDirectory _goodDir2;
-        private const string BAD_DIRECTORY = @"\I\hope\this\is\garbage";
+        private const string BadDirectory = @"\I\hope\this\is\garbage";
 
         [SetUp]
         public void SetUp()
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Legacy.Tests
             _goodDir1 = new TestDirectory();
             _goodDir2 = new TestDirectory();
             Assume.That(_goodDir1.Directory, Is.Not.EqualTo(_goodDir2.Directory), "The two good directories are the same");
-            Assume.That(BAD_DIRECTORY, Does.Not.Exist, BAD_DIRECTORY + " exists");
+            Assume.That(BadDirectory, Does.Not.Exist, BadDirectory + " exists");
         }
 
         [TearDown]
@@ -123,14 +123,14 @@ namespace NUnit.Framework.Legacy.Tests
         [Test]
         public void ExistsFailsWhenDirectoryInfoDoesNotExist()
         {
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(new DirectoryInfo(BAD_DIRECTORY)));
+            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(new DirectoryInfo(BadDirectory)));
             Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
-            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(BAD_DIRECTORY));
+            var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(BadDirectory));
             Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
@@ -173,13 +173,13 @@ namespace NUnit.Framework.Legacy.Tests
         [Test]
         public void DoesNotExistPassesWhenDirectoryInfoDoesNotExist()
         {
-            DirectoryAssert.DoesNotExist(new DirectoryInfo(BAD_DIRECTORY));
+            DirectoryAssert.DoesNotExist(new DirectoryInfo(BadDirectory));
         }
 
         [Test]
         public void DoesNotExistPassesWhenStringDoesNotExist()
         {
-            DirectoryAssert.DoesNotExist(BAD_DIRECTORY);
+            DirectoryAssert.DoesNotExist(BadDirectory);
         }
 
         [Test]

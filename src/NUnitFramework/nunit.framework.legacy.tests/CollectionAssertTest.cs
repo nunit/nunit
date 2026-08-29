@@ -150,13 +150,13 @@ namespace NUnit.Framework.Legacy.Tests
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
-        private static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10_000);
+        private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10_000);
         private static readonly IEnumerable[] PerformanceData =
         {
-            RANGE,
-            new List<int>(RANGE),
-            new List<double>(RANGE.Select(v => (double)v)),
-            new List<string>(RANGE.Select(v => v.ToString()))
+            Range,
+            new List<int>(Range),
+            new List<double>(Range.Select(v => (double)v)),
+            new List<string>(Range.Select(v => v.ToString()))
         };
 
         [TestCaseSource(nameof(PerformanceData))]

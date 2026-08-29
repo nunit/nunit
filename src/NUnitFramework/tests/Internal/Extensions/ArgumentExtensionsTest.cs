@@ -3,8 +3,10 @@
 using System;
 using System.Collections;
 using System.Threading;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
-namespace NUnit.Framework.Internal.Extensions
+namespace NUnit.Framework.Tests.Internal.Extensions
 {
     [TestFixture]
     internal sealed class ArgumentExtensionsTest

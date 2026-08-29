@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework.Legacy.Tests
 {
-    public class ClassicAssertExtensions_ComparisonTests
+    public class ClassicAssertExtensionsComparisonTests
     {
         [Test]
         public void Greater_Less_Comparisons()

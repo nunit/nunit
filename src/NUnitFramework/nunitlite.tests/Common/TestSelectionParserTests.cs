@@ -2,9 +2,10 @@
 
 using System;
 using System.Xml;
+using NUnit.Common;
 using NUnit.Framework;
 
-namespace NUnit.Common.Tests
+namespace NUnitLite.Tests.Common
 {
     public class TestSelectionParserTests
     {
