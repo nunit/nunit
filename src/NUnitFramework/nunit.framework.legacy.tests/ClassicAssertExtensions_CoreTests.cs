@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework.Legacy.Tests
 {
-    public class ClassicAssertExtensions_CoreTests
+    public class ClassicAssertExtensionsCoreTests
     {
         [Test]
         public void Equality_and_Sameness()

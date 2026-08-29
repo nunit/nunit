@@ -3,9 +3,10 @@
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Common;
 using NUnit.Framework;
 
-namespace NUnit.Common.Tests
+namespace NUnitLite.Tests.Common
 {
     public class ExtendedTextWrapperTests
     {

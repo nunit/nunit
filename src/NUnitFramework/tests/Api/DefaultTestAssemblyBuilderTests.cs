@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.Api
 {
     public class DefaultTestAssemblyBuilderTests
     {
-        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
+        private const string MockAssemblyFile = "mock-assembly.dll";
 
         private string _mockAssemblyPath;
         private DefaultTestAssemblyBuilder _builder;
@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Api
         [SetUp]
         public void SetUp()
         {
-            _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE);
+            _mockAssemblyPath = Path.Combine(TestContext.CurrentContext.TestDirectory, MockAssemblyFile);
             _builder = new DefaultTestAssemblyBuilder();
         }
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.Api
 
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
+            Assert.That(result.Name, Is.EqualTo(MockAssemblyFile));
             Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason)!);
 
             return result.TestCaseCount;
