@@ -17,13 +17,14 @@ If you're upgrading from NUnit 4, please check the release notes for version 5 (
 
 You can download the latest stable release version ![GitHub release date](https://img.shields.io/github/release-date/nunit/nunit.svg?style=flat) as [![NuGet Version](https://img.shields.io/nuget/v/NUnit.svg)](https://www.nuget.org/packages/NUnit/) (![NuGet downloads](https://img.shields.io/nuget/dt/NUnit.svg?style=flat)), or the latest developer build as [![MyGet version](https://img.shields.io/myget/nunit/vpre/NUnit.svg?label=MyGet%3A%20Latest%20pre-release&style=flat)](https://www.myget.org/feed/nunit/package/nuget/NUnit).
 
-To pull developer builds from MyGet, add the feed to your `nuget.config`:
+To pull developer builds from MyGet, add this snippet to your existing or newly created `nuget.config`:
 
 ```xml
 <packageSources>
   <add key="nunit-myget" value="https://www.myget.org/F/nunit/api/v3/index.json" />
 </packageSources>
 ```
+
 [More info on downloading](https://docs.nunit.org/articles/nunit/getting-started/downloading.html)
 
 ## Table of Contents
