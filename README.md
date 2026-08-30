@@ -25,13 +25,6 @@ To pull developer builds from MyGet, add this line to your  `packageSources` sec
 
 [More info on downloading](https://docs.nunit.org/articles/nunit/getting-started/downloading.html)
 
-## Table of Contents
-
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
-- [NUnit Projects](#nunit-projects)
-
 ## Documentation
 
 Documentation for all NUnit projects can be found at the [documentation site](https://docs.nunit.org).
