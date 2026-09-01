@@ -1,7 +1,7 @@
 # NUnit 5 Framework
 
 
-[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://x.com/nunit) [![Slack](https://img.shields.io/badge/chat-on%20Slack-brightgreen)](https://join.slack.com/t/nunit/shared_invite/zt-jz58jw68-Led8y3WH4n2a~Y5WjuOpKA) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://x.com/nunit) [![Slack](https://img.shields.io/badge/chat-on%20Slack-brightgreen)](https://join.slack.com/t/nunit/shared_invite/zt-jz58jw68-Led8y3WH4n2a~Y5WjuOpKA) [![Open Issues](https://img.shields.io/github/issues/nunit/nunit.svg?style=flat)](https://github.com/nunit/nunit/issues) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
 NUnit is a unit-testing framework for all .NET languages.
 It can run on MacOS, Linux and Windows operating systems.
@@ -13,17 +13,17 @@ The latest version, version 5, is an upgrade from the groundbreaking NUnit 3 and
 If you are upgrading from NUnit 3, be aware of the [breaking changes](https://docs.nunit.org/articles/nunit/release-notes/breaking-changes.html#nunit-40). Please see the [NUnit 4 Migration Guide](https://docs.nunit.org/articles/nunit/release-notes/Nunit4.0-MigrationGuide.html) and take care to prepare your NUnit 3 code before you do the upgrade.
 If you're upgrading from NUnit 4, please check the release notes for version 5 (https://docs.nunit.org/articles/nunit/release-notes/framework.html).
 
-## Table of Contents
-
-- [Downloads](#downloads)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
-- [NUnit Projects](#nunit-projects)
-
 ## Downloads
 
-The latest stable release of the NUnit Framework is [available on NuGet](https://www.nuget.org/packages/NUnit/) or can be [downloaded from GitHub](https://github.com/nunit/nunit/releases). Pre-release builds are [available on MyGet](https://www.myget.org/feed/nunit/package/nuget/NUnit).
+You can download the latest stable release version ![GitHub release date](https://img.shields.io/github/release-date/nunit/nunit.svg?style=flat) as [![NuGet Version](https://img.shields.io/nuget/v/NUnit.svg)](https://www.nuget.org/packages/NUnit/) (![NuGet downloads](https://img.shields.io/nuget/dt/NUnit.svg?style=flat)), or the latest developer build as [![MyGet version](https://img.shields.io/myget/nunit/vpre/NUnit.svg?label=MyGet%3A%20Latest%20pre-release&style=flat)](https://www.myget.org/feed/nunit/package/nuget/NUnit).
+
+To pull developer builds from MyGet, add this line to your  `packageSources` section in `nuget.config`:
+
+```xml
+  <add key="nunit-myget" value="https://www.myget.org/F/nunit/api/v3/index.json" />
+```
+
+[More info on downloading](https://docs.nunit.org/articles/nunit/getting-started/downloading.html)
 
 ## Documentation
 
