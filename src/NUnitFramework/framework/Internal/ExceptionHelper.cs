@@ -165,6 +165,11 @@ namespace NUnit.Framework.Internal
                     sb.AppendFormat("  {0}: <getter threw {1}({2})>", property.Name, propertyEx.GetType().Name, propertyEx.GetMessageWithoutThrowing());
                 }
                 catch (Exception e)
+#if THREAD_ABORT
+                    // Never swallow a thread abort: on Mono a caught ThreadAbortException can be resurrected
+                    // at the end of a later unrelated catch block (see Reflect.InvokeMethod).
+                    when (e is not System.Threading.ThreadAbortException)
+#endif
                 {
                     // Reflection refused the read before the getter ran (e.g. NotSupportedException for a by-ref-like
                     // property on .NET) or the value's ToString() threw. Reporting the real failure must never abort.

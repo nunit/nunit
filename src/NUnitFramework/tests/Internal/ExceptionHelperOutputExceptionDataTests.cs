@@ -98,7 +98,7 @@ namespace NUnit.Framework.Tests.Internal
             string message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("ByValue: 42"));
-            Assert.That(message, Does.Not.Contain(nameof(ByRefPropertyException.ByRefValue)));
+            Assert.That(message, Does.Not.Contain($"{nameof(ByRefPropertyException.ByRefValue)}:"));
         }
 
         [Test]
@@ -109,14 +109,16 @@ namespace NUnit.Framework.Tests.Internal
 
             string message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
-            Assert.That(message, Does.Not.Contain("Item"));
+            Assert.That(message, Does.Not.Contain("Item:"));
         }
 
         [Test]
         public static void AppendsPropertiesToExceptionMessageCanDealWithByRefLikeProperties()
         {
-            // On .NET the getter cannot be invoked through reflection (NotSupportedException); on .NET Framework
-            // System.Memory's span boxes fine. Only the TFM-independent parts of the output are asserted.
+            // On .NET the runtime refuses to invoke a getter returning a ref struct (NotSupportedException), so the
+            // property is rendered as "<unreadable: ...>". The .NET Framework CLR does not know IsByRefLike, so
+            // System.Memory's span is boxed there like any other struct; Mono may refuse like .NET does.
+            // Only the TFM-independent parts of the output are asserted.
             var exception = new ByRefLikePropertyException("blah");
 
             string message = ExceptionHelper.BuildMessage(exception);
