@@ -162,7 +162,14 @@ namespace NUnit.Framework.Internal
                     var propertyEx = targetInvocationEx.InnerException ?? targetInvocationEx;
 
                     sb.AppendLine();
-                    sb.AppendFormat("  {0}: <getter threw {1}({2})", property.Name, propertyEx.GetType().Name, propertyEx.Message);
+                    sb.AppendFormat("  {0}: <getter threw {1}({2})>", property.Name, propertyEx.GetType().Name, propertyEx.GetMessageWithoutThrowing());
+                }
+                catch (Exception e)
+                {
+                    // Reflection refused the read before the getter ran (e.g. NotSupportedException for a by-ref-like
+                    // property on .NET) or the value's ToString() threw. Reporting the real failure must never abort.
+                    sb.AppendLine();
+                    sb.AppendFormat("  {0}: <unreadable: {1}({2})>", property.Name, e.GetType().Name, e.GetMessageWithoutThrowing());
                 }
             }
         }
@@ -178,6 +185,13 @@ namespace NUnit.Framework.Internal
                     property.GetMethod.GetBaseDefinition().DeclaringType == typeof(Exception))
                 {
                     // Ignore (overridden) properties from the Exception base class (Message, StackTrace) as these are mostly handled.
+                    continue;
+                }
+
+                if (property.PropertyType.IsByRef || property.GetIndexParameters().Length != 0)
+                {
+                    // By-ref returning properties cannot be read through reflection on .NET Framework (issue #5401)
+                    // and indexers cannot be read without arguments. Neither is meaningful to display.
                     continue;
                 }
 

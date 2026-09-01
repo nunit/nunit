@@ -87,6 +87,84 @@ namespace NUnit.Framework.Tests.Internal
 
             public Dictionary<string, string>? AuxiliaryValues { get; init; }
         }
+
+        [Test]
+        public static void AppendsPropertiesToExceptionMessageSkipsByRefProperties_Issue5401()
+        {
+            // Regression: on .NET Framework PropertyInfo.GetValue throws NotSupportedException for a by-ref
+            // returning property before invoking the getter, which escaped BuildMessage and killed the worker.
+            var exception = new ByRefPropertyException("blah");
+
+            string message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
+            Assert.That(message, Contains.Substring("ByValue: 42"));
+            Assert.That(message, Does.Not.Contain(nameof(ByRefPropertyException.ByRefValue)));
+        }
+
+        [Test]
+        public static void AppendsPropertiesToExceptionMessageSkipsIndexers()
+        {
+            // Same escape as issue #5401: GetValue(obj) on an indexer throws TargetParameterCountException.
+            var exception = new IndexerPropertyException("blah");
+
+            string message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
+            Assert.That(message, Does.Not.Contain("Item"));
+        }
+
+        [Test]
+        public static void AppendsPropertiesToExceptionMessageCanDealWithByRefLikeProperties()
+        {
+            // On .NET the getter cannot be invoked through reflection (NotSupportedException); on .NET Framework
+            // System.Memory's span boxes fine. Only the TFM-independent parts of the output are asserted.
+            var exception = new ByRefLikePropertyException("blah");
+
+            string message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
+            Assert.That(message, Contains.Substring($"{nameof(ByRefLikePropertyException.SpanValue)}: "));
+        }
+
+        [Test]
+        public static void AppendsPropertiesToExceptionMessageClosesGetterExceptionBracket()
+        {
+            var exception = new ExceptionHelperException("blah");
+
+            string message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring($"{nameof(ExceptionHelperException.CustomProperty)}: <getter threw NullReferenceException("));
+            Assert.That(message, Contains.Substring(")>"));
+        }
+
+        private sealed class ByRefPropertyException : Exception
+        {
+            private readonly int _byRefValue = 42;
+
+            public ByRefPropertyException(string message) : base(message)
+            {
+            }
+
+            public ref readonly int ByRefValue => ref _byRefValue;
+
+            public int ByValue => _byRefValue;
+        }
+
+        private sealed class IndexerPropertyException : Exception
+        {
+            public IndexerPropertyException(string message) : base(message)
+            {
+            }
+
+            public string this[string key] => key;
+        }
+
+        private sealed class ByRefLikePropertyException : Exception
+        {
+            public ByRefLikePropertyException(string message) : base(message)
+            {
+            }
+
+            public ReadOnlySpan<char> SpanValue => "span-value".AsSpan();
+        }
+
         [Test]
         public static void IncludesNullProperties()
         {
