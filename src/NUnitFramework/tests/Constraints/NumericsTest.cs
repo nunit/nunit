@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase(1234.5678f)]
         [TestCase(1234.5678)]
         [TestCaseSource(nameof(FloatingPointEqualsTestCases))]
-        [TestCaseSource(nameof(IntegerEqualsTestCases))]
+        [TestCaseSource(nameof(FixedPointEqualsTestCases))]
         public void CanMatchWithoutToleranceMode(object value)
         {
             Assert.That(Numerics.AreEqual(value, value, ref _zeroTolerance), Is.True);
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        private static TestCaseData[] IntegerEqualsTestCases
+        private static TestCaseData[] FixedPointEqualsTestCases
         {
             get
             {
@@ -71,13 +71,13 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((ulong)9500)]
         [TestCase((ulong)10000)]
         [TestCase((ulong)10500)]
-        [TestCaseSource(nameof(IntegerToleranceTestCases))]
-        public void CanMatchIntegralsWithPercentage(object value)
+        [TestCaseSource(nameof(FixedPointToleranceTestCases))]
+        public void CanMatchFixedPointsWithPercentage(object value)
         {
             Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True);
         }
 
-        private static TestCaseData[] IntegerToleranceTestCases
+        private static TestCaseData[] FixedPointToleranceTestCases
         {
             get
             {
@@ -157,19 +157,80 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        [Test]
-        public void CanCalculateAbsoluteDifference()
+        [TestCaseSource(nameof(CalculateAbsoluteDifferenceFixedPointTestCases))]
+        public object CanCalculateAbsoluteDifferenceFixedPoint<T>(T a, T b)
+            => Numerics.Difference(a, b, _absoluteTolerance.Mode);
+
+        [TestCaseSource(nameof(CalculateAbsoluteDifferenceFloatingPointTestCases))]
+        public void CanCalculateAbsoluteDifferenceFloatingPoint<T>(T a, T b, T expected)
         {
-            Assert.That(Numerics.Difference(10000m, 9500m, _absoluteTolerance.Mode), Is.EqualTo(500m));
-            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.05, _absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
-            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, _absoluteTolerance.Mode)), Is.EqualTo(-0.05).Within(0.00001));
+            Assert.That(Numerics.Difference(a, b, _absoluteTolerance.Mode), Is.EqualTo(expected).Within(0.00001));
         }
 
-        [Test]
-        public void CanCalculatePercentDifference()
+        private static TestCaseData[] CalculateAbsoluteDifferenceFixedPointTestCases()
         {
-            Assert.That(Numerics.Difference(10000m, 8500m, _tenPercent.Mode), Is.EqualTo(15));
-            Assert.That(Numerics.Difference(10000m, 11500m, _tenPercent.Mode), Is.EqualTo(-15));
+            return new TestCaseData[]
+            {
+                new TestCaseData<decimal>(10000m, 9500m) { ExpectedResult = 500m },
+                new TestCaseData<int>(10000, 9500) { ExpectedResult = 500 },
+                new TestCaseData<nint>(10000, 9500) { ExpectedResult = 500 },
+                new TestCaseData<nuint>(10000, 9500) { ExpectedResult = 500 },
+#if !NETFRAMEWORK
+                new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
+                new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
+#endif
+            };
+        }
+
+        private static TestCaseData[] CalculateAbsoluteDifferenceFloatingPointTestCases()
+        {
+            return new TestCaseData[]
+            {
+                new TestCaseData<double>(0.1, 0.05, 0.05),
+                new TestCaseData<double>(0.1, 0.15, -0.05),
+#if !NETFRAMEWORK
+                new TestCaseData<Half>((Half)0.1, (Half)0.05, (Half)0.05),
+#endif
+            };
+        }
+
+        [TestCaseSource(nameof(CanCalculatePercentDifferenceTestCases))]
+        public void CanCalculatePercentDifference(object expected, object actual, object expectedResult)
+            => Assert.That(Numerics.Difference(expected, actual, _tenPercent.Mode), Is.EqualTo(expectedResult));
+
+        private static TestCaseData[] CanCalculatePercentDifferenceTestCases()
+        {
+            return new TestCaseData[]
+            {
+                new TestCaseData(10000m, 8500m, 15),
+                new TestCaseData(10000m, 11500m, -15),
+
+                new TestCaseData(10000, 8500, 15),
+                new TestCaseData(10000, 11500, -15),
+                new TestCaseData(10000u, 8500u, 15),
+                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+
+                new TestCaseData(10000, 8500, 15),
+                new TestCaseData(10000, 11500, -15),
+                new TestCaseData(10000u, 8500u, 15),
+                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+
+                new TestCaseData(10000, 8500, 15),
+                new TestCaseData(10000, 11500, -15),
+                new TestCaseData(10000u, 8500u, 15),
+                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+#if !NETFRAMEWORK
+                new TestCaseData(10000, 8500, 15),
+                new TestCaseData(10000, 11500, -15),
+                new TestCaseData(10000, 8500, 15),
+                new TestCaseData(10000, 11500, -15),
+                new TestCaseData((Half)0, (Half)5, double.NegativeInfinity),
+                new TestCaseData((Half)5, (Half)0, 100),
+#endif
+            };
         }
 
         [Test]

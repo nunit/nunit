@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
+
 #if !NETFRAMEWORK
 using System.Numerics;
 #endif
@@ -113,15 +115,6 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
-            if (expected is double || actual is double)
-                return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
-
-            if (expected is float || actual is float)
-                return AreEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
-
-            if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
-
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
             {
@@ -147,6 +140,14 @@ namespace NUnit.Framework.Constraints
                     tolerance);
             }
 #endif
+            if (expected is double || actual is double)
+                return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
+
+            if (expected is float || actual is float)
+                return AreEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
+
+            if (tolerance.Mode == ToleranceMode.Ulps)
+                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
             if (expected is decimal || actual is decimal)
                 return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
@@ -380,36 +381,13 @@ namespace NUnit.Framework.Constraints
                 }
 
                 T difference = T.Max(expected, actual) - T.Min(expected, actual);
-                T hundred = T.CreateChecked(100);
-
-                // 2. Safely determine the absolute threshold without calling T.Abs(expected)
-                // If expected is negative, its magnitude is (-expected).
-                // If expected == T.MinValue, we handle it as a special fallback case.
-                bool isMinVal = expected < T.Zero && expected == T.MinValue;
-
-                // Check if (difference * 100) overflows: Is difference > (Max / 100)?
-                bool leftSideSafe = difference <= (T.MaxValue / hundred);
-
-                // Check if (tolerance * |expected|) overflows.
-                bool rightSideSafe;
-                if (isMinVal)
-                {
-                    // If it's T.MinValue, we can't do T.MaxValue / T.Abs(expected).
-                    // Instead, check if toleranceAmount > (T.MaxValue / T.MinValue) wrapped carefully,
-                    // or simply flag it unsafe to force the fallback to handle this edge case.
-                    rightSideSafe = false;
-                }
-                else
-                {
-                    T absExpected = expected < T.Zero ? -expected : expected;
-                    rightSideSafe = toleranceAmount <= (T.MaxValue / absExpected);
-                }
 
                 // 3. Execute the branch
-                if (leftSideSafe && rightSideSafe)
+                if (IsPercentageSafeFromOverflow(difference, toleranceAmount))
                 {
                     // Because we passed the checks, we know expected is NOT T.MinValue here.
                     T absExpected = expected < T.Zero ? -expected : expected;
+                    T hundred = T.CreateChecked(100);
                     return (difference * hundred) <= (toleranceAmount * absExpected);
                 }
                 else
@@ -419,12 +397,48 @@ namespace NUnit.Framework.Constraints
                     double fallbackDiff = double.CreateChecked(difference);
                     double fallbackTolerance = double.CreateChecked(toleranceAmount);
 
-                    // Use double to naturally hold the absolute value of int.MinValue (2147483648.0) without crashing
+                    // Use double to naturally hold the absolute values without crashing
                     double fallbackExpected = Math.Abs(double.CreateChecked(expected));
 
                     return (fallbackDiff / fallbackExpected) <= (fallbackTolerance / 100.0);
                 }
             }
+        }
+
+        private static bool IsPercentageSafeFromOverflow<T>(T expected, T actual)
+            where T : INumber<T>, IMinMaxValue<T>
+        {
+            T hundred = T.CreateChecked(100);
+
+            bool isMinVal = expected < T.Zero && expected == T.MinValue;
+            if (isMinVal)
+            {
+                return false;
+            }
+
+            // Check if (difference * 100) overflows: Is difference > (Max / 100)?
+            //bool leftSideSafe = difference <= (T.MaxValue / hundred);
+
+            //// Check if (tolerance * |expected|) overflows.
+            //bool rightSideSafe;
+            //if (isMinVal)
+            //{
+            //    // If it's T.MinValue, we can't do T.MaxValue / T.Abs(expected).
+            //    // Instead, check if toleranceAmount > (T.MaxValue / T.MinValue) wrapped carefully,
+            //    // or simply flag it unsafe to force the fallback to handle this edge case.
+            //    rightSideSafe = false;
+            //}
+            //else
+            //{
+            //    T absExpected = expected < T.Zero ? -expected : expected;
+            //    rightSideSafe = toleranceAmount <= (T.MaxValue / absExpected);
+            //}
+
+            // Check if (a * multiplier) overflows: Is a > (Max / multiplier)?
+            bool leftSideSafe = expected <= (T.MaxValue / hundred);
+            // Check if (b * multiplier) overflows: Is b > (Max / multiplier)?
+            bool rightSideSafe = actual <= (T.MaxValue / hundred);
+            return leftSideSafe && rightSideSafe;
         }
 
         private static T ConvertFloating<T>(object value)
@@ -663,11 +677,47 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        private static object Difference<T>(T expected, T actual, bool isAbsolute)
+            where T : INumber<T>, IMinMaxValue<T>
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+
+            if (isAbsolute)
+            {
+                return difference;
+            }
+            else if (IsPercentageSafeFromOverflow(expected, actual))
+            {
+                T hundred = T.CreateChecked(100);
+                // Compute signed difference and multiply before dividing to avoid integer truncation
+                T signed = expected - actual;
+                return signed * hundred / expected;
+            }
+            else
+            {
+                // Fallback: The numbers are either massive or hitting T.MinValue bounds.
+                // Truncation doesn't matter at this massive scale, so double casting is perfectly accurate.
+                double fallbackDiff = double.CreateChecked(difference);
+                return fallbackDiff / double.CreateChecked(expected) * 100.0;
+            }
+        }
+#endif
+
         private static object Difference(object? expected, object? actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 return double.NaN;
+
+#if !NETFRAMEWORK
+            if (expected is Half h1 && actual is Half h2)
+                return Difference(h1, h2, isAbsolute);
+            else if (expected is Int128 i1 && actual is Int128 i2)
+                return Difference(i1, i2, isAbsolute);
+            else if (expected is UInt128 u1 && actual is UInt128 u2)
+                return Difference(u1, u2, isAbsolute);
+#endif
 
             // Treat as decimal if one is decimal and other can be treated as decimal
             if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
@@ -689,8 +739,15 @@ namespace NUnit.Framework.Constraints
 
             if (expected is ulong || actual is ulong)
             {
-                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+                var expectedValue = Convert.ToUInt64(expected);
+                var actualValue = Convert.ToUInt64(actual);
+
+                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
+                if (!isAbsolute && expectedValue < actualValue)
+                    return double.NegativeInfinity;
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
             if (expected is long || actual is long)
@@ -701,8 +758,37 @@ namespace NUnit.Framework.Constraints
 
             if (expected is uint || actual is uint)
             {
-                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+                var expectedValue = Convert.ToUInt32(expected);
+                var actualValue = Convert.ToUInt32(actual);
+
+                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
+                if (!isAbsolute && expectedValue < actualValue)
+                    return double.NegativeInfinity;
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+                var difference = expectedValue - actualValue;
+
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
+                if (!isAbsolute && expectedValue < actualValue)
+                    return double.NegativeInfinity;
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
             var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
