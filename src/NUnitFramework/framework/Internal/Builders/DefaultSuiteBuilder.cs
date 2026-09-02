@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -12,7 +13,7 @@ namespace NUnit.Framework.Internal.Builders
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
         // Builder we use for fixtures without any fixture attribute specified
-        private readonly NUnitTestFixtureBuilder _defaultBuilder = new();
+        private readonly TestFixtureAttribute[] _defaultBuilders = [new()];
 
         #region ISuiteBuilder Methods
 
@@ -64,44 +65,42 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="filter">A PreFilter for selecting methods.</param>
         public TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            var fixtures = new List<TestSuite>();
+            var suites = new List<TestSuite>();
 
             try
             {
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
+                Type[]?[] outerTypeArgs = NUnitTestFixtureBuilder.NoOuterTypeArgs;
 
-                if (HasNoneOrSingleTestFixtureAttributeWithNoArguments(builders) && typeInfo.IsGenericTypeDefinition)
+                if (typeInfo.Type.DeclaringType is Type declaringType && declaringType.IsGenericTypeDefinition)
                 {
-                    // If no fixture builder attributes are found on the type, we look for them on the declaring type, if any.
-                    Type? declaringType = typeInfo.Type.DeclaringType;
-                    while (HasNoneOrSingleTestFixtureAttributeWithNoArguments(builders) && declaringType is not null)
-                    {
-                        builders = GetFixtureBuilderAttributes(new TypeWrapper(declaringType));
-                        declaringType = declaringType.DeclaringType;
-                    }
+                    // We need to get the type parameters for the outer class from that class' attributes.
+                    outerTypeArgs = GetFixtureBuilderAttributes(new TypeWrapper(declaringType))
+                        .OfType<IFixtureBuilderWithParameters>()
+                        .SelectMany(b => b.GetFixtureData(typeInfo))
+                        .Select(declaringType.GetTypeArgumentsFromArguments)
+                        .ToArray();
                 }
 
                 foreach (var builder in builders)
                 {
-                    // See if this is an enhanced attribute, accepting a filter
-                    var builder2 = builder as IFixtureBuilder2;
+                    IEnumerable<TestSuite> fixtures = builder switch
+                    {
+                        // A nested generic aware builder, accepting builder information from the outer type.
+                        IFixtureBuilderForNestedGeneric nestedGenericBuilder => nestedGenericBuilder.BuildFrom(typeInfo, filter, outerTypeArgs),
+                        // An enhanced attribute, accepting a filter
+                        IFixtureBuilderWithFilter filteringBuilder => filteringBuilder.BuildFrom(typeInfo, filter),
+                        _ => builder.BuildFrom(typeInfo),
+                    };
 
-                    foreach (var fixture in builder2?.BuildFrom(typeInfo, filter) ?? builder.BuildFrom(typeInfo))
-                        fixtures.Add(fixture);
+                    foreach (var fixture in fixtures)
+                        suites.Add(fixture);
                 }
 
-                if (typeInfo.IsGenericType)
-                    return BuildMultipleFixtures(typeInfo, fixtures);
+                if (typeInfo.IsGenericType || suites.Count > 1)
+                    return BuildMultipleFixtures(typeInfo, suites);
 
-                switch (fixtures.Count)
-                {
-                    case 0:
-                        return _defaultBuilder.BuildFrom(typeInfo, filter);
-                    case 1:
-                        return fixtures[0];
-                    default:
-                        return BuildMultipleFixtures(typeInfo, fixtures);
-                }
+                return suites[0];
             }
             catch (Exception ex)
             {
@@ -115,7 +114,7 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Helper Methods
 
-        private TestSuite BuildMultipleFixtures(ITypeInfo typeInfo, IEnumerable<TestSuite> fixtures)
+        private static TestSuite BuildMultipleFixtures(ITypeInfo typeInfo, IEnumerable<TestSuite> fixtures)
         {
             TestSuite suite = new ParameterizedFixtureSuite(typeInfo);
 
@@ -127,13 +126,6 @@ namespace NUnit.Framework.Internal.Builders
             return suite;
         }
 
-        private static bool HasNoneOrSingleTestFixtureAttributeWithNoArguments(IFixtureBuilder[] builders)
-        {
-            return builders.Length == 0 ||
-                   builders.Length == 1 && builders[0] is TestFixtureAttribute testFixture &&
-                                           testFixture.Arguments.Length == 0 && testFixture.TypeArgs.Length == 0;
-        }
-
         /// <summary>
         /// We look for attributes implementing IFixtureBuilder at one level
         /// of inheritance at a time. Attributes on base classes are not used
@@ -143,11 +135,9 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="typeInfo">The type being examined for attributes</param>
         private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo? typeInfo)
         {
-            IFixtureBuilder[] attrs = Array.Empty<IFixtureBuilder>();
-
             while (typeInfo is not null && !typeInfo.IsType(typeof(object)))
             {
-                attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
+                IFixtureBuilder[] attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
 
                 if (attrs.Length > 0)
                 {
@@ -170,7 +160,7 @@ namespace NUnit.Framework.Internal.Builders
 
                     // If none of them have args, return the first one
                     if (withArgs == 0)
-                        return new[] { attrs[0] };
+                        return [attrs[0]];
 
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];
@@ -187,15 +177,15 @@ namespace NUnit.Framework.Internal.Builders
                 typeInfo = typeInfo.BaseType;
             }
 
-            return attrs;
+            // If no fixture builder attributes were found, we return the default builder,
+            // which is a TestFixtureAttribute with no arguments.
+            return _defaultBuilders;
         }
 
-        private bool HasArguments(IFixtureBuilder attr)
+        private static bool HasArguments(IFixtureBuilder attr)
         {
             // Only TestFixtureAttribute can be used without arguments
-            var temp = attr as TestFixtureAttribute;
-
-            return temp is null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
+            return attr is not TestFixtureAttribute fixture || fixture.Arguments.Length > 0 || fixture.TypeArgs.Length > 0;
         }
 
         #endregion

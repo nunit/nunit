@@ -247,7 +247,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [TestCase(typeof(GenericClassWith<>.NestedClassImplicitTextFixtureAttribute))]
         [TestCase(typeof(GenericClassWith<>.NestedClassExplicitTestFixtureAttribute))]
-        public void GenericClassWithNonParameterizedNestedClassTest(Type nestedClass)
+        public void GenericClassWithNestedClassTests(Type nestedClass)
         {
             var suiteBuilder = new Framework.Internal.Builders.DefaultSuiteBuilder();
             var typeInfo = new TypeWrapper(nestedClass);
@@ -282,6 +282,106 @@ namespace NUnit.Framework.Tests.Attributes
                 ITestResult testResult = resultsByName[unsuccessfulName];
                 Assert.That(testResult.ResultState, Is.EqualTo(ResultState.ChildFailure), unsuccessfulName);
                 Assert.That(testResult.Children.First().ResultState, Is.EqualTo(ResultState.Failure), "Test");
+            }
+        }
+
+        [Test]
+        public void GenericClassWithNestedGenericClassTests()
+        {
+            var suiteBuilder = new Framework.Internal.Builders.DefaultSuiteBuilder();
+            var typeInfo = new TypeWrapper(typeof(GenericClassWith<>.NestedGenericClass<>));
+            Assert.That(suiteBuilder.CanBuildFrom(typeInfo), Is.True,
+                "Nested generic fixtures should be discoverable when the declaring type provides TestFixtureAttribute(s).");
+            TestSuite parameterizedFixture = suiteBuilder.BuildFrom(typeInfo);
+
+            Assert.That(parameterizedFixture.Tests, Has.Count.EqualTo(6));
+            var fixturesByName = parameterizedFixture.Tests.ToDictionary(t => t.Name);
+
+            // Test where TOuter is the same as TInner are successful, others are unsuccessful
+            string[] successfulNames =
+            [
+                "GenericClassWith<String>+NestedGenericClass<String>(\"42\")",
+                "GenericClassWith<Int32>+NestedGenericClass<Int32>(42)",
+            ];
+            string[] unsuccessfulNames =
+            [
+                "GenericClassWith<String>+NestedGenericClass<Int32>(42)",
+                "GenericClassWith<String>+NestedGenericClass<Int64>(42)",
+                "GenericClassWith<Int32>+NestedGenericClass<String>(\"42\")",
+                "GenericClassWith<Int32>+NestedGenericClass<Int64>(42)",
+            ];
+
+            Assert.That(fixturesByName.Keys, Is.EquivalentTo([.. successfulNames, .. unsuccessfulNames]));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(parameterizedFixture.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(parameterizedFixture.Tests.Select(x => x.RunState), Has.All.EqualTo(RunState.Runnable));
+            }
+
+            ITestResult fixtureResult = TestBuilder.RunTest(parameterizedFixture);
+            Assert.That(fixtureResult.ResultState, Is.EqualTo(ResultState.ChildFailure), "Overall result");
+
+            var resultsByName = fixtureResult.Children.ToDictionary(r => r.Name);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(successfulNames.Select(name => resultsByName[name].ResultState), Has.All.EqualTo(ResultState.Success));
+                foreach (var name in unsuccessfulNames)
+                {
+                    ITestResult testResult = resultsByName[name];
+                    Assert.That(testResult.ResultState, Is.EqualTo(ResultState.ChildFailure), name);
+                    Assert.That(testResult.Children.First().ResultState, Is.EqualTo(ResultState.Failure), "Test");
+                }
+            }
+        }
+
+        [Test]
+        public void NonGenericClassWithNestedGenericClassTests()
+        {
+            var suiteBuilder = new Framework.Internal.Builders.DefaultSuiteBuilder();
+            var typeInfo = new TypeWrapper(typeof(NonGenericClassWith.NestedGenericClass<>));
+            Assert.That(suiteBuilder.CanBuildFrom(typeInfo), Is.True,
+                "Nested generic fixtures should be discoverable when the declaring type provides TestFixtureAttribute(s).");
+            TestSuite parameterizedFixture = suiteBuilder.BuildFrom(typeInfo);
+
+            // TestSourceAttribute wraps all tests in a ParameterizedFixtureSuite
+            Assert.That(parameterizedFixture.Tests, Has.Count.EqualTo(1));
+
+            IList<ITest> tests = parameterizedFixture.Tests[0].Tests;
+            Assert.That(tests, Has.Count.EqualTo(3));
+            var fixturesByName = tests.ToDictionary(t => t.Name);
+
+            // Test where TInner is a class are successful, others are unsuccessful
+            const string successfulName = "NonGenericClassWith+NestedGenericClass<String>(\"42\")";
+            string[] unsuccessfulNames =
+            [
+                "NonGenericClassWith+NestedGenericClass<Int32>(42)",
+                "NonGenericClassWith+NestedGenericClass<Int64>(42)",
+            ];
+
+            Assert.That(fixturesByName.Keys, Is.EquivalentTo([successfulName, .. unsuccessfulNames]));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(parameterizedFixture.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(tests.Select(x => x.RunState), Has.All.EqualTo(RunState.Runnable));
+            }
+
+            ITestResult fixtureResult = TestBuilder.RunTest(parameterizedFixture);
+            Assert.That(fixtureResult.ResultState, Is.EqualTo(ResultState.ChildFailure), "Overall result");
+
+            var resultsByName = fixtureResult.Children.SelectMany(x => x.Children).ToDictionary(r => r.Name);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultsByName[successfulName].ResultState, Is.EqualTo(ResultState.Success), successfulName);
+                foreach (var name in unsuccessfulNames)
+                {
+                    ITestResult testResult = resultsByName[name];
+                    Assert.That(testResult.ResultState, Is.EqualTo(ResultState.ChildFailure), name);
+                    Assert.That(testResult.Children.First().ResultState, Is.EqualTo(ResultState.Failure), "Test");
+                }
             }
         }
     }

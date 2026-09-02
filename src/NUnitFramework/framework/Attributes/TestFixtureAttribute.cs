@@ -13,7 +13,7 @@ namespace NUnit.Framework
     /// Marks the class as a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
+    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilderForNestedGeneric, ITestFixtureData
     {
         private readonly NUnitTestFixtureBuilder _builder = new();
 
@@ -34,7 +34,7 @@ namespace NUnit.Framework
         public TestFixtureAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
-            Arguments = arguments ?? new object?[] { null };
+            Arguments = arguments ?? [null];
             TypeArgs = Array.Empty<Type>();
             Properties = new PropertyBag();
         }
@@ -57,7 +57,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object?[] Arguments { get; }
+        public object?[] Arguments { get; private set; }
 
         /// <summary>
         /// Properties pertaining to this fixture
@@ -224,32 +224,68 @@ namespace NUnit.Framework
         #region IFixtureBuilder Members
 
         /// <summary>
-        /// Builds a single test fixture from the specified type.
+        /// Builds any number of test fixtures from the specified type.
         /// </summary>
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
             return BuildFrom(typeInfo, PreFilter.Empty);
         }
 
-        #endregion
-
-        #region IFixtureBuilder2 Members
-
         /// <summary>
-        /// Builds a single test fixture from the specified type.
+        /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="typeInfo">The type info of the fixture to be used.</param>
-        /// <param name="filter">Filter used to select methods as tests.</param>
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
+        /// <param name="filter">PreFilter used to select methods as tests.</param>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            var fixture = _builder.BuildFrom(typeInfo, filter, this);
-            fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<FixtureLifeCycleAttribute>());
-            fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<NoTestsAttribute>());
-            fixture.ApplyAttributesToTest(typeInfo.Type);
+            return BuildFrom(typeInfo, filter, NUnitTestFixtureBuilder.NoOuterTypeArgs);
+        }
 
-            yield return fixture;
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
+        /// <param name="filter">PreFilter to be used to select methods.</param>
+        /// <param name="outerTypeArgsSets">Sets of Type Arguments for the outer fixture to be used for nested generic classes.</param>
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter, Type[]?[] outerTypeArgsSets)
+        {
+            if (typeInfo.ContainsGenericParameters)
+            {
+                // Ensure any TypeArguments are extracted from the arguments for this fixture.
+                DeduceTypeArgumentsFromArguments(typeInfo.Type);
+            }
+
+            // We need to combine the generic type arguments from the outer fixture builders and with our own type arguments.
+            foreach (var outerTypeArgs in outerTypeArgsSets)
+            {
+                var fixture = _builder.BuildFrom(typeInfo, filter, this, outerTypeArgs);
+                fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<FixtureLifeCycleAttribute>());
+                fixture.ApplyAttributesToTest(typeInfo.Type.Assembly.GetAttributes<NoTestsAttribute>());
+                fixture.ApplyAttributesToTest(typeInfo.Type);
+                yield return fixture;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<ITestFixtureData> GetFixtureData(ITypeInfo typeInfo)
+        {
+            yield return this;
         }
 
         #endregion
+
+        private void DeduceTypeArgumentsFromArguments(Type type)
+        {
+            if (TypeArgs.Length == 0 && Arguments.Length > 0)
+            {
+                object?[]? arguments = Arguments;
+                if (type.GetTypeArgumentsFromArguments(ref arguments, out Type[]? typeArgs))
+                {
+                    Arguments = arguments;
+                    TypeArgs = typeArgs;
+                }
+            }
+        }
     }
 }

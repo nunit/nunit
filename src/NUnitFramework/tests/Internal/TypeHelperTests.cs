@@ -33,6 +33,59 @@ namespace NUnit.Framework.Tests.Internal
 
         #endregion
 
+        #region GetOwnGenericArguments
+
+        [Test]
+        public void TestOwnGenericArguments()
+        {
+            const string tOuter = "TOuter";
+            const string tInner = "TInner";
+
+            using (Assert.EnterMultipleScope())
+            {
+                AssertTypeParameters(typeof(NonNestedNonGeneric).GetOwnGenericArguments());
+                AssertTypeParameters(typeof(NonNestedNonGeneric.NestedNonGeneric).GetOwnGenericArguments());
+                AssertTypeParameters(typeof(NonNestedNonGeneric.NestedGeneric<>).GetOwnGenericArguments(), tInner);
+                AssertTypeParameters(typeof(NonNestedGeneric<>).GetOwnGenericArguments(), tOuter);
+
+                AssertTypeParameters(typeof(NonNestedGeneric<>.NestedNonGeneric).GetGenericArguments(), tOuter);
+                AssertTypeParameters(typeof(NonNestedGeneric<>.NestedNonGeneric).GetOwnGenericArguments());
+
+                AssertTypeParameters(typeof(NonNestedGeneric<>.NestedGeneric<>).GetGenericArguments(), tOuter, tInner);
+                AssertTypeParameters(typeof(NonNestedGeneric<>.NestedGeneric<>).GetOwnGenericArguments(), tInner);
+            }
+
+            static void AssertTypeParameters(Type[] genericArguments, params string[] typeNames)
+            {
+                Assert.That(genericArguments, Has.Length.EqualTo(typeNames.Length));
+                Assert.That(genericArguments.Select(x => x.Name), Is.EqualTo(typeNames));
+            }
+        }
+
+        private sealed class NonNestedNonGeneric
+        {
+            internal sealed class NestedNonGeneric
+            {
+            }
+
+            internal sealed class NestedGeneric<TInner>
+            {
+            }
+        }
+
+        private sealed class NonNestedGeneric<TOuter>
+        {
+            internal sealed class NestedNonGeneric
+            {
+            }
+
+            internal sealed class NestedGeneric<TInner>
+            {
+            }
+        }
+
+        #endregion
+
         #region GetDisplayName
 
         [TestCase(typeof(int), ExpectedResult = "Int32")]

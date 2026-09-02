@@ -25,6 +25,15 @@ namespace NUnit.Framework.Internal.Builders
 
         #endregion
 
+        #region Static Fields
+
+        /// <summary>
+        /// A static array containing a single null value, used to indicate that no outer type arguments are available.
+        /// </summary>
+        public static readonly Type[]?[] NoOuterTypeArgs = [null];
+
+        #endregion
+
         #region Instance Fields
 
         private readonly ITestCaseBuilder _testBuilder = new DefaultTestCaseBuilder();
@@ -71,45 +80,51 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns></returns>
         public TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter, ITestFixtureData testFixtureData)
         {
+            return BuildFrom(typeInfo, filter, testFixtureData, null);
+        }
+
+        /// <summary>
+        /// Overload of BuildFrom called by tests that have arguments.
+        /// Builds a fixture using the provided type and information
+        /// in the ITestFixtureData object.
+        /// </summary>
+        /// <param name="typeInfo">The TypeInfo for which to construct a fixture.</param>
+        /// <param name="filter">Filter used to select methods as tests.</param>
+        /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
+        /// <param name="outerTypeArgs">The type arguments of the outer fixture, if any.</param>
+        /// <returns></returns>
+        public TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter, ITestFixtureData testFixtureData, Type[]? outerTypeArgs)
+        {
             ArgumentNullException.ThrowIfNull(testFixtureData);
 
             object?[] arguments = testFixtureData.Arguments;
 
             if (typeInfo.ContainsGenericParameters)
             {
-                Type[]? typeArgs = testFixtureData.TypeArgs;
-                if (typeArgs is null || typeArgs.Length == 0)
+                Type[]? typeArgs;
+                if (outerTypeArgs is null || outerTypeArgs.Length == 0)
                 {
-                    // Check for Type arguments at start of argument list
-                    // from which to infer and construct the generic type
-
-                    int cnt = 0;
-                    foreach (object? o in arguments)
+                    typeArgs = testFixtureData.TypeArgs;
+                    if (typeArgs is null || typeArgs.Length == 0)
                     {
-                        if (o is Type)
-                            cnt++;
-                        else
-                            break;
-                    }
-
-                    typeArgs = new Type[cnt];
-
-                    if (cnt > 0)
-                    {
-                        Array.Copy(arguments, typeArgs, cnt);
-
-                        object?[] args = new object?[arguments.Length - cnt];
-                        Array.Copy(arguments, cnt, args, 0, args.Length);
-
-                        arguments = args;
+                        // This should have been resolved by the caller,
+                        // but is left in for backwards compatibility.
+                        _ = typeInfo.Type.GetTypeArgumentsFromArguments(ref arguments, out typeArgs);
                     }
                 }
-
-                if (typeArgs.Length > 0 ||
-                    typeInfo.Type.CanDeduceTypeArgsFromArgs(arguments, ref typeArgs))
+                else if (testFixtureData.TypeArgs is null || testFixtureData.TypeArgs.Length == 0)
                 {
+                    typeArgs = outerTypeArgs;
+                }
+                else
+                {
+                    typeArgs = new Type[outerTypeArgs.Length + testFixtureData.TypeArgs.Length];
+                    Array.Copy(outerTypeArgs, typeArgs, outerTypeArgs.Length);
+                    Array.Copy(testFixtureData.TypeArgs, 0, typeArgs, outerTypeArgs.Length, testFixtureData.TypeArgs.Length);
+                }
+
+                if (typeArgs is not null && typeArgs.Length > 0)
                     typeInfo = typeInfo.MakeGenericType(typeArgs);
-                }
             }
 
             var fixture = new TestFixture(typeInfo, arguments);

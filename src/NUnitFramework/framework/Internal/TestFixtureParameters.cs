@@ -53,8 +53,26 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Type arguments used to create a generic fixture instance
         /// </summary>
-        public Type[]? TypeArgs { get; init; }
+        public Type[]? TypeArgs { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Deduce type arguments from the provided arguments, if possible.
+        /// This is used when a generic fixture is specified with arguments that can be used to determine the type arguments.
+        /// </summary>
+        /// <param name="type"></param>
+        public void DeduceTypeArgumentsFromArguments(Type type)
+        {
+            if (TypeArgs is null || TypeArgs.Length == 0 && Arguments.Length > 0)
+            {
+                object?[]? arguments = Arguments;
+                if (type.GetTypeArgumentsFromArguments(ref arguments, out Type[]? typeArgs))
+                {
+                    Arguments = arguments;
+                    TypeArgs = typeArgs;
+                }
+            }
+        }
     }
 }
