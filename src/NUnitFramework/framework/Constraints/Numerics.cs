@@ -416,24 +416,6 @@ namespace NUnit.Framework.Constraints
                 return false;
             }
 
-            // Check if (difference * 100) overflows: Is difference > (Max / 100)?
-            //bool leftSideSafe = difference <= (T.MaxValue / hundred);
-
-            //// Check if (tolerance * |expected|) overflows.
-            //bool rightSideSafe;
-            //if (isMinVal)
-            //{
-            //    // If it's T.MinValue, we can't do T.MaxValue / T.Abs(expected).
-            //    // Instead, check if toleranceAmount > (T.MaxValue / T.MinValue) wrapped carefully,
-            //    // or simply flag it unsafe to force the fallback to handle this edge case.
-            //    rightSideSafe = false;
-            //}
-            //else
-            //{
-            //    T absExpected = expected < T.Zero ? -expected : expected;
-            //    rightSideSafe = toleranceAmount <= (T.MaxValue / absExpected);
-            //}
-
             // Check if (a * multiplier) overflows: Is a > (Max / multiplier)?
             bool leftSideSafe = expected <= (T.MaxValue / hundred);
             // Check if (b * multiplier) overflows: Is b > (Max / multiplier)?
