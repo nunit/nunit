@@ -14,18 +14,18 @@ namespace NUnitLite.Tests
 {
     public class TextUIReportTests
     {
-        private static readonly string NL = Environment.NewLine;
+        private static readonly string Nl = Environment.NewLine;
 
         private TextUI _textUI;
         private StringBuilder _reportBuilder;
         private TestResult _result;
 
-        private static readonly string[] REPORT_SEQUENCE = new string[]
-        {
-            "Test Run Summary",
-            "Errors and Failures",
-            "Tests Not Run"
-        };
+        private static readonly string[] ReportSequence =
+        [
+            "Tests Not Run",
+            "Errors, Failures and Warnings",
+            "Test Run Summary"
+        ];
 
         [OneTimeSetUp]
         public void CreateResult()
@@ -55,19 +55,26 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        [Ignore("Test needs modification")]
         public void ReportSequenceTest()
         {
-            var textRunner = new TextRunner();
-            textRunner.ReportResults(_result);
+            var reportBuilder = new StringBuilder();
+            var writer = new ExtendedTextWrapper(new StringWriter(reportBuilder));
+            var textRunner = new TextRunner(MockAssembly.ThisAssembly);
 
+            textRunner.Execute(writer, TextReader.Null, []);
+
+            var report = reportBuilder.ToString().Replace(Nl, "\n");
             int last = -1;
 
-            foreach (string title in REPORT_SEQUENCE)
+            foreach (string title in ReportSequence)
             {
-                var index = Report.IndexOf(title);
-                Assert.That(index >= 0, "Report not found: " + title);
-                Assert.That(index > last, "Report out of sequence: " + title);
+                var index = report.IndexOf(title);
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(index, Is.GreaterThanOrEqualTo(0), "Report not found: " + title);
+                    Assert.That(index, Is.GreaterThan(last), "Report out of sequence: " + title);
+                }
+                last = index;
             }
         }
 
@@ -113,33 +120,35 @@ namespace NUnitLite.Tests
             _textUI.DisplayErrorsFailuresAndWarningsReport(_result);
             var lines = GetReportLines();
 
-            // NOTE: Although this could be done by a very long regular expression,
-            // any error messages would be hard to interpret.
+            using (Assert.EnterMultipleScope())
+            {
+                // NOTE: Although this could be done by a very long regular expression,
+                // any error messages would be hard to interpret.
 
-            Assert.That(lines[0], Is.EqualTo("Errors, Failures and Warnings"));
-            Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest"));
-            Assert.That(lines[3], Is.EqualTo("Method is not public"));
-            Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
-            Assert.That(lines[6], Is.EqualTo("Intentional failure"));
-            Assert.That(lines[9], Is.EqualTo("3) Warning : NUnit.Tests.Assemblies.MockTestFixture.WarningTest"));
-            Assert.That(lines[10], Is.EqualTo("Warning Message"));
-            Assert.That(lines[13], Is.EqualTo("4) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
-            Assert.That(lines[14], Is.EqualTo("No arguments were provided"));
-            Assert.That(lines[16], Is.EqualTo("5) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
-            Assert.That(lines[17], Is.EqualTo("System.Exception : Intentional Exception"));
+                Assert.That(lines[0], Is.EqualTo("Errors, Failures and Warnings"));
+                Assert.That(lines[2], Is.EqualTo("1) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NonPublicTest"));
+                Assert.That(lines[3], Is.EqualTo("Method is not public"));
+                Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
+                Assert.That(lines[6], Is.EqualTo("Intentional failure"));
+                Assert.That(lines[9], Is.EqualTo("3) Warning : NUnit.Tests.Assemblies.MockTestFixture.WarningTest"));
+                Assert.That(lines[10], Is.EqualTo("Warning Message"));
+                Assert.That(lines[13], Is.EqualTo("4) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
+                Assert.That(lines[14], Is.EqualTo("No arguments were provided"));
+                Assert.That(lines[16], Is.EqualTo("5) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
+                Assert.That(lines[17], Is.EqualTo("System.Exception : Intentional Exception"));
+            }
         }
 
         #region Private Properties and Methods
 
-        private string Report => _reportBuilder.ToString().Replace(NL, "\n");
+        private string Report => _reportBuilder.ToString().Replace(Nl, "\n");
 
         private IList<string> GetReportLines()
         {
             var rdr = new StringReader(Report);
 
-            string line;
             var lines = new List<string>();
-            while ((line = rdr.ReadLine()) is not null)
+            while (rdr.ReadLine() is { } line)
             {
                 if (!line.Contains("InvokeStub_"))
                 {
