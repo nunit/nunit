@@ -63,7 +63,7 @@ namespace NUnitLite.Tests
 
             textRunner.Execute(writer, TextReader.Null, []);
 
-            var report = reportBuilder.ToString().Replace(Nl, "\n");
+            var report = reportBuilder.ToString().Replace(NL, "\n");
             int last = -1;
 
             foreach (string title in ReportSequence)
@@ -141,7 +141,7 @@ namespace NUnitLite.Tests
 
         #region Private Properties and Methods
 
-        private string Report => _reportBuilder.ToString().Replace(Nl, "\n");
+        private string Report => _reportBuilder.ToString().Replace(NL, "\n");
 
         private IList<string> GetReportLines()
         {
