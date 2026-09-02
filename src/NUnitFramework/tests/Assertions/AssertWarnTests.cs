@@ -14,7 +14,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "CallAssertWarnWithMessage");
+                nameof(WarningFixture.CallAssertWarnWithMessage));
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
             Assert.That(result.Message, Contains.Substring("MESSAGE"));
@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndFailure");
+                nameof(WarningFixture.TwoWarningsAndFailure));
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndIgnore");
+                nameof(WarningFixture.TwoWarningsAndIgnore));
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndInconclusive");
+                nameof(WarningFixture.TwoWarningsAndInconclusive));
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
