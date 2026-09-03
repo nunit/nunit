@@ -162,7 +162,7 @@ namespace NUnit.Framework.Tests.Constraints
             => Numerics.Difference(a, b, _absoluteTolerance.Mode);
 
         [TestCaseSource(nameof(CalculateAbsoluteDifferenceFloatingPointTestCases))]
-        public void CanCalculateAbsoluteDifferenceFloatingPoint<T>(T a, T b, T expected)
+        public void CanCalculateAbsoluteDifferenceFloatingPoint<T1, T2, T3>(T1 a, T2 b, T3 expected)
         {
             Assert.That(Numerics.Difference(a, b, _absoluteTolerance.Mode), Is.EqualTo(expected).Within(0.00001));
         }
@@ -186,49 +186,53 @@ namespace NUnit.Framework.Tests.Constraints
         {
             return new TestCaseData[]
             {
-                new TestCaseData<double>(0.1, 0.05, 0.05),
-                new TestCaseData<double>(0.1, 0.15, -0.05),
+                new TestCaseData<double, double, double>(0.1, 0.05, 0.05),
+                new TestCaseData<double, double, double>(0.1, 0.15, -0.05),
 #if !NETFRAMEWORK
-                new TestCaseData<Half>((Half)0.1, (Half)0.05, (Half)0.05),
+                new TestCaseData<Half, Half, Half>((Half)0.1, (Half)0.05, (Half)0.05),
+                new TestCaseData<Half, Half, double>((Half)0.1, (Half)0.05, 0.05),
 #endif
             };
         }
 
         [TestCaseSource(nameof(CanCalculatePercentDifferenceTestCases))]
-        public void CanCalculatePercentDifference(object expected, object actual, object expectedResult)
+        public void CanCalculatePercentDifference<T1, T2, T3>(T1 expected, T2 actual, T3 expectedResult)
             => Assert.That(Numerics.Difference(expected, actual, _tenPercent.Mode), Is.EqualTo(expectedResult));
 
         private static TestCaseData[] CanCalculatePercentDifferenceTestCases()
         {
             return new TestCaseData[]
             {
-                new TestCaseData(10000m, 8500m, 15),
-                new TestCaseData(10000m, 11500m, -15),
+                new TestCaseData<decimal, decimal, object>(10000m, 8500m, 15),
+                new TestCaseData<decimal, decimal, object>(10000m, 11500m, -15),
 
-                new TestCaseData(10000, 8500, 15),
-                new TestCaseData(10000, 11500, -15),
-                new TestCaseData(10000u, 8500u, 15),
-                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
-                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<int, int, object>(10000, 8500, 15),
+                new TestCaseData<int, int, object>(10000, 11500, -15),
+                new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
+                new TestCaseData<uint, uint, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<uint, uint, object>(0u, 11500u, double.NegativeInfinity),
 
-                new TestCaseData(10000, 8500, 15),
-                new TestCaseData(10000, 11500, -15),
-                new TestCaseData(10000u, 8500u, 15),
-                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
-                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<long, long, object>(10000, 8500, 15),
+                new TestCaseData<long, long, object>(10000, 11500, -15),
+                new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
+                new TestCaseData<ulong, ulong, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<ulong, ulong, object>(0u, 11500u, double.NegativeInfinity),
 
-                new TestCaseData(10000, 8500, 15),
-                new TestCaseData(10000, 11500, -15),
-                new TestCaseData(10000u, 8500u, 15),
-                new TestCaseData(10000u, 11500u, double.NegativeInfinity),
-                new TestCaseData(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<nint, nint, object>(10000, 8500, 15),
+                new TestCaseData<nint, nint, object>(10000, 11500, -15),
+                new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
+                new TestCaseData<nuint, nuint, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<nuint, nuint, object>(0u, 11500u, double.NegativeInfinity),
 #if !NETFRAMEWORK
-                new TestCaseData(10000, 8500, 15),
-                new TestCaseData(10000, 11500, -15),
-                new TestCaseData(10000, 8500, 15),
-                new TestCaseData(10000, 11500, -15),
-                new TestCaseData((Half)0, (Half)5, double.NegativeInfinity),
-                new TestCaseData((Half)5, (Half)0, 100),
+                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
+                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
+                new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
+                new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)11500, double.NegativeInfinity),
+                new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.NegativeInfinity),
+
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, 15),
+                new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.NegativeInfinity),
+                new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             };
         }
