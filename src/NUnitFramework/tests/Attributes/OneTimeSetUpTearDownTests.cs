@@ -239,7 +239,7 @@ namespace NUnit.Framework.Tests.Attributes
 
             // should have one suite and one fixture
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.SetUp)), "Suite should be ignored");
-            Assert.That(result.Message, Is.EqualTo("OneTimeSetUp called Ignore"));
+            Assert.That(result.Message, Does.Contain("OneTimeSetUp called Ignore"));
             Assert.That(result.StackTrace, Is.Not.Null, "StackTrace should not be null");
 
             Assert.That(result.Children.Count(), Is.EqualTo(1), "Child result count");
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Tests.Attributes
             fixture.BlowUpInTearDown = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
             Assert.That(result.Children.Count(), Is.EqualTo(1));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.TearDownError));
 
             Assert.That(fixture.SetUpCount, Is.EqualTo(1), "setUpCount");
             Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");

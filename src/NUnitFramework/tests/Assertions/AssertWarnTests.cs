@@ -14,10 +14,13 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "CallAssertWarnWithMessage");
+                nameof(WarningFixture.CallAssertWarnWithMessage));
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
-            Assert.That(result.Message, Contains.Substring("MESSAGE"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+                Assert.That(result.Message, Contains.Substring("MESSAGE"));
+            }
         }
 
         [Test]
@@ -25,47 +28,47 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndFailure");
-            Assert.Multiple(() =>
+                nameof(WarningFixture.TwoWarningsAndFailure));
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
                 Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
                 Assert.That(result.Message, Contains.Substring("First warning"));
                 Assert.That(result.Message, Contains.Substring("Second warning"));
                 Assert.That(result.Message, Contains.Substring("This fails"));
-            });
+            }
         }
 
-        [Test, Ignore("Currently Fails: Ignored message is displayed without the warnings")]
+        [Test]
         public void WarningsAreDisplayedWithIgnore()
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndIgnore");
-            Assert.Multiple(() =>
+                nameof(WarningFixture.TwoWarningsAndIgnore));
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
                 Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
                 Assert.That(result.Message, Contains.Substring("First warning"));
                 Assert.That(result.Message, Contains.Substring("Second warning"));
                 Assert.That(result.Message, Contains.Substring("Ignore this"));
-            });
+            }
         }
 
-        [Test, Ignore("Currently Fails: Inconclusive message is displayed without the warnings")]
+        [Test]
         public void WarningsAreDisplayedWithInconclusive()
         {
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
-                "TwoWarningsAndInconclusive");
-            Assert.Multiple(() =>
+                nameof(WarningFixture.TwoWarningsAndInconclusive));
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
                 Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
                 Assert.That(result.Message, Contains.Substring("First warning"));
                 Assert.That(result.Message, Contains.Substring("Second warning"));
                 Assert.That(result.Message, Contains.Substring("This is inconclusive"));
-            });
+            }
         }
     }
 }
