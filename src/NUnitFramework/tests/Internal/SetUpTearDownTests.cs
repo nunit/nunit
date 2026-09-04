@@ -202,7 +202,7 @@ namespace NUnit.Framework.Tests.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.TearDownError), "Test should be in error state");
             string expectedSetUpError = $"SetUp : {e1.GetType().FullName} : {e1.Message}";
             string expectedTearDownError = $"TearDown : {e2.GetType().FullName} : {e2.Message}";
             Assert.That(result.Message, Does.Contain(expectedSetUpError).And.Contain(expectedTearDownError));
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Tests.Internal
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Error), "Test should be in error state");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.TearDownError), "Test should be in error state");
             string expectedTestError = $"{e1.GetType().FullName} : {e1.Message}";
             string expectedTearDownError = $"TearDown : {e2.GetType().FullName} : {e2.Message}";
             Assert.That(result.Message, Does.Contain(expectedTestError).And.Contain(expectedTearDownError));

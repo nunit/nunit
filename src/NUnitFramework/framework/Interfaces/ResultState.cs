@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace NUnit.Framework.Interfaces
@@ -13,6 +14,7 @@ namespace NUnit.Framework.Interfaces
     /// skipped or was inconclusive. The Label provides a more
     /// detailed breakdown for use by client runners.
     /// </summary>
+    [DebuggerDisplay("{ToString()}")]
     public class ResultState : IEquatable<ResultState>
     {
         #region Constructors

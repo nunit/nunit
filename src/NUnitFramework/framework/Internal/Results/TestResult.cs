@@ -717,7 +717,7 @@ namespace NUnit.Framework.Internal
 
             var result = new ExceptionResult(RecordedException, site);
 
-            if (ex is NUnitException { InnerException: ResultStateException } or ResultStateException)
+            if (RecordedException is AssertionException or MultipleAssertException)
             {
                 SetResult(result.ResultState, result.Message, result.StackTrace);
             }
@@ -727,7 +727,7 @@ namespace NUnit.Framework.Internal
                                 ResultStateToAssertionStatus(result.ResultState),
                                 FailureSiteMessage(site, result.Message),
                                 FailureSiteStackTrace(site, result.StackTrace)));
-                RecordTestCompletion();
+                RecordTestCompletion(result.ResultState);
             }
         }
 
@@ -794,7 +794,13 @@ namespace NUnit.Framework.Internal
         /// Update overall test result, including legacy Message, based
         /// on AssertionResults that have been saved to this point.
         /// </summary>
-        public void RecordTestCompletion()
+        public void RecordTestCompletion() => RecordTestCompletion(null);
+
+        /// <summary>
+        /// Update overall test result, including legacy Message, based
+        /// on AssertionResults that have been saved to this point.
+        /// </summary>
+        internal void RecordTestCompletion(ResultState? resultState)
         {
             RwLock.EnterUpgradeableReadLock();
 
@@ -808,13 +814,13 @@ namespace NUnit.Framework.Internal
                     case 1:
                         AssertionResult assertionResult = _assertionResults[0];
                         SetResult(
-                            AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
+                            resultState ?? AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
                             assertionResult.Message,
                             assertionResult.StackTrace);
                         break;
                     default:
                         SetResult(
-                            AssertionStatusToResultState(WorstAssertionStatus),
+                            resultState ?? AssertionStatusToResultState(WorstAssertionStatus),
                             CreateLegacyFailureMessage());
                         break;
                 }
