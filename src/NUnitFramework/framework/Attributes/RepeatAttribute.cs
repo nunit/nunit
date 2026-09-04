@@ -163,19 +163,19 @@ namespace NUnit.Framework
                 return context.CurrentResult;
             }
 
-            private ResultState Worst(ResultState a, ResultState b)
+            private static ResultState Worst(ResultState overall, ResultState iterationResult)
             {
                 // Unfortunately TestStatus is not ordered from good to bad, so we have to do this the hard way.
                 // Inconclusive means nothing happened, so if either is inconclusive, return the other.
                 // Anything is worse than passed, so if either is passed, return the other.
                 // Otherwise, return the one with the higher status value.
-                if (a.Status is TestStatus.Inconclusive or TestStatus.Passed)
-                    return b;
-                if (b.Status is TestStatus.Inconclusive or TestStatus.Passed)
-                    return a;
-                if (a.Status > b.Status)
-                    return a;
-                return b;
+                if (overall.Status is TestStatus.Inconclusive or TestStatus.Passed)
+                    return iterationResult;
+                if (iterationResult.Status is TestStatus.Inconclusive or TestStatus.Passed)
+                    return overall;
+                if (overall.Status > iterationResult.Status)
+                    return overall;
+                return iterationResult;
             }
 
             private TestResult ExecuteWithThreshold(TestExecutionContext context)
