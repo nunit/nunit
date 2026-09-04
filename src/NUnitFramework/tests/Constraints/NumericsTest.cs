@@ -164,13 +164,15 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(CalculateAbsoluteDifferenceFloatingPointTestCases))]
         public void CanCalculateAbsoluteDifferenceFloatingPoint<T1, T2, T3>(T1 a, T2 b, T3 expected)
         {
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(Numerics.Difference(a, b, _absoluteTolerance.Mode), Is.EqualTo(expected).Within(0.00001));
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
         }
 
         private static TestCaseData[] CalculateAbsoluteDifferenceFixedPointTestCases()
         {
-            return new TestCaseData[]
-            {
+            return
+            [
                 new TestCaseData<decimal>(10000m, 9500m) { ExpectedResult = 500m },
                 new TestCaseData<int>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nint>(10000, 9500) { ExpectedResult = 500 },
@@ -179,20 +181,20 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
 #endif
-            };
+            ];
         }
 
         private static TestCaseData[] CalculateAbsoluteDifferenceFloatingPointTestCases()
         {
-            return new TestCaseData[]
-            {
+            return
+            [
                 new TestCaseData<double, double, double>(0.1, 0.05, 0.05),
                 new TestCaseData<double, double, double>(0.1, 0.15, -0.05),
 #if !NETFRAMEWORK
                 new TestCaseData<Half, Half, Half>((Half)0.1, (Half)0.05, (Half)0.05),
                 new TestCaseData<Half, Half, double>((Half)0.1, (Half)0.05, 0.05),
 #endif
-            };
+            ];
         }
 
         [TestCaseSource(nameof(CanCalculatePercentDifferenceTestCases))]
@@ -201,40 +203,41 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static TestCaseData[] CanCalculatePercentDifferenceTestCases()
         {
-            return new TestCaseData[]
-            {
+            return
+            [
                 new TestCaseData<decimal, decimal, object>(10000m, 8500m, 15),
                 new TestCaseData<decimal, decimal, object>(10000m, 11500m, -15),
 
                 new TestCaseData<int, int, object>(10000, 8500, 15),
                 new TestCaseData<int, int, object>(10000, 11500, -15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
-                new TestCaseData<uint, uint, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<uint, uint, object>(10000u, 11500u, -15),
                 new TestCaseData<uint, uint, object>(0u, 11500u, double.NegativeInfinity),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
                 new TestCaseData<long, long, object>(10000, 11500, -15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
-                new TestCaseData<ulong, ulong, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<ulong, ulong, object>(10000u, 11500u, -15),
                 new TestCaseData<ulong, ulong, object>(0u, 11500u, double.NegativeInfinity),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
                 new TestCaseData<nint, nint, object>(10000, 11500, -15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
-                new TestCaseData<nuint, nuint, object>(10000u, 11500u, double.NegativeInfinity),
+                new TestCaseData<nuint, nuint, object>(10000u, 11500u, -15),
                 new TestCaseData<nuint, nuint, object>(0u, 11500u, double.NegativeInfinity),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
-                new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)11500, double.NegativeInfinity),
+                new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)11500, -15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.NegativeInfinity),
 
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, 15),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.040000000000001d),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.040000000000001d)),
                 new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.NegativeInfinity),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
-            };
+            ];
         }
 
         [Test]

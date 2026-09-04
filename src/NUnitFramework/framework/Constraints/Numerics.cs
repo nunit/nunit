@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 
 #if !NETFRAMEWORK
 using System.Numerics;
@@ -438,6 +437,10 @@ namespace NUnit.Framework.Constraints
         {
             if (value is T t)
                 return t;
+            if (value is Int128 int128)
+                return T.CreateChecked(int128);
+            if (value is UInt128 uint128)
+                return T.CreateChecked(uint128);
             return T.CreateChecked(Convert.ToInt64(value));
         }
 
@@ -446,6 +449,10 @@ namespace NUnit.Framework.Constraints
         {
             if (value is T t)
                 return t;
+            if (value is Int128 int128)
+                return T.CreateChecked(int128);
+            if (value is UInt128 uint128)
+                return T.CreateChecked(uint128);
             return T.CreateChecked(Convert.ToUInt64(value));
         }
 #else
@@ -669,20 +676,28 @@ namespace NUnit.Framework.Constraints
             {
                 return difference;
             }
-            else if (IsPercentageSafeFromOverflow(expected, actual))
+
+            if (typeof(T) == typeof(UInt128) && expected < actual)
+            {
+                if (expected == T.Zero)
+                    return double.NegativeInfinity;
+
+                double signedDifference = double.CreateChecked(expected) - double.CreateChecked(actual);
+                return signedDifference / double.CreateChecked(expected) * 100.0;
+            }
+
+            if (IsPercentageSafeFromOverflow(expected, actual))
             {
                 T hundred = T.CreateChecked(100);
                 // Compute signed difference and multiply before dividing to avoid integer truncation
                 T signed = expected - actual;
                 return signed * hundred / expected;
             }
-            else
-            {
-                // Fallback: The numbers are either massive or hitting T.MinValue bounds.
-                // Truncation doesn't matter at this massive scale, so double casting is perfectly accurate.
-                double fallbackDiff = double.CreateChecked(difference);
-                return fallbackDiff / double.CreateChecked(expected) * 100.0;
-            }
+
+            // Fallback: The numbers are either massive or hitting T.MinValue bounds.
+            // Truncation doesn't matter at this massive scale, so double casting is perfectly accurate.
+            double fallbackSignedDifference = double.CreateChecked(expected) - double.CreateChecked(actual);
+            return fallbackSignedDifference / double.CreateChecked(expected) * 100.0;
         }
 #endif
 
@@ -694,11 +709,25 @@ namespace NUnit.Framework.Constraints
 
 #if !NETFRAMEWORK
             if (expected is Half h1 && actual is Half h2)
+            {
                 return Difference(h1, h2, isAbsolute);
-            else if (expected is Int128 i1 && actual is Int128 i2)
-                return Difference(i1, i2, isAbsolute);
-            else if (expected is UInt128 u1 && actual is UInt128 u2)
-                return Difference(u1, u2, isAbsolute);
+            }
+
+            if (expected is Int128 || actual is Int128)
+            {
+                return Difference(
+                    ConvertSignedInteger<Int128>(expected!),
+                    ConvertSignedInteger<Int128>(actual!),
+                    isAbsolute);
+            }
+
+            if (expected is UInt128 || actual is UInt128)
+            {
+                return Difference(
+                    ConvertUnsignedInteger<UInt128>(expected!),
+                    ConvertUnsignedInteger<UInt128>(actual!),
+                    isAbsolute);
+            }
 #endif
 
             // Treat as decimal if one is decimal and other can be treated as decimal
@@ -724,12 +753,17 @@ namespace NUnit.Framework.Constraints
                 var expectedValue = Convert.ToUInt64(expected);
                 var actualValue = Convert.ToUInt64(actual);
 
-                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
-                if (!isAbsolute && expectedValue < actualValue)
-                    return double.NegativeInfinity;
+                if (!isAbsolute)
+                {
+                    if (expectedValue == 0ul && actualValue > 0ul)
+                        return double.NegativeInfinity;
+
+                    double signedDifference = expectedValue - (double)actualValue;
+                    return signedDifference / expectedValue * 100;
+                }
 
                 var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+                return difference;
             }
 
             if (expected is long || actual is long)
@@ -743,12 +777,17 @@ namespace NUnit.Framework.Constraints
                 var expectedValue = Convert.ToUInt32(expected);
                 var actualValue = Convert.ToUInt32(actual);
 
-                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
-                if (!isAbsolute && expectedValue < actualValue)
-                    return double.NegativeInfinity;
+                if (!isAbsolute)
+                {
+                    if (expectedValue == 0u && actualValue > 0u)
+                        return double.NegativeInfinity;
+
+                    double signedDifference = expectedValue - (double)actualValue;
+                    return signedDifference / expectedValue * 100;
+                }
 
                 var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+                return difference;
             }
 
             if (expected is nint || actual is nint)
@@ -765,12 +804,17 @@ namespace NUnit.Framework.Constraints
                 nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
                 nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
 
-                // Protect against division by zero and overflow when calculating percentage difference on unsigned integers
-                if (!isAbsolute && expectedValue < actualValue)
-                    return double.NegativeInfinity;
+                if (!isAbsolute)
+                {
+                    if (expectedValue == 0u && actualValue > 0u)
+                        return double.NegativeInfinity;
+
+                    double signedDifference = expectedValue - (double)actualValue;
+                    return signedDifference / expectedValue * 100;
+                }
 
                 var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+                return difference;
             }
 
             var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
