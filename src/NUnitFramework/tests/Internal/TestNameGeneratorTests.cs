@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -101,35 +102,62 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
         }
 
-        [TestCase(double.MaxValue, ExpectedResult = "double.MaxValue")]
-        [TestCase(double.MinValue, ExpectedResult = "double.MinValue")]
-        [TestCase(double.NaN, ExpectedResult = "double.NaN")]
-        [TestCase(double.PositiveInfinity, ExpectedResult = "double.PositiveInfinity")]
-        [TestCase(double.NegativeInfinity, ExpectedResult = "double.NegativeInfinity")]
-        [TestCase(float.MaxValue, ExpectedResult = "float.MaxValue")]
-        [TestCase(float.MinValue, ExpectedResult = "float.MinValue")]
-        [TestCase(float.NaN, ExpectedResult = "float.NaN")]
-        [TestCase(float.PositiveInfinity, ExpectedResult = "float.PositiveInfinity")]
-        [TestCase(float.NegativeInfinity, ExpectedResult = "float.NegativeInfinity")]
-        [TestCase(int.MaxValue, ExpectedResult = "int.MaxValue")]
-        [TestCase(int.MinValue, ExpectedResult = "int.MinValue")]
-        [TestCase(uint.MaxValue, ExpectedResult = "uint.MaxValue")]
-        [TestCase(uint.MinValue, ExpectedResult = "uint.MinValue")]
-        [TestCase(long.MaxValue, ExpectedResult = "long.MaxValue")]
-        [TestCase(long.MinValue, ExpectedResult = "long.MinValue")]
-        [TestCase(ulong.MaxValue, ExpectedResult = "ulong.MaxValue")]
-        [TestCase(ulong.MinValue, ExpectedResult = "ulong.MinValue")]
-        [TestCase(short.MaxValue, ExpectedResult = "short.MaxValue")]
-        [TestCase(short.MinValue, ExpectedResult = "short.MinValue")]
-        [TestCase(ushort.MaxValue, ExpectedResult = "ushort.MaxValue")]
-        [TestCase(ushort.MinValue, ExpectedResult = "ushort.MinValue")]
-        [TestCase(byte.MaxValue, ExpectedResult = "byte.MaxValue")]
-        [TestCase(byte.MinValue, ExpectedResult = "byte.MinValue")]
-        [TestCase(sbyte.MaxValue, ExpectedResult = "sbyte.MaxValue")]
-        [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
+        [TestCaseSource(nameof(GetSpecialNamedValuesTestCases))]
         public string SpecialNamedValues(object arg)
         {
-            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg });
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, [arg]);
+        }
+
+        private static TestCaseData[] GetSpecialNamedValuesTestCases()
+        {
+            return [
+                CreateTestCaseData(double.MaxValue),
+                CreateTestCaseData(double.MinValue),
+                CreateTestCaseData(double.NaN),
+                CreateTestCaseData(double.PositiveInfinity),
+                CreateTestCaseData(double.NegativeInfinity),
+                CreateTestCaseData(float.MaxValue),
+                CreateTestCaseData(float.MinValue),
+                CreateTestCaseData(float.NaN),
+                CreateTestCaseData(float.PositiveInfinity),
+                CreateTestCaseData(float.NegativeInfinity),
+                CreateTestCaseData(int.MaxValue),
+                CreateTestCaseData(int.MinValue),
+                CreateTestCaseData(uint.MaxValue),
+                CreateTestCaseData(uint.MinValue),
+                CreateTestCaseData(long.MaxValue),
+                CreateTestCaseData(long.MinValue),
+                CreateTestCaseData(ulong.MaxValue),
+                CreateTestCaseData(ulong.MinValue),
+                CreateTestCaseData(short.MaxValue),
+                CreateTestCaseData(short.MinValue),
+                CreateTestCaseData(ushort.MaxValue),
+                CreateTestCaseData(ushort.MinValue),
+                CreateTestCaseData(byte.MaxValue),
+                CreateTestCaseData(byte.MinValue),
+                CreateTestCaseData(sbyte.MaxValue),
+                CreateTestCaseData(sbyte.MinValue),
+                CreateTestCaseData(decimal.MaxValue),
+                CreateTestCaseData(decimal.MinValue),
+                CreateTestCaseData(nint.MaxValue),
+                CreateTestCaseData(nint.MinValue),
+                CreateTestCaseData(nuint.MaxValue),
+                CreateTestCaseData(nuint.MinValue),
+#if !NETFRAMEWORK
+                CreateTestCaseData(Half.MaxValue),
+                CreateTestCaseData(Half.MinValue),
+                CreateTestCaseData(Half.NaN),
+                CreateTestCaseData(Half.PositiveInfinity),
+                CreateTestCaseData(Half.NegativeInfinity),
+                CreateTestCaseData(Int128.MaxValue),
+                CreateTestCaseData(Int128.MinValue),
+                CreateTestCaseData(UInt128.MaxValue),
+                CreateTestCaseData(UInt128.MinValue),
+#endif
+                ];
+
+            static TestCaseData CreateTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string displayName = "")
+                => new TestCaseData(value).SetArgDisplayNames(displayName).Returns(displayName);
         }
 
         #region Methods Used as Data
