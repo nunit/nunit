@@ -115,12 +115,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression, ReportFailure);
         }
 
         /// <summary>
@@ -135,12 +130,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression, ReportFailure);
         }
 
         /// <summary>
@@ -157,12 +147,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-            if (!result.IsSuccess)
-                ReportFailure(result, getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, getExceptionMessage, actualExpression, constraintExpression, ReportFailure);
         }
 
         #endregion
@@ -230,12 +215,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression, ReportFailure);
         }
 
         /// <summary>
@@ -251,12 +231,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-                ReportFailure(result, message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression, ReportFailure);
         }
 
         /// <summary>
@@ -274,12 +249,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-                ReportFailure(result, getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, getExceptionMessage, actualExpression, constraintExpression, ReportFailure);
         }
 
         #endregion
