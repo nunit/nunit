@@ -67,7 +67,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, expr, getExceptionMessage, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         #endregion
@@ -204,7 +204,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, expression, getExceptionMessage, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(Unless), msg, ae, ce));
+                IssueUnlessWarning);
         }
 
         #endregion
@@ -265,7 +265,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), getExceptionMessage, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         #endregion
@@ -402,7 +402,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -419,7 +419,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), message, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -438,7 +438,7 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
             ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), getExceptionMessage, actualExpression, constraintExpression,
-                (result, msg, ae, ce) => IssueWarning(result, nameof(If), msg, ae, ce));
+                IssueIfWarning);
         }
 
         #endregion
@@ -446,6 +446,12 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
+
+        private static void IssueUnlessWarning(ConstraintResult result, string message, string actualExpression, string constraintExpression)
+            => IssueWarning(result, nameof(Unless), message, actualExpression, constraintExpression);
+
+        private static void IssueIfWarning(ConstraintResult result, string message, string actualExpression, string constraintExpression)
+            => IssueWarning(result, nameof(If), message, actualExpression, constraintExpression);
 
         private static void IssueWarning(ConstraintResult result, string method, string message, string actualExpression, string constraintExpression)
         {
