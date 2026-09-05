@@ -22,59 +22,21 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TestActionCommand may only apply to a TestMethod", nameof(innerCommand));
             ArgumentNullException.ThrowIfNull(action);
 
-            BeforeTest = context =>
-            {
-                Action beforeTestMethod = context.ExecutionHooksEnabled ?
-                    RunBeforeTestWithHooks : RunBeforeTest;
+            BeforeTest = context => TestActionHookRunner.Run(
+                context,
+                action.GetType(),
+                nameof(ITestAction.BeforeTest),
+                (ctx, m) => ctx.ExecutionHooks.OnBeforeTestActionBeforeTest(ctx, m),
+                (ctx, m, ex) => ctx.ExecutionHooks.OnAfterTestActionBeforeTest(ctx, m, ex),
+                () => action.BeforeTest(Test));
 
-                beforeTestMethod();
-
-                void RunBeforeTestWithHooks()
-                {
-                    var hookedMethodInfo = new MethodWrapper(action.GetType(), nameof(ITestAction.BeforeTest));
-                    try
-                    {
-                        context.ExecutionHooks.OnBeforeTestActionBeforeTest(context, hookedMethodInfo);
-
-                        RunBeforeTest();
-                    }
-                    catch (Exception ex)
-                    {
-                        context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo, ex);
-                        throw;
-                    }
-                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo);
-                }
-
-                void RunBeforeTest() => action.BeforeTest(Test);
-            };
-
-            AfterTest = context =>
-            {
-                Action afterTestMethod = context.ExecutionHooksEnabled ?
-                    RunAfterTestWithHooks : RunAfterTest;
-
-                afterTestMethod();
-
-                void RunAfterTestWithHooks()
-                {
-                    var hookedMethodInfo = new MethodWrapper(action.GetType(), nameof(ITestAction.AfterTest));
-                    try
-                    {
-                        context.ExecutionHooks.OnBeforeTestActionAfterTest(context, hookedMethodInfo);
-
-                        RunAfterTest();
-                    }
-                    catch (Exception ex)
-                    {
-                        context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo, ex);
-                        throw;
-                    }
-                    context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo);
-                }
-
-                void RunAfterTest() => action.AfterTest(Test);
-            };
+            AfterTest = context => TestActionHookRunner.Run(
+                context,
+                action.GetType(),
+                nameof(ITestAction.AfterTest),
+                (ctx, m) => ctx.ExecutionHooks.OnBeforeTestActionAfterTest(ctx, m),
+                (ctx, m, ex) => ctx.ExecutionHooks.OnAfterTestActionAfterTest(ctx, m, ex),
+                () => action.AfterTest(Test));
         }
     }
 }
