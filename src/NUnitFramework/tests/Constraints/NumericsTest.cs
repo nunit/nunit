@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Constraints
                 return [
                     new TestCaseData(123m),
 #if !NETFRAMEWORK
-                    BuildTestCaseData((Half)124),
+                    TestCaseData.Create((Half)123),
 #endif
                 ];
             }
@@ -49,11 +49,11 @@ namespace NUnit.Framework.Tests.Constraints
             get
             {
                 return [
-                    BuildTestCaseData((nint)130),
-                    BuildTestCaseData((nuint)131),
+                    TestCaseData.Create((nint)130),
+                    TestCaseData.Create((nuint)131),
 #if !NETFRAMEWORK
-                    BuildTestCaseData((Int128)132),
-                    BuildTestCaseData((UInt128)133),
+                    TestCaseData.Create((Int128)132),
+                    TestCaseData.Create((UInt128)133),
 #endif
                 ];
             }
@@ -82,15 +82,15 @@ namespace NUnit.Framework.Tests.Constraints
             get
             {
                 return [
-                    BuildTestCaseData((nint)10500),
-                    BuildTestCaseData((nint)9500),
-                    BuildTestCaseData((nuint)10500),
-                    BuildTestCaseData((nuint)9500),
+                    TestCaseData.Create((nint)10500),
+                    TestCaseData.Create((nint)9500),
+                    TestCaseData.Create((nuint)10500),
+                    TestCaseData.Create((nuint)9500),
 #if !NETFRAMEWORK
-                    BuildTestCaseData((Int128)10500),
-                    BuildTestCaseData((Int128)9500),
-                    BuildTestCaseData((UInt128)10500),
-                    BuildTestCaseData((UInt128)9500),
+                    TestCaseData.Create((Int128)10500),
+                    TestCaseData.Create((Int128)9500),
+                    TestCaseData.Create((UInt128)10500),
+                    TestCaseData.Create((UInt128)9500),
 #endif
                 ];
             }
@@ -111,9 +111,9 @@ namespace NUnit.Framework.Tests.Constraints
                     new TestCaseData(10000m),
                     new TestCaseData(10500m),
 #if !NETFRAMEWORK
-                    BuildTestCaseData((Half)9500m),
-                    BuildTestCaseData((Half)10000m),
-                    BuildTestCaseData((Half)10500m)
+                    TestCaseData.Create((Half)9500m),
+                    TestCaseData.Create((Half)10000m),
+                    TestCaseData.Create((Half)10500m)
 #endif
                 ];
             }
@@ -356,8 +356,5 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
-
-        private static TestCaseData BuildTestCaseData<T>(T value)
-            => new TestCaseData<T>(value);
     }
 }
