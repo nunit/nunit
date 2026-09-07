@@ -191,27 +191,27 @@ namespace NUnit.Framework.Constraints
             where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
-                return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
+                return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
 
             if (expected is float || actual is float)
-                return AreEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
+                return AreEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
             if (expected is decimal || actual is decimal)
-                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
+                return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
 
             if (expected is ulong || actual is ulong)
-                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
 
             if (expected is long || actual is long)
-                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
+                return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
 
             if (expected is uint || actual is uint)
-                return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
+                return AreEqual(expected.ToUInt32(null), actual.ToUInt32(null), tolerance);
 
-            return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
+            return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
         }
 
         private static bool AreEqual(double expected, double actual, ref Tolerance tolerance)
