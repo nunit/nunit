@@ -31,6 +31,17 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.AreEqual(value, value, ref _zeroTolerance), Is.True);
         }
 
+#if !NETFRAMEWORK
+        [Test]
+        public void CanMatchMixedFloatingPointNumerics()
+        {
+            var a = 0.5d;
+            var b = (Half)0.5d;
+
+            Assert.That(Numerics.AreEqual(a, b, ref _zeroTolerance), Is.True);
+        }
+#endif
+
         private static TestCaseData[] FloatingPointEqualsTestCases
         {
             get
