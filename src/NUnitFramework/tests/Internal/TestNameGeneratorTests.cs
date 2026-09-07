@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal;
 
@@ -64,6 +65,28 @@ namespace NUnit.Framework.Tests.Internal
         public string ParameterizedTests(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
+        }
+
+        [TestCase(-500, Description = "Validate negative sign", TypeArgs = [typeof(int)], ExpectedResult = "-500")]
+        [TestCase(0.5, Description = "Validate decimal separator", TypeArgs = [typeof(double)], ExpectedResult = "0.5d")]
+        public string ParameterizedTestsUseInvariantCulture<T>(T value)
+        {
+            CultureInfo culture = CultureInfo.CurrentCulture;
+
+            try
+            {
+                CultureInfo customCulture = new CultureInfo("en-US");
+                customCulture.NumberFormat.NegativeSign = "NEGATIVE_SIGN";
+                customCulture.NumberFormat.NumberDecimalSeparator = "DECIMAL_SEPARATOR";
+
+                CultureInfo.CurrentCulture = customCulture;
+
+                return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, [value]);
+            }
+            finally
+            {
+                CultureInfo.CurrentCulture = culture;
+            }
         }
 
         [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethodWithArgs(a: 1)")]

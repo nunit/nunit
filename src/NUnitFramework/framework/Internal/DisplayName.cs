@@ -319,7 +319,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    var display = arg.ToString()!;
+                    var display = Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
                     return literalSuffix is null ? display : display + literalSuffix;
                 }
             }
@@ -349,7 +349,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    var display = arg.ToString()!;
+                    var display = Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
                     if (!display.Contains('.'))
                         display += ".0";
 
