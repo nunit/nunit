@@ -370,15 +370,6 @@ namespace NUnit.Framework.Constraints
                 if (expected == T.Zero)
                     return expected.Equals(actual);
 
-                // 1b. Compile-time friendly fastpaths
-                // If it's already a floating-point type (double/float), overflow isn't an issue,
-                if (typeof(T) == typeof(double) || typeof(T) == typeof(float) || typeof(T) == typeof(decimal) || typeof(T) == typeof(Half))
-                {
-                    T floatDiff = T.Max(expected, actual) - T.Min(expected, actual);
-                    T floatHundred = T.CreateChecked(100);
-                    return (floatDiff * floatHundred) <= (toleranceAmount * T.Abs(expected));
-                }
-
                 T difference = T.Max(expected, actual) - T.Min(expected, actual);
 
                 // 3. Execute the branch
