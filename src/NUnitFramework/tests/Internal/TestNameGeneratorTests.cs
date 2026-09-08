@@ -113,7 +113,12 @@ namespace NUnit.Framework.Tests.Internal
                 new TestCaseData("{0}", new object[] { 1f }) { ExpectedResult = "1.0f" },
                 new TestCaseData("{0}", new object[] { 1d }) { ExpectedResult = "1.0d" },
                 new TestCaseData("{0}", new object[] { 1E+20 }) { ExpectedResult = "1E+20d" },
-                new TestCaseData("{0}", new object[] { 1e21 }) { ExpectedResult = "1E+21d" },
+                new TestCaseData("{0}", new object[] { 1E+5 }) { ExpectedResult = "1E+05d" },
+                new TestCaseData("{0}", new object[] { 1e-21 }) { ExpectedResult = "1E-21d" },
+                new TestCaseData("{0}", new object[] { 1e-5 }) { ExpectedResult = "1E-05d" },
+#if !NETFRAMEWORK
+                new TestCaseData("{0}", new object[] { (Half)1e5 }) { ExpectedResult = "1E+05h" },
+#endif
             ];
         }
 
