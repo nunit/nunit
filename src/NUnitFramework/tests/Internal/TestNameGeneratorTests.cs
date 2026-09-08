@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Internal
         private TestMethod _simpleTestWithArgs;
         private TestMethod _genericTest;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void InitializeMethodInfos()
         {
             Type thisType = GetType();
