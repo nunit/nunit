@@ -98,6 +98,25 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
         }
 
+        [TestCaseSource(nameof(GetNumericFormattingTestCases))]
+        public string ParameterizedTestsWithNumericFormatting(string pattern, object[] args)
+        {
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
+        }
+
+        private static TestCaseData[] GetNumericFormattingTestCases()
+        {
+            return [
+                new TestCaseData("{0}", new object[] { 123456789 }) { ExpectedResult = "123456789" },
+                new TestCaseData("{0}", new object[] { 1m }) { ExpectedResult = "1m" },
+                new TestCaseData("{0}", new object[] { 1.1m }) { ExpectedResult = "1.1m" },
+                new TestCaseData("{0}", new object[] { 1f }) { ExpectedResult = "1.0f" },
+                new TestCaseData("{0}", new object[] { 1d }) { ExpectedResult = "1.0d" },
+                new TestCaseData("{0}", new object[] { 1E+20 }) { ExpectedResult = "1E+20d" },
+                new TestCaseData("{0}", new object[] { 1e21 }) { ExpectedResult = "1E+21d" },
+            ];
+        }
+
         [TestCase("FIXED", ExpectedResult = "FIXED")]
         [TestCase("{m}", ExpectedResult = "GenericTest<T1,T2,T3>")]
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Tests.Internal")]

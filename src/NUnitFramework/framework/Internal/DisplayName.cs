@@ -12,6 +12,7 @@ namespace NUnit.Framework.Internal
     internal static class DisplayName
     {
         private const string THREE_DOTS = "...";
+        private static readonly char[] FloatFormattingChars = ['.', 'E', 'e'];
 
         public static string GetValueString(object? arg, int stringMax)
         {
@@ -89,7 +90,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    if (display.IndexOf('.') == -1)
+                    if (display.IndexOfAny(FloatFormattingChars) == -1)
                         display += ".0";
                     display += "d";
                 }
@@ -118,7 +119,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    if (display.IndexOf('.') == -1)
+                    if (display.IndexOfAny(FloatFormattingChars) == -1)
                         display += ".0";
                     display += "f";
                 }
@@ -350,7 +351,7 @@ namespace NUnit.Framework.Internal
                 else
                 {
                     var display = Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
-                    if (!display.Contains('.'))
+                    if (display.IndexOfAny(FloatFormattingChars) == -1)
                         display += ".0";
 
                     return literalSuffix is null ? display : display + literalSuffix;
