@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private Tolerance _tenPercent, _zeroTolerance, _absoluteTolerance;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             _absoluteTolerance = new Tolerance(0.1);
@@ -136,6 +136,28 @@ namespace NUnit.Framework.Tests.Constraints
         {
             var tolerance = new Tolerance(0.0).Percent;
             Assert.That(Numerics.AreEqual(value, value, ref tolerance), Is.True);
+        }
+
+        [TestCaseSource(nameof(FractionalLinearToleranceTestCases))]
+        public void CanMatchFractionalLinearTolerance(object a, object b, Tolerance toleranceValue)
+        {
+            Assert.That(Numerics.AreEqual(a, b, ref toleranceValue), Is.True);
+        }
+
+        private static TestCaseData[] FractionalLinearToleranceTestCases()
+        {
+            return [
+                new TestCaseData(1m, 1.1m, new Tolerance(0.5m)),
+                new TestCaseData(1d, 1.1d, new Tolerance(0.5d)),
+                new TestCaseData(1f, 1.1f, new Tolerance(0.5f)),
+                new TestCaseData(1m, 1.001m, new Tolerance(0.5m).Percent),
+                new TestCaseData(1d, 1.001d, new Tolerance(0.5d).Percent),
+                new TestCaseData(1f, 1.001f, new Tolerance(0.5f).Percent),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)1, (Half)1.1, new Tolerance((Half)0.5)),
+                new TestCaseData((Half)1, (Half)1.001, new Tolerance((Half)0.5).Percent),
+#endif
+            ];
         }
 
         private static TestCaseData[] GetEqualsWithPercentageEdgeCases

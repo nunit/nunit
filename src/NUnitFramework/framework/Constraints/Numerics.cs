@@ -361,7 +361,11 @@ namespace NUnit.Framework.Constraints
             {
                 if (tolerance.Amount is T tol)
                     return tol;
-                return T.CreateChecked(Convert.ToUInt64(tolerance.Amount));
+                if (tolerance.Amount is Int128 int128)
+                    return T.CreateChecked(int128);
+                if (tolerance.Amount is UInt128 uint128)
+                    return T.CreateChecked(uint128);
+                return T.CreateChecked(Convert.ToDouble(tolerance.Amount));
             }
 
             static bool IsWithinTolerancePercent(T expected, T actual, T toleranceAmount)
