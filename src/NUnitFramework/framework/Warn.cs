@@ -66,13 +66,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -88,13 +83,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, message, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -112,13 +102,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = expr.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(Unless), getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, expr, getExceptionMessage, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         #endregion
@@ -218,7 +203,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            Unless(actual, expression, () => message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -234,7 +220,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            Unless(actual, expression, () => message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, message, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         /// <summary>
@@ -252,13 +239,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(Unless), getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, expression, getExceptionMessage, actualExpression, constraintExpression,
+                IssueUnlessWarning);
         }
 
         #endregion
@@ -282,13 +264,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = new NotConstraint(expr.Resolve());
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), message, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -304,13 +281,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = new NotConstraint(expr.Resolve());
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), message, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -328,13 +300,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(code))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
-            var constraint = new NotConstraint(expr.Resolve());
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(code);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(If), getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(code, new NotConstraint(expr.Resolve()), getExceptionMessage, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         #endregion
@@ -434,7 +401,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            If(actual, expression, () => message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), message, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -450,7 +418,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            If(actual, expression, () => message.ToString(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), message, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         /// <summary>
@@ -468,13 +437,8 @@ namespace NUnit.Framework
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
-            var constraint = new NotConstraint(expression.Resolve());
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, nameof(If), getExceptionMessage(), actualExpression, constraintExpression);
+            ConstraintEvaluator.Evaluate(actual, new NotConstraint(expression.Resolve()), getExceptionMessage, actualExpression, constraintExpression,
+                IssueIfWarning);
         }
 
         #endregion
@@ -483,10 +447,11 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private static void IncrementAssertCount()
-        {
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-        }
+        private static void IssueUnlessWarning(ConstraintResult result, string message, string actualExpression, string constraintExpression)
+            => IssueWarning(result, nameof(Unless), message, actualExpression, constraintExpression);
+
+        private static void IssueIfWarning(ConstraintResult result, string message, string actualExpression, string constraintExpression)
+            => IssueWarning(result, nameof(If), message, actualExpression, constraintExpression);
 
         private static void IssueWarning(ConstraintResult result, string method, string message, string actualExpression, string constraintExpression)
         {

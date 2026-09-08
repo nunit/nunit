@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -41,33 +39,17 @@ namespace NUnit.Framework.Internal.Commands
         {
             var context = TestExecutionContext.CurrentContext;
 
-            Action beforeTestMethod = context.ExecutionHooksEnabled ?
-                RunBeforeTestWithHooks : RunBeforeTest;
-
-            beforeTestMethod();
-
-            void RunBeforeTestWithHooks()
-            {
-                var hookedMethodInfo = new MethodWrapper(_action.GetType(), nameof(ITestAction.BeforeTest));
-                try
+            TestActionHookRunner.Run(
+                context,
+                _action.GetType(),
+                nameof(ITestAction.BeforeTest),
+                (ctx, m) => ctx.ExecutionHooks.OnBeforeTestActionBeforeTest(ctx, m),
+                (ctx, m, ex) => ctx.ExecutionHooks.OnAfterTestActionBeforeTest(ctx, m, ex),
+                () =>
                 {
-                    context.ExecutionHooks.OnBeforeTestActionBeforeTest(context, hookedMethodInfo);
-
-                    RunBeforeTest();
-                }
-                catch (Exception ex)
-                {
-                    context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo, ex);
-                    throw;
-                }
-                context.ExecutionHooks.OnAfterTestActionBeforeTest(context, hookedMethodInfo);
-            }
-
-            void RunBeforeTest()
-            {
-                BeforeTestWasRun = true;
-                _action.BeforeTest(test);
-            }
+                    BeforeTestWasRun = true;
+                    _action.BeforeTest(test);
+                });
         }
 
         /// <summary>
@@ -78,33 +60,18 @@ namespace NUnit.Framework.Internal.Commands
         public void AfterTest(Interfaces.ITest test)
         {
             var context = TestExecutionContext.CurrentContext;
-            Action afterTestMethod = context.ExecutionHooksEnabled ?
-                RunAfterTestWithHooks : RunAfterTest;
 
-            afterTestMethod();
-
-            void RunAfterTest()
-            {
-                if (BeforeTestWasRun)
-                    _action.AfterTest(test);
-            }
-
-            void RunAfterTestWithHooks()
-            {
-                var hookedMethodInfo = new MethodWrapper(_action.GetType(), nameof(ITestAction.AfterTest));
-                try
+            TestActionHookRunner.Run(
+                context,
+                _action.GetType(),
+                nameof(ITestAction.AfterTest),
+                (ctx, m) => ctx.ExecutionHooks.OnBeforeTestActionAfterTest(ctx, m),
+                (ctx, m, ex) => ctx.ExecutionHooks.OnAfterTestActionAfterTest(ctx, m, ex),
+                () =>
                 {
-                    context.ExecutionHooks.OnBeforeTestActionAfterTest(context, hookedMethodInfo);
-
-                    RunAfterTest();
-                }
-                catch (Exception ex)
-                {
-                    context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo, ex);
-                    throw;
-                }
-                context.ExecutionHooks.OnAfterTestActionAfterTest(context, hookedMethodInfo);
-            }
+                    if (BeforeTestWasRun)
+                        _action.AfterTest(test);
+                });
         }
     }
 }
