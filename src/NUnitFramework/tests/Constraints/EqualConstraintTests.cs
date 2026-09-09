@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
 using NUnit.Framework.Constraints.Comparers;
 using System.Threading.Tasks;
@@ -1196,6 +1197,79 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             private class Type3 : Type2;
+        }
+
+        #endregion
+
+        #region Issue 4140 - IEnumerable + IEquatable error messages
+
+        /// <summary>
+        /// Issue #4140: When a class implements both IEquatable&lt;T&gt; and IEnumerable&lt;T&gt;,
+        /// the error message should provide meaningful details about the difference,
+        /// not just "Expected and actual are both {type}".
+        /// </summary>
+        public class IEnumerableWithIEquatableErrorMessages
+        {
+            /// <summary>
+            /// When comparing two objects that implement both IEquatable and IEnumerable
+            /// and they differ, the error message should show what values differ.
+            /// </summary>
+            [Test]
+            public void ErrorMessage_ShouldShowValueDifference_WhenIEquatableAndIEnumerable()
+            {
+                var expected = new TestEnumerableEquatable("expected", 1);
+                var actual = new TestEnumerableEquatable("actual", 1);
+
+                var constraint = new EqualConstraint(expected);
+                var result = constraint.ApplyTo(actual);
+
+                Assert.That(result.IsSuccess, Is.False, "Objects should not be equal");
+
+                var msgWriter = new TextMessageWriter();
+                result.WriteMessageTo(msgWriter);
+                string message = msgWriter.ToString();
+
+                // The error message should NOT be the generic "Expected and actual are both" message
+                // It should contain information about what differs
+                Assert.That(message, Does.Not.Contain("Expected and actual are both"),
+                    "Error message should not use generic 'Expected and actual are both' format");
+
+                // The message should contain the ToString() output of the objects
+                // showing the actual differing values, not just the type name
+                Assert.That(message,
+                    Does.Contain("TestEnumerableEquatable(expected").Or.Contain("TestEnumerableEquatable(actual"),
+                    "Error message should contain the ToString() representation of the differing values");
+            }
+
+            /// <summary>
+            /// Test class implementing both IEquatable and IEnumerable
+            /// </summary>
+            private class TestEnumerableEquatable : IEnumerable<int>, IEquatable<TestEnumerableEquatable>
+            {
+                private readonly string _name;
+                private readonly int[] _values;
+
+                public TestEnumerableEquatable(string name, params int[] values)
+                {
+                    _name = name;
+                    _values = values;
+                }
+
+                public bool Equals(TestEnumerableEquatable? other)
+                {
+                    return other is not null && _name == other._name;
+                }
+
+                public override bool Equals(object? obj) => obj is TestEnumerableEquatable other && Equals(other);
+
+                public override int GetHashCode() => _name.GetHashCode();
+
+                public override string ToString() => $"TestEnumerableEquatable({_name}, [{string.Join(", ", _values)}])";
+
+                public IEnumerator<int> GetEnumerator() => ((IEnumerable<int>)_values).GetEnumerator();
+
+                IEnumerator IEnumerable.GetEnumerator() => _values.GetEnumerator();
+            }
         }
 
         #endregion
