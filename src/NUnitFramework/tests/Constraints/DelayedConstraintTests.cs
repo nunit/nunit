@@ -491,17 +491,23 @@ namespace NUnit.Framework.Tests.Constraints
             return 0;
         }
 
-        private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
+        private static AutoResetEvent _waitEvent;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            _waitEvent = new AutoResetEvent(false);
+        }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            WaitEvent.Dispose();
+            _waitEvent.Dispose();
         }
 
         private static void Delay(int delay)
         {
-            WaitEvent.WaitOne(delay);
+            _waitEvent.WaitOne(delay);
         }
 
         private static void MethodSetsValues()
