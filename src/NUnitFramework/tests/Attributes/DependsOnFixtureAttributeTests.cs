@@ -151,6 +151,26 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void FilteredOutDependencyIsNotRunWhenDependentFixtureIsFilteredOut()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyFilteredOutDependentAfter), typeof(FixtureDependencyFilteredOutDependentBefore), typeof(FixtureDependencyFilteredOutIndependent));
+            var filter = new FullNameFilter(typeof(FixtureDependencyFilteredOutIndependent).FullName!);
+
+            var work = TestBuilder.CreateWorkItem(suite, filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var resultChildren = result.Children.ToArray();
+            var independentResult = resultChildren.Single(x => x.Name == nameof(FixtureDependencyFilteredOutIndependent));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultChildren, Has.Length.EqualTo(1));
+                Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(FixtureDependencyFilteredOutIndependent.IndependentTest)]));
+            }
+        }
+
+        [Test]
         public void DependentTestsAreOrderedWhenDependenciesFork()
         {
             var suite = new TestSuite("dummy").Containing(typeof(ForkingDependencyRoot), typeof(ForkingDependencyNodeA), typeof(ForkingDependencyNodeB));

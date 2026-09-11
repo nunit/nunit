@@ -138,6 +138,24 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void FilteredOutDependencyIsNotRunWhenDependentTestIsFilteredOut()
+        {
+            var filter = new MethodNameFilter(nameof(MethodDependencyFilteredOutDependent.OrderedIndependent));
+            var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyFilteredOutDependent), filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var resultChildren = result.Children.ToArray();
+            var orderedResult = resultChildren.Single(x => x.Name == nameof(MethodDependencyFilteredOutDependent.OrderedIndependent));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultChildren, Has.Length.EqualTo(1));
+                Assert.That(orderedResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(MethodDependencyFilteredOutDependent.OrderedIndependent)]));
+            }
+        }
+
+        [Test]
         public void DependentTestIsNotRunnableIfDependencyAbsent()
         {
             var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyMissing));
