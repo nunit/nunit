@@ -99,25 +99,31 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [TestCaseSource(nameof(GetNumericFormattingTestCases))]
-        public string ParameterizedTestsWithNumericFormatting(string pattern, object[] args)
+        public string ParameterizedTestsWithNumericFormatting<T>(T arg)
         {
-            return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTestWithArgs, [arg]);
         }
 
         private static TestCaseData[] GetNumericFormattingTestCases()
         {
             return [
-                new TestCaseData("{0}", new object[] { 123456789 }) { ExpectedResult = "123456789" },
-                new TestCaseData("{0}", new object[] { 1m }) { ExpectedResult = "1m" },
-                new TestCaseData("{0}", new object[] { 1.1m }) { ExpectedResult = "1.1m" },
-                new TestCaseData("{0}", new object[] { 1f }) { ExpectedResult = "1.0f" },
-                new TestCaseData("{0}", new object[] { 1d }) { ExpectedResult = "1.0d" },
-                new TestCaseData("{0}", new object[] { 1E+20 }) { ExpectedResult = "1E+20d" },
-                new TestCaseData("{0}", new object[] { 1E+5 }) { ExpectedResult = "1E+05d" },
-                new TestCaseData("{0}", new object[] { 1e-21 }) { ExpectedResult = "1E-21d" },
-                new TestCaseData("{0}", new object[] { 1e-5 }) { ExpectedResult = "1E-05d" },
+                TestCaseData.Create(123456789).Returns("123456789"),
+                TestCaseData.Create((nint)123456789).Returns("123456789"),
+                TestCaseData.Create((nuint)123456789).Returns("123456789"),
+                TestCaseData.Create(1m).Returns("1m"),
+                TestCaseData.Create(1.1m).Returns("1.1m"),
+                TestCaseData.Create(1f).Returns("1.0f"),
+                TestCaseData.Create(1d).Returns("1.0d"),
+                TestCaseData.Create(1E+20).Returns("1E+20d"),
+                TestCaseData.Create(1E+5).Returns("100000.0d"),
+                TestCaseData.Create(1e-21).Returns("1E-21d"),
+                TestCaseData.Create(1e-5).Returns("1E-05d"),
 #if !NETFRAMEWORK
-                new TestCaseData("{0}", new object[] { (Half)1e5 }) { ExpectedResult = "1E+05h" },
+                TestCaseData.Create((Half)1e5).Returns("Half.PositiveInfinity"),
+                TestCaseData.Create((Half)1e3).Returns("1000.0h"),
+                TestCaseData.Create((Half)1e-3).Returns("0.001h"),
+                TestCaseData.Create((Int128)123456789).Returns("123456789i128"),
+                TestCaseData.Create((UInt128)123456789).Returns("123456789u128"),
 #endif
             ];
         }
