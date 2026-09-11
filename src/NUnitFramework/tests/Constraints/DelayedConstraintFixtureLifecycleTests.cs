@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
@@ -22,11 +23,9 @@ namespace NUnit.Framework.Tests.Constraints
                 var work = TestBuilder.CreateWorkItem(typeof(DelayedConstraintTests), new FullNameFilter(testName));
                 ITestResult result = TestBuilder.ExecuteWorkItem(work);
 
-                Assert.Multiple(() =>
-                {
-                    Assert.That(result.TotalCount, Is.EqualTo(1), $"Fixture execution {run}");
-                    Assert.That(result.ResultState, Is.EqualTo(ResultState.Success), result.ToXml(true).OuterXml);
-                });
+                Assert.That(result.TotalCount, Is.EqualTo(1), $"Fixture execution {run}");
+                ITestResult childResult = result.Children.First();
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Success), childResult.Message);
             }
         }
     }

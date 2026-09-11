@@ -491,7 +491,7 @@ namespace NUnit.Framework.Tests.Constraints
             return 0;
         }
 
-        private static AutoResetEvent _waitEvent = null!;
+        private static AutoResetEvent _waitEvent;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
