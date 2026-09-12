@@ -246,5 +246,32 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That((object)type, Has.Property("Namespace").EqualTo("System"), "GetType()");
             });
         }
+
+        [TestCaseSource(nameof(GetGenericPropertyTestCases))]
+        public void CoercesMismatchedTypes(object obj)
+        {
+            Assert.That(obj, Has.Property("Value").EqualTo(1));
+        }
+
+        private static IEnumerable<TestCaseData> GetGenericPropertyTestCases()
+        {
+            yield return new TestCaseData(new GenericPropertyType<nint>(1)).SetArgDisplayNames("nint");
+            yield return new TestCaseData(new GenericPropertyType<nuint>(1)).SetArgDisplayNames("nuint");
+#if !NETFRAMEWORK
+            yield return new TestCaseData(new GenericPropertyType<Int128>(1)).SetArgDisplayNames("Int128");
+            yield return new TestCaseData(new GenericPropertyType<UInt128>(1)).SetArgDisplayNames("UInt128");
+            yield return new TestCaseData(new GenericPropertyType<Half>((Half)1)).SetArgDisplayNames("Half");
+#endif
+        }
+
+        private class GenericPropertyType<T>
+        {
+            public GenericPropertyType(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; set; }
+        }
     }
 }
