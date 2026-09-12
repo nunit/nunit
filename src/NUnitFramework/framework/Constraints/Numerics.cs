@@ -757,8 +757,7 @@ namespace NUnit.Framework.Constraints
                     return signedDifference / expectedValue * 100;
                 }
 
-                var difference = expectedValue - actualValue;
-                return difference;
+                return expectedValue - (double)actualValue;
             }
 
             if (expected is long || actual is long)
@@ -781,8 +780,7 @@ namespace NUnit.Framework.Constraints
                     return signedDifference / expectedValue * 100;
                 }
 
-                var difference = expectedValue - actualValue;
-                return difference;
+                return expectedValue - (double)actualValue;
             }
 
             if (expected is nint || actual is nint)
@@ -808,8 +806,7 @@ namespace NUnit.Framework.Constraints
                     return signedDifference / expectedValue * 100;
                 }
 
-                var difference = expectedValue - actualValue;
-                return difference;
+                return expectedValue - (double)actualValue;
             }
 
             var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);

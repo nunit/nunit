@@ -207,16 +207,23 @@ namespace NUnit.Framework.Tests.Constraints
             return
             [
                 new TestCaseData<decimal>(10000m, 9500m) { ExpectedResult = 500m },
+                new TestCaseData<ulong>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<ulong>(0, 500) { ExpectedResult = -500 },
                 new TestCaseData<int>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<uint>(0, 500) { ExpectedResult = -500 },
                 new TestCaseData<nint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<nuint>(0, 500) { ExpectedResult = -500 },
+                new TestCaseData<ushort>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<ushort>(0, 500) { ExpectedResult = -500 },
 #if !NETFRAMEWORK
                 new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>((UInt128)500, (UInt128)0) { ExpectedResult = 500 },
+                new TestCaseData<UInt128>((UInt128)0, (UInt128)500) { ExpectedResult = -500 },
 #endif
             ];
         }
