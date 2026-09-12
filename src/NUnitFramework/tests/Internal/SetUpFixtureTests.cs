@@ -146,7 +146,7 @@ namespace NUnit.Framework.Tests.Internal
                 });
             }
 
-            suite = suite.Tests[0] as TestSuite;
+            suite = suite?.Tests[0] as TestSuite;
             Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
             {
