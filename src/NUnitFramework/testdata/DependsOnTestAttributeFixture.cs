@@ -220,6 +220,35 @@ namespace NUnit.TestData
     }
 
     [TestFixture]
+    public class MethodDependencyFilteredOutDependent
+    {
+        [Test]
+        public void Before()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+        [DependsOnTest(nameof(Before))]
+        public void After()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+
+        [Test]
+#pragma warning disable CS0618 // Type or member is obsolete
+        [Order(1)]
+#pragma warning restore CS0618 // Type or member is obsolete
+        public void OrderedIndependent()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
     public class MethodDependencyParallel
     {
         [Test]
