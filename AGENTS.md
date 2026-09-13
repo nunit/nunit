@@ -31,7 +31,7 @@ Don't invent workarounds — the build genuinely requires the SDK.
 ## Build & test quick reference
 
 - **Solution**: `nunit.slnx` in repo root.
-- **Target frameworks** in build output: `net8.0`, `net6.0`, `net462`. A full build produces binaries for each.
+- **Target frameworks** in build output: `net8.0`, `net10.0`, `net462`. A full build produces binaries for each.
 - **Test projects** (the ones to actually run): `nunit.framework.tests-*`, `nunit.framework.legacy.tests-*`, `nunitlite.tests-*`. Other test projects contain **intentionally-failing** fixtures used by integration tests — **IMPORTANT DONT "fix" their failures.**
 - **Full packaging build** (only needed for releases, not per-change): `./build.ps1 --target=Test --configuration=Release` on Windows, `./build.sh --target=Test --configuration=Release` on Linux/Mac. See `BUILDING.md` for all Cake targets.
 
