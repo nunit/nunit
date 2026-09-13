@@ -64,7 +64,8 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var childTest in children)
                 {
                     // Always include tests that are dependencies of other tests, even if they don't match the filter
-                    var forceIncludeTest = dependencyClosure?.Contains(childTest) == true;
+                    var matchesFilter = filter.Pass(childTest);
+                    var forceIncludeTest = !matchesFilter && dependencyClosure?.Contains(childTest) == true;
                     var childFilter = forceIncludeTest ? TestFilter.Empty : filter;
 
                     var childItem = CreateWorkItem(childTest, childFilter, debugger, recursive, root: forceIncludeTest);
