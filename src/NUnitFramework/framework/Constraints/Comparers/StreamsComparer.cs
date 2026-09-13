@@ -16,36 +16,33 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (x is not Stream xStream || y is not Stream yStream)
+            if (x is not Stream expectedStream || y is not Stream actualStream)
                 return EqualMethodResult.TypesNotSupported;
 
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            if (xStream == yStream)
+            if (expectedStream == actualStream)
                 return EqualMethodResult.ComparedEqual;
 
-            if (!xStream.CanRead)
+            if (!expectedStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
-            if (!yStream.CanRead)
+            if (!actualStream.CanRead)
                 throw new ArgumentException("Stream is not readable", "actual");
 
-            bool bothSeekable = xStream.CanSeek && yStream.CanSeek;
+            bool bothSeekable = expectedStream.CanSeek && actualStream.CanSeek;
 
             if (bothSeekable)
             {
-                if (xStream.Length != yStream.Length)
+                if (expectedStream.Length != actualStream.Length)
                     return EqualMethodResult.ComparedNotEqual;
 
-                if (xStream.Length == 0)
+                if (expectedStream.Length == 0)
                     return EqualMethodResult.ComparedEqual;
             }
 
-            BinaryReader binaryReaderExpected = new BinaryReader(xStream);
-            BinaryReader binaryReaderActual = new BinaryReader(yStream);
-
-            long expectedPosition = bothSeekable ? xStream.Position : default;
-            long actualPosition = bothSeekable ? yStream.Position : default;
+            long expectedPosition = bothSeekable ? expectedStream.Position : default;
+            long actualPosition = bothSeekable ? actualStream.Position : default;
 
             byte[]? bufferExpected = null;
             byte[]? bufferActual = null;
@@ -55,13 +52,13 @@ namespace NUnit.Framework.Constraints.Comparers
                 bufferExpected = LocalPool.Rent();
                 bufferActual = LocalPool.Rent();
 
-                if (xStream.CanSeek)
+                if (expectedStream.CanSeek)
                 {
-                    binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
+                    expectedStream.Seek(0, SeekOrigin.Begin);
                 }
-                if (yStream.CanSeek)
+                if (actualStream.CanSeek)
                 {
-                    binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
+                    actualStream.Seek(0, SeekOrigin.Begin);
                 }
 
                 int readExpected = 1;
@@ -70,8 +67,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 while (readExpected > 0 && readActual > 0)
                 {
-                    readExpected = ReadBuffer(binaryReaderExpected, bufferExpected);
-                    readActual = ReadBuffer(binaryReaderActual, bufferActual);
+                    readExpected = ReadBuffer(expectedStream, bufferExpected);
+                    readActual = ReadBuffer(actualStream, bufferActual);
 
 #if !NETFRAMEWORK
                     if (readExpected == readActual && bufferExpected.AsSpan(0, readExpected).SequenceEqual(bufferActual.AsSpan(0, readActual)))
@@ -86,12 +83,14 @@ namespace NUnit.Framework.Constraints.Comparers
                     {
                         if (count >= readExpected || count >= readActual || bufferExpected[count] != bufferActual[count])
                         {
-                            NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
-                            fp.Position = readByte + count;
-                            fp.ExpectedHasData = count < readExpected;
-                            fp.ExpectedValue = fp.ExpectedHasData ? bufferExpected[count] : null;
-                            fp.ActualHasData = count < readActual;
-                            fp.ActualValue = fp.ActualHasData ? bufferActual[count] : null;
+                            var fp = new NUnitEqualityComparer.FailurePoint
+                            {
+                                Position = readByte + count,
+                                ExpectedHasData = count < readExpected,
+                                ExpectedValue = count < readExpected ? bufferExpected[count] : null,
+                                ActualHasData = count < readActual,
+                                ActualValue = count < readActual ? bufferActual[count] : null
+                            };
                             equalityComparer.FailurePoints.Insert(0, fp);
                             return EqualMethodResult.ComparedNotEqual;
                         }
@@ -102,13 +101,13 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             finally
             {
-                if (xStream.CanSeek)
+                if (expectedStream.CanSeek)
                 {
-                    xStream.Position = expectedPosition;
+                    expectedStream.Position = expectedPosition;
                 }
-                if (yStream.CanSeek)
+                if (actualStream.CanSeek)
                 {
-                    yStream.Position = actualPosition;
+                    actualStream.Position = actualPosition;
                 }
 
                 if (bufferExpected is not null)
@@ -121,12 +120,12 @@ namespace NUnit.Framework.Constraints.Comparers
             return EqualMethodResult.ComparedEqual;
         }
 
-        private static int ReadBuffer(BinaryReader reader, byte[] buffer)
+        private static int ReadBuffer(Stream stream, byte[] buffer)
         {
             int total = 0;
             while (total < buffer.Length)
             {
-                int read = reader.Read(buffer, total, buffer.Length - total);
+                int read = stream.Read(buffer, total, buffer.Length - total);
                 if (read == 0)
                     break;
                 total += read;
