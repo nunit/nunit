@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Execution
                     var forceIncludeTest = !matchesFilter && dependencyClosure?.Contains(childTest) == true;
                     var childFilter = forceIncludeTest ? TestFilter.Empty : filter;
 
-                    var childItem = CreateWorkItem(childTest, childFilter, debugger, recursive, root: forceIncludeTest);
+                    var childItem = CreateWorkItem(childTest, childFilter, debugger, recursive, root: false);
                     if (childItem is null)
                         continue;
 
