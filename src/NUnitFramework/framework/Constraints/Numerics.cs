@@ -466,21 +466,22 @@ namespace NUnit.Framework.Constraints
                     return true;
                 }
 
-                // Handle Int128 and UInt128 separately since they don't implement IConvertible
-                if (value is Int128 int128)
-                {
-                    result = T.CreateChecked(int128);
-                    return true;
-                }
-                if (value is UInt128 uint128)
-                {
-                    result = T.CreateChecked(uint128);
-                    return true;
-                }
-
-                // Fallback to double conversion for other numeric types
                 try
                 {
+                    // Handle Int128 and UInt128 separately since they don't implement IConvertible
+                    if (value is Int128 int128)
+                    {
+                        result = T.CreateChecked(int128);
+                        return true;
+                    }
+                    if (value is UInt128 uint128)
+                    {
+                        result = T.CreateChecked(uint128);
+                        return true;
+                    }
+
+                    // Fallback to double conversion for other numeric types
+
                     result = T.CreateChecked(Convert.ToDouble(value));
                     return true;
                 }
@@ -706,11 +707,12 @@ namespace NUnit.Framework.Constraints
         private static object Difference<T>(T expected, T actual, bool isAbsolute)
             where T : INumber<T>, IMinMaxValue<T>
         {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-
             if (isAbsolute)
             {
-                return difference;
+                if (typeof(T) == typeof(UInt128) && expected < actual)
+                    return double.CreateChecked(expected) - double.CreateChecked(actual);
+
+                return expected - actual;
             }
 
             if (typeof(T) == typeof(UInt128) && expected < actual)
