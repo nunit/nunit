@@ -122,23 +122,8 @@ namespace NUnit.Framework.Constraints
                     ConvertFloating<Half>(actual),
                     tolerance);
             }
-
-            if (expected is UInt128 || actual is UInt128)
-            {
-                return AreEqual(
-                    ConvertUnsignedInteger<UInt128>(expected),
-                    ConvertUnsignedInteger<UInt128>(actual),
-                    tolerance);
-            }
-
-            if (expected is Int128 || actual is Int128)
-            {
-                return AreEqual(
-                    ConvertSignedInteger<Int128>(expected),
-                    ConvertSignedInteger<Int128>(actual),
-                    tolerance);
-            }
 #endif
+
             if (expected is double || actual is double)
                 return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
 
@@ -173,6 +158,18 @@ namespace NUnit.Framework.Constraints
                 nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
                 return AreEqual(expectedValue, actualValue, tolerance);
             }
+
+#if !NETFRAMEWORK
+            if (TryCoerceNumbers<UInt128>(expected, actual, out var expectedU128, out var actualU128))
+            {
+                return AreEqual(expectedU128, actualU128, tolerance);
+            }
+
+            if (TryCoerceNumbers<Int128>(expected, actual, out var expectedI128, out var actualI128))
+            {
+                return AreEqual(expectedI128, actualI128, tolerance);
+            }
+#endif
 
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
@@ -450,6 +447,50 @@ namespace NUnit.Framework.Constraints
                 return T.CreateChecked(uint128);
             return T.CreateChecked(Convert.ToUInt64(value));
         }
+
+        private static bool TryCoerceNumbers<T>(object value1, object value2, out T result1, out T result2)
+                where T : INumber<T>, IMinMaxValue<T>
+        {
+            if (TryCoerceNumber(value1, out result1) && TryCoerceNumber(value2, out result2))
+                return true;
+
+            result1 = default!;
+            result2 = default!;
+            return false;
+
+            static bool TryCoerceNumber(object value, out T result)
+            {
+                if (value is T t)
+                {
+                    result = t;
+                    return true;
+                }
+
+                // Handle Int128 and UInt128 separately since they don't implement IConvertible
+                if (value is Int128 int128)
+                {
+                    result = T.CreateChecked(int128);
+                    return true;
+                }
+                if (value is UInt128 uint128)
+                {
+                    result = T.CreateChecked(uint128);
+                    return true;
+                }
+
+                // Fallback to double conversion for other numeric types
+                try
+                {
+                    result = T.CreateChecked(Convert.ToDouble(value));
+                    return true;
+                }
+                catch
+                {
+                    result = default!;
+                    return false;
+                }
+            }
+        }
 #else
         private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
         {
@@ -708,19 +749,19 @@ namespace NUnit.Framework.Constraints
                 return Difference(h1, h2, isAbsolute);
             }
 
-            if (expected is Int128 || actual is Int128)
-            {
-                return Difference(
-                    ConvertSignedInteger<Int128>(expected!),
-                    ConvertSignedInteger<Int128>(actual!),
-                    isAbsolute);
-            }
-
             if (expected is UInt128 || actual is UInt128)
             {
                 return Difference(
                     ConvertUnsignedInteger<UInt128>(expected!),
                     ConvertUnsignedInteger<UInt128>(actual!),
+                    isAbsolute);
+            }
+
+            if (expected is Int128 || actual is Int128)
+            {
+                return Difference(
+                    ConvertSignedInteger<Int128>(expected!),
+                    ConvertSignedInteger<Int128>(actual!),
                     isAbsolute);
             }
 #endif
