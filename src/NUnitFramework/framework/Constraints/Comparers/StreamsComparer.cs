@@ -70,35 +70,34 @@ namespace NUnit.Framework.Constraints.Comparers
 
                 while (readExpected > 0 && readActual > 0)
                 {
-                    readExpected = binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
-                    readActual = binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
+                    readExpected = ReadBuffer(binaryReaderExpected, bufferExpected);
+                    readActual = ReadBuffer(binaryReaderActual, bufferActual);
 
 #if !NETFRAMEWORK
-                    if (bufferExpected.SequenceEqual(bufferActual))
+                    if (readExpected == readActual && bufferExpected.AsSpan(0, readExpected).SequenceEqual(bufferActual.AsSpan(0, readActual)))
                     {
                         readByte += readActual;
                         continue;
                     }
 #endif
 
-                    for (int count = 0; count < BUFFER_SIZE; ++count)
+                    int bytesToCompare = Math.Max(readExpected, readActual);
+                    for (int count = 0; count < bytesToCompare; ++count)
                     {
-                        if (bufferExpected[count] != bufferActual[count])
+                        if (count >= readExpected || count >= readActual || bufferExpected[count] != bufferActual[count])
                         {
                             NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                             fp.Position = readByte + count;
-                            fp.ExpectedHasData = true;
-                            fp.ExpectedValue = bufferExpected[count];
-                            fp.ActualHasData = true;
-                            fp.ActualValue = bufferActual[count];
+                            fp.ExpectedHasData = count < readExpected;
+                            fp.ExpectedValue = fp.ExpectedHasData ? bufferExpected[count] : null;
+                            fp.ActualHasData = count < readActual;
+                            fp.ActualValue = fp.ActualHasData ? bufferActual[count] : null;
                             equalityComparer.FailurePoints.Insert(0, fp);
                             return EqualMethodResult.ComparedNotEqual;
                         }
                     }
 
-#if NETFRAMEWORK
                     readByte += readActual;
-#endif
                 }
             }
             finally
@@ -120,6 +119,20 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             return EqualMethodResult.ComparedEqual;
+        }
+
+        private static int ReadBuffer(BinaryReader reader, byte[] buffer)
+        {
+            int total = 0;
+            while (total < buffer.Length)
+            {
+                int read = reader.Read(buffer, total, buffer.Length - total);
+                if (read == 0)
+                    break;
+                total += read;
+            }
+
+            return total;
         }
 
         internal static class LocalPool
