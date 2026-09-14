@@ -57,12 +57,18 @@ namespace NUnit.Framework.Internal.Execution
                 var manager = TestDependencyManager.Create(suite);
                 var testDependencies = manager?.PrepareTestDependencies(suite);
                 var children = testDependencies is null ? suite.Tests : TopologicalSort(suite.Tests, testDependencies);
+                HashSet<ITest>? dependencyClosure = testDependencies is null ? null : GetDependencyClosure(suite.Tests, testDependencies, filter);
 
                 int countOrderedItems = 0;
 
                 foreach (var childTest in children)
                 {
-                    var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
+                    // Always include tests that are dependencies of other tests, even if they don't match the filter
+                    var matchesFilter = filter.Pass(childTest);
+                    var forceIncludeTest = !matchesFilter && dependencyClosure?.Contains(childTest) == true;
+                    var childFilter = forceIncludeTest ? TestFilter.Empty : filter;
+
+                    var childItem = CreateWorkItem(childTest, childFilter, debugger, recursive, root: false);
                     if (childItem is null)
                         continue;
 
@@ -87,6 +93,28 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             return work;
+        }
+
+        private static HashSet<ITest> GetDependencyClosure(IList<ITest> tests, Dictionary<ITest, ITest> dependencyGraph, ITestFilter filter)
+        {
+            var includedTests = new HashSet<ITest>();
+
+            foreach (var test in tests)
+            {
+                if (filter.Pass(test))
+                    IncludeDependencies(test);
+            }
+
+            return includedTests;
+
+            void IncludeDependencies(ITest test)
+            {
+                if (!includedTests.Add(test))
+                    return;
+
+                if (dependencyGraph.TryGetValue(test, out ITest? dependency))
+                    IncludeDependencies(dependency);
+            }
         }
 
         private static List<ITest> TopologicalSort(IList<ITest> tests, Dictionary<ITest, ITest> dependencyGraph)

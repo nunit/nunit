@@ -128,6 +128,40 @@ namespace NUnit.TestData
             Assert.That(true, Is.True);
         }
     }
+
+    [TestFixture]
+    public class FixtureDependencyFilteredOutDependentBefore
+    {
+        [Test]
+        public void BeforeTest()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(FixtureDependencyFilteredOutDependentBefore))]
+    public class FixtureDependencyFilteredOutDependentAfter
+    {
+        [Test]
+        public void AfterTest()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
+
+    [TestFixture]
+    public class FixtureDependencyFilteredOutIndependent
+    {
+        [Test]
+        public void IndependentTest()
+        {
+            FixtureDependencyEvents.Record();
+            Assert.That(true, Is.True);
+        }
+    }
     #endregion
 
     #region Referential Integrity

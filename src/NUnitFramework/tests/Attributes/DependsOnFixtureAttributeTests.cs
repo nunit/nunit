@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 
@@ -122,6 +123,50 @@ namespace NUnit.Framework.Tests.Attributes
             {
                 Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            }
+        }
+
+        [Test]
+        public void FilteredOutDependencyFixtureIsStillRunWhenDependentFixtureIsSelected()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependsOnFixtureWithInternalMethodDependencies), typeof(MethodDependencyOrdered));
+            var filter = new FullNameFilter(typeof(FixtureDependsOnFixtureWithInternalMethodDependencies).FullName!);
+
+            var work = TestBuilder.CreateWorkItem(suite, filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var dependencyResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOrdered));
+            var dependencyChildren = dependencyResult.Children.ToArray();
+            var dependentResult = result.Children.Single(x => x.Name == nameof(FixtureDependsOnFixtureWithInternalMethodDependencies));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(dependencyResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(dependentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(dependencyChildren, Has.Length.EqualTo(2));
+                Assert.That(dependencyChildren[0].Name, Is.EqualTo(nameof(MethodDependencyOrdered.Before)));
+                Assert.That(dependencyChildren[1].Name, Is.EqualTo(nameof(MethodDependencyOrdered.After)));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(MethodDependencyOrdered.Before), nameof(MethodDependencyOrdered.After), nameof(FixtureDependsOnFixtureWithInternalMethodDependencies.AfterTest)]));
+            }
+        }
+
+        [Test]
+        public void FilteredOutDependencyIsNotRunWhenDependentFixtureIsFilteredOut()
+        {
+            var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyFilteredOutDependentAfter), typeof(FixtureDependencyFilteredOutDependentBefore), typeof(FixtureDependencyFilteredOutIndependent));
+            var filter = new FullNameFilter(typeof(FixtureDependencyFilteredOutIndependent).FullName!);
+
+            var work = TestBuilder.CreateWorkItem(suite, filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var resultChildren = result.Children.ToArray();
+            var independentResult = resultChildren.Single(x => x.Name == nameof(FixtureDependencyFilteredOutIndependent));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultChildren, Has.Length.EqualTo(1));
+                Assert.That(independentResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(FixtureDependencyFilteredOutIndependent.IndependentTest)]));
             }
         }
 

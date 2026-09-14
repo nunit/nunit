@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
 
@@ -115,6 +116,42 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
                 Assert.That(FixtureDependencyEvents.Events, Does.Contain(nameof(MethodDependencyFailingAllowed.BeforeFailing)));
                 Assert.That(FixtureDependencyEvents.Events, Does.Contain(nameof(MethodDependencyFailingAllowed.AfterFailingAllowed)));
+            }
+        }
+
+        [Test]
+        public void FilteredOutDependencyIsStillRunWhenDependentTestIsSelected()
+        {
+            var filter = new MethodNameFilter(nameof(MethodDependencyOrdered.After));
+            var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyOrdered), filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var beforeResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOrdered.Before));
+            var afterResult = result.Children.Single(x => x.Name == nameof(MethodDependencyOrdered.After));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(beforeResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(afterResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(MethodDependencyOrdered.Before), nameof(MethodDependencyOrdered.After)]));
+            }
+        }
+
+        [Test]
+        public void FilteredOutDependencyIsNotRunWhenDependentTestIsFilteredOut()
+        {
+            var filter = new MethodNameFilter(nameof(MethodDependencyFilteredOutDependent.OrderedIndependent));
+            var work = TestBuilder.CreateWorkItem(typeof(MethodDependencyFilteredOutDependent), filter);
+            var result = TestBuilder.ExecuteWorkItem(work);
+
+            var resultChildren = result.Children.ToArray();
+            var orderedResult = resultChildren.Single(x => x.Name == nameof(MethodDependencyFilteredOutDependent.OrderedIndependent));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(resultChildren, Has.Length.EqualTo(1));
+                Assert.That(orderedResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(MethodDependencyFilteredOutDependent.OrderedIndependent)]));
             }
         }
 
