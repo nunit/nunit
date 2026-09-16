@@ -18,7 +18,7 @@
   <!-- General Packages -->
   <ItemGroup>
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.401" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageVersion Include="FSharp.Core" Version="10.1.401" />
   </ItemGroup>
   <ItemGroup>
