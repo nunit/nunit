@@ -192,10 +192,14 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(CalculateAbsoluteDifferenceFixedPointTestCases))]
         public object CanCalculateAbsoluteDifferenceFixedPoint<T>(T a, T b)
+            where T : notnull
             => Numerics.Difference(a, b, _absoluteTolerance.Mode);
 
         [TestCaseSource(nameof(CalculateAbsoluteDifferenceFloatingPointTestCases))]
         public void CanCalculateAbsoluteDifferenceFloatingPoint<T1, T2, T3>(T1 a, T2 b, T3 expected)
+            where T1 : notnull
+            where T2 : notnull
+            where T3 : notnull
         {
 #pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(Numerics.Difference(a, b, _absoluteTolerance.Mode), Is.EqualTo(expected).Within(0.00001));
@@ -243,6 +247,9 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(CanCalculatePercentDifferenceTestCases))]
         public void CanCalculatePercentDifference<T1, T2, T3>(T1 expected, T2 actual, T3 expectedResult)
+            where T1 : notnull
+            where T2 : notnull
+            where T3 : notnull
             => Assert.That(Numerics.Difference(expected, actual, _tenPercent.Mode), Is.EqualTo(expectedResult));
 
         private static TestCaseData[] CanCalculatePercentDifferenceTestCases()

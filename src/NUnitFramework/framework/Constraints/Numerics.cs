@@ -690,7 +690,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual value</param>
         /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
         /// <returns>The difference between the values</returns>
-        internal static object Difference(object? expected, object? actual, ToleranceMode toleranceMode)
+        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
         {
             switch (toleranceMode)
             {
@@ -739,7 +739,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static object Difference(object? expected, object? actual, bool isAbsolute)
+        private static object Difference(object expected, object actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))
@@ -754,16 +754,16 @@ namespace NUnit.Framework.Constraints
             if (expected is UInt128 || actual is UInt128)
             {
                 return Difference(
-                    ConvertUnsignedInteger<UInt128>(expected!),
-                    ConvertUnsignedInteger<UInt128>(actual!),
+                    ConvertUnsignedInteger<UInt128>(expected),
+                    ConvertUnsignedInteger<UInt128>(actual),
                     isAbsolute);
             }
 
             if (expected is Int128 || actual is Int128)
             {
                 return Difference(
-                    ConvertSignedInteger<Int128>(expected!),
-                    ConvertSignedInteger<Int128>(actual!),
+                    ConvertSignedInteger<Int128>(expected),
+                    ConvertSignedInteger<Int128>(actual),
                     isAbsolute);
             }
 #endif
