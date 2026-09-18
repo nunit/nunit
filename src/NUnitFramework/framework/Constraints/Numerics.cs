@@ -374,9 +374,9 @@ namespace NUnit.Framework.Constraints
                 T difference = T.Max(expected, actual) - T.Min(expected, actual);
 
                 // 3. Execute the branch
-                if (IsPercentageSafeFromOverflow(difference, toleranceAmount))
+                if (CanCalculatePercentSafeFromOverflow(difference, toleranceAmount))
                 {
-                    // Because we passed the checks, we know expected is NOT T.MinValue here.
+                    // Because we passed the checks, we know this is safe from overflow.
                     T absExpected = expected < T.Zero ? -expected : expected;
                     T hundred = T.CreateChecked(100);
                     return (difference * hundred) <= (toleranceAmount * absExpected);
@@ -396,21 +396,30 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static bool IsPercentageSafeFromOverflow<T>(T expected, T actual)
+        /// <summary>
+        /// Determine if the values are within a safe range to perform percentage calculations without overflow.
+        /// Ex: percentage = numerator * 100 / divisor
+        /// </summary>
+        /// <param name="numerator">The numerator of the percentage calculation</param>
+        /// <param name="divisor">The divisor of the percentage calculation</param>
+        /// <returns>True if the percentage calculation is safe from overflow, otherwise false</returns>
+        private static bool CanCalculatePercentSafeFromOverflow<T>(T numerator, T divisor)
             where T : INumber<T>, IMinMaxValue<T>
         {
             T hundred = T.CreateChecked(100);
 
-            bool isMinVal = expected < T.Zero && expected == T.MinValue;
+            bool isMinVal = numerator < T.Zero && numerator == T.MinValue;
             if (isMinVal)
             {
                 return false;
             }
 
             // Check if (a * multiplier) overflows: Is a > (Max / multiplier)?
-            bool leftSideSafe = expected <= (T.MaxValue / hundred);
+            bool leftSideSafe = numerator <= (T.MaxValue / hundred);
+
             // Check if (b * multiplier) overflows: Is b > (Max / multiplier)?
-            bool rightSideSafe = actual <= (T.MaxValue / hundred);
+            bool rightSideSafe = divisor <= (T.MaxValue / hundred);
+
             return leftSideSafe && rightSideSafe;
         }
 
@@ -724,7 +733,7 @@ namespace NUnit.Framework.Constraints
                 return signedDifference / double.CreateChecked(expected) * 100.0;
             }
 
-            if (IsPercentageSafeFromOverflow(expected, actual))
+            if (CanCalculatePercentSafeFromOverflow(expected, actual))
             {
                 T hundred = T.CreateChecked(100);
                 // Compute signed difference and multiply before dividing to avoid integer truncation
