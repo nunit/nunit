@@ -311,7 +311,7 @@ namespace NUnit.Framework.Internal
             WriteLine();
         }
 
-        private void WriteDifferenceLine(object? expected, object? actual, Tolerance tolerance)
+        private void WriteDifferenceLine(object expected, object actual, Tolerance tolerance)
         {
             // It only makes sense to display absolute/percent difference
             if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)
