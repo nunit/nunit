@@ -4,11 +4,17 @@
 
 These packages are used when compiling and are not shipped with NUnit.
 
-| Reference                                   | Version         | License Type | License                        |
-|---------------------------------------------|-----------------|--------------|--------------------------------|
-| IsExternalInit                              | 1.0.3           | MIT          | https://licenses.nuget.org/MIT |
-| Nullable                                    | 1.3.1           | MIT          | https://licenses.nuget.org/MIT |
-| TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160 | MIT          | https://licenses.nuget.org/MIT |
+| Reference                                   | Version                | License Type | License                        |
+|---------------------------------------------|------------------------|--------------|--------------------------------|
+| CSharpIsNullAnalyzer                        | 0.2.19                 | MIT          | https://licenses.nuget.org/MIT |
+| DotNetAnalyzers.DocumentationAnalyzers      | 1.0.0-beta.59          | MIT          | https://licenses.nuget.org/MIT |
+| IsExternalInit                              | 1.0.3                  | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.CodeAnalysis.CSharp.CodeStyle     | 5.9.0                  | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.SourceLink.GitHub                  | 10.0.401               | MIT          | https://licenses.nuget.org/MIT |
+| MinVer                                      | 8.0.0                  | MIT          | https://licenses.nuget.org/MIT |
+| Nullable                                    | 1.3.1                  | MIT          | https://licenses.nuget.org/MIT |
+| StyleCop.Analyzers                           | 1.2.0-beta.556         | MIT          | https://licenses.nuget.org/MIT |
+| TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160       | MIT          | https://licenses.nuget.org/MIT |
 
 ## nunit.framework.legacy.tests.csproj
 
