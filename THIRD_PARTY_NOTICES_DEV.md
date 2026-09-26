@@ -1,27 +1,60 @@
 # Third party notices for development-only projects
 
+## Build-time only (all projects, via Directory.Build.props)
+
+These packages are used when compiling and are not shipped with NUnit.
+
+| Reference                                   | Version                | License Type | License                        |
+|---------------------------------------------|------------------------|--------------|--------------------------------|
+| CSharpIsNullAnalyzer                        | 0.2.19                 | MIT          | https://licenses.nuget.org/MIT |
+| DotNetAnalyzers.DocumentationAnalyzers      | 1.0.0-beta.59          | MIT          | https://licenses.nuget.org/MIT |
+| IsExternalInit                              | 1.0.3                  | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.CodeAnalysis.CSharp.CodeStyle     | 5.9.0                  | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.SourceLink.GitHub                  | 10.0.401               | MIT          | https://licenses.nuget.org/MIT |
+| MinVer                                      | 8.0.0                  | MIT          | https://licenses.nuget.org/MIT |
+| Nullable                                    | 1.3.1                  | MIT          | https://licenses.nuget.org/MIT |
+| StyleCop.Analyzers                           | 1.2.0-beta.556         | MIT          | https://licenses.nuget.org/MIT |
+| TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160       | MIT          | https://licenses.nuget.org/MIT |
+
 ## nunit.framework.legacy.tests.csproj
 
-| Reference              | Version | License Type    | License                                                              |
-|---------------------------------------------------------------------------------------------------------------------------|
-| Microsoft.NET.Test.Sdk | 17.11.1  | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.11.1/License |
+| Reference              | Version | License Type | License                        |
+|------------------------|---------|--------------|--------------------------------|
+| Microsoft.NET.Test.Sdk | 18.10.1 | MIT          | https://licenses.nuget.org/MIT |
 
 ## nunit.testdata.csproj
 
-| Reference                         | Version | License Type | License                        |
-|---------------------------------------------------------------------------------------------|
-| System.Security.Principal.Windows | 5.0.0   | MIT          | https://licenses.nuget.org/MIT |
+| Reference                     | Version | License Type | License                        |
+|-------------------------------|---------|--------------|--------------------------------|
+| Microsoft.Bcl.AsyncInterfaces | 10.0.12 | MIT          | https://licenses.nuget.org/MIT |
 
 ## nunit.testdata.fsharp.fsproj
 
-| Reference   | Version | License Type | License                        |
-|-----------------------------------------------------------------------|
-| FSharp.Core | 8.0.400 | MIT          | https://licenses.nuget.org/MIT |
+| Reference   | Version  | License Type | License                        |
+|-------------|----------|--------------|--------------------------------|
+| FSharp.Core | 10.1.401 | MIT          | https://licenses.nuget.org/MIT |
 
 ## nunit.framework.tests.csproj
 
-| Reference                                   | Version         | License Type    | License                                                              |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Microsoft.NET.Test.Sdk                      | 17.11.1          | LICENSE_NET.txt | https://www.nuget.org/packages/Microsoft.NET.Test.Sdk/17.11.1/License |
-| System.Collections.Immutable                | 8.0.0           | MIT             | https://github.com/dotnet/runtime/blob/main/LICENSE.TXT             |
-| TunnelVisionLabs.ReferenceAssemblyAnnotator | 1.0.0-alpha.160 | MIT             | https://licenses.nuget.org/MIT                                       |
+| Reference                        | Version | License Type | License                        |
+|----------------------------------|---------|--------------|--------------------------------|
+| Microsoft.Bcl.AsyncInterfaces    | 10.0.12 | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.CodeAnalysis.Analyzers | 5.9.0   | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.CodeAnalysis.CSharp    | 5.9.0   | MIT          | https://licenses.nuget.org/MIT |
+| Microsoft.NET.Test.Sdk           | 18.10.1 | MIT          | https://licenses.nuget.org/MIT |
+| System.Collections.Immutable     | 10.0.12 | MIT          | https://licenses.nuget.org/MIT |
+| System.Memory                    | 4.6.3   | MIT          | https://licenses.nuget.org/MIT |
+| System.ValueTuple                | 4.6.2   | MIT          | https://licenses.nuget.org/MIT |
+
+## nunitlite-runner.csproj
+
+| Reference                     | Version | License Type | License                        |
+|-------------------------------|---------|--------------|--------------------------------|
+| Microsoft.CodeAnalysis.CSharp | 5.9.0   | MIT          | https://licenses.nuget.org/MIT |
+| System.Memory                 | 4.6.3   | MIT          | https://licenses.nuget.org/MIT |
+
+## windows-tests.csproj
+
+| Reference              | Version | License Type | License                        |
+|------------------------|---------|--------------|--------------------------------|
+| Microsoft.NET.Test.Sdk | 18.10.1 | MIT          | https://licenses.nuget.org/MIT |
