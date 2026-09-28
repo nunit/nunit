@@ -378,7 +378,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.ManualThrownAssertionException), "My own thrown AssertionException")]
         [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.OnlyFailureOnFirstRun), "This test should fail on the first repetition")]
-        public void RepeatMaintainsMessageAndStracktrace_Issue5434(string testName, string message)
+public void RepeatMaintainsMessageAndStackTrace_Issue5434(string testName, string message)
         {
             var fixture = new RepeatShouldMaintainFailingMessageAndStackTrace();
             ITestResult result = TestBuilder.RunTestCase(fixture, testName);
@@ -386,7 +386,7 @@ namespace NUnit.Framework.Tests.Attributes
             using (Assert.EnterMultipleScope())
             {
                 Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(fixture.Count, Is.GreaterThanOrEqualTo(2), "Should run a least twice");
+Assert.That(fixture.Count, Is.GreaterThanOrEqualTo(2), "Should run at least twice");
                 Assert.That(result.Message, Does.Contain(message));
                 Assert.That(result.StackTrace, Is.Not.Null.And.Contains(testName));
             }
