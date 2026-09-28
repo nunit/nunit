@@ -430,4 +430,24 @@ namespace NUnit.TestData.RepeatingTests
             Assert.Fail("Deliberate failure");
         }
     }
+
+    public class RepeatShouldMaintainFailingMessageAndStackTrace : RepeatingTestsFixtureBase
+    {
+        [Test]
+        [Repeat(3, StopOnFailure = true)]
+        public void ManualThrownAssertionException()
+        {
+            Count++;
+            if (Count == 2)
+                throw new AssertionException("My own thrown AssertionException");
+        }
+
+        [Test]
+        [Repeat(3, StopOnFailure = false)]
+        public void OnlyFailureOnFirstRun()
+        {
+            Count++;
+            Assert.That(Count, Is.Not.EqualTo(1), "This test should fail on the first repetition");
+        }
+    }
 }

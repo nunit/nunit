@@ -150,7 +150,8 @@ namespace NUnit.Framework
                 {
                     if (count == 0 || iterationResult.ResultState != ResultState.Success)
                     {
-                        overall.SetResult(Worst(overall.ResultState, iterationResult.ResultState));
+                        TestResult worst = Worst(overall, iterationResult);
+                        overall.SetResult(worst.ResultState, worst.Message, worst.StackTrace);
                     }
 
                     return iterationResult.ResultState != ResultState.Success && _stopOnFailure;
@@ -163,17 +164,17 @@ namespace NUnit.Framework
                 return context.CurrentResult;
             }
 
-            private static ResultState Worst(ResultState overall, ResultState iterationResult)
+            private static TestResult Worst(TestResult overall, TestResult iterationResult)
             {
                 // Unfortunately TestStatus is not ordered from good to bad, so we have to do this the hard way.
                 // Inconclusive means nothing happened, so if either is inconclusive, return the other.
                 // Anything is worse than passed, so if either is passed, return the other.
                 // Otherwise, return the one with the higher status value.
-                if (overall.Status is TestStatus.Inconclusive or TestStatus.Passed)
+                if (overall.ResultState.Status is TestStatus.Inconclusive or TestStatus.Passed)
                     return iterationResult;
-                if (iterationResult.Status is TestStatus.Inconclusive or TestStatus.Passed)
+                if (iterationResult.ResultState.Status is TestStatus.Inconclusive or TestStatus.Passed)
                     return overall;
-                if (overall.Status > iterationResult.Status)
+                if (overall.ResultState.Status > iterationResult.ResultState.Status)
                     return overall;
                 return iterationResult;
             }
