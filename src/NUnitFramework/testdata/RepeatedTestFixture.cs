@@ -438,7 +438,7 @@ namespace NUnit.TestData.RepeatingTests
         public void ManualThrownAssertionException()
         {
             Count++;
-            if (Count == 2)
+            if (Count != 1)
                 throw new AssertionException("My own thrown AssertionException");
         }
 
@@ -447,7 +447,17 @@ namespace NUnit.TestData.RepeatingTests
         public void OnlyFailureOnFirstRun()
         {
             Count++;
+            Assert.That(Count, Is.GreaterThan(1), "This test should fail on the first repetition");
+        }
+
+        [Test]
+        [Repeat(3, StopOnFailure = false)]
+        public void MixedFailures()
+        {
+            Count++;
             Assert.That(Count, Is.Not.EqualTo(1), "This test should fail on the first repetition");
+            if (Count == 2)
+                throw new AssertionException("AssertionException thrown on 2nd repetition");
         }
     }
 }

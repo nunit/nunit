@@ -346,7 +346,7 @@ namespace NUnit.Framework
             // If multiple asserts disabled, then throw
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert is false)
             {
-                throw new AssertionException(result.Message);
+                throw new AssertionException(result.Message, fromReportFailure: true);
             }
             else if (TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger && Debugger.IsAttached)
             {

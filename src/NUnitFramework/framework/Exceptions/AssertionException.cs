@@ -26,6 +26,11 @@ namespace NUnit.Framework
         {
         }
 
+        internal AssertionException(string message, bool fromReportFailure) : base(message)
+        {
+            FromReportFailure = fromReportFailure;
+        }
+
 #if NETFRAMEWORK
         /// <summary>
         /// Serialization Constructor
@@ -40,5 +45,10 @@ namespace NUnit.Framework
         /// Gets the ResultState provided by this exception
         /// </summary>
         public override ResultState ResultState => ResultState.Failure;
+
+        /// <summary>
+        /// Indicates that this exception was thrown from ReportFailure, rather than directly.
+        /// </summary>
+        internal bool FromReportFailure { get; }
     }
 }
