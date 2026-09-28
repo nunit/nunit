@@ -308,7 +308,7 @@ namespace NUnit.Framework.Internal
             }
 
             static string DisplayNumeric<T>(T arg, string typeName, string? literalSuffix = null)
-                where T : INumber<T>, IMinMaxValue<T>
+                where T : INumber<T>, IMinMaxValue<T>, IFormattable
             {
                 if (arg.Equals(T.MaxValue))
                 {
@@ -320,13 +320,13 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    var display = Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
+                    var display = arg.ToString(null, System.Globalization.CultureInfo.InvariantCulture);
                     return literalSuffix is null ? display : display + literalSuffix;
                 }
             }
 
             static string DisplayFloat<T>(T arg, string typeName, string? literalSuffix = null)
-                where T : IFloatingPoint<T>, IMinMaxValue<T>
+                where T : IFloatingPoint<T>, IMinMaxValue<T>, IFormattable
             {
                 if (T.IsNaN(arg))
                 {
@@ -350,7 +350,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    var display = Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
+                    var display = arg.ToString(null, System.Globalization.CultureInfo.InvariantCulture);
                     if (display.IndexOfAny(FloatFormattingChars) == -1)
                         display += ".0";
 

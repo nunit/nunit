@@ -107,6 +107,9 @@ namespace NUnit.Framework.Tests.Internal
         {
             return [
                 TestCaseData.Create(123456789).Returns("123456789"),
+                TestCaseData.Create((uint)123456789).Returns("123456789"),
+                TestCaseData.Create((long)123456789).Returns("123456789L"),
+                TestCaseData.Create((ulong)123456789).Returns("123456789UL"),
                 TestCaseData.Create((nint)123456789).Returns("123456789"),
                 TestCaseData.Create((nuint)123456789).Returns("123456789"),
                 TestCaseData.Create(1m).Returns("1m"),
