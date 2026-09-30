@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         protected readonly TestSuite AnotherFixtureSuite = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected readonly TestSuite YetAnotherFixtureSuite = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
         protected readonly TestSuite FixtureWithMultipleTestsSuite = TestBuilder.MakeFixture(typeof(FixtureWithMultipleTests));
-        protected readonly TestSuite FixtureWithLongTestCaseNamesSuite = TestBuilder.MakeFixture(typeof(FixtureWithLongTestCaseNames));
+        protected readonly TestSuite FixtureWithLongTestCaseNamesSuite = TestBuilder.MakeFixture(typeof(FixtureWithLongNames_JestlaquissemperlectusMaurisetligulafringillaiaculisnislsagittistemporliberoSedinterdummagnasitametfeugiatullamcorperlectusjustosollicitudinmagnaasollicitudinmagnaaugueveljustoDonecfacilisisinmassanecmollisVivamussitametnullaultriciesaliquammaurisegetgravidarisusDonecleonunccongueeuelementumsedconvallisatortorClassaptenttacitisociosquadlitoratorquentperconubianostraperinceptoshimenaeosSedidipsumnisiEtiameleifendmassavitaetortordauctoraefficixtsap));
         protected readonly TestSuite NestingFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture));
         protected readonly TestSuite NestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.NestedFixture));
         protected readonly TestSuite EmptyNestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.EmptyNestedFixture));
