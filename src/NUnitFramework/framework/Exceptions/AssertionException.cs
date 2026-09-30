@@ -49,6 +49,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Indicates that this exception was thrown from ReportFailure, rather than directly.
         /// </summary>
-        internal bool FromReportFailure { get; }
+        internal bool FromReportFailure { get; } = false;
     }
 }
