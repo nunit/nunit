@@ -196,6 +196,31 @@ namespace NUnit.Framework.Tests.Assertions
             CheckForSpuriousAssertionResults();
         }
 
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionPass()
+        {
+            Assert.That(() => throw new InvalidOperationException("No can do"),
+                        Throws.Exception.Not.TypeOf<ArgumentNullException>()
+                                        .And
+                                        .Not.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionFail()
+        {
+            Assert.That(() =>
+                        Assert.That(() => throw new InvalidOperationException("No can do"),
+                                    Throws.Exception.Not.TypeOf<InvalidOperationException>()),
+                        Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        public void AssertNotSpecificExceptionNotThrowingAtAll()
+        {
+            Assert.That(() => "All Good",
+                        Throws.Exception.Not.InstanceOf<ArgumentException>());
+        }
+
         private static void CheckForSpuriousAssertionResults()
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
