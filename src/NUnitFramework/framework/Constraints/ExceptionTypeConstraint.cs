@@ -75,7 +75,7 @@ namespace NUnit.Framework.Constraints
                 }
                 else
                 {
-                    base.WriteActualValueTo(writer);
+                    writer.Write("no exception thrown");
                 }
             }
         }

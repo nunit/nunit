@@ -113,9 +113,9 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
+            Assert.That(ex.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  null" + Environment.NewLine));
+                "  But was:  no exception thrown" + Environment.NewLine));
 
             CheckForSpuriousAssertionResults();
         }
