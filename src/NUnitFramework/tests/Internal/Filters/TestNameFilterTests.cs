@@ -5,7 +5,7 @@ using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
-    [TestFixture("TestFilterTests+DummyFixture", false)]
+    [TestFixture("DummyFixture", false)]
     [TestFixture("Dummy", true)]
     public class TestNameFilterTests : TestFilterTests
     {
