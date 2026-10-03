@@ -375,5 +375,29 @@ namespace NUnit.Framework.Tests.Attributes
 
             Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
+
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.ManualThrownAssertionException), "My own thrown AssertionException")]
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.OnlyFailureOnFirstRun), "This test should fail on the first repetition")]
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.MixedFailures), "Multiple")]
+        public void RepeatMaintainsMessageAndStackTrace_Issue5434(string testName, string message)
+        {
+            var fixture = new RepeatShouldMaintainFailingMessageAndStackTrace();
+            ITestResult result = TestBuilder.RunTestCase(fixture, testName);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(fixture.Count, Is.GreaterThanOrEqualTo(2), "Should run at least twice");
+                Assert.That(result.Message, Does.Contain(message));
+                if (result.Message.Contains("Multiple failures or warnings in test"))
+                {
+                    Assert.That(result.StackTrace, Is.Null);
+                }
+                else
+                {
+                    Assert.That(result.StackTrace, Does.Contain(testName));
+                }
+            }
+        }
     }
 }
