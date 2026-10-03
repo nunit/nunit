@@ -7,7 +7,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
-using NUnit.TestData.SetupFixture.Namespace2;
+using NUnit.TestData.Filters;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
             yield return new object[]
             {
-                new TestPartitionFilter(6, 10),
+                new TestPartitionFilter(9, 10),
                 fixtureWithMultipleTestsSuite.Tests[0],
                 fixtureWithMultipleTestsSuite.Tests[1],
                 fixtureWithLongTestCaseNamesSuite.Tests
