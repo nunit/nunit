@@ -4,8 +4,6 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.Filters
 {
-    #region Fixtures Used by Tests
-
     [Category("Dummy"), Property("Priority", "High"), Author("Charlie Poole")]
     public class DummyFixture
     {
@@ -108,6 +106,4 @@ namespace NUnit.TestData.Filters
             }
         }
     }
-
-    #endregion
 }

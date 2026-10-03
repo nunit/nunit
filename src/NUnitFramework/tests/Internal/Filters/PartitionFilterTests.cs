@@ -19,7 +19,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         public void CreateFilter()
         {
             // Configure a new PartitionFilter with the provided partition count and number
-            _filter = new PartitionFilter(6, 10);
+            _filter = new PartitionFilter(9, 10);
 
             _testMatchingPartition = FixtureWithMultipleTestsSuite.Tests[0];
             _testNotMatchingPartition = FixtureWithMultipleTestsSuite.Tests[1];
@@ -36,8 +36,8 @@ namespace NUnit.Framework.Tests.Internal.Filters
         public void MatchTest()
         {
             // Validate
-            Assert.That(_filter.ComputePartitionNumber(_testMatchingPartition), Is.EqualTo(6));
-            Assert.That(_filter.ComputePartitionNumber(_testNotMatchingPartition), Is.EqualTo(9));
+            Assert.That(_filter.ComputePartitionNumber(_testMatchingPartition), Is.EqualTo(9));
+            Assert.That(_filter.ComputePartitionNumber(_testNotMatchingPartition), Is.EqualTo(3));
 
             // Assert
             Assert.That(_filter.Match(_testMatchingPartition), Is.True);
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [Test]
         public void ToXml()
         {
-            Assert.That(_filter.ToXml(false).OuterXml, Is.EqualTo(@"<partition>6/10</partition>"));
+            Assert.That(_filter.ToXml(false).OuterXml, Is.EqualTo(@"<partition>9/10</partition>"));
         }
 
         [Test]
