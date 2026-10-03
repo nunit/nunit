@@ -3,6 +3,7 @@
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.Filters;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
@@ -96,7 +97,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         public void TestNameFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
-                "<filter><name>TestFilterTests+DummyFixture</name></filter>");
+                "<filter><name>DummyFixture</name></filter>");
 
             Assert.That(filter, Is.TypeOf<TestNameFilter>());
             Assert.That(filter.Match(DummyFixtureSuite));
@@ -106,8 +107,8 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [Test]
         public void TestNameFilter_ToXml()
         {
-            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture");
-            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name>TestFilterTests+DummyFixture</name>"));
+            TestFilter filter = new TestNameFilter("DummyFixture");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name>DummyFixture</name>"));
         }
 
         [Test]
@@ -124,8 +125,8 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [Test]
         public void TestNameFilter_ToXml_Regex()
         {
-            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture", isRegex: true);
-            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name re=\"1\">TestFilterTests+DummyFixture</name>"));
+            TestFilter filter = new TestNameFilter("DummyFixture", isRegex: true);
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name re=\"1\">DummyFixture</name>"));
         }
 
         #endregion
