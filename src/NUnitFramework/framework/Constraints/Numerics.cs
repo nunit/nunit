@@ -131,6 +131,22 @@ namespace NUnit.Framework.Constraints
             if (expected is long || actual is long)
                 return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
             if (expected is uint || actual is uint)
                 return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
 
@@ -442,6 +458,12 @@ namespace NUnit.Framework.Constraints
             if (expected is long || actual is long)
                 return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
 
+            if (expected is nuint || actual is nuint)
+                return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
+
+            if (expected is nint || actual is nint)
+                return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
+
             if (expected is uint || actual is uint)
                 return Convert.ToUInt32(expected).CompareTo(Convert.ToUInt32(actual));
 
@@ -505,6 +527,24 @@ namespace NUnit.Framework.Constraints
             {
                 var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
                 return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+            }
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
             if (expected is uint || actual is uint)
