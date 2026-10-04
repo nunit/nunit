@@ -18,14 +18,10 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a numeric type</returns>
         public static bool IsNumericType(object? obj)
-        {
-            return IsFloatingPointNumeric(obj) || IsFixedPointNumeric(obj);
-        }
+            => obj is not null && IsNumericType(obj.GetType());
 
         internal static bool IsNumericType(Type type)
-        {
-            return IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
-        }
+            => IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
 
         /// <summary>
         /// Checks the type of the object, returning true if
@@ -34,20 +30,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a floating point numeric type</returns>
         public static bool IsFloatingPointNumeric(object? obj)
-        {
-            if (obj is not null)
-            {
-                if (obj is double)
-                    return true;
-                if (obj is float)
-                    return true;
-                if (obj is decimal)
-                    return true;
-            }
-            return false;
-        }
+            => obj is not null && IsFloatingPointNumeric(obj.GetType());
 
-        internal static bool IsFloatingPointNumeric(Type type)
+        private static bool IsFloatingPointNumeric(Type type)
         {
             if (type is not null)
             {
@@ -57,6 +42,10 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(decimal))
                     return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Half))
+                    return true;
+#endif
             }
             return false;
         }
@@ -68,32 +57,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a fixed point numeric type</returns>
         public static bool IsFixedPointNumeric(object? obj)
-        {
-            if (obj is not null)
-            {
-                if (obj is byte)
-                    return true;
-                if (obj is sbyte)
-                    return true;
-                if (obj is int)
-                    return true;
-                if (obj is uint)
-                    return true;
-                if (obj is long)
-                    return true;
-                if (obj is ulong)
-                    return true;
-                if (obj is short)
-                    return true;
-                if (obj is ushort)
-                    return true;
-                if (obj is char)
-                    return true;
-            }
-            return false;
-        }
+            => obj is not null && IsFixedPointNumeric(obj.GetType());
 
-        internal static bool IsFixedPointNumeric(Type type)
+        private static bool IsFixedPointNumeric(Type type)
         {
             if (type is not null)
             {
@@ -115,6 +81,16 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(char))
                     return true;
+                if (type == typeof(nint))
+                    return true;
+                if (type == typeof(nuint))
+                    return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Int128))
+                    return true;
+                if (type == typeof(UInt128))
+                    return true;
+#endif
             }
             return false;
         }
