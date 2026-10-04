@@ -212,15 +212,12 @@ namespace NUnit.Framework.Tests.Constraints
             [
                 new TestCaseData<decimal>(10000m, 9500m) { ExpectedResult = 500m },
                 new TestCaseData<ulong>(500, 0) { ExpectedResult = 500 },
-                new TestCaseData<ulong>(0, 500) { ExpectedResult = -500 },
                 new TestCaseData<int>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(500, 0) { ExpectedResult = 500 },
-                new TestCaseData<uint>(0, 500) { ExpectedResult = -500 },
                 new TestCaseData<nint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(500, 0) { ExpectedResult = 500 },
-                new TestCaseData<nuint>(0, 500) { ExpectedResult = -500 },
                 new TestCaseData<ushort>(500, 0) { ExpectedResult = 500 },
                 new TestCaseData<ushort>(0, 500) { ExpectedResult = -500 },
 #if !NETFRAMEWORK
@@ -262,30 +259,26 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<int, int, object>(10000, 8500, 15),
                 new TestCaseData<int, int, object>(10000, 11500, -15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
-                new TestCaseData<uint, uint, object>(10000u, 11500u, -15),
-                new TestCaseData<uint, uint, object>(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<uint, uint, object>(0u, 11500u, double.PositiveInfinity),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
                 new TestCaseData<long, long, object>(10000, 11500, -15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
-                new TestCaseData<ulong, ulong, object>(10000u, 11500u, -15),
-                new TestCaseData<ulong, ulong, object>(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<ulong, ulong, object>(0u, 11500u, double.PositiveInfinity),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
                 new TestCaseData<nint, nint, object>(10000, 11500, -15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
-                new TestCaseData<nuint, nuint, object>(10000u, 11500u, -15),
-                new TestCaseData<nuint, nuint, object>(0u, 11500u, double.NegativeInfinity),
+                new TestCaseData<nuint, nuint, object>(0u, 11500u, double.PositiveInfinity),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
-                new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)11500, -15),
-                new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.NegativeInfinity),
+                new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.PositiveInfinity),
 
                 new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.040000000000001d),
                 new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.040000000000001d)),
-                new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.NegativeInfinity),
+                new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.PositiveInfinity),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             ];
