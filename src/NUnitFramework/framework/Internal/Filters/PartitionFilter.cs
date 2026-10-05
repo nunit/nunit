@@ -9,6 +9,9 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
+    /// <summary>
+    /// The supported partition types that can be used when creating a PartitionFilter
+    /// </summary>
     file static class PartitionFilterTypes
     {
         public const string Test = "test";
@@ -88,21 +91,31 @@ namespace NUnit.Framework.Internal.Filters
                     partitionFilter = new TestPartitionFilter(number, count);
                     return true;
                 }
-                else if (parts.Length == 3)
+                else if (parts.Length == 3 && value[parts[0].Length + parts[1].Length + 1] == ':')
                 {
-                    var partitionType = parts[2];
-                    if (!partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase) && !partitionType.Equals(PartitionFilterTypes.Test, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return false;
-                    }
-
-                    partitionFilter = partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase) ? new FixturePartitionFilter(number, count) : new TestPartitionFilter(number, count);
-                    return true;
+                    partitionFilter = CreateFilterInstance(number, count, parts[2]);
+                    return partitionFilter is not null;
                 }
             }
 
             // Could not parse partition information
             return false;
+
+            static PartitionFilter? CreateFilterInstance(uint number, uint count, string partitionType)
+            {
+                if (partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new FixturePartitionFilter(number, count);
+                }
+                else if (partitionType.Equals(PartitionFilterTypes.Test, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new TestPartitionFilter(number, count);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>
