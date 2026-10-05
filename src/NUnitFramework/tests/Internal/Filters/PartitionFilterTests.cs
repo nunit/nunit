@@ -183,7 +183,11 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [TestCase("1 /1n")]
         [TestCase("1")]
         [TestCase("1/2:")]
+        [TestCase("1//2:")]
         [TestCase("1/2:No")]
+        [TestCase("1/2::")]
+        [TestCase("1/2::fixture")]
+        [TestCase("1:2/fixture")]
         public static void TryCreateFailure(string input)
         {
             Assert.That(PartitionFilter.TryCreate(input, out _), Is.False);
