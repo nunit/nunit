@@ -16,6 +16,7 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
 using NUnit.Framework.Tests.TestUtilities;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Tests.Attributes
 {
@@ -374,6 +375,54 @@ namespace NUnit.Framework.Tests.Attributes
             var command = new TestMethodCommand(testMethod);
 
             Assert.That(() => attr.Wrap(command), Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.ManualThrownAssertionException), RepeatShouldMaintainFailingMessageAndStackTrace.ExceptionMessage)]
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.OnlyFailureOnFirstRun), RepeatShouldMaintainFailingMessageAndStackTrace.FirstFailureMessage)]
+        public void RepeatMaintainsMessageAndStackTraceWhenSingleFailure_Issue5434(string testName, string message)
+        {
+            var fixture = new RepeatShouldMaintainFailingMessageAndStackTrace();
+            ITestResult result = TestBuilder.RunTestCase(fixture, testName);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(fixture.Count, Is.GreaterThanOrEqualTo(2), "Should run at least twice");
+                Assert.That(result.Message, Does.Contain(message));
+                Assert.That(result.StackTrace, Does.Contain(testName));
+                IList<AssertionResult> assertionResults = result.AssertionResults;
+                Assert.That(assertionResults, Has.Count.EqualTo(1), "Expected single AssertionResults");
+                var assertionResult = assertionResults[0];
+                Assert.That(assertionResult.Status, Is.EqualTo(AssertionStatus.Failed));
+                Assert.That(assertionResult.Message, Does.Contain(message));
+                Assert.That(assertionResult.StackTrace, Does.Contain(testName));
+            }
+        }
+
+        [TestCase(nameof(RepeatShouldMaintainFailingMessageAndStackTrace.MixedFailures), RepeatShouldMaintainFailingMessageAndStackTrace.FirstFailureMessage, RepeatShouldMaintainFailingMessageAndStackTrace.SecondFailureMessage)]
+        public void RepeatMaintainsMessageAndStackTraceInAssertionsWhenMultipleFailures_Issue5434(string testName, params string[] message)
+        {
+            var fixture = new RepeatShouldMaintainFailingMessageAndStackTrace();
+            ITestResult result = TestBuilder.RunTestCase(fixture, testName);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(fixture.Count, Is.GreaterThanOrEqualTo(2), "Should run at least twice");
+                Assert.That(result.Message, Does.Contain("Multiple failures or warnings in test"));
+                Assert.That(result.StackTrace, Is.Null); // No single stack trace for multiple failures
+                IList<AssertionResult> assertionResults = result.AssertionResults;
+                Assert.That(assertionResults, Has.Count.GreaterThanOrEqualTo(2), "Expected multiple AssertionResults for multiple failures");
+
+                int messageIndex = 0;
+                foreach (var assertionResult in assertionResults)
+                {
+                    Assert.That(assertionResult.Status, Is.EqualTo(AssertionStatus.Failed));
+                    Assert.That(assertionResult.Message, Does.Contain(message[messageIndex]));
+                    Assert.That(assertionResult.StackTrace, Does.Contain(testName));
+                    messageIndex++;
+                }
+            }
         }
     }
 }

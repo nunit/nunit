@@ -717,7 +717,7 @@ namespace NUnit.Framework.Internal
 
             var result = new ExceptionResult(RecordedException, site);
 
-            if (RecordedException is AssertionException or MultipleAssertException)
+            if (RecordedException is AssertionException { FromReportFailure: true } or MultipleAssertException)
             {
                 SetResult(result.ResultState, result.Message, result.StackTrace);
             }
