@@ -57,45 +57,51 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True on successful parsing, or False if there is an error</returns>
         public static bool TryCreate(string value, [NotNullWhen(true)] out PartitionFilter? partitionFilter)
         {
+            partitionFilter = null;
+
             // Split our numberWithCount into two parts, such that "1/10" becomes PartitionNumber 1, PartitionCount 10
-            string[] parts = value.Split('/');
+            var parts = value.Split('/', ':');
 
             // Parts must be exactly 2, and be in the format of "number/count"
             // There may be an optional partition type after the count, such as "1/10:fixture" or "1/10:test"
-            if (parts.Length == 2)
+            if (parts.Length >= 2 && parts.Length < 4)
             {
-                var partitionTypeIdx = parts[1].IndexOf(':');
-                var partitionType = PartitionFilterTypes.Test;
-
-                if (partitionTypeIdx > 0)
+                // First delimeter must be a '/', so check the character after the first part to ensure it is a '/'
+                if (value[parts[0].Length] != '/')
                 {
-                    partitionType = parts[1].Substring(partitionTypeIdx + 1);
-                    parts[1] = parts[1].Substring(0, partitionTypeIdx);
-                }
-
-                if (!partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase) && !partitionType.Equals(PartitionFilterTypes.Test, StringComparison.OrdinalIgnoreCase))
-                {
-                    partitionFilter = null;
                     return false;
                 }
 
+                // First and second parts must be valid unsigned integers, so try to parse and validate them
                 if (!uint.TryParse(parts[0], out uint number) || !uint.TryParse(parts[1], out uint count))
                 {
-                    partitionFilter = null;
+                    return false;
+                }
+                else if (number < 1 || number > count)
+                {
                     return false;
                 }
 
-                // Number must be between 1 and Count, inclusive
-                // Return a new PartitionFilter with the parsed values
-                if (number >= 1 && number <= count)
+                // Basic number/count parsing succeeded, so check if there is an optional partition type specified after the count, and create the appropriate PartitionFilter
+                if (parts.Length == 2)
                 {
+                    partitionFilter = new TestPartitionFilter(number, count);
+                    return true;
+                }
+                else if (parts.Length == 3)
+                {
+                    var partitionType = parts[2];
+                    if (!partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase) && !partitionType.Equals(PartitionFilterTypes.Test, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+
                     partitionFilter = partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase) ? new FixturePartitionFilter(number, count) : new TestPartitionFilter(number, count);
                     return true;
                 }
             }
 
             // Could not parse partition information
-            partitionFilter = null;
             return false;
         }
 
