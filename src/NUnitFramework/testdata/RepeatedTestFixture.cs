@@ -433,13 +433,17 @@ namespace NUnit.TestData.RepeatingTests
 
     public class RepeatShouldMaintainFailingMessageAndStackTrace : RepeatingTestsFixtureBase
     {
+        public const string ExceptionMessage = "My own thrown AssertionException";
+        public const string FirstFailureMessage = "This test should fail on the first repetition";
+        public const string SecondFailureMessage = "This test should fail on the second repetition";
+
         [Test]
         [Repeat(3, StopOnFailure = true)]
         public void ManualThrownAssertionException()
         {
             Count++;
             if (Count != 1)
-                throw new AssertionException("My own thrown AssertionException");
+                throw new AssertionException(ExceptionMessage);
         }
 
         [Test]
@@ -447,7 +451,7 @@ namespace NUnit.TestData.RepeatingTests
         public void OnlyFailureOnFirstRun()
         {
             Count++;
-            Assert.That(Count, Is.GreaterThan(1), "This test should fail on the first repetition");
+            Assert.That(Count, Is.GreaterThan(1), FirstFailureMessage);
         }
 
         [Test]
@@ -455,9 +459,9 @@ namespace NUnit.TestData.RepeatingTests
         public void MixedFailures()
         {
             Count++;
-            Assert.That(Count, Is.Not.EqualTo(1), "This test should fail on the first repetition");
+            Assert.That(Count, Is.Not.EqualTo(1), FirstFailureMessage);
             if (Count == 2)
-                throw new AssertionException("AssertionException thrown on 2nd repetition");
+                throw new AssertionException(SecondFailureMessage);
         }
     }
 }
