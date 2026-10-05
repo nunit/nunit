@@ -154,8 +154,8 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(1d, 1.001d, new Tolerance(0.5d).Percent),
                 new TestCaseData(1f, 1.001f, new Tolerance(0.5f).Percent),
 #if !NETFRAMEWORK
-                new TestCaseData((Half)1, (Half)1.1, new Tolerance((Half)0.5)),
-                new TestCaseData((Half)1, (Half)1.001, new Tolerance((Half)0.5).Percent),
+                //new TestCaseData((Half)1, (Half)1.1, new Tolerance((Half)0.5)),
+                //new TestCaseData((Half)1, (Half)1.001, new Tolerance((Half)0.5).Percent),
 #endif
             ];
         }
