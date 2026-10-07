@@ -195,7 +195,7 @@ namespace NUnit.Framework.Internal
 
                 case "partition":
                     if (PartitionFilter.TryCreate(NodeValue(node), out var partitionFilter))
-                        return partitionFilter!;
+                        return partitionFilter;
                     break;
             }
 

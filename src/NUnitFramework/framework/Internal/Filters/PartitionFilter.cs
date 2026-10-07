@@ -10,11 +10,20 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
+    /// The supported partition types that can be used when creating a PartitionFilter
+    /// </summary>
+    file static class PartitionFilterTypes
+    {
+        public const string Test = "test";
+        public const string Fixture = "fixture";
+    }
+
+    /// <summary>
     /// PartitionFilter filter matches a subset of tests based upon a chosen partition number and partition count
     ///
     /// This is helpful when you may want to run a subset of tests (eg, across 3 machines - or partitions), each with a separately assigned partition number and fixed partition count
     /// </summary>
-    internal sealed class PartitionFilter : TestFilter
+    internal abstract class PartitionFilter : TestFilter
     {
         /// <summary>
         /// The matching partition number (between 1 and Partition Count, inclusive) this filter should match on
@@ -51,24 +60,62 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True on successful parsing, or False if there is an error</returns>
         public static bool TryCreate(string value, [NotNullWhen(true)] out PartitionFilter? partitionFilter)
         {
-            // Split our numberWithCount into two parts, such that "1/10" becomes PartitionNumber 1, PartitionCount 10
-            string[] parts = value.Split('/');
+            partitionFilter = null;
 
-            // Parts must be exactly 2, and be in the format of "number/count"
-            if (parts.Length == 2 && uint.TryParse(parts[0], out uint number) && uint.TryParse(parts[1], out uint count))
+            // Split our numberWithCount into two parts, such that "1/10" becomes PartitionNumber 1, PartitionCount 10
+            string[] parts = value.Split('/', ':');
+
+            // Parts must be in the format of "number/count"
+            // There may be an optional partition type after the count, such as "1/10:fixture" or "1/10:test"
+            if (parts.Length is 2 or 3)
             {
-                // Number must be between 1 and Count, inclusive
-                // Return a new PartitionFilter with the parsed values
-                if (number >= 1 && number <= count)
+                // First delimeter must be a '/', so check the character after the first part to ensure it is a '/'
+                if (value[parts[0].Length] != '/')
                 {
-                    partitionFilter = new PartitionFilter(number, count);
+                    return false;
+                }
+
+                // First and second parts must be valid unsigned integers, so try to parse and validate them
+                if (!uint.TryParse(parts[0], out uint number) || !uint.TryParse(parts[1], out uint count))
+                {
+                    return false;
+                }
+                else if (number < 1 || number > count)
+                {
+                    return false;
+                }
+
+                // Basic number/count parsing succeeded, so check if there is an optional partition type specified after the count, and create the appropriate PartitionFilter
+                if (parts.Length == 2)
+                {
+                    partitionFilter = new TestPartitionFilter(number, count);
                     return true;
+                }
+                else if (parts.Length == 3 && value[parts[0].Length + parts[1].Length + 1] == ':')
+                {
+                    partitionFilter = CreateFilterInstance(number, count, parts[2]);
+                    return partitionFilter is not null;
                 }
             }
 
             // Could not parse partition information
-            partitionFilter = null;
             return false;
+
+            static PartitionFilter? CreateFilterInstance(uint number, uint count, string partitionType)
+            {
+                if (partitionType.Equals(PartitionFilterTypes.Fixture, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new FixturePartitionFilter(number, count);
+                }
+                else if (partitionType.Equals(PartitionFilterTypes.Test, StringComparison.OrdinalIgnoreCase))
+                {
+                    return new TestPartitionFilter(number, count);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>
@@ -76,10 +123,6 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public override bool Match(ITest test)
         {
-            // Do not match a test Suite, only match individual tests
-            if (test.IsSuite)
-                return false;
-
             // Calculate the partition number for the provided Test
             var partitionForTest = ComputePartitionNumber(test);
 
@@ -88,15 +131,17 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         /// <summary>
-        /// Adds a PartitionFilter XML node to the provided parentNode
+        /// Adds a PartitionFilter XML node to the provided parentNode.
         /// </summary>
         /// <param name="parentNode">Parent node</param>
         /// <param name="recursive">True if recursive</param>
         /// <returns>The added XML node</returns>
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            return parentNode.AddElement("partition", $"{PartitionNumber}/{PartitionCount}");
+            return parentNode.AddElement("partition", GetXmlValue());
         }
+
+        public abstract string GetXmlValue();
 
         /// <summary>
         /// Computes the Partition Number that has been assigned to the provided ITest value (based upon the configured Partition Count)
@@ -130,5 +175,42 @@ namespace NUnit.Framework.Internal.Filters
             return BitConverter.ToUInt32(hashValue[..4]);
 #endif
         }
+    }
+
+    internal sealed class TestPartitionFilter : PartitionFilter
+    {
+        public TestPartitionFilter(uint partitionNumber, uint partitionCount) : base(partitionNumber, partitionCount)
+        {
+        }
+
+        public override bool Match(ITest test)
+        {
+            // Do not match a test Suite, only match individual tests
+            if (test.IsSuite)
+                return false;
+
+            return base.Match(test);
+        }
+
+        public override string GetXmlValue() => $"{PartitionNumber}/{PartitionCount}";
+    }
+
+    internal sealed class FixturePartitionFilter : PartitionFilter
+    {
+        public FixturePartitionFilter(uint partitionNumber, uint partitionCount) : base(partitionNumber, partitionCount)
+        {
+        }
+
+        public override bool Match(ITest test)
+        {
+            // Only match TestFixtures, not individual tests
+            if (test is not TestFixture)
+                return false;
+
+            return base.Match(test);
+        }
+
+        public override string GetXmlValue()
+            => $"{PartitionNumber}/{PartitionCount}:{PartitionFilterTypes.Fixture}";
     }
 }
