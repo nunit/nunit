@@ -1,7 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
 using System.Numerics;
+#endif
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -120,7 +122,7 @@ namespace NUnit.Framework.Constraints
                 var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
                 var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
 
-                return AreEqual(expectedValue, actualValue, ref tolerance);
+                return AreEqual(expectedValue, actualValue, tolerance);
             }
 
             if (expected is UInt128 || actual is UInt128)
@@ -190,8 +192,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
-            where T1 : unmanaged, IConvertible
-            where T2 : unmanaged, IConvertible
+            where T1 : struct, IConvertible
+            where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
                 return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
@@ -447,7 +449,7 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
-        #endregion
+#endregion
 
         #region Numeric Comparisons
 
@@ -607,6 +609,12 @@ namespace NUnit.Framework.Constraints
                 return T.CreateChecked(int128);
             if (o is UInt128 uint128)
                 return T.CreateChecked(uint128);
+            if (o is Half half)
+                return T.CreateChecked(half);
+            if (o is nint nintValue)
+                return T.CreateChecked(nintValue);
+            if (o is nuint nuintValue)
+                return T.CreateChecked(nuintValue);
             return T.CreateChecked(Convert.ToDouble(o));
         }
 #endif
@@ -631,18 +639,25 @@ namespace NUnit.Framework.Constraints
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
             {
-                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
-                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+#if NETFRAMEWORK
+                double expectedValue = Convert.ToDouble(expected);
+                double actualValue = Convert.ToDouble(actual);
+#else
+                double expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+                double actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+#endif
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / expectedValue * 100;
             }
 
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-            {
-                var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
-                var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+            //if (expected is Half || actual is Half)
+            //{
+            //    var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+            //    var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
 
-                return Difference(expectedValue, actualValue, isAbsolute);
-            }
+            //    return Difference(expectedValue, actualValue, isAbsolute);
+            //}
 
             if (expected is UInt128 || actual is UInt128)
             {
