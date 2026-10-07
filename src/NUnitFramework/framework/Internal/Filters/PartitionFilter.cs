@@ -63,11 +63,11 @@ namespace NUnit.Framework.Internal.Filters
             partitionFilter = null;
 
             // Split our numberWithCount into two parts, such that "1/10" becomes PartitionNumber 1, PartitionCount 10
-            var parts = value.Split('/', ':');
+            string[] parts = value.Split('/', ':');
 
-            // Parts must be exactly 2, and be in the format of "number/count"
+            // Parts must be in the format of "number/count"
             // There may be an optional partition type after the count, such as "1/10:fixture" or "1/10:test"
-            if (parts.Length >= 2 && parts.Length < 4)
+            if (parts.Length is 2 or 3)
             {
                 // First delimeter must be a '/', so check the character after the first part to ensure it is a '/'
                 if (value[parts[0].Length] != '/')
