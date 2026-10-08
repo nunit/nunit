@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -18,14 +21,10 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a numeric type</returns>
         public static bool IsNumericType(object? obj)
-        {
-            return IsFloatingPointNumeric(obj) || IsFixedPointNumeric(obj);
-        }
+            => obj is not null && IsNumericType(obj.GetType());
 
         internal static bool IsNumericType(Type type)
-        {
-            return IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
-        }
+            => IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
 
         /// <summary>
         /// Checks the type of the object, returning true if
@@ -34,20 +33,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a floating point numeric type</returns>
         public static bool IsFloatingPointNumeric(object? obj)
-        {
-            if (obj is not null)
-            {
-                if (obj is double)
-                    return true;
-                if (obj is float)
-                    return true;
-                if (obj is decimal)
-                    return true;
-            }
-            return false;
-        }
+            => obj is not null && IsFloatingPointNumeric(obj.GetType());
 
-        internal static bool IsFloatingPointNumeric(Type type)
+        private static bool IsFloatingPointNumeric(Type type)
         {
             if (type is not null)
             {
@@ -57,6 +45,10 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(decimal))
                     return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Half))
+                    return true;
+#endif
             }
             return false;
         }
@@ -68,32 +60,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a fixed point numeric type</returns>
         public static bool IsFixedPointNumeric(object? obj)
-        {
-            if (obj is not null)
-            {
-                if (obj is byte)
-                    return true;
-                if (obj is sbyte)
-                    return true;
-                if (obj is int)
-                    return true;
-                if (obj is uint)
-                    return true;
-                if (obj is long)
-                    return true;
-                if (obj is ulong)
-                    return true;
-                if (obj is short)
-                    return true;
-                if (obj is ushort)
-                    return true;
-                if (obj is char)
-                    return true;
-            }
-            return false;
-        }
+            => obj is not null && IsFixedPointNumeric(obj.GetType());
 
-        internal static bool IsFixedPointNumeric(Type type)
+        private static bool IsFixedPointNumeric(Type type)
         {
             if (type is not null)
             {
@@ -115,6 +84,16 @@ namespace NUnit.Framework.Constraints
                     return true;
                 if (type == typeof(char))
                     return true;
+                if (type == typeof(nint))
+                    return true;
+                if (type == typeof(nuint))
+                    return true;
+#if !NETFRAMEWORK
+                if (type == typeof(Int128))
+                    return true;
+                if (type == typeof(UInt128))
+                    return true;
+#endif
             }
             return false;
         }
@@ -137,6 +116,48 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+            {
+                var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+                var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
+            if (expected is UInt128 || actual is UInt128)
+            {
+                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
+                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
+            if (expected is Int128 || actual is Int128)
+            {
+                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
+                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+#endif
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                return AreEqual(expectedValue, actualValue, tolerance);
+            }
+
             if (expected is double || actual is double)
                 return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
 
@@ -171,8 +192,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
-            where T1 : unmanaged, IConvertible
-            where T2 : unmanaged, IConvertible
+            where T1 : struct, IConvertible
+            where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
                 return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
@@ -428,7 +449,7 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
-        #endregion
+#endregion
 
         #region Numeric Comparisons
 
@@ -459,6 +480,48 @@ namespace NUnit.Framework.Constraints
 
             if (expected is float || actual is float)
                 return Convert.ToSingle(expected).CompareTo(Convert.ToSingle(actual));
+
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+            {
+                var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+                var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+
+                return expectedValue.CompareTo(actualValue);
+            }
+
+            if (expected is UInt128 || actual is UInt128)
+            {
+                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
+                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
+
+                return expectedValue.CompareTo(actualValue);
+            }
+
+            if (expected is Int128 || actual is Int128)
+            {
+                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
+                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
+
+                return expectedValue.CompareTo(actualValue);
+            }
+#endif
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                return expectedValue.CompareTo(actualValue);
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                return expectedValue.CompareTo(actualValue);
+            }
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
@@ -495,6 +558,67 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        private static T Difference<T>(T expected, T actual, bool isAbsolute)
+            where T : INumber<T>
+        {
+            var difference = expected - actual;
+            var hundred = T.CreateChecked(100);
+
+            return isAbsolute ? difference : difference / expected * hundred;
+        }
+
+        private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
+            where T : INumber<T>
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return expected.Equals(actual);
+
+                case ToleranceMode.Linear:
+                    T ulongTolerance = ConvertToValue<T>(tolerance.Amount);
+                    if (ulongTolerance > T.Zero)
+                    {
+                        T diff = expected >= actual ? expected - actual : actual - expected;
+                        return diff <= ulongTolerance;
+                    }
+
+                    return expected.Equals(actual);
+
+                case ToleranceMode.Percent:
+                    if (expected == T.CreateChecked(0))
+                        return expected.Equals(actual);
+
+                    // Can't do a simple Math.Abs() here since it's unsigned
+                    T difference = (expected >= actual ? expected - actual : actual - expected);
+                    double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
+                    return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+
+        private static T ConvertToValue<T>(object o)
+            where T : INumber<T>
+        {
+            if (o is T tol)
+                return tol;
+            if (o is Int128 int128)
+                return T.CreateChecked(int128);
+            if (o is UInt128 uint128)
+                return T.CreateChecked(uint128);
+            if (o is Half half)
+                return T.CreateChecked(half);
+            if (o is nint nintValue)
+                return T.CreateChecked(nintValue);
+            if (o is nuint nuintValue)
+                return T.CreateChecked(nuintValue);
+            return T.CreateChecked(Convert.ToDouble(o));
+        }
+#endif
+
         private static object Difference(object? expected, object? actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
@@ -515,8 +639,59 @@ namespace NUnit.Framework.Constraints
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
             {
-                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
-                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+#if NETFRAMEWORK
+                double expectedValue = Convert.ToDouble(expected);
+                double actualValue = Convert.ToDouble(actual);
+#else
+                double expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+                double actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+#endif
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / expectedValue * 100;
+            }
+
+#if !NETFRAMEWORK
+            //if (expected is Half || actual is Half)
+            //{
+            //    var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
+            //    var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
+
+            //    return Difference(expectedValue, actualValue, isAbsolute);
+            //}
+
+            if (expected is UInt128 || actual is UInt128)
+            {
+                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
+                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
+
+                return Difference(expectedValue, actualValue, isAbsolute);
+            }
+
+            if (expected is Int128 || actual is Int128)
+            {
+                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
+                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
+
+                return Difference(expectedValue, actualValue, isAbsolute);
+            }
+#endif
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
+                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
+                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
             if (expected is ulong || actual is ulong)
