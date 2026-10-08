@@ -49,14 +49,10 @@ namespace NUnit.Framework.Constraints
 
             _caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            if (_caughtException is not null)
-            {
-                return new ThrowsConstraintResult(
-                    this,
-                    _caughtException,
-                    BaseConstraint.ApplyTo(_caughtException));
-            }
-            return new ThrowsConstraintResult(this);
+            return new ThrowsConstraintResult(
+                this,
+                _caughtException,
+                BaseConstraint.ApplyTo(_caughtException));
         }
 
         /// <summary>
@@ -72,14 +68,10 @@ namespace NUnit.Framework.Constraints
         {
             _caughtException = await ExceptionHelper.RecordExceptionAsync(actual, nameof(actual));
 
-            if (_caughtException is not null)
-            {
-                return new ThrowsConstraintResult(
-                    this,
-                    _caughtException,
-                    BaseConstraint.ApplyTo(_caughtException));
-            }
-            return new ThrowsConstraintResult(this);
+            return new ThrowsConstraintResult(
+                this,
+                _caughtException,
+                BaseConstraint.ApplyTo(_caughtException));
         }
 
         #endregion
@@ -88,25 +80,15 @@ namespace NUnit.Framework.Constraints
 
         private sealed class ThrowsConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult? _baseResult;
-
-            public ThrowsConstraintResult(ThrowsConstraint constraint)
-                : base(constraint, null)
-            {
-                Status = ConstraintStatus.Failure;
-            }
+            private readonly ConstraintResult _baseResult;
 
             public ThrowsConstraintResult(ThrowsConstraint constraint,
-                Exception caughtException,
+                Exception? caughtException,
                 ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
-                if (baseResult.IsSuccess)
-                    Status = ConstraintStatus.Success;
-                else
-                    Status = ConstraintStatus.Failure;
-
                 _baseResult = baseResult;
+                Status = baseResult.Status;
             }
 
             /// <summary>
@@ -117,7 +99,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (_baseResult is null)
+                if (ActualValue is null)
                     writer.Write("no exception thrown");
                 else
                     _baseResult.WriteActualValueTo(writer);
