@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -58,6 +59,11 @@ namespace NUnit.Framework.Tests.Api
         private int _inconclusiveCount;
 
         private Dictionary<string, bool> _activeTests;
+
+        /// <summary>
+        /// The partition numbers observed by <see cref="ITestListener.TestStarted"/> during a run.
+        /// </summary>
+        private readonly ConcurrentQueue<int?> _partitionNumbersSeen = new();
 
         [SetUp]
         public void CreateRunner()
@@ -686,6 +692,66 @@ namespace NUnit.Framework.Tests.Api
 
         #endregion
 
+        #region PartitionNumber
+
+        // ConcurrentQueue<T>.Clear is not available on all target frameworks
+        private void ClearPartitionNumbersSeen()
+        {
+            while (_partitionNumbersSeen.TryDequeue(out _))
+            {
+            }
+        }
+
+        [Test]
+        public void Run_WithPartitionFilter_ExposesPartitionNumberDuringRun()
+        {
+            ClearPartitionNumbersSeen();
+            LoadMockAssembly();
+
+            // The composite shape produced when a partition is combined with other criteria;
+            // the negated category matches every test, so all of partition 1 is started.
+            var filter = TestFilter.FromXml(
+                @"<filter><and><partition>1/2</partition><not><cat>NoSuchCategory</cat></not></and></filter>");
+
+            _runner.Run(this, filter);
+
+            Assert.That(_partitionNumbersSeen, Is.Not.Empty, "No tests were started");
+            Assert.That(_partitionNumbersSeen, Is.All.EqualTo(1));
+        }
+
+        [Test]
+        public void Run_WithoutPartitionFilter_ShowsNoPartitionNumberDuringRun()
+        {
+            ClearPartitionNumbersSeen();
+            LoadMockAssembly();
+
+            _runner.Run(this, TestFilter.Empty);
+
+            Assert.That(_partitionNumbersSeen, Is.Not.Empty, "No tests were started");
+            Assert.That(_partitionNumbersSeen, Is.All.Null);
+        }
+
+        [Test]
+        public void Run_RestoresPreviousPartitionNumberWhenFinished()
+        {
+            const int outerPartitionNumber = 5;
+            TestContext.PartitionNumber = outerPartitionNumber;
+
+            try
+            {
+                LoadMockAssembly();
+                _runner.Run(this, TestFilter.Empty);
+
+                Assert.That(TestContext.PartitionNumber, Is.EqualTo(outerPartitionNumber));
+            }
+            finally
+            {
+                TestContext.PartitionNumber = null;
+            }
+        }
+
+        #endregion
+
         #region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
@@ -696,6 +762,8 @@ namespace NUnit.Framework.Tests.Api
                 _suiteStartedCount++;
             else
                 _testStartedCount++;
+
+            _partitionNumbersSeen.Enqueue(TestContext.PartitionNumber);
         }
 
         void ITestListener.TestFinished(ITestResult result)

@@ -33,6 +33,9 @@ namespace NUnit.Framework.Api
         private readonly ITestAssemblyBuilder _builder;
         private readonly ManualResetEventSlim _runComplete = new();
 
+        // The partition number in effect before this run started, restored when it completes
+        private int? _previousPartitionNumber;
+
         // Saved Console.Out and Console.Error
         private TextWriter? _savedOut;
         private TextWriter? _savedErr;
@@ -218,6 +221,11 @@ namespace NUnit.Framework.Api
 
             // Needs to be set for StopRun
             Context = context;
+
+            // The run's partition number, if any, comes from the filter it was given.
+            // Saved and restored so that a nested run does not change it for the outer run.
+            _previousPartitionNumber = TestContext.PartitionNumber;
+            TestContext.PartitionNumber = (filter as TestFilter)?.GetPartitionNumber();
 
             try
             {
@@ -483,6 +491,9 @@ namespace NUnit.Framework.Api
             // Unhook exception handlers of last resort
             AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
             TaskScheduler.UnobservedTaskException -= OnUnobservedException;
+
+            // Restore the partition number that was in effect before this run started
+            TestContext.PartitionNumber = _previousPartitionNumber;
 
             _runComplete.Set();
         }
