@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Indicates whether the worker is currently executing a WorkItem
         /// </summary>
-        public bool IsBusy => _currentWorkItem is not null;
+        internal bool IsBusy => _currentWorkItem is not null;
 
         private void TestWorkerThreadProc()
         {
@@ -94,8 +94,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (_running)
                 {
-                    _currentWorkItem = WorkQueue.Dequeue();
-                    if (_currentWorkItem is null)
+                    if (!WorkQueue.TryDequeue(out _currentWorkItem))
                         break;
 
                     Log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);

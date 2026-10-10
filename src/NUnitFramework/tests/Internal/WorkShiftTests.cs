@@ -169,6 +169,9 @@ namespace NUnit.Framework.Tests.Internal
                     Assert.That(w.IsBusy, Is.False, "Worker has finished");
                     Assert.That(_shift.HasWork, Is.False, "Shift should not have work after worker finishes");
                 }
+
+                _shift.ShutDown();
+                Assert.That(() => w.IsAlive, Is.False.After(BusyWorkerFixture.Timeout, 100), "Worker should be done after shutdown");
             }
             finally
             {
