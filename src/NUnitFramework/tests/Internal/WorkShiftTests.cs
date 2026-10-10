@@ -82,7 +82,7 @@ namespace NUnit.Framework.Tests.Internal
             var q = CreateQueue("test");
             _shift.AddQueue(q);
             Assert.That(_shift.HasWork, Is.False, "Should not have work initially");
-            q.Enqueue(Fakes.GetWorkItem(this, "Test1"));
+            q.Enqueue(Fakes.GetWorkItem(this, nameof(Test1)));
             Assert.That(_shift.HasWork, "Should have work after enqueue");
             _shift.Start();
             Assert.That(_shift.HasWork, "Should have work after starting");
