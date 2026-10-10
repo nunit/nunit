@@ -221,7 +221,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="work">The WorkItem dequeued, or null if the queue has stopped</param>
         /// <returns>True if a WorkItem was dequeued, false if the queue has stopped</returns>
-        public bool TryDequeue([NotNullWhen(true)] out WorkItem? work)
+        internal bool TryDequeue([NotNullWhen(true)] out WorkItem? work)
         {
             SpinWait sw = new SpinWait();
 
