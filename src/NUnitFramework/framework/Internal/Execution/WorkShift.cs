@@ -72,6 +72,12 @@ namespace NUnit.Framework.Internal.Execution
                         return true;
                 }
 
+                foreach (var w in Workers)
+                {
+                    if (w.IsBusy)
+                        return true;
+                }
+
                 return false;
             }
         }
