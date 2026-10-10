@@ -81,6 +81,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private WorkItem? _currentWorkItem;
 
+        /// <summary>
+        /// Indicates whether the worker is currently executing a WorkItem
+        /// </summary>
+        public bool IsBusy => _currentWorkItem is not null;
+
         private void TestWorkerThreadProc()
         {
             _running = true;
@@ -110,10 +115,12 @@ namespace NUnit.Framework.Internal.Execution
                     // is saved, its children end up in the new queue set.
                     _currentWorkItem.Execute();
 
+                    WorkItem lastWorkItem = Interlocked.Exchange(ref _currentWorkItem, null);
+
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
                     // the queues unless all child items have finished.
-                    Idle?.Invoke(this, _currentWorkItem);
+                    Idle?.Invoke(this, lastWorkItem);
 
                     ++_workItemCount;
                 }
