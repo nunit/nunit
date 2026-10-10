@@ -137,6 +137,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Interlocked.Exchange(ref _active, 1) == 1)
             {
                 Log.Info("{0} shift already started", Name);
+                return;
             }
 
             Log.Info("{0} shift starting", Name);
@@ -207,7 +208,6 @@ namespace NUnit.Framework.Internal.Execution
             if (Interlocked.Exchange(ref _active, 0) == 1)
             {
                 Log.Info("{0} shutdown with active shift", Name);
-                return;
             }
 
             foreach (var q in Queues)
