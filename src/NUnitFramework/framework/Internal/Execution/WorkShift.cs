@@ -134,22 +134,25 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            if (Interlocked.Exchange(ref _active, 1) == 1)
+            lock (_syncRoot)
             {
-                Log.Info("{0} shift already started", Name);
-                return;
+                if (Interlocked.Exchange(ref _active, 1) == 1)
+                {
+                    Log.Info("{0} shift already started", Name);
+                    return;
+                }
+
+                Log.Info("{0} shift starting", Name);
+
+                if (_firstStart)
+                {
+                    _firstStart = false;
+                    StartWorkers();
+                }
+
+                foreach (var q in Queues)
+                    q.Start();
             }
-
-            Log.Info("{0} shift starting", Name);
-
-            if (_firstStart)
-            {
-                _firstStart = false;
-                StartWorkers();
-            }
-
-            foreach (var q in Queues)
-                q.Start();
         }
 
         private void StartWorkers()
@@ -184,17 +187,20 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            if (Interlocked.Exchange(ref _active, 0) == 0)
+            lock (_syncRoot)
             {
-                Log.Info("{0} shift already ended", Name);
-                return;
+                if (Interlocked.Exchange(ref _active, 0) == 0)
+                {
+                    Log.Info("{0} shift already ended", Name);
+                    return;
+                }
+
+                Log.Info("{0} shift ending", Name);
+
+                // Pause all queues for this shift
+                foreach (var q in Queues)
+                    q.Pause();
             }
-
-            Log.Info("{0} shift ending", Name);
-
-            // Pause all queues for this shift
-            foreach (var q in Queues)
-                q.Pause();
 
             // Signal the dispatcher that shift ended
             EndOfShift?.Invoke(this);
