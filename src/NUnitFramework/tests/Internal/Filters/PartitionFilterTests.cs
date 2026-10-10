@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.Filters;
@@ -215,14 +216,16 @@ namespace NUnit.Framework.Tests.Internal.Filters
     [TestFixture]
     public static class PartitionNumberDiscoveryTests
     {
-        [TestCase(@"<partition>1/2</partition>", 1)]
-        [TestCase(@"<partition>7/10:test</partition>", 7)]
-        [TestCase(@"<partition>4/5:fixture</partition>", 4)]
-        [TestCase(@"<and><partition>3/9</partition><cat>SomeCategory</cat></and>", 3)]
-        [TestCase(@"<or><partition>2/3</partition><cat>SomeCategory</cat></or>", 2)]
-        [TestCase(@"<or><not><cat>SomeCategory</cat></not><partition>2/3</partition></or>", 2)]
-        [TestCase(@"<or><partition>2/3</partition><partition>2/3</partition></or>", 2)]
-        public static void GetPartitionNumberFindsPartition(string xml, int expectedPartitionNumber)
+        [TestCase(@"<partition>1/2</partition>", 1u)]
+        [TestCase(@"<partition>7/10:test</partition>", 7u)]
+        [TestCase(@"<partition>4/5:fixture</partition>", 4u)]
+        [TestCase(@"<partition>3000000000/4000000000</partition>", 3000000000u)]
+        [TestCase(@"<and><partition>3/9</partition><cat>SomeCategory</cat></and>", 3u)]
+        [TestCase(@"<or><partition>2/3</partition><cat>SomeCategory</cat></or>", 2u)]
+        [TestCase(@"<or><not><cat>SomeCategory</cat></not><partition>2/3</partition></or>", 2u)]
+        [TestCase(@"<or><partition>2/3</partition><partition>2/3</partition></or>", 2u)]
+        [TestCase(@"<and><partition>1/2</partition><not><partition>2/3</partition></not></and>", 1u)]
+        public static void GetPartitionNumberFindsPartition(string xml, uint expectedPartitionNumber)
         {
             var filter = TestFilter.FromXml($@"<filter>{xml}</filter>");
 
@@ -231,14 +234,21 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
         [TestCase(@"<cat>SomeCategory</cat>")]
         [TestCase(@"<not><partition>1/2</partition></not>")]
-        [TestCase(@"<or><partition>1/3</partition><partition>2/3</partition></or>")]
-        [TestCase(@"<and><partition>1/3</partition><partition>2/3</partition></and>")]
-        [TestCase(@"<partition>3000000000/4000000000</partition>")]
         public static void GetPartitionNumberIsNullWhenItIsNotASinglePartition(string xml)
         {
             var filter = TestFilter.FromXml($@"<filter>{xml}</filter>");
 
             Assert.That(filter.GetPartitionNumber(), Is.Null);
+        }
+
+        [TestCase(@"<or><partition>1/3</partition><partition>2/3</partition></or>")]
+        [TestCase(@"<and><partition>1/3</partition><partition>2/3</partition></and>")]
+        [TestCase(@"<or><partition>1/3</partition><and><partition>2/3</partition><cat>SomeCategory</cat></and></or>")]
+        public static void GetPartitionNumberThrowsWhenMoreThanOnePartitionIsSelected(string xml)
+        {
+            var filter = TestFilter.FromXml($@"<filter>{xml}</filter>");
+
+            Assert.That(() => filter.GetPartitionNumber(), Throws.InvalidOperationException);
         }
     }
 }

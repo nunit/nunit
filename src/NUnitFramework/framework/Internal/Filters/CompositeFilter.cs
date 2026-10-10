@@ -32,27 +32,6 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public TestFilter[] Filters { get; }
 
-        internal override int? GetPartitionNumber()
-        {
-            int? partitionNumber = null;
-
-            foreach (var filter in Filters)
-            {
-                int? childPartitionNumber = filter.GetPartitionNumber();
-
-                if (childPartitionNumber is null)
-                    continue;
-
-                // More than one distinct partition means the filter does not identify a single one
-                if (partitionNumber is not null && partitionNumber != childPartitionNumber)
-                    return null;
-
-                partitionNumber = childPartitionNumber;
-            }
-
-            return partitionNumber;
-        }
-
         /// <summary>
         /// Checks whether the CompositeFilter is matched by a test.
         /// </summary>

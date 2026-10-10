@@ -35,11 +35,6 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public uint PartitionCount { get; private set; }
 
-        // TestContext.PartitionNumber is an int? (see #5435), so a partition number too large to
-        // represent is reported as unknown rather than wrapping to a negative value.
-        internal override int? GetPartitionNumber()
-            => PartitionNumber <= int.MaxValue ? (int)PartitionNumber : null;
-
 #if NETFRAMEWORK
         private readonly ThreadLocal<SHA256> _sha256 = new(() => SHA256.Create());
 #endif

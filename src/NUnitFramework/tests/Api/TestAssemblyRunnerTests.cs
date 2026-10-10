@@ -63,7 +63,7 @@ namespace NUnit.Framework.Tests.Api
         /// <summary>
         /// The partition numbers observed by <see cref="ITestListener.TestStarted"/> during a run.
         /// </summary>
-        private readonly ConcurrentQueue<int?> _partitionNumbersSeen = new();
+        private readonly ConcurrentQueue<uint?> _partitionNumbersSeen = new();
 
         [SetUp]
         public void CreateRunner()
@@ -732,22 +732,15 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
-        public void Run_RestoresPreviousPartitionNumberWhenFinished()
+        public void Run_WithoutPartitionFilter_ClearsPartitionNumberFromPreviousRun()
         {
-            const int outerPartitionNumber = 5;
-            TestContext.PartitionNumber = outerPartitionNumber;
+            LoadMockAssembly();
 
-            try
-            {
-                LoadMockAssembly();
-                _runner.Run(this, TestFilter.Empty);
+            _runner.Run(this, TestFilter.FromXml("<filter><partition>1/2</partition></filter>"));
+            Assert.That(TestContext.PartitionNumber, Is.EqualTo(1));
 
-                Assert.That(TestContext.PartitionNumber, Is.EqualTo(outerPartitionNumber));
-            }
-            finally
-            {
-                TestContext.PartitionNumber = null;
-            }
+            _runner.Run(this, TestFilter.Empty);
+            Assert.That(TestContext.PartitionNumber, Is.Null);
         }
 
         #endregion

@@ -78,7 +78,8 @@ namespace NUnit.Framework
         /// all tests executed in the process share the same partition number. This can be
         /// used to create partition-specific resources, such as a shard-specific database.
         /// </remarks>
-        public static int? PartitionNumber { get; internal set; }
+        [CLSCompliant(false)]
+        public static uint? PartitionNumber { get; internal set; }
 
         /// <summary>
         /// Static DefaultWorkDirectory is now used as the source

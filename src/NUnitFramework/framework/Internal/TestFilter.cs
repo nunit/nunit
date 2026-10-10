@@ -29,13 +29,6 @@ namespace NUnit.Framework.Internal
         public bool IsEmpty => this is EmptyFilter;
 
         /// <summary>
-        /// Gets the partition number this filter selects, or <see langword="null"/> if the
-        /// filter does not identify a single partition. A negated partition does not
-        /// identify a single partition and is ignored.
-        /// </summary>
-        internal virtual int? GetPartitionNumber() => null;
-
-        /// <summary>
         /// Determine if a particular test passes the filter criteria. The default
         /// implementation checks the test itself, its parents and any descendants.
         ///
