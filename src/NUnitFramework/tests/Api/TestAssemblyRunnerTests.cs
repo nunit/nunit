@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -58,6 +59,18 @@ namespace NUnit.Framework.Tests.Api
         private int _inconclusiveCount;
 
         private Dictionary<string, bool> _activeTests;
+
+        /// <summary>
+        /// Guards <see cref="_partitionNumbersSeen"/>; <see cref="ITestListener.TestStarted"/>
+        /// is called from the worker threads running the tests.
+        /// </summary>
+        private readonly object _partitionNumbersSeenLock = new();
+
+        /// <summary>
+        /// The distinct partition numbers observed by <see cref="ITestListener.TestStarted"/>
+        /// during a run. Only the differences matter, not how often each was seen.
+        /// </summary>
+        private readonly HashSet<uint?> _partitionNumbersSeen = new();
 
         [SetUp]
         public void CreateRunner()
@@ -686,6 +699,67 @@ namespace NUnit.Framework.Tests.Api
 
         #endregion
 
+        #region PartitionNumber
+
+        private void ClearPartitionNumbersSeen()
+        {
+            lock (_partitionNumbersSeenLock)
+            {
+                _partitionNumbersSeen.Clear();
+            }
+        }
+
+        private uint?[] PartitionNumbersSeen()
+        {
+            lock (_partitionNumbersSeenLock)
+            {
+                return _partitionNumbersSeen.ToArray();
+            }
+        }
+
+        [Test]
+        public void Run_WithPartitionFilter_ExposesPartitionNumberDuringRun()
+        {
+            ClearPartitionNumbersSeen();
+            LoadMockAssembly();
+
+            // The composite shape produced when a partition is combined with other criteria;
+            // the negated category matches every test, so all of partition 1 is started.
+            var filter = TestFilter.FromXml(
+                @"<filter><and><partition>1/2</partition><not><cat>NoSuchCategory</cat></not></and></filter>");
+
+            _runner.Run(this, filter);
+
+            Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
+            Assert.That(PartitionNumbersSeen(), Is.All.EqualTo(1));
+        }
+
+        [Test]
+        public void Run_WithoutPartitionFilter_ShowsNoPartitionNumberDuringRun()
+        {
+            ClearPartitionNumbersSeen();
+            LoadMockAssembly();
+
+            _runner.Run(this, TestFilter.Empty);
+
+            Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
+            Assert.That(PartitionNumbersSeen(), Is.All.Null);
+        }
+
+        [Test]
+        public void Run_WithoutPartitionFilter_ClearsPartitionNumberFromPreviousRun()
+        {
+            LoadMockAssembly();
+
+            _runner.Run(this, TestFilter.FromXml("<filter><partition>1/2</partition></filter>"));
+            Assert.That(TestContext.PartitionNumber, Is.EqualTo(1));
+
+            _runner.Run(this, TestFilter.Empty);
+            Assert.That(TestContext.PartitionNumber, Is.Null);
+        }
+
+        #endregion
+
         #region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
@@ -696,6 +770,11 @@ namespace NUnit.Framework.Tests.Api
                 _suiteStartedCount++;
             else
                 _testStartedCount++;
+
+            lock (_partitionNumbersSeenLock)
+            {
+                _partitionNumbersSeen.Add(TestContext.PartitionNumber);
+            }
         }
 
         void ITestListener.TestFinished(ITestResult result)

@@ -219,6 +219,9 @@ namespace NUnit.Framework.Api
             // Needs to be set for StopRun
             Context = context;
 
+            // The run's partition number, if any, comes from the filter it was given
+            TestContext.PartitionNumber = filter.GetPartitionNumber();
+
             try
             {
                 WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));

@@ -70,6 +70,18 @@ namespace NUnit.Framework
         public static readonly TestParameters Parameters = new();
 
         /// <summary>
+        /// Gets the partition number assigned to this test run, or <see langword="null"/>
+        /// when the tests are not partitioned.
+        /// </summary>
+        /// <remarks>
+        /// When tests are partitioned (for example with <c>--where "partition == 1/3"</c>),
+        /// all tests executed in the process share the same partition number. This can be
+        /// used to create partition-specific resources, such as a shard-specific database.
+        /// </remarks>
+        [CLSCompliant(false)]
+        public static uint? PartitionNumber { get; internal set; }
+
+        /// <summary>
         /// Static DefaultWorkDirectory is now used as the source
         /// of the public instance property WorkDirectory. This is
         /// a bit odd but necessary to avoid breaking user tests.
