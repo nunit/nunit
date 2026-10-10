@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Internal
         public void BusyExecuteIdleEventsCalledInSequence()
         {
             StringBuilder sb = new StringBuilder();
-            FakeWorkItem work = Fakes.GetWorkItem(this, "FakeMethod");
+            FakeWorkItem work = Fakes.GetWorkItem(this, nameof(FakeMethod));
 
             _worker.Busy += (s, ea) => sb.Append("Busy");
             work.Executed += (s, ea) => sb.Append("Exec");
