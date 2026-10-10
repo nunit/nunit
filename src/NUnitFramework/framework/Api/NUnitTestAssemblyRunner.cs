@@ -220,7 +220,7 @@ namespace NUnit.Framework.Api
             Context = context;
 
             // The run's partition number, if any, comes from the filter it was given
-            TestContext.PartitionNumber = (filter as TestFilter)?.GetPartitionNumber();
+            TestContext.PartitionNumber = filter.GetPartitionNumber();
 
             try
             {

@@ -241,14 +241,14 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.That(filter.GetPartitionNumber(), Is.Null);
         }
 
-        [TestCase(@"<or><partition>1/3</partition><partition>2/3</partition></or>")]
-        [TestCase(@"<and><partition>1/3</partition><partition>2/3</partition></and>")]
-        [TestCase(@"<or><partition>1/3</partition><and><partition>2/3</partition><cat>SomeCategory</cat></and></or>")]
-        public static void GetPartitionNumberThrowsWhenMoreThanOnePartitionIsSelected(string xml)
+        [TestCase(@"<or><partition>1/3</partition><partition>2/3</partition></or>", 1u)]
+        [TestCase(@"<and><partition>1/3</partition><partition>2/3</partition></and>", 1u)]
+        [TestCase(@"<or><partition>1/3</partition><and><partition>2/3</partition><cat>SomeCategory</cat></and></or>", 1u)]
+        public static void GetPartitionNumberTakesTheFirstWhenMoreThanOneIsSelected(string xml, uint expectedPartitionNumber)
         {
             var filter = TestFilter.FromXml($@"<filter>{xml}</filter>");
 
-            Assert.That(() => filter.GetPartitionNumber(), Throws.InvalidOperationException);
+            Assert.That(filter.GetPartitionNumber(), Is.EqualTo(expectedPartitionNumber));
         }
     }
 }

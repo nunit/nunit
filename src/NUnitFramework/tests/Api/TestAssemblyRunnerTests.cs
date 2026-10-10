@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -61,9 +61,16 @@ namespace NUnit.Framework.Tests.Api
         private Dictionary<string, bool> _activeTests;
 
         /// <summary>
-        /// The partition numbers observed by <see cref="ITestListener.TestStarted"/> during a run.
+        /// Guards <see cref="_partitionNumbersSeen"/>; <see cref="ITestListener.TestStarted"/>
+        /// is called from the worker threads running the tests.
         /// </summary>
-        private readonly ConcurrentQueue<uint?> _partitionNumbersSeen = new();
+        private readonly object _partitionNumbersSeenLock = new();
+
+        /// <summary>
+        /// The distinct partition numbers observed by <see cref="ITestListener.TestStarted"/>
+        /// during a run. Only the differences matter, not how often each was seen.
+        /// </summary>
+        private readonly HashSet<uint?> _partitionNumbersSeen = new();
 
         [SetUp]
         public void CreateRunner()
@@ -694,11 +701,19 @@ namespace NUnit.Framework.Tests.Api
 
         #region PartitionNumber
 
-        // ConcurrentQueue<T>.Clear is not available on all target frameworks
         private void ClearPartitionNumbersSeen()
         {
-            while (_partitionNumbersSeen.TryDequeue(out _))
+            lock (_partitionNumbersSeenLock)
             {
+                _partitionNumbersSeen.Clear();
+            }
+        }
+
+        private uint?[] PartitionNumbersSeen()
+        {
+            lock (_partitionNumbersSeenLock)
+            {
+                return _partitionNumbersSeen.ToArray();
             }
         }
 
@@ -715,8 +730,8 @@ namespace NUnit.Framework.Tests.Api
 
             _runner.Run(this, filter);
 
-            Assert.That(_partitionNumbersSeen, Is.Not.Empty, "No tests were started");
-            Assert.That(_partitionNumbersSeen, Is.All.EqualTo(1));
+            Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
+            Assert.That(PartitionNumbersSeen(), Is.All.EqualTo(1));
         }
 
         [Test]
@@ -727,8 +742,8 @@ namespace NUnit.Framework.Tests.Api
 
             _runner.Run(this, TestFilter.Empty);
 
-            Assert.That(_partitionNumbersSeen, Is.Not.Empty, "No tests were started");
-            Assert.That(_partitionNumbersSeen, Is.All.Null);
+            Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
+            Assert.That(PartitionNumbersSeen(), Is.All.Null);
         }
 
         [Test]
@@ -756,7 +771,10 @@ namespace NUnit.Framework.Tests.Api
             else
                 _testStartedCount++;
 
-            _partitionNumbersSeen.Enqueue(TestContext.PartitionNumber);
+            lock (_partitionNumbersSeenLock)
+            {
+                _partitionNumbersSeen.Add(TestContext.PartitionNumber);
+            }
         }
 
         void ITestListener.TestFinished(ITestResult result)

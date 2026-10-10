@@ -1,12 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+using System.Linq;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Internal.Extensions
 {
     /// <summary>
-    /// Provides helpers for inspecting the partition a <see cref="TestFilter"/> selects.
+    /// Provides helpers for inspecting the partition a <see cref="ITestFilter"/> selects.
     /// </summary>
     internal static class TestFilterExtensions
     {
@@ -20,8 +21,7 @@ namespace NUnit.Framework.Internal.Extensions
         /// </remarks>
         /// <param name="filter">The filter to inspect.</param>
         /// <returns>The partition number, or <see langword="null"/> if there isn't a single one.</returns>
-        /// <exception cref="InvalidOperationException">The filter selects more than one partition.</exception>
-        public static uint? GetPartitionNumber(this TestFilter filter)
+        public static uint? GetPartitionNumber(this ITestFilter filter)
         {
             switch (filter)
             {
@@ -32,29 +32,9 @@ namespace NUnit.Framework.Internal.Extensions
                     return null;
 
                 case CompositeFilter compositeFilter:
-                {
-                    uint? partitionNumber = null;
-
-                    foreach (TestFilter childFilter in compositeFilter.Filters)
-                    {
-                        uint? childPartitionNumber = childFilter.GetPartitionNumber();
-
-                        if (childPartitionNumber is null)
-                            continue;
-
-                        // Tests cannot be in two partitions at once, so a filter asking for
-                        // more than one cannot be turned into a single partition number.
-                        if (partitionNumber is not null && partitionNumber != childPartitionNumber)
-                        {
-                            throw new InvalidOperationException(
-                                $"The filter selects more than one partition ({partitionNumber} and {childPartitionNumber}).");
-                        }
-
-                        partitionNumber = childPartitionNumber;
-                    }
-
-                    return partitionNumber;
-                }
+                    return compositeFilter.Filters
+                        .Select(GetPartitionNumber)
+                        .FirstOrDefault(partitionNumber => partitionNumber is not null);
 
                 default:
                     return null;
