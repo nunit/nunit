@@ -637,6 +637,15 @@ namespace NUnit.Framework.Constraints
                 return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
             }
 
+#if !NETFRAMEWORK
+            // Special case when both are Half, to avoid converting to double and losing precision
+            if (expected is Half h1 && actual is Half h2)
+            {
+                var difference = h1 - h2;
+                return isAbsolute ? difference : difference / h1 * (Half)100;
+            }
+#endif
+
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
             {
 #if NETFRAMEWORK
@@ -651,14 +660,6 @@ namespace NUnit.Framework.Constraints
             }
 
 #if !NETFRAMEWORK
-            //if (expected is Half || actual is Half)
-            //{
-            //    var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
-            //    var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
-
-            //    return Difference(expectedValue, actualValue, isAbsolute);
-            //}
-
             if (expected is UInt128 || actual is UInt128)
             {
                 UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
@@ -716,6 +717,6 @@ namespace NUnit.Framework.Constraints
             return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
         }
 
-        #endregion
+#endregion
     }
 }

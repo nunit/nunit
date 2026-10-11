@@ -275,8 +275,8 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.PositiveInfinity),
 
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.040000000000001d),
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.040000000000001d)),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.04),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.04)),
                 new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.PositiveInfinity),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
