@@ -565,7 +565,7 @@ namespace NUnit.Framework.Constraints
             var difference = expected - actual;
             var hundred = T.CreateChecked(100);
 
-            return isAbsolute ? difference : difference / expected * hundred;
+            return isAbsolute ? difference : difference * hundred / expected;
         }
 
         private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
