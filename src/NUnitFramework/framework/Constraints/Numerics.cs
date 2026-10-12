@@ -307,6 +307,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if NETFRAMEWORK
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {
             switch (tolerance.Mode)
@@ -449,6 +450,7 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+#endif
 #endregion
 
         #region Numeric Comparisons
