@@ -20,8 +20,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a numeric type</returns>
-        public static bool IsNumericType(object? obj)
-            => obj is not null && IsNumericType(obj.GetType());
+        public static bool IsNumericType(object obj)
+            => IsNumericType(obj.GetType());
 
         internal static bool IsNumericType(Type type)
             => IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
@@ -545,7 +545,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual value</param>
         /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
         /// <returns>The difference between the values</returns>
-        internal static object Difference(object? expected, object? actual, ToleranceMode toleranceMode)
+        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
         {
             switch (toleranceMode)
             {
@@ -619,7 +619,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static object Difference(object? expected, object? actual, bool isAbsolute)
+        private static object Difference(object expected, object actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))
