@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal.Filters
                 {
                     return false;
                 }
-                else if (number < 1 || number > count)
+                else if (number < 1 || count < 2 || number > count)
                 {
                     return false;
                 }

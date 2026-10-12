@@ -180,6 +180,9 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.That(filter1, Is.EqualTo(filter2).UsingPropertiesComparer());
         }
 
+        [TestCase("1/1")]
+        [TestCase("1/1:test")]
+        [TestCase("1/1:fixture")]
         [TestCase("1 /1n")]
         [TestCase("1")]
         [TestCase("1/2:")]
