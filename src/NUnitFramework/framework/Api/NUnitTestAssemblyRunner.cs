@@ -6,6 +6,7 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Filters;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
@@ -220,7 +221,7 @@ namespace NUnit.Framework.Api
             Context = context;
 
             // The run's partition number, if any, comes from the filter it was given
-            TestContext.PartitionNumber = filter.GetPartitionNumber();
+            TestContext.PartitionNumber = GetPartitionNumber(filter);
 
             try
             {
@@ -231,6 +232,21 @@ namespace NUnit.Framework.Api
                 OnRunCompleted(this, EventArgs.Empty);
                 throw;
             }
+        }
+
+        // A partition is usually combined with other criteria, so composites are searched.
+        // A negated partition selects everything but one partition, so it is not a
+        // partition number for the run.
+        private static uint? GetPartitionNumber(ITestFilter filter)
+        {
+            return filter switch
+            {
+                PartitionFilter partitionFilter => partitionFilter.PartitionNumber,
+                CompositeFilter compositeFilter => compositeFilter.Filters
+                    .Select(GetPartitionNumber)
+                    .FirstOrDefault(partitionNumber => partitionNumber is not null),
+                _ => null,
+            };
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)

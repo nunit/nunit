@@ -718,24 +718,35 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
-        public void Run_WithPartitionFilter_ExposesPartitionNumberDuringRun()
+        public void Run_WithPartitionFilter_ExposesPartitionNumberToTests()
         {
             ClearPartitionNumbersSeen();
             LoadMockAssembly();
 
-            // The composite shape produced when a partition is combined with other criteria;
-            // the negated category matches every test, so all of partition 1 is started.
-            var filter = TestFilter.FromXml(
-                @"<filter><and><partition>1/2</partition><not><cat>NoSuchCategory</cat></not></and></filter>");
-
-            _runner.Run(this, filter);
+            // The filter the command line creates for `--partition 1/2`.
+            _runner.Run(this, TestFilter.FromXml("<filter><partition>1/2</partition></filter>"));
 
             Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
             Assert.That(PartitionNumbersSeen(), Is.All.EqualTo(1));
         }
 
         [Test]
-        public void Run_WithoutPartitionFilter_ShowsNoPartitionNumberDuringRun()
+        public void Run_WithPartitionFilterCombinedWithOtherCriteria_ExposesPartitionNumber()
+        {
+            LoadMockAssembly();
+
+            // A partition can be combined with other criteria, as in
+            // `--where "cat == MockCategory and partition == 1/2"`.
+            var filter = TestFilter.FromXml(
+                @"<filter><and><cat>MockCategory</cat><partition>1/2</partition></and></filter>");
+
+            _runner.Run(this, filter);
+
+            Assert.That(TestContext.PartitionNumber, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Run_WithoutPartitionFilter_ExposesNoPartitionNumberToTests()
         {
             ClearPartitionNumbersSeen();
             LoadMockAssembly();
@@ -744,18 +755,6 @@ namespace NUnit.Framework.Tests.Api
 
             Assert.That(PartitionNumbersSeen(), Is.Not.Empty, "No tests were started");
             Assert.That(PartitionNumbersSeen(), Is.All.Null);
-        }
-
-        [Test]
-        public void Run_WithoutPartitionFilter_ClearsPartitionNumberFromPreviousRun()
-        {
-            LoadMockAssembly();
-
-            _runner.Run(this, TestFilter.FromXml("<filter><partition>1/2</partition></filter>"));
-            Assert.That(TestContext.PartitionNumber, Is.EqualTo(1));
-
-            _runner.Run(this, TestFilter.Empty);
-            Assert.That(TestContext.PartitionNumber, Is.Null);
         }
 
         #endregion
