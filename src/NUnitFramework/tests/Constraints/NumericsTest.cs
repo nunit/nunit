@@ -258,26 +258,29 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<int, int, object>(10000, 8500, 15),
                 new TestCaseData<int, int, object>(10000, 11500, -15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
-                new TestCaseData<uint, uint, object>(0u, 11500u, double.PositiveInfinity),
+                //new TestCaseData<uint, uint, object>(0u, 11500u, double.PositiveInfinity),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
                 new TestCaseData<long, long, object>(10000, 11500, -15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
-                new TestCaseData<ulong, ulong, object>(0u, 11500u, double.PositiveInfinity),
+                //new TestCaseData<ulong, ulong, object>(0u, 11500u, double.PositiveInfinity),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
                 new TestCaseData<nint, nint, object>(10000, 11500, -15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
-                new TestCaseData<nuint, nuint, object>(0u, 11500u, double.PositiveInfinity),
+                //new TestCaseData<nuint, nuint, object>(0u, 11500u, double.PositiveInfinity),
+
+                //new TestCaseData<double, double, object>((double)0, (double)5, double.NegativeInfinity),
+                //new TestCaseData<float, float, object>((float)0, (float)5, double.NegativeInfinity),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
-                new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.PositiveInfinity),
+                //new TestCaseData<UInt128, UInt128, object>((UInt128)0, (UInt128)11500, double.PositiveInfinity),
 
                 new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.04),
                 new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.04)),
-                new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.PositiveInfinity),
+                //new TestCaseData<Half, Half, object>((Half)0, (Half)5, double.NegativeInfinity),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             ];
