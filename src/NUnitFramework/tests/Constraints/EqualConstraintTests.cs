@@ -1028,7 +1028,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(testValue, Is.EqualTo((object)50).Within(50).Percent, "Doesn't work with object-based constraints.");
             }
 #if !NETFRAMEWORK
-#pragma warning disable NUnit2047 // Incompatible types for Within constraint
             [TestCaseSource(nameof(GetNumericToleranceValues))]
             public void CanMatchRelativeTolerance<T>(T actualValue, T expectedValue)
                 where T : INumber<T>
@@ -1046,7 +1045,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actualValue, Is.EqualTo((object)expectedValue).Within(expectedValue), "Doesn't work with object-based constraints.");
                 Assert.That(actualValue, Is.EqualTo(expectedValue).Within(int.CreateChecked(expectedValue)), "Doesn't work with type variant tolerances.");
             }
-#pragma warning restore NUnit2047 // Incompatible types for Within constraint
 
             private static IEnumerable<TestCaseData> GetNumericToleranceValues()
             {

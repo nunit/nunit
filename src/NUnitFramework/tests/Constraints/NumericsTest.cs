@@ -144,6 +144,24 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.AreEqual(a, b, ref toleranceValue), Is.True);
         }
 
+        [TestCaseSource(nameof(UlpsToleranceTestCases))]
+        public void CanMatchUlpsTolerance<T>(T a, T b, Tolerance toleranceValue)
+            where T : notnull
+        {
+            Assert.That(Numerics.AreEqual(a, b, ref toleranceValue), Is.True);
+        }
+
+        private static TestCaseData[] UlpsToleranceTestCases()
+        {
+            return [
+                new TestCaseData(1.0d, 1.0000000000000004d, new Tolerance(2).Ulps) { TypeArgs = [typeof(double)] },
+                new TestCaseData(1.0f, 1.0000002384f, new Tolerance(2).Ulps) { TypeArgs = [typeof(float)] },
+#if !NETFRAMEWORK
+                new TestCaseData((Half)1, (Half)1.001953125f, new Tolerance(2).Ulps) { TypeArgs = [typeof(Half)] },
+#endif
+            ];
+        }
+
         private static TestCaseData[] FractionalLinearToleranceTestCases()
         {
             return [
@@ -175,11 +193,20 @@ namespace NUnit.Framework.Tests.Constraints
                     new TestCaseData(decimal.MinValue),
                     new TestCaseData(float.MaxValue),
                     new TestCaseData(float.MinValue),
+                    new TestCaseData(float.PositiveInfinity),
+                    new TestCaseData(float.NegativeInfinity),
+                    new TestCaseData(float.NaN),
                     new TestCaseData(double.MaxValue),
                     new TestCaseData(double.MinValue),
+                    new TestCaseData(double.PositiveInfinity),
+                    new TestCaseData(double.NegativeInfinity),
+                    new TestCaseData(double.NaN),
 #if !NETFRAMEWORK
                     new TestCaseData(Half.MaxValue),
                     new TestCaseData(Half.MinValue),
+                    new TestCaseData(Half.PositiveInfinity),
+                    new TestCaseData(Half.NegativeInfinity),
+                    new TestCaseData(Half.NaN),
                     new TestCaseData(Int128.MaxValue - 5),
                     new TestCaseData(Int128.MaxValue),
                     new TestCaseData(Int128.MinValue),
@@ -201,9 +228,7 @@ namespace NUnit.Framework.Tests.Constraints
             where T2 : notnull
             where T3 : notnull
         {
-#pragma warning disable NUnit2047 // Incompatible types for Within constraint
             Assert.That(Numerics.Difference(a, b, _absoluteTolerance.Mode), Is.EqualTo(expected).Within(0.001));
-#pragma warning restore NUnit2047 // Incompatible types for Within constraint
         }
 
         private static TestCaseData[] CalculateAbsoluteDifferenceFixedPointTestCases()

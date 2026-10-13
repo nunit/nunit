@@ -592,7 +592,7 @@ namespace NUnit.Framework.Constraints
                     if (expected == T.CreateChecked(0))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Math.Abs() here since it's unsigned
+                    // Can't do a simple Math.Abs() here in case it's unsigned or could overflow
                     T difference = (expected >= actual ? expected - actual : actual - expected);
                     double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
                     return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
