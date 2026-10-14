@@ -172,9 +172,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual value</param>
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
-        public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
-            where T1 : struct, IConvertible
-            where T2 : struct, IConvertible
+        public static bool AreEqual<T>(T expected, T actual, ref Tolerance tolerance)
+            where T : struct, IConvertible
         {
             if (expected is double || actual is double)
                 return AreIeeeFloatsEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
