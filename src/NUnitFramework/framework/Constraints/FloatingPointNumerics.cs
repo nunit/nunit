@@ -184,5 +184,57 @@ namespace NUnit.Framework.Constraints
             // Either they have the same sign or both are very close to zero
             return Math.Abs(leftUnion.Long - rightUnion.Long) <= maxUlps;
         }
+
+#if !NETFRAMEWORK
+        public static bool AreAlmostEqualUlps(Half left, Half right, short maxUlps)
+        {
+            var leftUnion = new HalfShortUnion();
+            var rightUnion = new HalfShortUnion();
+
+            leftUnion.FloatingPoint = left;
+            rightUnion.FloatingPoint = right;
+
+            ushort leftSignMask = (ushort)(leftUnion.UnsignedInt >> 15);
+            ushort rightSignMask = (ushort)(rightUnion.UnsignedInt >> 15);
+
+            ushort leftTemp = (ushort)((0x8000 - leftUnion.UnsignedInt) & leftSignMask);
+            leftUnion.UnsignedInt = (ushort)(leftTemp | (leftUnion.UnsignedInt & ~leftSignMask));
+
+            ushort rightTemp = (ushort)((0x8000 - rightUnion.UnsignedInt) & rightSignMask);
+            rightUnion.UnsignedInt = (ushort)(rightTemp | (rightUnion.UnsignedInt & ~rightSignMask));
+
+            if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
+            {
+                // This check is specifically used to trap the case of 0 == -0
+                // In IEEE floating point maths, -0 is converted to Double.MinValue, which cannot be used with
+                // Math.Abs(...) below due to overflow issues. This should only match the 0 == -0 condition.
+                if (left == right)
+                {
+                    return true;
+                }
+                if (Math.Abs(leftUnion.SignedInt) > maxUlps || Math.Abs(rightUnion.SignedInt) > maxUlps)
+                    return false;
+            }
+
+            // Either they have the same sign or both are very close to zero
+            return Math.Abs(leftUnion.SignedInt - rightUnion.SignedInt) <= maxUlps;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        private struct HalfShortUnion
+        {
+            /// <summary>The union's value as a floating point variable</summary>
+            [FieldOffset(0)]
+            public Half FloatingPoint;
+
+            /// <summary>The union's value as an integer</summary>
+            [FieldOffset(0)]
+            public short SignedInt;
+
+            /// <summary>The union's value as an unsigned integer</summary>
+            [FieldOffset(0)]
+            public ushort UnsignedInt;
+        }
+#endif
     }
 }

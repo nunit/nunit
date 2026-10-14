@@ -122,7 +122,7 @@ namespace NUnit.Framework.Constraints
                 var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
                 var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
 
-                return AreEqual(expectedValue, actualValue, tolerance);
+                return AreIeeeFloatsEqual(expectedValue, actualValue, ref tolerance);
             }
 
             if (expected is UInt128 || actual is UInt128)
@@ -142,6 +142,24 @@ namespace NUnit.Framework.Constraints
             }
 #endif
 
+            if (expected is double || actual is double)
+                return AreIeeeFloatsEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
+
+            if (expected is float || actual is float)
+                return AreIeeeFloatsEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
+
+            if (tolerance.Mode == ToleranceMode.Ulps)
+                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+
+            if (expected is decimal || actual is decimal)
+                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
+
+            if (expected is ulong || actual is ulong)
+                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+
+            if (expected is long || actual is long)
+                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
+
             if (expected is nuint || actual is nuint)
             {
                 nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
@@ -157,24 +175,6 @@ namespace NUnit.Framework.Constraints
 
                 return AreEqual(expectedValue, actualValue, tolerance);
             }
-
-            if (expected is double || actual is double)
-                return AreEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
-
-            if (expected is float || actual is float)
-                return AreEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
-
-            if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
-
-            if (expected is decimal || actual is decimal)
-                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
-
-            if (expected is ulong || actual is ulong)
-                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
-
-            if (expected is long || actual is long)
-                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
             if (expected is uint || actual is uint)
                 return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
@@ -196,10 +196,10 @@ namespace NUnit.Framework.Constraints
             where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
-                return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
+                return AreIeeeFloatsEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
 
             if (expected is float || actual is float)
-                return AreEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
+                return AreIeeeFloatsEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
@@ -219,7 +219,8 @@ namespace NUnit.Framework.Constraints
             return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
         }
 
-        private static bool AreEqual(double expected, double actual, ref Tolerance tolerance)
+#if NETFRAMEWORK
+        private static bool AreIeeeFloatsEqual(double expected, double actual, ref Tolerance tolerance)
         {
             if (double.IsNaN(expected) && double.IsNaN(actual))
                 return true;
@@ -264,7 +265,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static bool AreEqual(float expected, float actual, ref Tolerance tolerance)
+        private static bool AreIeeeFloatsEqual(float expected, float actual, ref Tolerance tolerance)
         {
             if (float.IsNaN(expected) && float.IsNaN(actual))
                 return true;
@@ -307,7 +308,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if NETFRAMEWORK
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {
             switch (tolerance.Mode)
@@ -451,7 +451,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 #endif
-#endregion
+        #endregion
 
         #region Numeric Comparisons
 
@@ -568,6 +568,63 @@ namespace NUnit.Framework.Constraints
             var hundred = T.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
+        }
+
+        private static bool AreIeeeFloatsEqual<T>(T expected, T actual, ref Tolerance tolerance)
+            where T : INumber<T>, IFloatingPointIeee754<T>
+        {
+            if (T.IsNaN(expected) && T.IsNaN(actual))
+                return true;
+
+            // Handle infinity specially since subtracting two infinite values gives
+            // NaN and the following test fails. mono also needs NaN to be handled
+            // specially although ms.net could use either method. Also, handle
+            // situation where no tolerance is used.
+            if (T.IsInfinity(expected) || T.IsNaN(expected) || T.IsNaN(actual))
+            {
+                return expected.Equals(actual);
+            }
+
+            if (tolerance.IsUnsetOrDefault)
+            {
+                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
+                if (temp is not null && !temp.IsUnsetOrDefault)
+                    tolerance = temp;
+            }
+
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return expected.Equals(actual);
+
+                case ToleranceMode.Linear:
+                    return T.Abs(expected - actual) <= ConvertToValue<T>(tolerance.Amount);
+
+                case ToleranceMode.Percent:
+                    if (T.IsZero(expected))
+                        return expected.Equals(actual);
+
+                    T relativeError = T.Abs((expected - actual) / expected);
+                    return (relativeError <= T.CreateChecked(Convert.ToDouble(tolerance.Amount) / 100.0));
+
+                case ToleranceMode.Ulps:
+                    {
+                        switch (expected)
+                        {
+                            case Half h1 when actual is Half h2:
+                                return FloatingPointNumerics.AreAlmostEqualUlps(h1, h2, Convert.ToInt16(tolerance.Amount));
+                            case float f1 when actual is float f2:
+                                return FloatingPointNumerics.AreAlmostEqualUlps(f1, f2, Convert.ToInt32(tolerance.Amount));
+                            case double d1 when actual is double d2:
+                                return FloatingPointNumerics.AreAlmostEqualUlps(d1, d2, Convert.ToInt64(tolerance.Amount));
+                            default:
+                                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+                        }
+                    }
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
         }
 
         private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)

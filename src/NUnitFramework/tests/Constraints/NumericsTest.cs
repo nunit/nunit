@@ -324,7 +324,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             var result = Numerics.Compare(expected, actual);
 
-            Assert.That(expected, Is.GreaterThan(actual));
+            Assert.That(result, Is.GreaterThan(0));
         }
 
         [Test]
