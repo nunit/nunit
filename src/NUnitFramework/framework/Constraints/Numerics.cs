@@ -37,19 +37,16 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsFloatingPointNumeric(Type type)
         {
-            if (type is not null)
-            {
-                if (type == typeof(double))
-                    return true;
-                if (type == typeof(float))
-                    return true;
-                if (type == typeof(decimal))
-                    return true;
+            if (type == typeof(double))
+                return true;
+            if (type == typeof(float))
+                return true;
+            if (type == typeof(decimal))
+                return true;
 #if !NETFRAMEWORK
-                if (type == typeof(Half))
-                    return true;
+            if (type == typeof(Half))
+                return true;
 #endif
-            }
             return false;
         }
 
@@ -64,37 +61,34 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsFixedPointNumeric(Type type)
         {
-            if (type is not null)
-            {
-                if (type == typeof(byte))
-                    return true;
-                if (type == typeof(sbyte))
-                    return true;
-                if (type == typeof(int))
-                    return true;
-                if (type == typeof(uint))
-                    return true;
-                if (type == typeof(long))
-                    return true;
-                if (type == typeof(ulong))
-                    return true;
-                if (type == typeof(short))
-                    return true;
-                if (type == typeof(ushort))
-                    return true;
-                if (type == typeof(char))
-                    return true;
-                if (type == typeof(nint))
-                    return true;
-                if (type == typeof(nuint))
-                    return true;
+            if (type == typeof(byte))
+                return true;
+            if (type == typeof(sbyte))
+                return true;
+            if (type == typeof(int))
+                return true;
+            if (type == typeof(uint))
+                return true;
+            if (type == typeof(long))
+                return true;
+            if (type == typeof(ulong))
+                return true;
+            if (type == typeof(short))
+                return true;
+            if (type == typeof(ushort))
+                return true;
+            if (type == typeof(char))
+                return true;
+            if (type == typeof(nint))
+                return true;
+            if (type == typeof(nuint))
+                return true;
 #if !NETFRAMEWORK
-                if (type == typeof(Int128))
-                    return true;
-                if (type == typeof(UInt128))
-                    return true;
+            if (type == typeof(Int128))
+                return true;
+            if (type == typeof(UInt128))
+                return true;
 #endif
-            }
             return false;
         }
 
@@ -117,36 +111,23 @@ namespace NUnit.Framework.Constraints
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-            {
-                var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
-                var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
-
-                return AreIeeeFloatsEqual(expectedValue, actualValue, ref tolerance);
-            }
-
             if (expected is UInt128 || actual is UInt128)
-            {
-                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
-                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
-
-                return AreEqual(expectedValue, actualValue, tolerance);
-            }
+                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
 
             if (expected is Int128 || actual is Int128)
-            {
-                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
-                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
-
-                return AreEqual(expectedValue, actualValue, tolerance);
-            }
+                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
 #endif
 
             if (expected is double || actual is double)
-                return AreIeeeFloatsEqual(Convert.ToDouble(expected), Convert.ToDouble(actual), ref tolerance);
+                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
 
             if (expected is float || actual is float)
-                return AreIeeeFloatsEqual(Convert.ToSingle(expected), Convert.ToSingle(actual), ref tolerance);
+                return AreIeeeFloatsEqual(ConvertToValue<float>(expected), ConvertToValue<float>(actual), ref tolerance);
+
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+                return AreIeeeFloatsEqual(ConvertToValue<Half>(expected), ConvertToValue<Half>(actual), ref tolerance);
+#endif
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
@@ -604,23 +585,12 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    T relativeError = T.Abs((expected - actual) / expected);
-                    return (relativeError <= T.CreateChecked(Convert.ToDouble(tolerance.Amount) / 100.0));
+                    // Can't do a simple Abs() here in case it's unsigned or could overflow
+                    T relativeError = (expected >= actual ? expected - actual : actual - expected) / expected;
+                    return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
-                    {
-                        switch (expected)
-                        {
-                            case Half h1 when actual is Half h2:
-                                return FloatingPointNumerics.AreAlmostEqualUlps(h1, h2, Convert.ToInt16(tolerance.Amount));
-                            case float f1 when actual is float f2:
-                                return FloatingPointNumerics.AreAlmostEqualUlps(f1, f2, Convert.ToInt32(tolerance.Amount));
-                            case double d1 when actual is double d2:
-                                return FloatingPointNumerics.AreAlmostEqualUlps(d1, d2, Convert.ToInt64(tolerance.Amount));
-                            default:
-                                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
-                        }
-                    }
+                    return FloatingPointNumerics.AreAlmostEqualUlps(expected, actual, Convert.ToInt64(tolerance.Amount));
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -646,10 +616,10 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Percent:
-                    if (expected == T.CreateChecked(0))
+                    if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Math.Abs() here in case it's unsigned or could overflow
+                    // Can't do a simple Abs() here in case it's unsigned or could overflow
                     T difference = (expected >= actual ? expected - actual : actual - expected);
                     double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
                     return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
@@ -658,8 +628,24 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+#endif
 
         private static T ConvertToValue<T>(object o)
+#if NETFRAMEWORK
+        {
+            if (o is T tol)
+                return tol;
+            if (typeof(T) == typeof(nint))
+                return (T)(object)Convert.ToInt64(o);
+            if (typeof(T) == typeof(nuint))
+                return (T)(object)Convert.ToUInt64(o);
+            if (typeof(T) == typeof(double))
+                return (T)(object)Convert.ToDouble(o);
+            if (typeof(T) == typeof(float))
+                return (T)(object)Convert.ToSingle(o);
+            return (T)Convert.ChangeType(o, typeof(T));
+        }
+#else
             where T : INumber<T>
         {
             if (o is T tol)

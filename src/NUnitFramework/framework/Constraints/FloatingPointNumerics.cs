@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 using System.Runtime.InteropServices;
 
 namespace NUnit.Framework.Constraints
@@ -186,6 +189,23 @@ namespace NUnit.Framework.Constraints
         }
 
 #if !NETFRAMEWORK
+
+        public static bool AreAlmostEqualUlps<T>(T left, T right, long maxUlps)
+            where T : IFloatingPointIeee754<T>
+        {
+            switch (left)
+            {
+                case Half h1 when right is Half h2:
+                    return FloatingPointNumerics.AreAlmostEqualUlps(h1, h2, Convert.ToInt16(maxUlps));
+                case float f1 when right is float f2:
+                    return FloatingPointNumerics.AreAlmostEqualUlps(f1, f2, Convert.ToInt32(maxUlps));
+                case double d1 when right is double d2:
+                    return FloatingPointNumerics.AreAlmostEqualUlps(d1, d2, Convert.ToInt64(maxUlps));
+                default:
+                    throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+            }
+        }
+
         public static bool AreAlmostEqualUlps(Half left, Half right, short maxUlps)
         {
             var leftUnion = new HalfShortUnion();
