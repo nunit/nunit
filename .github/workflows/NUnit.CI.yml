@@ -111,7 +111,7 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-14
+    runs-on: macos-26
 
     steps:
     - name: ⤵️ Checkout Source
