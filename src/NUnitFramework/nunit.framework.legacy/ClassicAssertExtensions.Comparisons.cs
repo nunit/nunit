@@ -5,9 +5,9 @@ using System;
 // ReSharper disable once CheckNamespace
 namespace NUnit.Framework
 {
-    /// <summary>
+    /// <content>
     /// C#14 static extension methods for comparison assertions (Greater, Less, etc.)
-    /// </summary>
+    /// </content>
     public static partial class ClassicAssertExtensions
     {
         extension(Assert)
