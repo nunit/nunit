@@ -10,10 +10,10 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-    /// <summary>
+    /// <content>
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
-    /// </summary>
+    /// </content>
     public abstract partial class Assert
     {
         #region Assert.That
