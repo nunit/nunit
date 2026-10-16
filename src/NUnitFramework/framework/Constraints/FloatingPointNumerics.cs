@@ -226,7 +226,7 @@ namespace NUnit.Framework.Constraints
             if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
             {
                 // This check is specifically used to trap the case of 0 == -0
-                // In IEEE floating point maths, -0 is converted to Double.MinValue, which cannot be used with
+                // In IEEE floating point maths, -0 is converted to MinValue, which cannot be used with
                 // Math.Abs(...) below due to overflow issues. This should only match the 0 == -0 condition.
                 if (left == right)
                 {
