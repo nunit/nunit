@@ -160,7 +160,9 @@ namespace NUnit.Framework.Tests.Constraints
 
             var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
 
-            Assert.That(result, Is.EqualTo(0.423309));
+            // Within 15 decimal places of precision as this is the minimum precion across our supported runtimes
+            // NET11 makes this more granular, so we use a very small tolerance to account for that.
+            Assert.That(result, Is.EqualTo(0.423309).Within(0.000000000000001));
         }
 
         [TestCase((int)8500)]
