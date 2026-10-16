@@ -292,7 +292,9 @@ namespace NUnit.Framework.Tests.Assertions
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = PlatformNames.Mono, Reason = "Warning has no effect inside BeginInvoke on Mono")]
-#if NET10_0
+#if NET11_0_OR_GREATER
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 6, IncludePlatform = PlatformNames.Win)]
+#elif NET10_0_OR_GREATER
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = PlatformNames.Win)]
 #elif NET7_0_OR_GREATER
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4, ExcludePlatform = PlatformNames.MacOSX)]
