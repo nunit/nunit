@@ -481,7 +481,9 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void StopOnErrorFalseRunsAllChildItems()
         {
-            WorkItem work = TestBuilder.CreateWorkItem(typeof(StopOnErrorFixture));
+            TestSuite testSuite = TestBuilder.MakeFixture<StopOnErrorFixture>();
+            var debugger = new StubDebugger();
+            WorkItem work = TestBuilder.CreateWorkItem(testSuite, testObject: null, debugger);
             work.Context.StopOnError = false;
             ITestResult result = TestBuilder.ExecuteWorkItem(work);
             ITestResult[] childResults = result.Children.ToArray();
@@ -502,7 +504,9 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void StopOnErrorTrueDoesNotRunAllChildItems()
         {
-            CompositeWorkItem work = (CompositeWorkItem)TestBuilder.CreateWorkItem(typeof(StopOnErrorFixture));
+            TestSuite testSuite = TestBuilder.MakeFixture<StopOnErrorFixture>();
+            var debugger = new StubDebugger();
+            CompositeWorkItem work = (CompositeWorkItem)TestBuilder.CreateWorkItem(testSuite, testObject: null, debugger);
             List<WorkItem> childWorkItems = work.Children;
             Assert.That(childWorkItems, Has.Count.EqualTo(3));
 
