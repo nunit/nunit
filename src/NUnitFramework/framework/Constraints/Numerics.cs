@@ -110,6 +110,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
+            // Step from highest precision to lowest, converting as necessary.
+            // Use the most precise type that can hold both values.
+            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
 #if !NETFRAMEWORK
             if (expected is UInt128 || actual is UInt128)
                 return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
