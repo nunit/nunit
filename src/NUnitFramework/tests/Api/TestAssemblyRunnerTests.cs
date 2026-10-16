@@ -596,18 +596,24 @@ namespace NUnit.Framework.Tests.Api
 
         private static readonly TestCaseData[] StopRunCases =
         [
-            new TestCaseData(0).SetName("{m}(Simple dispatcher, cooperative stop)"),
-            new TestCaseData(2).SetName("{m}(Parallel dispatcher, cooperative stop)"),
+            new TestCaseData(0, nameof(SlowTests.NonCancelableTests)).SetName("{m}(Simple dispatcher, non-cooperative tests)"),
+            new TestCaseData(2, nameof(SlowTests.NonCancelableTests)).SetName("{m}(Parallel dispatcher, non-cooperative tests)"),
+            new TestCaseData(0, nameof(SlowTests.GlobalCancelableTests)).SetName("{m}(Simple dispatcher, cancelable tests)"),
+            new TestCaseData(2, nameof(SlowTests.GlobalCancelableTests)).SetName("{m}(Parallel dispatcher, cancelable tests)"),
+            new TestCaseData(0, nameof(SlowTests.CancelAfterTests)).SetName("{m}(Simple dispatcher, cancelable after tests)"),
+            new TestCaseData(2, nameof(SlowTests.CancelAfterTests)).SetName("{m}(Parallel dispatcher, cancelable after tests)"),
         ];
 
         [TestCaseSource(nameof(StopRunCases))]
-        public void StopRun_WhenTestIsRunning_StopsTest(int workers)
+        public void StopRun_WhenTestIsRunning_StopsTest(int workers, string? className = null)
         {
             var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
             var stopType = "cooperative stop";
 
-            _runner.RunAsync(this, TestFilter.Empty);
+            string? slowTests = typeof(SlowTests).FullName;
+            ITestFilter filter = className is null ? TestFilter.Empty : new ClassNameFilter($"{slowTests}+{className}");
+            _runner.RunAsync(this, filter);
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);

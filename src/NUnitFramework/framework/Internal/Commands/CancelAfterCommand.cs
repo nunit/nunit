@@ -50,7 +50,11 @@ namespace NUnit.Framework.Internal.Commands
                     testCancellationTokenSource.Cancel();
             });
 
-            context.CancellationToken = testCancellationTokenSource.Token;
+            CancellationToken globalCancellationToken = context.CancellationToken;
+            using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+                globalCancellationToken,
+                testCancellationTokenSource.Token);
+            context.CancellationToken = combinedCancellationTokenSource.Token;
 
             try
             {
@@ -62,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             finally
             {
-                context.CancellationToken = CancellationToken.None;
+                context.CancellationToken = globalCancellationToken;
             }
 
             return context.CurrentResult;

@@ -40,6 +40,8 @@ namespace NUnit.Framework.Api
         // Event Pump
         private EventPump? _pump;
 
+        private CancellationTokenSource? _cancellationTokenSource;
+
         #region Constructors
 
         /// <summary>
@@ -202,7 +204,10 @@ namespace NUnit.Framework.Api
 
             _runComplete.Reset();
 
-            var context = CreateTestExecutionContext(LoadedTest, listener);
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            var context = CreateTestExecutionContext(LoadedTest, listener, _cancellationTokenSource.Token);
 
             TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, new DebuggerProxy(), true);
             if (TopLevelWorkItem is null)
@@ -329,6 +334,8 @@ namespace NUnit.Framework.Api
                 Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                 Context.Dispatcher.CancelRun();
+
+                _cancellationTokenSource?.Cancel();
             }
         }
 
@@ -424,9 +431,13 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="loadedTest">The test loaded.</param>
         /// <param name="listener">The ITestListener specified in the RunAsync call</param>
-        private TestExecutionContext CreateTestExecutionContext(ITest loadedTest, ITestListener listener)
+        /// <param name="cancellationToken">The CancellationToken for the test execution</param>
+        private TestExecutionContext CreateTestExecutionContext(ITest loadedTest, ITestListener listener, CancellationToken cancellationToken)
         {
-            var context = new TestExecutionContext();
+            var context = new TestExecutionContext
+            {
+                CancellationToken = cancellationToken
+            };
 
             // Apply package settings to the context
 #if NETFRAMEWORK
@@ -471,6 +482,9 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void OnRunCompleted(object? sender, EventArgs e)
         {
+            if (_cancellationTokenSource is not null)
+                _cancellationTokenSource.Dispose();
+
             if (_pump is not null)
                 _pump.Dispose();
 

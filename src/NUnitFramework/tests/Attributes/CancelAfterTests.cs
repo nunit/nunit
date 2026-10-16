@@ -353,66 +353,75 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(cancellationToken.IsCancellationRequested, Is.EqualTo(cancelled));
         }
 
-        [Test, CancelAfter(500)]
-        public void TestWithCancelAfterAttributeCurrentContextHasCancellationToken()
+        private CancellationToken _cancellationTokenAtOneTimeSetUp;
+
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            _cancellationTokenAtOneTimeSetUp = TestExecutionContext.CurrentContext.CancellationToken;
+        }
+
+        [Test, CancelAfter(500)]
+        public void TestWithCancelAfterAttributeCurrentContextHasTestCancellationToken()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CancellationToken,
+                        Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
         }
 
         [Test]
-        public void TestWithoutCancelAfterAttributeCurrentContextHasNoneCancellationToken()
+        public void TestWithoutCancelAfterAttributeCurrentContextHasGlobalCancellationToken()
         {
-            Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.EqualTo(CancellationToken.None));
+            Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.EqualTo(_cancellationTokenAtOneTimeSetUp));
         }
 
         [Test, CancelAfter(500)]
-        public void TestWithCancelAfterAttributeHasCancellationToken(CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeHasTestCancellationToken(CancellationToken cancellationToken)
         {
-            Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+            Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
 #pragma warning disable NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
         [Test]
 #pragma warning restore NUnit1027 // The test method has parameters, but no arguments are supplied by attributes
-        public void TestWithoutCancelAfterAttributeHasNoneCancellationToken(CancellationToken cancellationToken)
+        public void TestWithoutCancelAfterAttributeHasGlobalCancellationToken(CancellationToken cancellationToken)
         {
-            Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
+            Assert.That(cancellationToken, Is.EqualTo(_cancellationTokenAtOneTimeSetUp));
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
         [TestCase(1)]
         [CancelAfter(500)]
-        public void TestWithCancelAfterAttributeAndTestCaseHasCancellationToken(int value, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndTestCaseHasTestCancellationToken(int value, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(value, Is.EqualTo(1));
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
         [TestCaseSource(nameof(Arguments))]
         [CancelAfter(500)]
-        public void TestWithCancelAfterAttributeAndTestCaseSourceHasCancellationToken(int value, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndTestCaseSourceHasTestCancellationToken(int value, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(value, Is.EqualTo(1));
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
         [Test]
         [CancelAfter(500)]
-        public void TestWithCancelAfterAttributeAndValueAttributeHasCancellationToken([Values] bool value, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndValueAttributeHasTestCancellationToken([Values] bool value, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(value, Is.True.Or.False);
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
@@ -420,12 +429,12 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         [CancelAfter(500)]
         [Sequential]
-        public void TestWithCancelAfterAttributeAndMultipleValueAttributesSequentialHasCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndMultipleValueAttributesSequentialHasTestCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(b));
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
@@ -433,12 +442,12 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         [CancelAfter(500)]
         [Pairwise]
-        public void TestWithCancelAfterAttributeAndMultipleValueAttributesPairwiseHasCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndMultipleValueAttributesPairwiseHasTestCancellationToken([Values] bool a, [Values] bool b, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(b).Or.Not.EqualTo(b));
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
@@ -447,12 +456,12 @@ namespace NUnit.Framework.Tests.Attributes
 
         [Test]
         [CancelAfter(500)]
-        public void TestWithCancelAfterAttributeAndValueSourceAttributeHasCancellationToken([ValueSource(nameof(Parameters))] bool value, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndValueSourceAttributeHasTestCancellationToken([ValueSource(nameof(Parameters))] bool value, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(value, Is.True.Or.False);
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
@@ -460,12 +469,12 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         [CancelAfter(500)]
         [Pairwise]
-        public void TestWithCancelAfterAttributeAndMultipleValueSourceAttributesPairwiseHasCancellationToken([ValueSource(nameof(Parameters))] bool a, [ValueSource(nameof(Parameters))] bool b, CancellationToken cancellationToken)
+        public void TestWithCancelAfterAttributeAndMultipleValueSourceAttributesPairwiseHasTestCancellationToken([ValueSource(nameof(Parameters))] bool a, [ValueSource(nameof(Parameters))] bool b, CancellationToken cancellationToken)
         {
             Assert.Multiple(() =>
             {
                 Assert.That(a, Is.EqualTo(b).Or.Not.EqualTo(b));
-                Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+                Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp).And.Not.EqualTo(CancellationToken.None));
             });
             Assert.That(cancellationToken, Is.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
@@ -478,7 +487,9 @@ namespace NUnit.Framework.Tests.Attributes
 #pragma warning restore NUnit1029 // The number of parameters provided by the TestCaseSource does not match the number of parameters in the Test method
         public void TestWithCancelAfterAttributeAndTestCaseSourceHasOwnCancellationToken(CancellationToken cancellationToken)
         {
-            Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None).And.Not.EqualTo(TestContext.CurrentContext.CancellationToken));
+            Assert.That(cancellationToken, Is.Not.EqualTo(_cancellationTokenAtOneTimeSetUp)
+                                         .And.Not.EqualTo(CancellationToken.None)
+                                         .And.Not.EqualTo(TestContext.CurrentContext.CancellationToken));
         }
 
         private static IEnumerable<CancellationToken> CancellationTokens
