@@ -335,7 +335,15 @@ namespace NUnit.Framework.Api
 
                 Context.Dispatcher.CancelRun();
 
-                _cancellationTokenSource?.Cancel();
+                try
+                {
+                    _cancellationTokenSource?.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // CancellationTokenSource has already been disposed.
+                    // Tests may have completed before we got here, so we can ignore this exception.
+                }
             }
         }
 
@@ -482,8 +490,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void OnRunCompleted(object? sender, EventArgs e)
         {
-            if (_cancellationTokenSource is not null)
-                _cancellationTokenSource.Dispose();
+            _cancellationTokenSource?.Dispose();
 
             if (_pump is not null)
                 _pump.Dispose();
