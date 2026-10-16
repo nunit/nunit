@@ -75,6 +75,12 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(// Ensure we don't overflow on twos complement values
                 FloatingPointNumerics.AreAlmostEqualUlps((Half)2.0f, (Half)(-2.0f), 1),
                 Is.False);
+            Assert.That(
+                FloatingPointNumerics.AreAlmostEqualUlps((Half)65500, (Half)65472, 1),
+                Is.True);
+            Assert.That(// Ensure we don't overflow on large ulps values
+                FloatingPointNumerics.AreAlmostEqualUlps((Half)65500, (Half)(-495.75f), 40_000L),
+                Is.True);
         }
 #endif
     }
