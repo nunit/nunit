@@ -116,6 +116,7 @@ namespace NUnit.Framework.Internal
             ThrowOnEachFailureUnderDebugger = other.ThrowOnEachFailureUnderDebugger;
             UseCancellation = other.UseCancellation;
             CancellationToken = other.CancellationToken;
+            GlobalCancellationToken = other.GlobalCancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
             _sandboxedThreadState = other._sandboxedThreadState;
@@ -340,9 +341,14 @@ namespace NUnit.Framework.Internal
         public bool UseCancellation { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="CancellationToken"/> for the test case.
+        /// Gets or sets the <see cref="CancellationToken"/> for the <see cref="CancelAfterAttribute"/> timeout.
         /// </summary>
-        public CancellationToken CancellationToken { get; internal set; } = CancellationToken.None;
+        public CancellationToken CancellationToken { get; internal set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="CancellationToken"/> for the whole test run.
+        /// </summary>
+        internal CancellationToken GlobalCancellationToken { get; set; }
 
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests

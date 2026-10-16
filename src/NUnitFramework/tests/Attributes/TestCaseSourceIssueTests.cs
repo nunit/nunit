@@ -32,7 +32,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestC(string a, int b, CancellationToken token)
         {
             Assert.That(int.Parse(a), Is.EqualTo(b));
-            Assert.That(token, Is.EqualTo(CancellationToken.None));
+            Assert.That(token, Is.Not.EqualTo(CancellationToken.None));
         }
 
         [TestCaseSource(nameof(Cases))]
