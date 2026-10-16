@@ -554,24 +554,9 @@ namespace NUnit.Framework.Constraints
                 return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
             }
 
-            if (expected is double || actual is double)
-            {
-                var expectedValue = ConvertToValue<double>(expected);
-                var actualValue = ConvertToValue<double>(actual);
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / expectedValue * 100;
-            }
-
-            if (expected is float || actual is float)
-            {
-                var expectedValue = ConvertToValue<float>(expected);
-                var actualValue = ConvertToValue<float>(actual);
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / expectedValue * 100;
-            }
-
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
+            // EXCEPTION: Check half before other floats to preserve precision of reported differences in certain cases.
+            if (expected is Half && actual is Half)
             {
                 var expectedValue = ConvertToValue<Half>(expected);
                 var actualValue = ConvertToValue<Half>(actual);
@@ -579,6 +564,12 @@ namespace NUnit.Framework.Constraints
                 return isAbsolute ? difference : difference / expectedValue * Half.CreateChecked(100);
             }
 #endif
+
+            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
+            {
+                var difference = ConvertToValue<double>(expected) - ConvertToValue<double>(actual);
+                return isAbsolute ? difference : difference / ConvertToValue<double>(expected) * 100;
+            }
 
             if (expected is nuint || actual is nuint)
             {
@@ -670,6 +661,8 @@ namespace NUnit.Framework.Constraints
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
+                    // NOTE: We cannot convert types here because it will affect the ulps calculation.
+                    // For example, converting a Half to a double will change the ulps distance.
                     return FloatingPointNumerics.AreAlmostEqualUlps(expected, actual, Convert.ToInt64(tolerance.Amount));
 
                 default:
