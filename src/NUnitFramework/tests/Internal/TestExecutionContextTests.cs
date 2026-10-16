@@ -12,6 +12,12 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
+using System.Linq;
+using System.Collections.Generic;
+using NUnit.Framework.Internal.Abstractions;
+
 #if NETFRAMEWORK
 using System.Reflection;
 #endif
@@ -470,6 +476,95 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(stop, Is.EqualTo(_setupContext.StopOnError));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(stop));
+        }
+
+        [Test]
+        public void StopOnErrorFalseRunsAllChildItems()
+        {
+            WorkItem work = TestBuilder.CreateWorkItem(typeof(StopOnErrorFixture));
+            work.Context.StopOnError = false;
+            ITestResult result = TestBuilder.ExecuteWorkItem(work);
+            ITestResult[] childResults = result.Children.ToArray();
+            Assert.That(childResults, Has.Length.EqualTo(3));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(childResults[0].Test.Name, Is.EqualTo(nameof(StopOnErrorFixture.AlwaysFails)));
+                Assert.That(childResults[0].ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(childResults[1].Test.Name, Is.EqualTo(nameof(StopOnErrorFixture.AlwaysTimesout)));
+                Assert.That(childResults[1].ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(childResults[2].Test.Name, Is.EqualTo(nameof(StopOnErrorFixture.TestThatMightBeSkipped)));
+                Assert.That(childResults[2].ResultState, Is.EqualTo(ResultState.Success));
+            }
+        }
+
+        [Test]
+        public void StopOnErrorTrueDoesNotRunAllChildItems()
+        {
+            CompositeWorkItem work = (CompositeWorkItem)TestBuilder.CreateWorkItem(typeof(StopOnErrorFixture));
+            List<WorkItem> childWorkItems = work.Children;
+            Assert.That(childWorkItems, Has.Count.EqualTo(3));
+
+            work.Context.StopOnError = true;
+            ITestResult result = TestBuilder.ExecuteWorkItem(work);
+            ITestResult[] childResults = result.Children.ToArray();
+            Assert.That(childResults, Has.Length.EqualTo(1));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Cancelled));
+                Assert.That(childResults[0].Test.Name, Is.EqualTo(nameof(StopOnErrorFixture.AlwaysFails)));
+                Assert.That(childResults[0].ResultState, Is.EqualTo(ResultState.Failure));
+
+                Assert.That(childWorkItems[0].State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(childWorkItems[1].State, Is.EqualTo(WorkItemState.Ready));
+                Assert.That(childWorkItems[2].State, Is.EqualTo(WorkItemState.Ready));
+            }
+        }
+
+        [Test]
+        public void StopOnErrorTrueParallelDispatcherRunsAllChildItems()
+        {
+            TestSuite testSuite = TestBuilder.MakeFixture<StopOnErrorFixture>();
+            var debugger = new StubDebugger();
+
+            var dispatcher = new ParallelWorkItemDispatcher(2);
+            var context = new TestExecutionContext
+            {
+                StopOnError = true,
+                Dispatcher = dispatcher,
+            };
+
+            CompositeWorkItem work = (CompositeWorkItem)TestBuilder.CreateWorkItem(testSuite, context, debugger);
+            List<WorkItem> childWorkItems = work.Children;
+            Assert.That(childWorkItems, Has.Count.EqualTo(3));
+
+            // All items have been dispatched onto the ParallelQueue before the first failure, regardless of StopOnError
+            // SimpleWorkItem does not checks Context.ExecututionStatus in Execute, so they all run to completion.
+            dispatcher.Start(work);
+            work.WaitForCompletion();
+
+            TestResult result = work.Result;
+            ITestResult[] childResults = result.Children.ToArray();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                var childResult = childResults.Single(r => r.Test.Name == nameof(StopOnErrorFixture.AlwaysFails));
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Failure));
+
+                childResult = childResults.Single(r => r.Test.Name == nameof(StopOnErrorFixture.AlwaysTimesout));
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Failure));
+
+                childResult = childResults.Single(r => r.Test.Name == nameof(StopOnErrorFixture.TestThatMightBeSkipped));
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Success));
+            }
+        }
+
+        private class StubDebugger : IDebugger
+        {
+            public bool IsAttached { get; set; }
         }
 
         #endregion

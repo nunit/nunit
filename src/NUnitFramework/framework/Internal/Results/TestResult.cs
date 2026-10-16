@@ -775,20 +775,17 @@ namespace NUnit.Framework.Internal
                     Message = ex.GetMessageWithoutThrowing();
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
                 }
+                else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.GlobalCancellationToken.IsCancellationRequested)
+                {
+                    ResultState = ResultState.Cancelled.WithSite(site);
+                    Message = USER_CANCELLED_MESSAGE;
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
+                    ResultState = ResultState.Failure.WithSite(site);
+                    Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
                     StackTrace = ExceptionHelper.BuildStackTrace(ex);
-
-                    if (TestExecutionContext.CurrentContext.ExecutionStatus == TestExecutionStatus.StopRequested)
-                    {
-                        ResultState = ResultState.Cancelled.WithSite(site);
-                        Message = USER_CANCELLED_MESSAGE;
-                    }
-                    else
-                    {
-                        ResultState = ResultState.Failure.WithSite(site);
-                        Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
-                    }
                 }
                 else
                 {

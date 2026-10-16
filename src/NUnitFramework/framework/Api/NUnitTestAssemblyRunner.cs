@@ -344,6 +344,10 @@ namespace NUnit.Framework.Api
                     // CancellationTokenSource has already been disposed.
                     // Tests may have completed before we got here, so we can ignore this exception.
                 }
+                catch (AggregateException ex)
+                {
+                    Log.Error($"Exception from cancellation callbacks during StopRun: {ex}");
+                }
             }
         }
 
@@ -444,7 +448,8 @@ namespace NUnit.Framework.Api
         {
             var context = new TestExecutionContext
             {
-                CancellationToken = cancellationToken
+                GlobalCancellationToken = cancellationToken,
+                CancellationToken = cancellationToken,
             };
 
             // Apply package settings to the context
