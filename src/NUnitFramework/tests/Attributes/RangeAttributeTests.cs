@@ -417,9 +417,9 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public static void MaxValueRange_Decimal()
         {
-            const decimal fromDecimal = (decimal)NextLargestDoubleConvertibleToLowerDecimal;
-            const decimal toDecimal = (decimal)LargestDoubleConvertibleToDecimal;
-            const double step = (double)((toDecimal - fromDecimal) / 2);
+            decimal fromDecimal = Convert.ToDecimal(NextLargestDoubleConvertibleToLowerDecimal);
+            decimal toDecimal = Convert.ToDecimal(LargestDoubleConvertibleToDecimal);
+            double step = (double)((toDecimal - fromDecimal) / 2);
 
             Assert.That(
                 GetData(new RangeAttribute(NextLargestDoubleConvertibleToLowerDecimal, LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
@@ -515,9 +515,9 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public static void MinValueRange_Decimal()
         {
-            const decimal fromDecimal = -(decimal)NextLargestDoubleConvertibleToLowerDecimal;
-            const decimal toDecimal = -(decimal)LargestDoubleConvertibleToDecimal;
-            const double step = (double)((toDecimal - fromDecimal) / 2);
+            decimal fromDecimal = -Convert.ToDecimal(NextLargestDoubleConvertibleToLowerDecimal);
+            decimal toDecimal = -Convert.ToDecimal(LargestDoubleConvertibleToDecimal);
+            double step = (double)((toDecimal - fromDecimal) / 2);
 
             Assert.That(
                 GetData(new RangeAttribute(-NextLargestDoubleConvertibleToLowerDecimal, -LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
