@@ -449,64 +449,45 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
+            // Step from highest precision to lowest, converting as necessary.
+            // Use the most precise type that can hold both values.
+            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
+
+            if (expected is Int128 || actual is Int128)
+                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
+#endif
+
             if (expected is decimal || actual is decimal)
             {
                 // Treat as decimal if one is decimal and other can be treated as decimal
-                if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
-                    return eDec.CompareTo(Convert.ToDecimal(actual));
-                else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
-                    return Convert.ToDecimal(expected).CompareTo(aDec);
+                if (expected is decimal eDec && IsWithinDecimalRange(ConvertToValue<double>(actual)))
+                    return eDec.CompareTo(ConvertToValue<decimal>(actual));
+                else if (actual is decimal aDec && IsWithinDecimalRange(ConvertToValue<double>(expected)))
+                    return ConvertToValue<decimal>(expected).CompareTo(aDec);
                 else
-                    return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
+                    return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
             }
 
             if (expected is double || actual is double)
-                return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
+                return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
 
             if (expected is float || actual is float)
-                return Convert.ToSingle(expected).CompareTo(Convert.ToSingle(actual));
+                return ConvertToValue<float>(expected).CompareTo(ConvertToValue<float>(actual));
 
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
-            {
-                var expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
-                var actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
-
-                return expectedValue.CompareTo(actualValue);
-            }
-
-            if (expected is UInt128 || actual is UInt128)
-            {
-                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
-                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
-
-                return expectedValue.CompareTo(actualValue);
-            }
-
-            if (expected is Int128 || actual is Int128)
-            {
-                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
-                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
-
-                return expectedValue.CompareTo(actualValue);
-            }
+                return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
 #endif
 
             if (expected is nuint || actual is nuint)
-            {
-                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
-                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
-
-                return expectedValue.CompareTo(actualValue);
-            }
+                return ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual));
 
             if (expected is nint || actual is nint)
-            {
-                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
-                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
-
-                return expectedValue.CompareTo(actualValue);
-            }
+                return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
@@ -542,6 +523,103 @@ namespace NUnit.Framework.Constraints
                     throw new InvalidOperationException("Cannot calculate a difference for specified tolerance mode");
             }
         }
+
+        private static object Difference(object expected, object actual, bool isAbsolute)
+        {
+            // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
+            if (!IsNumericType(expected) || !IsNumericType(actual))
+                return double.NaN;
+
+            // Step from highest precision to lowest, converting as necessary.
+            // Use the most precise type that can hold both values.
+            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
+
+            if (expected is Int128 || actual is Int128)
+                return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
+#endif
+
+            // Treat as decimal if one is decimal and other can be treated as decimal
+            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+            {
+                var difference = eDec - Convert.ToDecimal(actual);
+                return isAbsolute ? difference : difference / eDec * 100;
+            }
+            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+            {
+                var difference = Convert.ToDecimal(expected) - aDec;
+                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+            }
+
+            if (expected is double || actual is double)
+            {
+                var expectedValue = ConvertToValue<double>(expected);
+                var actualValue = ConvertToValue<double>(actual);
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / expectedValue * 100;
+            }
+
+            if (expected is float || actual is float)
+            {
+                var expectedValue = ConvertToValue<float>(expected);
+                var actualValue = ConvertToValue<float>(actual);
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / expectedValue * 100;
+            }
+
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+            {
+                var expectedValue = ConvertToValue<Half>(expected);
+                var actualValue = ConvertToValue<Half>(actual);
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / expectedValue * Half.CreateChecked(100);
+            }
+#endif
+
+            if (expected is nuint || actual is nuint)
+            {
+                nuint expectedValue = ConvertToValue<nuint>(expected);
+                nuint actualValue = ConvertToValue<nuint>(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is nint || actual is nint)
+            {
+                nint expectedValue = ConvertToValue<nint>(expected);
+                nint actualValue = ConvertToValue<nint>(actual);
+
+                var difference = expectedValue - actualValue;
+                return isAbsolute ? difference : difference / (double)expectedValue * 100;
+            }
+
+            if (expected is ulong || actual is ulong)
+            {
+                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+            }
+
+            if (expected is long || actual is long)
+            {
+                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+            }
+
+            if (expected is uint || actual is uint)
+            {
+                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+            }
+
+            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
+            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
+        }
+        #endregion
 
 #if !NETFRAMEWORK
         private static T Difference<T>(T expected, T actual, bool isAbsolute)
@@ -665,105 +743,5 @@ namespace NUnit.Framework.Constraints
             return T.CreateChecked(Convert.ToDouble(o));
         }
 #endif
-
-        private static object Difference(object expected, object actual, bool isAbsolute)
-        {
-            // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
-            if (!IsNumericType(expected) || !IsNumericType(actual))
-                return double.NaN;
-
-            // Treat as decimal if one is decimal and other can be treated as decimal
-            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
-            {
-                var difference = eDec - Convert.ToDecimal(actual);
-                return isAbsolute ? difference : difference / eDec * 100;
-            }
-            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
-            {
-                var difference = Convert.ToDecimal(expected) - aDec;
-                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
-            }
-
-#if !NETFRAMEWORK
-            // Special case when both are Half, to avoid converting to double and losing precision
-            if (expected is Half h1 && actual is Half h2)
-            {
-                var difference = h1 - h2;
-                return isAbsolute ? difference : difference / h1 * (Half)100;
-            }
-#endif
-
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-            {
-#if NETFRAMEWORK
-                double expectedValue = Convert.ToDouble(expected);
-                double actualValue = Convert.ToDouble(actual);
-#else
-                double expectedValue = expected is Half x ? (double)x : Convert.ToDouble(expected);
-                double actualValue = actual is Half y ? (double)y : Convert.ToDouble(actual);
-#endif
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / expectedValue * 100;
-            }
-
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-            {
-                UInt128 expectedValue = expected is UInt128 x ? x : UInt128.CreateChecked(Convert.ToUInt64(expected));
-                UInt128 actualValue = actual is UInt128 y ? y : UInt128.CreateChecked(Convert.ToUInt64(actual));
-
-                return Difference(expectedValue, actualValue, isAbsolute);
-            }
-
-            if (expected is Int128 || actual is Int128)
-            {
-                Int128 expectedValue = expected is Int128 x ? x : Int128.CreateChecked(Convert.ToInt64(expected));
-                Int128 actualValue = actual is Int128 y ? y : Int128.CreateChecked(Convert.ToInt64(actual));
-
-                return Difference(expectedValue, actualValue, isAbsolute);
-            }
-#endif
-
-            if (expected is nuint || actual is nuint)
-            {
-                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
-                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
-
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is nint || actual is nint)
-            {
-                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
-                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
-
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is ulong || actual is ulong)
-            {
-                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
-            }
-
-            if (expected is long || actual is long)
-            {
-                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
-            }
-
-            if (expected is uint || actual is uint)
-            {
-                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
-            }
-
-            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
-            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
-        }
-
-#endregion
     }
 }
