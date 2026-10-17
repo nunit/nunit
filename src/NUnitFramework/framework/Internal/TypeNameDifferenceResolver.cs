@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns whether or not the <see cref="Type"/> is generic.
         /// </summary>
-        [Obsolete("Use IsTypeGeneric property instead. This method will be removed in a future version.")]
+        [Obsolete("Use Type.IsGenericType property instead. This method will be removed in a future version.")]
         public bool IsTypeGeneric(Type type)
         {
             ArgumentNullException.ThrowIfNull(type);
