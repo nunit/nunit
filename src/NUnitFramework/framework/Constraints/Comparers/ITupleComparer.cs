@@ -1,39 +1,38 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+using System.Runtime.CompilerServices;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
     /// Base class for comparators for tuples (both regular Tuples and ValueTuples).
     /// </summary>
-    internal static class TupleComparerBase
+    internal static class ITupleComparer
     {
-        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer,
-                                              Func<Type, bool> isCorrectType, Func<Type, string, object, object?> getValue)
+        public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            Type xType = x.GetType();
-            Type yType = y.GetType();
+            ITuple? xTuple = TupleAccessor.For(x);
+            ITuple? yTuple = TupleAccessor.For(y);
 
-            if (!isCorrectType(xType) || !isCorrectType(yType))
+            if (xTuple is null || yTuple is null)
                 return EqualMethodResult.TypesNotSupported;
 
-            int numberOfGenericArgs = xType.GetGenericArguments().Length;
+            int numberOElements = xTuple.Length;
 
-            if (numberOfGenericArgs != yType.GetGenericArguments().Length)
+            if (numberOElements != yTuple.Length)
                 return EqualMethodResult.ComparedNotEqual;
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
-            if (numberOfGenericArgs == 0) // Nothing to compare
+            if (numberOElements == 0) // Nothing to compare
                 return EqualMethodResult.ComparedEqual;
 
             uint redoWithoutTolerance = 0x0;
-            for (int i = 0; i < numberOfGenericArgs; i++)
+            for (int i = 0; i < numberOElements; i++)
             {
-                string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                object? xItem = getValue(xType, propertyName, x);
-                object? yItem = getValue(yType, propertyName, y);
+                object? xItem = xTuple[i];
+                object? yItem = yTuple[i];
 
                 EqualMethodResult result = equalityComparer.AreEqual(xItem, yItem, ref tolerance, comparisonState);
                 if (result == EqualMethodResult.ComparedNotEqual)
@@ -42,19 +41,18 @@ namespace NUnit.Framework.Constraints.Comparers
                     redoWithoutTolerance |= 1U << i;
             }
 
-            if (redoWithoutTolerance == (1U << numberOfGenericArgs) - 1)
+            if (redoWithoutTolerance == (1U << numberOElements) - 1)
                 return EqualMethodResult.ToleranceNotSupported;
 
             if (redoWithoutTolerance != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
-                for (int i = 0; i < numberOfGenericArgs; i++)
+                for (int i = 0; i < numberOElements; i++)
                 {
                     if ((redoWithoutTolerance & (1U << i)) != 0)
                     {
-                        string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                        object? xItem = getValue(xType, propertyName, x);
-                        object? yItem = getValue(yType, propertyName, y);
+                        object? xItem = xTuple[i];
+                        object? yItem = yTuple[i];
 
                         EqualMethodResult result = equalityComparer.AreEqual(xItem, yItem, ref noTolerance, comparisonState);
                         if (result == EqualMethodResult.ComparedNotEqual)

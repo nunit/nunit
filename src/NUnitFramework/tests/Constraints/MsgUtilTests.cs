@@ -227,11 +227,21 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public static void FormatValue_EightElementsTupleNestedTest()
+        public static void FormatValue_EightElementsNestedTupleEndTest()
         {
             var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, Tuple.Create(8, "9"));
             string s = MsgUtils.FormatValue(tuple);
+
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, (8, \"9\"))"));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsNestedTupleMiddleTest()
+        {
+            var tuple = Tuple.Create(1, 2, 3, Tuple.Create(4, "5"), 6, 7, 8, 9);
+            string s = MsgUtils.FormatValue(tuple);
+
+            Assert.That(s, Is.EqualTo("(1, 2, 3, (4, \"5\"), 6, 7, 8, 9)"));
         }
 
         [Test]
