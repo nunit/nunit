@@ -588,7 +588,7 @@ namespace NUnit.Framework.Internal
                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                    .SingleOrDefault(candidate =>
                    {
-                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0)
+                       if (candidate.Name != name || candidate.IsGenericMethod)
                             return false;
 
                        var parameters = candidate.GetParameters();
