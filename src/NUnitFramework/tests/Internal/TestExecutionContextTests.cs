@@ -528,11 +528,14 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
-        public void StopOnErrorTrueParallelDispatcherRunsAllChildItems()
+        public void StopOnErrorTrueParallelDispatcherDoesNotRunAllChildItems()
         {
-            TestSuite testSuite = TestBuilder.MakeFixture<StopOnErrorFixture>();
+            var stopOnErrorFixture = new StopOnErrorFixture();
+            TestSuite testSuite = TestBuilder.MakeFixture(stopOnErrorFixture);
             var debugger = new StubDebugger();
 
+            // Because of the level of parallelism, the first two child work items will be started before the first one fails.
+            // The third child work item should not be started.
             var dispatcher = new ParallelWorkItemDispatcher(2);
             var context = new TestExecutionContext
             {
@@ -544,8 +547,6 @@ namespace NUnit.Framework.Tests.Internal
             List<WorkItem> childWorkItems = work.Children;
             Assert.That(childWorkItems, Has.Count.EqualTo(3));
 
-            // All items have been dispatched onto the ParallelQueue before the first failure, regardless of StopOnError
-            // SimpleWorkItem does not checks Context.ExecututionStatus in Execute, so they all run to completion.
             dispatcher.Start(work);
             work.WaitForCompletion();
 
@@ -554,7 +555,7 @@ namespace NUnit.Framework.Tests.Internal
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Cancelled));
                 var childResult = childResults.Single(r => r.Test.Name == nameof(StopOnErrorFixture.AlwaysFails));
                 Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Failure));
 
@@ -562,7 +563,9 @@ namespace NUnit.Framework.Tests.Internal
                 Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Failure));
 
                 childResult = childResults.Single(r => r.Test.Name == nameof(StopOnErrorFixture.TestThatMightBeSkipped));
-                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.Cancelled));
+
+                Assert.That(stopOnErrorFixture.OneTimeTearDownExecuted, Is.True, "OneTimeTearDown should have been executed even when cancelled");
             }
         }
 
