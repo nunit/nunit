@@ -12,6 +12,54 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     public class TypeHelperTests
     {
+        #region Tuple
+
+        [TestCase(typeof(Tuple<int>))]
+        [TestCase(typeof(Tuple<int, int>))]
+        [TestCase(typeof(Tuple<int, int, int>))]
+        [TestCase(typeof(Tuple<int, int, int, int>))]
+        [TestCase(typeof(Tuple<int, int, int, int, int>))]
+        [TestCase(typeof(Tuple<int, int, int, int, int, int>))]
+        [TestCase(typeof(Tuple<int, int, int, int, int, int, int>))]
+        [TestCase(typeof(Tuple<int, int, int, int, int, int, int, int>))]
+        public void TestIsTuple(Type type)
+        {
+            Assert.That(type.IsTuple(), Is.True, type.FullName);
+        }
+
+        [TestCase(typeof(Tuple))]
+        [TestCase(typeof(ValueTuple<int, int>))]
+        [TestCase(typeof(List<int>))]
+        [TestCase(typeof(int))]
+        public void TestIsNotTuple(Type type)
+        {
+            Assert.That(type.IsTuple(), Is.False, type.FullName);
+        }
+
+        [TestCase(typeof(ValueTuple<int>))]
+        [TestCase(typeof(ValueTuple<int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int, int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int, int, int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int, int, int, int, int>))]
+        [TestCase(typeof(ValueTuple<int, int, int, int, int, int, int, int>))]
+        public void TestIsValueTuple(Type type)
+        {
+            Assert.That(type.IsValueTuple(), Is.True, type.FullName);
+        }
+
+        [TestCase(typeof(ValueTuple))]
+        [TestCase(typeof(Tuple<int, int>))]
+        [TestCase(typeof(List<int>))]
+        [TestCase(typeof(int))]
+        public void TestIsNotValueTuple(Type type)
+        {
+            Assert.That(type.IsValueTuple(), Is.False, type.FullName);
+        }
+
+        #endregion
+
         #region BestCommonType
 
         [TestCase(typeof(A), typeof(B), ExpectedResult = typeof(A))]

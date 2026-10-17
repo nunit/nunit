@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
             /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsValueTuple()
             {
-                return type.IsTupleInternal("System.ValueTuple");
+                return type.IsGenericType && type.IsValueType && type.IsTupleInternal("System.ValueTuple");
             }
 
             /// <summary>
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
             /// <returns><see langword="true"/> if the type is a <see cref="Tuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsTuple()
             {
-                return type.IsTupleInternal("System.Tuple");
+                return type.IsGenericType && type.IsClass && type.IsTupleInternal("System.Tuple");
             }
 
             private bool IsTupleInternal(string tupleName)
@@ -45,8 +45,9 @@ namespace NUnit.Framework.Internal
                 if (typeName.EndsWith("[]", StringComparison.Ordinal))
                     return false;
 
-                string typeNameWithoutGenerics = GetTypeNameWithoutGenerics(typeName);
-                return typeNameWithoutGenerics == tupleName;
+                int genericTypeIndicatorLocation = typeName.IndexOf('`');
+                return genericTypeIndicatorLocation == tupleName.Length &&
+                       typeName.StartsWith(tupleName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -507,12 +508,6 @@ namespace NUnit.Framework.Internal
                     }
                 }
             }
-        }
-
-        private static string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
 
         /// <summary>
