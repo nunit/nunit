@@ -26,7 +26,8 @@ namespace NUnit.Framework.Internal
             /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsValueTuple()
             {
-                return type.IsGenericType && type.IsValueType && type.IsTupleInternal("System.ValueTuple");
+                return type == typeof(ValueTuple) ||
+                    (type.IsGenericType && type.IsValueType && type.IsTupleInternal("System.ValueTuple"));
             }
 
             /// <summary>
