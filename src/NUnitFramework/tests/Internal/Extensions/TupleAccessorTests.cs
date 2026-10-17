@@ -42,6 +42,7 @@ namespace NUnit.Framework.Tests.Internal.Extensions
         {
             using (Assert.EnterMultipleScope())
             {
+                Assert.That(TupleAccessor.For(ValueTuple.Create()), Is.Not.Null);
                 Assert.That(TupleAccessor.For(ValueTuple.Create(1)), Is.Not.Null);
                 Assert.That(TupleAccessor.For((1, 2)), Is.Not.Null);
                 Assert.That(TupleAccessor.For((1, 2, 3)), Is.Not.Null);
@@ -99,6 +100,15 @@ namespace NUnit.Framework.Tests.Internal.Extensions
                 Assert.That(accessor[7], Is.EqualTo(8));
                 Assert.That(accessor[8], Is.EqualTo(9));
             }
+        }
+
+        [Test]
+        public void ITupleCanAccessEmptyValueTuple()
+        {
+            var tuple = ValueTuple.Create();
+            ITuple? accessor = TupleAccessor.For(tuple);
+            Assert.That(accessor, Is.Not.Null);
+            Assert.That(accessor.Length, Is.Zero);
         }
     }
 }

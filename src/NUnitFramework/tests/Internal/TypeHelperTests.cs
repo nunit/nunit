@@ -36,6 +36,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(type.IsTuple(), Is.False, type.FullName);
         }
 
+        [TestCase(typeof(ValueTuple))]
         [TestCase(typeof(ValueTuple<int>))]
         [TestCase(typeof(ValueTuple<int, int>))]
         [TestCase(typeof(ValueTuple<int, int, int>))]
@@ -49,7 +50,6 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(type.IsValueTuple(), Is.True, type.FullName);
         }
 
-        [TestCase(typeof(ValueTuple))]
         [TestCase(typeof(Tuple<int, int>))]
         [TestCase(typeof(List<int>))]
         [TestCase(typeof(int))]
