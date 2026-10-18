@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
                 // since this code is needed as a fallback anyway.
 
                 var getAwaiterMethod = awaitableType.GetNonGenericPublicInstanceMethod("GetAwaiter", Type.EmptyTypes);
-                if (getAwaiterMethod is null || getAwaiterMethod.GetGenericArguments().Length != 0)
+                if (getAwaiterMethod is null || getAwaiterMethod.IsGenericMethod)
                     return null;
 
                 var awaiterType = getAwaiterMethod.ReturnType;
