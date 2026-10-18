@@ -78,7 +78,8 @@ namespace NUnit.Framework.Tests.Syntax
         {
             string path = "/path/to/match";
             string defaultCaseSensitivity = Path.DirectorySeparatorChar == '\\'
-                ? "ignorecase" : "respectcase";
+                ? "ignorecase"
+                : "respectcase";
 
             ParseTree = $@"<samepathorunder ""{path}"" {defaultCaseSensitivity}>";
             StaticSyntax = Is.SamePathOrUnder(path);
