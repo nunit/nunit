@@ -504,41 +504,51 @@ namespace NUnit.Framework.Constraints
             // Treat as decimal if one is decimal and other can be treated as decimal
             if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
             {
-                var difference = eDec - Convert.ToDecimal(actual);
-                return isAbsolute ? difference : difference / eDec * 100;
+                var difference = Math.Abs(eDec - Convert.ToDecimal(actual));
+                return isAbsolute ? difference : difference / Math.Abs(eDec) * 100;
             }
             else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
             {
-                var difference = Convert.ToDecimal(expected) - aDec;
-                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+                var eDecVal = Convert.ToDecimal(expected);
+                var difference = Math.Abs(eDecVal - aDec);
+                return isAbsolute ? difference : difference / Math.Abs(eDecVal) * 100;
             }
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
             {
-                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
-                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+                var eDouble = Convert.ToDouble(expected);
+                var difference = Math.Abs(eDouble - Convert.ToDouble(actual));
+                return isAbsolute ? difference : difference / Math.Abs(eDouble) * 100;
             }
 
             if (expected is ulong || actual is ulong)
             {
-                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+                var eUlong = Convert.ToUInt64(expected);
+                var aUlong = Convert.ToUInt64(actual);
+                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
+                return isAbsolute ? difference : difference / (double)eUlong * 100;
             }
 
             if (expected is long || actual is long)
             {
-                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+                var eLong = Convert.ToInt64(expected);
+                var aLong = Convert.ToInt64(actual);
+                var difference = Math.Abs(eLong - aLong);
+                return isAbsolute ? difference : difference / (double)Math.Abs(eLong) * 100;
             }
 
             if (expected is uint || actual is uint)
             {
-                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+                var eUint = Convert.ToUInt32(expected);
+                var aUint = Convert.ToUInt32(actual);
+                var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
+                return isAbsolute ? difference : difference / (double)eUint * 100;
             }
 
-            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
-            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
+            var eInt = Convert.ToInt32(expected);
+            var aInt = Convert.ToInt32(actual);
+            var intDifference = Math.Abs(eInt - aInt);
+            return isAbsolute ? intDifference : intDifference / (double)Math.Abs(eInt) * 100;
         }
 
         #endregion

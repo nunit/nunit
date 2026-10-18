@@ -68,14 +68,30 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(Numerics.Difference(10000m, 9500m, _absoluteTolerance.Mode), Is.EqualTo(500m));
             Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.05, _absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
-            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, _absoluteTolerance.Mode)), Is.EqualTo(-0.05).Within(0.00001));
+            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, _absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
+            Assert.That(Numerics.Difference(1UL, 3UL, _absoluteTolerance.Mode), Is.EqualTo(2UL));
+            Assert.That(Numerics.Difference(3UL, 1UL, _absoluteTolerance.Mode), Is.EqualTo(2UL));
+            Assert.That(Numerics.Difference(1U, 3U, _absoluteTolerance.Mode), Is.EqualTo(2U));
+            Assert.That(Numerics.Difference(3U, 1U, _absoluteTolerance.Mode), Is.EqualTo(2U));
+            Assert.That(Numerics.Difference(1L, 3L, _absoluteTolerance.Mode), Is.EqualTo(2L));
+            Assert.That(Numerics.Difference(3L, 1L, _absoluteTolerance.Mode), Is.EqualTo(2L));
+            Assert.That(Numerics.Difference(1, 3, _absoluteTolerance.Mode), Is.EqualTo(2));
+            Assert.That(Numerics.Difference(3, 1, _absoluteTolerance.Mode), Is.EqualTo(2));
         }
 
         [Test]
         public void CanCalculatePercentDifference()
         {
             Assert.That(Numerics.Difference(10000m, 8500m, _tenPercent.Mode), Is.EqualTo(15));
-            Assert.That(Numerics.Difference(10000m, 11500m, _tenPercent.Mode), Is.EqualTo(-15));
+            Assert.That(Numerics.Difference(10000m, 11500m, _tenPercent.Mode), Is.EqualTo(15));
+            Assert.That(Numerics.Difference(100UL, 85UL, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100UL, 115UL, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100U, 85U, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100U, 115U, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100L, 85L, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100L, 115L, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100, 85, _tenPercent.Mode), Is.EqualTo(15.0));
+            Assert.That(Numerics.Difference(100, 115, _tenPercent.Mode), Is.EqualTo(15.0));
         }
 
         [Test]
