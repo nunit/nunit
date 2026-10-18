@@ -31,10 +31,15 @@ jobs:
       uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
         global-json-file: global.json
-        dotnet-quality: 'preview'
         dotnet-version: |
             8.0.x
             10.0.x
+
+    - name: 🛠️ Setup .NET (Preview)
+      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+      with:
+        global-json-file: global.json
+        dotnet-quality: 'preview'
         
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
