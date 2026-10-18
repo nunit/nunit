@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal.Extensions;
 
@@ -18,18 +19,21 @@ namespace NUnit.Framework.Constraints.Comparers
             if (xTuple is null || yTuple is null)
                 return EqualMethodResult.TypesNotSupported;
 
-            int numberOElements = xTuple.Length;
+            int numberOfElements = xTuple.Length;
 
-            if (numberOElements != yTuple.Length)
+            if (numberOfElements != yTuple.Length)
                 return EqualMethodResult.ComparedNotEqual;
 
             ComparisonState comparisonState = state.PushComparison(x, y);
 
-            if (numberOElements == 0) // Nothing to compare
+            if (numberOfElements == 0) // Nothing to compare
                 return EqualMethodResult.ComparedEqual;
 
+            if (numberOfElements >= 32)
+                throw new NotSupportedException($"Tuples with 32 or more elements are not supported. Found {numberOfElements} elements.");
+
             uint redoWithoutTolerance = 0x0;
-            for (int i = 0; i < numberOElements; i++)
+            for (int i = 0; i < numberOfElements; i++)
             {
                 object? xItem = xTuple[i];
                 object? yItem = yTuple[i];
@@ -41,13 +45,13 @@ namespace NUnit.Framework.Constraints.Comparers
                     redoWithoutTolerance |= 1U << i;
             }
 
-            if (redoWithoutTolerance == (1U << numberOElements) - 1)
+            if (redoWithoutTolerance == (1U << numberOfElements) - 1)
                 return EqualMethodResult.ToleranceNotSupported;
 
             if (redoWithoutTolerance != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
-                for (int i = 0; i < numberOElements; i++)
+                for (int i = 0; i < numberOfElements; i++)
                 {
                     if ((redoWithoutTolerance & (1U << i)) != 0)
                     {

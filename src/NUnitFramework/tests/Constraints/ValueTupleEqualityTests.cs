@@ -67,6 +67,17 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FailsForTuplesWith32ElementsOrMore()
+        {
+            var tuple1 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "13", 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+            var tuple2 = (2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, "13", 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32);
+
+            Assert.That(() => Assert.That(tuple2, Is.EqualTo(tuple1).Within(1)),
+                Throws.InstanceOf<NotSupportedException>().With.Message.Contains(
+                    "Tuples with 32 or more elements are not supported."));
+        }
+
+        [Test]
         public void FailsWhenTuplesAreOfDifferentLengths()
         {
             ValueTuple<string, int> tuple1 = ("Hello", 3);
