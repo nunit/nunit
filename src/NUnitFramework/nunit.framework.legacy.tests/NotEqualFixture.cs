@@ -67,51 +67,44 @@ namespace NUnit.Framework.Legacy.Tests
         [Test]
         public void NotEqualSameTypes()
         {
+            sbyte sb1 = 35;
             byte b1 = 35;
-            sbyte sb2 = 35;
-            decimal d4 = 35;
-            double d5 = 35;
-            float f6 = 35;
-            int i7 = 35;
-            uint u8 = 35;
-            long l9 = 35;
-            short s10 = 35;
-            ushort us11 = 35;
+            short s1 = 35;
+            ushort us1 = 35;
+            int i1 = 35;
+            uint u1 = 35;
+            long l1 = 35;
+            ulong ul1 = 35;
+            decimal dec1 = 35;
+            float f1 = 35;
+            double d1 = 35;
+            char c1 = '3';
 
-            byte b12 = 35;
-            sbyte sb13 = 35;
-            decimal d14 = 35;
-            double d15 = 35;
-            float s16 = 35;
-            int i17 = 35;
-            uint ui18 = 35;
-            long i19 = 35;
-            ulong ui20 = 35;
-            short i21 = 35;
-            ushort i22 = 35;
+            sbyte sb2 = 23;
+            byte b2 = 23;
+            short s2 = 23;
+            ushort us2 = 23;
+            int i2 = 23;
+            uint u2 = 23;
+            long l2 = 23;
+            ulong ul2 = 23;
+            decimal dec2 = 23;
+            float f2 = 23;
+            double d2 = 23;
+            char c2 = '2';
 
-            Legacy.ClassicAssert.AreNotEqual(23, b1);
-            Legacy.ClassicAssert.AreNotEqual(23, sb2);
-            Legacy.ClassicAssert.AreNotEqual(23, d4);
-            Legacy.ClassicAssert.AreNotEqual(23, d5);
-            Legacy.ClassicAssert.AreNotEqual(23, f6);
-            Legacy.ClassicAssert.AreNotEqual(23, i7);
-            Legacy.ClassicAssert.AreNotEqual(23, u8);
-            Legacy.ClassicAssert.AreNotEqual(23, l9);
-            Legacy.ClassicAssert.AreNotEqual(23, s10);
-            Legacy.ClassicAssert.AreNotEqual(23, us11);
-
-            Legacy.ClassicAssert.AreNotEqual(23, b12);
-            Legacy.ClassicAssert.AreNotEqual(23, sb13);
-            Legacy.ClassicAssert.AreNotEqual(23, d14);
-            Legacy.ClassicAssert.AreNotEqual(23, d15);
-            Legacy.ClassicAssert.AreNotEqual(23, s16);
-            Legacy.ClassicAssert.AreNotEqual(23, i17);
-            Legacy.ClassicAssert.AreNotEqual(23, ui18);
-            Legacy.ClassicAssert.AreNotEqual(23, i19);
-            Legacy.ClassicAssert.AreNotEqual(23, ui20);
-            Legacy.ClassicAssert.AreNotEqual(23, i21);
-            Legacy.ClassicAssert.AreNotEqual(23, i22);
+            ClassicAssert.AreNotEqual(sb1, sb2);
+            ClassicAssert.AreNotEqual(b1, b2);
+            ClassicAssert.AreNotEqual(s1, s2);
+            ClassicAssert.AreNotEqual(us1, us2);
+            ClassicAssert.AreNotEqual(i1, i2);
+            ClassicAssert.AreNotEqual(u1, u2);
+            ClassicAssert.AreNotEqual(l1, l2);
+            ClassicAssert.AreNotEqual(ul1, ul2);
+            ClassicAssert.AreNotEqual(dec1, dec2);
+            ClassicAssert.AreNotEqual(f1, f2);
+            ClassicAssert.AreNotEqual(d1, d2);
+            ClassicAssert.AreNotEqual(c1, c2);
         }
 
         [Test]

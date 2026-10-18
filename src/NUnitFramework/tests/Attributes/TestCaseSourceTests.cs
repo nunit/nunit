@@ -1184,10 +1184,9 @@ namespace NUnit.Framework.Tests.Attributes
         {
             Assert.That(value, Is.Not.Null);
             int index = value.Value.ToInt32(null);
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(value.Value, Is.EqualTo(index));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(value.Value, Is.InstanceOf(GenericNullableSource[index].GetType()));
+            object expected = GenericNullableSource[index];
+            Assert.That(value.Value, Is.InstanceOf(expected.GetType()));
+            Assert.That(value.Value, Is.EqualTo(expected));
         }
 
         private static readonly object[] GenericNullableSource = [0, 1L, 2UL, 3F, 4D];

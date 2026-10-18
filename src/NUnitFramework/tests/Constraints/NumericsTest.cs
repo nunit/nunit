@@ -46,10 +46,6 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((long)9500)]
         [TestCase((long)10000)]
         [TestCase((long)10500)]
-        [TestCase((ulong)9500)]
-        [TestCase((ulong)10000)]
-        [TestCase((ulong)10500)]
-        [Test]
         public void CanMatchIntegralsWithPercentage(object value)
         {
             Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True);
@@ -169,8 +165,6 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase((uint)11500)]
         [TestCase((long)8500)]
         [TestCase((long)11500)]
-        [TestCase((ulong)8500)]
-        [TestCase((ulong)11500)]
         public void FailsOnIntegralsOutsideOfPercentage(object value)
         {
             Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True));

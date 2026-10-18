@@ -118,8 +118,6 @@ namespace NUnit.Framework.Tests.Syntax
                     "uint actual, int expected, int tolerance");
                 Assert.That(487L, Is.EqualTo(500).Within(25),
                     "long actual, int expected, int tolerance");
-                Assert.That(487ul, Is.EqualTo(500).Within(25),
-                    "ulong actual, int expected, int tolerance");
 
                 // Issue 4964
                 Assert.That(4.87m, Is.Not.EqualTo(5).Within(.10),

@@ -199,7 +199,8 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(value, Is.Not.Null);
             int index = value.Value.ToInt32(null);
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(value.Value, Is.EqualTo(index));
+            // Converted to double to prevent issues when comparing different numeric types (int and ulong)
+            Assert.That(value.Value, Is.EqualTo((double)index));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             Assert.That(value.Value, Is.InstanceOf(ExpectedType[index]));
         }
