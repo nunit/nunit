@@ -47,7 +47,7 @@ namespace NUnit.Framework.Tests.Constraints
             get
             {
                 return [
-                    new TestCaseData(123m),
+                    TestCaseData.Create(123m),
 #if !NETFRAMEWORK
                     TestCaseData.Create((Half)123),
 #endif
@@ -118,9 +118,9 @@ namespace NUnit.Framework.Tests.Constraints
             get
             {
                 return [
-                    new TestCaseData(9500m),
-                    new TestCaseData(10000m),
-                    new TestCaseData(10500m),
+                    TestCaseData.Create(9500m),
+                    TestCaseData.Create(10000m),
+                    TestCaseData.Create(10500m),
 #if !NETFRAMEWORK
                     TestCaseData.Create((Half)9500m),
                     TestCaseData.Create((Half)10000m),

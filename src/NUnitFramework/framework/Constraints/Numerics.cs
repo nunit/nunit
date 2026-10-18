@@ -679,14 +679,12 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    T ulongTolerance = ConvertToValue<T>(tolerance.Amount);
-                    if (ulongTolerance > T.Zero)
-                    {
-                        T diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= ulongTolerance;
-                    }
+                    T toleranceValue = ConvertToValue<T>(tolerance.Amount);
+                    if (T.IsZero(toleranceValue))
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    T diff = expected >= actual ? expected - actual : actual - expected;
+                    return diff <= toleranceValue;
 
                 case ToleranceMode.Percent:
                     if (T.IsZero(expected))
