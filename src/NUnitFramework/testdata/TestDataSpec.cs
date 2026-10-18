@@ -36,8 +36,9 @@ namespace NUnit.TestData
 
         public string GetFixtureName(string fixtureName)
         {
-            return _expectedArgumentListDisplay == "()" ? fixtureName :
-                fixtureName + _expectedArgumentListDisplay;
+            return _expectedArgumentListDisplay == "()"
+                ? fixtureName
+                : fixtureName + _expectedArgumentListDisplay;
         }
     }
 }
