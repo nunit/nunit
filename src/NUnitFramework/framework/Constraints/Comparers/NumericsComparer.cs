@@ -15,8 +15,9 @@ namespace NUnit.Framework.Constraints.Comparers
             if (!Numerics.IsNumericType(tolerance.Amount))
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return Numerics.AreEqual(x, y, ref tolerance) ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return Numerics.AreEqual(x, y, ref tolerance)
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
     }
 }

@@ -18,9 +18,9 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.IgnoreLineEndingFormat) ?
-                EqualMethodResult.ComparedEqual :
-                EqualMethodResult.ComparedNotEqual;
+            return Equals(xString, yString, equalityComparer.IgnoreCase, equalityComparer.IgnoreWhiteSpace, equalityComparer.IgnoreLineEndingFormat)
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
 
         public static bool Equals(string x, string y, bool ignoreCase, bool ignoreWhiteSpace, bool ignoreLineEndingFormat)

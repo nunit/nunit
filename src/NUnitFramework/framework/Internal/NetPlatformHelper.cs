@@ -52,9 +52,9 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            return version is null ?
-                OperatingSystem.IsOSPlatform(os) :
-                OperatingSystem.IsOSPlatformVersionAtLeast(os, version.Major, version.Minor, version.Build, version.MajorRevision);
+            return version is null
+                ? OperatingSystem.IsOSPlatform(os)
+                : OperatingSystem.IsOSPlatformVersionAtLeast(os, version.Major, version.Minor, version.Build, version.MajorRevision);
         }
 
         private static readonly char[] Digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };

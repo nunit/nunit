@@ -152,9 +152,9 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (timeout > 0)
                 {
-                    command = useCancellation ?
-                        new CancelAfterCommand(command, timeout, _debugger) :
-                        new TimeoutCommand(command, timeout, _debugger);
+                    command = useCancellation
+                        ? new CancelAfterCommand(command, timeout, _debugger)
+                        : new TimeoutCommand(command, timeout, _debugger);
                 }
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat

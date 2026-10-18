@@ -26,8 +26,9 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
     }
 }
