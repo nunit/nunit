@@ -12,8 +12,8 @@ namespace System.Web.UI
         /// <summary>
         /// Processes a callback event that targets a control.
         /// </summary>
-        /// <param name="report"></param>
-        void RaiseCallbackEvent(string report);
+        /// <param name="eventArgument">The argument passed to the callback event.</param>
+        void RaiseCallbackEvent(string eventArgument);
 
         /// <summary>
         /// Returns the results of a callback event that targets a control.
