@@ -1,2 +1,5 @@
 [*.cs]
 dotnet_diagnostic.IDE0130.severity = none
+
+# SA1315: parameter names must match the inherited name. Renaming public parameters breaks named-argument callers.
+dotnet_diagnostic.SA1315.severity = none
