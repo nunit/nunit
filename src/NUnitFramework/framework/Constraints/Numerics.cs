@@ -123,6 +123,33 @@ namespace NUnit.Framework.Constraints
         {
             return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
         }
+
+        /// <summary>
+        /// Checks the type of the object, returning true if
+        /// the object is a fixed point numeric type.
+        /// </summary>
+        /// <param name="obj">The object to check</param>
+        /// <returns>true if the object is a fixed point numeric type</returns>
+        public static bool IsSignedFixedPointNumeric(object? obj)
+        {
+            return obj is int or long or short or sbyte;
+        }
+
+        /// <summary>
+        /// Checks the type of the value, returning true if
+        /// the value is a fixed point numeric type.
+        /// </summary>
+        /// <remarks>
+        /// This method is generic and constrained the same as the generic AreEqual to prevent boxing of value types.
+        /// </remarks>
+        /// <param name="value">The value to check</param>
+        /// <returns>true if the value is a fixed point numeric type</returns>
+        public static bool IsSignedFixedPointNumeric<T>(T value)
+            where T : struct, IConvertible
+        {
+            return value is int or long or short or sbyte;
+        }
+
         #endregion
 
         #region Numeric Equality
@@ -149,15 +176,40 @@ namespace NUnit.Framework.Constraints
             if (expected is decimal || actual is decimal)
                 return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
 
-            if (expected is ulong || actual is ulong)
-                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+            if (expected is ulong expectedULong)
+            {
+                if (actual is ulong actualULong)
+                    return AreEqual(expectedULong, actualULong, tolerance);
+                else if (IsSignedFixedPointNumeric(actual))
+                    throw new NotSupportedException("Cannot compare ulong with " + actual.GetType());
+                else // Unsigned fixed point numeric types are safe to convert to ulong
+                    return AreEqual(expectedULong, Convert.ToUInt64(actual), tolerance);
+            }
+            else if (actual is ulong actualULong)
+            {
+                if (IsSignedFixedPointNumeric(expected))
+                    throw new NotSupportedException("Cannot compare " + expected.GetType() + " with ulong");
+                else // Unsigned fixed point numeric types are safe to convert to ulong
+                    return AreEqual(Convert.ToUInt64(expected), actualULong, tolerance);
+            }
 
             if (expected is long || actual is long)
                 return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
-            if (expected is uint || actual is uint)
-                return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
+            if (expected is uint expectedUInt)
+            {
+                if (actual is uint actualUInt)
+                    return AreEqual(expectedUInt, actualUInt, tolerance);
+                else // Promote to long for comparison with signed fixed point numeric types
+                    return AreEqual(expectedUInt, Convert.ToInt64(actual), tolerance);
+            }
+            else if (actual is uint actualUInt)
+            {
+                // Promote to long for comparison with signed fixed point numeric types
+                return AreEqual(Convert.ToInt64(expected), actualUInt, tolerance);
+            }
 
+            // Promote anything smaller than int to int for comparison
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
 
@@ -171,8 +223,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T1, T2>(T1 expected, T2 actual, ref Tolerance tolerance)
-            where T1 : unmanaged, IConvertible
-            where T2 : unmanaged, IConvertible
+            where T1 : struct, IConvertible
+            where T2 : struct, IConvertible
         {
             if (expected is double || actual is double)
                 return AreEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
@@ -186,15 +238,40 @@ namespace NUnit.Framework.Constraints
             if (expected is decimal || actual is decimal)
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
 
-            if (expected is ulong || actual is ulong)
-                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
+            if (expected is ulong expectedULong)
+            {
+                if (actual is ulong actualULong)
+                    return AreEqual(expectedULong, actualULong, tolerance);
+                else if (IsSignedFixedPointNumeric(actual))
+                    throw new NotSupportedException("Cannot compare ulong with " + actual.GetType());
+                else // Unsigned fixed point numeric types are safe to convert to ulong
+                    return AreEqual(expectedULong, actual.ToUInt64(null), tolerance);
+            }
+            else if (actual is ulong actualULong)
+            {
+                if (IsSignedFixedPointNumeric(expected))
+                    throw new NotSupportedException("Cannot compare " + expected.GetType() + " with ulong");
+                else // Unsigned fixed point numeric types are safe to convert to ulong
+                    return AreEqual(expected.ToUInt64(null), actualULong, tolerance);
+            }
 
             if (expected is long || actual is long)
                 return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
 
-            if (expected is uint || actual is uint)
-                return AreEqual(expected.ToUInt32(null), actual.ToUInt32(null), tolerance);
+            if (expected is uint expectedUInt)
+            {
+                if (actual is uint actualUInt)
+                    return AreEqual(expectedUInt, actualUInt, tolerance);
+                else // Promote to long for comparison with signed fixed point numeric types
+                    return AreEqual(expectedUInt, actual.ToInt64(null), tolerance);
+            }
+            else if (actual is uint actualUInt)
+            {
+                // Promote to long for comparison with signed fixed point numeric types
+                return AreEqual(expected.ToInt64(null), actualUInt, tolerance);
+            }
 
+            // Promote anything smaller than int to int for comparison
             return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
         }
 

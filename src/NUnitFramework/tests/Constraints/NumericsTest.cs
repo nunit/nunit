@@ -193,5 +193,113 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
+
+        [TestCaseSource(nameof(SucceedingSignedFixedPointNumericMethodTestCases))]
+        public void SucceedsSignedFixedPointNumericMethod<T>(T value)
+            where T : struct, IConvertible
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.IsSignedFixedPointNumeric(value), Is.True);
+                Assert.That(Numerics.IsSignedFixedPointNumeric((object)value), Is.True);
+            }
+        }
+
+        private static readonly TestCaseData[] SucceedingSignedFixedPointNumericMethodTestCases =
+        {
+            TestCaseData.Create((sbyte)100),
+            TestCaseData.Create((short)100),
+            TestCaseData.Create((int)100),
+            TestCaseData.Create((long)100),
+        };
+
+        [TestCaseSource(nameof(FailingSignedFixedPointNumericMethodTestCases))]
+        public void FailsSignedFixedPointNumericMethod<T>(T value)
+            where T : struct, IConvertible
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.IsSignedFixedPointNumeric(value), Is.False);
+                Assert.That(Numerics.IsSignedFixedPointNumeric((object)value), Is.False);
+            }
+        }
+
+        private static readonly TestCaseData[] FailingSignedFixedPointNumericMethodTestCases =
+        {
+            TestCaseData.Create((byte)100),
+            TestCaseData.Create((ushort)100),
+            TestCaseData.Create((uint)100),
+            TestCaseData.Create((ulong)100),
+            TestCaseData.Create((float)100),
+            TestCaseData.Create((double)100),
+            TestCaseData.Create((decimal)100),
+        };
+
+        [TestCase((byte)100)]
+        [TestCase((ushort)100)]
+        [TestCase((uint)100)]
+        [TestCase((ulong)100)]
+        public void ComparingUnsignedTypesWithUInt64<T>(T value)
+            where T : struct, IConvertible
+        {
+            ulong expected = 100UL;
+            Assert.That(Numerics.AreEqual(expected, value, ref _tenPercent), Is.True);
+        }
+
+        [TestCase((sbyte)-100)]
+        [TestCase((short)-100)]
+        [TestCase((int)-100)]
+        [TestCase((long)-100)]
+        public void ComparingSignedTypesWithUInt64<T>(T value)
+            where T : struct, IConvertible
+        {
+            ulong expected = 100UL;
+            Assert.That(() => Numerics.AreEqual(expected, value, ref _tenPercent), Throws.TypeOf<NotSupportedException>());
+        }
+
+        [TestCase((byte)100)]
+        [TestCase((ushort)100)]
+        [TestCase((uint)100)]
+        [TestCase((ulong)100)]
+        public void ComparingUnsignedTypedObjectWithUInt64(object value)
+        {
+            ulong expected = 100UL;
+            Assert.That(Numerics.AreEqual(expected, value, ref _tenPercent), Is.True);
+        }
+
+        [TestCase((sbyte)-100)]
+        [TestCase((short)-100)]
+        [TestCase((int)-100)]
+        [TestCase((long)-100)]
+        public void ComparingSignedTypedObjectWithUInt64(object value)
+        {
+            ulong expected = 100UL;
+            Assert.That(() => Numerics.AreEqual(expected, value, ref _tenPercent), Throws.TypeOf<NotSupportedException>());
+        }
+
+        [TestCase((sbyte)100)]
+        [TestCase((byte)100)]
+        [TestCase((short)100)]
+        [TestCase((ushort)100)]
+        [TestCase((int)100)]
+        [TestCase((uint)100)]
+        public void ComparingTypesWithUInt32<T>(T value)
+            where T : unmanaged, IConvertible
+        {
+            uint expected = 100U;
+            Assert.That(Numerics.AreEqual(expected, value, ref _tenPercent), Is.True);
+        }
+
+        [TestCase((sbyte)100)]
+        [TestCase((byte)100)]
+        [TestCase((short)100)]
+        [TestCase((ushort)100)]
+        [TestCase((int)100)]
+        [TestCase((uint)100)]
+        public void ComparingTypedObjectWithUInt32(object value)
+        {
+            uint expected = 100U;
+            Assert.That(Numerics.AreEqual(expected, value, ref _tenPercent), Is.True);
+        }
     }
 }
