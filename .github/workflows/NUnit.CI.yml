@@ -38,7 +38,7 @@ jobs:
     - name: 🛠️ Setup .NET (Preview)
       uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
-        global-json-file: global.json
+        dotnet-version: '11.0.x'
         dotnet-quality: 'preview'
         
     - name: 🛠️ Install dotnet tools
