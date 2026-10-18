@@ -556,12 +556,10 @@ namespace NUnit.Framework.Constraints
 
 #if !NETFRAMEWORK
             // EXCEPTION: Check half before other floats to preserve precision of reported differences in certain cases.
-            if (expected is Half && actual is Half)
+            if (expected is Half expectedHalf && actual is Half actualHalf)
             {
-                var expectedValue = ConvertToValue<Half>(expected);
-                var actualValue = ConvertToValue<Half>(actual);
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / expectedValue * Half.CreateChecked(100);
+                var difference = expectedHalf - actualHalf;
+                return isAbsolute ? difference : difference / expectedHalf * Half.CreateChecked(100);
             }
 #endif
 
