@@ -94,7 +94,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for equality with zero
         /// </summary>
-        public static EqualConstraint Zero => new(0);
+        public static EqualConstraint Zero => new(0.0);
 
         #endregion
 

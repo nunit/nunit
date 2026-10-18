@@ -74,7 +74,7 @@ namespace NUnit.Framework.Legacy.Tests
         public void ZeroFailureMessage()
         {
             var expectedMessage =
-                "  Expected: 0" + Environment.NewLine +
+                "  Expected: 0.0d" + Environment.NewLine +
                 "  But was:  9" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => ClassicAssert.Zero(9));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Legacy.Tests
         public void NotZeroFailureMessage()
         {
             var expectedMessage =
-                "  Expected: not equal to 0" + Environment.NewLine +
+                "  Expected: not equal to 0.0d" + Environment.NewLine +
                 "  But was:  0" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => ClassicAssert.NotZero(0));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));

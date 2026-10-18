@@ -357,7 +357,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests if item is equal to zero
         /// </summary>
-        public EqualConstraint Zero => Append(new EqualConstraint(0));
+        public EqualConstraint Zero => Append(new EqualConstraint(0.0));
 
         #endregion
 
