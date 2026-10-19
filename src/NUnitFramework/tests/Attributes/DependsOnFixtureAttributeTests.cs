@@ -69,6 +69,20 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void TestDependenciesAreOrderedWhenFirstChildIsNotFixture()
+        {
+            var suite = new TestSuite("dummy");
+            suite.Add(new TestSuite("childNamespace"));
+            suite.Add(TestBuilder.MakeFixture(typeof(FixtureDependencyAfter)));
+            suite.Add(TestBuilder.MakeFixture(typeof(FixtureDependencyBefore)));
+
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
+
+            var names = work.Children.Select(c => c.Test.Name).ToList();
+            Assert.That(names.IndexOf(nameof(FixtureDependencyBefore)), Is.LessThan(names.IndexOf(nameof(FixtureDependencyAfter))));
+        }
+
+        [Test]
         public void DependentTestIsSkippedIfDependencyFails()
         {
             var suite = new TestSuite("dummy").Containing(typeof(FixtureDependencyAfterFailing), typeof(FixtureDependencyBeforeFailing));

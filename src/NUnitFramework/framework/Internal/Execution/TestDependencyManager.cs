@@ -21,13 +21,15 @@ namespace NUnit.Framework.Internal.Execution
             if (test.Tests.Count == 0)
                 return null;
 
+            foreach (var candidate in test.Tests)
+            {
+                if (candidate is TestFixture)
+                    return new TestFixtureDependencyManager();
+            }
+
             var child = test.Tests[0];
 
-            if (child is TestFixture)
-            {
-                return new TestFixtureDependencyManager();
-            }
-            else if (child is TestMethod or ParameterizedMethodSuite)
+            if (child is TestMethod or ParameterizedMethodSuite)
             {
                 return new TestMethodDependencyManager();
             }
