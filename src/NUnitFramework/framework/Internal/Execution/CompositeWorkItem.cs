@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
@@ -80,10 +81,7 @@ namespace NUnit.Framework.Internal.Execution
                                     // Just return: completion event will take care
                                     // of OneTimeTearDown when all tests are done.
                                 }
-                                else
-                                {
-                                    SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
-                                }
+                                SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
                             }
 
                             // Directly execute the OneTimeFixtureTearDown for tests that
@@ -151,10 +149,10 @@ namespace NUnit.Framework.Internal.Execution
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
                 bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
-                    || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
+                    || (action.Targets == ActionTargets.Default && Test is not ParameterizedMethodSuite);
 
                 bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
-                    && !(Test is ParameterizedMethodSuite);
+                    && Test is not ParameterizedMethodSuite;
 
                 if (applyToSuite)
                     actionItems.Add(new TestActionItem(action));
@@ -180,8 +178,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TypeInfo is not null)
             {
                 // Build the OneTimeSetUpCommands
-                foreach (SetUpTearDownItem item in setUpTearDown)
-                    command = new OneTimeSetUpCommand(command, item);
+                command = setUpTearDown.Aggregate(command, (current, item) => new OneTimeSetUpCommand(current, item));
 
                 // Construct the fixture if necessary
                 if (!Test.TypeInfo.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
@@ -189,8 +186,8 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             // Prefix with any IApplyToContext items from attributes
-            foreach (var attr in Test.GetCustomAttributes<IApplyToContext>(true))
-                command = new ApplyChangesToContextCommand(command, attr);
+            command = Test.GetCustomAttributes<IApplyToContext>(true)
+                .Aggregate(command, (current, attr) => new ApplyChangesToContextCommand(current, attr));
 
             return command;
         }
@@ -209,8 +206,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new AfterTestActionCommand(command, actions[index]);
 
             // Create the OneTimeTearDown commands
-            foreach (SetUpTearDownItem item in setUpTearDownItems)
-                command = new OneTimeTearDownCommand(command, item);
+            command = setUpTearDownItems.Aggregate(command, (current, item) => new OneTimeTearDownCommand(current, item));
 
             // Dispose of fixture if necessary
             if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
@@ -325,14 +321,10 @@ namespace NUnit.Framework.Internal.Execution
         /// Returns null if the child has no dependency, does not require a passing dependency,
         /// or the dependency hasn't been run yet.
         /// </summary>
-        private TestStatus? GetDependencyStatus(WorkItem child)
-        {
-            if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
-                return null;
-
-            // A missing dependency would indicate an error in the framework, when the test is runnable.
-            return FindDependency(child)?.Result.ResultState.Status;
-        }
+        private TestStatus? GetDependencyStatus(WorkItem child) =>
+            child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false)
+                ? null
+                : FindDependency(child)?.Result.ResultState.Status; // A missing dependency would indicate an error in the framework, when the test is runnable.
 
         /// <summary>
         /// Finds the work item of a child's dependency among our children, if any.
@@ -340,7 +332,9 @@ namespace NUnit.Framework.Internal.Execution
         private WorkItem? FindDependency(WorkItem child)
         {
             ITest? dependantTest = child.Test.DependantTest;
-            return dependantTest is null ? null : Children.Find(c => c.Test == dependantTest);
+            return dependantTest is null
+                ? null
+                : Children.Find(c => c.Test == dependantTest);
         }
 
         /// <summary>
@@ -394,7 +388,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
 
-            child.Completed += new EventHandler(OnChildItemCompleted);
+            child.Completed += OnChildItemCompleted;
             child.InitializeContext(new TestExecutionContext(Context));
 
             // In case we run directly, on same thread
@@ -414,15 +408,9 @@ namespace NUnit.Framework.Internal.Execution
             _teardownCommand?.Execute(Context);
         }
 
-        private string GetSkipReason()
-        {
-            return (string?)Test.Properties.Get(PropertyNames.SkipReason) ?? string.Empty;
-        }
+        private string GetSkipReason() => (string?)Test.Properties.Get(PropertyNames.SkipReason) ?? string.Empty;
 
-        private string? GetProviderStackTrace()
-        {
-            return (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
-        }
+        private string? GetProviderStackTrace() => (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
 
         private readonly Lock _childCompletionLock = new();
         private readonly HashSet<WorkItem> _completedChildren = [];
@@ -441,14 +429,14 @@ namespace NUnit.Framework.Internal.Execution
 
             lock (_childCompletionLock)
             {
-                childTask.Completed -= new EventHandler(OnChildItemCompleted);
+                childTask.Completed -= OnChildItemCompleted;
                 _suiteResult.AddResult(childTask.Result);
 
                 if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
                     Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                 _completedChildren.Add(childTask);
-                if (_waitingForDependency.TryGetValue(childTask, out dependents))
+                if (_waitingForDependency.TryGetValue(childTask, out dependents)) // TryGetValue needed for .net framework.
                     _waitingForDependency.Remove(childTask);
 
                 // Check to see if all children completed
