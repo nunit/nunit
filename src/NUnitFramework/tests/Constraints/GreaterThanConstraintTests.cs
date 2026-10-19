@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly DateTime ConstantDateTime = new(2024, 1, 1, 1, 1, 1);
 
-        private static IEnumerable<object[]> GetSimpleToleranceData()
+        private static IEnumerable<object[]> GetLinearToleranceData()
         {
             yield return new object[] { 6.0, 5.0, 0.05 };
             yield return new object[] { 5.05, 5.0, 0.05 }; // upper range bound
@@ -63,17 +63,30 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { 198, 200, 5 };
             yield return new object[] { 196, 200, 5 }; // lower range bound + 1
             yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(1), TimeSpan.FromSeconds(2) };
+
+            yield return new object[] { (nint)5, (nint)5, (nint)1 };
+            yield return new object[] { (nint)6, (nint)5, (nint)1 };
+            yield return new object[] { (nuint)15, (nuint)15, (nuint)1 };
+            yield return new object[] { (nuint)16, (nuint)15, (nuint)1 };
+#if !NETFRAMEWORK
+            yield return new object[] { (Half)25, (Half)25, (Half)1 };
+            yield return new object[] { (Half)26, (Half)25, (Half)1 };
+            yield return new object[] { (Int128)35, (Int128)35, (Int128)1 };
+            yield return new object[] { (Int128)36, (Int128)35, (Int128)1 };
+            yield return new object[] { (UInt128)45, (UInt128)45, (UInt128)1 };
+            yield return new object[] { (UInt128)46, (UInt128)45, (UInt128)1 };
+#endif
         }
 
-        [TestCaseSource(nameof(GetSimpleToleranceData))]
-        public void SimpleTolerance(object actual, object expected, object tolerance)
+        [TestCaseSource(nameof(GetLinearToleranceData))]
+        public void LinearTolerance(object actual, object expected, object tolerance)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThan(expected).Within(tolerance));
 #pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
-        private static IEnumerable<object[]> GetSimpleTolerance_FailureData()
+        private static IEnumerable<object[]> GetLinearToleranceData_FailureData()
         {
             yield return new object[] { 4.95, 5.0, 0.05 }; // lower range bound
             yield return new object[] { 4.9, 5.0, 0.05 };
@@ -81,10 +94,18 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { 190, 200, 5 };
             yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(1) };
             yield return new object[] { ConstantDateTime, ConstantDateTime.AddSeconds(2), TimeSpan.FromSeconds(2) };
+
+            yield return new object[] { (nint)4, (nint)5, (nint)1 };
+            yield return new object[] { (nuint)14, (nuint)15, (nuint)1 };
+#if !NETFRAMEWORK
+            yield return new object[] { (Half)24, (Half)25, (Half)1 };
+            yield return new object[] { (Int128)34, (Int128)35, (Int128)1 };
+            yield return new object[] { (UInt128)44, (UInt128)45, (UInt128)1 };
+#endif
         }
 
-        [TestCaseSource(nameof(GetSimpleTolerance_FailureData))]
-        public void SimpleTolerance_Failure(object actual, object expected, object tolerance)
+        [TestCaseSource(nameof(GetLinearToleranceData_FailureData))]
+        public void LinearTolerance_Failure(object actual, object expected, object tolerance)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
