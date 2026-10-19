@@ -301,8 +301,8 @@ namespace NUnit.Framework.Constraints
 
             if (Amount is decimal || value is decimal)
             {
-                var amount = Convert.ToDecimal(Amount);
-                var v = Convert.ToDecimal(value);
+                var amount = Numerics.ConvertToValue<decimal>(Amount);
+                var v = Numerics.ConvertToValue<decimal>(value);
                 return new Range(v - amount, v + amount);
             }
 
