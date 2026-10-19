@@ -609,9 +609,9 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 public MyBasicDateTime(DateTimeOffset value) => Value = value;
 
-                public DateTimeOffset Value { get; }
+                protected DateTimeOffset Value { get; }
 
-                public override bool Equals(object? other) => Value.Equals(other);
+                public override bool Equals(object? obj) => Value.Equals(obj);
 
                 public override string ToString() => MsgUtils.FormatValue(Value);
             }

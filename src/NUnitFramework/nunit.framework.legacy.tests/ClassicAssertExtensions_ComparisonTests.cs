@@ -20,9 +20,9 @@ namespace NUnit.Framework.Legacy.Tests
             {
                 _v = v;
             }
-            public int CompareTo(object? other)
+            public int CompareTo(object? obj)
             {
-                if (other is C c)
+                if (obj is C c)
                 {
                     return _v.CompareTo(c._v);
                 }
@@ -37,8 +37,8 @@ namespace NUnit.Framework.Legacy.Tests
             var a = new C(1);
             var b = new C(2);
 
-            Assert.Less((System.IComparable)a, (System.IComparable)b);
-            Assert.Greater((System.IComparable)b, (System.IComparable)a);
+            Assert.Less(a, b);
+            Assert.Greater(b, a);
         }
     }
 }

@@ -264,9 +264,9 @@ namespace NUnit.Framework.Constraints
 
             public bool Equals(string? x, string? y)
             {
-                return x is not null && y is not null ?
-                    StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _ignoreLineEndingFormat) :
-                    ReferenceEquals(x, y);
+                return x is not null && y is not null
+                    ? StringsComparer.Equals(x, y, _ignoreCase, _ignoreWhiteSpace, _ignoreLineEndingFormat)
+                    : ReferenceEquals(x, y);
             }
 
             public int GetHashCode(string obj)

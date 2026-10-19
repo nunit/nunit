@@ -28,8 +28,9 @@ namespace NUnit.Framework.Constraints.Comparers
                 // Keep all the refs up to date
                 tolerance = equalityComparison.Tolerance;
 
-                return xResult || yResult ?
-                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                return xResult || yResult
+                    ? EqualMethodResult.ComparedEqual
+                    : EqualMethodResult.ComparedNotEqual;
             }
 
             return EqualMethodResult.TypesNotSupported;

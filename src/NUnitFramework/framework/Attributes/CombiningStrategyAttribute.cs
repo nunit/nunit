@@ -62,8 +62,9 @@ namespace NUnit.Framework
 
             if (parameters.Length > 0)
             {
-                int parametersToSupply = parameters.LastParameterAcceptsCancellationToken() ?
-                    parameters.Length - 1 : parameters.Length;
+                int parametersToSupply = parameters.LastParameterAcceptsCancellationToken()
+                    ? parameters.Length - 1
+                    : parameters.Length;
 
                 IEnumerable[] sources = new IEnumerable[parametersToSupply];
 

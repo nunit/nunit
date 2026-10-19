@@ -64,9 +64,9 @@ namespace NUnit.Framework.Tests.Constraints
             _val = val;
         }
 
-        public int CompareTo(object? x)
+        public int CompareTo(object? obj)
         {
-            if (x is ClassWithIComparable other)
+            if (obj is ClassWithIComparable other)
                 return _val.CompareTo(other._val);
 
             throw new ArgumentException();

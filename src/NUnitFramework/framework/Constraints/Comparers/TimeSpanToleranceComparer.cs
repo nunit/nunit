@@ -22,8 +22,9 @@ namespace NUnit.Framework.Constraints.Comparers
                 else
                     return EqualMethodResult.TypesNotSupported;
 
-                return result ?
-                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                return result
+                    ? EqualMethodResult.ComparedEqual
+                    : EqualMethodResult.ComparedNotEqual;
             }
 
             return EqualMethodResult.TypesNotSupported;
