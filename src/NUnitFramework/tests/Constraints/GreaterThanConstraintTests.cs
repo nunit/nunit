@@ -103,11 +103,12 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetLinearToleranceData))]
-        public void LinearTolerance(object actual, object expected, object tolerance)
+        public void LinearTolerance<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
+            where TActual : notnull, IComparable<TExpected>
+            where TExpected : notnull
+            where TTolerance : notnull
         {
-#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThan(expected).Within(tolerance));
-#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         private static IEnumerable<object[]> GetLinearToleranceData_FailureData()
@@ -129,13 +130,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetLinearToleranceData_FailureData))]
-        public void LinearTolerance_Failure(object actual, object expected, object tolerance)
+        public void LinearTolerance_Failure<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
+            where TActual : notnull, IComparable<TExpected>
+            where TExpected : notnull
+            where TTolerance : notnull
         {
-#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance)),
                 "Assertion should have failed");
-#pragma warning restore NUnit2042 // Comparison constraint on object
 
             Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected)));
         }
@@ -155,11 +157,12 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetPercentToleranceData))]
-        public void PercentTolerance(object actual, object expected, object tolerance)
+        public void PercentTolerance<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
+            where TActual : notnull, IComparable<TExpected>
+            where TExpected : notnull
+            where TTolerance : notnull
         {
-#pragma warning disable NUnit2042 // Comparison constraint on object
             Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent);
-#pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
         private static IEnumerable<object[]> GetPercentTolerance_FailureData()
@@ -171,13 +174,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetPercentTolerance_FailureData))]
-        public void PercentTolerance_Failure(object actual, object expected, object tolerance)
+        public void PercentTolerance_Failure<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
+            where TActual : notnull, IComparable<TExpected>
+            where TExpected : notnull
+            where TTolerance : notnull
         {
-#pragma warning disable NUnit2042 // Comparison constraint on object
             var ex = Assert.Throws<AssertionException>(
                 () => Assert.That(actual, Is.GreaterThan(expected).Within(tolerance).Percent),
                 "Assertion should have failed");
-#pragma warning restore NUnit2042 // Comparison constraint on object
 
             Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
