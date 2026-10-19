@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
@@ -467,8 +468,41 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-        // ParallelWorkItemDispatcher only queues work items, unlike the synchronous TestBuilder dispatcher.
+        [Test]
+        public void CancelWhileDependentWaitsCompletesWithoutRunningDependent()
+        {
+            QueuedDependencyBeforeBlocking.Reset();
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterBlocking),
+                typeof(QueuedDependencyBeforeBlocking));
+
+            var work = StartWithParallelDispatcher(suite);
+
+            // The dependency is running, so its dependent is waiting.
+            Assert.That(QueuedDependencyBeforeBlocking.Started.Wait(TimeSpan.FromSeconds(10)), Is.True, "Dependency did not start");
+            work.Cancel();
+            QueuedDependencyBeforeBlocking.Release.Set();
+
+            Assert.That(Task.Run(work.WaitForCompletion).Wait(TimeSpan.FromSeconds(10)), Is.True, "Run did not complete after cancel");
+
+            var after = work.Result.Children.Single(x => x.Name == nameof(QueuedDependencyAfterBlocking));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(after.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(QueuedDependencyBeforeBlocking.QueuedBeforeBlockingTest)]));
+            }
+        }
+
         private static ITestResult RunWithParallelDispatcher(TestSuite suite)
+        {
+            var work = StartWithParallelDispatcher(suite);
+            work.WaitForCompletion();
+
+            return work.Result;
+        }
+
+        // ParallelWorkItemDispatcher only queues work items, unlike the synchronous TestBuilder dispatcher.
+        private static WorkItem StartWithParallelDispatcher(TestSuite suite)
         {
             var dispatcher = new ParallelWorkItemDispatcher(4);
             var context = new TestExecutionContext
@@ -477,11 +511,9 @@ namespace NUnit.Framework.Tests.Attributes
             };
 
             var work = TestBuilder.CreateWorkItem(suite, context);
-
             dispatcher.Start(work);
-            work.WaitForCompletion();
 
-            return work.Result;
+            return work;
         }
     }
 }

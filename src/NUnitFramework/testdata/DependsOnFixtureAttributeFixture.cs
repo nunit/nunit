@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
@@ -384,6 +385,41 @@ namespace NUnit.TestData
     {
         [Test]
         public void QueuedAfterFailingAllowedTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    public class QueuedDependencyBeforeBlocking
+    {
+        public static ManualResetEventSlim Started { get; } = new();
+
+        public static ManualResetEventSlim Release { get; } = new();
+
+        public static void Reset()
+        {
+            Started.Reset();
+            Release.Reset();
+        }
+
+        [Test]
+        public void QueuedBeforeBlockingTest()
+        {
+            Started.Set();
+
+            // Bounded, so a broken test can not block the run forever.
+            Release.Wait(TimeSpan.FromSeconds(10));
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeBlocking))]
+    public class QueuedDependencyAfterBlocking
+    {
+        [Test]
+        public void QueuedAfterBlockingTest()
         {
             FixtureDependencyEvents.Record();
         }
