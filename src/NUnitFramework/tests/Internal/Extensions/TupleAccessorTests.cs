@@ -81,6 +81,54 @@ namespace NUnit.Framework.Tests.Internal.Extensions
         }
 
         [Test]
+        public void ITupleCanAccessTupleValuesOnClassesDerivedFromTuple()
+        {
+            var tuple = new TuplePair(8, 9);
+
+            ITuple? accessor = TupleAccessor.For(tuple);
+            Assert.That(accessor, Is.Not.Null);
+            Assert.That(accessor.Length, Is.EqualTo(2));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(accessor[0], Is.EqualTo(8));
+                Assert.That(accessor[1], Is.EqualTo(9));
+            }
+        }
+
+        [Test]
+        public void ITupleCanAccessTupleValuesOnRestClassesDerivedFromITuple()
+        {
+            var rest = new TuplePair(8, 9);
+            var tuple = new Tuple<int, int, int, int, int, int, int, TuplePair>(1, 2, 3, 4, 5, 6, 7, rest);
+            Assert.That(tuple.Rest, Is.EqualTo(rest));
+
+            ITuple? accessor = TupleAccessor.For(tuple);
+            Assert.That(accessor, Is.Not.Null);
+            Assert.That(accessor.Length, Is.EqualTo(9));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(accessor[0], Is.EqualTo(1));
+                Assert.That(accessor[1], Is.EqualTo(2));
+                Assert.That(accessor[2], Is.EqualTo(3));
+                Assert.That(accessor[3], Is.EqualTo(4));
+                Assert.That(accessor[4], Is.EqualTo(5));
+                Assert.That(accessor[5], Is.EqualTo(6));
+                Assert.That(accessor[6], Is.EqualTo(7));
+                Assert.That(accessor[7], Is.EqualTo(8));
+                Assert.That(accessor[8], Is.EqualTo(9));
+            }
+        }
+
+        private sealed class TuplePair : Tuple<int, int>
+        {
+            public TuplePair(int item1, int item2) : base(item1, item2)
+            {
+            }
+        }
+
+        [Test]
         public void ITupleCanAccessValueTupleValues()
         {
             var tuple = (1, 2, 3, 4, 5, 6, 7, 8, 9);

@@ -23,15 +23,22 @@ namespace NUnit.Framework.Internal.Extensions
             if (tuple is null)
                 return null;
 
-            Type type = tuple.GetType();
+            Type? type = tuple.GetType();
+
+            if (type.IsValueTuple())
+            {
+                return new ReflectionTupleAccessor<ReflectionValueTupleAccessor>(GetValueTupleAccessorFor(type), tuple);
+            }
+
+            // Allow for types derived from Tuple
+            while (type.IsClass && !type.IsTuple() && type.BaseType is Type baseType)
+            {
+                type = baseType;
+            }
 
             if (type.IsTuple())
             {
                 return new ReflectionTupleAccessor<ReflectionTupleAccessor>(GetTupleAccessorFor(type), tuple);
-            }
-            else if (type.IsValueTuple())
-            {
-                return new ReflectionTupleAccessor<ReflectionValueTupleAccessor>(GetValueTupleAccessorFor(type), tuple);
             }
             else
             {
