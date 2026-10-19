@@ -157,16 +157,16 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { 195, 200, 2.5 }; // lower range bound
 
             yield return new object[] { (nint)990, (nint)1000, 1 };
-            yield return new object[] { (nint)1010, (nint)1000, 1 };
+            yield return new object[] { (nint)1020, (nint)1000, 1 };
             yield return new object[] { (nuint)990, (nuint)1000, 1 };
-            yield return new object[] { (nuint)1010, (nuint)1000, 1 };
+            yield return new object[] { (nuint)1020, (nuint)1000, 1 };
 #if !NETFRAMEWORK
             yield return new object[] { (Half)990, (Half)1000, 1 };
-            yield return new object[] { (Half)1010, (Half)1000, 1 };
+            yield return new object[] { (Half)1020, (Half)1000, 1 };
             yield return new object[] { (Int128)990, (Int128)1000, 1 };
-            yield return new object[] { (Int128)1010, (Int128)1000, 1 };
+            yield return new object[] { (Int128)1020, (Int128)1000, 1 };
             yield return new object[] { (UInt128)990, (UInt128)1000, 1 };
-            yield return new object[] { (UInt128)1010, (UInt128)1000, 1 };
+            yield return new object[] { (UInt128)1020, (UInt128)1000, 1 };
 #endif
         }
 
