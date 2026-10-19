@@ -688,6 +688,13 @@ namespace NUnit.Framework.Constraints
         {
             if (o is T tol)
                 return tol;
+
+            // nint and nuint are not IConvertible, so we need to convert them to long/ulong first
+            if (o is nint nintValue)
+                o = (long)nintValue;
+            else if (o is nuint nuintValue)
+                o = (ulong)nuintValue;
+
             if (typeof(T) == typeof(nint))
                 return (T)(object)new IntPtr(Convert.ToInt64(o));
             if (typeof(T) == typeof(nuint))
