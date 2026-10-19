@@ -155,6 +155,19 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { 198, 200, 2.5 };
             yield return new object[] { 196, 200, 2.5 }; // lower range bound + 1
             yield return new object[] { 195, 200, 2.5 }; // lower range bound
+
+            yield return new object[] { (nint)990, (nint)1000, 1 };
+            yield return new object[] { (nint)1010, (nint)1000, 1 };
+            yield return new object[] { (nuint)990, (nuint)1000, 1 };
+            yield return new object[] { (nuint)1010, (nuint)1000, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { (Half)990, (Half)1000, 1 };
+            yield return new object[] { (Half)1010, (Half)1000, 1 };
+            yield return new object[] { (Int128)990, (Int128)1000, 1 };
+            yield return new object[] { (Int128)1010, (Int128)1000, 1 };
+            yield return new object[] { (UInt128)990, (UInt128)1000, 1 };
+            yield return new object[] { (UInt128)1010, (UInt128)1000, 1 };
+#endif
         }
 
         [TestCaseSource(nameof(GetPercentToleranceData))]
@@ -170,6 +183,14 @@ namespace NUnit.Framework.Tests.Constraints
         {
             yield return new object[] { 4.9, 5.0, 1 };
             yield return new object[] { 190, 200, 2.5 };
+
+            yield return new object[] { (nint)980, (nint)1000, 1 };
+            yield return new object[] { (nuint)980, (nuint)1000, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { (Half)980, (Half)1000, 1 };
+            yield return new object[] { (Int128)980, (Int128)1000, 1 };
+            yield return new object[] { (UInt128)980, (UInt128)1000, 1 };
+#endif
         }
 
         [TestCaseSource(nameof(GetPercentTolerance_FailureData))]
