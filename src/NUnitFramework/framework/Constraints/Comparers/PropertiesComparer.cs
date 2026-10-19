@@ -1,10 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -87,8 +87,7 @@ namespace NUnit.Framework.Constraints.Comparers
                     $"This object graph is deeper than the configured maximum of {configuration.MaximumGraphDepth}.  This may be caused by the compared objects having recursive properties.");
             }
 
-            BitArray redoWithoutTolerance = new BitArray(xProperties.Length);
-            int toleranceNotSupportedCount = 0;
+            IBits redoWithoutTolerance = BitsFactory.Create(xProperties.Length);
 
             // We compare in 'x' order, but need to lookup corresponding yProperty.
             Dictionary<string, PropertyInfo> yPropertyDictionary = yProperties.ToDictionary(x => x.Name);
@@ -123,19 +122,16 @@ namespace NUnit.Framework.Constraints.Comparers
                 }
 
                 if (result == EqualMethodResult.ToleranceNotSupported)
-                {
-                    redoWithoutTolerance.Set(i, true);
-                    toleranceNotSupportedCount++;
-                }
+                    redoWithoutTolerance.Set(i);
             }
 
-            if (toleranceNotSupportedCount == xProperties.Length)
+            if (redoWithoutTolerance.BitsSet == xProperties.Length)
             {
                 // If none of the properties supported the tolerance don't retry without it
                 return EqualMethodResult.ToleranceNotSupported;
             }
 
-            if (toleranceNotSupportedCount != 0)
+            if (redoWithoutTolerance.BitsSet != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
                 for (int i = 0; i < xProperties.Length; i++)
