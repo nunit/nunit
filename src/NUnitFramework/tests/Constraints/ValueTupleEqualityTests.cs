@@ -2,12 +2,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class ValueTupleEqualityTests
     {
+        private const string Hello = "Hello";
+
         [Test]
         public void SucceedsWhenTuplesAreEmpty()
         {
@@ -27,24 +32,44 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void SucceedsWhenTuplesAreTheSame()
         {
-            ValueTuple<string, int> tuple1 = ("Hello", 3);
-            ValueTuple<string, int> tuple2 = ("Hello", 3);
+            ValueTuple<string, int> tuple1 = (Hello, 3);
+            ValueTuple<string, int> tuple2 = (Hello, 3);
             Assert.That(tuple1, Is.EqualTo(tuple2));
         }
 
         [Test]
         public void SucceedsWhenTuplesAreTheSameWithinTolerance()
         {
-            ValueTuple<string, int> tuple1 = ("Hello", 3);
-            ValueTuple<string, int> tuple2 = ("Hello", 4);
+            ValueTuple<string, int> tuple1 = (Hello, 3);
+            ValueTuple<string, int> tuple2 = (Hello, 4);
             Assert.That(tuple1, Is.EqualTo(tuple2).Within(1));
+        }
+
+        [Test]
+        public void FailsWhenNoneOfTheTupleMembersSupportTolerance()
+        {
+            // We need two identical strings, but not the same reference.
+            // Equals bails out when to instances have the same reference, before calling the appropriate comparer.
+            // So we need a different reference to trigger calling the comparer, which will then reject tolerance for strings.
+            string alsoHello = string.Format("{0}", Hello);
+            Assert.That(alsoHello, Is.Not.SameAs(Hello));
+            Assert.That(alsoHello, Is.EqualTo(Hello));
+
+            ValueTuple<string, string> tuple1 = (Hello, alsoHello);
+            ValueTuple<string, string> tuple2 = (alsoHello, Hello);
+            Assert.That(tuple1, Is.EqualTo(tuple2));
+
+#pragma warning disable NUnit2047 // Incompatible types for Within constraint
+            Assert.That(() => Assert.That(tuple1, Is.EqualTo(tuple2).Within(1)),
+                        Throws.InstanceOf<NotSupportedException>());
+#pragma warning restore NUnit2047 // Incompatible types for Within constraint
         }
 
         [Test]
         public void SucceedsWhenContentOfTuplesAreEquivalent()
         {
-            ValueTuple<string, int> tuple1 = ("Hello", 3);
-            ValueTuple<string, int?> tuple2 = ("Hello", 3);
+            ValueTuple<string, int> tuple1 = (Hello, 3);
+            ValueTuple<string, int?> tuple2 = (Hello, 3);
             Assert.That(tuple1, Is.EqualTo(tuple2));
         }
 
@@ -67,14 +92,56 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void FailsForTuplesWith32ElementsOrMore()
+        public void SucceedsForTuplesWith32Elements()
         {
-            var tuple1 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "13", 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
-            var tuple2 = (2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, "13", 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32);
+            const string thirteen = "13";
+            string alsoThirteen = string.Format("{0}", thirteen);
+            Assert.That(thirteen, Is.Not.SameAs(alsoThirteen));
+            Assert.That(thirteen, Is.EqualTo(alsoThirteen));
 
-            Assert.That(() => Assert.That(tuple2, Is.EqualTo(tuple1).Within(1)),
-                Throws.InstanceOf<NotSupportedException>().With.Message.Contains(
-                    "Tuples with 32 or more elements are not supported."));
+            var tuple1 = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, thirteen, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32);
+            var tuple2 = (2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, alsoThirteen, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28, 30, 30, 32, 32);
+
+            Assert.That(tuple2, Is.EqualTo(tuple1).Within(1));
+        }
+
+        [TestCase(64)]
+        [TestCase(128)]
+        [TestCase(512)]
+        ////[TestCase(999)] // Causes StackOverflowException in System.ValueTuple
+        public void SucceedsOnRidiculousLargeTuples(int numberOfElements)
+        {
+            const string fixtureName = "LargeTuplesTest";
+            string numbers = string.Join(", ", Enumerable.Range(1, numberOfElements - 1));
+            string code = $$"""
+                using NUnit.Framework;
+
+                [TestFixture]
+                public sealed class {{fixtureName}}
+                {
+                    [Test]
+                    public void Test1()
+                    {
+                        const string Text = "Text";
+                        string alsoText = string.Format("{0}", Text);
+
+                        var tuple1 = (Text, {{numbers}});
+                        var tuple2 = (alsoText, {{numbers}});
+
+                        Assert.That(tuple2, Is.EqualTo(tuple1).Within(1));
+                    }
+                }
+                """;
+
+            var compiler = new TestCompiler(typeof(Assert));
+            var assembly = compiler.GenerateInMemoryAssembly(code);
+            var testType = assembly.GetType(fixtureName);
+            Assert.That(testType, Is.Not.Null);
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
 
         [Test]

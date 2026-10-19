@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Runtime.CompilerServices;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -29,10 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
             if (numberOfElements == 0) // Nothing to compare
                 return EqualMethodResult.ComparedEqual;
 
-            if (numberOfElements >= 32)
-                throw new NotSupportedException($"Tuples with 32 or more elements are not supported. Found {numberOfElements} elements.");
-
-            uint redoWithoutTolerance = 0x0;
+            IBits redoWithoutTolerance = BitsFactory.Create(numberOfElements);
             for (int i = 0; i < numberOfElements; i++)
             {
                 object? xItem = xTuple[i];
@@ -42,18 +39,18 @@ namespace NUnit.Framework.Constraints.Comparers
                 if (result == EqualMethodResult.ComparedNotEqual)
                     return result;
                 if (result == EqualMethodResult.ToleranceNotSupported)
-                    redoWithoutTolerance |= 1U << i;
+                    redoWithoutTolerance.Set(i);
             }
 
-            if (redoWithoutTolerance == (1U << numberOfElements) - 1)
+            if (redoWithoutTolerance.BitsSet == numberOfElements)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            if (redoWithoutTolerance != 0)
+            if (redoWithoutTolerance.BitsSet != 0)
             {
                 Tolerance noTolerance = Tolerance.Exact;
                 for (int i = 0; i < numberOfElements; i++)
                 {
-                    if ((redoWithoutTolerance & (1U << i)) != 0)
+                    if (redoWithoutTolerance.Get(i))
                     {
                         object? xItem = xTuple[i];
                         object? yItem = yTuple[i];
