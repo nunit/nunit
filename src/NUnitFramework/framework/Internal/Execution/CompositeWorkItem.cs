@@ -53,71 +53,68 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         protected override void PerformWork()
         {
-            if (!CheckForCancellation())
+            if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
             {
-                if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
+                SkipFixture(ResultState.Explicit, GetSkipReason(), null);
+            }
+            else
+            {
+                switch (Test.RunState)
                 {
-                    SkipFixture(ResultState.Explicit, GetSkipReason(), null);
-                }
-                else
-                {
-                    switch (Test.RunState)
-                    {
-                        default:
-                        case RunState.Runnable:
-                        case RunState.Explicit:
-                            if (Children.Count > 0)
+                    default:
+                    case RunState.Runnable:
+                    case RunState.Explicit:
+                        if (Children.Count > 0)
+                        {
+                            InitializeSetUpAndTearDownCommands();
+
+                            PerformOneTimeSetUp();
+
+                            if (!CheckForCancellation())
                             {
-                                InitializeSetUpAndTearDownCommands();
-
-                                PerformOneTimeSetUp();
-
-                                if (!CheckForCancellation())
+                                if ((Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
+                                    (Result.ResultState.Site != FailureSite.SetUp))
                                 {
-                                    if ((Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
-                                        (Result.ResultState.Site != FailureSite.SetUp))
-                                    {
-                                        RunChildren();
-                                        return;
-                                        // Just return: completion event will take care
-                                        // of OneTimeTearDown when all tests are done.
-                                    }
-                                    else
-                                    {
-                                        SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
-                                    }
+                                    RunChildren();
+                                    return;
+                                    // Just return: completion event will take care
+                                    // of OneTimeTearDown when all tests are done.
                                 }
-
-                                // Directly execute the OneTimeFixtureTearDown for tests that
-                                // were skipped, failed or set to inconclusive in one time setup
-                                // unless we are aborting.
-                                if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                                    PerformOneTimeTearDown();
-                            }
-                            else if (Test.TestType == "Theory")
-                            {
-                                Result.SetResult(ResultState.Failure, "No test cases were provided");
-                            }
-                            else
-                            {
-                                var status = Test.GetEffectiveProperty(PropertyNames.NoTests, TestStatus.Inconclusive);
-                                Result.SetResult(new ResultState(status), "No test cases were provided");
+                                else
+                                {
+                                    SkipChildren(this, Result.ResultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + Result.Message, Result.StackTrace);
+                                }
                             }
 
-                            break;
+                            // Directly execute the OneTimeFixtureTearDown for tests that
+                            // were skipped, failed or set to inconclusive in one time setup
+                            // unless we are aborting.
+                            if (Context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                                PerformOneTimeTearDown();
+                        }
+                        else if (Test.TestType == "Theory")
+                        {
+                            Result.SetResult(ResultState.Failure, "No test cases were provided");
+                        }
+                        else
+                        {
+                            var status = Test.GetEffectiveProperty(PropertyNames.NoTests, TestStatus.Inconclusive);
+                            Result.SetResult(new ResultState(status), "No test cases were provided");
+                        }
 
-                        case RunState.Skipped:
-                            SkipFixture(ResultState.Skipped, GetSkipReason(), null);
-                            break;
+                        break;
 
-                        case RunState.Ignored:
-                            SkipFixture(ResultState.Ignored, GetSkipReason(), null);
-                            break;
+                    case RunState.Skipped:
+                        SkipFixture(ResultState.Skipped, GetSkipReason(), null);
+                        break;
 
-                        case RunState.NotRunnable:
-                            SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
-                            break;
-                    }
+                    case RunState.Ignored:
+                        SkipFixture(ResultState.Ignored, GetSkipReason(), null);
+                        break;
+
+                    case RunState.NotRunnable:
+                        SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
+                        break;
                 }
             }
 
@@ -127,17 +124,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         #region Helper Methods
-
-        private bool CheckForCancellation()
-        {
-            if (Context.ExecutionStatus != TestExecutionStatus.Running)
-            {
-                Result.SetResult(ResultState.Cancelled, "Test cancelled by user");
-                return true;
-            }
-
-            return false;
-        }
 
         private void InitializeSetUpAndTearDownCommands()
         {
@@ -511,7 +497,7 @@ namespace NUnit.Framework.Internal.Execution
                     {
                         if (childResult.ResultState == ResultState.Cancelled)
                         {
-                            Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            Result.SetResult(ResultState.Cancelled, TestResult.USER_CANCELLED_MESSAGE);
                             break;
                         }
                     }
