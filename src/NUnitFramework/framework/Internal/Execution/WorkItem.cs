@@ -308,7 +308,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Checks if the item has been cancelled.
         /// </summary>
         /// <returns></returns>
-        protected bool IsCancelled()
+        protected bool CheckForCancellation()
         {
             if (Context.ExecutionStatus != TestExecutionStatus.Running)
             {
@@ -469,7 +469,7 @@ namespace NUnit.Framework.Internal.Execution
 
             State = WorkItemState.Running;
 
-            if (IsCancelled())
+            if (CheckForCancellation())
             {
                 WorkItemComplete();
                 return;

@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
 
                             PerformOneTimeSetUp();
 
-                            if (!IsCancelled())
+                            if (!CheckForCancellation())
                             {
                                 if ((Result.ResultState.Status is not TestStatus.Failed and not TestStatus.Skipped) &&
                                     (Result.ResultState.Site != FailureSite.SetUp))
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Internal.Execution
 
             foreach (WorkItem child in Children)
             {
-                if (IsCancelled())
+                if (CheckForCancellation())
                     break;
 
                 if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
