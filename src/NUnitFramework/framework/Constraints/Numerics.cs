@@ -217,12 +217,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -261,12 +256,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -635,12 +625,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -699,15 +684,15 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static T ConvertToValue<T>(object o)
+        internal static T ConvertToValue<T>(object o)
 #if NETFRAMEWORK
         {
             if (o is T tol)
                 return tol;
             if (typeof(T) == typeof(nint))
-                return (T)(object)Convert.ToInt64(o);
+                return (T)(object)new IntPtr(Convert.ToInt64(o));
             if (typeof(T) == typeof(nuint))
-                return (T)(object)Convert.ToUInt64(o);
+                return (T)(object)new UIntPtr(Convert.ToUInt64(o));
             if (typeof(T) == typeof(double))
                 return (T)(object)Convert.ToDouble(o);
             if (typeof(T) == typeof(float))
