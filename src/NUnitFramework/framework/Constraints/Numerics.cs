@@ -4,7 +4,6 @@ using System;
 #if !NETFRAMEWORK
 using System.Numerics;
 #endif
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

@@ -116,16 +116,21 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(ex?.Message, Contains.Substring("Expected: less than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance)));
         }
 
-        [TestCase(4.0, 5.0, 1)]
-        [TestCase(4.95, 5.0, 1)] // lower range bound
-        [TestCase(4.9501, 5.0, 1)] // lower range bound + .01
-        [TestCase(4.9999, 5.0, 1)]
-        [TestCase(5.0001, 5.0, 1)]
-        [TestCase(190, 200, 2.5)]
-        [TestCase(195, 200, 2.5)] // lower range bound
-        [TestCase(196, 200, 5)] // lower range bound + 1
-        [TestCase(198, 200, 2.5)]
-        [TestCase(202, 200, 2.5)]
+        private static IEnumerable<object[]> GetPercentToleranceData()
+        {
+            yield return new object[] { 4.0, 5.0, 1 };
+            yield return new object[] { 4.95, 5.0, 1 }; // lower range bound
+            yield return new object[] { 4.9501, 5.0, 1 }; // lower range bound + .01
+            yield return new object[] { 4.9999, 5.0, 1 };
+            yield return new object[] { 5.0001, 5.0, 1 };
+            yield return new object[] { 190, 200, 2.5 };
+            yield return new object[] { 195, 200, 2.5 }; // lower range bound
+            yield return new object[] { 196, 200, 5 }; // lower range bound + 1
+            yield return new object[] { 198, 200, 2.5 };
+            yield return new object[] { 202, 200, 2.5 };
+        }
+
+        [TestCaseSource(nameof(GetPercentToleranceData))]
         public void PercentTolerance(object actual, object expected, object percent)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
@@ -133,10 +138,15 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning restore NUnit2042 // Comparison constraint on object
         }
 
-        [TestCase(5.05, 5.0, 1)] // upper range bound
-        [TestCase(6.0, 5.0, 1)]
-        [TestCase(205, 200, 2.5)] // upper range bound
-        [TestCase(210, 200, 2.5)]
+        private static IEnumerable<object[]> GetPercentTolerance_FailureData()
+        {
+            yield return new object[] { 5.05, 5.0, 1 }; // upper range bound
+            yield return new object[] { 6.0, 5.0, 1 };
+            yield return new object[] { 205, 200, 2.5 }; // upper range bound
+            yield return new object[] { 210, 200, 2.5 };
+        }
+
+        [TestCaseSource(nameof(GetPercentTolerance_FailureData))]
         public void PercentTolerance_Failure(object actual, object expected, object tolerance)
         {
 #pragma warning disable NUnit2042 // Comparison constraint on object
