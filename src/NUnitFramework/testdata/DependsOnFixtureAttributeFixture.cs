@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
 
@@ -422,6 +423,30 @@ namespace NUnit.TestData
         public void QueuedAfterBlockingTest()
         {
             FixtureDependencyEvents.Record();
+        }
+    }
+
+    // Methods used to build long dependency chains in code.
+    [TestFixture]
+    public class QueuedDependencyChain
+    {
+        public static int RecordedStackDepth { get; set; }
+
+        [Test]
+        public void PassingLink()
+        {
+        }
+
+        [Test]
+        public void FailingLink()
+        {
+            Assert.Fail("Intentional failure for dependency behavior testing");
+        }
+
+        [Test]
+        public void RecordStackDepth()
+        {
+            RecordedStackDepth = new StackTrace().FrameCount;
         }
     }
 

@@ -415,6 +415,8 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Lock _childCompletionLock = new();
         private readonly HashSet<WorkItem> _completedChildren = [];
         private readonly Dictionary<WorkItem, List<WorkItem>> _waitingForDependency = new();
+        private readonly Queue<WorkItem> _readyDependents = new();
+        private bool _startingDependents;
 
         private void OnChildItemCompleted(object? sender, EventArgs e)
         {
@@ -425,8 +427,6 @@ namespace NUnit.Framework.Internal.Execution
             if (sender is not WorkItem childTask)
                 return;
 
-            List<WorkItem>? dependents;
-
             lock (_childCompletionLock)
             {
                 childTask.Completed -= OnChildItemCompleted;
@@ -436,21 +436,55 @@ namespace NUnit.Framework.Internal.Execution
                     Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
                 _completedChildren.Add(childTask);
-                if (_waitingForDependency.TryGetValue(childTask, out dependents)) // TryGetValue needed for .net framework.
+                if (_waitingForDependency.TryGetValue(childTask, out var dependents)) // TryGetValue needed for .net framework.
+                {
                     _waitingForDependency.Remove(childTask);
+                    foreach (WorkItem dependent in dependents)
+                        _readyDependents.Enqueue(dependent);
+                }
 
                 // Check to see if all children completed
                 // _childTestCountdown is created before running child tasks, so is not null here.
                 _childTestCountdown!.Signal();
                 if (_childTestCountdown.CurrentCount == 0)
                     OnAllChildItemsCompleted();
+
+                // A call that is already starting dependents picks up the new ones.
+                if (_startingDependents || _readyDependents.Count == 0)
+                    return;
+
+                _startingDependents = true;
             }
 
-            // Started outside the lock, since a skipped or directly executed child calls back into this method.
-            if (dependents is not null)
+            StartReadyDependents();
+        }
+
+        /// <summary>
+        /// Starts ready dependents one by one until none are left.
+        /// </summary>
+        /// <remarks>
+        /// A skipped or directly executed child completes inside <see cref="StartChild"/> and calls
+        /// <see cref="OnChildItemCompleted"/> again. That call only queues its dependents, so the stack
+        /// does not grow with the length of a dependency chain. Children are started outside the lock.
+        /// </remarks>
+        private void StartReadyDependents()
+        {
+            while (true)
             {
-                foreach (WorkItem dependent in dependents)
-                    StartChild(dependent);
+                WorkItem dependent;
+
+                lock (_childCompletionLock)
+                {
+                    if (_readyDependents.Count == 0)
+                    {
+                        _startingDependents = false;
+                        return;
+                    }
+
+                    dependent = _readyDependents.Dequeue();
+                }
+
+                StartChild(dependent);
             }
         }
 

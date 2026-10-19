@@ -493,6 +493,55 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
+        [Test]
+        public void LongWaitingChainDoesNotGrowStack([Values] bool firstLinkFails)
+        {
+            int shortChainDepth = RunChainAndGetStackDepth(1, firstLinkFails);
+            int longChainDepth = RunChainAndGetStackDepth(200, firstLinkFails);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(shortChainDepth, Is.GreaterThan(0), "Last link did not run");
+                // Small margin: the call path into the first completion can differ by a few frames.
+                // Recursion would add hundreds of frames for 200 links.
+                Assert.That(longChainDepth, Is.LessThanOrEqualTo(shortChainDepth + 10));
+            }
+        }
+
+        // The first link is queued as non-parallel, so all later links wait for it and are started
+        // from completion callbacks. They run directly, or are skipped when the first link fails.
+        // The last link allows failure, so it always runs and records its stack depth.
+        private static int RunChainAndGetStackDepth(int links, bool firstLinkFails)
+        {
+            QueuedDependencyChain.RecordedStackDepth = 0;
+            var fixture = TestBuilder.MakeFixture(typeof(QueuedDependencyChain));
+            fixture.Tests.Clear();
+
+            var first = TestBuilder.MakeTestCase(typeof(QueuedDependencyChain),
+                firstLinkFails ? nameof(QueuedDependencyChain.FailingLink) : nameof(QueuedDependencyChain.PassingLink));
+            first.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
+            fixture.Add(first);
+
+            string previous = first.Name;
+            for (int i = 0; i < links; i++)
+                previous = AddLink(nameof(QueuedDependencyChain.PassingLink), "Link" + i, previous).Name;
+
+            AddLink(nameof(QueuedDependencyChain.RecordStackDepth), "Last", previous)
+                .Properties.Set(PropertyNames.DependsOnAllowFailure, true);
+
+            RunWithParallelDispatcher(fixture);
+            return QueuedDependencyChain.RecordedStackDepth;
+
+            TestMethod AddLink(string method, string name, string dependsOn)
+            {
+                var link = TestBuilder.MakeTestCase(typeof(QueuedDependencyChain), method);
+                link.Name = name;
+                link.Properties.Set(PropertyNames.DependsOnTest, dependsOn);
+                fixture.Add(link);
+                return link;
+            }
+        }
+
         private static ITestResult RunWithParallelDispatcher(TestSuite suite)
         {
             var work = StartWithParallelDispatcher(suite);
