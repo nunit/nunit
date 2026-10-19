@@ -306,4 +306,99 @@ namespace NUnit.TestData
     }
 
     #endregion
+
+    #region Queued Dispatch
+    // Non-parallel chains run by a dispatcher that only queues work items.
+    // The dependencies sleep, so a dependent that does not wait would start first.
+
+    [TestFixture]
+    public class QueuedDependencyBeforeSlow
+    {
+        [Test]
+        public void QueuedBeforeSlowTest()
+        {
+            Thread.Sleep(150);
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlow))]
+    public class QueuedDependencyAfter
+    {
+        [Test]
+        public void QueuedAfterTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyAfter))]
+    public class QueuedDependencyAfterAfter
+    {
+        [Test]
+        public void QueuedAfterAfterTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    public class QueuedDependencyBeforeSlowFailing
+    {
+        [Test]
+        public void QueuedBeforeSlowFailingTest()
+        {
+            Thread.Sleep(150);
+            FixtureDependencyEvents.Record();
+            Assert.Fail("Intentional failure for dependency behavior testing");
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlowFailing))]
+    public class QueuedDependencyAfterFailing
+    {
+        [Test]
+        public void QueuedAfterFailingTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyAfterFailing))]
+    public class QueuedDependencyAfterSkipped
+    {
+        [Test]
+        public void QueuedAfterSkippedTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlowFailing), AllowFailure = true)]
+    public class QueuedDependencyAfterFailingAllowed
+    {
+        [Test]
+        public void QueuedAfterFailingAllowedTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public class QueuedDependencyParallelIndependent
+    {
+        [Test]
+        public void QueuedParallelIndependentTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    #endregion
 }

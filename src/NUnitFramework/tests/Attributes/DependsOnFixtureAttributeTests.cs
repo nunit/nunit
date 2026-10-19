@@ -397,5 +397,91 @@ namespace NUnit.Framework.Tests.Attributes
                 ]));
             }
         }
+
+        [Test]
+        public void DependenciesAreOrderedWhenFirstChildIsNotAFixture()
+        {
+            // A child namespace suite or set-up fixture can come before the fixtures.
+            var suite = new TestSuite("dummy")
+                .Containing(new TestSuite("child"))
+                .Containing(typeof(FixtureDependencyAfter), typeof(FixtureDependencyBefore));
+
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
+            var names = work.Children.Select(c => c.Test.Name).ToList();
+
+            Assert.That(names.IndexOf(nameof(FixtureDependencyBefore)), Is.LessThan(names.IndexOf(nameof(FixtureDependencyAfter))));
+        }
+
+        [Test]
+        public void ChainRunsInOrderWithQueuingDispatcher()
+        {
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterAfter),
+                typeof(QueuedDependencyAfter),
+                typeof(QueuedDependencyBeforeSlow),
+                typeof(QueuedDependencyParallelIndependent));
+
+            var result = RunWithParallelDispatcher(suite);
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var child in result.Children)
+                    Assert.That(child.ResultState.Status, Is.EqualTo(TestStatus.Passed), child.Name);
+
+                var chain = FixtureDependencyEvents.Events.Where(e => e != nameof(QueuedDependencyParallelIndependent.QueuedParallelIndependentTest));
+                Assert.That(chain, Is.EqualTo([
+                    nameof(QueuedDependencyBeforeSlow.QueuedBeforeSlowTest),
+                    nameof(QueuedDependencyAfter.QueuedAfterTest),
+                    nameof(QueuedDependencyAfterAfter.QueuedAfterAfterTest)
+                ]));
+            }
+        }
+
+        [Test]
+        public void FailingDependencySkipsChainWithQueuingDispatcher()
+        {
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterSkipped),
+                typeof(QueuedDependencyAfterFailing),
+                typeof(QueuedDependencyAfterFailingAllowed),
+                typeof(QueuedDependencyBeforeSlowFailing));
+
+            var result = RunWithParallelDispatcher(suite);
+
+            ITestResult Child(string name) => result.Children.Single(x => x.Name == name);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Child(nameof(QueuedDependencyBeforeSlowFailing)).ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailing)).ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailing)).Message, Does.Contain($"Dependency on {nameof(QueuedDependencyBeforeSlowFailing)} did not pass"));
+                Assert.That(Child(nameof(QueuedDependencyAfterSkipped)).ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(Child(nameof(QueuedDependencyAfterSkipped)).Message, Does.Contain($"Dependency on {nameof(QueuedDependencyAfterFailing)} did not pass"));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailingAllowed)).ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+                // AllowFailure still waits for the dependency to finish.
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([
+                    nameof(QueuedDependencyBeforeSlowFailing.QueuedBeforeSlowFailingTest),
+                    nameof(QueuedDependencyAfterFailingAllowed.QueuedAfterFailingAllowedTest)
+                ]));
+            }
+        }
+
+        // ParallelWorkItemDispatcher only queues work items, unlike the synchronous TestBuilder dispatcher.
+        private static ITestResult RunWithParallelDispatcher(TestSuite suite)
+        {
+            var dispatcher = new ParallelWorkItemDispatcher(4);
+            var context = new TestExecutionContext
+            {
+                Dispatcher = dispatcher
+            };
+
+            var work = TestBuilder.CreateWorkItem(suite, context);
+
+            dispatcher.Start(work);
+            work.WaitForCompletion();
+
+            return work.Result;
+        }
     }
 }

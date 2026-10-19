@@ -18,18 +18,15 @@ namespace NUnit.Framework.Internal.Execution
 
         public static TestDependencyManager? Create(TestSuite test)
         {
-            if (test.Tests.Count == 0)
-                return null;
-
-            var child = test.Tests[0];
-
-            if (child is TestFixture)
+            // Check all children: a namespace suite can hold child namespace suites
+            // and set-up fixtures before its fixtures.
+            foreach (var child in test.Tests)
             {
-                return new TestFixtureDependencyManager();
-            }
-            else if (child is TestMethod or ParameterizedMethodSuite)
-            {
-                return new TestMethodDependencyManager();
+                if (child is TestFixture)
+                    return new TestFixtureDependencyManager();
+
+                if (child is TestMethod or ParameterizedMethodSuite)
+                    return new TestMethodDependencyManager();
             }
 
             return null;

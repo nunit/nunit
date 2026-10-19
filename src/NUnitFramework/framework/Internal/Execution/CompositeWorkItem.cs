@@ -269,29 +269,11 @@ namespace NUnit.Framework.Internal.Execution
                 if (CheckForCancellation())
                     break;
 
-                if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
-                {
-                    TestStatus? dependencyStatus = GetDependencyStatus(child);
-                    if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
-                    {
-                        var dependant = child.Test.DependantTest!;
-                        var message = $"Dependency on {dependant.Name} did not pass.";
+                // A child whose dependency has not completed yet is started
+                // from OnChildItemCompleted when the dependency completes.
+                if (!WaitForDependency(child))
+                    StartChild(child);
 
-                        SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
-                        OnChildItemCompleted(child, EventArgs.Empty);
-
-                        childCount--;
-                        continue;
-                    }
-                }
-
-                child.Completed += new EventHandler(OnChildItemCompleted);
-                child.InitializeContext(new TestExecutionContext(Context));
-
-                // In case we run directly, on same thread
-                child.TestWorker = TestWorker;
-
-                Context.Dispatcher.Dispatch(child);
                 childCount--;
             }
 
@@ -348,22 +330,77 @@ namespace NUnit.Framework.Internal.Execution
             if (child.Test.Properties.TryGet(PropertyNames.DependsOnAllowFailure, false))
                 return null;
 
-            ITest? dependantTest = child.Test.DependantTest;
-            if (dependantTest is null)
-                return null;
+            // A missing dependency would indicate an error in the framework, when the test is runnable.
+            return FindDependency(child)?.Result.ResultState.Status;
+        }
 
-            // Find the dependency fixture in our children
-            WorkItem? dependency = Children.Find(c => c.Test == dependantTest);
-            if (dependency is not null)
+        /// <summary>
+        /// Finds the work item of a child's dependency among our children, if any.
+        /// </summary>
+        private WorkItem? FindDependency(WorkItem child)
+        {
+            ITest? dependantTest = child.Test.DependantTest;
+            return dependantTest is null ? null : Children.Find(c => c.Test == dependantTest);
+        }
+
+        /// <summary>
+        /// Registers the child to be started when its dependency completes.
+        /// Returns false if the child has no dependency, or the dependency has already completed.
+        /// </summary>
+        /// <remarks>
+        /// The dispatcher may only queue the dependency, so it can still be running here.
+        /// This also applies with AllowFailure set, since the dependency must still finish first.
+        /// A child that is not runnable never waits: invalid dependencies, such as cycles,
+        /// would otherwise wait for each other forever.
+        /// </remarks>
+        private bool WaitForDependency(WorkItem child)
+        {
+            if (child.Test.RunState is not (RunState.Runnable or RunState.Explicit))
+                return false;
+
+            WorkItem? dependency = FindDependency(child);
+            if (dependency is null)
+                return false;
+
+            lock (_childCompletionLock)
             {
-                // Return the status of the dependency
-                return dependency.Result.ResultState.Status;
+                if (_completedChildren.Contains(dependency))
+                    return false;
+
+                if (!_waitingForDependency.TryGetValue(dependency, out var dependents))
+                    _waitingForDependency[dependency] = dependents = [];
+
+                dependents.Add(child);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Dispatches a child, or skips it if its dependency did not pass.
+        /// </summary>
+        private void StartChild(WorkItem child)
+        {
+            if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
+            {
+                TestStatus? dependencyStatus = GetDependencyStatus(child);
+                if (dependencyStatus.HasValue && dependencyStatus is not (TestStatus.Passed or TestStatus.Warning))
+                {
+                    var dependant = child.Test.DependantTest!;
+                    var message = $"Dependency on {dependant.Name} did not pass.";
+
+                    SetChildWorkItemSkippedResult(child.Result, ResultState.Skipped, message, null);
+                    OnChildItemCompleted(child, EventArgs.Empty);
+                    return;
+                }
             }
 
-            // This would indicate an error in the framework,
-            // when the test is runnable,
-            // but the dependency is not found in the same suite.
-            return null;
+            child.Completed += new EventHandler(OnChildItemCompleted);
+            child.InitializeContext(new TestExecutionContext(Context));
+
+            // In case we run directly, on same thread
+            child.TestWorker = TestWorker;
+
+            Context.Dispatcher.Dispatch(child);
         }
 
         private void PerformOneTimeTearDown()
@@ -388,6 +425,8 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         private readonly Lock _childCompletionLock = new();
+        private readonly HashSet<WorkItem> _completedChildren = [];
+        private readonly Dictionary<WorkItem, List<WorkItem>> _waitingForDependency = new();
 
         private void OnChildItemCompleted(object? sender, EventArgs e)
         {
@@ -395,22 +434,35 @@ namespace NUnit.Framework.Internal.Execution
             // method may be called simultaneously by different children.
             // The lock is a member of the parent item and therefore
             // only blocks its own children.
+            if (sender is not WorkItem childTask)
+                return;
+
+            List<WorkItem>? dependents;
+
             lock (_childCompletionLock)
             {
-                if (sender is WorkItem childTask)
-                {
-                    childTask.Completed -= new EventHandler(OnChildItemCompleted);
-                    _suiteResult.AddResult(childTask.Result);
+                childTask.Completed -= new EventHandler(OnChildItemCompleted);
+                _suiteResult.AddResult(childTask.Result);
 
-                    if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
-                        Context.ExecutionStatus = TestExecutionStatus.StopRequested;
+                if (Context.StopOnError && childTask.Result.ResultState.Status == TestStatus.Failed)
+                    Context.ExecutionStatus = TestExecutionStatus.StopRequested;
 
-                    // Check to see if all children completed
-                    // _childTestCountdown is created before running child tasks, so is not null here.
-                    _childTestCountdown!.Signal();
-                    if (_childTestCountdown.CurrentCount == 0)
-                        OnAllChildItemsCompleted();
-                }
+                _completedChildren.Add(childTask);
+                if (_waitingForDependency.TryGetValue(childTask, out dependents))
+                    _waitingForDependency.Remove(childTask);
+
+                // Check to see if all children completed
+                // _childTestCountdown is created before running child tasks, so is not null here.
+                _childTestCountdown!.Signal();
+                if (_childTestCountdown.CurrentCount == 0)
+                    OnAllChildItemsCompleted();
+            }
+
+            // Started outside the lock, since a skipped or directly executed child calls back into this method.
+            if (dependents is not null)
+            {
+                foreach (WorkItem dependent in dependents)
+                    StartChild(dependent);
             }
         }
 
