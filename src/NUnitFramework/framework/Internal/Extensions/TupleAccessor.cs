@@ -52,32 +52,16 @@ namespace NUnit.Framework.Internal.Extensions
             private readonly T _tupleAccessor;
             private readonly object _tuple;
 
+            private ITuple? _rest;
+            private int? _length;
+
             public ReflectionTupleAccessor(T tupleAccessor, object tuple)
             {
                 _tupleAccessor = tupleAccessor;
                 _tuple = tuple;
             }
 
-            public int Length
-            {
-                get
-                {
-                    int length = _tupleAccessor.Length;
-                    if (length == 8)
-                    {
-                        // This interface hides that the 8th element of a tuple is actually a nested tuple,
-                        // We need to get the length of that nested tuple and add it to the length of this tuple.
-                        object? rest = _tupleAccessor.GetValue(_tuple, 7);
-                        ITuple? restTuple = For(rest);
-                        if (restTuple is not null)
-                        {
-                            length = 7 + restTuple.Length;
-                        }
-                    }
-
-                    return length;
-                }
-            }
+            public int Length => _length ??= DetermineLength();
 
             public object? this[int index]
             {
@@ -92,16 +76,33 @@ namespace NUnit.Framework.Internal.Extensions
                     {
                         // This interface hides that the 8th element of a tuple is actually a nested tuple,
                         // We need to get the value of that nested tuple at the corrected index
-                        value = _tupleAccessor.GetValue(_tuple, 7);
-                        ITuple? rest = For(value);
-                        if (rest is not null)
-                        {
-                            value = rest[index - 7];
-                        }
+                        value = Rest[index - 7];
                     }
 
                     return value;
                 }
+            }
+
+            private ITuple Rest => _rest ??= GetTupleFor8thElement();
+
+            private ITuple GetTupleFor8thElement()
+            {
+                object? rest = _tupleAccessor.GetValue(_tuple, 7);
+                return For(rest) ??
+                    throw new NotSupportedException($"The 8th element of the tuple is not a valid tuple type. Type: {rest?.GetType().FullName ?? "null"}");
+            }
+
+            private int DetermineLength()
+            {
+                int length = _tupleAccessor.Length;
+                if (length == 8)
+                {
+                    // This interface hides that the 8th element of a tuple is actually a nested tuple,
+                    // We need to get the length of that nested tuple and add it to the length of this tuple.
+                    length = 7 + Rest.Length;
+                }
+
+                return length;
             }
         }
 
@@ -149,14 +150,14 @@ namespace NUnit.Framework.Internal.Extensions
 
         private static ReflectionTupleAccessor GetTupleAccessorFor(Type tupleType)
         {
-            return TupleAccessorsCache.GetOrAdd(tupleType, t => new ReflectionTupleAccessor(t));
+            return TupleAccessorsCache.GetOrAdd(tupleType, static t => new ReflectionTupleAccessor(t));
         }
 
         private static readonly ConcurrentDictionary<Type, ReflectionValueTupleAccessor> ValueTupleAccessors = new();
 
         private static ReflectionValueTupleAccessor GetValueTupleAccessorFor(Type valueTupleType)
         {
-            return ValueTupleAccessors.GetOrAdd(valueTupleType, t => new ReflectionValueTupleAccessor(t));
+            return ValueTupleAccessors.GetOrAdd(valueTupleType, static t => new ReflectionValueTupleAccessor(t));
         }
 #endif
     }
