@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 using NUnit.Framework.Constraints;
 
+#pragma warning disable NUnit2041 // Incompatible types for comparison constraint
+
 namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
@@ -104,7 +106,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(GetLinearToleranceData))]
         public void LinearTolerance<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
-            where TActual : notnull, IComparable<TExpected>
+            where TActual : notnull
             where TExpected : notnull
             where TTolerance : notnull
         {
@@ -131,7 +133,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(GetLinearToleranceData_FailureData))]
         public void LinearTolerance_Failure<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
-            where TActual : notnull, IComparable<TExpected>
+            where TActual : notnull
             where TExpected : notnull
             where TTolerance : notnull
         {
@@ -171,7 +173,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(GetPercentToleranceData))]
         public void PercentTolerance<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance percent)
-            where TActual : notnull, IComparable<TExpected>
+            where TActual : notnull
             where TExpected : notnull
             where TTolerance : notnull
         {
@@ -196,7 +198,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCaseSource(nameof(GetPercentTolerance_FailureData))]
         public void PercentTolerance_Failure<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
-            where TActual : notnull, IComparable<TExpected>
+            where TActual : notnull
             where TExpected : notnull
             where TTolerance : notnull
         {
@@ -208,3 +210,5 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 }
+
+#pragma warning restore NUnit2041 // Incompatible types for comparison constraint
