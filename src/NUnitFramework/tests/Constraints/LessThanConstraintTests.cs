@@ -20,8 +20,32 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { 4, 4.999 };
-        private static readonly object[] FailureData = new object[] { new object[] { 6, "6" }, new object[] { 5, "5" } };
+        private static readonly object[] SuccessData = [
+            4, 4.999,
+            (nint)4,
+            (nuint)4,
+#if !NETFRAMEWORK
+            (Half)4,
+            (Int128)4,
+            (UInt128)4,
+#endif
+        ];
+        private static readonly object[] FailureData = [
+            new object[] { 6, "6" },
+            new object[] { 5, "5" },
+            new object[] { (nint)6, "6" },
+            new object[] { (nint)5, "5" },
+            new object[] { (nuint)6, "6" },
+            new object[] { (nuint)5, "5" },
+#if !NETFRAMEWORK
+            new object[] { (Half)6, "6" },
+            new object[] { (Half)5, "5" },
+            new object[] { (Int128)6, "6" },
+            new object[] { (Int128)5, "5" },
+            new object[] { (UInt128)6, "6" },
+            new object[] { (UInt128)5, "5" },
+#endif
+        ];
 #pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
