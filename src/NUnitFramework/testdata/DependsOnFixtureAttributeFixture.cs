@@ -450,6 +450,30 @@ namespace NUnit.TestData
         }
     }
 
+    // The dependency runs on the STA worker, its dependent is then started from there.
+    [TestFixture]
+    public class QueuedDependencyOtherWorker
+    {
+        public static string? DependentThreadName { get; set; }
+
+        public static string? DependentWorkerId { get; set; }
+
+        [Test]
+        [NonParallelizable]
+        [Apartment(ApartmentState.STA)]
+        public void StaDependency()
+        {
+        }
+
+        [Test]
+        [DependsOnTest(nameof(StaDependency))]
+        public void Dependent()
+        {
+            DependentThreadName = Thread.CurrentThread.Name;
+            DependentWorkerId = TestContext.CurrentContext.WorkerId;
+        }
+    }
+
     [TestFixture]
     [Parallelizable(ParallelScope.All)]
     public class QueuedDependencyParallelIndependent

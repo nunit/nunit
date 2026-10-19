@@ -542,6 +542,23 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
+        [Test]
+        [Platform(Includes = [PlatformNames.Win])]
+        public void DependentStartedFromOtherWorkerReportsThatWorker()
+        {
+            QueuedDependencyOtherWorker.DependentThreadName = null;
+            QueuedDependencyOtherWorker.DependentWorkerId = null;
+
+            var result = RunWithParallelDispatcher(TestBuilder.MakeFixture(typeof(QueuedDependencyOtherWorker)));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(QueuedDependencyOtherWorker.DependentThreadName, Is.EqualTo("NUnit.Fw.NonParallelSTAWorker"));
+                Assert.That(QueuedDependencyOtherWorker.DependentWorkerId, Is.EqualTo(QueuedDependencyOtherWorker.DependentThreadName));
+            }
+        }
+
         private static ITestResult RunWithParallelDispatcher(TestSuite suite)
         {
             var work = StartWithParallelDispatcher(suite);

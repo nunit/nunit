@@ -268,7 +268,7 @@ namespace NUnit.Framework.Internal.Execution
                 // A child whose dependency has not completed yet is started
                 // from OnChildItemCompleted when the dependency completes.
                 if (!WaitForDependency(child))
-                    StartChild(child);
+                    StartChild(child, TestWorker);
 
                 childCount--;
             }
@@ -372,8 +372,14 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Dispatches a child, or skips it if its dependency did not pass.
         /// </summary>
-        private void StartChild(WorkItem child)
+        /// <param name="child">The child to start.</param>
+        /// <param name="worker">The worker running the current thread. A directly executed child runs on it.
+        /// It can differ from our own worker when a dependency completed on another worker.</param>
+        private void StartChild(WorkItem child, TestWorker? worker)
         {
+            // In case we run directly, on same thread
+            child.TestWorker = worker;
+
             if (child.Test.RunState is RunState.Runnable or RunState.Explicit)
             {
                 TestStatus? dependencyStatus = GetDependencyStatus(child);
@@ -390,10 +396,6 @@ namespace NUnit.Framework.Internal.Execution
 
             child.Completed += OnChildItemCompleted;
             child.InitializeContext(new TestExecutionContext(Context));
-
-            // In case we run directly, on same thread
-            child.TestWorker = TestWorker;
-
             Context.Dispatcher.Dispatch(child);
         }
 
@@ -456,7 +458,8 @@ namespace NUnit.Framework.Internal.Execution
                 _startingDependents = true;
             }
 
-            StartReadyDependents();
+            // The dependents start on the thread that ran the completed child.
+            StartReadyDependents(childTask.TestWorker);
         }
 
         /// <summary>
@@ -467,7 +470,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <see cref="OnChildItemCompleted"/> again. That call only queues its dependents, so the stack
         /// does not grow with the length of a dependency chain. Children are started outside the lock.
         /// </remarks>
-        private void StartReadyDependents()
+        private void StartReadyDependents(TestWorker? worker)
         {
             while (true)
             {
@@ -484,7 +487,7 @@ namespace NUnit.Framework.Internal.Execution
                     dependent = _readyDependents.Dequeue();
                 }
 
-                StartChild(dependent);
+                StartChild(dependent, worker);
             }
         }
 
