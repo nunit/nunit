@@ -158,5 +158,32 @@ namespace NUnit.Framework.Tests.Internal.Extensions
             Assert.That(accessor, Is.Not.Null);
             Assert.That(accessor.Length, Is.Zero);
         }
+
+        [Test]
+        public void ITupleCanAccessDefaultValueTupleWith8thElementNotAValueTuple()
+        {
+            // There is some strange exception when having values tuples with 8 elements.
+            // The default tuple syntax and ValueTuple.Create() method both create a ValueTuple with 7 elements and
+            // a Rest property that is another ValueTuple with the 8th element.
+            // However it IS possible to create a ValueTuple with 8 elements where the last element is not a ValueTuple,
+            // but only the default instance as the constructor does not allow it.
+            var stupidDefaultValueTupleWithIllegalTRest = default(ValueTuple<int, int, int, int, int, int, int, int>);
+
+            ITuple? accessor = TupleAccessor.For(stupidDefaultValueTupleWithIllegalTRest);
+            Assert.That(accessor, Is.Not.Null);
+            Assert.That(accessor.Length, Is.EqualTo(8));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(accessor[0], Is.Zero);
+                Assert.That(accessor[1], Is.Zero);
+                Assert.That(accessor[2], Is.Zero);
+                Assert.That(accessor[3], Is.Zero);
+                Assert.That(accessor[4], Is.Zero);
+                Assert.That(accessor[5], Is.Zero);
+                Assert.That(accessor[6], Is.Zero);
+                Assert.That(accessor[7], Is.Zero);
+            }
+        }
     }
 }
