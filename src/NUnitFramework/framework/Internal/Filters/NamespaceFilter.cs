@@ -27,9 +27,9 @@ namespace NUnit.Framework.Internal.Filters
         {
             string? containingNamespace = null;
 
-            if (test.TypeInfo is not null)
+            if (test.IsFixture)
             {
-                containingNamespace = test.TypeInfo.Namespace;
+                containingNamespace = test.TypeInfo!.Namespace;
             }
 
             return Match(containingNamespace);

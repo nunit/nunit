@@ -161,6 +161,12 @@ namespace NUnit.Framework.Internal
         public ITypeInfo? TypeInfo { get; }
 
         /// <summary>
+        /// Gets a bool indicating whether this test is a TestFixture or a SetupFixture
+        /// If so, TypeInfo can be used.
+        /// </summary>
+        public bool IsFixture => TypeInfo is not null;
+
+        /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
@@ -275,9 +281,9 @@ namespace NUnit.Framework.Internal
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    if (Method is null && TypeInfo is not null)
+                    if (Method is null && IsFixture)
                     {
-                        _actions = TestMetadataCache.Get(TypeInfo.Type).TestActionAttributes;
+                        _actions = TestMetadataCache.Get(TypeInfo!.Type).TestActionAttributes;
                     }
                     else if (Method is not null)
                     {
@@ -375,8 +381,8 @@ namespace NUnit.Framework.Internal
             if (Method is not null)
                 return Method.GetCustomAttributes<TAttr>(inherit);
 
-            if (TypeInfo is not null)
-                return TypeInfo.GetCustomAttributes<TAttr>(inherit);
+            if (IsFixture)
+                return TypeInfo!.GetCustomAttributes<TAttr>(inherit);
 
             return Array.Empty<TAttr>();
         }
