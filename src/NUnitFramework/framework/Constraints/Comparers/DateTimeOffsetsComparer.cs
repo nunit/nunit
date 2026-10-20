@@ -34,8 +34,9 @@ namespace NUnit.Framework.Constraints.Comparers
                 result = xOffset.Offset == yOffset.Offset;
             }
 
-            return result ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return result
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
     }
 }

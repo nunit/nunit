@@ -14,8 +14,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     file static class PartitionFilterTypes
     {
-        public const string Test = "test";
         public const string Fixture = "fixture";
+        public const string Test = "test";
     }
 
     /// <summary>

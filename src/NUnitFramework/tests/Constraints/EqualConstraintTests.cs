@@ -4,15 +4,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
-
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Tests.TestUtilities.Comparers;
-using NUnit.Framework.Constraints.Comparers;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Constraints.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -607,9 +609,9 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 public MyBasicDateTime(DateTimeOffset value) => Value = value;
 
-                public DateTimeOffset Value { get; }
+                protected DateTimeOffset Value { get; }
 
-                public override bool Equals(object? other) => Value.Equals(other);
+                public override bool Equals(object? obj) => Value.Equals(obj);
 
                 public override string ToString() => MsgUtils.FormatValue(Value);
             }
@@ -1013,7 +1015,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
                 Assert.That(ex?.Message, Does.Contain("+/- 10.0d Percent"));
-                var expectedPercentDiff = Math.Abs(10000 - (double)value) / 100;
+                var expectedPercentDiff = (10000 - (double)value) / 100;
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
@@ -1025,6 +1027,34 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(testValue, Is.EqualTo(50).Within(50).Percent, "Doesn't work with generic numeric constraints.");
                 Assert.That(testValue, Is.EqualTo((object)50).Within(50).Percent, "Doesn't work with object-based constraints.");
             }
+#if !NETFRAMEWORK
+            [TestCaseSource(nameof(GetNumericToleranceValues))]
+            public void CanMatchRelativeTolerance<T>(T actualValue, T expectedValue)
+                where T : INumber<T>
+            {
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(expectedValue).Percent, "Doesn't work with generic numeric constraints.");
+                Assert.That(actualValue, Is.EqualTo((object)expectedValue).Within(expectedValue).Percent, "Doesn't work with object-based constraints.");
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(int.CreateChecked(expectedValue)).Percent, "Doesn't work with type variant tolerances.");
+            }
+
+            [TestCaseSource(nameof(GetNumericToleranceValues))]
+            public void CanMatchAbsoluteTolerance<T>(T actualValue, T expectedValue)
+                where T : INumber<T>
+            {
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(expectedValue), "Doesn't work with generic numeric constraints.");
+                Assert.That(actualValue, Is.EqualTo((object)expectedValue).Within(expectedValue), "Doesn't work with object-based constraints.");
+                Assert.That(actualValue, Is.EqualTo(expectedValue).Within(int.CreateChecked(expectedValue)), "Doesn't work with type variant tolerances.");
+            }
+
+            private static IEnumerable<TestCaseData> GetNumericToleranceValues()
+            {
+                yield return new TestCaseData<Half>((Half)30, (Half)50);
+                yield return new TestCaseData<Int128>((Int128)30, (Int128)50);
+                yield return new TestCaseData<UInt128>((UInt128)30, (UInt128)50);
+                yield return new TestCaseData<nint>((nint)30, (nint)50);
+                yield return new TestCaseData<nuint>((nuint)30, (nuint)50);
+            }
+#endif
 
             [TestCase(9500.0f)]
             [TestCase(10000.0f)]
@@ -1040,7 +1070,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
                 Assert.That(ex?.Message, Does.Contain("+/- 10.0f Percent"));
-                double expectedPercentDiff = Math.Abs(10000 - (float)value) / 100;
+                double expectedPercentDiff = (10000 - (float)value) / 100;
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
@@ -1051,7 +1081,7 @@ namespace NUnit.Framework.Tests.Constraints
                 const double tolerance = 0.001;
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
                 Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
-                var expectedAbsoluteDiff = Math.Abs(1.2 - (double)value);
+                var expectedAbsoluteDiff = 1.2 - (double)value;
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
@@ -1701,23 +1731,13 @@ namespace NUnit.Framework.Tests.Constraints
         {
             get
             {
-                var ptr = new System.IntPtr(0);
                 var exampleTestA = new ExampleTest.ClassA(0);
                 var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
-                yield return new object[] { 0, ptr };
                 yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
-        }
-        [Test]
-        public void SameValueDifferentTypeExactMessageMatch()
-        {
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That(ex?.Message, Does.Contain("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL));
         }
 
         private class Dummy

@@ -18,9 +18,7 @@ namespace NUnit.Framework.Tests.TestUtilities.Comparers
             return Comparer<T>.Default.Compare(x, y) == 0;
         }
 
-        int IEqualityComparer<T>.GetHashCode(T x)
-        {
-            return x is null ? 0 : x.GetHashCode();
-        }
+        int IEqualityComparer<T>.GetHashCode(T obj)
+            => obj is null ? 0 : obj.GetHashCode();
     }
 }

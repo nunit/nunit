@@ -10,6 +10,14 @@ namespace NUnit.TestData
     [Parallelizable(ParallelScope.Children)]
     public sealed class StopOnErrorFixture
     {
+        public bool OneTimeTearDownExecuted { get; private set; }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            OneTimeTearDownExecuted = true;
+        }
+
         [Test]
         public async Task AlwaysFails(CancellationToken cancellationToken)
         {

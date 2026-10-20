@@ -616,6 +616,16 @@ namespace NUnit.Framework.Tests.Api
             // Ensure that at least one test started, otherwise we aren't testing anything!
             SpinWait.SpinUntil(() => _testStartedCount > 0, SlowTests.SINGLE_TEST_DELAY);
 
+            // The ITestListener.TestStarted event that increments _testStartedCount is fired before the test actually starts running,
+            // This means that the above SpinWait may return true before the test has actually started running.
+            // Calling StopRun immediately after the SpinWait may result in the test never starting at all,
+            // due to the check on StopRequested in WorkItem before calling PerformWork.
+
+            // We need to wait for a test to be active before stopping the run so the test fails and
+            // we can test the StopOnFailure functionality.
+            // If we stop the run before a test is active, the test may never start and we won't be testing what we intend to.
+            Thread.Sleep(SlowTests.SINGLE_TEST_DELAY / 2);
+
             _runner.StopRun();
 
             // A single test takes SINGLE_TEST_DELAY,

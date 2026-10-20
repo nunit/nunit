@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
         /// <param name="actualTypeShortened">Output of the unique type name for actual object.</param>
         public void ResolveTypeNameDifference(Type expected, Type actual, out string expectedTypeShortened, out string actualTypeShortened)
         {
-            if (IsTypeGeneric(expected) && IsTypeGeneric(actual))
+            if (expected.IsGenericType && actual.IsGenericType)
             {
                 GetShortenedGenericTypes(expected, actual, out var shortenedGenericTypeExpected, out var shortenedGenericTypeActual);
 
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
                 expectedTypeShortened = ReconstructGenericTypeName(shortenedGenericTypeExpected, shortenedParamsExpected);
                 actualTypeShortened = ReconstructGenericTypeName(shortenedGenericTypeActual, shortenedParamsActual);
             }
-            else if (IsTypeGeneric(expected) || IsTypeGeneric(actual))
+            else if (expected.IsGenericType || actual.IsGenericType)
             {
                 expectedTypeShortened = FullyShortenTypeName(expected);
                 actualTypeShortened = FullyShortenTypeName(actual);
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string FullyShortenTypeName(Type genericType)
         {
-            if (IsTypeGeneric(genericType))
+            if (genericType.IsGenericType)
             {
                 string genericTypeDefinition = genericType.GetGenericTypeDefinition().Name;
 
@@ -151,11 +151,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns whether or not the <see cref="Type"/> is generic.
         /// </summary>
+        [Obsolete("Use Type.IsGenericType property instead. This method will be removed in a future version.")]
         public bool IsTypeGeneric(Type type)
         {
             ArgumentNullException.ThrowIfNull(type);
 
-            return type.GetGenericArguments().Length > 0;
+            return type.IsGenericType;
         }
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace NUnit.Framework.Internal
         {
             ArgumentNullException.ThrowIfNull(type);
 
-            if (IsTypeGeneric(type))
+            if (type.IsGenericType)
             {
                 Type generic = type.GetGenericTypeDefinition();
                 return generic.FullName();

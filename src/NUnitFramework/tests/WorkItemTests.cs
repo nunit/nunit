@@ -63,12 +63,12 @@ namespace NUnit.Framework.Tests
             _context.ExecutionStatus = TestExecutionStatus.StopRequested;
             _workItem.Execute();
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
-                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Cancelled));
                 Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
-            });
+            }
         }
 
         // Use static for simplicity

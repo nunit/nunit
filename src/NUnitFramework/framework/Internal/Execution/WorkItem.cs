@@ -305,6 +305,21 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
+        /// Checks if the item has been cancelled.
+        /// </summary>
+        /// <returns></returns>
+        protected bool CheckForCancellation()
+        {
+            if (Context.ExecutionStatus != TestExecutionStatus.Running)
+            {
+                Result.SetResult(ResultState.Cancelled, TestResult.USER_CANCELLED_MESSAGE);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
         /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
@@ -453,6 +468,12 @@ namespace NUnit.Framework.Internal.Execution
             Context.EstablishExecutionEnvironment();
 
             State = WorkItemState.Running;
+
+            if (CheckForCancellation())
+            {
+                WorkItemComplete();
+                return;
+            }
 
             PerformWork();
         }

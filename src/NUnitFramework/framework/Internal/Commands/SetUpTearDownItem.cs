@@ -49,8 +49,9 @@ namespace NUnit.Framework.Internal.Commands
         {
             _setUpWasRun = true;
 
-            Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled ?
-                RunSetUpMethodWithHooks : RunSetUpOrTearDownMethod;
+            Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled
+                ? RunSetUpMethodWithHooks
+                : RunSetUpOrTearDownMethod;
 
             try
             {
@@ -75,8 +76,9 @@ namespace NUnit.Framework.Internal.Commands
             {
                 try
                 {
-                    Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled ?
-                        RunTearDownMethodWithHooks : RunSetUpOrTearDownMethod;
+                    Action<TestExecutionContext, IMethodInfo> runMethod = context.ExecutionHooksEnabled
+                        ? RunTearDownMethodWithHooks
+                        : RunSetUpOrTearDownMethod;
 
                     // Count of assertion results so far
                     var oldCount = context.CurrentResult.AssertionResultCount;

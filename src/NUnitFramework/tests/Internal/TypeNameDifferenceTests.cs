@@ -372,6 +372,7 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        [Obsolete("This test is for a method that is now obsolete. It will be removed in a future version.")]
         public void TestIsObjectInstanceGeneric()
         {
             var notGeneric = new DifferingNamespace1.Dummy(1);

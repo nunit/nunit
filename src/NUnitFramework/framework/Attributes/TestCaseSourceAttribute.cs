@@ -250,8 +250,9 @@ namespace NUnit.Framework
                 if (field is not null)
                 {
                     return field.IsStatic
-                        ? (MethodParams is null ? (IEnumerable?)field.GetValue(null)
-                                                : ReturnErrorAsParameter(ParamGivenToField))
+                        ? (MethodParams is null
+                            ? (IEnumerable?)field.GetValue(null)
+                            : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
                 }
 
@@ -260,8 +261,9 @@ namespace NUnit.Framework
                 {
                     MethodInfo? getMethod = property.GetGetMethod(true);
                     return getMethod?.IsStatic is true
-                        ? (MethodParams is null ? (IEnumerable?)property.GetValue(null, null)
-                                                : ReturnErrorAsParameter(ParamGivenToProperty))
+                        ? (MethodParams is null
+                            ? (IEnumerable?)property.GetValue(null, null)
+                            : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
                 }
 

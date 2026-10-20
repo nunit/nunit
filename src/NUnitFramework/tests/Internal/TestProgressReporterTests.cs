@@ -136,11 +136,11 @@ namespace NUnit.Framework.Tests.Internal
 
         private class ReportCollector : System.Web.UI.ICallbackEventHandler
         {
-            public List<string> Reports { get; } = new List<string>();
+            public List<string> Reports { get; } = [];
 
-            public void RaiseCallbackEvent(string report)
+            public void RaiseCallbackEvent(string eventArgument)
             {
-                Reports.Add(report);
+                Reports.Add(eventArgument);
             }
 
             public string GetCallbackResult()
