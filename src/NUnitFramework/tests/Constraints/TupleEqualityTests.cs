@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -111,6 +112,83 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(() => Assert.That(tuple1, Is.EqualTo(tuple2).Within(1)),
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
 #pragma warning restore NUnit2047 // Incompatible types for Within constraint
+        }
+
+        [Test]
+        public void CanCompareTuplesWithDifferentTypes()
+        {
+            Tuple<int, int, int> intTuple = Tuple.Create(1, 2, 3);
+            Tuple<double, double, double> doubleTuple = Tuple.Create(1.0, 2.0, 3.0);
+
+            using (Assert.EnterMultipleScope())
+            {
+                // This is a side effect of using ITuple to compare members.
+                // NUnit allows comparing Tuple<int> with Tuple<double> so why not allow ValueTuple.
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+                Assert.That(doubleTuple, Is.EqualTo(intTuple));
+                Assert.That(intTuple, Is.EqualTo(doubleTuple));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            }
+        }
+
+        [Test]
+        public void WillNotUseTupleComparerForDerivedTypes()
+        {
+            var tuple1 = new MyTuple("Tuple1", 1);
+            var tuple2 = new MyTuple("Tuple2", 1);
+            Assert.That(tuple1, Is.Not.EqualTo(tuple2));
+        }
+
+        private sealed class MyTuple : Tuple<int>, IStructuralEquatable
+        {
+            public MyTuple(string name, int item1)
+                : base(item1)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public override string ToString()
+            {
+                return "${Name}: {base.ToString()}";
+            }
+
+            // NUnit calls IStructuralEquatable.Equals before Object.Equals
+            // We need to therefore implement IStructuralEquatable here
+            // as otherwise the Tuple<>'s implementation will be used, which will ignore the Name property.
+            bool IStructuralEquatable.Equals(object? other, IEqualityComparer comparer)
+            {
+                if (other is MyTuple otherTuple)
+                {
+                    return comparer.Equals(Name, otherTuple.Name) &&
+                           comparer.Equals(Item1, otherTuple.Item1);
+                }
+
+                return false;
+            }
+
+            int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
+            {
+                return HashCode.Combine(
+                    comparer.GetHashCode(Name),
+                    comparer.GetHashCode(Item1));
+            }
+
+            public override bool Equals(object? obj)
+            {
+                if (obj is MyTuple other)
+                {
+                    return Name == other.Name && base.Equals(other);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Name, base.GetHashCode());
+            }
         }
     }
 }

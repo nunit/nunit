@@ -29,6 +29,7 @@ namespace NUnit.Framework.Tests.Internal
 
         [TestCase(typeof(Tuple))]
         [TestCase(typeof(ValueTuple<int, int>))]
+        [TestCase(typeof(MyNamedTuple<int, double>))]
         [TestCase(typeof(List<int>))]
         [TestCase(typeof(int))]
         public void TestIsNotTuple(Type type)
@@ -51,11 +52,38 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [TestCase(typeof(Tuple<int, int>))]
+        [TestCase(typeof(MyNamedTuple<int, double>))]
         [TestCase(typeof(List<int>))]
         [TestCase(typeof(int))]
         public void TestIsNotValueTuple(Type type)
         {
             Assert.That(type.IsValueTuple(), Is.False, type.FullName);
+        }
+
+        [TestCase(typeof(Tuple<int>))]
+        [TestCase(typeof(ValueTuple<int>))]
+        public void TestIsTupleOrValueTuple(Type type)
+        {
+            Assert.That(type.IsTupleOrValueTuple(), Is.True, type.FullName);
+        }
+
+        [TestCase(typeof(MyNamedTuple<int, double>))]
+        [TestCase(typeof(List<int>))]
+        [TestCase(typeof(int))]
+        public void TestIsNotTupleOrValueTuple(Type type)
+        {
+            Assert.That(type.IsTupleOrValueTuple(), Is.False, type.FullName);
+        }
+
+        private sealed class MyNamedTuple<T1, T2> : Tuple<T1, T2>
+        {
+            public MyNamedTuple(string name, T1 item1, T2 item2)
+                : base(item1, item2)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
         }
 
         #endregion

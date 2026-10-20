@@ -193,5 +193,35 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(a, Is.EqualTo(b).IgnoreCase.IgnoreLineEndingFormat);
         }
+
+        [Test]
+        public void CanCompareTuplesWithDifferentTypes()
+        {
+            ValueTuple<int, int, int> intTuple = (1, 2, 3);
+            ValueTuple<double, double, double> doubleTuple = (1.0, 2.0, 3.0);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(doubleTuple, Is.EqualTo(intTuple));
+                Assert.That(intTuple, Is.EqualTo(doubleTuple));
+            }
+        }
+
+        [Test]
+        public void CanCompareTuplesWithValueTuples()
+        {
+            Tuple<int, int, int> tuple = Tuple.Create(1, 2, 3);
+            ValueTuple<double, double, double> valueTuple = (1.0, 2.0, 3.0);
+
+            using (Assert.EnterMultipleScope())
+            {
+                // This is a side effect of using ITuple to compare members.
+                // NUnit allows comparing Tuple<int> with Tuple<double> so why not allow ValueTuple.
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+                Assert.That(valueTuple, Is.EqualTo(tuple));
+                Assert.That(tuple, Is.EqualTo(valueTuple));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            }
+        }
     }
 }

@@ -21,7 +21,15 @@ namespace NUnit.Framework.Internal
         extension(Type type)
         {
             /// <summary>
-            /// Determines whether the specified type represents a ValueTuple.
+            /// Determines whether the current type is a tuple type implemented by <see cref="Tuple"/> or <see
+            /// cref="ValueTuple"/>.
+            /// </summary>
+            /// <returns><see langword="true"/> if the current type is a <see cref="Tuple"/> or <see
+            /// cref="ValueTuple"/> type; otherwise, <see langword="false"/>.</returns>
+            internal bool IsTupleOrValueTuple() => type.IsTuple() || type.IsValueTuple();
+
+            /// <summary>
+            /// Determines whether the specified type represents a <see cref="ValueTuple"/>.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsValueTuple()
@@ -31,7 +39,7 @@ namespace NUnit.Framework.Internal
             }
 
             /// <summary>
-            /// Determines whether the specified type represents a Tuple.
+            /// Determines whether the specified type represents a <see cref="Tuple"/>.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="Tuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsTuple()

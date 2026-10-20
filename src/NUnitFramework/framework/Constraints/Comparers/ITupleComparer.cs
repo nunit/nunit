@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Runtime.CompilerServices;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Extensions;
 
@@ -13,6 +15,15 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
+            // A class derived from Tuple inherits ITuple, but would not check any extra members declared in the derived class.
+            // We can therefore not use ITuple to check for equality.
+            // The derived class must correctly implement IStructuralEquatable.Equals.
+            Type xType = x.GetType();
+            Type yType = y.GetType();
+
+            if (!xType.IsTupleOrValueTuple() || !yType.IsTupleOrValueTuple())
+                return EqualMethodResult.TypesNotSupported;
+
             ITuple? xTuple = TupleAccessor.For(x);
             ITuple? yTuple = TupleAccessor.For(y);
 
