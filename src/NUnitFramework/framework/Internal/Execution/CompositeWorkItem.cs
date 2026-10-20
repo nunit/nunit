@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
@@ -178,7 +177,8 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TypeInfo is not null)
             {
                 // Build the OneTimeSetUpCommands
-                command = setUpTearDown.Aggregate(command, (current, item) => new OneTimeSetUpCommand(current, item));
+                foreach (var item in setUpTearDown)
+                    command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
                 if (!Test.TypeInfo.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
@@ -186,8 +186,8 @@ namespace NUnit.Framework.Internal.Execution
             }
 
             // Prefix with any IApplyToContext items from attributes
-            command = Test.GetCustomAttributes<IApplyToContext>(true)
-                .Aggregate(command, (current, attr) => new ApplyChangesToContextCommand(current, attr));
+            foreach (IApplyToContext attribute in Test.GetCustomAttributes<IApplyToContext>(true))
+                command = new ApplyChangesToContextCommand(command, attribute);
 
             return command;
         }
@@ -206,7 +206,8 @@ namespace NUnit.Framework.Internal.Execution
                 command = new AfterTestActionCommand(command, actions[index]);
 
             // Create the OneTimeTearDown commands
-            command = setUpTearDownItems.Aggregate(command, (current, item) => new OneTimeTearDownCommand(current, item));
+            foreach (var item in setUpTearDownItems)
+                command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
             if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
