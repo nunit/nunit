@@ -64,5 +64,9 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        #region Test Overrides
+        internal override bool IsFixture => true;
+        #endregion
     }
 }

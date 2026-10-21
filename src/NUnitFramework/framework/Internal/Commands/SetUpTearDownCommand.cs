@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", nameof(innerCommand));
-            Guard.OperationValid(Test.IsFixture, "TestSuite must be a TestFixture or a SetupFixture");
+            Guard.OperationValid(Test.TypeInfo is not null, "TestMethod must have a non-null TypeInfo");
             ArgumentNullException.ThrowIfNull(setUpTearDown);
 
             BeforeTest = setUpTearDown.RunSetUp;

@@ -480,10 +480,10 @@ namespace NUnit.Framework.Internal.Execution
 
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
-            // If there is no fixture and so nothing to do but dispatch
-            // grandchildren we run directly. This saves time that would
-            // otherwise be spent enqueuing and dequeuing items.
-            if (!Test.IsFixture)
+            // A suite that only groups other tests has no fixture work and
+            // nothing to do but dispatch its children, so we run it directly.
+            // This saves time that would otherwise be spent enqueuing and dequeuing items.
+            if (Test is TestSuite { IsFixture: false })
                 return ParallelExecutionStrategy.Direct;
 
             // If the context is single-threaded we are required to run

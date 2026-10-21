@@ -122,7 +122,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
-            if (test.IsFixture)
+            if (test.TypeInfo is not null)
             {
                 Assert.That(test.ClassName, Is.Not.Null);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));

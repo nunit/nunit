@@ -161,10 +161,9 @@ namespace NUnit.Framework.Internal
         public ITypeInfo? TypeInfo { get; }
 
         /// <summary>
-        /// Gets a bool indicating whether this test is a TestFixture or a SetupFixture
-        /// If so, TypeInfo can be used.
+        /// Gets a bool indicating whether this test is a TestFixture or a SetUpFixture
         /// </summary>
-        public bool IsFixture => TypeInfo is not null;
+        internal virtual bool IsFixture => false;
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
