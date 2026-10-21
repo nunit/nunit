@@ -114,6 +114,21 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        public void CopyTestFixtureKeepsPerTestSetUpAndTearDownMethods()
+        {
+            TestSuite testFixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.SetUpData.SetUpAndTearDownFixture));
+            TestSuite copiedTestFixture = testFixture.Copy(TestFilter.Empty);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(testFixture.SetUpMethods, Is.Not.Empty);
+                Assert.That(testFixture.TearDownMethods, Is.Not.Empty);
+                Assert.That(copiedTestFixture.SetUpMethods, Is.EqualTo(testFixture.SetUpMethods));
+                Assert.That(copiedTestFixture.TearDownMethods, Is.EqualTo(testFixture.TearDownMethods));
+            }
+        }
+
+        [Test]
         public void CopiedTestFixtureRunsOneTimeSetUpAndTearDown()
         {
             var fixture = new SetUpAndTearDownFixture();
