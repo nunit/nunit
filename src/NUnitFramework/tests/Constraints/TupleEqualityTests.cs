@@ -151,7 +151,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             public override string ToString()
             {
-                return "${Name}: {base.ToString()}";
+                return $"{Name}: {base.ToString()}";
             }
 
             // NUnit calls IStructuralEquatable.Equals before Object.Equals

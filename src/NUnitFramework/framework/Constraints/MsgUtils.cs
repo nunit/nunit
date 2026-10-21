@@ -299,6 +299,9 @@ namespace NUnit.Framework.Constraints
 
         private static string? TryFormatITuple(object? value)
         {
+            if (value is null || !value.GetType().IsTupleOrValueTuple())
+                return null;
+
             ITuple? tuple = TupleAccessor.For(value);
 
             return tuple is null ? null : FormatTuple(tuple, true);

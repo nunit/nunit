@@ -255,6 +255,30 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
         }
 
+        [Test]
+        public static void WillNotFormatClassesDerivedFromTupleAsTuples()
+        {
+            var tuple = new MyTuple("Name", 3);
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("<Name: (3)>"));
+        }
+
+        private sealed class MyTuple : Tuple<int>
+        {
+            public MyTuple(string name, int item1)
+                : base(item1)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public override string ToString()
+            {
+                return $"{Name}: {base.ToString()}";
+            }
+        }
+
         #endregion
 
         #region EscapeControlChars
