@@ -101,11 +101,5 @@ namespace NUnit.Framework.Interfaces
         /// The arguments to use in creating the test or empty array if none are required.
         /// </summary>
         object?[] Arguments { get; }
-
-        /// <summary>
-        /// Gets a bool indicating whether this test is a TestFixture or a SetupFixture
-        /// If so, TypeInfo can be used.
-        /// </summary>
-        bool IsFixture { get; }
     }
 }
