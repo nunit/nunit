@@ -72,6 +72,20 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        /// <summary>
+        /// Constructs a copy of a test, keeping its identity, type, method and setup information.
+        /// A new <see cref="Id"/> is generated.
+        /// </summary>
+        /// <param name="test">The test to copy.</param>
+        private protected Test(Test test)
+            : this(pathName: null, test.Name, test.TypeInfo, test.Method)
+        {
+            FullName = test.FullName;
+            RunState = test.RunState;
+            SetUpMethods = test.SetUpMethods;
+            TearDownMethods = test.TearDownMethods;
+        }
+
         private Test(string? pathName, string name, ITypeInfo? typeInfo, IMethodInfo? method)
         {
             ArgumentException.ThrowIfNullOrEmpty(name);

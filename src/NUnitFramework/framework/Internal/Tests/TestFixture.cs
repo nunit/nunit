@@ -44,6 +44,7 @@ namespace NUnit.Framework.Internal
         private TestFixture(TestFixture fixture, ITestFilter filter)
             : base(fixture, filter)
         {
+            LifeCycle = fixture.LifeCycle;
         }
 
         /// <summary>
