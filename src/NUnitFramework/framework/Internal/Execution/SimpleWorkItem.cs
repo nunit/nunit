@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal.Execution
         internal TestCommand MakeTestCommand()
         {
             if (Test.RunState == RunState.Runnable ||
-                Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test))
+                (Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test)))
             {
                 // Command to execute test
                 TestCommand command = new TestMethodCommand(_testMethod);
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Dispose of fixture if necessary
                 var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
-                if (isInstancePerTestCase && parentFixture is IDisposableFixture && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
+                if (isInstancePerTestCase && parentFixture is not null && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.WrapSetupTearDownAttributes)
+                foreach (IWrapSetUpTearDown decorator in method.WrapSetupTearDownAttributes)
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
@@ -163,10 +163,8 @@ namespace NUnit.Framework.Internal.Execution
 
                 return command;
             }
-            else
-            {
-                return new SkipCommand(_testMethod);
-            }
+
+            return new SkipCommand(_testMethod);
         }
     }
 }
