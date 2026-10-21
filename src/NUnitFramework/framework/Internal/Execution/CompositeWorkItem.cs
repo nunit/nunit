@@ -174,14 +174,14 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
 
-            if (Test.TypeInfo is not null)
+            if (Test.IsFixture)
             {
                 // Build the OneTimeSetUpCommands
                 foreach (var item in setUpTearDown)
                     command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
-                if (!Test.TypeInfo.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+                if (!Test.TypeInfo!.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                     command = new ConstructFixtureCommand(command);
             }
 
@@ -210,7 +210,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && Test.TypeInfo is not null && DisposeHelper.IsDisposable(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
+            if (Test is IDisposableFixture && Test.IsFixture && DisposeHelper.IsDisposable(Test.TypeInfo!.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
