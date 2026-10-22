@@ -104,7 +104,40 @@ namespace NUnit.Framework.Tests.Constraints
 #endif
         }
 
+        private static IEnumerable<object[]> GetLinearToleranceData_BoundsData()
+        {
+            yield return new object[] { byte.MinValue + 2, byte.MinValue, 1 };
+            yield return new object[] { byte.MaxValue, byte.MaxValue - 2, 1 };
+            yield return new object[] { ushort.MinValue + 2, ushort.MinValue, 1 };
+            yield return new object[] { ushort.MaxValue, ushort.MaxValue - 2, 1 };
+            yield return new object[] { short.MinValue + 2, short.MinValue, 1 };
+            yield return new object[] { short.MaxValue, short.MaxValue - 2, 1 };
+            yield return new object[] { uint.MinValue + 2, uint.MinValue, 1 };
+            yield return new object[] { uint.MaxValue, uint.MaxValue - 2, 1 };
+            yield return new object[] { int.MinValue + 2, int.MinValue, 1 };
+            yield return new object[] { int.MaxValue, int.MaxValue - 2, 1 };
+            yield return new object[] { ulong.MinValue + 2, ulong.MinValue, 1 };
+            yield return new object[] { ulong.MaxValue, ulong.MaxValue - 2, 1 };
+            yield return new object[] { long.MinValue + 2, long.MinValue, 1 };
+            yield return new object[] { long.MaxValue, long.MaxValue - 2, 1 };
+
+            yield return new object[] { nint.MinValue + 2, nint.MinValue, 1 };
+            yield return new object[] { nint.MaxValue, nint.MaxValue - 2, 1 };
+            yield return new object[] { nuint.MinValue + 2, nuint.MinValue, 1 };
+            yield return new object[] { nuint.MaxValue, nuint.MaxValue - 2, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { (Half)(-65472), (Half)(-65500), (Half)1 };
+            yield return new object[] { (Half)65500, (Half)65472, (Half)1 };
+
+            yield return new object[] { UInt128.MinValue + 2, UInt128.MinValue, (UInt128)1 };
+            yield return new object[] { UInt128.MaxValue, UInt128.MaxValue - 2, (UInt128)1 };
+            yield return new object[] { Int128.MinValue + 2, Int128.MinValue, (Int128)1 };
+            yield return new object[] { Int128.MaxValue, Int128.MaxValue - 2, (Int128)1 };
+#endif
+        }
+
         [TestCaseSource(nameof(GetLinearToleranceData))]
+        [TestCaseSource(nameof(GetLinearToleranceData_BoundsData))]
         public void LinearTolerance<TActual, TExpected, TTolerance>(TActual actual, TExpected expected, TTolerance tolerance)
             where TActual : notnull
             where TExpected : notnull

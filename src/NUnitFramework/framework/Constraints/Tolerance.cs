@@ -260,92 +260,122 @@ namespace NUnit.Framework.Constraints
 
         private Range LinearRange(object value)
         {
-#if !NETFRAMEWORK
-            if (Amount is UInt128 || value is UInt128)
-            {
-                var amount = Numerics.ConvertToValue<UInt128>(Amount);
-                var v = Numerics.ConvertToValue<UInt128>(value);
-                return new Range(v - amount, v + amount);
-            }
-
-            if (Amount is Int128 || value is Int128)
-            {
-                var amount = Numerics.ConvertToValue<Int128>(Amount);
-                var v = Numerics.ConvertToValue<Int128>(value);
-                return new Range(v - amount, v + amount);
-            }
-#endif
-
             if (Amount is double || value is double)
             {
                 var amount = Numerics.ConvertToValue<double>(Amount);
-                var v = Numerics.ConvertToValue<double>(value);
-                return new Range(v - amount, v + amount);
+                var offset = Numerics.ConvertToValue<double>(value);
+                return new Range(offset - amount, offset + amount);
             }
 
             if (Amount is float || value is float)
             {
                 var amount = Numerics.ConvertToValue<float>(Amount);
-                var v = Numerics.ConvertToValue<float>(value);
-                return new Range(v - amount, v + amount);
+                var offset = Numerics.ConvertToValue<float>(value);
+                return new Range(offset - amount, offset + amount);
             }
 
 #if !NETFRAMEWORK
             if (Amount is Half || value is Half)
             {
                 var amount = Numerics.ConvertToValue<Half>(Amount);
-                var v = Numerics.ConvertToValue<Half>(value);
-                return new Range(v - amount, v + amount);
+                var offset = Numerics.ConvertToValue<Half>(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : Half.MinValue,
+                    Half.MaxValue - offset >= amount ? offset + amount : Half.MaxValue);
             }
 #endif
 
             if (Amount is decimal || value is decimal)
             {
                 var amount = Numerics.ConvertToValue<decimal>(Amount);
-                var v = Numerics.ConvertToValue<decimal>(value);
-                return new Range(v - amount, v + amount);
+                var offset = Numerics.ConvertToValue<decimal>(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : decimal.MinValue,
+                    decimal.MaxValue - offset >= amount ? offset + amount : decimal.MaxValue);
             }
 
-            if (Amount is nuint || value is nuint)
+#if !NETFRAMEWORK
+            if (Amount is UInt128 || value is UInt128)
             {
-                var amount = Amount is nuint nuintAmount ? nuintAmount : (nuint)Convert.ToUInt64(Amount);
-                var v = value is nuint nuintValue ? nuintValue : (nuint)Convert.ToUInt64(value);
-                return new Range(v - amount, v + amount);
+                var amount = Numerics.ConvertToValue<UInt128>(Amount);
+                var offset = Numerics.ConvertToValue<UInt128>(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : UInt128.MinValue,
+                    UInt128.MaxValue - offset >= amount ? offset + amount : UInt128.MaxValue);
             }
 
-            if (Amount is nint || value is nint)
+            if (Amount is Int128 || value is Int128)
             {
-                var amount = Amount is nint nintAmount ? nintAmount : (nint)Convert.ToInt64(Amount);
-                var v = value is nint nintValue ? nintValue : (nint)Convert.ToInt64(value);
-                return new Range(v - amount, v + amount);
+                var amount = Numerics.ConvertToValue<Int128>(Amount);
+                var offset = Numerics.ConvertToValue<Int128>(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : Int128.MinValue,
+                    Int128.MaxValue - offset >= amount ? offset + amount : Int128.MaxValue);
             }
+#endif
 
             if (Amount is ulong || value is ulong)
             {
                 var amount = Convert.ToUInt64(Amount);
-                var v = Convert.ToUInt64(value);
-                return new Range(v - amount, v + amount);
+                var offset = Convert.ToUInt64(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : ulong.MinValue,
+                    ulong.MaxValue - offset >= amount ? offset + amount : ulong.MaxValue);
             }
 
             if (Amount is long || value is long)
             {
                 var amount = Convert.ToInt64(Amount);
-                var v = Convert.ToInt64(value);
-                return new Range(v - amount, v + amount);
+                var offset = Convert.ToInt64(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : long.MinValue,
+                    long.MaxValue - offset >= amount ? offset + amount : long.MaxValue);
+            }
+
+            if (Amount is nuint || value is nuint)
+            {
+                var amount = Amount is nuint nuintAmount ? nuintAmount : (nuint)Convert.ToUInt64(Amount);
+                var offset = value is nuint nuintValue ? nuintValue : (nuint)Convert.ToUInt64(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : nuint.MinValue,
+                    nuint.MaxValue - offset >= amount ? offset + amount : nuint.MaxValue);
+            }
+
+            if (Amount is nint || value is nint)
+            {
+                var amount = Amount is nint nintAmount ? nintAmount : (nint)Convert.ToInt64(Amount);
+                var offset = value is nint nintValue ? nintValue : (nint)Convert.ToInt64(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : nint.MinValue,
+                    nint.MaxValue - offset >= amount ? offset + amount : nint.MaxValue);
             }
 
             if (Amount is uint || value is uint)
             {
                 var amount = Convert.ToUInt32(Amount);
-                var v = Convert.ToUInt32(value);
-                return new Range(v - amount, v + amount);
+                var offset = Convert.ToUInt32(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : uint.MinValue,
+                    uint.MaxValue - offset >= amount ? offset + amount : uint.MaxValue);
             }
 
             if (Numerics.IsFixedPointNumeric(Amount) && Numerics.IsFixedPointNumeric(value))
             {
                 var amount = Convert.ToInt32(Amount);
-                var v = Convert.ToInt32(value);
-                return new Range(v - amount, v + amount);
+                var offset = Convert.ToInt32(value);
+
+                return new Range(
+                    offset >= amount ? offset - amount : int.MinValue,
+                    int.MaxValue - offset >= amount ? offset + amount : int.MaxValue);
             }
 
             if (Amount is TimeSpan interval && value is DateTime dateTime)
