@@ -313,8 +313,12 @@ namespace NUnit.Framework.Constraints
                 var offset = Numerics.ConvertToValue<Int128>(value);
 
                 return new Range(
-                    offset >= amount ? offset - amount : Int128.MinValue,
-                    Int128.MaxValue - offset >= amount ? offset + amount : Int128.MaxValue);
+                    offset < Int128.MinValue + amount ? Int128.MinValue : offset - amount,
+                    offset > Int128.MaxValue - amount ? Int128.MaxValue : offset + amount);
+
+                //return new Range(
+                //    offset >= amount ? offset - amount : Int128.MinValue,
+                //    Int128.MaxValue - offset >= amount ? offset + amount : Int128.MaxValue);
             }
 #endif
 

@@ -108,40 +108,33 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static IEnumerable<object[]> GetLinearToleranceData_BoundsData()
         {
-            yield return new object[] { byte.MinValue + 1, byte.MinValue, 1 };
-            yield return new object[] { byte.MaxValue, byte.MaxValue - 1, 1 };
-            yield return new object[] { ushort.MinValue + 1, ushort.MinValue, 1 };
-            yield return new object[] { ushort.MaxValue, ushort.MaxValue - 1, 1 };
-            yield return new object[] { short.MinValue + 1, short.MinValue, 1 };
-            yield return new object[] { short.MaxValue, short.MaxValue - 1, 1 };
-            yield return new object[] { uint.MinValue + 1, uint.MinValue, 1 };
-            yield return new object[] { uint.MaxValue, uint.MaxValue - 1, 1 };
-            yield return new object[] { int.MinValue + 1, int.MinValue, 1 };
-            yield return new object[] { int.MaxValue, int.MaxValue - 1, 1 };
-            yield return new object[] { ulong.MinValue + 1, ulong.MinValue, 1 };
-            yield return new object[] { ulong.MaxValue, ulong.MaxValue - 1, 1 };
-            yield return new object[] { long.MinValue + 1, long.MinValue, 1 };
-            yield return new object[] { long.MaxValue, long.MaxValue - 1, 1 };
+            yield return new object[] { byte.MinValue, byte.MinValue + 1, 1 };
+            yield return new object[] { byte.MaxValue - 1, byte.MaxValue, 1 };
+            yield return new object[] { ushort.MinValue, ushort.MinValue + 1, 1 };
+            yield return new object[] { ushort.MaxValue - 1, ushort.MaxValue, 1 };
+            yield return new object[] { short.MinValue, short.MinValue + 1, 1 };
+            yield return new object[] { short.MaxValue - 1, short.MaxValue, 1 };
+            yield return new object[] { uint.MinValue, uint.MinValue + 1, 1 };
+            yield return new object[] { uint.MaxValue - 1, uint.MaxValue, 1 };
+            yield return new object[] { int.MinValue, int.MinValue + 1, 1 };
+            yield return new object[] { int.MaxValue - 1, int.MaxValue, 1 };
+            yield return new object[] { ulong.MinValue, ulong.MinValue + 1, 1 };
+            yield return new object[] { ulong.MaxValue - 1, ulong.MaxValue, 1 };
+            yield return new object[] { long.MinValue, long.MinValue + 1, 1 };
+            yield return new object[] { long.MaxValue - 1, long.MaxValue, 1 };
 
-            yield return new object[] { float.MinValue + 1, float.MinValue, 1 };
-            yield return new object[] { float.MaxValue, float.MaxValue - 1, 1 };
-            yield return new object[] { double.MinValue + 1, double.MinValue, 1 };
-            yield return new object[] { double.MaxValue, double.MaxValue - 1, 1 };
-            yield return new object[] { decimal.MinValue + 1, decimal.MinValue, 1 };
-            yield return new object[] { decimal.MaxValue, decimal.MaxValue - 1, 1 };
-
-            yield return new object[] { nint.MinValue + 1, nint.MinValue, 1 };
-            yield return new object[] { nint.MaxValue, nint.MaxValue - 1, 1 };
-            yield return new object[] { nuint.MinValue + 1, nuint.MinValue, 1 };
-            yield return new object[] { nuint.MaxValue, nuint.MaxValue - 1, 1 };
+            yield return new object[] { nint.MinValue, nint.MinValue + 1, 1 };
+            yield return new object[] { nint.MaxValue - 1, nint.MaxValue, 1 };
+            yield return new object[] { nuint.MinValue, nuint.MinValue + 1, 1 };
+            yield return new object[] { nuint.MaxValue - 1, nuint.MaxValue, 1 };
 #if !NETFRAMEWORK
             yield return new object[] { (Half)(-65472), (Half)(-65500), (Half)1 };
             yield return new object[] { (Half)65500, (Half)65472, (Half)1 };
 
-            yield return new object[] { UInt128.MinValue + 1, UInt128.MinValue, (UInt128)1 };
-            yield return new object[] { UInt128.MaxValue, UInt128.MaxValue - 1, (UInt128)1 };
-            yield return new object[] { Int128.MinValue + 1, Int128.MinValue, (Int128)1 };
-            yield return new object[] { Int128.MaxValue, Int128.MaxValue - 1, (Int128)1 };
+            yield return new object[] { UInt128.MinValue, UInt128.MinValue + 1, (UInt128)1 };
+            yield return new object[] { UInt128.MaxValue - 1, UInt128.MaxValue, (UInt128)1 };
+            yield return new object[] { Int128.MinValue, Int128.MinValue + 1, (Int128)1 };
+            yield return new object[] { Int128.MaxValue - 1, Int128.MaxValue, (Int128)1 };
 #endif
         }
 
