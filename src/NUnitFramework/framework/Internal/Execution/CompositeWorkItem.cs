@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
@@ -169,14 +170,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             TestCommand command = new EmptyTestCommand(Test);
 
-            // Add Action Commands
-            int index = actions.Count;
-            while (--index >= 0)
-                command = new BeforeTestActionCommand(command, actions[index]);
+            // Add Action Commands in reverse order so that they are executed in the order they were added
+            command = command.WrapWith(Enumerable.Reverse(actions), (c, action) => new BeforeTestActionCommand(c, action));
 
             if (Test.IsFixture)
             {
-                // Build the OneTimeSetUpCommands
+                // Build the chain of OneTimeSetUpCommands
                 command = command.WrapWith(setUpTearDown, (c, item) => new OneTimeSetUpCommand(c, item));
 
                 // Construct the fixture if necessary
@@ -198,12 +197,10 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TestType == "Theory")
                 command = new TheoryResultCommand(command);
 
-            // Create the AfterTestAction commands
-            int index = actions.Count;
-            while (--index >= 0)
-                command = new AfterTestActionCommand(command, actions[index]);
+            // Create the chain of AfterTestAction commands
+            command = command.WrapWith(Enumerable.Reverse(actions), (c, action) => new AfterTestActionCommand(c, action));
 
-            // Create the OneTimeTearDown commands
+            // Create the chain of OneTimeTearDown commands
             command = command.WrapWith(setUpTearDownItems, (c, item) => new OneTimeTearDownCommand(c, item));
 
             // Dispose of fixture if necessary

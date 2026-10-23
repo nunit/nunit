@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Extensions
@@ -19,6 +20,19 @@ namespace NUnit.Framework.Internal.Extensions
                 TestCommand wrapped = command;
                 foreach (T item in items)
                     wrapped = wrap(wrapped, item);
+
+                return wrapped;
+            }
+
+            /// <summary>
+            /// Wraps the command with each wrapper, in order.
+            /// Each wrap encloses the result of the previous one.
+            /// </summary>
+            public TestCommand WrapWith(IEnumerable<ICommandWrapper> wrappers)
+            {
+                TestCommand wrapped = command;
+                foreach (ICommandWrapper wrapper in wrappers)
+                    wrapped = wrapper.Wrap(wrapped);
 
                 return wrapped;
             }
