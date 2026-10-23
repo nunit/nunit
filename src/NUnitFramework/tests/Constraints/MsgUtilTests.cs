@@ -224,14 +224,37 @@ namespace NUnit.Framework.Tests.Constraints
             var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, 8);
             string s = MsgUtils.FormatValue(tuple);
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8)"));
+            Assert.That(s, Is.EqualTo(tuple.ToString()));
         }
 
         [Test]
-        public static void FormatValue_EightElementsTupleNestedTest()
+        public static void FormatValue_EightElementsNestedTupleEndTest()
         {
             var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, Tuple.Create(8, "9"));
             string s = MsgUtils.FormatValue(tuple);
+
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, (8, \"9\"))"));
+            Assert.That(s.Replace("\"", string.Empty), Is.EqualTo(tuple.ToString()));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementDerivedTupleTest()
+        {
+            var tuple = Tuple.Create(1, 2, 3, 4, 5, 6, 7, new TestUtilities.MyTuple("Eight", 8));
+            string s = MsgUtils.FormatValue(tuple);
+
+            Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, <Eight: (8)>)"));
+            Assert.That(s.Replace("<", string.Empty).Replace(">", string.Empty), Is.EqualTo(tuple.ToString()));
+        }
+
+        [Test]
+        public static void FormatValue_EightElementsNestedTupleMiddleTest()
+        {
+            var tuple = Tuple.Create(1, 2, 3, Tuple.Create(4, "5"), 6, 7, 8, 9);
+            string s = MsgUtils.FormatValue(tuple);
+
+            Assert.That(s, Is.EqualTo("(1, 2, 3, (4, \"5\"), 6, 7, 8, 9)"));
+            Assert.That(s.Replace("\"", string.Empty), Is.EqualTo(tuple.ToString()));
         }
 
         [Test]
@@ -243,6 +266,25 @@ namespace NUnit.Framework.Tests.Constraints
 
             string s = MsgUtils.FormatValue(tuple);
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
+            Assert.That(s.Replace("\"", string.Empty), Is.EqualTo(tuple.ToString()));
+        }
+
+        [Test]
+        public static void FormatValue8ElementsDefaultTupleTest()
+        {
+            var tuple = default(ValueTuple<int, int, int, int, int, int, int, int>);
+
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("(0, 0, 0, 0, 0, 0, 0, 0)"));
+            Assert.That(s, Is.EqualTo(tuple.ToString()));
+        }
+
+        [Test]
+        public static void WillNotFormatClassesDerivedFromTupleAsTuples()
+        {
+            var tuple = new TestUtilities.MyTuple("Three", 3);
+            string s = MsgUtils.FormatValue(tuple);
+            Assert.That(s, Is.EqualTo("<Three: (3)>"));
         }
 
         #endregion
