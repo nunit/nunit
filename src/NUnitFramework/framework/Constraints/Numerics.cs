@@ -237,7 +237,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T>(T expected, T actual, ref Tolerance tolerance)
-            where T : struct, IConvertible, IComparable<T>
+            where T : struct, IConvertible
         {
             // We know that both arguments are the same type, so we don't need or and conversions.
             if (expected is double expectedDouble && actual is double actualDouble)
@@ -848,14 +848,14 @@ namespace NUnit.Framework.Constraints
             if (IsUnsignedFixedPointNumeric(other))
             {
                 // 'other' is an unsigned fixed point numeric type, so we can safely convert it to ulong for comparison
-                ulong otherUInt64 = ConvertToValue<ulong>(other);
+                ulong otherUInt64 = Convert.ToUInt64(other);
                 return uint64IsExpected
                     ? AreEqual(uint64Value, otherUInt64, tolerance)
                     : AreEqual(otherUInt64, uint64Value, tolerance);
             }
 
             // 'other' is a signed fixed point numeric type, so we can safely convert it to long for comparison
-            long otherInt64 = ConvertToValue<long>(other);
+            long otherInt64 = Convert.ToInt64(other);
 
             if (otherInt64 >= 0)
             {
