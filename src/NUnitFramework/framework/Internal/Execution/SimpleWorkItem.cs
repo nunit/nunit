@@ -114,19 +114,9 @@ namespace NUnit.Framework.Internal.Execution
                 if (isInstancePerTestCase && parentFixture is not null && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 
-                // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-                // then actions would have to be tested for here. For now we simply assert it in Debug. We allow
-                // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
-                int index = Context.UpstreamActions.Count;
-                while (--index >= 0)
-                {
-                    ITestAction action = Context.UpstreamActions[index];
-                    System.Diagnostics.Debug.Assert(
-                        action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test),
-                        $"Invalid target on upstream action: {action.Targets}");
-
-                    command = new TestActionCommand(command, action);
-                }
+                // Build the chain of TestActionCommands for actions inherited from enclosing suites,
+                // in reverse order so the actions of the outermost suite run first
+                command = command.WrapWith(Enumerable.Reverse(Context.UpstreamActions), (c, action) => new TestActionCommand(c, action));
 
                 // Add wrappers that apply before setup and after teardown
                 command = command.WrapWith(method.WrapSetupTearDownAttributes);
