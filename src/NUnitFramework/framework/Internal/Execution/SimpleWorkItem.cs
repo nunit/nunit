@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Build the chain of TestActionCommands for actions that target the test
                 command = command.WrapWith(
-                    Test.Actions.Where(action => action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test)),
+                    Test.Actions.Where(action => action.AppliesToTest()),
                     (c, action) => new TestActionCommand(c, action));
 
                 // Try to locate the parent fixture. In current implementations, the test method
