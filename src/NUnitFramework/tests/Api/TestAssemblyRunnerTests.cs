@@ -334,6 +334,32 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
+        public void ExploreTests_AfterLoad_WithFilter_FixturesKeepClassName()
+        {
+            LoadMockAssembly();
+            ITestFilter filter = new CategoryFilter("FixtureCategory");
+
+            var fixtures = new List<ITest>();
+            CollectFixtures(_runner.ExploreTests(filter), fixtures);
+
+            Assert.That(fixtures, Is.Not.Empty);
+            foreach (var fixture in fixtures)
+            {
+                Assert.That(fixture.ClassName, Is.Not.Null, fixture.FullName);
+                Assert.That(fixture.ToXml(false).Attributes["classname"], Is.EqualTo(fixture.ClassName), fixture.FullName);
+            }
+        }
+
+        private static void CollectFixtures(ITest test, List<ITest> fixtures)
+        {
+            if (test.TestType == nameof(TestFixture))
+                fixtures.Add(test);
+
+            foreach (var child in test.Tests)
+                CollectFixtures(child, fixtures);
+        }
+
+        [Test]
         public void ExploreTests_AfterLoad_WithFilter_ReturnCorrectCount()
         {
             LoadMockAssembly();
