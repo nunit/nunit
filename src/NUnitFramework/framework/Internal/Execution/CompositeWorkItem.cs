@@ -183,7 +183,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new ConstructFixtureCommand(command);
             }
 
-            // Prefix with any IApplyToContext items from attributes
+            // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
             command = command.WrapWith(Test.GetCustomAttributes<IApplyToContext>(true), (c, attribute) => new ApplyChangesToContextCommand(c, attribute));
 
             return command;
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TestType == "Theory")
                 command = new TheoryResultCommand(command);
 
-            // Create the chain of AfterTestAction commands
+            // Build the chain of AfterTestActionCommands, in reverse order to mirror the BeforeTestActionCommands
             command = command.WrapWith(Enumerable.Reverse(actions), (c, action) => new AfterTestActionCommand(c, action));
 
             // Create the chain of OneTimeTearDown commands

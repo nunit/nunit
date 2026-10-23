@@ -85,10 +85,10 @@ namespace NUnit.Framework.Internal.Execution
 
                 var method = MethodInfoCache.Get(_testMethod.Method);
 
-                // Add any wrappers to the TestMethodCommand
+                // Build the chain of IWrapTestMethod wrappers around the test method
                 command = command.WrapWith(method.WrapTestMethodAttributes);
 
-                // Create TestActionCommands using attributes of the method
+                // Build the chain of TestActionCommands for actions that target the test
                 command = command.WrapWith(
                     Test.Actions.Where(action => action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test)),
                     (c, action) => new TestActionCommand(c, action));
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal.Execution
                 var setUpMethods = parentFixture?.SetUpMethods ?? typeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
                 var tearDownMethods = parentFixture?.TearDownMethods ?? typeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
-                // Wrap in SetUpTearDownCommands
+                // Build the chain of SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
                 command = command.WrapWith(setUpTearDownList, (c, item) => new SetUpTearDownCommand(c, item));
 
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Internal.Execution
                 // Add wrappers that apply before setup and after teardown
                 command = command.WrapWith(method.WrapSetupTearDownAttributes);
 
-                // Add command to set up context using attributes that implement IApplyToContext
+                // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
                 command = command.WrapWith(method.ApplyToContextAttributes, (c, attr) => new ApplyChangesToContextCommand(c, attr));
 
                 // Add a construct command and optionally a dispose command in case of instance per test case.
