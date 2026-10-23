@@ -130,6 +130,140 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        [TestCaseSource(nameof(SucceedingUnsignedFixedPointNumericMethodTestCases))]
+        public void SucceedsUnsignedFixedPointNumericMethod<T>(T value)
+            where T : struct
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.IsUnsignedFixedPointNumeric(value), Is.True);
+                Assert.That(Numerics.IsUnsignedFixedPointNumeric((object)value), Is.True);
+            }
+        }
+
+        private static readonly TestCaseData[] SucceedingUnsignedFixedPointNumericMethodTestCases =
+        {
+            TestCaseData.Create((byte)100),
+            TestCaseData.Create((ushort)100),
+            TestCaseData.Create((uint)100),
+            TestCaseData.Create((ulong)100),
+            TestCaseData.Create((nuint)100),
+#if !NETFRAMEWORK
+            TestCaseData.Create((UInt128)100),
+#endif
+        };
+
+        [TestCaseSource(nameof(FailingUnsignedFixedPointNumericMethodTestCases))]
+        public void FailsUnsignedFixedPointNumericMethod<T>(T value)
+            where T : struct
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.IsUnsignedFixedPointNumeric(value), Is.False);
+                Assert.That(Numerics.IsUnsignedFixedPointNumeric((object)value), Is.False);
+            }
+        }
+
+        private static readonly TestCaseData[] FailingUnsignedFixedPointNumericMethodTestCases =
+        {
+            TestCaseData.Create((sbyte)100),
+            TestCaseData.Create((short)100),
+            TestCaseData.Create((int)100),
+            TestCaseData.Create((long)100),
+            TestCaseData.Create((nint)100),
+#if !NETFRAMEWORK
+            TestCaseData.Create((Int128)100),
+#endif
+        };
+
+        [Test]
+        public void AreEqualHundredDifferentTypes<T1, T2>(
+            [ValueSource(nameof(ValueHundredInAllTypes))] T1 value,
+            [ValueSource(nameof(ValueHundredInAllTypes))] T2 sameValue)
+            where T1 : struct
+            where T2 : struct
+        {
+            Assert.That(Numerics.AreEqual(sameValue, value, ref _tenPercent), Is.True);
+        }
+
+        private static readonly object[] ValueHundredInAllTypes =
+        [
+            (sbyte)100,
+            (byte)100,
+            (short)100,
+            (ushort)100,
+            (int)100,
+            (uint)100,
+            (long)100,
+            (ulong)100,
+            (uint)100,
+            (nuint)100,
+            (float)100,
+            (double)100,
+            (decimal)100,
+#if !NETFRAMEWORK
+            (Half)100,
+            (Int128)100,
+            (UInt128)100,
+#endif
+        ];
+
+        [Test]
+        public void AreEqualMinusHundredDifferentTypes<T1, T2>(
+            [ValueSource(nameof(ValueMinusHundredInSignedAllTypes))] T1 value,
+            [ValueSource(nameof(ValueMinusHundredInSignedAllTypes))] T2 sameValue)
+            where T1 : struct
+            where T2 : struct
+        {
+            Assert.That(Numerics.AreEqual(sameValue, value, ref _tenPercent), Is.True);
+        }
+
+        private static readonly object[] ValueMinusHundredInSignedAllTypes =
+        [
+            (sbyte)-100,
+            (short)-100,
+            (int)-100,
+            (long)-100,
+            (float)-100,
+            (double)-100,
+            (decimal)-100,
+#if !NETFRAMEWORK
+            (Half)(-100),
+            (Int128)(-100),
+#endif
+        ];
+
+        [Test]
+        public void ComparingHundredWithMinusHundredDifferentTypes<T1, T2>(
+            [ValueSource(nameof(ValueHundredInAllTypes))] T1 value,
+            [ValueSource(nameof(ValueMinusHundredInSignedAllTypes))] T2 otherValue)
+            where T1 : struct
+            where T2 : struct
+        {
+            Assert.That(Numerics.AreEqual(otherValue, value, ref _tenPercent), Is.False);
+        }
+
+        [TestCaseSource(nameof(ExtremeValuePairs))]
+        public void AreEqualExtremeUnsignedWithSignedValues<T1, T2>(T1 value, T2 differentValue)
+            where T1 : struct
+            where T2 : struct
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(differentValue, value, ref _tenPercent), Is.False);
+                Assert.That(Numerics.AreEqual(value, differentValue, ref _tenPercent), Is.False);
+            }
+        }
+
+        private static readonly TestCaseData[] ExtremeValuePairs =
+        [
+            TestCaseData.Create(ulong.MaxValue, long.MinValue),
+            TestCaseData.Create(nuint.MaxValue, nint.MinValue),
+#if !NETFRAMEWORK
+            TestCaseData.Create(UInt128.MaxValue, Int128.MinValue),
+#endif
+        ];
+
         [TestCaseSource(nameof(GetEqualsWithPercentageEdgeCases))]
         public void EqualsWithPercentageEdgeCases<T>(T value)
             where T : notnull

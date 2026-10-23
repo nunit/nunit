@@ -92,13 +92,56 @@ namespace NUnit.Framework.Constraints
             return false;
         }
 
+        /// <summary>
+        /// Checks the type of the object, returning true if
+        /// the object is a fixed point numeric type.
+        /// </summary>
+        /// <param name="obj">The object to check</param>
+        /// <returns>true if the object is a fixed point numeric type</returns>
+        internal static bool IsUnsignedFixedPointNumeric(object? obj)
+        {
+            if (obj is uint or ulong or ushort or byte or nuint)
+                return true;
+
+#if !NETFRAMEWORK
+            if (obj is UInt128)
+                return true;
+#endif
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks the type of the value, returning true if
+        /// the value is a fixed point numeric type.
+        /// </summary>
+        /// <remarks>
+        /// This method is generic and constrained the same as the generic AreEqual to prevent boxing of value types.
+        /// </remarks>
+        /// <param name="value">The value to check</param>
+        /// <returns>true if the value is a fixed point numeric type</returns>
+        internal static bool IsUnsignedFixedPointNumeric<T>(T value)
+            where T : struct
+        {
+            if (value is uint or ulong or ushort or byte or nuint)
+                return true;
+
+#if !NETFRAMEWORK
+            if (value is UInt128)
+                return true;
+#endif
+
+            return false;
+        }
+
         private static bool IsWithinDecimalRange(double value)
         {
             return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
         }
-        #endregion
+#endregion
 
         #region Numeric Equality
+
         /// <summary>
         /// Test two numeric values for equality, performing the usual numeric
         /// conversions and using a provided or default tolerance. If the tolerance
@@ -110,17 +153,20 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
+            // nuint doesn't implement IConvertible, convert it to ulong using a cast.
+            if (expected is nuint expectedAsNUInt)
+                expected = (ulong)expectedAsNUInt;
+            if (actual is nuint actualAsNUInt)
+                actual = (ulong)actualAsNUInt;
+
+            // nint doesn't implement IConvertible, convert it to long using a cast.
+            if (expected is nint expectedAsNInt)
+                expected = (long)expectedAsNInt;
+            if (actual is nint actualAsNInt)
+                actual = (long)actualAsNInt;
+
             // Step from highest precision to lowest, converting as necessary.
             // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
-
-            if (expected is Int128 || actual is Int128)
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
-#endif
-
             if (expected is double || actual is double)
                 return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
 
@@ -135,34 +181,49 @@ namespace NUnit.Framework.Constraints
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
-            if (expected is decimal || actual is decimal)
-                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
+#if !NETFRAMEWORK
+            if (expected is UInt128 expectedAsUInt128)
+            {
+                return AreEqualWhenOneOperandIsUInt128(expectedAsUInt128, actual, tolerance, uint128IsExpected: true);
+            }
+            else if (actual is UInt128 actualAsUInt128)
+            {
+                return AreEqualWhenOneOperandIsUInt128(actualAsUInt128, expected, tolerance, uint128IsExpected: false);
+            }
 
-            if (expected is ulong || actual is ulong)
-                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+            if (expected is Int128 || actual is Int128)
+                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
+#endif
+
+            if (expected is decimal || actual is decimal)
+                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
+
+            if (expected is ulong expectedAsULong)
+            {
+                return AreEqualWhenOneOperandIsUInt64(expectedAsULong, actual, tolerance, uint64IsExpected: true);
+            }
+            else if (actual is ulong actualAsULong)
+            {
+                return AreEqualWhenOneOperandIsUInt64(actualAsULong, expected, tolerance, uint64IsExpected: false);
+            }
 
             if (expected is long || actual is long)
                 return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
 
-            if (expected is nuint || actual is nuint)
+            if (expected is uint expectedUInt)
             {
-                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
-                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
-
-                return AreEqual(expectedValue, actualValue, tolerance);
+                if (actual is uint actualUInt)
+                    return AreEqual(expectedUInt, actualUInt, tolerance);
+                else // Promote to long for comparison with signed fixed point numeric types
+                    return AreEqual(expectedUInt, Convert.ToInt64(actual), tolerance);
+            }
+            else if (actual is uint actualUInt)
+            {
+                // Promote to long for comparison with signed fixed point numeric types
+                return AreEqual(Convert.ToInt64(expected), actualUInt, tolerance);
             }
 
-            if (expected is nint || actual is nint)
-            {
-                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
-                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
-
-                return AreEqual(expectedValue, actualValue, tolerance);
-            }
-
-            if (expected is uint || actual is uint)
-                return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
-
+            // Promote anything smaller than int to int for comparison
             return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
         }
 
@@ -176,29 +237,33 @@ namespace NUnit.Framework.Constraints
         /// <param name="tolerance">A reference to the tolerance in effect</param>
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual<T>(T expected, T actual, ref Tolerance tolerance)
-            where T : struct, IConvertible
+            where T : struct, IConvertible, IComparable<T>
         {
-            if (expected is double || actual is double)
-                return AreIeeeFloatsEqual(expected.ToDouble(null), actual.ToDouble(null), ref tolerance);
+            // We know that both arguments are the same type, so we don't need or and conversions.
+            if (expected is double expectedDouble && actual is double actualDouble)
+                return AreIeeeFloatsEqual(expectedDouble, actualDouble, ref tolerance);
 
-            if (expected is float || actual is float)
-                return AreIeeeFloatsEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
+            if (expected is float expectedFloat && actual is float actualFloat)
+                return AreIeeeFloatsEqual(expectedFloat, actualFloat, ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
-            if (expected is decimal || actual is decimal)
-                return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+            if (expected is decimal expectedDecimal && actual is decimal actualDecimal)
+                return AreEqual(expectedDecimal, actualDecimal, tolerance);
 
-            if (expected is ulong || actual is ulong)
-                return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
+            if (expected is ulong expectedULong && actual is ulong actualULong)
+                return AreEqual(expectedULong, actualULong, tolerance);
 
-            if (expected is long || actual is long)
-                return AreEqual(expected.ToInt64(null), actual.ToInt64(null), tolerance);
+            if (expected is long expectedLong && actual is long actualLong)
+                return AreEqual(expectedLong, actualLong, tolerance);
 
-            if (expected is uint || actual is uint)
-                return AreEqual(expected.ToUInt32(null), actual.ToUInt32(null), tolerance);
+            if (expected is uint expectedUInt && actual is uint actualUInt)
+            {
+                return AreEqual(expectedUInt, actualUInt, tolerance);
+            }
 
+            // Promote anything smaller than int to int for comparison
             return AreEqual(expected.ToInt32(null), actual.ToInt32(null), tolerance);
         }
 
@@ -434,7 +499,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 #endif
-        #endregion
+#endregion
 
         #region Numeric Comparisons
 
@@ -654,8 +719,7 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T relativeError = (expected >= actual ? expected - actual : actual - expected) / expected;
+                    T relativeError = T.Abs((expected - actual) / expected);
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
@@ -704,6 +768,10 @@ namespace NUnit.Framework.Constraints
         {
             if (o is T tol)
                 return tol;
+            if (typeof(T) == typeof(long))
+                return (T)(object)Convert.ToInt64(o);
+            if (typeof(T) == typeof(ulong))
+                return (T)(object)Convert.ToUInt64(o);
             if (typeof(T) == typeof(nint))
                 return (T)(object)Convert.ToInt64(o);
             if (typeof(T) == typeof(nuint))
@@ -723,6 +791,10 @@ namespace NUnit.Framework.Constraints
                 return T.CreateChecked(int128);
             if (o is UInt128 uint128)
                 return T.CreateChecked(uint128);
+            if (o is long int64Value)
+                return T.CreateChecked(int64Value);
+            if (o is ulong uint64Value)
+                return T.CreateChecked(uint64Value);
             if (o is Half half)
                 return T.CreateChecked(half);
             if (o is nint nintValue)
@@ -732,5 +804,79 @@ namespace NUnit.Framework.Constraints
             return T.CreateChecked(Convert.ToDouble(o));
         }
 #endif
+
+#if !NETFRAMEWORK
+        private static bool AreEqualWhenOneOperandIsUInt128(UInt128 uint128Value, object other, Tolerance tolerance, bool uint128IsExpected)
+        {
+            if (IsUnsignedFixedPointNumeric(other))
+            {
+                // 'other' is an unsigned fixed point numeric type, so we can safely convert it to UInt128 for comparison
+                UInt128 otherUInt128 = ConvertToValue<UInt128>(other);
+                return uint128IsExpected
+                    ? AreEqual(uint128Value, otherUInt128, tolerance)
+                    : AreEqual(otherUInt128, uint128Value, tolerance);
+            }
+
+            // 'other' is a signed fixed point numeric type, so we can safely convert it to Int128 for comparison
+            Int128 otherInt128 = ConvertToValue<Int128>(other);
+
+            if (otherInt128 >= 0)
+            {
+                // 'otherInt128' can be safely converted to UInt128 for comparison
+                UInt128 otherAsUInt128 = (UInt128)otherInt128;
+                return uint128IsExpected
+                    ? AreEqual(uint128Value, otherAsUInt128, tolerance)
+                    : AreEqual(otherAsUInt128, uint128Value, tolerance);
+            }
+
+            if (uint128Value < (UInt128)Int128.MaxValue)
+            {
+                // 'uint128Value' can be safely converted to Int128 for comparison
+                Int128 uint128AsInt128 = (Int128)uint128Value;
+                return uint128IsExpected
+                    ? AreEqual(uint128AsInt128, otherInt128, tolerance)
+                    : AreEqual(otherInt128, uint128AsInt128, tolerance);
+            }
+
+            // 'uint128Value' is too large to be converted to Int128, and 'otherInt128' is negative, so they cannot be equal
+            return false;
+        }
+#endif
+
+        private static bool AreEqualWhenOneOperandIsUInt64(ulong uint64Value, object other, Tolerance tolerance, bool uint64IsExpected)
+        {
+            if (IsUnsignedFixedPointNumeric(other))
+            {
+                // 'other' is an unsigned fixed point numeric type, so we can safely convert it to ulong for comparison
+                ulong otherUInt64 = ConvertToValue<ulong>(other);
+                return uint64IsExpected
+                    ? AreEqual(uint64Value, otherUInt64, tolerance)
+                    : AreEqual(otherUInt64, uint64Value, tolerance);
+            }
+
+            // 'other' is a signed fixed point numeric type, so we can safely convert it to long for comparison
+            long otherInt64 = ConvertToValue<long>(other);
+
+            if (otherInt64 >= 0)
+            {
+                // 'otherInt64' can be safely converted to ulong for comparison
+                ulong otherAsUInt64 = (ulong)otherInt64;
+                return uint64IsExpected
+                    ? AreEqual(uint64Value, otherAsUInt64, tolerance)
+                    : AreEqual(otherAsUInt64, uint64Value, tolerance);
+            }
+
+            if (uint64Value < (ulong)long.MaxValue)
+            {
+                // 'uint64Value' can be safely converted to long for comparison
+                long uint64AsInt64 = (long)uint64Value;
+                return uint64IsExpected
+                    ? AreEqual(uint64AsInt64, otherInt64, tolerance)
+                    : AreEqual(otherInt64, uint64AsInt64, tolerance);
+            }
+
+            // 'uint64Value' is too large to be converted to long, and 'otherInt64' is negative, so they cannot be equal
+            return false;
+        }
     }
 }
