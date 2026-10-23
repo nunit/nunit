@@ -7,7 +7,7 @@ using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Extensions
 {
-    internal static class WorkItemExtensions
+    internal static class TestCommandExtensions
     {
         extension(TestCommand command)
         {
