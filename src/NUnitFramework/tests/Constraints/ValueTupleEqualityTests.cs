@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsWhenNoneOfTheTupleMembersSupportTolerance()
         {
             // We need two identical strings, but not the same reference.
-            // Equals bails out when to instances have the same reference, before calling the appropriate comparer.
+            // Equals bails out when two instances have the same reference, before calling the appropriate comparer.
             // So we need a different reference to trigger calling the comparer, which will then reject tolerance for strings.
             string alsoHello = string.Format("{0}", Hello);
             Assert.That(alsoHello, Is.Not.SameAs(Hello));
