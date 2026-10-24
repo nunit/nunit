@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
@@ -169,25 +170,21 @@ namespace NUnit.Framework.Internal.Execution
         {
             TestCommand command = new EmptyTestCommand(Test);
 
-            // Add Action Commands
-            int index = actions.Count;
-            while (--index >= 0)
-                command = new BeforeTestActionCommand(command, actions[index]);
+            // Add Action Commands in reverse order so that they are executed in the order they were added
+            command = command.WrapWith(Enumerable.Reverse(actions), (c, action) => new BeforeTestActionCommand(c, action));
 
             if (Test.IsFixture)
             {
-                // Build the OneTimeSetUpCommands
-                foreach (var item in setUpTearDown)
-                    command = new OneTimeSetUpCommand(command, item);
+                // Build the chain of OneTimeSetUpCommands
+                command = command.WrapWith(setUpTearDown, (c, item) => new OneTimeSetUpCommand(c, item));
 
                 // Construct the fixture if necessary
                 if (!Test.TypeInfo!.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                     command = new ConstructFixtureCommand(command);
             }
 
-            // Prefix with any IApplyToContext items from attributes
-            foreach (IApplyToContext attribute in Test.GetCustomAttributes<IApplyToContext>(true))
-                command = new ApplyChangesToContextCommand(command, attribute);
+            // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
+            command = command.WrapWith(Test.GetCustomAttributes<IApplyToContext>(true), (c, attribute) => new ApplyChangesToContextCommand(c, attribute));
 
             return command;
         }
@@ -200,14 +197,11 @@ namespace NUnit.Framework.Internal.Execution
             if (Test.TestType == "Theory")
                 command = new TheoryResultCommand(command);
 
-            // Create the AfterTestAction commands
-            int index = actions.Count;
-            while (--index >= 0)
-                command = new AfterTestActionCommand(command, actions[index]);
+            // Build the chain of AfterTestActionCommands, in reverse order to mirror the BeforeTestActionCommands
+            command = command.WrapWith(Enumerable.Reverse(actions), (c, action) => new AfterTestActionCommand(c, action));
 
-            // Create the OneTimeTearDown commands
-            foreach (var item in setUpTearDownItems)
-                command = new OneTimeTearDownCommand(command, item);
+            // Create the chain of OneTimeTearDown commands
+            command = command.WrapWith(setUpTearDownItems, (c, item) => new OneTimeTearDownCommand(c, item));
 
             // Dispose of fixture if necessary
             if (Test is IDisposableFixture && Test.IsFixture && DisposeHelper.IsDisposable(Test.TypeInfo!.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))

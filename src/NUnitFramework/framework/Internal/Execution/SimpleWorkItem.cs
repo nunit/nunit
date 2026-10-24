@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Linq;
 #if THREAD_ABORT
 using System.Threading;
 #endif
@@ -84,16 +85,13 @@ namespace NUnit.Framework.Internal.Execution
 
                 var method = MethodInfoCache.Get(_testMethod.Method);
 
-                // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.WrapTestMethodAttributes)
-                    command = wrapper.Wrap(command);
+                // Build the chain of IWrapTestMethod wrappers around the test method
+                command = command.WrapWith(method.WrapTestMethodAttributes);
 
-                // Create TestActionCommands using attributes of the method
-                foreach (ITestAction action in Test.Actions)
-                {
-                    if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
-                        command = new TestActionCommand(command, action);
-                }
+                // Build the chain of TestActionCommands for actions that target the test
+                command = command.WrapWith(
+                    Test.Actions.Where(action => action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test)),
+                    (c, action) => new TestActionCommand(c, action));
 
                 // Try to locate the parent fixture. In current implementations, the test method
                 // is either one or two levels below the TestFixture - if this changes,
@@ -107,37 +105,24 @@ namespace NUnit.Framework.Internal.Execution
                 var setUpMethods = parentFixture?.SetUpMethods ?? typeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
                 var tearDownMethods = parentFixture?.TearDownMethods ?? typeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
-                // Wrap in SetUpTearDownCommands
+                // Build the chain of SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
-                foreach (var item in setUpTearDownList)
-                    command = new SetUpTearDownCommand(command, item);
+                command = command.WrapWith(setUpTearDownList, (c, item) => new SetUpTearDownCommand(c, item));
 
                 // Dispose of fixture if necessary
                 var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
                 if (isInstancePerTestCase && parentFixture is not null && DisposeHelper.IsDisposable(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 
-                // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-                // then actions would have to be tested for here. For now we simply assert it in Debug. We allow
-                // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
-                int index = Context.UpstreamActions.Count;
-                while (--index >= 0)
-                {
-                    ITestAction action = Context.UpstreamActions[index];
-                    System.Diagnostics.Debug.Assert(
-                        action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test),
-                        $"Invalid target on upstream action: {action.Targets}");
-
-                    command = new TestActionCommand(command, action);
-                }
+                // Build the chain of TestActionCommands for actions inherited from enclosing suites,
+                // in reverse order so the actions of the outermost suite run first
+                command = command.WrapWith(Enumerable.Reverse(Context.UpstreamActions), (c, action) => new TestActionCommand(c, action));
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (IWrapSetUpTearDown decorator in method.WrapSetupTearDownAttributes)
-                    command = decorator.Wrap(command);
+                command = command.WrapWith(method.WrapSetupTearDownAttributes);
 
-                // Add command to set up context using attributes that implement IApplyToContext
-                foreach (var attr in method.ApplyToContextAttributes)
-                    command = new ApplyChangesToContextCommand(command, attr);
+                // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
+                command = command.WrapWith(method.ApplyToContextAttributes, (c, attr) => new ApplyChangesToContextCommand(c, attr));
 
                 // Add a construct command and optionally a dispose command in case of instance per test case.
                 if (isInstancePerTestCase)
@@ -158,8 +143,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
-                foreach (var repeatableAttribute in method.RepeatTestAttributes)
-                    command = repeatableAttribute.Wrap(command);
+                command = command.WrapWith(method.RepeatTestAttributes);
 
                 return command;
             }
