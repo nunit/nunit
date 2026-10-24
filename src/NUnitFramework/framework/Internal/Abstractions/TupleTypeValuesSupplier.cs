@@ -7,28 +7,32 @@ using System.Reflection;
 
 namespace NUnit.Framework.Internal.Abstractions
 {
-    internal class TupleTypeValuesSupplier
+    /// <summary>
+    /// Class to obtain a <see cref="ITupleTypeValuesSupplier"/> for a given tuple type.
+    /// </summary>
+    internal static class TupleTypeValuesSupplier
     {
         private static readonly ConcurrentDictionary<Type, TupleTypeValuesSupplierUsingReflection> TupleAccessorsCache = new();
         private static readonly ConcurrentDictionary<Type, ValueTupleTypeValuesSupplierUsingReflection> ValueTupleAccessors = new();
 
+        /// <summary>
+        /// Creates an <see cref="ITupleTypeValuesSupplier"/> for a tuple type.
+        /// </summary>
+        /// <param name="type">The type to get a <see cref="ITupleTypeValuesSupplier"/> for.</param>
+        /// <returns>An <see cref="ITupleTypeValuesSupplier"/> for <see cref="ValueTuple"/> or <see cref="Tuple"/>
+        /// types; otherwise, <see langword="null"/>.</returns>
         public static ITupleTypeValuesSupplier? For(Type? type)
         {
             if (type is null)
                 return null;
 
             if (type.IsValueTuple())
-            {
                 return ForValueTuple(type);
-            }
-            else if (type.IsTuple())
-            {
+
+            if (type.IsTuple())
                 return ForTuple(type);
-            }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         private static TupleTypeValuesSupplierUsingReflection ForTuple(Type tupleType)
@@ -52,7 +56,7 @@ namespace NUnit.Framework.Internal.Abstractions
             {
                 _itemProperties = tupleType
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .OrderBy(p => p.Name) // Order by name to ensure Item1, Item2, etc. are in the correct order
+                    .OrderBy(p => p.Name, StringComparer.Ordinal) // Order by name to ensure Item1, Item2, etc. are in the correct order
                     .ToArray();
             }
 
@@ -72,7 +76,7 @@ namespace NUnit.Framework.Internal.Abstractions
             {
                 _itemFields = valueTupleType
                     .GetFields(BindingFlags.Public | BindingFlags.Instance)
-                    .OrderBy(f => f.Name) // Order by name to ensure Item1, Item2, etc. are in the correct order
+                    .OrderBy(f => f.Name, StringComparer.Ordinal) // Order by name to ensure Item1, Item2, etc. are in the correct order
                     .ToArray();
             }
 

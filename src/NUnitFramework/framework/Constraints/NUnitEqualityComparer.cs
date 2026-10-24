@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
             NumericsComparer.Equal,
             DateTimeOffsetsComparer.Equal,
             TimeSpanToleranceComparer.Equal,
-            ITupleComparer.Equal,
+            TupleComparer.Equal,
             StructuralComparer.Equal,
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,

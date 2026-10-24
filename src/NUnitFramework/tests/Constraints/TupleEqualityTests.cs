@@ -121,12 +121,8 @@ namespace NUnit.Framework.Tests.Constraints
 
             using (Assert.EnterMultipleScope())
             {
-                // This is a side effect of using ITuple to compare members.
-                // NUnit allows comparing Tuple<int> with Tuple<double> so why not allow ValueTuple.
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
                 Assert.That(doubleTuple, Is.EqualTo(intTuple));
                 Assert.That(intTuple, Is.EqualTo(doubleTuple));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             }
         }
 

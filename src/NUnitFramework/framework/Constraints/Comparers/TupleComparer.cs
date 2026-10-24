@@ -7,9 +7,9 @@ using NUnit.Framework.Internal.Abstractions;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Base class for comparators for tuples (both regular Tuples and ValueTuples).
+    /// Class for comparing tuples (both regular Tuples and ValueTuples) for equality.
     /// </summary>
-    internal static class ITupleComparer
+    internal static class TupleComparer
     {
         public static EqualMethodResult Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {

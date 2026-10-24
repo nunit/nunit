@@ -1,30 +1,42 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if NET471_OR_GREATER || NETCOREAPP2_0_OR_GREATER
 using System.Runtime.CompilerServices;
+#endif
 
 namespace NUnit.Framework.Internal.Abstractions
 {
+    /// <summary>
+    /// Class to obtain a <see cref="ITupleValuesSupplier"/> for a given tuple instance.
+    /// </summary>
     internal static class TupleValuesSupplier
     {
-        public static ITupleValuesSupplier? For(object? tuple)
+        /// <summary>
+        /// Creates an <see cref="ITupleValuesSupplier"/> for a tuple instance.
+        /// </summary>
+        /// <remarks>Uses an <c>ITuple</c>-based supplier when available on the target framework;
+        /// otherwise uses reflection.</remarks>
+        /// <param name="value">Tuple instance to read values from.</param>
+        /// <returns>An <see cref="ITupleValuesSupplier"/> for <paramref name="value"/>, or <see langword="null"/> when <paramref
+        /// name="value"/> is <see langword="null"/> or its type is not a supported tuple type.</returns>
+        public static ITupleValuesSupplier? For(object? value)
         {
-            if (tuple is null)
+            if (value is null)
                 return null;
 
-            ITupleTypeValuesSupplier? tupleTypeValuesSupplier = TupleTypeValuesSupplier.For(tuple.GetType());
+            ITupleTypeValuesSupplier? tupleTypeValuesSupplier = TupleTypeValuesSupplier.For(value.GetType());
             if (tupleTypeValuesSupplier is null)
                 return null;
 
-            if (tuple is ITuple tupleInterface)
-            {
+#if NET471_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+            if (value is ITuple tupleInterface)
                 return new TupleValuesSupplierUsingITuple(tupleTypeValuesSupplier, tupleInterface);
-            }
-            else
-            {
-                return new TupleValuesSupplierUsingReflection(tupleTypeValuesSupplier, tuple);
-            }
+#endif
+
+            return new TupleValuesSupplierUsingReflection(tupleTypeValuesSupplier, value);
         }
 
+#if NET471_OR_GREATER || NETCOREAPP2_0_OR_GREATER
         private sealed class TupleValuesSupplierUsingITuple : ITupleValuesSupplier
         {
             private readonly ITupleTypeValuesSupplier _tupleTypeValuesSupplier;
@@ -49,6 +61,7 @@ namespace NUnit.Framework.Internal.Abstractions
             /// <returns></returns>
             public object? GetValue(int index) => index < 7 ? _tuple[index] : _tupleTypeValuesSupplier.GetValue(_tuple, index);
         }
+#endif
 
         private sealed class TupleValuesSupplierUsingReflection : ITupleValuesSupplier
         {
