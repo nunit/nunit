@@ -1,0 +1,13 @@
+name: Draft PR Labeler
+
+# Logic lives in nunit/.github. pull_request_target so fork PRs get a token that can write labels.
+on:
+  pull_request_target:
+    types: [opened, converted_to_draft, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  draft-label:
+    uses: nunit/.github/.github/workflows/draft-label.yml@main
