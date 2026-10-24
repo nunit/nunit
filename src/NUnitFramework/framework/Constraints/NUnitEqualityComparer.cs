@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         ///     <see langword="null"/> if the objects cannot be compared using the method.
         ///     Otherwise the result of the comparison is returned.
         /// </returns>
-        private delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
+        internal delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
 
         /// <summary>
         /// List of comparers used to compare pairs of objects.
@@ -256,12 +256,9 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return EqualMethodResult.ComparedEqual;
 
-            foreach (EqualMethod equalMethod in Comparers)
-            {
-                EqualMethodResult result = equalMethod(x, y, ref tolerance, state, this);
-                if (result != EqualMethodResult.TypesNotSupported)
-                    return result;
-            }
+            EqualMethod? equalMethod = FindEqualMethod(x, y, ref tolerance, state, out EqualMethodResult result);
+            if (equalMethod is not null)
+                return result;
 
             if (_compareProperties)
             {
@@ -290,6 +287,25 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
+            return null;
+        }
+
+        internal EqualMethod? FindEqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, out EqualMethodResult result)
+        {
+            if (x is null || y is null)
+            {
+                result = EqualMethodResult.TypesNotSupported;
+                return null;
+            }
+
+            foreach (EqualMethod equalMethod in Comparers)
+            {
+                result = equalMethod(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return equalMethod;
+            }
+
+            result = EqualMethodResult.TypesNotSupported;
             return null;
         }
 
