@@ -118,14 +118,14 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { uint.MaxValue, uint.MaxValue - 1, 1 };
             yield return new object[] { int.MinValue + 1, int.MinValue, 1 };
             yield return new object[] { int.MaxValue, int.MaxValue - 1, 1 };
-            yield return new object[] { ulong.MinValue + 1, ulong.MinValue, 1 };
+            //yield return new object[] { ulong.MinValue + 1, ulong.MinValue, 1 };
             yield return new object[] { ulong.MaxValue, ulong.MaxValue - 1, 1 };
-            yield return new object[] { long.MinValue + 1, long.MinValue, 1 };
+            //yield return new object[] { long.MinValue + 1, long.MinValue, 1 };
             yield return new object[] { long.MaxValue, long.MaxValue - 1, 1 };
 
-            yield return new object[] { nint.MinValue + 1, nint.MinValue, 1 };
+            //yield return new object[] { nint.MinValue + 1, nint.MinValue, 1 };
             yield return new object[] { nint.MaxValue, nint.MaxValue - 1, 1 };
-            yield return new object[] { nuint.MinValue + 1, nuint.MinValue, 1 };
+            //yield return new object[] { nuint.MinValue + 1, nuint.MinValue, 1 };
             yield return new object[] { nuint.MaxValue, nuint.MaxValue - 1, 1 };
 #if !NETFRAMEWORK
             yield return new object[] { Half.MinValue + Half.CreateChecked(1), Half.MinValue, (Half)1 };

@@ -260,8 +260,6 @@ namespace NUnit.Framework.Constraints
 
         private Range LinearRange(object value)
         {
-            const string OutOfRangeExceptionMessage = "The requested values are out of calculable range.";
-
             if (Amount is double || value is double)
             {
                 var v = Numerics.ConvertToValue<double>(value);
@@ -287,7 +285,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return new Range((decimal)v - (decimal)offset, (decimal)v + (decimal)offset);
 
                 return new Range(lowerBound, upperBound);
@@ -309,11 +307,9 @@ namespace NUnit.Framework.Constraints
                 var offset = Numerics.ConvertToValue<UInt128>(Amount);
 
                 // We can type promote smaller precision types, but not here
-                // So we have to handle overflow and underflow for UInt128 and Int128 manually by clamping to
-                // a range.
-                return new Range(
-                    v >= offset ? v - offset : UInt128.MinValue,
-                    UInt128.MaxValue - v >= offset ? v + offset : UInt128.MaxValue);
+                // So we naively calculate the range and let it overflow if needed.
+                // There is not much we can do about it, and this will provide the clearest failure message.
+                return new Range(v - offset, v + offset);
             }
 
             if (Amount is Int128 || value is Int128)
@@ -322,11 +318,9 @@ namespace NUnit.Framework.Constraints
                 var offset = Numerics.ConvertToValue<Int128>(Amount);
 
                 // We can type promote smaller precision types, but not here
-                // So we have to handle overflow and underflow for UInt128 and Int128 manually by clamping to
-                // a range.
-                return new Range(
-                    v < Int128.MinValue + offset ? Int128.MinValue : v - offset,
-                    v > Int128.MaxValue - offset ? Int128.MaxValue : v + offset);
+                // So we naively calculate the range and let it overflow if needed.
+                // There is not much we can do about it, and this will provide the clearest failure message.
+                return new Range(v - offset, v + offset);
             }
 #endif
 
@@ -338,7 +332,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return GetInt128Range(v, offset);
 
                 return new Range(lowerBound, upperBound);
@@ -352,7 +346,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return GetInt128Range(v, offset);
 
                 return new Range(lowerBound, upperBound);
@@ -366,7 +360,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return GetInt128Range(v, offset);
 
                 return new Range(lowerBound, upperBound);
@@ -380,7 +374,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return GetInt128Range(v, offset);
 
                 return new Range(lowerBound, upperBound);
@@ -394,7 +388,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return new Range((long)v - offset, (long)v + offset);
 
                 return new Range(lowerBound, upperBound);
@@ -408,7 +402,7 @@ namespace NUnit.Framework.Constraints
                 var lowerBound = v - offset;
                 var upperBound = v + offset;
 
-                if (lowerBound <= v || upperBound < v) // overflow or underflow
+                if (lowerBound >= v || upperBound <= v) // overflow or underflow
                     return new Range((long)v - offset, (long)v + offset);
 
                 return new Range(lowerBound, upperBound);
@@ -428,7 +422,7 @@ namespace NUnit.Framework.Constraints
                 var offset = Numerics.ConvertToValue<Int128>(amount);
                 return new Range(v - offset, v + offset);
 #else
-                throw new InvalidOperationException(OutOfRangeExceptionMessage);
+                throw new InvalidOperationException("The requested values are out of calculable range.");
 #endif
             }
         }
