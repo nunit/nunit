@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -67,13 +68,11 @@ namespace NUnit.Framework.Constraints
             // Initialize formatter to default for values of indeterminate type.
             DefaultValueFormatter = FormatValueWithoutThrowing;
 
-            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsTuple, GetValueFromTuple) ?? next(val));
-
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 
-            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
+            AddFormatter(next => val => TryFormatITuple(val) ?? next(val));
 
             AddFormatter(next => val => val is DateTime value ? FormatDateTime(value) : next(val));
 
@@ -297,43 +296,48 @@ namespace NUnit.Framework.Constraints
             return $"[{FormatValue(key)}, {FormatValue(value)}]";
         }
 
-        private static object? GetValueFromTuple(Type type, string propertyName, object obj)
+        private static string? TryFormatITuple(object? value)
         {
-            return type.GetProperty(propertyName)?.GetValue(obj, null);
-        }
-
-        private static object? GetValueFromValueTuple(Type type, string propertyName, object obj)
-        {
-            return type.GetField(propertyName)?.GetValue(obj);
-        }
-
-        private static string? TryFormatTuple(object? value, Func<Type, bool> isTuple, Func<Type, string, object, object?> getValue)
-        {
-            if (value is null)
+            if (value is null || !value.GetType().IsTupleOrValueTuple())
                 return null;
 
-            Type valueType = value.GetType();
-            return !isTuple(valueType) ? null : FormatTuple(value, true, getValue);
+            ITupleValuesSupplier? tuple = TupleValuesSupplier.For(value);
+
+            return tuple is null ? null : FormatTuple(tuple, true);
         }
 
-        private static string FormatTuple(object value, bool printParentheses, Func<Type, string, object, object?> getValue)
+        private static string FormatTuple(ITupleValuesSupplier tuple, bool printParentheses)
         {
-            Type valueType = value.GetType();
-            int numberOfGenericArgs = valueType.GetGenericArguments().Length;
+            int numberOfElements = tuple.Length;
+
+            if (numberOfElements > 8)
+            {
+                // Tuples with more than 8 direct elements are not supported.
+                // The 8th element is a nested tuple, we compare separately the 7 direct elements and the nested tuple.
+                throw new InvalidOperationException($"Tuples with more than 8 direct elements are not supported. Found {numberOfElements} elements.");
+            }
 
             StringBuilder sb = new StringBuilder();
             if (printParentheses)
                 sb.Append('(');
 
-            for (int i = 0; i < numberOfGenericArgs; i++)
+            for (int i = 0; i < numberOfElements; i++)
             {
                 if (i > 0)
                     sb.Append(", ");
 
-                bool notLastElement = i < 7;
-                string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
-                object? itemValue = getValue(valueType, propertyName, value);
-                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue!, false, getValue);
+                object? itemValue = tuple.GetValue(i);
+                if (i == 7)
+                {
+                    ITupleValuesSupplier? nestedTuple = TupleValuesSupplier.For(itemValue);
+                    if (nestedTuple is not null)
+                    {
+                        sb.Append(FormatTuple(nestedTuple, false));
+                        break;
+                    }
+                }
+
+                string formattedValue = FormatValue(itemValue);
                 sb.Append(formattedValue);
             }
             if (printParentheses)

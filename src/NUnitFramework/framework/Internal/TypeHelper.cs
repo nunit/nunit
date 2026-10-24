@@ -21,21 +21,30 @@ namespace NUnit.Framework.Internal
         extension(Type type)
         {
             /// <summary>
-            /// Determines whether the specified type represents a ValueTuple.
+            /// Determines whether the current type is a tuple type implemented by <see cref="Tuple"/> or <see
+            /// cref="ValueTuple"/>.
+            /// </summary>
+            /// <returns><see langword="true"/> if the current type is a <see cref="Tuple"/> or <see
+            /// cref="ValueTuple"/> type; otherwise, <see langword="false"/>.</returns>
+            internal bool IsTupleOrValueTuple() => type.IsTuple() || type.IsValueTuple();
+
+            /// <summary>
+            /// Determines whether the specified type represents a <see cref="ValueTuple"/>.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="ValueTuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsValueTuple()
             {
-                return type.IsTupleInternal("System.ValueTuple");
+                return type == typeof(ValueTuple) ||
+                    (type.IsGenericType && type.IsValueType && type.IsTupleInternal("System.ValueTuple"));
             }
 
             /// <summary>
-            /// Determines whether the specified type represents a Tuple.
+            /// Determines whether the specified type represents a <see cref="Tuple"/>.
             /// </summary>
             /// <returns><see langword="true"/> if the type is a <see cref="Tuple"/>; otherwise, <see langword="false"/>.</returns>
             public bool IsTuple()
             {
-                return type.IsTupleInternal("System.Tuple");
+                return type.IsGenericType && type.IsClass && type.IsTupleInternal("System.Tuple");
             }
 
             private bool IsTupleInternal(string tupleName)
@@ -45,8 +54,9 @@ namespace NUnit.Framework.Internal
                 if (typeName.EndsWith("[]", StringComparison.Ordinal))
                     return false;
 
-                string typeNameWithoutGenerics = GetTypeNameWithoutGenerics(typeName);
-                return typeNameWithoutGenerics == tupleName;
+                int genericTypeIndicatorLocation = typeName.IndexOf('`');
+                return genericTypeIndicatorLocation == tupleName.Length &&
+                       typeName.StartsWith(tupleName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -507,12 +517,6 @@ namespace NUnit.Framework.Internal
                     }
                 }
             }
-        }
-
-        private static string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
 
         /// <summary>
