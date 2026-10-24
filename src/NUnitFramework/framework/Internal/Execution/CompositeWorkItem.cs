@@ -136,28 +136,11 @@ namespace NUnit.Framework.Internal.Execution
             var actionItems = new List<TestActionItem>();
             foreach (ITestAction action in Test.Actions)
             {
-                // We need to go through all the actions on the test to determine which ones
-                // will be used immediately and which will go into the context for use by
-                // lower level tests.
-                //
-                // Special handling here for ParameterizedMethodSuite is a bit ugly. However,
-                // it is needed because Tests are not supposed to know anything about Action
-                // Attributes (or any attribute) and Attributes don't know where they were
-                // initially applied unless we tell them.
-                //
-                // ParameterizedMethodSuites and individual test cases both use the same
-                // MethodInfo as a source of attributes. We handle the Test and Default targets
-                // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
-                    || (action.Targets == ActionTargets.Default && Test is not ParameterizedMethodSuite);
-
-                bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
-                    && Test is not ParameterizedMethodSuite;
-
-                if (applyToSuite)
+                // An action runs around this suite, is passed down to its tests, or both
+                if (action.AppliesToSuite(Test))
                     actionItems.Add(new TestActionItem(action));
 
-                if (applyToTest)
+                if (action.IsPassedDownToTests(Test))
                     Context.UpstreamActions.Add(action);
             }
 
