@@ -112,5 +112,36 @@ namespace NUnit.Framework.Tests.Constraints
                         Throws.InstanceOf<NotSupportedException>().With.Message.Contains("Tolerance"));
 #pragma warning restore NUnit2047 // Incompatible types for Within constraint
         }
+
+        [Test]
+        public void CanCompareTuplesWithDifferentTypes()
+        {
+            Tuple<int, int, int> intTuple = Tuple.Create(1, 2, 3);
+            Tuple<double, double, double> doubleTuple = Tuple.Create(1.0, 2.0, 3.0);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(doubleTuple, Is.EqualTo(intTuple));
+                Assert.That(intTuple, Is.EqualTo(doubleTuple));
+            }
+        }
+
+        [Test]
+        public void WillNotUseTupleComparerForDerivedTypes()
+        {
+            var tuple1 = new TestUtilities.MyTuple("Tuple1", 1);
+            var tuple2 = new TestUtilities.MyTuple("Tuple2", 1);
+            Assert.That(tuple1, Is.Not.EqualTo(tuple2));
+        }
+
+        [Test]
+        public void WillNotUseTupleComparerForDerivedTypesAtRest()
+        {
+            var rest1 = new TestUtilities.MyTuple("Tuple1", 1);
+            var rest2 = new TestUtilities.MyTuple("Tuple2", 1);
+            var tuple1 = new Tuple<int, int, int, int, int, int, int, TestUtilities.MyTuple>(1, 2, 3, 4, 5, 6, 7, rest1);
+            var tuple2 = new Tuple<int, int, int, int, int, int, int, TestUtilities.MyTuple>(1, 2, 3, 4, 5, 6, 7, rest2);
+            Assert.That(tuple1, Is.Not.EqualTo(tuple2));
+        }
     }
 }

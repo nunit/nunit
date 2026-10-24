@@ -20,8 +20,9 @@ namespace NUnit.Framework.Constraints.Comparers
             char c1 = caseInsensitive ? char.ToLower(xChar) : xChar;
             char c2 = caseInsensitive ? char.ToLower(yChar) : yChar;
 
-            return c1 == c2 ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return c1 == c2
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
     }
 }

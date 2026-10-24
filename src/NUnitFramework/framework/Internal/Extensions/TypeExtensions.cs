@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal.Extensions
             if (!type.ImplementsIComparable())
                 return false;
 
-            if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
+            if (type.IsTupleOrValueTuple())
             {
                 return type.GetGenericArguments()
                            .All(arg => arg.IsSortable());
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Extensions
             else if (type == typeof(string) || Numerics.IsNumericType(type) || type == typeof(DateTime))
                 return true;
 
-            if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
+            if (type.IsTupleOrValueTuple())
             {
                 return type.GetGenericArguments()
                            .All(arg => arg.CanUseDefaultEquality());
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Extensions
                 return false;
 
             var type = typeof(T);
-            if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
+            if (type.IsTupleOrValueTuple())
             {
                 return type.GetGenericArguments()
                            .All(arg => arg.IsSortable());

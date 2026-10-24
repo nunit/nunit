@@ -32,8 +32,9 @@ namespace NUnit.Framework.Constraints.Comparers
                 if (tolerance.HasVariance)
                     return EqualMethodResult.ToleranceNotSupported;
 
-                return InvokeFirstIEquatableEqualsSecond(x, y, equals) ?
-                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                return InvokeFirstIEquatableEqualsSecond(x, y, equals)
+                    ? EqualMethodResult.ComparedEqual
+                    : EqualMethodResult.ComparedNotEqual;
             }
 
             equals = FirstImplementsIEquatableOfSecond(yType, xType);
@@ -42,8 +43,9 @@ namespace NUnit.Framework.Constraints.Comparers
                 if (tolerance.HasVariance)
                     return EqualMethodResult.ToleranceNotSupported;
 
-                return InvokeFirstIEquatableEqualsSecond(y, x, equals) ?
-                    EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                return InvokeFirstIEquatableEqualsSecond(y, x, equals)
+                    ? EqualMethodResult.ComparedEqual
+                    : EqualMethodResult.ComparedNotEqual;
             }
 
             return EqualMethodResult.TypesNotSupported;

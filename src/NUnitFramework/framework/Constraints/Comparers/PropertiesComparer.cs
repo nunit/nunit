@@ -294,9 +294,9 @@ namespace NUnit.Framework.Constraints.Comparers
             var fp = new NUnitEqualityComparer.FailurePoint
             {
                 Position = i,
-                PropertyName = xTypeName == yTypeName ?
-                    $"{xTypeName}.{xPropertyName}" :
-                    $"{xTypeName}.{xPropertyName} => {yTypeName}.{yPropertyName}",
+                PropertyName = xTypeName == yTypeName
+                    ? $"{xTypeName}.{xPropertyName}"
+                    : $"{xTypeName}.{xPropertyName} => {yTypeName}.{yPropertyName}",
                 ExpectedHasData = true,
                 ExpectedValue = xPropertyValue,
                 ActualHasData = true,

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
@@ -333,6 +334,32 @@ namespace NUnit.Framework.Tests.Api
         }
 
         [Test]
+        public void ExploreTests_AfterLoad_WithFilter_FixturesKeepClassName()
+        {
+            LoadMockAssembly();
+            ITestFilter filter = new CategoryFilter("FixtureCategory");
+
+            var fixtures = new List<ITest>();
+            CollectFixtures(_runner.ExploreTests(filter), fixtures);
+
+            Assert.That(fixtures, Is.Not.Empty);
+            foreach (var fixture in fixtures)
+            {
+                Assert.That(fixture.ClassName, Is.Not.Null, fixture.FullName);
+                Assert.That(fixture.ToXml(false).Attributes["classname"], Is.EqualTo(fixture.ClassName), fixture.FullName);
+            }
+        }
+
+        private static void CollectFixtures(ITest test, List<ITest> fixtures)
+        {
+            if (test.TestType == nameof(TestFixture))
+                fixtures.Add(test);
+
+            foreach (var child in test.Tests)
+                CollectFixtures(child, fixtures);
+        }
+
+        [Test]
         public void ExploreTests_AfterLoad_WithFilter_ReturnCorrectCount()
         {
             LoadMockAssembly();
@@ -585,9 +612,6 @@ namespace NUnit.Framework.Tests.Api
 
         #region StopRun
 
-        // Arbitrary delay for cancellation based on the time to run each case in SlowTests
-        private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
-
         [Test]
         public void StopRun_WhenNoTestIsRunning_DoesNotThrow()
         {
@@ -596,27 +620,46 @@ namespace NUnit.Framework.Tests.Api
 
         private static readonly TestCaseData[] StopRunCases =
         [
-            new TestCaseData(0).SetName("{m}(Simple dispatcher, cooperative stop)"),
-            new TestCaseData(2).SetName("{m}(Parallel dispatcher, cooperative stop)"),
+            new TestCaseData(0, false, nameof(SlowTests.NonCancelableTests)).SetName("{m}(Simple dispatcher, non-cooperative tests)"),
+            new TestCaseData(2, false, nameof(SlowTests.NonCancelableTests)).SetName("{m}(Parallel dispatcher, non-cooperative tests)"),
+            new TestCaseData(0, true, nameof(SlowTests.GlobalCancelableTests)).SetName("{m}(Simple dispatcher, cancelable tests)"),
+            new TestCaseData(2, true, nameof(SlowTests.GlobalCancelableTests)).SetName("{m}(Parallel dispatcher, cancelable tests)"),
+            new TestCaseData(0, true, nameof(SlowTests.CancelAfterTests)).SetName("{m}(Simple dispatcher, cancelable after tests)"),
+            new TestCaseData(2, true, nameof(SlowTests.CancelAfterTests)).SetName("{m}(Parallel dispatcher, cancelable after tests)"),
         ];
 
         [TestCaseSource(nameof(StopRunCases))]
-        public void StopRun_WhenTestIsRunning_StopsTest(int workers)
+        public void StopRun_WhenTestIsRunning_StopsTest(int workers, bool cooperative, string className)
         {
             var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
             var stopType = "cooperative stop";
 
-            _runner.RunAsync(this, TestFilter.Empty);
+            string? slowTests = typeof(SlowTests).FullName;
+            ITestFilter filter = new ClassNameFilter($"{slowTests}+{className}");
+            _runner.RunAsync(this, filter);
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
-            SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
+            SpinWait.SpinUntil(() => _testStartedCount > 0, SlowTests.SINGLE_TEST_DELAY);
+
+            // The ITestListener.TestStarted event that increments _testStartedCount is fired before the test actually starts running,
+            // This means that the above SpinWait may return true before the test has actually started running.
+            // Calling StopRun immediately after the SpinWait may result in the test never starting at all,
+            // due to the check on StopRequested in WorkItem before calling PerformWork.
+
+            // We need to wait for a test to be active before stopping the run so the test fails and
+            // we can test the StopOnFailure functionality.
+            // If we stop the run before a test is active, the test may never start and we won't be testing what we intend to.
+            Thread.Sleep(SlowTests.SINGLE_TEST_DELAY / 2);
 
             _runner.StopRun();
 
             // A single test takes SINGLE_TEST_DELAY,
-            // If we wait twice as long, the test should be finished and not other should be started.
-            var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
+            // For cooperative tests, we expect the test to cancel immediately.
+            // For non-cooperative tests, we wait twice as long so the test should be finished and no other should be started.
+            int cancelTestDelay = cooperative ? SlowTests.SINGLE_TEST_TIMEOUT / 2 : SlowTests.SINGLE_TEST_DELAY * 2;
+
+            var completionWasSignaled = _runner.WaitForCompletion(cancelTestDelay);
 
             // Write out status for debugging
             TestContext.Out.WriteLine($"No of started suites  {_suiteStartedCount}:");
@@ -650,6 +693,14 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled), $"Invalid ResultState after {stopType}");
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             }
+
+            // Now find the first test's result.
+            ITestResult testResult = _runner.Result;
+            while (testResult.HasChildren)
+                testResult = testResult.Children.First();
+
+            ResultState expectedResult = cooperative ? ResultState.Cancelled : ResultState.Success;
+            Assert.That(testResult.ResultState, Is.EqualTo(expectedResult), $"First test did not have {expectedResult} after {stopType}");
         }
 
         #endregion

@@ -3,9 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace NUnit.Framework
 {
-    /// <summary>
+    /// <content>
     /// C#14 static extension methods for numeric assertions
-    /// </summary>
+    /// </content>
     public static partial class ClassicAssertExtensions
     {
         extension(Assert)

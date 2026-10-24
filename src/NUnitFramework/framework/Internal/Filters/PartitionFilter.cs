@@ -14,8 +14,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     file static class PartitionFilterTypes
     {
-        public const string Test = "test";
         public const string Fixture = "fixture";
+        public const string Test = "test";
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal.Filters
                 {
                     return false;
                 }
-                else if (number < 1 || number > count)
+                else if (number < 1 || count < 2 || number > count)
                 {
                     return false;
                 }

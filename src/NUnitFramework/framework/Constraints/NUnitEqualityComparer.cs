@@ -46,7 +46,6 @@ namespace NUnit.Framework.Constraints
             DateTimeOffsetsComparer.Equal,
             TimeSpanToleranceComparer.Equal,
             TupleComparer.Equal,
-            ValueTupleComparer.Equal,
             StructuralComparer.Equal,
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,
@@ -238,8 +237,9 @@ namespace NUnit.Framework.Constraints
             {
                 try
                 {
-                    return externalComparer.AreEqual(x, y, ref tolerance) ?
-                        EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                    return externalComparer.AreEqual(x, y, ref tolerance)
+                        ? EqualMethodResult.ComparedEqual
+                        : EqualMethodResult.ComparedNotEqual;
                 }
                 catch (InvalidOperationException)
                 {
@@ -268,8 +268,9 @@ namespace NUnit.Framework.Constraints
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return x.Equals(y) ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return x.Equals(y)
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
 
         #endregion

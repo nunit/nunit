@@ -378,7 +378,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void PlatformAttributeSkipsTest()
         {
             string notMyPlatform = System.IO.Path.DirectorySeparatorChar == '/'
-                ? PlatformNames.Win : PlatformNames.Linux;
+                ? PlatformNames.Win
+                : PlatformNames.Linux;
             new PlatformAttribute(notMyPlatform).ApplyToTest(_test);
             Assert.That(_test.RunState, Is.EqualTo(RunState.Skipped));
         }

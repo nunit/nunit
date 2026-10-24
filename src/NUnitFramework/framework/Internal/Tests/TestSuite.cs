@@ -80,11 +80,12 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
-            : this(suite.Name)
+            : base(suite)
         {
-            FullName = suite.FullName;
-            Method = suite.Method;
-            RunState = suite.RunState;
+            Arguments = suite.Arguments;
+            OneTimeSetUpMethods = suite.OneTimeSetUpMethods;
+            OneTimeTearDownMethods = suite.OneTimeTearDownMethods;
+            MaintainTestOrder = suite.MaintainTestOrder;
             Fixture = suite.Fixture;
 
             foreach (string key in suite.Properties.Keys)

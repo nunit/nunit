@@ -72,6 +72,20 @@ namespace NUnit.Framework.Internal
         {
         }
 
+        /// <summary>
+        /// Constructs a copy of a test, keeping its identity, type, method and setup information.
+        /// A new <see cref="Id"/> is generated.
+        /// </summary>
+        /// <param name="test">The test to copy.</param>
+        private protected Test(Test test)
+            : this(pathName: null, test.Name, test.TypeInfo, test.Method)
+        {
+            FullName = test.FullName;
+            RunState = test.RunState;
+            SetUpMethods = test.SetUpMethods;
+            TearDownMethods = test.TearDownMethods;
+        }
+
         private Test(string? pathName, string name, ITypeInfo? typeInfo, IMethodInfo? method)
         {
             ArgumentException.ThrowIfNullOrEmpty(name);
@@ -159,6 +173,11 @@ namespace NUnit.Framework.Internal
         /// or null if no fixture type is associated with it.
         /// </summary>
         public ITypeInfo? TypeInfo { get; }
+
+        /// <summary>
+        /// Gets a bool indicating whether this test is a TestFixture or a SetUpFixture
+        /// </summary>
+        internal virtual bool IsFixture => false;
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
@@ -275,9 +294,9 @@ namespace NUnit.Framework.Internal
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    if (Method is null && TypeInfo is not null)
+                    if (Method is null && IsFixture)
                     {
-                        _actions = TestMetadataCache.Get(TypeInfo.Type).TestActionAttributes;
+                        _actions = TestMetadataCache.Get(TypeInfo!.Type).TestActionAttributes;
                     }
                     else if (Method is not null)
                     {
@@ -375,8 +394,8 @@ namespace NUnit.Framework.Internal
             if (Method is not null)
                 return Method.GetCustomAttributes<TAttr>(inherit);
 
-            if (TypeInfo is not null)
-                return TypeInfo.GetCustomAttributes<TAttr>(inherit);
+            if (IsFixture)
+                return TypeInfo!.GetCustomAttributes<TAttr>(inherit);
 
             return Array.Empty<TAttr>();
         }

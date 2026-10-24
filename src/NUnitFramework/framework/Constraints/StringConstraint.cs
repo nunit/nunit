@@ -211,7 +211,6 @@ namespace NUnit.Framework.Constraints
                 StringComparison.Ordinal => StringComparison.OrdinalIgnoreCase,
                 StringComparison.OrdinalIgnoreCase => StringComparison.OrdinalIgnoreCase,
                 _ => throw new InvalidOperationException($"Unsupported StringComparison value: {currentComparison}")
-
             };
         }
 

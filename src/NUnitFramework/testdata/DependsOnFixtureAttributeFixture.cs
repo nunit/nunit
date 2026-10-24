@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework;
 
@@ -302,6 +304,184 @@ namespace NUnit.TestData
         public void IndependentTest()
         {
             Assert.That(true, Is.True);
+        }
+    }
+
+    #endregion
+
+    #region Queued Dispatch
+    // Non-parallel chains run by a dispatcher that only queues work items.
+    // The dependencies sleep, so a dependent that does not wait would start first.
+
+    [TestFixture]
+    public class QueuedDependencyBeforeSlow
+    {
+        [Test]
+        public void QueuedBeforeSlowTest()
+        {
+            Thread.Sleep(150);
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlow))]
+    public class QueuedDependencyAfter
+    {
+        [Test]
+        public void QueuedAfterTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyAfter))]
+    public class QueuedDependencyAfterAfter
+    {
+        [Test]
+        public void QueuedAfterAfterTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    public class QueuedDependencyBeforeSlowFailing
+    {
+        [Test]
+        public void QueuedBeforeSlowFailingTest()
+        {
+            Thread.Sleep(150);
+            FixtureDependencyEvents.Record();
+            Assert.Fail("Intentional failure for dependency behavior testing");
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlowFailing))]
+    public class QueuedDependencyAfterFailing
+    {
+        [Test]
+        public void QueuedAfterFailingTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyAfterFailing))]
+    public class QueuedDependencyAfterSkipped
+    {
+        [Test]
+        public void QueuedAfterSkippedTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeSlowFailing), AllowFailure = true)]
+    public class QueuedDependencyAfterFailingAllowed
+    {
+        [Test]
+        public void QueuedAfterFailingAllowedTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    public class QueuedDependencyBeforeBlocking
+    {
+        public static ManualResetEventSlim Started { get; } = new();
+
+        public static ManualResetEventSlim Release { get; } = new();
+
+        public static void Reset()
+        {
+            Started.Reset();
+            Release.Reset();
+        }
+
+        [Test]
+        public void QueuedBeforeBlockingTest()
+        {
+            Started.Set();
+
+            // Bounded, so a broken test can not block the run forever.
+            Release.Wait(TimeSpan.FromSeconds(10));
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    [TestFixture]
+    [DependsOnFixture(typeof(QueuedDependencyBeforeBlocking))]
+    public class QueuedDependencyAfterBlocking
+    {
+        [Test]
+        public void QueuedAfterBlockingTest()
+        {
+            FixtureDependencyEvents.Record();
+        }
+    }
+
+    // Methods used to build long dependency chains in code.
+    [TestFixture]
+    public class QueuedDependencyChain
+    {
+        public static int RecordedStackDepth { get; set; }
+
+        [Test]
+        public void PassingLink()
+        {
+        }
+
+        [Test]
+        public void FailingLink()
+        {
+            Assert.Fail("Intentional failure for dependency behavior testing");
+        }
+
+        [Test]
+        public void RecordStackDepth()
+        {
+            RecordedStackDepth = new StackTrace().FrameCount;
+        }
+    }
+
+    // The dependency runs on the STA worker, its dependent is then started from there.
+    [TestFixture]
+    public class QueuedDependencyOtherWorker
+    {
+        public static string? DependentThreadName { get; set; }
+
+        public static string? DependentWorkerId { get; set; }
+
+        [Test]
+        [NonParallelizable]
+        [Apartment(ApartmentState.STA)]
+        public void StaDependency()
+        {
+        }
+
+        [Test]
+        [DependsOnTest(nameof(StaDependency))]
+        public void Dependent()
+        {
+            DependentThreadName = Thread.CurrentThread.Name;
+            DependentWorkerId = TestContext.CurrentContext.WorkerId;
+        }
+    }
+
+    [TestFixture]
+    [Parallelizable(ParallelScope.All)]
+    public class QueuedDependencyParallelIndependent
+    {
+        [Test]
+        public void QueuedParallelIndependentTest()
+        {
+            FixtureDependencyEvents.Record();
         }
     }
 

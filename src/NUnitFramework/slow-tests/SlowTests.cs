@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace NUnit.Tests
@@ -7,67 +9,73 @@ namespace NUnit.Tests
     public class SlowTests
     {
         public const int SINGLE_TEST_DELAY = 1000;
+        public const int SINGLE_TEST_TIMEOUT = SINGLE_TEST_DELAY * 3;
 
-        public class AAA
+        public class NonCancelableTests
         {
             [Test]
             public void Test1()
             {
-                SlowTests.Delay();
+                Delay();
             }
             [Test]
             public void Test2()
             {
-                SlowTests.Delay();
+                Delay();
             }
             [Test]
             public void Test3()
             {
-                SlowTests.Delay();
+                Delay();
+            }
+
+            private static void Delay()
+            {
+                Thread.Sleep(SINGLE_TEST_DELAY);
             }
         }
 
-        public class BBB
+        public class GlobalCancelableTests
         {
             [Test]
-            public void Test1()
+            public async Task Test1(CancellationToken cancellationToken)
             {
-                SlowTests.Delay();
+                await Task.Delay(SINGLE_TEST_DELAY, cancellationToken);
             }
+
             [Test]
-            public void Test2()
+            public async Task Test2()
             {
-                SlowTests.Delay();
+                await Task.Delay(SINGLE_TEST_DELAY, TestContext.CurrentContext.CancellationToken);
             }
+
             [Test]
-            public void Test3()
+            public async Task Test3()
             {
-                SlowTests.Delay();
+                await Task.Delay(SINGLE_TEST_TIMEOUT + SINGLE_TEST_DELAY, TestContext.CurrentContext.CancellationToken);
             }
         }
 
-        public class CCC
+        [CancelAfter(SINGLE_TEST_TIMEOUT)]
+        public class CancelAfterTests
         {
             [Test]
-            public void Test1()
+            public async Task Test1(CancellationToken cancellationToken)
             {
-                SlowTests.Delay();
+                await Task.Delay(SINGLE_TEST_DELAY, cancellationToken);
             }
-            [Test]
-            public void Test2()
-            {
-                SlowTests.Delay();
-            }
-            [Test]
-            public void Test3()
-            {
-                SlowTests.Delay();
-            }
-        }
 
-        private static void Delay()
-        {
-            System.Threading.Thread.Sleep(SINGLE_TEST_DELAY);
+            [Test]
+            public async Task Test2()
+            {
+                await Task.Delay(SINGLE_TEST_DELAY, TestContext.CurrentContext.CancellationToken);
+            }
+
+            [Test]
+            public async Task Test3()
+            {
+                await Task.Delay(SINGLE_TEST_TIMEOUT + SINGLE_TEST_DELAY, TestContext.CurrentContext.CancellationToken);
+            }
         }
     }
 }

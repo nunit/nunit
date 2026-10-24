@@ -44,6 +44,7 @@ namespace NUnit.Framework.Internal
         private TestFixture(TestFixture fixture, ITestFilter filter)
             : base(fixture, filter)
         {
+            LifeCycle = fixture.LifeCycle;
         }
 
         /// <summary>
@@ -74,6 +75,10 @@ namespace NUnit.Framework.Internal
             return new TestFixture(this, filter);
         }
 
+        #endregion
+
+        #region Test Overrides
+        internal override bool IsFixture => true;
         #endregion
     }
 }

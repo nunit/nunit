@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
@@ -396,6 +397,189 @@ namespace NUnit.Framework.Tests.Attributes
                     nameof(FixtureDependsOnFixtureWithInternalMethodDependencies.AfterTest)
                 ]));
             }
+        }
+
+        [Test]
+        public void DependenciesAreOrderedWhenFirstChildIsNotAFixture()
+        {
+            // A child namespace suite or set-up fixture can come before the fixtures.
+            var suite = new TestSuite("dummy")
+                .Containing(new TestSuite("child"))
+                .Containing(typeof(FixtureDependencyAfter), typeof(FixtureDependencyBefore));
+
+            var work = (CompositeWorkItem)TestBuilder.CreateWorkItem(suite);
+            var names = work.Children.Select(c => c.Test.Name).ToList();
+
+            Assert.That(names.IndexOf(nameof(FixtureDependencyBefore)), Is.LessThan(names.IndexOf(nameof(FixtureDependencyAfter))));
+        }
+
+        [Test]
+        public void ChainRunsInOrderWithQueuingDispatcher()
+        {
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterAfter),
+                typeof(QueuedDependencyAfter),
+                typeof(QueuedDependencyBeforeSlow),
+                typeof(QueuedDependencyParallelIndependent));
+
+            var result = RunWithParallelDispatcher(suite);
+
+            using (Assert.EnterMultipleScope())
+            {
+                foreach (var child in result.Children)
+                    Assert.That(child.ResultState.Status, Is.EqualTo(TestStatus.Passed), child.Name);
+
+                var chain = FixtureDependencyEvents.Events.Where(e => e != nameof(QueuedDependencyParallelIndependent.QueuedParallelIndependentTest));
+                Assert.That(chain, Is.EqualTo([
+                    nameof(QueuedDependencyBeforeSlow.QueuedBeforeSlowTest),
+                    nameof(QueuedDependencyAfter.QueuedAfterTest),
+                    nameof(QueuedDependencyAfterAfter.QueuedAfterAfterTest)
+                ]));
+            }
+        }
+
+        [Test]
+        public void FailingDependencySkipsChainWithQueuingDispatcher()
+        {
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterSkipped),
+                typeof(QueuedDependencyAfterFailing),
+                typeof(QueuedDependencyAfterFailingAllowed),
+                typeof(QueuedDependencyBeforeSlowFailing));
+
+            var result = RunWithParallelDispatcher(suite);
+
+            ITestResult Child(string name) => result.Children.Single(x => x.Name == name);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Child(nameof(QueuedDependencyBeforeSlowFailing)).ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailing)).ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailing)).Message, Does.Contain($"Dependency on {nameof(QueuedDependencyBeforeSlowFailing)} did not pass"));
+                Assert.That(Child(nameof(QueuedDependencyAfterSkipped)).ResultState.Status, Is.EqualTo(TestStatus.Skipped));
+                Assert.That(Child(nameof(QueuedDependencyAfterSkipped)).Message, Does.Contain($"Dependency on {nameof(QueuedDependencyAfterFailing)} did not pass"));
+                Assert.That(Child(nameof(QueuedDependencyAfterFailingAllowed)).ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+                // AllowFailure still waits for the dependency to finish.
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([
+                    nameof(QueuedDependencyBeforeSlowFailing.QueuedBeforeSlowFailingTest),
+                    nameof(QueuedDependencyAfterFailingAllowed.QueuedAfterFailingAllowedTest)
+                ]));
+            }
+        }
+
+        [Test]
+        public void CancelWhileDependentWaitsCompletesWithoutRunningDependent()
+        {
+            QueuedDependencyBeforeBlocking.Reset();
+            var suite = new TestSuite("dummy").Containing(
+                typeof(QueuedDependencyAfterBlocking),
+                typeof(QueuedDependencyBeforeBlocking));
+
+            var work = StartWithParallelDispatcher(suite);
+
+            // The dependency is running, so its dependent is waiting.
+            Assert.That(QueuedDependencyBeforeBlocking.Started.Wait(TimeSpan.FromSeconds(10)), Is.True, "Dependency did not start");
+            work.Cancel();
+            QueuedDependencyBeforeBlocking.Release.Set();
+
+            Assert.That(Task.Run(work.WaitForCompletion).Wait(TimeSpan.FromSeconds(10)), Is.True, "Run did not complete after cancel");
+
+            var after = work.Result.Children.Single(x => x.Name == nameof(QueuedDependencyAfterBlocking));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(after.ResultState.Status, Is.Not.EqualTo(TestStatus.Passed));
+                Assert.That(FixtureDependencyEvents.Events, Is.EqualTo([nameof(QueuedDependencyBeforeBlocking.QueuedBeforeBlockingTest)]));
+            }
+        }
+
+        [Test]
+        public void LongWaitingChainDoesNotGrowStack([Values] bool firstLinkFails)
+        {
+            int shortChainDepth = RunChainAndGetStackDepth(1, firstLinkFails);
+            int longChainDepth = RunChainAndGetStackDepth(200, firstLinkFails);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(shortChainDepth, Is.GreaterThan(0), "Last link did not run");
+                // Small margin: the call path into the first completion can differ by a few frames.
+                // Recursion would add hundreds of frames for 200 links.
+                Assert.That(longChainDepth, Is.LessThanOrEqualTo(shortChainDepth + 10));
+            }
+        }
+
+        // The first link is queued as non-parallel, so all later links wait for it and are started
+        // from completion callbacks. They run directly, or are skipped when the first link fails.
+        // The last link allows failure, so it always runs and records its stack depth.
+        private static int RunChainAndGetStackDepth(int links, bool firstLinkFails)
+        {
+            QueuedDependencyChain.RecordedStackDepth = 0;
+            var fixture = TestBuilder.MakeFixture(typeof(QueuedDependencyChain));
+            fixture.Tests.Clear();
+
+            var first = TestBuilder.MakeTestCase(typeof(QueuedDependencyChain),
+                firstLinkFails ? nameof(QueuedDependencyChain.FailingLink) : nameof(QueuedDependencyChain.PassingLink));
+            first.Properties.Set(PropertyNames.ParallelScope, ParallelScope.None);
+            fixture.Add(first);
+
+            string previous = first.Name;
+            for (int i = 0; i < links; i++)
+                previous = AddLink(nameof(QueuedDependencyChain.PassingLink), "Link" + i, previous).Name;
+
+            AddLink(nameof(QueuedDependencyChain.RecordStackDepth), "Last", previous)
+                .Properties.Set(PropertyNames.DependsOnAllowFailure, true);
+
+            RunWithParallelDispatcher(fixture);
+            return QueuedDependencyChain.RecordedStackDepth;
+
+            TestMethod AddLink(string method, string name, string dependsOn)
+            {
+                var link = TestBuilder.MakeTestCase(typeof(QueuedDependencyChain), method);
+                link.Name = name;
+                link.Properties.Set(PropertyNames.DependsOnTest, dependsOn);
+                fixture.Add(link);
+                return link;
+            }
+        }
+
+        [Test]
+        [Platform(Includes = [PlatformNames.Win])]
+        public void DependentStartedFromOtherWorkerReportsThatWorker()
+        {
+            QueuedDependencyOtherWorker.DependentThreadName = null;
+            QueuedDependencyOtherWorker.DependentWorkerId = null;
+
+            var result = RunWithParallelDispatcher(TestBuilder.MakeFixture(typeof(QueuedDependencyOtherWorker)));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+                Assert.That(QueuedDependencyOtherWorker.DependentThreadName, Is.EqualTo("NUnit.Fw.NonParallelSTAWorker"));
+                Assert.That(QueuedDependencyOtherWorker.DependentWorkerId, Is.EqualTo(QueuedDependencyOtherWorker.DependentThreadName));
+            }
+        }
+
+        private static ITestResult RunWithParallelDispatcher(TestSuite suite)
+        {
+            var work = StartWithParallelDispatcher(suite);
+            work.WaitForCompletion();
+
+            return work.Result;
+        }
+
+        // ParallelWorkItemDispatcher only queues work items, unlike the synchronous TestBuilder dispatcher.
+        private static WorkItem StartWithParallelDispatcher(TestSuite suite)
+        {
+            var dispatcher = new ParallelWorkItemDispatcher(4);
+            var context = new TestExecutionContext
+            {
+                Dispatcher = dispatcher
+            };
+
+            var work = TestBuilder.CreateWorkItem(suite, context);
+            dispatcher.Start(work);
+
+            return work;
         }
     }
 }

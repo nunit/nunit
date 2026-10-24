@@ -17,8 +17,9 @@ namespace NUnit.Framework.Constraints.Comparers
             if (tolerance.HasVariance)
                 return EqualMethodResult.ToleranceNotSupported;
 
-            return xEnum.Equals(yEnum) ?
-                EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+            return xEnum.Equals(yEnum)
+                ? EqualMethodResult.ComparedEqual
+                : EqualMethodResult.ComparedNotEqual;
         }
     }
 }

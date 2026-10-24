@@ -305,6 +305,21 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
+        /// Checks if the item has been cancelled.
+        /// </summary>
+        /// <returns></returns>
+        protected bool CheckForCancellation()
+        {
+            if (Context.ExecutionStatus != TestExecutionStatus.Running)
+            {
+                Result.SetResult(ResultState.Cancelled, TestResult.USER_CANCELLED_MESSAGE);
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Builds the set up tear down list.
         /// </summary>
         /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
@@ -454,15 +469,21 @@ namespace NUnit.Framework.Internal.Execution
 
             State = WorkItemState.Running;
 
+            if (CheckForCancellation())
+            {
+                WorkItemComplete();
+                return;
+            }
+
             PerformWork();
         }
 
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
-            // If there is no fixture and so nothing to do but dispatch
-            // grandchildren we run directly. This saves time that would
-            // otherwise be spent enqueuing and dequeuing items.
-            if (Test.TypeInfo is null)
+            // A suite that only groups other tests has no fixture work and
+            // nothing to do but dispatch its children, so we run it directly.
+            // This saves time that would otherwise be spent enqueuing and dequeuing items.
+            if (Test is TestSuite { IsFixture: false })
                 return ParallelExecutionStrategy.Direct;
 
             // If the context is single-threaded we are required to run

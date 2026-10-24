@@ -775,6 +775,12 @@ namespace NUnit.Framework.Internal
                     Message = ex.GetMessageWithoutThrowing();
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
                 }
+                else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.GlobalCancellationToken.IsCancellationRequested)
+                {
+                    ResultState = ResultState.Cancelled.WithSite(site);
+                    Message = USER_CANCELLED_MESSAGE;
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
                     ResultState = ResultState.Failure.WithSite(site);

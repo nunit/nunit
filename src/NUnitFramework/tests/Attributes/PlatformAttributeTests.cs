@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        public void ChildTestWithoutAttribute_DoesntExplicitlyInheritFixturePlatforms([Values]bool allowOS)
+        public void ChildTestWithoutAttribute_DoesntExplicitlyInheritFixturePlatforms([Values] bool allowOS)
         {
             OverridePlatformCheck(PlatformAttributeFixture.NUnitOS, allowOS);
             OverridePlatformCheck(PlatformAttributeFixture.NUnitArchitecture, true);

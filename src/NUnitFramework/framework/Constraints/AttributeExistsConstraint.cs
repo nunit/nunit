@@ -43,7 +43,8 @@ namespace NUnit.Framework.Constraints
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
             result.Status = attrs.Length > 0
-                ? ConstraintStatus.Success : ConstraintStatus.Failure;
+                ? ConstraintStatus.Success
+                : ConstraintStatus.Failure;
             return result;
         }
     }
