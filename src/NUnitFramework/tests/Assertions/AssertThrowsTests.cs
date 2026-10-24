@@ -113,9 +113,9 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
+            Assert.That(ex.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  null" + Environment.NewLine));
+                "  But was:  no exception thrown" + Environment.NewLine));
 
             CheckForSpuriousAssertionResults();
         }
@@ -194,6 +194,31 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionPass()
+        {
+            Assert.That(() => throw new InvalidOperationException("No can do"),
+                        Throws.Exception.Not.TypeOf<ArgumentNullException>()
+                                        .And
+                                        .Not.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionFail()
+        {
+            Assert.That(() =>
+                        Assert.That(() => throw new InvalidOperationException("No can do"),
+                                    Throws.Exception.Not.TypeOf<InvalidOperationException>()),
+                        Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        public void AssertNotSpecificExceptionNotThrowingAtAll()
+        {
+            Assert.That(() => "All Good",
+                        Throws.Exception.Not.InstanceOf<ArgumentException>());
         }
 
         private static void CheckForSpuriousAssertionResults()
