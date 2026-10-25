@@ -442,14 +442,6 @@ namespace NUnit.Framework.Constraints
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
 
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
-
-            if (expected is Int128 || actual is Int128)
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-
             if (expected is decimal || actual is decimal)
             {
                 // Treat as decimal if one is decimal and other can be treated as decimal
@@ -470,6 +462,14 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
                 return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
+#endif
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
+
+            if (expected is Int128 || actual is Int128)
+                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
 #endif
 
             if (expected is nuint || actual is nuint)

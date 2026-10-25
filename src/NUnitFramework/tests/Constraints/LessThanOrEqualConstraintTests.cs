@@ -118,6 +118,7 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { uint.MaxValue, uint.MaxValue - 1, 1 };
             yield return new object[] { int.MinValue + 1, int.MinValue, 1 };
             yield return new object[] { int.MaxValue, int.MaxValue - 1, 1 };
+
             //yield return new object[] { ulong.MinValue + 1, ulong.MinValue, 1 };
             yield return new object[] { ulong.MaxValue, ulong.MaxValue - 1, 1 };
             //yield return new object[] { long.MinValue + 1, long.MinValue, 1 };

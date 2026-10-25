@@ -119,14 +119,22 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { int.MinValue, int.MinValue + 1, 1 };
             yield return new object[] { int.MaxValue - 1, int.MaxValue, 1 };
             yield return new object[] { ulong.MinValue, ulong.MinValue + 1, 1 };
-            //yield return new object[] { ulong.MaxValue - 1, ulong.MaxValue, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { ulong.MaxValue - 1, ulong.MaxValue, 1 };
+#endif
             yield return new object[] { long.MinValue, long.MinValue + 1, 1 };
-            //yield return new object[] { long.MaxValue - 1, long.MaxValue, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { long.MaxValue - 1, long.MaxValue, 1 };
+#endif
 
             yield return new object[] { nint.MinValue, nint.MinValue + 1, 1 };
-            //yield return new object[] { nint.MaxValue - 1, nint.MaxValue, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { nint.MaxValue - 1, nint.MaxValue, 1 };
+#endif
             yield return new object[] { nuint.MinValue, nuint.MinValue + 1, 1 };
-            //yield return new object[] { nuint.MaxValue - 1, nuint.MaxValue, 1 };
+#if !NETFRAMEWORK
+            yield return new object[] { nuint.MaxValue - 1, nuint.MaxValue, 1 };
+#endif
 #if !NETFRAMEWORK
             yield return new object[] { (Half)(-65472), (Half)(-65500), (Half)1 };
             yield return new object[] { (Half)65500, (Half)65472, (Half)1 };
