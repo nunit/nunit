@@ -154,12 +154,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(suite.Properties[PropertyNames.Category], Is.EquivalentTo(new[] { "FromAttribute" }));
                 Assert.That(suite.Tests[0].Properties[PropertyNames.Category], Is.Empty);
                 Assert.That(suite.Tests[1].Properties[PropertyNames.Category], Is.EquivalentTo(new[] { "Regression", "Slow" }));
-            });
+            }
         }
 
         [Test]
@@ -168,11 +168,11 @@ namespace NUnit.Framework.Tests.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
             var filter = new CategoryFilter("Regression");
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(filter.Pass(suite.Tests[0].Tests[0]), Is.False);
                 Assert.That(filter.Pass(suite.Tests[1].Tests[0]), Is.True);
-            });
+            }
         }
 
         [Test]
@@ -180,11 +180,11 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(suite.Tests[0].Properties.Get(PropertyNames.Description), Is.Null);
                 Assert.That(suite.Tests[2].Properties.Get(PropertyNames.Description), Is.EqualTo("Fixture description"));
-            });
+            }
         }
 
         [Test]
@@ -192,12 +192,12 @@ namespace NUnit.Framework.Tests.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(suite.Tests[3].Properties.Get("Owner"), Is.EqualTo("NUnit"));
                 Assert.That(suite.Tests[3].Properties.Get("Priority"), Is.EqualTo(1));
                 Assert.That(suite.Tests[3].Properties.Get("Weight"), Is.EqualTo(1.5));
-            });
+            }
         }
 
         #region Test name tests
