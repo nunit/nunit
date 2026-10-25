@@ -432,54 +432,14 @@ namespace NUnit.Framework.Constraints
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-#if !NETFRAMEWORK
-            if (Amount is UInt128 || value is UInt128)
-            {
-                double v = Numerics.ConvertToValue<double>(value);
-                double amount = Numerics.ConvertToValue<double>(Amount);
-                return CalculateDoubleBasedRange(v, amount);
-            }
+            double v = value is IConvertible ? Convert.ToDouble(value) : Numerics.ConvertToValue<double>(value);
+            double amount = Amount is IConvertible ? Convert.ToDouble(Amount) : Numerics.ConvertToValue<double>(Amount);
 
-            if (Amount is Int128 || value is Int128)
-            {
-                double v = Numerics.ConvertToValue<double>(value);
-                double amount = Numerics.ConvertToValue<double>(Amount);
-                return CalculateDoubleBasedRange(v, amount);
-            }
-
-            if (Amount is Half || value is Half)
-            {
-                double v = Numerics.ConvertToValue<double>(value);
-                double amount = Numerics.ConvertToValue<double>(Amount);
-                return CalculateDoubleBasedRange(v, amount);
-            }
-#endif
-            if (Amount is nuint || value is nuint)
-            {
-                ulong v = value is nuint nuintValue ? nuintValue : Convert.ToUInt64(value);
-                ulong amount = Amount is nuint nuintAmount ? nuintAmount : Convert.ToUInt64(Amount);
-                return CalculateDoubleBasedRange(v, amount);
-            }
-
-            if (Amount is nint || value is nint)
-            {
-                long v = value is nint nintValue ? nintValue : Convert.ToInt64(value);
-                long amount = Amount is nint nintAmount ? nintAmount : Convert.ToInt64(Amount);
-                return CalculateDoubleBasedRange(v, amount);
-            }
-
-            return CalculateDoubleBasedRange(value, Amount);
-        }
-        private static Range CalculateDoubleBasedRange(object value, object amount)
-                => CalculateDoubleBasedRange(Convert.ToDouble(value), Convert.ToDouble(amount));
-
-        private static Range CalculateDoubleBasedRange(double value, double amount)
-        {
             // Calculate the absolute value of the offset in case 'value' is negative to ensure lower bounds is always less than upper bounds
-            var offset = Math.Abs(value * amount / 100.0);
+            double offset = Math.Abs(v * amount / 100.0);
 
-            var lowerBound = value - offset;
-            var upperBound = value + offset;
+            double lowerBound = v - offset;
+            double upperBound = v + offset;
             return new Range(lowerBound, upperBound);
         }
 
