@@ -407,6 +407,31 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
+    [Category("FromAttribute")]
+    [TestFixtureSource(nameof(FixtureData))]
+    public class IndividualInstancesMayHaveCategoriesAndProperties
+    {
+        public IndividualInstancesMayHaveCategoriesAndProperties(string arg)
+        {
+        }
+
+        [Test]
+        public void Test()
+        {
+        }
+
+        private static IEnumerable FixtureData()
+        {
+            yield return new TestFixtureData("NoExtraData");
+            yield return new TestFixtureData("WithCategories").SetCategory("Regression").SetCategory("Slow");
+            yield return new TestFixtureData("WithDescription").SetDescription("Fixture description");
+            yield return new TestFixtureData("WithProperties")
+                .SetProperty("Owner", "NUnit")
+                .SetProperty("Priority", 1)
+                .SetProperty("Weight", 1.5);
+        }
+    }
+
     #region Test name tests
 
     [TestFixtureSource(nameof(IndividualInstanceNameTestDataSource))]
