@@ -438,11 +438,6 @@ namespace NUnit.Framework.Constraints
                 double v = Numerics.ConvertToValue<double>(value);
                 double amount = Numerics.ConvertToValue<double>(Amount);
                 return CalculateDoubleBasedRange(v, amount);
-
-                //var v = Numerics.ConvertToValue<UInt128>(value);
-                //var offset = UInt128.CreateTruncating(double.CreateChecked(v) * Numerics.ConvertToValue<double>(Amount) / 100.0);
-
-                //return new Range(v - offset, v + offset);
             }
 
             if (Amount is Int128 || value is Int128)
@@ -450,11 +445,6 @@ namespace NUnit.Framework.Constraints
                 double v = Numerics.ConvertToValue<double>(value);
                 double amount = Numerics.ConvertToValue<double>(Amount);
                 return CalculateDoubleBasedRange(v, amount);
-
-                //var v = Numerics.ConvertToValue<Int128>(value);
-                //var offset = Int128.CreateTruncating(double.CreateChecked(v) * Numerics.ConvertToValue<double>(Amount) / 100.0);
-
-                //return new Range(v - offset, v + offset);
             }
 
             if (Amount is Half || value is Half)
@@ -479,20 +469,21 @@ namespace NUnit.Framework.Constraints
             }
 
             return CalculateDoubleBasedRange(value, Amount);
+        }
+        private static Range CalculateDoubleBasedRange(object value, object amount)
+                => CalculateDoubleBasedRange(Convert.ToDouble(value), Convert.ToDouble(amount));
 
-            static Range CalculateDoubleBasedRange(object value, object amount)
-            {
-                var v = Convert.ToDouble(value);
-                // Calculate the absolute value of the offset in case 'value' is negative to ensure lower bounds is always less than upper bounds
-                var offset = Math.Abs(v * Convert.ToDouble(amount) / 100.0);
+        private static Range CalculateDoubleBasedRange(double value, double amount)
+        {
+            // Calculate the absolute value of the offset in case 'value' is negative to ensure lower bounds is always less than upper bounds
+            var offset = Math.Abs(value * amount / 100.0);
 
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-                return new Range(lowerBound, upperBound);
-            }
+            var lowerBound = value - offset;
+            var upperBound = value + offset;
+            return new Range(lowerBound, upperBound);
         }
 
-#endregion
+        #endregion
 
         #region Nested Range Class
 
