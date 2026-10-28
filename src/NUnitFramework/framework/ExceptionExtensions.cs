@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -58,6 +60,20 @@ namespace NUnit.Framework
             {
                 return Result.Error<IDictionary>(ex.GetType().Name + " was thrown by the Exception.Data property.");
             }
+        }
+
+        /// <summary>
+        /// Sets the result state and message of the current test before the exception is thrown,
+        /// so code that catches the exception can read them from <see cref="TestContext.Result"/>.
+        /// A result that is already worse, for example a failed test whose TearDown swallows the exception,
+        /// is left alone. So is a suite result whose children set its state, because it appends messages.
+        /// </summary>
+        public static ResultStateException RecordInCurrentResult(this ResultStateException exception)
+        {
+            var result = TestExecutionContext.CurrentContext.CurrentResult;
+            if (result.ResultState.Site != FailureSite.Child && exception.ResultState.Status >= result.ResultState.Status)
+                result.SetResult(exception.ResultState, exception.Message);
+            return exception;
         }
     }
 }
