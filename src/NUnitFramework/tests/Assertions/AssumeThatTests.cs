@@ -20,8 +20,11 @@ namespace NUnit.Framework.Tests.Assertions
             {
             }
 
-            Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Inconclusive));
-            Assert.That(TestContext.CurrentContext.Result.Message, Does.Contain("MESSAGE").And.Contain("Expected: 5"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(TestContext.CurrentContext.Result.Message, Does.Contain("MESSAGE").And.Contain("Expected: 5"));
+            }
         }
 
         [Test]

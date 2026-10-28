@@ -38,8 +38,11 @@ namespace NUnit.Framework.Tests.Assertions
             {
             }
 
-            Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Ignored));
-            Assert.That(TestContext.CurrentContext.Result.Message, Is.EqualTo("MESSAGE"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Ignored));
+                Assert.That(TestContext.CurrentContext.Result.Message, Is.EqualTo("MESSAGE"));
+            }
         }
 
         [Test]

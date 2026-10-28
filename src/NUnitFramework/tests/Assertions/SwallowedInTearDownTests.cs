@@ -26,8 +26,11 @@ namespace NUnit.Framework.Tests.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(fixture, "Test");
 
-            Assert.That(result.ResultState, Is.EqualTo(expectedState));
-            Assert.That(result.Message, Is.EqualTo(expectedMessage));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(expectedState));
+                Assert.That(result.Message, Is.EqualTo(expectedMessage));
+            }
         }
     }
 }
