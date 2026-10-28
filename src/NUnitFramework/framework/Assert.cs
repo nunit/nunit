@@ -83,7 +83,7 @@ namespace NUnit.Framework
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
-            throw new SuccessException(message).RecordInCurrentResult();
+            throw new SuccessException(message).SetEarlyResult();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace NUnit.Framework
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
-            throw new IgnoreException(message).RecordInCurrentResult();
+            throw new IgnoreException(message).SetEarlyResult();
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace NUnit.Framework
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
 
-            throw new InconclusiveException(message).RecordInCurrentResult();
+            throw new InconclusiveException(message).SetEarlyResult();
         }
 
         /// <summary>
@@ -348,7 +348,7 @@ namespace NUnit.Framework
             {
                 throw new AssertionException(result.Message, fromReportFailure: true);
             }
-            if (TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger && Debugger.IsAttached)
+            else if (TestExecutionContext.CurrentContext.ThrowOnEachFailureUnderDebugger && Debugger.IsAttached)
             {
                 try
                 {

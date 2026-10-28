@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
+using NUnit.TestData.SwallowedInTearDownData;
 using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Assertions
@@ -40,6 +41,14 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Ignored));
             Assert.That(TestContext.CurrentContext.Result.Message, Is.EqualTo("MESSAGE"));
+        }
+
+        [Test]
+        public void PassSwallowedInTearDownKeepsIgnored()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(IgnoredTestSwallowsPassInTearDown), "Test");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
+            Assert.That(result.Message, Is.EqualTo("Test ignored"));
         }
 
         [Test]

@@ -306,7 +306,7 @@ namespace NUnit.Framework
                 Assert.ExtendedMessage($"{nameof(Assume)}.{nameof(Assume.That)}",
                 message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
-            throw new InconclusiveException(writer.ToString()).RecordInCurrentResult();
+            throw new InconclusiveException(writer.ToString()).SetEarlyResult();
         }
 
         #endregion

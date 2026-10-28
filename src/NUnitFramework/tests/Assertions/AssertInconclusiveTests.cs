@@ -47,5 +47,13 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Message, Is.Empty);
         }
+
+        [Test]
+        public void PassSwallowedInTearDownKeepsInconclusive()
+        {
+            ITestResult result = TestBuilder.RunTestCase(typeof(InconclusiveTestSwallowsPassInTearDown), "Test");
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+            Assert.That(result.Message, Is.EqualTo("Test inconclusive"));
+        }
     }
 }

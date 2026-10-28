@@ -682,6 +682,25 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Sets the result early, before a <see cref="ResultStateException"/> propagates, unless the outcome
+        /// is already decided or the new state would rank lower than the current one.
+        /// A TearDown that swallows the exception then does not change the outcome of the test.
+        /// </summary>
+        internal void SetEarlyResult(ResultState resultState, string message)
+        {
+            if (!IsOutcomeDecided && resultState.Status >= ResultState.Status)
+            {
+                SetResult(resultState, message);
+            }
+        }
+
+        /// <summary>
+        /// True when an exception has been recorded as an assertion result,
+        /// or when the result is set by child results.
+        /// </summary>
+        private bool IsOutcomeDecided => AssertionResultCount > 0 || ResultState.Site == FailureSite.Child;
+
+        /// <summary>
         /// Set the test result based on the type of exception thrown
         /// </summary>
         /// <param name="ex">The exception that was thrown</param>
