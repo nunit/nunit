@@ -695,10 +695,26 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Records a warning and updates the result at once, so the test can read it from
+        /// <see cref="TestContext.Result"/>. A result set by child results is updated
+        /// later, when the suite completes, because updating it here would replace the child message.
+        /// </summary>
+        internal void RecordWarning(string message, string? stackTrace)
+        {
+            RecordAssertion(AssertionStatus.Warning, message, stackTrace);
+            if (!IsSetByChildResults)
+            {
+                RecordTestCompletion();
+            }
+        }
+
+        /// <summary>
         /// True when an exception has been recorded as an assertion result,
         /// or when the result is set by child results.
         /// </summary>
-        private bool IsOutcomeDecided => AssertionResultCount > 0 || ResultState.Site == FailureSite.Child;
+        private bool IsOutcomeDecided => AssertionResultCount > 0 || IsSetByChildResults;
+
+        private bool IsSetByChildResults => ResultState.Site == FailureSite.Child;
 
         /// <summary>
         /// Set the test result based on the type of exception thrown

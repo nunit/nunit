@@ -363,8 +363,7 @@ namespace NUnit.Framework
 
         private static void IssueWarning(string message)
         {
-            var result = TestExecutionContext.CurrentContext.CurrentResult;
-            result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());
+            TestExecutionContext.CurrentContext.CurrentResult.RecordWarning(message, GetStackTrace());
         }
 
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments

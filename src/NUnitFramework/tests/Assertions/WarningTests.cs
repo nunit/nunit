@@ -167,6 +167,43 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void WarnSetsCurrentResultImmediately()
+        {
+            TestResult result;
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                Assert.Warn("MESSAGE");
+                result = TestExecutionContext.CurrentContext.CurrentResult;
+            }
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+                Assert.That(result.Message, Is.EqualTo("MESSAGE"));
+            }
+        }
+
+        [Test]
+        public void WarningInOneTimeSetUpSetsFixtureResult()
+        {
+            ITestResult result = TestBuilder.RunTestFixture(typeof(WarningInOneTimeSetUpWithPassingChild));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+                Assert.That(result.Message, Is.EqualTo("Warning in OneTimeSetUp"));
+            }
+        }
+
+        [Test]
+        public void WarningInOneTimeTearDownKeepsChildMessage()
+        {
+            ITestResult result = TestBuilder.RunTestFixture(typeof(WarningInOneTimeTearDownAfterChildFailure));
+
+            Assert.That(result.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "Warning in OneTimeTearDown"));
+        }
+
+        [Test]
         public void FailingWarning_CallsExceptionStringFunc()
         {
             // Arrange
