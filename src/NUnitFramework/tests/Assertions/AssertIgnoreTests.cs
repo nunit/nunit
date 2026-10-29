@@ -28,6 +28,24 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void SetsCurrentResultBeforeThrowing()
+        {
+            try
+            {
+                Assert.Ignore("MESSAGE");
+            }
+            catch (IgnoreException)
+            {
+            }
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Ignored));
+                Assert.That(TestContext.CurrentContext.Result.Message, Is.EqualTo("MESSAGE"));
+            }
+        }
+
+        [Test]
         public void IgnoreWorksForTestCase()
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);

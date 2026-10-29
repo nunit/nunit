@@ -2,12 +2,31 @@
 
 using System;
 using System.Threading.Tasks;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssumeThatTests
     {
+        [Test]
+        public void FailureSetsCurrentResultBeforeThrowing()
+        {
+            try
+            {
+                Assume.That(2 + 2, Is.EqualTo(5), "MESSAGE");
+            }
+            catch (InconclusiveException)
+            {
+            }
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(TestContext.CurrentContext.Result.Message, Does.Contain("MESSAGE").And.Contain("Expected: 5"));
+            }
+        }
+
         [Test]
         public void AssumptionPasses_Boolean()
         {
