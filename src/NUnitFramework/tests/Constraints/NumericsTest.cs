@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Constraints
         [OneTimeSetUp]
         public void SetUp()
         {
-            _absoluteTolerance = new Tolerance(0.1);
+            _absoluteTolerance = new Tolerance(1);
             _tenPercent = new Tolerance(10.0).Percent;
             _zeroTolerance = Tolerance.Exact;
         }
@@ -419,5 +419,110 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
+
+        [Test]
+        public void DeltaWithBigTolerance()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                var tolerance = new Tolerance(uint.MaxValue);
+                Assert.That(Numerics.AreEqual(0, uint.MaxValue, ref tolerance), Is.True);
+
+                tolerance = new Tolerance(int.MaxValue);
+                Assert.That(Numerics.AreEqual(0, int.MaxValue, ref tolerance), Is.True);
+                Assert.That(Numerics.AreEqual(int.MinValue, int.MaxValue, ref tolerance), Is.False);
+            }
+        }
+
+#if !NETFRAMEWORK
+        [Test]
+        public void DeltaWithHalfAndBigPercentageTolerance()
+        {
+            var tolerance = new Tolerance(100000d).Percent;
+            var expected = (Half)1;
+            var actual = (Half)2000;
+
+            Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.False);
+        }
+#endif
+
+        [Test]
+        public void DeltaWithDecimalAtMaxValueEdge()
+        {
+            var toleranceAmount = 0.6m;
+            var tolerance = new Tolerance(toleranceAmount);
+            var expected = decimal.MaxValue - 1m;
+            var actual = decimal.MaxValue;
+
+            checked
+            {
+                // Verify that `AreEqual` returns the same as C# comparison with the same values and tolerance.
+                Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(actual >= (expected - toleranceAmount)));
+                Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(actual <= (expected + toleranceAmount)));
+            }
+        }
+
+        [Test]
+        public void PercentageToleranceWithLongValuesAtEdge()
+        {
+            var toleranceAmount = 0.0d;
+            var tolerance = new Tolerance(toleranceAmount).Percent;
+            var expected = long.MaxValue - 1L;
+            var actual = long.MaxValue;
+            checked
+            {
+                // Verify that `AreEqual` returns the same as C# comparison with the same values and tolerance.
+                Assert.That(Numerics.AreEqual(expected, actual, ref tolerance),
+                            Is.EqualTo(
+                                (actual >= (expected - (long)(expected * (toleranceAmount / 100)))) &&
+                                (actual <= (expected + (long)(expected * (toleranceAmount / 100))))));
+            }
+        }
+
+        [TestCaseSource(nameof(DeltaExceedsTypeRangeCases))]
+        public void DeltaExceedsTypeRangeLinearTolerance<T>(T expected, T actual)
+            where T : struct, IEquatable<T>
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(expected, actual, ref _absoluteTolerance), Is.False);
+                Assert.That(Numerics.AreEqual(actual, expected, ref _absoluteTolerance), Is.False);
+            }
+        }
+
+        [TestCaseSource(nameof(DeltaExceedsTypeRangeCases))]
+        public void DeltaExceedsTypeRangePercentageTolerance<T>(T expected, T actual)
+            where T : struct, IEquatable<T>
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(expected, actual, ref _tenPercent), Is.False);
+                Assert.That(Numerics.AreEqual(actual, expected, ref _tenPercent), Is.False);
+            }
+        }
+
+        // Test cases where the delta exceeds the range of the type, which should result in a false comparison.
+        // The unsigned cases technically don't overflow, but they are included to ensure those are not broken.
+        private static readonly TestCaseData[] DeltaExceedsTypeRangeCases =
+        [
+            new TestCaseData(int.MaxValue, int.MinValue),
+            new TestCaseData(0, int.MinValue),
+            new TestCaseData(int.MaxValue / 2 + 1, int.MinValue / 2),
+            new TestCaseData(uint.MaxValue, uint.MinValue),
+            new TestCaseData(long.MaxValue, long.MinValue),
+            new TestCaseData(0, long.MinValue),
+            new TestCaseData(long.MaxValue / 2 + 1, long.MinValue / 2),
+            new TestCaseData(ulong.MaxValue, ulong.MinValue),
+            new TestCaseData(float.MaxValue, float.MinValue),
+            new TestCaseData(double.MaxValue, double.MinValue),
+            new TestCaseData(decimal.MaxValue, decimal.MinValue),
+#if !NETFRAMEWORK
+            new TestCaseData(Int128.MaxValue, Int128.MinValue),
+            new TestCaseData(Int128.Zero, Int128.MinValue),
+            new TestCaseData(Int128.MaxValue / 2 + 1, Int128.MinValue / 2),
+            new TestCaseData(UInt128.MaxValue, UInt128.MinValue),
+            new TestCaseData(Half.MaxValue, Half.MinValue),
+#endif
+        ];
     }
 }

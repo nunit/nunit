@@ -230,14 +230,17 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return Math.Abs(expected - actual) <= Convert.ToDouble(tolerance.Amount);
+                    double toleranceValue = Convert.ToDouble(tolerance.Amount);
+                    if (toleranceValue == 0.0)
+                        return expected.Equals(actual);
+
+                    return DeltaWithinAbsoluteTolerance(expected, actual, toleranceValue);
 
                 case ToleranceMode.Percent:
                     if (expected == 0.0)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs((expected - actual) / expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 case ToleranceMode.Ulps:
                     return FloatingPointNumerics.AreAlmostEqualUlps(
@@ -274,13 +277,17 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return Math.Abs(expected - actual) <= Convert.ToDouble(tolerance.Amount);
+                    float toleranceValue = Convert.ToSingle(tolerance.Amount);
+                    if (toleranceValue == 0.0)
+                        return expected.Equals(actual);
+
+                    return DeltaWithinAbsoluteTolerance(expected, actual, toleranceValue);
 
                 case ToleranceMode.Percent:
-                    if (expected == 0.0f)
+                    if (expected == 0.0)
                         return expected.Equals(actual);
-                    float relativeError = Math.Abs((expected - actual) / expected);
-                    return (relativeError <= Convert.ToSingle(tolerance.Amount) / 100.0f);
+
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 case ToleranceMode.Ulps:
                     return FloatingPointNumerics.AreAlmostEqualUlps(
@@ -300,18 +307,17 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     decimal decimalTolerance = Convert.ToDecimal(tolerance.Amount);
-                    if (decimalTolerance > 0m)
-                        return Math.Abs(expected - actual) <= decimalTolerance;
+                    if (decimalTolerance == 0m)
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    // Just like integers, the delta for decimal can overflow
+                    return DeltaWithinAbsoluteTolerance(expected, actual, decimalTolerance);
 
                 case ToleranceMode.Percent:
                     if (expected == 0m)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -320,6 +326,8 @@ namespace NUnit.Framework.Constraints
 
         private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
         {
+            ulong difference;
+
             switch (tolerance.Mode)
             {
                 case ToleranceMode.Unset:
@@ -327,22 +335,17 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     ulong ulongTolerance = Convert.ToUInt64(tolerance.Amount);
-                    if (ulongTolerance > 0ul)
-                    {
-                        ulong diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= ulongTolerance;
-                    }
+                    if (ulongTolerance == 0ul)
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    difference = expected >= actual ? expected - actual : actual - expected;
+                    return difference <= ulongTolerance;
 
                 case ToleranceMode.Percent:
                     if (expected == 0ul)
                         return expected.Equals(actual);
 
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    ulong difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs((double)difference / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -358,18 +361,16 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     long longTolerance = Convert.ToInt64(tolerance.Amount);
-                    if (longTolerance > 0L)
-                        return Math.Abs(expected - actual) <= longTolerance;
+                    if (longTolerance == 0L)
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    return DeltaWithinAbsoluteTolerance(expected, actual, longTolerance);
 
                 case ToleranceMode.Percent:
                     if (expected == 0L)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -378,6 +379,8 @@ namespace NUnit.Framework.Constraints
 
         private static bool AreEqual(uint expected, uint actual, Tolerance tolerance)
         {
+            uint difference;
+
             switch (tolerance.Mode)
             {
                 case ToleranceMode.Unset:
@@ -385,22 +388,17 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     uint uintTolerance = Convert.ToUInt32(tolerance.Amount);
-                    if (uintTolerance > 0)
-                    {
-                        uint diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= uintTolerance;
-                    }
+                    if (uintTolerance == 0)
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    difference = expected >= actual ? expected - actual : actual - expected;
+                    return difference <= uintTolerance;
 
                 case ToleranceMode.Percent:
                     if (expected == 0u)
                         return expected.Equals(actual);
 
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    double difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs(difference / expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -416,18 +414,16 @@ namespace NUnit.Framework.Constraints
 
                 case ToleranceMode.Linear:
                     int intTolerance = Convert.ToInt32(tolerance.Amount);
-                    if (intTolerance > 0)
-                        return Math.Abs(expected - actual) <= intTolerance;
+                    if (intTolerance == 0)
+                        return expected.Equals(actual);
 
-                    return expected.Equals(actual);
+                    return DeltaWithinAbsoluteTolerance(expected, actual, intTolerance);
 
                 case ToleranceMode.Percent:
                     if (expected == 0)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -621,7 +617,7 @@ namespace NUnit.Framework.Constraints
         }
 
         private static bool AreIeeeFloatsEqual<T>(T expected, T actual, ref Tolerance tolerance)
-            where T : INumber<T>, IFloatingPointIeee754<T>
+            where T : INumber<T>, IMinMaxValue<T>, IFloatingPointIeee754<T>
         {
             if (T.IsNaN(expected) && T.IsNaN(actual))
                 return true;
@@ -648,15 +644,17 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return T.Abs(expected - actual) <= ConvertToValue<T>(tolerance.Amount);
+                    T toleranceValue = ConvertToValue<T>(tolerance.Amount);
+                    if (T.IsZero(toleranceValue))
+                        return expected.Equals(actual);
+
+                    return DeltaWithinAbsoluteTolerance(expected, actual, toleranceValue);
 
                 case ToleranceMode.Percent:
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T relativeError = (expected >= actual ? expected - actual : actual - expected) / expected;
-                    return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 case ToleranceMode.Ulps:
                     // NOTE: We cannot convert types here because it will affect the ulps calculation.
@@ -669,7 +667,7 @@ namespace NUnit.Framework.Constraints
         }
 
         private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
-            where T : INumber<T>
+            where T : INumber<T>, IMinMaxValue<T>
         {
             switch (tolerance.Mode)
             {
@@ -681,23 +679,47 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(toleranceValue))
                         return expected.Equals(actual);
 
-                    T diff = expected >= actual ? expected - actual : actual - expected;
-                    return diff <= toleranceValue;
+                    return DeltaWithinAbsoluteTolerance(expected, actual, toleranceValue);
 
                 case ToleranceMode.Percent:
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T difference = (expected >= actual ? expected - actual : actual - expected);
-                    double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
-                    return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
+                    return DeltaWithinRelativeTolerance(expected, actual, tolerance);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
 #endif
+
+        private static bool DeltaWithinAbsoluteTolerance<T>(T expected, T actual, T tolerance)
+#if NETFRAMEWORK
+            where T : struct, IComparable<T>, IConvertible
+#else
+            where T : INumber<T>, IMinMaxValue<T>
+#endif
+        {
+            ClampedRange<T> range = ClampedRange.ForAbsolute(expected, tolerance);
+            return range.ValueIsWithinRange(actual);
+        }
+
+        private static bool DeltaWithinRelativeTolerance<T>(T expected, T actual, Tolerance tolerance)
+#if NETFRAMEWORK
+            where T : struct, IComparable<T>, IConvertible
+#else
+            where T : INumber<T>, IMinMaxValue<T>
+#endif
+        {
+            // Convert to double before calculating delta to avoid overflow
+#if NETFRAMEWORK
+            double fraction = Convert.ToDouble(tolerance.Amount) / 100.0;
+#else
+            double fraction = ConvertToValue<double>(tolerance.Amount) / 100.0;
+#endif
+            ClampedRange<T> range = ClampedRange.ForRelative(expected, fraction);
+            return range.ValueIsWithinRange(actual);
+        }
 
         private static T ConvertToValue<T>(object o)
 #if NETFRAMEWORK
