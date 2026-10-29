@@ -65,9 +65,9 @@ namespace NUnit.Framework
         /// Sets the result state and message of the current test before the exception is thrown,
         /// so code that catches the exception can read them from <see cref="TestContext.Result"/>.
         /// </summary>
-        public static ResultStateException SetEarlyResult(this ResultStateException exception)
+        public static ResultStateException SetPreliminaryResult(this ResultStateException exception)
         {
-            TestExecutionContext.CurrentContext.CurrentResult.SetEarlyResult(exception.ResultState, exception.Message);
+            TestExecutionContext.CurrentContext.CurrentResult.SetPreliminaryResult(exception.ResultState, exception.Message);
             return exception;
         }
     }

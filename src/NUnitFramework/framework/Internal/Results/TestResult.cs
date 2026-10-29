@@ -682,11 +682,11 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Sets the result early, before a <see cref="ResultStateException"/> propagates, unless the outcome
+        /// Sets a preliminary result before a <see cref="ResultStateException"/> propagates, unless the outcome
         /// is already decided or the new state would rank lower than the current one.
         /// A TearDown that swallows the exception then does not change the outcome of the test.
         /// </summary>
-        internal void SetEarlyResult(ResultState resultState, string message)
+        internal void SetPreliminaryResult(ResultState resultState, string message)
         {
             if (!IsOutcomeDecided && resultState.Status >= ResultState.Status)
             {
