@@ -107,6 +107,33 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void CatchWithMessageReturnsDerivedException_Issue5520()
+        {
+            var thrown = new ArgumentException("myMessage");
+
+            var ex = Assert.Catch(() => throw thrown, "Expected an exception");
+
+            Assert.That(ex, Is.SameAs(thrown));
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
+        public void CatchWithMessageFailsWhenNoExceptionThrown()
+        {
+            var ex = CatchException(() =>
+                Assert.Catch(TestDelegates.ThrowsNothing, "Expected an exception from {0}", "ThrowsNothing"));
+
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex!.Message, Does.Contain("Expected an exception from ThrowsNothing"));
+            Assert.That(ex.Message, Does.Contain(
+                "  Expected: instance of <System.Exception>" + Environment.NewLine +
+                "  But was:  null" + Environment.NewLine));
+
+            CheckForSpuriousAssertionResults();
+        }
+
+        [Test]
         public void NoExceptionThrown()
         {
             var ex = CatchException(() =>
