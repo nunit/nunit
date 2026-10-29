@@ -4,7 +4,6 @@ using System;
 #if !NETFRAMEWORK
 using System.Numerics;
 #endif
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -217,12 +216,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -261,12 +255,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -453,14 +442,6 @@ namespace NUnit.Framework.Constraints
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
 
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
-
-            if (expected is Int128 || actual is Int128)
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-
             if (expected is decimal || actual is decimal)
             {
                 // Treat as decimal if one is decimal and other can be treated as decimal
@@ -481,6 +462,14 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
                 return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
+#endif
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
+
+            if (expected is Int128 || actual is Int128)
+                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
 #endif
 
             if (expected is nuint || actual is nuint)
@@ -635,12 +624,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -699,15 +683,22 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static T ConvertToValue<T>(object o)
+        internal static T ConvertToValue<T>(object o)
 #if NETFRAMEWORK
         {
             if (o is T tol)
                 return tol;
+
+            // nint and nuint are not IConvertible, so we need to convert them to long/ulong first
+            if (o is nint nintValue)
+                o = (long)nintValue;
+            else if (o is nuint nuintValue)
+                o = (ulong)nuintValue;
+
             if (typeof(T) == typeof(nint))
-                return (T)(object)Convert.ToInt64(o);
+                return (T)(object)new IntPtr(Convert.ToInt64(o));
             if (typeof(T) == typeof(nuint))
-                return (T)(object)Convert.ToUInt64(o);
+                return (T)(object)new UIntPtr(Convert.ToUInt64(o));
             if (typeof(T) == typeof(double))
                 return (T)(object)Convert.ToDouble(o);
             if (typeof(T) == typeof(float))
