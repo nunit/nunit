@@ -196,11 +196,15 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void WarningInOneTimeTearDownKeepsChildMessage()
+        public void WarningInOneTimeTearDownKeepsChildFailure()
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(WarningInOneTimeTearDownAfterChildFailure));
 
-            Assert.That(result.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "Warning in OneTimeTearDown"));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(result.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "Warning in OneTimeTearDown"));
+            }
         }
 
         [Test]

@@ -855,13 +855,13 @@ namespace NUnit.Framework.Internal
                     case 1:
                         AssertionResult assertionResult = _assertionResults[0];
                         SetResult(
-                            resultState ?? AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
+                            resultState ?? KeepWorseChildResult(AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site)),
                             assertionResult.Message,
                             assertionResult.StackTrace);
                         break;
                     default:
                         SetResult(
-                            resultState ?? AssertionStatusToResultState(WorstAssertionStatus),
+                            resultState ?? KeepWorseChildResult(AssertionStatusToResultState(WorstAssertionStatus)),
                             CreateLegacyFailureMessage());
                         break;
                 }
@@ -871,6 +871,13 @@ namespace NUnit.Framework.Internal
                 RwLock.ExitUpgradeableReadLock();
             }
         }
+
+        /// <summary>
+        /// A warning recorded after the child results, for example in OneTimeTearDown,
+        /// must not hide a worse result set by the child results.
+        /// </summary>
+        private ResultState KeepWorseChildResult(ResultState fromAssertions)
+            => IsSetByChildResults && ResultState.Status >= fromAssertions.Status ? ResultState : fromAssertions;
 
         /// <summary>
         /// Used in one particular case clear intentional failure result.
