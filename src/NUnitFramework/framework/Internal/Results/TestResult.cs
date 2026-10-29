@@ -63,6 +63,7 @@ namespace NUnit.Framework.Internal
         private ResultState _resultState;
         private string _message;
         private string? _stackTrace;
+        private string? _childResultsMessage;
 
         private readonly List<AssertionResult> _assertionResults = new();
         private readonly List<TestAttachment> _testAttachments = new();
@@ -99,6 +100,7 @@ namespace NUnit.Framework.Internal
             _resultState = other._resultState;
             _message = other._message;
             _stackTrace = other._stackTrace;
+            _childResultsMessage = other._childResultsMessage;
             _duration = other._duration;
             StartTime = other.StartTime;
             EndTime = other.EndTime;
@@ -854,15 +856,16 @@ namespace NUnit.Framework.Internal
                         break;
                     case 1:
                         AssertionResult assertionResult = _assertionResults[0];
-                        SetResult(
+                        SetCompletionResult(
                             resultState ?? KeepWorseChildResult(AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site)),
                             assertionResult.Message,
                             assertionResult.StackTrace);
                         break;
                     default:
-                        SetResult(
+                        SetCompletionResult(
                             resultState ?? KeepWorseChildResult(AssertionStatusToResultState(WorstAssertionStatus)),
-                            CreateLegacyFailureMessage());
+                            CreateLegacyFailureMessage(),
+                            null);
                         break;
                 }
             }
@@ -877,7 +880,30 @@ namespace NUnit.Framework.Internal
         /// must not hide a worse result set by the child results.
         /// </summary>
         private ResultState KeepWorseChildResult(ResultState fromAssertions)
-            => IsSetByChildResults && ResultState.Status >= fromAssertions.Status ? ResultState : fromAssertions;
+            => IsSetByChildResults && ResultState.Status > fromAssertions.Status ? ResultState : fromAssertions;
+
+        /// <summary>
+        /// Sets the result from the assertion results. Once the child results have set the result,
+        /// the message is the child message followed by the current assertion message.
+        /// It is rebuilt on every call, so messages from earlier calls are not repeated.
+        /// </summary>
+        private void SetCompletionResult(ResultState resultState, string message, string? stackTrace)
+        {
+            RwLock.EnterWriteLock();
+            try
+            {
+                if (IsSetByChildResults)
+                    _childResultsMessage ??= Message;
+
+                Message = _childResultsMessage is null ? message : _childResultsMessage + Environment.NewLine + message;
+                ResultState = resultState;
+                StackTrace = stackTrace;
+            }
+            finally
+            {
+                RwLock.ExitWriteLock();
+            }
+        }
 
         /// <summary>
         /// Used in one particular case clear intentional failure result.

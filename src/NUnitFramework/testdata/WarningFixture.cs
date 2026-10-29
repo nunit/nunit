@@ -649,4 +649,43 @@ namespace NUnit.TestData
             Assert.Warn("Warning in OneTimeTearDown");
         }
     }
+
+    public class FailureInOneTimeTearDownAfterChildFailure
+    {
+        [Test]
+        public void Fails()
+        {
+            Assert.Fail("Child failed");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Assert.Fail("Failure in OneTimeTearDown");
+        }
+    }
+
+    public class WarningInBaseOneTimeTearDownAfterChildFailure
+    {
+        [OneTimeTearDown]
+        public void BaseOneTimeTearDown()
+        {
+            Assert.Warn("Warning in base OneTimeTearDown");
+        }
+    }
+
+    public class WarningsInBaseAndDerivedOneTimeTearDownAfterChildFailure : WarningInBaseOneTimeTearDownAfterChildFailure
+    {
+        [Test]
+        public void Fails()
+        {
+            Assert.Fail("Child failed");
+        }
+
+        [OneTimeTearDown]
+        public void DerivedOneTimeTearDown()
+        {
+            Assert.Warn("Warning in derived OneTimeTearDown");
+        }
+    }
 }

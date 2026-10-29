@@ -208,6 +208,34 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
+        public void FailureInOneTimeTearDownAfterChildFailureIsReportedOnce()
+        {
+            ITestResult result = TestBuilder.RunTestFixture(typeof(FailureInOneTimeTearDownAfterChildFailure));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure.WithSite(FailureSite.TearDown)));
+                Assert.That(result.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "Failure in OneTimeTearDown"));
+            }
+        }
+
+        [Test]
+        public void WarningsInBaseAndDerivedOneTimeTearDownAreReportedOnce()
+        {
+            const string derivedWarning = "Warning in derived OneTimeTearDown";
+            ITestResult result = TestBuilder.RunTestFixture(typeof(WarningsInBaseAndDerivedOneTimeTearDownAfterChildFailure));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(result.Message, Does.StartWith(TestResult.CHILD_ERRORS_MESSAGE + Environment.NewLine + "Multiple failures or warnings in test:"));
+                Assert.That(result.Message, Does.Contain("Warning in base OneTimeTearDown"));
+                Assert.That(result.Message.IndexOf(derivedWarning, StringComparison.Ordinal),
+                    Is.EqualTo(result.Message.LastIndexOf(derivedWarning, StringComparison.Ordinal)));
+            }
+        }
+
+        [Test]
         public void FailingWarning_CallsExceptionStringFunc()
         {
             // Arrange
