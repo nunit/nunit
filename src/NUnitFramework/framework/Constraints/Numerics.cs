@@ -618,7 +618,10 @@ namespace NUnit.Framework.Constraints
         private static T Difference<T>(T expected, T actual, bool isAbsolute)
             where T : INumber<T>
         {
-            var difference = expected - actual;
+            // Subtract the smaller value from the larger one so the difference
+            // can never underflow (e.g. UInt128) or flip sign (e.g. Int128)
+            // when the actual value exceeds the expected value.
+            var difference = expected >= actual ? expected - actual : actual - expected;
             var hundred = T.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
