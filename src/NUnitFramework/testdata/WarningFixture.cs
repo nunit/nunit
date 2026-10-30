@@ -620,4 +620,33 @@ namespace NUnit.TestData
             Warn.Unless(2 + 2, Is.EqualTo(5));
         }
     }
+
+    public class WarningInOneTimeSetUpWithPassingChild
+    {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            Assert.Warn("Warning in OneTimeSetUp");
+        }
+
+        [Test]
+        public void Passes()
+        {
+        }
+    }
+
+    public class WarningInOneTimeTearDownAfterChildFailure
+    {
+        [Test]
+        public void Fails()
+        {
+            Assert.Fail("Child failed");
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            Assert.Warn("Warning in OneTimeTearDown");
+        }
+    }
 }
