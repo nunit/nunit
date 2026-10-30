@@ -50,6 +50,13 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitLibraryFrameworks").Split(';');
 var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
 
+// .NET Framework tests run only on Windows; We also only build + publish them on Windows.
+if (!IsRunningOnWindows())
+{
+    Information($"Running on non-Windows platform, filtering out .NET Framework targets.");
+    RuntimeFrameworks = RuntimeFrameworks.Where(framework => !framework.StartsWith("net4")).ToArray();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
 ///////////////////////////////////////////////////////////////////////////////
