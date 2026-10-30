@@ -121,7 +121,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static Exception? Catch(Action code, string message, params object?[]? args)
         {
-            return Throws<Exception>(code, message, args);
+            return Catch<Exception>(code, message, args);
         }
 
         /// <summary>
