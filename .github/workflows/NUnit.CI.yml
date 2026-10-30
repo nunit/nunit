@@ -40,7 +40,7 @@ jobs:
       uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
         dotnet-version: '11.0.x'
-        dotnet-quality: 'preview'
+        dotnet-quality: 'ga'
         
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
