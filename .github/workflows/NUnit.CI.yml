@@ -34,12 +34,7 @@ jobs:
         dotnet-version: |
             8.0.x
             10.0.x
-        dotnet-quality: 'preview'
-
-    - name: 🛠️ Setup .NET (Preview)
-      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
-      with:
-        dotnet-version: '11.0.x'
+            11.0.x
         dotnet-quality: 'ga'
         
     - name: 🛠️ Install dotnet tools
