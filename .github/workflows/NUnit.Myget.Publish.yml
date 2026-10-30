@@ -27,16 +27,12 @@ jobs:
     - name: 🛠️ Setup .NET
       uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
       with:
-        global-json-file: global.json
+        #global-json-file: global.json
         dotnet-version: |
             8.0.x
             10.0.x
-
-    - name: 🛠️ Setup .NET (Preview)
-      uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
-      with:
-        dotnet-version: '11.0.x'
-        dotnet-quality: 'preview'
+            11.0.x
+        dotnet-quality: 'ga'
         
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
