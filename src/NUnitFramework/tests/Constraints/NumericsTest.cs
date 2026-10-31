@@ -101,6 +101,37 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.AreEqual(UInt128.MaxValue, decimal.MaxValue, ref _zeroTolerance), Is.False);
         }
 
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void WideIntegerJustOutsideDecimalRangeDoesNotEqualDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.AreEqual(wide, 0m, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(0m, wide, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void WideIntegerJustOutsideDecimalRangeComparesWithDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.Compare(wide, 0m), Is.EqualTo(Math.Sign(wideAsDouble)));
+            Assert.That(Numerics.Compare(0m, wide), Is.EqualTo(-Math.Sign(wideAsDouble)));
+        }
+
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void CanCalculateDifferenceBetweenWideIntegerJustOutsideDecimalRangeAndDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(wideAsDouble));
+            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(-wideAsDouble));
+        }
+
+        private static TestCaseData[] WideIntegerJustOutsideDecimalRangeTestCases()
+        {
+            // Rounded to double these values equal the rounded decimal limits.
+            return [
+                new TestCaseData((Int128)decimal.MaxValue + 1, (double)decimal.MaxValue),
+                new TestCaseData((UInt128)decimal.MaxValue + 1, (double)decimal.MaxValue),
+                new TestCaseData((Int128)decimal.MinValue - 1, (double)decimal.MinValue),
+            ];
+        }
+
         [Test]
         public void CanCalculateDifferenceBetweenWideIntegerAndDouble()
         {
