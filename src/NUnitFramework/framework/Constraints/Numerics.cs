@@ -91,6 +91,32 @@ namespace NUnit.Framework.Constraints
             return false;
         }
 
+        /// <summary>
+        /// Checks whether one value is a signed integer and the other an unsigned integer
+        /// that does not always fit in an <see cref="int"/>, so neither type can hold all values of the other.
+        /// </summary>
+        private static bool IsMixedSignInteger(object expected, object actual)
+            => (IsSignedInteger(expected) && IsUnsignedInteger(actual)) ||
+               (IsUnsignedInteger(expected) && IsSignedInteger(actual));
+
+        private static bool IsSignedInteger(object value)
+#if NETFRAMEWORK
+            => value is sbyte or short or int or long or nint;
+#else
+            => value is sbyte or short or int or long or nint or Int128;
+#endif
+
+        // byte, ushort and char are not included as they always fit in an int.
+        private static bool IsUnsignedInteger(object value)
+#if NETFRAMEWORK
+            => value is uint or ulong or nuint;
+#else
+            => value is uint or ulong or nuint or UInt128;
+#endif
+
+        private static bool Is32BitOrSmallerInteger(object value)
+            => value is sbyte or byte or short or ushort or char or int or uint;
+
         private static bool IsWithinDecimalRange(double value)
         {
             return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
@@ -152,6 +178,24 @@ namespace NUnit.Framework.Constraints
                     return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
 
                 return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
+            }
+
+            // Converting a negative value to an unsigned type would overflow,
+            // so use a signed type that can hold both values.
+            if (IsMixedSignInteger(expected, actual))
+            {
+                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
+                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
+                    return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
+
+#if NETFRAMEWORK
+                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
+#else
+                if (expected is UInt128 || actual is UInt128)
+                    return AreEqual(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), tolerance);
+
+                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
+#endif
             }
 
 #if !NETFRAMEWORK
@@ -489,6 +533,24 @@ namespace NUnit.Framework.Constraints
                 return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
 #endif
 
+            // Converting a negative value to an unsigned type would overflow,
+            // so use a signed type that can hold both values.
+            if (IsMixedSignInteger(expected, actual))
+            {
+                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
+                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
+                    return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
+
+#if NETFRAMEWORK
+                return ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual));
+#else
+                if (expected is UInt128 || actual is UInt128)
+                    return ConvertToValue<BigInteger>(expected).CompareTo(ConvertToValue<BigInteger>(actual));
+
+                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
+#endif
+            }
+
 #if !NETFRAMEWORK
             if (expected is UInt128 || actual is UInt128)
                 return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
@@ -576,6 +638,30 @@ namespace NUnit.Framework.Constraints
                 return isAbsolute ? difference : difference / ConvertToValue<double>(expected) * 100;
             }
 
+            // Converting a negative value to an unsigned type would overflow,
+            // so use a signed type that can hold both values.
+            if (IsMixedSignInteger(expected, actual))
+            {
+                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
+                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
+                {
+                    long expectedValue = Convert.ToInt64(expected);
+                    var difference = expectedValue - Convert.ToInt64(actual);
+                    return isAbsolute ? difference : difference / (double)expectedValue * 100;
+                }
+
+#if NETFRAMEWORK
+                decimal expectedDecimal = ConvertToValue<decimal>(expected);
+                var decimalDifference = expectedDecimal - ConvertToValue<decimal>(actual);
+                return isAbsolute ? decimalDifference : (double)decimalDifference / (double)expectedDecimal * 100;
+#else
+                if (expected is UInt128 || actual is UInt128)
+                    return SignedDifference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute);
+
+                return SignedDifference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
+#endif
+            }
+
 #if !NETFRAMEWORK
             if (expected is UInt128 || actual is UInt128)
                 return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
@@ -637,6 +723,16 @@ namespace NUnit.Framework.Constraints
             var hundred = T.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
+        }
+
+        // Signed overload used for mixed signed and unsigned values: calculate
+        // the percentage as double so an expected value of 0 does not throw.
+        private static object SignedDifference<T>(T expected, T actual, bool isAbsolute)
+            where T : INumber<T>
+        {
+            T difference = expected - actual;
+
+            return isAbsolute ? difference : double.CreateChecked(difference) / double.CreateChecked(expected) * 100;
         }
 
         // Unsigned-only overload: subtract the smaller value from the larger one
