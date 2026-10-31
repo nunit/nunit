@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -147,10 +148,73 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(actual, Is.EqualTo(expected).Using<int>((x, y) => Math.Abs(x - y) <= 1));
         }
 
+        [Test]
+        public void CyclicHomogeneousCollectionsDoNotCauseStackOverflow()
+        {
+            var listA = new CyclicList();
+            listA.Add(listA);
+
+            var listB = new CyclicList();
+            listB.Add(listB);
+
+            Assert.That(listA, Is.Not.EqualTo(listB));
+            Assert.That(listA, Is.EqualTo(listA));
+        }
+
+        [Test]
+        public void MixedRuntimeTypesDoNotBypassSpecializedComparers()
+        {
+            // Arrange
+            var expected = new List<IEnumerable>
+            {
+                new List<int> { 1, 2 },
+                new int[1, 2] { { 1, 2 } }
+            };
+
+            var actual = new List<IEnumerable>
+            {
+                new List<int> { 1, 2 },
+                new int[2, 1]
+                {
+                    { 1 },
+                    { 2 }
+                }
+            };
+
+            // Act & Assert
+            Assert.That(actual, Is.Not.EqualTo(expected));
+        }
+
+        [Test]
+        public void CustomComparerInvokedEvenForIdenticalReferences()
+        {
+            // Arrange
+            const string item = "same_instance";
+            var expected = new[] { item };
+            var actual = new[] { item };
+
+            // Act & Assert
+            Assert.That(actual, Is.Not.EqualTo(expected).Using<string>((x, y) => false));
+        }
+
+        [Test]
+        public void HeterogeneousElementsUnderCommonGenericInterfaceFallBackSafely()
+        {
+            // Arrange
+            var expected = new List<IComparable> { 1, "test" };
+            var actual = new List<IComparable> { 1, "test" };
+
+            // Act & Assert
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
         #region Helper Types
 
         private readonly record struct SamplePoint(int X, int Y);
 
+        private sealed class CyclicList : List<CyclicList>
+        {
+        }
         #endregion
     }
 }

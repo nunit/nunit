@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -17,9 +17,10 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.TypesNotSupported;
 
             Type? commonElementType = GetCommonGenericElementType(x, y);
-            bool canCache = commonElementType is not null
-                && !equalityComparer.IsModified;
+            bool canCache = commonElementType is not null;
 
+            Type? cachedExpectedType = null;
+            Type? cachedActualType = null;
             NUnitEqualityComparer.EqualMethod? cachedMethod = null;
             bool checkedForCachedMethod = false;
 
@@ -49,7 +50,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             object? expectedItem = expectedEnum.Current;
                             object? actualItem = actualEnum.Current;
 
-                            if (object.ReferenceEquals(expectedItem, actualItem))
+                            if (expectedItem is null && actualItem is null)
                             {
                                 result = EqualMethodResult.ComparedEqual;
                             }
@@ -57,27 +58,31 @@ namespace NUnit.Framework.Constraints.Comparers
                             {
                                 result = EqualMethodResult.ComparedNotEqual;
                             }
+                            else if (comparisonState.DidCompare(expectedItem, actualItem))
+                            {
+                                result = EqualMethodResult.ComparisonPending;
+                            }
                             else
                             {
-                                if (canCache && !checkedForCachedMethod)
+                                if (!checkedForCachedMethod)
                                 {
                                     checkedForCachedMethod = true;
+                                    cachedExpectedType = expectedItem.GetType();
+                                    cachedActualType = actualItem.GetType();
                                     cachedMethod = equalityComparer.FindEqualMethod(expectedItem, actualItem, ref tolerance, comparisonState, out result);
-
-                                    if (cachedMethod is null)
-                                    {
-                                        result = equalityComparer.AreEqual(expectedItem, actualItem, ref tolerance, comparisonState);
-                                    }
                                 }
-                                else if (cachedMethod is not null)
+                                else if (cachedMethod is not null
+                                    && expectedItem.GetType() == cachedExpectedType
+                                    && actualItem.GetType() == cachedActualType)
                                 {
                                     result = cachedMethod(expectedItem, actualItem, ref tolerance, comparisonState, equalityComparer);
-                                    if (result == EqualMethodResult.TypesNotSupported)
-                                    {
-                                        result = equalityComparer.AreEqual(expectedItem, actualItem, ref tolerance, comparisonState);
-                                    }
                                 }
                                 else
+                                {
+                                    result = EqualMethodResult.TypesNotSupported;
+                                }
+
+                                if (cachedMethod is null || result == EqualMethodResult.TypesNotSupported)
                                 {
                                     result = equalityComparer.AreEqual(expectedItem, actualItem, ref tolerance, comparisonState);
                                 }
@@ -112,35 +117,17 @@ namespace NUnit.Framework.Constraints.Comparers
             {
                 Type? xElem = xType.GetElementType();
                 Type? yElem = yType.GetElementType();
-                if (xElem is not null && xElem == yElem && xElem != typeof(object))
+                if (xElem is not null && xElem == yElem && xElem != typeof(object) && !xElem.IsInterface)
                     return xElem;
             }
 
-            Type? xInterface = FindGenericEnumerable(xType);
-            Type? yInterface = FindGenericEnumerable(yType);
+            Type? xArg = xType.FindPrimaryEnumerableInterfaceGenericTypeArgument();
+            Type? yArg = yType.FindPrimaryEnumerableInterfaceGenericTypeArgument();
 
-            if (xInterface is not null && yInterface is not null && xInterface == yInterface)
-            {
-                Type genericArg = xInterface.GetGenericArguments()[0];
-                if (genericArg != typeof(object))
-                    return genericArg;
-            }
+            if (xArg is not null && xArg == yArg && xArg != typeof(object) && !xArg.IsInterface)
+                return xArg;
 
             return null;
-
-            static Type? FindGenericEnumerable(Type type)
-            {
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                    return type;
-
-                foreach (Type iface in type.GetInterfaces())
-                {
-                    if (iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                        return iface;
-                }
-
-                return null;
-            }
         }
         #endregion
     }

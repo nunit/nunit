@@ -293,10 +293,17 @@ namespace NUnit.Framework.Constraints
 
         internal EqualMethod? FindEqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, out EqualMethodResult result)
         {
-            if (x is null || y is null)
+            if (_externalComparers is not null)
             {
-                result = EqualMethodResult.TypesNotSupported;
-                return null;
+                foreach (EqualityAdapter adapter in _externalComparers)
+                {
+                    if (adapter.CanCompare(x, y))
+                    {
+                        result = adapter.AreEqual(x, y) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                        return (object a, object b, ref Tolerance _, ComparisonState _, NUnitEqualityComparer _) =>
+                            adapter.AreEqual(a, b) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                    }
+                }
             }
 
             foreach (EqualMethod equalMethod in Comparers)
@@ -304,6 +311,13 @@ namespace NUnit.Framework.Constraints
                 result = equalMethod(x, y, ref tolerance, state, this);
                 if (result != EqualMethodResult.TypesNotSupported)
                     return equalMethod;
+            }
+
+            if (_compareProperties)
+            {
+                result = PropertiesComparer.Equal(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return PropertiesComparer.Equal;
             }
 
             result = EqualMethodResult.TypesNotSupported;
