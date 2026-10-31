@@ -421,6 +421,49 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 11500m, ref _tenPercent), Is.True));
         }
 
+        [TestCaseSource(nameof(NegativeFloatingPointOutsideOfPercentageTestCases))]
+        public void FailsOnNegativeFloatingPointOutsideOfPercentage_Issue5500(object expected, object actual)
+        {
+            Assert.That(Numerics.AreEqual(expected, actual, ref _tenPercent), Is.False);
+        }
+
+        private static TestCaseData[] NegativeFloatingPointOutsideOfPercentageTestCases()
+        {
+            return [
+                new TestCaseData(-10000d, -8500d),
+                new TestCaseData(-10000d, -11500d),
+                new TestCaseData(-10000d, 10000d),
+                new TestCaseData(-10000f, -8500f),
+                new TestCaseData(-10000f, -11500f),
+                new TestCaseData(-10000f, 10000f),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)(-10000), (Half)(-8500)),
+                new TestCaseData((Half)(-10000), (Half)(-11500)),
+                new TestCaseData((Half)(-10000), (Half)10000),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(NegativeFloatingPointWithinPercentageTestCases))]
+        public void CanMatchNegativeFloatingPointWithPercentage(object expected, object actual)
+        {
+            Assert.That(Numerics.AreEqual(expected, actual, ref _tenPercent), Is.True);
+        }
+
+        private static TestCaseData[] NegativeFloatingPointWithinPercentageTestCases()
+        {
+            return [
+                new TestCaseData(-10000d, -9500d),
+                new TestCaseData(-10000d, -10500d),
+                new TestCaseData(-10000f, -9500f),
+                new TestCaseData(-10000f, -10500f),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)(-10000), (Half)(-9500)),
+                new TestCaseData((Half)(-10000), (Half)(-10500)),
+#endif
+            ];
+        }
+
         [Test]
         public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
         {
