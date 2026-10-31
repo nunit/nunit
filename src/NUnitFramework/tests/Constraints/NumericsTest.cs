@@ -121,8 +121,8 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
         public void CanCalculateDifferenceBetweenWideIntegerJustOutsideDecimalRangeAndDecimal(object wide, double wideAsDouble)
         {
-            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(wideAsDouble));
-            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(-wideAsDouble));
+            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(Math.Abs(wideAsDouble)));
+            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(Math.Abs(wideAsDouble)));
         }
 
         private static TestCaseData[] WideIntegerJustOutsideDecimalRangeTestCases()
@@ -353,7 +353,7 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<nuint>(500, 0) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(0, 500) { ExpectedResult = 500 },
                 new TestCaseData<ushort>(500, 0) { ExpectedResult = 500 },
-                new TestCaseData<ushort>(0, 500) { ExpectedResult = -500 },
+                new TestCaseData<ushort>(0, 500) { ExpectedResult = 500 },
 #if !NETFRAMEWORK
                 new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
@@ -368,7 +368,7 @@ namespace NUnit.Framework.Tests.Constraints
             return
             [
                 new TestCaseData<double, double, double>(0.1, 0.05, 0.05),
-                new TestCaseData<double, double, double>(0.1, 0.15, -0.05),
+                new TestCaseData<double, double, double>(0.1, 0.15, 0.05),
 #if !NETFRAMEWORK
                 new TestCaseData<Half, Half, Half>((Half)0.1, (Half)0.05, (Half)0.05),
                 new TestCaseData<Half, Half, double>((Half)0.1, (Half)0.05, 0.05),
@@ -388,29 +388,29 @@ namespace NUnit.Framework.Tests.Constraints
             return
             [
                 new TestCaseData<decimal, decimal, object>(10000m, 8500m, 15),
-                new TestCaseData<decimal, decimal, object>(10000m, 11500m, -15),
+                new TestCaseData<decimal, decimal, object>(10000m, 11500m, 15),
 
                 new TestCaseData<int, int, object>(10000, 8500, 15),
-                new TestCaseData<int, int, object>(10000, 11500, -15),
+                new TestCaseData<int, int, object>(10000, 11500, 15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
                 new TestCaseData<uint, uint, object>(10000u, 11500u, 15),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
-                new TestCaseData<long, long, object>(10000, 11500, -15),
+                new TestCaseData<long, long, object>(10000, 11500, 15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
                 new TestCaseData<ulong, ulong, object>(10000u, 11500u, 15),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
-                new TestCaseData<nint, nint, object>(10000, 11500, -15),
+                new TestCaseData<nint, nint, object>(10000, 11500, 15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
                 new TestCaseData<nuint, nuint, object>(10000u, 11500u, 15),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
-                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
+                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, 15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
 
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.04),
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.04)),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, 15.04),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, 15.04),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             ];
@@ -514,16 +514,16 @@ namespace NUnit.Framework.Tests.Constraints
         private static TestCaseData[] SignedAndUnsignedDifferenceTestCases()
         {
             return [
-                new TestCaseData(-1, 1u, ToleranceMode.Linear, -2),
+                new TestCaseData(-1, 1u, ToleranceMode.Linear, 2),
                 new TestCaseData(1u, -1, ToleranceMode.Linear, 2),
-                new TestCaseData(-1L, 1ul, ToleranceMode.Linear, -2),
+                new TestCaseData(-1L, 1ul, ToleranceMode.Linear, 2),
                 new TestCaseData(ulong.MaxValue, -1L, ToleranceMode.Linear, (decimal)ulong.MaxValue + 1),
-                new TestCaseData((nint)(-1), (nuint)1, ToleranceMode.Linear, -2),
+                new TestCaseData((nint)(-1), (nuint)1, ToleranceMode.Linear, 2),
                 new TestCaseData(-10, 5u, ToleranceMode.Percent, 150),
                 new TestCaseData(-10L, 5ul, ToleranceMode.Percent, 150),
-                new TestCaseData(0L, 5ul, ToleranceMode.Percent, double.NegativeInfinity),
+                new TestCaseData(0L, 5ul, ToleranceMode.Percent, double.PositiveInfinity),
 #if !NETFRAMEWORK
-                new TestCaseData((Int128)(-1), (UInt128)1, ToleranceMode.Linear, (BigInteger)(-2)),
+                new TestCaseData((Int128)(-1), (UInt128)1, ToleranceMode.Linear, (BigInteger)2),
                 new TestCaseData(UInt128.MaxValue, Int128.MinValue, ToleranceMode.Linear, (BigInteger)UInt128.MaxValue - (BigInteger)Int128.MinValue),
                 new TestCaseData((Int128)(-10), (UInt128)5, ToleranceMode.Percent, 150),
 #endif
@@ -790,6 +790,43 @@ namespace NUnit.Framework.Tests.Constraints
             ];
         }
 
+        [TestCaseSource(nameof(AbsoluteDifferenceTestCases))]
+        public void AbsoluteDifferenceIsPositiveAndOfTheUnsignedType(object expected, object actual, object expectedDifference)
+        {
+            Assert.That(Numerics.Difference(expected, actual, ToleranceMode.Linear), Is.EqualTo(expectedDifference).And.TypeOf(expectedDifference.GetType()));
+            Assert.That(Numerics.Difference(actual, expected, ToleranceMode.Linear), Is.EqualTo(expectedDifference).And.TypeOf(expectedDifference.GetType()));
+        }
+
+        private static TestCaseData[] AbsoluteDifferenceTestCases()
+        {
+            // The difference between two integers fits in the unsigned type of the same size.
+            return [
+                new TestCaseData(2, 5, 3u),
+                new TestCaseData(int.MaxValue, int.MinValue, uint.MaxValue),
+                new TestCaseData((short)-3, (byte)4, 7u),
+                new TestCaseData(2u, 5u, 3u),
+                new TestCaseData(long.MaxValue, long.MinValue, ulong.MaxValue),
+                new TestCaseData(2ul, 5ul, 3ul),
+                new TestCaseData(-1, 1u, 2ul),
+                new TestCaseData((nint)(-5), (nint)5, (nuint)10),
+                new TestCaseData(1.5, 2.25, 0.75),
+                new TestCaseData(1.5m, 2.25m, 0.75m),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, 2 * (double)decimal.MaxValue),
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, UInt128.MaxValue),
+                new TestCaseData((Half)1.5, (Half)2.25, (Half)0.75),
+#endif
+            ];
+        }
+
+        [Test]
+        public void PercentDifferenceIsPositive()
+        {
+            Assert.That(Numerics.Difference(-200, -150, ToleranceMode.Percent), Is.EqualTo(25.0));
+            Assert.That(Numerics.Difference(200, 250, ToleranceMode.Percent), Is.EqualTo(25.0));
+            Assert.That(Numerics.Difference(int.MinValue, int.MaxValue, ToleranceMode.Percent), Is.EqualTo((double)uint.MaxValue * 100 / 2147483648.0));
+        }
+
         [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
@@ -834,20 +871,11 @@ namespace NUnit.Framework.Tests.Constraints
             ];
         }
 
-        [TestCaseSource(nameof(WideAndNativeIntegerDifferenceTestCases))]
-        public void CanCalculateDifferenceBetweenWideIntegerAndNativeInteger(object wide, object native, long reverseDifference)
+        [TestCaseSource(nameof(WideAndNativeIntegerTestCases))]
+        public void CanCalculateDifferenceBetweenWideIntegerAndNativeInteger(object wide, object native)
         {
             Assert.That(Numerics.Difference(wide, native, ToleranceMode.Linear), Is.EqualTo(4_999_999_999L));
-            Assert.That(Numerics.Difference(native, wide, ToleranceMode.Linear), Is.EqualTo(reverseDifference));
-        }
-
-        private static TestCaseData[] WideAndNativeIntegerDifferenceTestCases()
-        {
-            // The unsigned difference is always positive.
-            return [
-                new TestCaseData(5_000_000_000ul, (nuint)1, 4_999_999_999L),
-                new TestCaseData(5_000_000_000L, (nint)1, -4_999_999_999L),
-            ];
+            Assert.That(Numerics.Difference(native, wide, ToleranceMode.Linear), Is.EqualTo(4_999_999_999L));
         }
 
         private static TestCaseData[] NonConvertibleOperandTestCases()

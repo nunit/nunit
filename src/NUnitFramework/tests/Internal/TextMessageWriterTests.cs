@@ -155,7 +155,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(message, Is.EqualTo(
                 TextMessageWriter.Pfx_Expected + "1 +/- 1" + NL +
                 TextMessageWriter.Pfx_Actual + "3" + NL +
-                TextMessageWriter.Pfx_Difference + "2.0d" + NL));
+                TextMessageWriter.Pfx_Difference + "2" + NL));
         }
 
         [Test]
@@ -167,6 +167,14 @@ namespace NUnit.Framework.Tests.Internal
                 TextMessageWriter.Pfx_Expected + "100 +/- 10.0d Percent" + NL +
                 TextMessageWriter.Pfx_Actual + "120" + NL +
                 TextMessageWriter.Pfx_Difference + "20.0d Percent" + NL));
+        }
+
+        [Test]
+        public void DisplayDifferences_Signed_LinearTolerance_NoOverflow()
+        {
+            _writer.DisplayDifferences(int.MaxValue, int.MinValue, new Tolerance(1));
+            string message = _writer.ToString();
+            Assert.That(message, Does.EndWith(TextMessageWriter.Pfx_Difference + "4294967295" + NL));
         }
 
         private string Q(string s)

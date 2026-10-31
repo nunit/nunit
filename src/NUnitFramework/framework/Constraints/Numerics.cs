@@ -962,17 +962,13 @@ namespace NUnit.Framework.Constraints
 
             return commonType switch
             {
-#if NETFRAMEWORK
-                CommonNumericType.Decimal when IsMixedSignInteger(expected, actual) => SignedDifference(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), isAbsolute),
-#endif
                 CommonNumericType.Decimal => Difference(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), isAbsolute),
 #if !NETFRAMEWORK
-                // EXCEPTION: Only use double for Half mixed with another type, to preserve precision of reported differences in certain cases.
-                CommonNumericType.Half when expected is Half expectedHalf && actual is Half actualHalf => Difference(expectedHalf, actualHalf, isAbsolute),
+                // Keep the difference between two Half values as Half, as converting them to double shows their imprecision.
+                CommonNumericType.Half when isAbsolute && expected is Half expectedHalf && actual is Half actualHalf => Half.Abs(expectedHalf - actualHalf),
                 CommonNumericType.Double or CommonNumericType.Single or CommonNumericType.Half => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
-                CommonNumericType.BigInteger => SignedDifference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute),
+                CommonNumericType.BigInteger => Difference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute),
                 CommonNumericType.UInt128 => Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute),
-                CommonNumericType.Int128 when IsMixedSignInteger(expected, actual) => SignedDifference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute),
                 CommonNumericType.Int128 => Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute),
 #else
                 CommonNumericType.Double or CommonNumericType.Single => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
@@ -987,102 +983,88 @@ namespace NUnit.Framework.Constraints
             };
         }
 
-        private static object Difference(decimal expected, decimal actual, bool isAbsolute)
+        // The absolute difference is always positive. For integers it is a value of the unsigned type
+        // of the same size, which cannot overflow. The percentage of the expected value is a double.
+        // The absolute difference is cast to object, as otherwise the conditional would convert it to double.
+        private static object Difference(int expected, int actual, bool isAbsolute)
         {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / expected * 100;
-        }
-
-        private static object Difference(double expected, double actual, bool isAbsolute)
-        {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / expected * 100;
-        }
-
-        private static object Difference(ulong expected, ulong actual, bool isAbsolute)
-        {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-            return isAbsolute ? difference : difference / (double)expected * 100;
-        }
-
-        private static object Difference(long expected, long actual, bool isAbsolute)
-        {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / (double)expected * 100;
-        }
-
-        private static object Difference(nuint expected, nuint actual, bool isAbsolute)
-        {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-            return isAbsolute ? difference : difference / (double)expected * 100;
-        }
-
-        private static object Difference(nint expected, nint actual, bool isAbsolute)
-        {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / (double)expected * 100;
+            uint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
         }
 
         private static object Difference(uint expected, uint actual, bool isAbsolute)
         {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-            return isAbsolute ? difference : difference / (double)expected * 100;
+            uint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
         }
 
-        private static object Difference(int expected, int actual, bool isAbsolute)
+        private static object Difference(long expected, long actual, bool isAbsolute)
         {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / (double)expected * 100;
+            ulong difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
         }
 
-#if NETFRAMEWORK
-        // Used for mixed signed and unsigned values: calculate
-        // the percentage as double so an expected value of 0 does not throw.
-        private static object SignedDifference(decimal expected, decimal actual, bool isAbsolute)
+        private static object Difference(ulong expected, ulong actual, bool isAbsolute)
         {
-            var difference = expected - actual;
-            return isAbsolute ? difference : (double)difference / (double)expected * 100;
+            ulong difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(nint expected, nint actual, bool isAbsolute)
+        {
+            nuint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(nuint expected, nuint actual, bool isAbsolute)
+        {
+            nuint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(decimal expected, decimal actual, bool isAbsolute)
+        {
+            if (TryAbsoluteDifference(expected, actual, out decimal difference))
+                return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+
+            // The difference is outside the decimal range.
+            double approximateDifference = Math.Abs((double)expected - (double)actual);
+            return isAbsolute ? approximateDifference : RelativeDifference(approximateDifference, (double)expected);
+        }
+
+        private static object Difference(double expected, double actual, bool isAbsolute)
+        {
+            double difference = Math.Abs(expected - actual);
+            return isAbsolute ? difference : RelativeDifference(difference, expected);
+        }
+
+#if !NETFRAMEWORK
+        private static object Difference(Int128 expected, Int128 actual, bool isAbsolute)
+        {
+            UInt128 difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+        }
+
+        private static object Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
+        {
+            UInt128 difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+        }
+
+        private static object Difference(BigInteger expected, BigInteger actual, bool isAbsolute)
+        {
+            BigInteger difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
         }
 #endif
+
+        // The difference as a percentage of the expected value. Multiplying first keeps
+        // round percentages exact, e.g. 1504 * 100 / 10000 is 15.04, but 1504 / 10000 * 100 is not.
+        private static double RelativeDifference(double difference, double expected)
+            => difference * 100 / Math.Abs(expected);
         #endregion
 
 #if !NETFRAMEWORK
-        private static T Difference<T>(T expected, T actual, bool isAbsolute)
-            where T : INumber<T>
-        {
-            var difference = expected - actual;
-            var hundred = T.CreateChecked(100);
-
-            return isAbsolute ? difference : difference * hundred / expected;
-        }
-
-        private static object Difference(Half expected, Half actual, bool isAbsolute)
-        {
-            var difference = expected - actual;
-            return isAbsolute ? difference : difference / expected * Half.CreateChecked(100);
-        }
-
-        // Signed overload used for mixed signed and unsigned values: calculate
-        // the percentage as double so an expected value of 0 does not throw.
-        private static object SignedDifference<T>(T expected, T actual, bool isAbsolute)
-            where T : INumber<T>
-        {
-            T difference = expected - actual;
-
-            return isAbsolute ? difference : double.CreateChecked(difference) / double.CreateChecked(expected) * 100;
-        }
-
-        // Unsigned-only overload: subtract the smaller value from the larger one
-        // so the difference can never underflow when the actual value exceeds
-        // the expected value (e.g. UInt128).
-        private static UInt128 Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
-        {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-            var hundred = UInt128.CreateChecked(100);
-
-            return isAbsolute ? difference : difference * hundred / expected;
-        }
-
         private static bool AreIeeeFloatsEqual<T>(T expected, T actual, ref Tolerance tolerance)
             where T : INumber<T>, IFloatingPointIeee754<T>
         {
