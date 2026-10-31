@@ -1696,6 +1696,29 @@ namespace NUnit.Framework.Tests.Constraints
                 }
             }
 
+            [Test]
+            public void UsesProvidedComparersForItemComparisonWithSelf()
+            {
+                var a = "a";
+                var userComparer = new NeverEqual<string?>();
+
+                Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(userComparer.Equals));
+            }
+
+            [Test]
+            public void UsesProvidedComparisonsForItemComparisonWithNull()
+            {
+                var everythingIsNull = new EverythingIsNull<string?>();
+                var neverEqual = new NeverEqual<string?>();
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(new[] { "a" }, Is.EqualTo(new string?[] { null }).Using<string?>(everythingIsNull.Equals));
+                    Assert.That(new string?[] { null }, Is.EqualTo(new[] { "a" }).Using<string?>(everythingIsNull.Equals));
+                    Assert.That(new string?[] { null }, Is.Not.EqualTo(new string?[] { null }).Using<string?>(neverEqual.Equals));
+                }
+            }
+
             private sealed class NeverEqual<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
             {
                 int IComparer.Compare(object? x, object? y) => -1;
