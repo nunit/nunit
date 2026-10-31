@@ -10,4 +10,4 @@ permissions:
 
 jobs:
   draft-label:
-    uses: nunit/.github/.github/workflows/draft-label.yml@4346e671f2b445a347a7e9e7fd967bc4e2c75933 # main
+    uses: nunit/.github/.github/workflows/draft-label.yml@7eceef553f9193d91a74b0c563bce8e4701dd024 # main
