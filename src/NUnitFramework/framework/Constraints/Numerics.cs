@@ -549,17 +549,17 @@ namespace NUnit.Framework.Constraints
                 return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
 #endif
 
-            if (expected is nuint || actual is nuint)
-                return ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual));
-
-            if (expected is nint || actual is nint)
-                return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
-
             if (expected is ulong || actual is ulong)
                 return ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual));
 
             if (expected is long || actual is long)
                 return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
+
+            if (expected is nuint || actual is nuint)
+                return ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual));
+
+            if (expected is nint || actual is nint)
+                return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
 
             if (expected is uint || actual is uint)
                 return ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual));
@@ -660,6 +660,20 @@ namespace NUnit.Framework.Constraints
                 return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
 #endif
 
+            if (expected is ulong || actual is ulong)
+            {
+                var eUlong = ConvertToValue<ulong>(expected);
+                var aUlong = ConvertToValue<ulong>(actual);
+                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
+                return isAbsolute ? difference : difference / (double)eUlong * 100;
+            }
+
+            if (expected is long || actual is long)
+            {
+                var difference = ConvertToValue<long>(expected) - ConvertToValue<long>(actual);
+                return isAbsolute ? difference : difference / (double)ConvertToValue<long>(expected) * 100;
+            }
+
             if (expected is nuint || actual is nuint)
             {
                 nuint expectedValue = ConvertToValue<nuint>(expected);
@@ -676,20 +690,6 @@ namespace NUnit.Framework.Constraints
 
                 var difference = expectedValue - actualValue;
                 return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is ulong || actual is ulong)
-            {
-                var eUlong = ConvertToValue<ulong>(expected);
-                var aUlong = ConvertToValue<ulong>(actual);
-                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
-                return isAbsolute ? difference : difference / (double)eUlong * 100;
-            }
-
-            if (expected is long || actual is long)
-            {
-                var difference = ConvertToValue<long>(expected) - ConvertToValue<long>(actual);
-                return isAbsolute ? difference : difference / (double)ConvertToValue<long>(expected) * 100;
             }
 
             if (expected is uint || actual is uint)
