@@ -1700,22 +1700,22 @@ namespace NUnit.Framework.Tests.Constraints
             public void UsesProvidedComparersForItemComparisonWithSelf()
             {
                 var a = "a";
-                var userComparer = new NeverEqual<string?>();
+                var neverEqualComparer = new NeverEqual<string?>();
 
-                Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(userComparer.Equals));
+                Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(neverEqualComparer.Equals));
             }
 
             [Test]
             public void UsesProvidedComparisonsForItemComparisonWithNull()
             {
-                var everythingIsNull = new EverythingIsNull<string?>();
-                var neverEqual = new NeverEqual<string?>();
+                var everythingIsNullComparer = new EverythingIsNull<string?>();
+                var neverEqualComparer = new NeverEqual<string?>();
 
                 using (Assert.EnterMultipleScope())
                 {
-                    Assert.That(new[] { "a" }, Is.EqualTo(new string?[] { null }).Using<string?>(everythingIsNull.Equals));
-                    Assert.That(new string?[] { null }, Is.EqualTo(new[] { "a" }).Using<string?>(everythingIsNull.Equals));
-                    Assert.That(new string?[] { null }, Is.Not.EqualTo(new string?[] { null }).Using<string?>(neverEqual.Equals));
+                    Assert.That(new[] { "a" }, Is.EqualTo(new string?[] { null }).Using<string?>(everythingIsNullComparer.Equals));
+                    Assert.That(new string?[] { null }, Is.EqualTo(new[] { "a" }).Using<string?>(everythingIsNullComparer.Equals));
+                    Assert.That(new string?[] { null }, Is.Not.EqualTo(new string?[] { null }).Using<string?>(neverEqualComparer.Equals));
                 }
             }
 
