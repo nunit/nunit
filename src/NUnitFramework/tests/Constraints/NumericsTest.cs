@@ -642,6 +642,80 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ToleranceDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The difference between these values does not fit in an int.
+                Assert.That(int.MaxValue, Is.Not.EqualTo(int.MinValue).Within(1));
+                Assert.That(int.MinValue, Is.Not.Zero.Within(1));
+                Assert.That(int.MinValue, Is.Not.EqualTo(int.MaxValue).Within(10).Percent);
+            }
+        }
+
+        [TestCaseSource(nameof(ToleranceTestCases))]
+        public bool AreEqualWithTolerance(object expected, object actual, Tolerance tolerance)
+        {
+            return Numerics.AreEqual(expected, actual, ref tolerance);
+        }
+
+        private static TestCaseData[] ToleranceTestCases()
+        {
+            return [
+                // The difference does not fit in the type, but does in the unsigned type of the same size.
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(uint.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(ulong.MaxValue)) { ExpectedResult = true },
+                new TestCaseData((nint)(-5), (nint)5, new Tolerance(10)) { ExpectedResult = true },
+                new TestCaseData(int.MinValue, 0, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(int.MinValue, int.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(long.MinValue, long.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(long.MinValue, long.MaxValue, new Tolerance(200).Percent) { ExpectedResult = true },
+
+                // A tolerance larger than the type allows any difference.
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(long.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30).Percent) { ExpectedResult = true },
+
+                // A fractional tolerance is rounded down, as the difference between integers is a whole number.
+                new TestCaseData(2, 4, new Tolerance(1.5)) { ExpectedResult = false },
+                new TestCaseData(2, 3, new Tolerance(1.5)) { ExpectedResult = true },
+                new TestCaseData(2, 4, new Tolerance(2.5m)) { ExpectedResult = true },
+                new TestCaseData(2, 3, new Tolerance(0.1)) { ExpectedResult = false },
+
+                // A percentage of an integer allows the difference rounded down: 1% of 202 is 2.02.
+                new TestCaseData(202, 200, new Tolerance(1).Percent) { ExpectedResult = true },
+                new TestCaseData(202, 199, new Tolerance(1).Percent) { ExpectedResult = false },
+                new TestCaseData(2, 3, new Tolerance(1.5).Percent) { ExpectedResult = false },
+                new TestCaseData(0, 0, new Tolerance(10).Percent) { ExpectedResult = true },
+                new TestCaseData(0, 1, new Tolerance(10).Percent) { ExpectedResult = false },
+
+                // The difference between decimals can be outside the decimal range.
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent) { ExpectedResult = true },
+                new TestCaseData(1.5m, 2.75m, new Tolerance(1.25m)) { ExpectedResult = true },
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, new Tolerance(UInt128.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(Int128.MinValue, Int128.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(Int128.MinValue, Int128.MaxValue, new Tolerance(200).Percent) { ExpectedResult = true },
+                new TestCaseData(UInt128.MaxValue, UInt128.MinValue, new Tolerance(1e40)) { ExpectedResult = true },
+
+                // Mixed sign UInt128 values are compared as BigInteger.
+                new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(10)) { ExpectedResult = true },
+                new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(9.5)) { ExpectedResult = false },
+                new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
+                new TestCaseData((Int128)(-100), (UInt128)50, new Tolerance(150).Percent) { ExpectedResult = true },
+                new TestCaseData((Int128)(-100), (UInt128)51, new Tolerance(150).Percent) { ExpectedResult = false },
+#endif
+            ];
+        }
+
+        [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
             Assert.That(Numerics.Difference(new object(), new object(), _tenPercent.Mode), Is.EqualTo(double.NaN));
