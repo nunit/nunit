@@ -12,6 +12,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     internal static class Numerics
     {
+        private const string UlpsRequiresFloatingPoint = "Ulps may only be specified for floating point arguments";
+
         #region Numeric Type Recognition
         /// <summary>
         /// Checks the type of the object, returning true if
@@ -157,6 +159,19 @@ namespace NUnit.Framework.Constraints
             // Step from highest precision to lowest, converting as necessary.
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+
+            if (expected is decimal || actual is decimal)
+            {
+                // Treat as decimal if both values fit, otherwise fall back to double, like Compare does
+                if (!IsWithinDecimalRange(expected) || !IsWithinDecimalRange(actual))
+                    return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
+
+                if (tolerance.Mode == ToleranceMode.Ulps)
+                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+
+                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
+            }
+
             if (expected is double || actual is double)
                 return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
 
@@ -169,16 +184,7 @@ namespace NUnit.Framework.Constraints
 #endif
 
             if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
-
-            if (expected is decimal || actual is decimal)
-            {
-                // Treat as decimal if both values fit, otherwise fall back to double
-                if (IsWithinDecimalRange(expected) && IsWithinDecimalRange(actual))
-                    return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-
-                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-            }
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             // Converting a negative value to an unsigned type would overflow,
             // so use a signed type that can hold both values.
@@ -243,7 +249,7 @@ namespace NUnit.Framework.Constraints
                 return AreIeeeFloatsEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             if (expected is decimal || actual is decimal)
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
