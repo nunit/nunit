@@ -563,7 +563,7 @@ namespace NUnit.Framework.Constraints
                 nuint expectedValue = ConvertToValue<nuint>(expected);
                 nuint actualValue = ConvertToValue<nuint>(actual);
 
-                var difference = expectedValue - actualValue;
+                var difference = expectedValue >= actualValue ? expectedValue - actualValue : actualValue - expectedValue;
                 return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
@@ -578,8 +578,10 @@ namespace NUnit.Framework.Constraints
 
             if (expected is ulong || actual is ulong)
             {
-                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+                var eUlong = Convert.ToUInt64(expected);
+                var aUlong = Convert.ToUInt64(actual);
+                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
+                return isAbsolute ? difference : difference / (double)eUlong * 100;
             }
 
             if (expected is long || actual is long)
@@ -590,8 +592,10 @@ namespace NUnit.Framework.Constraints
 
             if (expected is uint || actual is uint)
             {
-                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+                var eUint = Convert.ToUInt32(expected);
+                var aUint = Convert.ToUInt32(actual);
+                var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
+                return isAbsolute ? difference : difference / (double)eUint * 100;
             }
 
             var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
@@ -605,6 +609,17 @@ namespace NUnit.Framework.Constraints
         {
             var difference = expected - actual;
             var hundred = T.CreateChecked(100);
+
+            return isAbsolute ? difference : difference * hundred / expected;
+        }
+
+        // Unsigned-only overload: subtract the smaller value from the larger one
+        // so the difference can never underflow when the actual value exceeds
+        // the expected value (e.g. UInt128).
+        private static UInt128 Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+            var hundred = UInt128.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
         }
