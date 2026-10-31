@@ -653,6 +653,81 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        [Test]
+        public void ComparisonWithToleranceDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // A negative value with an unsigned tolerance.
+                Assert.That(-2, Is.GreaterThan(-1).Within(2u));
+                Assert.That(-3, Is.Not.GreaterThan(-1).Within(2u));
+                Assert.That(-5L, Is.LessThanOrEqualTo(-8L).Within(3ul));
+
+                // Bounds outside the range of the type.
+                Assert.That(int.MinValue, Is.GreaterThanOrEqualTo(int.MinValue).Within(1));
+                Assert.That(long.MaxValue, Is.LessThan(long.MaxValue).Within(1L));
+                Assert.That(ulong.MaxValue, Is.LessThanOrEqualTo(ulong.MaxValue - 3).Within(3ul));
+                Assert.That(ulong.MaxValue, Is.Not.LessThanOrEqualTo(ulong.MaxValue - 4).Within(3ul));
+
+                // Bounds of values that a double cannot represent exactly.
+                Assert.That(long.MaxValue - 1, Is.GreaterThan(long.MaxValue).Within(2.0));
+                Assert.That(long.MaxValue - 2, Is.Not.GreaterThan(long.MaxValue).Within(2.0));
+                Assert.That(long.MaxValue - 2, Is.GreaterThanOrEqualTo(long.MaxValue).Within(2.0));
+
+                // A percentage of an integer is usually fractional: 1% of 202 is 2.02.
+                Assert.That(200, Is.GreaterThan(202).Within(1).Percent);
+                Assert.That(199, Is.Not.GreaterThan(202).Within(1).Percent);
+                Assert.That(200, Is.GreaterThanOrEqualTo(202).Within(1).Percent);
+                Assert.That(199, Is.Not.GreaterThanOrEqualTo(202).Within(1).Percent);
+                Assert.That(204, Is.LessThan(202).Within(1).Percent);
+                Assert.That(205, Is.Not.LessThanOrEqualTo(202).Within(1).Percent);
+            }
+        }
+
+        [Test]
+        public void ComparisonOfIntegerWithFractionalToleranceThrows()
+        {
+            // There is no integer bound that is correct for both > and >=: a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
+            Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(5).Within(1.5).ApplyTo(4));
+            Assert.Throws<InvalidOperationException>(() => Is.LessThanOrEqualTo(5L).Within(0.5m).ApplyTo(4));
+        }
+
+        [TestCaseSource(nameof(ToleranceRangeTypeTestCases))]
+        public void ToleranceRangeUsesTypeOfValue(object value, Tolerance tolerance, object expectedLowerBound, object expectedUpperBound)
+        {
+            Tolerance.Range range = tolerance.ApplyToValue(value);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(range.LowerBound, Is.EqualTo(expectedLowerBound).And.TypeOf(expectedLowerBound.GetType()));
+                Assert.That(range.UpperBound, Is.EqualTo(expectedUpperBound).And.TypeOf(expectedUpperBound.GetType()));
+            }
+        }
+
+        private static TestCaseData[] ToleranceRangeTypeTestCases()
+        {
+            return [
+                // The type of the amount does not matter.
+                new TestCaseData(5, new Tolerance(2L), 3, 7),
+                new TestCaseData(5, new Tolerance(2.0), 3, 7),
+                new TestCaseData(5L, new Tolerance(2), 3L, 7L),
+                new TestCaseData(5u, new Tolerance(2ul), 3u, 7u),
+                new TestCaseData(5.0, new Tolerance(2), 3.0, 7.0),
+                new TestCaseData(5.0f, new Tolerance(2.5), 2.5f, 7.5f),
+                new TestCaseData(5m, new Tolerance(2.5), 2.5m, 7.5m),
+
+                // A bound that does not fit in the type of the value uses decimal.
+                new TestCaseData(-1, new Tolerance(2u), -3, 1),
+                new TestCaseData(1u, new Tolerance(2), -1m, 3u),
+                new TestCaseData(int.MaxValue, new Tolerance(1), int.MaxValue - 1, (decimal)int.MaxValue + 1),
+                new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (decimal)ulong.MaxValue + 1),
+
+                // A fractional offset of an integer value uses decimal.
+                new TestCaseData(202, new Tolerance(1).Percent, 199.98m, 204.02m),
+                new TestCaseData(200, new Tolerance(1).Percent, 198, 202),
+            ];
+        }
+
         [TestCaseSource(nameof(ToleranceTestCases))]
         public bool AreEqualWithTolerance(object expected, object actual, Tolerance tolerance)
         {
