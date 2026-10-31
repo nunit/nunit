@@ -592,6 +592,55 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.AreEqual(float.MaxValue, decimal.MaxValue, ref _zeroTolerance), Is.False);
         }
 
+        [TestCaseSource(nameof(BinaryFloatingPointAtDecimalBoundaryTestCases))]
+        public void BinaryFloatingPointAtDecimalBoundaryIsComparedAsDouble(object floatingPoint)
+        {
+            // decimal.MaxValue rounds up to 2^96 as double or float, which is just outside the decimal range.
+            int sign = Math.Sign(Numerics.ConvertToValue<double>(floatingPoint));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(floatingPoint, 1m, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.AreEqual(1m, floatingPoint, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.Compare(floatingPoint, 1m), Is.EqualTo(sign));
+                Assert.That(Numerics.Compare(1m, floatingPoint), Is.EqualTo(-sign));
+                Assert.That(() => Numerics.Difference(floatingPoint, 1m, ToleranceMode.Linear), Throws.Nothing);
+                Assert.That(() => Numerics.Difference(1m, floatingPoint, ToleranceMode.Linear), Throws.Nothing);
+            }
+        }
+
+        private static TestCaseData[] BinaryFloatingPointAtDecimalBoundaryTestCases()
+        {
+            return [
+                new TestCaseData((double)decimal.MaxValue),
+                new TestCaseData((double)decimal.MinValue),
+                new TestCaseData((float)decimal.MaxValue),
+                new TestCaseData((float)decimal.MinValue),
+            ];
+        }
+
+        [TestCaseSource(nameof(DecimalDifferenceOutsideDecimalRangeTestCases))]
+        public void DecimalToleranceDoesNotOverflow(object expected, object actual, Tolerance tolerance, bool expectedResult)
+        {
+            // Both values fit in a decimal, but their difference does not.
+            Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(expectedResult));
+        }
+
+        private static TestCaseData[] DecimalDifferenceOutsideDecimalRangeTestCases()
+        {
+            // A percentage is relative to the expected value, so it is not symmetric.
+            return [
+                new TestCaseData(decimal.MaxValue, -1d, new Tolerance(200).Percent, true),
+                new TestCaseData(-1d, decimal.MaxValue, new Tolerance(200).Percent, false),
+                new TestCaseData(decimal.MaxValue, -1d, new Tolerance(1), false),
+                new TestCaseData(-1d, decimal.MaxValue, new Tolerance(1), false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1), false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30), true),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent, false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent, true),
+            ];
+        }
+
         [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
