@@ -1701,15 +1701,20 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var a = "a";
                 var neverEqualComparer = new NeverEqual<string?>();
+                var everythingIsNullComparer = new EverythingIsNull<string?>();
 
-                Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(neverEqualComparer.Equals));
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(neverEqualComparer.Equals));
+                    Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(everythingIsNullComparer.Equals));
+                }
             }
 
             [Test]
             public void UsesProvidedComparisonsForItemComparisonWithNull()
             {
-                var everythingIsNullComparer = new EverythingIsNull<string?>();
                 var neverEqualComparer = new NeverEqual<string?>();
+                var everythingIsNullComparer = new EverythingIsNull<string?>();
 
                 using (Assert.EnterMultipleScope())
                 {
