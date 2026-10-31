@@ -150,6 +150,97 @@ namespace NUnit.Framework.Constraints
                     return true;
             }
         }
+
+        /// <summary>
+        /// The type in which two numeric values are compared.
+        /// </summary>
+        private enum CommonNumericType
+        {
+            Int32,
+            UInt32,
+            Int64,
+            UInt64,
+            NInt,
+            NUInt,
+            Decimal,
+            Single,
+            Double,
+#if !NETFRAMEWORK
+            Half,
+            Int128,
+            UInt128,
+            BigInteger,
+#endif
+        }
+
+        /// <summary>
+        /// Determines the most precise type that can hold both numeric values.
+        /// All operations on two numeric values should use this, so they convert them consistently.
+        /// </summary>
+        private static CommonNumericType GetCommonNumericType(object expected, object actual)
+        {
+            if (expected is decimal || actual is decimal)
+            {
+                // Treat as decimal if both values fit, otherwise fall back to double
+                return IsWithinDecimalRange(expected) && IsWithinDecimalRange(actual)
+                    ? CommonNumericType.Decimal
+                    : CommonNumericType.Double;
+            }
+
+            if (expected is double || actual is double)
+                return CommonNumericType.Double;
+
+            if (expected is float || actual is float)
+                return CommonNumericType.Single;
+
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+                return CommonNumericType.Half;
+#endif
+
+            // Converting a negative value to an unsigned type would overflow,
+            // so use a signed type that can hold both values.
+            if (IsMixedSignInteger(expected, actual))
+            {
+                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
+                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
+                    return CommonNumericType.Int64;
+
+#if NETFRAMEWORK
+                return CommonNumericType.Decimal;
+#else
+                return expected is UInt128 || actual is UInt128
+                    ? CommonNumericType.BigInteger
+                    : CommonNumericType.Int128;
+#endif
+            }
+
+            // Check the widest types first, as nuint and nint can be smaller than ulong and long.
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return CommonNumericType.UInt128;
+
+            if (expected is Int128 || actual is Int128)
+                return CommonNumericType.Int128;
+#endif
+
+            if (expected is ulong || actual is ulong)
+                return CommonNumericType.UInt64;
+
+            if (expected is long || actual is long)
+                return CommonNumericType.Int64;
+
+            if (expected is nuint || actual is nuint)
+                return CommonNumericType.NUInt;
+
+            if (expected is nint || actual is nint)
+                return CommonNumericType.NInt;
+
+            if (expected is uint || actual is uint)
+                return CommonNumericType.UInt32;
+
+            return CommonNumericType.Int32;
+        }
         #endregion
 
         #region Numeric Equality
@@ -164,78 +255,39 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
-            if (expected is decimal || actual is decimal)
+            switch (commonType)
             {
-                // Treat as decimal if both values fit, otherwise fall back to double, like Compare does
-                if (!IsWithinDecimalRange(expected) || !IsWithinDecimalRange(actual))
+                case CommonNumericType.Double:
                     return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-
-                if (tolerance.Mode == ToleranceMode.Ulps)
-                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
-
-                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-            }
-
-            if (expected is double || actual is double)
-                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-
-            if (expected is float || actual is float)
-                return AreIeeeFloatsEqual(ConvertToValue<float>(expected), ConvertToValue<float>(actual), ref tolerance);
-
+                case CommonNumericType.Single:
+                    return AreIeeeFloatsEqual(ConvertToValue<float>(expected), ConvertToValue<float>(actual), ref tolerance);
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-                return AreIeeeFloatsEqual(ConvertToValue<Half>(expected), ConvertToValue<Half>(actual), ref tolerance);
+                case CommonNumericType.Half:
+                    return AreIeeeFloatsEqual(ConvertToValue<Half>(expected), ConvertToValue<Half>(actual), ref tolerance);
 #endif
+            }
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
+            return commonType switch
             {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
-
-#if NETFRAMEWORK
-                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-#else
-                if (expected is UInt128 || actual is UInt128)
-                    return AreEqual(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), tolerance);
-
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
-#endif
-            }
-
+                CommonNumericType.Decimal => AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance),
 #if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
-
-            if (expected is Int128 || actual is Int128)
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
+                CommonNumericType.BigInteger => AreEqual(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), tolerance),
+                CommonNumericType.UInt128 => AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance),
+                CommonNumericType.Int128 => AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance),
 #endif
-
-            if (expected is ulong || actual is ulong)
-                return AreEqual(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), tolerance);
-
-            if (expected is long || actual is long)
-                return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
-
-            if (expected is nuint || actual is nuint)
-                return AreEqual(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), tolerance);
-
-            if (expected is nint || actual is nint)
-                return AreEqual(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), tolerance);
-
-            if (expected is uint || actual is uint)
-                return AreEqual(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), tolerance);
-
-            return AreEqual(ConvertToValue<int>(expected), ConvertToValue<int>(actual), tolerance);
+                CommonNumericType.UInt64 => AreEqual(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), tolerance),
+                CommonNumericType.Int64 => AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance),
+                CommonNumericType.NUInt => AreEqual(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), tolerance),
+                CommonNumericType.NInt => AreEqual(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), tolerance),
+                CommonNumericType.UInt32 => AreEqual(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), tolerance),
+                CommonNumericType.Int32 => AreEqual(ConvertToValue<int>(expected), ConvertToValue<int>(actual), tolerance),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
         }
 
         /// <summary>
@@ -527,74 +579,27 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
-            if (expected is decimal || actual is decimal)
+            return commonType switch
             {
-                // Treat as decimal if one is decimal and other can be treated as decimal
-                if (expected is decimal eDec && IsWithinDecimalRange(actual))
-                    return eDec.CompareTo(ConvertToValue<decimal>(actual));
-                else if (actual is decimal aDec && IsWithinDecimalRange(expected))
-                    return ConvertToValue<decimal>(expected).CompareTo(aDec);
-                else
-                    return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
-            }
-
-            if (expected is double || actual is double)
-                return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
-
-            if (expected is float || actual is float)
-                return ConvertToValue<float>(expected).CompareTo(ConvertToValue<float>(actual));
-
+                CommonNumericType.Decimal => ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual)),
+                CommonNumericType.Double => ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual)),
+                CommonNumericType.Single => ConvertToValue<float>(expected).CompareTo(ConvertToValue<float>(actual)),
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-                return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
+                CommonNumericType.Half => ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual)),
+                CommonNumericType.BigInteger => ConvertToValue<BigInteger>(expected).CompareTo(ConvertToValue<BigInteger>(actual)),
+                CommonNumericType.UInt128 => ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual)),
+                CommonNumericType.Int128 => ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual)),
 #endif
-
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
-            {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
-
-#if NETFRAMEWORK
-                return ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual));
-#else
-                if (expected is UInt128 || actual is UInt128)
-                    return ConvertToValue<BigInteger>(expected).CompareTo(ConvertToValue<BigInteger>(actual));
-
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-            }
-
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
-
-            if (expected is Int128 || actual is Int128)
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-
-            if (expected is ulong || actual is ulong)
-                return ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual));
-
-            if (expected is long || actual is long)
-                return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
-
-            if (expected is nuint || actual is nuint)
-                return ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual));
-
-            if (expected is nint || actual is nint)
-                return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
-
-            if (expected is uint || actual is uint)
-                return ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual));
-
-            return ConvertToValue<int>(expected).CompareTo(ConvertToValue<int>(actual));
+                CommonNumericType.UInt64 => ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual)),
+                CommonNumericType.Int64 => ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual)),
+                CommonNumericType.NUInt => ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual)),
+                CommonNumericType.NInt => ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual)),
+                CommonNumericType.UInt32 => ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual)),
+                CommonNumericType.Int32 => ConvertToValue<int>(expected).CompareTo(ConvertToValue<int>(actual)),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
         }
         #endregion
 
@@ -626,113 +631,92 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 return double.NaN;
 
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
-            // Treat as decimal if one is decimal and other can be treated as decimal
-            if (expected is decimal eDec && IsWithinDecimalRange(actual))
+            return commonType switch
             {
-                var difference = eDec - ConvertToValue<decimal>(actual);
-                return isAbsolute ? difference : difference / eDec * 100;
-            }
-            else if (actual is decimal aDec && IsWithinDecimalRange(expected))
-            {
-                decimal expectedValue = ConvertToValue<decimal>(expected);
-                var difference = expectedValue - aDec;
-                return isAbsolute ? difference : difference / expectedValue * 100;
-            }
-
-#if !NETFRAMEWORK
-            // EXCEPTION: Check half before other floats to preserve precision of reported differences in certain cases.
-            if (expected is Half expectedHalf && actual is Half actualHalf)
-            {
-                var difference = expectedHalf - actualHalf;
-                return isAbsolute ? difference : difference / expectedHalf * Half.CreateChecked(100);
-            }
+#if NETFRAMEWORK
+                CommonNumericType.Decimal when IsMixedSignInteger(expected, actual) => SignedDifference(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), isAbsolute),
 #endif
+                CommonNumericType.Decimal => Difference(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), isAbsolute),
+#if !NETFRAMEWORK
+                // EXCEPTION: Only use double for Half mixed with another type, to preserve precision of reported differences in certain cases.
+                CommonNumericType.Half when expected is Half expectedHalf && actual is Half actualHalf => Difference(expectedHalf, actualHalf, isAbsolute),
+                CommonNumericType.Double or CommonNumericType.Single or CommonNumericType.Half => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
+                CommonNumericType.BigInteger => SignedDifference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute),
+                CommonNumericType.UInt128 => Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute),
+                CommonNumericType.Int128 when IsMixedSignInteger(expected, actual) => SignedDifference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute),
+                CommonNumericType.Int128 => Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute),
+#else
+                CommonNumericType.Double or CommonNumericType.Single => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
+#endif
+                CommonNumericType.UInt64 => Difference(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), isAbsolute),
+                CommonNumericType.Int64 => Difference(ConvertToValue<long>(expected), ConvertToValue<long>(actual), isAbsolute),
+                CommonNumericType.NUInt => Difference(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), isAbsolute),
+                CommonNumericType.NInt => Difference(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), isAbsolute),
+                CommonNumericType.UInt32 => Difference(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), isAbsolute),
+                CommonNumericType.Int32 => Difference(ConvertToValue<int>(expected), ConvertToValue<int>(actual), isAbsolute),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
+        }
 
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-            {
-                var difference = ConvertToValue<double>(expected) - ConvertToValue<double>(actual);
-                return isAbsolute ? difference : difference / ConvertToValue<double>(expected) * 100;
-            }
+        private static object Difference(decimal expected, decimal actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / expected * 100;
+        }
 
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
-            {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                {
-                    long expectedValue = ConvertToValue<long>(expected);
-                    var difference = expectedValue - ConvertToValue<long>(actual);
-                    return isAbsolute ? difference : difference / (double)expectedValue * 100;
-                }
+        private static object Difference(double expected, double actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / expected * 100;
+        }
+
+        private static object Difference(ulong expected, ulong actual, bool isAbsolute)
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
+
+        private static object Difference(long expected, long actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
+
+        private static object Difference(nuint expected, nuint actual, bool isAbsolute)
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
+
+        private static object Difference(nint expected, nint actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
+
+        private static object Difference(uint expected, uint actual, bool isAbsolute)
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
+
+        private static object Difference(int expected, int actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / (double)expected * 100;
+        }
 
 #if NETFRAMEWORK
-                decimal expectedDecimal = ConvertToValue<decimal>(expected);
-                var decimalDifference = expectedDecimal - ConvertToValue<decimal>(actual);
-                return isAbsolute ? decimalDifference : (double)decimalDifference / (double)expectedDecimal * 100;
-#else
-                if (expected is UInt128 || actual is UInt128)
-                    return SignedDifference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute);
-
-                return SignedDifference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
-#endif
-            }
-
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
-
-            if (expected is Int128 || actual is Int128)
-                return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
-#endif
-
-            if (expected is ulong || actual is ulong)
-            {
-                var eUlong = ConvertToValue<ulong>(expected);
-                var aUlong = ConvertToValue<ulong>(actual);
-                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
-                return isAbsolute ? difference : difference / (double)eUlong * 100;
-            }
-
-            if (expected is long || actual is long)
-            {
-                var difference = ConvertToValue<long>(expected) - ConvertToValue<long>(actual);
-                return isAbsolute ? difference : difference / (double)ConvertToValue<long>(expected) * 100;
-            }
-
-            if (expected is nuint || actual is nuint)
-            {
-                nuint expectedValue = ConvertToValue<nuint>(expected);
-                nuint actualValue = ConvertToValue<nuint>(actual);
-
-                var difference = expectedValue >= actualValue ? expectedValue - actualValue : actualValue - expectedValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is nint || actual is nint)
-            {
-                nint expectedValue = ConvertToValue<nint>(expected);
-                nint actualValue = ConvertToValue<nint>(actual);
-
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is uint || actual is uint)
-            {
-                var eUint = ConvertToValue<uint>(expected);
-                var aUint = ConvertToValue<uint>(actual);
-                var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
-                return isAbsolute ? difference : difference / (double)eUint * 100;
-            }
-
-            var intDifference = ConvertToValue<int>(expected) - ConvertToValue<int>(actual);
-            return isAbsolute ? intDifference : intDifference / (double)ConvertToValue<int>(expected) * 100;
+        // Used for mixed signed and unsigned values: calculate
+        // the percentage as double so an expected value of 0 does not throw.
+        private static object SignedDifference(decimal expected, decimal actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : (double)difference / (double)expected * 100;
         }
+#endif
         #endregion
 
 #if !NETFRAMEWORK
@@ -743,6 +727,12 @@ namespace NUnit.Framework.Constraints
             var hundred = T.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
+        }
+
+        private static object Difference(Half expected, Half actual, bool isAbsolute)
+        {
+            var difference = expected - actual;
+            return isAbsolute ? difference : difference / expected * Half.CreateChecked(100);
         }
 
         // Signed overload used for mixed signed and unsigned values: calculate
