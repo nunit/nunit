@@ -111,7 +111,7 @@ jobs:
 
   build-macos:
     name: MacOS Build
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
     - name: ⤵️ Checkout Source
@@ -126,6 +126,10 @@ jobs:
         dotnet-version: |
             8.0.x
             10.0.x
+
+    # macos-15 images don't ship Mono, which the net462 test runs need
+    - name: 🛠️ Install Mono
+      run: brew install mono
 
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore --tool-manifest ./.config-macos/dotnet-tools.json
