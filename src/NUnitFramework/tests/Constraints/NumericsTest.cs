@@ -571,6 +571,39 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Numerics.Difference(b, a, ToleranceMode.Linear), Is.Zero);
         }
 
+        // ulong and long are at least as wide as nuint and nint, so they must be used for the calculation.
+        // Converting these values to nuint or nint would overflow in a 32-bit process.
+        [TestCaseSource(nameof(WideAndNativeIntegerTestCases))]
+        public void CanCompareWideIntegerWithNativeInteger(object wide, object native)
+        {
+            Assert.That(Numerics.Compare(wide, native), Is.GreaterThan(0));
+            Assert.That(Numerics.Compare(native, wide), Is.LessThan(0));
+        }
+
+        private static TestCaseData[] WideAndNativeIntegerTestCases()
+        {
+            return [
+                new TestCaseData(5_000_000_000ul, (nuint)1),
+                new TestCaseData(5_000_000_000L, (nint)1),
+            ];
+        }
+
+        [TestCaseSource(nameof(WideAndNativeIntegerDifferenceTestCases))]
+        public void CanCalculateDifferenceBetweenWideIntegerAndNativeInteger(object wide, object native, long reverseDifference)
+        {
+            Assert.That(Numerics.Difference(wide, native, ToleranceMode.Linear), Is.EqualTo(4_999_999_999L));
+            Assert.That(Numerics.Difference(native, wide, ToleranceMode.Linear), Is.EqualTo(reverseDifference));
+        }
+
+        private static TestCaseData[] WideAndNativeIntegerDifferenceTestCases()
+        {
+            // The unsigned difference is always positive.
+            return [
+                new TestCaseData(5_000_000_000ul, (nuint)1, 4_999_999_999L),
+                new TestCaseData(5_000_000_000L, (nint)1, -4_999_999_999L),
+            ];
+        }
+
         private static TestCaseData[] NonConvertibleOperandTestCases()
         {
             // nint and nuint are not IConvertible and char cannot be converted to floating point types.
