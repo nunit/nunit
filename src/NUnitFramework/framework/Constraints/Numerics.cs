@@ -677,9 +677,219 @@ namespace NUnit.Framework.Constraints
             => value is double or float;
 #else
             => value is double or float or Half;
+#endif
 
         private static bool IsPositiveInfinity(object amount)
             => IsBinaryFloatingPoint(amount) && double.IsPositiveInfinity(ConvertToValue<double>(amount));
+        #endregion
+
+        #region Tolerance Ranges
+
+        /// <summary>
+        /// Calculates the range value - amount to value + amount, used by the comparison constraints.
+        /// The type of the value determines the type of the bounds. Bounds that do not fit in that type
+        /// use a wider type, so custom comparers see the type of the value whenever possible.
+        /// </summary>
+        internal static Tolerance.Range LinearRange(object value, object amount)
+        {
+            switch (value)
+            {
+                case double doubleValue:
+                    double doubleOffset = ConvertToValue<double>(amount);
+                    return new Tolerance.Range(doubleValue - doubleOffset, doubleValue + doubleOffset);
+
+                case float floatValue:
+                    float floatOffset = ConvertToValue<float>(amount);
+                    return new Tolerance.Range(floatValue - floatOffset, floatValue + floatOffset);
+
+#if !NETFRAMEWORK
+                case Half halfValue:
+                    return HalfRange(halfValue, ConvertToValue<double>(amount));
+#endif
+
+                case decimal decimalValue:
+                    return DecimalRange(decimalValue, amount);
+            }
+
+            if (IsPositiveInfinity(amount))
+                return new Tolerance.Range(double.NegativeInfinity, double.PositiveInfinity);
+
+            // A range of integers cannot be fractional: there is no bound that is correct for both > and >=,
+            // e.g. a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
+            if (!IsWholeNumber(amount))
+                throw new InvalidOperationException($"Tolerance {amount} must be a whole number for the integer value {value}");
+
+            if (TryGetDecimal(value, out decimal decimalValueOfInteger) && TryGetDecimal(amount, out decimal offset) &&
+                offset <= decimal.MaxValue - Math.Abs(decimalValueOfInteger))
+            {
+                return new Tolerance.Range(
+                    NarrowToTypeOf(value, decimalValueOfInteger - offset),
+                    NarrowToTypeOf(value, decimalValueOfInteger + offset));
+            }
+
+#if !NETFRAMEWORK
+            BigInteger bigValue = ConvertToValue<BigInteger>(value);
+            BigInteger bigOffset = ConvertToValue<BigInteger>(amount);
+            return new Tolerance.Range(
+                NarrowToTypeOf(value, bigValue - bigOffset, isLowerBound: true),
+                NarrowToTypeOf(value, bigValue + bigOffset, isLowerBound: false));
+#else
+            // The amount does not fit in a decimal, so the bounds are far outside the range of any integer type.
+            double approximateValue = ConvertToValue<double>(value);
+            double approximateOffset = ConvertToValue<double>(amount);
+            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+#endif
+        }
+
+        /// <summary>
+        /// Calculates the range value - percentage of value to value + percentage of value,
+        /// used by the comparison constraints. The type of the value determines the type of the bounds.
+        /// As the offset of an integer value is usually fractional, it uses exact decimal bounds unless
+        /// a bound is a whole number that fits in the type of the value.
+        /// </summary>
+        internal static Tolerance.Range PercentRange(object value, object percentage)
+        {
+            if (IsBinaryFloatingPoint(value))
+            {
+                double offset = Math.Abs(ConvertToValue<double>(value) * ConvertToValue<double>(percentage) / 100);
+
+                switch (value)
+                {
+                    case double doubleValue:
+                        return new Tolerance.Range(doubleValue - offset, doubleValue + offset);
+                    case float floatValue:
+                        return new Tolerance.Range(floatValue - (float)offset, floatValue + (float)offset);
+#if !NETFRAMEWORK
+                    case Half halfValue:
+                        return HalfRange(halfValue, offset);
+#endif
+                }
+            }
+
+            const decimal limit = decimal.MaxValue / 2;
+            if (TryGetDecimal(value, out decimal decimalValue) && TryGetDecimal(percentage, out decimal percent) &&
+                Math.Abs(decimalValue) <= limit && (decimalValue == 0 || percent <= limit / Math.Abs(decimalValue)))
+            {
+                decimal decimalOffset = Math.Abs(decimalValue) * percent / 100;
+                return new Tolerance.Range(
+                    NarrowToTypeOf(value, decimalValue - decimalOffset),
+                    NarrowToTypeOf(value, decimalValue + decimalOffset));
+            }
+
+            // Values or percentages outside the decimal range.
+            double approximateValue = ConvertToValue<double>(value);
+            double approximateOffset = Math.Abs(approximateValue * ConvertToValue<double>(percentage) / 100);
+            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+        }
+
+        private static Tolerance.Range DecimalRange(decimal value, object amount)
+        {
+            if (TryGetDecimal(amount, out decimal offset) && offset <= decimal.MaxValue - Math.Abs(value))
+                return new Tolerance.Range(value - offset, value + offset);
+
+            // The bounds are outside the decimal range.
+            double approximateValue = (double)value;
+            double approximateOffset = ConvertToValue<double>(amount);
+            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+        }
+
+#if !NETFRAMEWORK
+        private static Tolerance.Range HalfRange(Half value, double offset)
+        {
+            Half halfOffset = (Half)offset;
+            Half lowerBound = value - halfOffset;
+            Half upperBound = value + halfOffset;
+
+            // An offset too small for the precision of Half does not change the value, so use decimal instead.
+            if (!double.IsInfinity(offset) && (lowerBound >= value || upperBound <= value))
+                return new Tolerance.Range((decimal)value - (decimal)offset, (decimal)value + (decimal)offset);
+
+            return new Tolerance.Range(lowerBound, upperBound);
+        }
+#endif
+
+        private static bool IsWholeNumber(object amount)
+        {
+            if (amount is decimal decimalValue)
+                return decimalValue == decimal.Truncate(decimalValue);
+
+            if (IsBinaryFloatingPoint(amount))
+            {
+                double doubleValue = ConvertToValue<double>(amount);
+                return Math.Floor(doubleValue) == doubleValue;
+            }
+
+            return true;
+        }
+
+        private static bool TryGetDecimal(object value, out decimal decimalValue)
+        {
+            bool fits = IsWithinDecimalRange(value);
+            decimalValue = fits ? ConvertToValue<decimal>(value) : 0m;
+            return fits;
+        }
+
+        /// <summary>
+        /// Converts a bound to the type in which the integer value is compared if it is a whole number that fits,
+        /// otherwise keeps it as decimal.
+        /// </summary>
+        private static object NarrowToTypeOf(object value, decimal bound)
+        {
+            if (bound != decimal.Truncate(bound))
+                return bound;
+
+            switch (GetCommonNumericType(value, value))
+            {
+                case CommonNumericType.Int32 when bound >= int.MinValue && bound <= int.MaxValue:
+                    return (int)bound;
+                case CommonNumericType.UInt32 when bound >= uint.MinValue && bound <= uint.MaxValue:
+                    return (uint)bound;
+                case CommonNumericType.Int64 when bound >= long.MinValue && bound <= long.MaxValue:
+                    return (long)bound;
+                case CommonNumericType.UInt64 when bound >= ulong.MinValue && bound <= ulong.MaxValue:
+                    return (ulong)bound;
+                case CommonNumericType.NInt when IntPtr.Size == 8 ? bound >= long.MinValue && bound <= long.MaxValue : bound >= int.MinValue && bound <= int.MaxValue:
+                    return (nint)(long)bound;
+                case CommonNumericType.NUInt when IntPtr.Size == 8 ? bound >= ulong.MinValue && bound <= ulong.MaxValue : bound >= uint.MinValue && bound <= uint.MaxValue:
+                    return (nuint)(ulong)bound;
+#if !NETFRAMEWORK
+                case CommonNumericType.Int128:
+                    return (Int128)bound;
+                case CommonNumericType.UInt128 when bound >= 0m:
+                    return (UInt128)bound;
+#endif
+                default:
+                    return bound;
+            }
+        }
+
+#if !NETFRAMEWORK
+        private static readonly BigInteger DecimalMinValue = new(decimal.MinValue);
+        private static readonly BigInteger DecimalMaxValue = new(decimal.MaxValue);
+
+        /// <summary>
+        /// Converts a bound outside the decimal range to Int128 or UInt128 when it fits,
+        /// otherwise to double, rounded away from the range so it does not exclude any value in it.
+        /// </summary>
+        private static object NarrowToTypeOf(object value, BigInteger bound, bool isLowerBound)
+        {
+            if (bound >= DecimalMinValue && bound <= DecimalMaxValue)
+                return NarrowToTypeOf(value, (decimal)bound);
+
+            if (bound >= Int128.MinValue && bound <= Int128.MaxValue && !(value is UInt128 && bound >= 0))
+                return (Int128)bound;
+
+            if (bound >= 0 && bound <= UInt128.MaxValue)
+                return (UInt128)bound;
+
+            double approximation = (double)bound;
+            if (isLowerBound && (BigInteger)approximation > bound)
+                approximation = Math.BitDecrement(approximation);
+            else if (!isLowerBound && (BigInteger)approximation < bound)
+                approximation = Math.BitIncrement(approximation);
+
+            return approximation;
+        }
 #endif
         #endregion
 
