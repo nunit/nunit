@@ -1015,7 +1015,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
                 Assert.That(ex?.Message, Does.Contain("+/- 10.0d Percent"));
-                var expectedPercentDiff = (10000 - (double)value) / 100;
+                var expectedPercentDiff = Math.Abs(10000 - (double)value) / 100;
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
@@ -1070,7 +1070,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
                 Assert.That(ex?.Message, Does.Contain("+/- 10.0f Percent"));
-                double expectedPercentDiff = (10000 - (float)value) / 100;
+                double expectedPercentDiff = Math.Abs(10000 - (float)value) / 100;
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
@@ -1081,7 +1081,7 @@ namespace NUnit.Framework.Tests.Constraints
                 const double tolerance = 0.001;
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
                 Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
-                var expectedAbsoluteDiff = 1.2 - (double)value;
+                var expectedAbsoluteDiff = Math.Abs(1.2 - (double)value);
                 Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
