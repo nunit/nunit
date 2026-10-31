@@ -404,125 +404,59 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+#endif
 
-        private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
+        // Integer comparisons: the difference between two integers is calculated without overflow in the
+        // unsigned type of the same size and compared with the largest difference the tolerance allows.
+        // For a percentage tolerance that is floor(|expected| * percentage / 100), as the difference is a whole number.
+        private static bool AreEqual(int expected, int actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    ulong ulongTolerance = Convert.ToUInt64(tolerance.Amount);
-                    if (ulongTolerance > 0ul)
-                    {
-                        ulong diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= ulongTolerance;
-                    }
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0ul)
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    ulong difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs((double)difference / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
-        }
-
-        private static bool AreEqual(long expected, long actual, Tolerance tolerance)
-        {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    long longTolerance = Convert.ToInt64(tolerance.Amount);
-                    if (longTolerance > 0L)
-                        return Math.Abs(expected - actual) <= longTolerance;
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0L)
-                        return expected.Equals(actual);
-
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
 
         private static bool AreEqual(uint expected, uint actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    uint uintTolerance = Convert.ToUInt32(tolerance.Amount);
-                    if (uintTolerance > 0)
-                    {
-                        uint diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= uintTolerance;
-                    }
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0u)
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    double difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs(difference / expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
 
-        private static bool AreEqual(int expected, int actual, Tolerance tolerance)
+        private static bool AreEqual(long expected, long actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    int intTolerance = Convert.ToInt32(tolerance.Amount);
-                    if (intTolerance > 0)
-                        return Math.Abs(expected - actual) <= intTolerance;
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0)
-                        return expected.Equals(actual);
-
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
-#endif
 
-        // Used on .NET and .NET Framework, as decimal arithmetic can overflow.
+        private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(nint expected, nint actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(nuint expected, nuint actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {
             switch (tolerance.Mode)
@@ -552,6 +486,75 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        private static bool AreEqual(Int128 expected, Int128 actual, Tolerance tolerance)
+        {
+            UInt128 maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, Int128.Zero), tolerance.Amount)
+                : MaxLinearDifference128(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(UInt128 expected, UInt128 actual, Tolerance tolerance)
+        {
+            UInt128 maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference128(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(BigInteger expected, BigInteger actual, Tolerance tolerance)
+        {
+            BigInteger difference = AbsoluteDifference(expected, actual);
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return difference.IsZero;
+
+                case ToleranceMode.Linear:
+                    return IsPositiveInfinity(tolerance.Amount) || difference <= ConvertToValue<BigInteger>(tolerance.Amount);
+
+                case ToleranceMode.Percent:
+                    return difference <= PercentageOf(BigInteger.Abs(expected), PercentageAsDecimal(tolerance.Amount));
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+#endif
+
+        // The difference between two integers fits in the unsigned type of the same size.
+        // Subtracting the smaller from the larger value using unsigned arithmetic gives the exact result,
+        // even when the signed subtraction would overflow, e.g. int.MaxValue - int.MinValue.
+        private static uint AbsoluteDifference(int x, int y)
+            => x >= y ? unchecked((uint)x - (uint)y) : unchecked((uint)y - (uint)x);
+
+        private static uint AbsoluteDifference(uint x, uint y)
+            => x >= y ? x - y : y - x;
+
+        private static ulong AbsoluteDifference(long x, long y)
+            => x >= y ? unchecked((ulong)x - (ulong)y) : unchecked((ulong)y - (ulong)x);
+
+        private static ulong AbsoluteDifference(ulong x, ulong y)
+            => x >= y ? x - y : y - x;
+
+        private static nuint AbsoluteDifference(nint x, nint y)
+            => x >= y ? unchecked((nuint)x - (nuint)y) : unchecked((nuint)y - (nuint)x);
+
+        private static nuint AbsoluteDifference(nuint x, nuint y)
+            => x >= y ? x - y : y - x;
+
+#if !NETFRAMEWORK
+        private static UInt128 AbsoluteDifference(Int128 x, Int128 y)
+            => x >= y ? unchecked((UInt128)x - (UInt128)y) : unchecked((UInt128)y - (UInt128)x);
+
+        private static UInt128 AbsoluteDifference(UInt128 x, UInt128 y)
+            => x >= y ? x - y : y - x;
+
+        private static BigInteger AbsoluteDifference(BigInteger x, BigInteger y)
+            => BigInteger.Abs(x - y);
+#endif
+
         // Subtracting decimals with different signs can exceed the decimal range.
         private static bool TryAbsoluteDifference(decimal x, decimal y, out decimal difference)
         {
@@ -564,6 +567,120 @@ namespace NUnit.Framework.Constraints
             difference = Math.Abs(x - y);
             return true;
         }
+
+        // 2^64 as decimal, the first value that no longer fits in a ulong.
+        private const decimal UInt64Range = 18446744073709551616m;
+
+        /// <summary>
+        /// The largest difference between two integers allowed by a tolerance that is not a percentage.
+        /// A fractional amount is rounded down, which is exact as the difference is a whole number:
+        /// it is within 1.5 exactly when it is within 1. An amount too large for the type allows any difference.
+        /// </summary>
+        private static ulong MaxLinearDifference(Tolerance tolerance)
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return 0;
+
+                case ToleranceMode.Linear:
+                    if (tolerance.Amount is decimal decimalValue)
+                        return decimalValue >= UInt64Range ? ulong.MaxValue : (ulong)decimalValue;
+                    if (IsBinaryFloatingPoint(tolerance.Amount))
+                    {
+                        double doubleValue = ConvertToValue<double>(tolerance.Amount);
+                        return doubleValue >= (double)UInt64Range ? ulong.MaxValue : (ulong)doubleValue;
+                    }
+#if !NETFRAMEWORK
+                    if (tolerance.Amount is Int128 or UInt128)
+                    {
+                        UInt128 wideValue = ConvertToValue<UInt128>(tolerance.Amount);
+                        return wideValue > ulong.MaxValue ? ulong.MaxValue : (ulong)wideValue;
+                    }
+#endif
+                    return ConvertToValue<ulong>(tolerance.Amount);
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+
+#if !NETFRAMEWORK
+        private static UInt128 MaxLinearDifference128(Tolerance tolerance)
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return UInt128.Zero;
+
+                case ToleranceMode.Linear:
+                    return IsBinaryFloatingPoint(tolerance.Amount)
+                        ? UInt128.CreateSaturating(ConvertToValue<double>(tolerance.Amount))
+                        : ConvertToValue<UInt128>(tolerance.Amount);
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+#endif
+
+        /// <summary>
+        /// The largest difference between two integers allowed by a percentage of the expected value:
+        /// floor(|expected| * percentage / 100), as the difference is a whole number.
+        /// </summary>
+        private static ulong PercentageOf(ulong magnitude, object percentage)
+        {
+            decimal percent = PercentageAsDecimal(percentage);
+            if (magnitude == 0)
+                return 0;
+
+            // The result does not fit in a ulong if the product does not fit in a decimal.
+            if (percent > decimal.MaxValue / magnitude)
+                return ulong.MaxValue;
+
+            decimal maxDifference = decimal.Floor(magnitude * percent / 100m);
+            return maxDifference >= UInt64Range ? ulong.MaxValue : (ulong)maxDifference;
+        }
+
+#if !NETFRAMEWORK
+        private static UInt128 PercentageOf(UInt128 magnitude, object percentage)
+        {
+            BigInteger maxDifference = PercentageOf((BigInteger)magnitude, PercentageAsDecimal(percentage));
+            return maxDifference >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)maxDifference;
+        }
+
+        // Calculates exactly using the decimal's mantissa and scale: magnitude * mantissa / (100 * 10^scale).
+        private static BigInteger PercentageOf(BigInteger magnitude, decimal percent)
+        {
+            int[] bits = decimal.GetBits(percent);
+            BigInteger mantissa = ((BigInteger)(uint)bits[2] << 64) | ((BigInteger)(uint)bits[1] << 32) | (uint)bits[0];
+            int scale = (bits[3] >> 16) & 0xFF;
+
+            return magnitude * mantissa / (100 * BigInteger.Pow(10, scale));
+        }
+#endif
+
+        // A percentage that does not fit in a decimal is so large that any difference is allowed.
+        // The amount is never negative or NaN, as Tolerance does not allow that.
+        private static decimal PercentageAsDecimal(object percentage)
+        {
+            if (percentage is decimal decimalValue)
+                return decimalValue;
+
+            return ConvertToValue<double>(percentage) < (double)decimal.MaxValue
+                ? ConvertToValue<decimal>(percentage)
+                : decimal.MaxValue;
+        }
+
+        private static bool IsBinaryFloatingPoint(object value)
+#if NETFRAMEWORK
+            => value is double or float;
+#else
+            => value is double or float or Half;
+
+        private static bool IsPositiveInfinity(object amount)
+            => IsBinaryFloatingPoint(amount) && double.IsPositiveInfinity(ConvertToValue<double>(amount));
+#endif
         #endregion
 
         #region Numeric Comparisons
@@ -792,36 +909,6 @@ namespace NUnit.Framework.Constraints
                     // NOTE: We cannot convert types here because it will affect the ulps calculation.
                     // For example, converting a Half to a double will change the ulps distance.
                     return FloatingPointNumerics.AreAlmostEqualUlps(expected, actual, Convert.ToInt64(tolerance.Amount));
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
-        }
-
-        private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
-            where T : INumber<T>
-        {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    T toleranceValue = ConvertToValue<T>(tolerance.Amount);
-                    if (T.IsZero(toleranceValue))
-                        return expected.Equals(actual);
-
-                    T diff = expected >= actual ? expected - actual : actual - expected;
-                    return diff <= toleranceValue;
-
-                case ToleranceMode.Percent:
-                    if (T.IsZero(expected))
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T difference = (expected >= actual ? expected - actual : actual - expected);
-                    double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
-                    return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
