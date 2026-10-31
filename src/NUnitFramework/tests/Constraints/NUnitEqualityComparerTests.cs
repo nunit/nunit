@@ -324,6 +324,32 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(equalityComparer.AreEqual(x, y, ref _tolerance), Is.True);
         }
 
+        [Test]
+        public void ExternalComparerReceivesTolerance()
+        {
+            _comparer.ExternalComparers.Add(new LengthWithinToleranceAdapter());
+            var tolerance = new Tolerance(2);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_comparer.AreEqual("a", "abc", ref tolerance), Is.True);
+                Assert.That(_comparer.AreEqual("a", "abcd", ref tolerance), Is.False);
+            }
+        }
+
+        [Test]
+        public void ExternalComparerReceivesToleranceForCollectionItems()
+        {
+            _comparer.ExternalComparers.Add(new LengthWithinToleranceAdapter());
+            var tolerance = new Tolerance(2);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_comparer.AreEqual(new[] { "a", "b" }, new[] { "abc", "bcd" }, ref tolerance), Is.True);
+                Assert.That(_comparer.AreEqual(new[] { "a", "b" }, new[] { "abc", "bcde" }, ref tolerance), Is.False);
+            }
+        }
+
         private static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
         {
             // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in
@@ -378,6 +404,19 @@ namespace NUnit.Framework.Tests.Constraints
         {
             throw new InvalidOperationException("Recurses");
         }
+    }
+
+    /// <summary>
+    /// Treats strings as equal when their lengths differ by at most the tolerance.
+    /// </summary>
+    internal sealed class LengthWithinToleranceAdapter : EqualityAdapter
+    {
+        public override bool CanCompare(object? x, object? y) => x is string && y is string;
+
+        public override bool AreEqual(object? x, object? y) => ((string)x!).Length == ((string)y!).Length;
+
+        public override bool AreEqual(object? x, object? y, ref Tolerance tolerance)
+            => Math.Abs(((string)x!).Length - ((string)y!).Length) <= (int)tolerance.Amount;
     }
 
     internal class SelfContainer : IEnumerable

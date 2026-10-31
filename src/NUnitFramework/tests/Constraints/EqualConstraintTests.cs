@@ -1696,6 +1696,14 @@ namespace NUnit.Framework.Tests.Constraints
                 }
             }
 
+            [Test]
+            public void ToleranceWithProvidedComparerIsNotSupportedForItemComparison()
+            {
+                var constraint = Is.EqualTo(new[] { 1, 2 }).Using<int>((x, y) => x == y).Within(1);
+
+                Assert.That(() => constraint.ApplyTo(new[] { 1, 2 }), Throws.TypeOf<NotSupportedException>());
+            }
+
             private sealed class NeverEqual<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
             {
                 int IComparer.Compare(object? x, object? y) => -1;
