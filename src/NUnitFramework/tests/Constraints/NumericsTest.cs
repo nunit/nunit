@@ -544,6 +544,54 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        [TestCaseSource(nameof(DecimalAndBinaryFloatingPointTestCases))]
+        public void DecimalAndBinaryFloatingPointAreComparedAsDecimal_Issue5539(decimal value, object floatingPoint)
+        {
+            // AreEqual and Compare must agree.
+            Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.Compare(value, floatingPoint), Is.Zero);
+            Assert.That(Numerics.Compare(floatingPoint, value), Is.Zero);
+        }
+
+        private static TestCaseData[] DecimalAndBinaryFloatingPointTestCases()
+        {
+            return [
+                new TestCaseData(0.3m, 0.1d + 0.2d),
+                new TestCaseData(0.1m, 0.1f),
+#if !NETFRAMEWORK
+                new TestCaseData(0.5m, (Half)0.5),
+#endif
+            ];
+        }
+
+        [Test]
+        public void EqualityAndComparisonOfDecimalAndDoubleAgree_Issue5539()
+        {
+            double value = 0.1 + 0.2;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(value, Is.EqualTo(0.3m));
+                Assert.That(value, Is.LessThanOrEqualTo(0.3m));
+                Assert.That(value, Is.GreaterThanOrEqualTo(0.3m));
+            }
+        }
+
+        [Test]
+        public void UlpsToleranceIsNotSupportedForDecimalAndDouble()
+        {
+            var tolerance = new Tolerance(1).Ulps;
+            Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(0.3m, 0.3d, ref tolerance));
+        }
+
+        [Test]
+        public void DecimalAndValueOutsideDecimalRangeAreComparedAsDouble()
+        {
+            Assert.That(Numerics.AreEqual(decimal.MaxValue, float.MaxValue, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(float.MaxValue, decimal.MaxValue, ref _zeroTolerance), Is.False);
+        }
+
         [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
