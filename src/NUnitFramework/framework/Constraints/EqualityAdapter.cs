@@ -133,7 +133,8 @@ namespace NUnit.Framework.Constraints
             public override bool AreEqual(object? x, object? y)
             {
                 // The CanCompare method ensures that the casts will succeed,
-                // so we can safely cast and use the null-forgiving operator here.
+                // so we can safely cast here.
+                // The null-forgiving operator is used here because the generic predicate is unconstrained.
                 return _comparison.Invoke((TActual)y!, (TExpected)x!);
             }
 
@@ -183,8 +184,8 @@ namespace NUnit.Framework.Constraints
             public override bool AreEqual(object? x, object? y)
             {
                 // The CanCompare method ensures that the casts will succeed,
-                // so we can safely cast and use the null-forgiving operator here.
-                return _comparer.Equals((T)x!, (T)y!);
+                // so we can safely cast here.
+                return _comparer.Equals((T?)x, (T?)y);
             }
         }
 
@@ -215,8 +216,8 @@ namespace NUnit.Framework.Constraints
             public override bool AreEqual(object? x, object? y)
             {
                 // The CanCompare method ensures that the casts will succeed,
-                // so we can safely cast and use the null-forgiving operator here.
-                return _comparer.Compare((T)x!, (T)y!) == 0;
+                // so we can safely cast here.
+                return _comparer.Compare((T?)x, (T?)y) == 0;
             }
         }
 
@@ -244,11 +245,67 @@ namespace NUnit.Framework.Constraints
             public override bool AreEqual(object? x, object? y)
             {
                 // The CanCompare method ensures that the casts will succeed,
-                // so we can safely cast and use the null-forgiving operator here.
+                // so we can safely cast here.
+                // The null-forgiving operator is used here because the Comparison<T> delegate
+                // is not declared as accepting null values despite the note to implementors:
+                // https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.comparer-1.compare?view=net-10.0#notes-to-implementers
+                // Comparing null with any reference type is allowed and does not generate an exception.
                 return _comparer.Invoke((T)x!, (T)y!) == 0;
             }
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Generic version of <see cref="EqualityAdapter"/> making it cleaner to write adapters for specific types.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements to compare.</typeparam>
+    public abstract class EqualityAdapter<T> : EqualityAdapter
+        where T : notnull
+    {
+        /// <inheritdoc />
+        public sealed override bool CanCompare(object? x, object? y)
+        {
+            return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
+        }
+
+        /// <inheritdoc />
+        public sealed override bool AreEqual(object? x, object? y)
+        {
+            if (ReferenceEquals(x, y))
+                return true;
+            if (x is null || y is null)
+                return false;
+            return AreEqual((T)x, (T)y);
+        }
+
+        /// <inheritdoc />
+        public sealed override bool AreEqual(object? x, object? y, ref Tolerance tolerance)
+        {
+            if (ReferenceEquals(x, y))
+                return true;
+            if (x is null || y is null)
+                return false;
+            return AreEqual((T)x, (T)y, ref tolerance);
+        }
+
+        /// <summary>
+        /// Compares two instances of <typeparamref name="T"/>, within a tolerance returning true if they are equal
+        /// </summary>
+        public virtual bool AreEqual(T x, T y, ref Tolerance tolerance)
+        {
+            if (!tolerance.HasVariance)
+            {
+                return AreEqual(x, y);
+            }
+
+            throw new InvalidOperationException("Tolerance is not supported for this comparison");
+        }
+
+        /// <summary>
+        /// Compares two instances of <typeparamref name="T"/>, returning true if they are equal
+        /// </summary>
+        public abstract bool AreEqual(T x, T y);
     }
 }

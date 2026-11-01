@@ -11,15 +11,16 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private static IEnumerable<EqualityAdapter> EqualityAdapters()
         {
-            return new[]
-            {
+            return
+            [
                 EqualityAdapter.For((IEqualityComparer)StringComparer.Ordinal),
                 EqualityAdapter.For((IEqualityComparer<string>)StringComparer.Ordinal),
                 EqualityAdapter.For<string, string>(StringComparer.Ordinal.Equals),
                 EqualityAdapter.For((IComparer)StringComparer.Ordinal),
                 EqualityAdapter.For((IComparer<string>)StringComparer.Ordinal),
-                EqualityAdapter.For<string>(StringComparer.Ordinal.Compare)
-            };
+                EqualityAdapter.For<string>(StringComparer.Ordinal.Compare),
+                new StringEqualityAdapter(),
+            ];
         }
 
         [TestCaseSource(nameof(EqualityAdapters))]
@@ -34,6 +35,12 @@ namespace NUnit.Framework.Tests.Constraints
         public static void CanCompare(EqualityAdapter adapter)
         {
             Assert.That(adapter.AreEqual("a", "a"), Is.True);
+        }
+
+        private sealed class StringEqualityAdapter : EqualityAdapter<string>
+        {
+            public override bool AreEqual(string x, string y)
+                => string.Equals(x, y, StringComparison.Ordinal);
         }
     }
 }
