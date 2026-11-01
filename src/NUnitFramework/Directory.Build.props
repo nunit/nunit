@@ -20,7 +20,7 @@
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NUnitLibraryFrameworks>net462;net8.0;net10.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;net8.0;net9.0;net10.0</NUnitRuntimeFrameworks>
+    <NUnitRuntimeFrameworks>net462;net8.0;net9.0;net10.0;net11.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -60,29 +60,16 @@
   </PropertyGroup>
 
   <Choose>
-    <When Condition="'$(TargetFramework)' == 'net462'">
+    <When Condition="$(TargetFramework.StartsWith('net4'))">
       <PropertyGroup>
-        <AssemblyConfiguration>.NET Framework 4.6.2 $(Configuration)</AssemblyConfiguration>
-      </PropertyGroup>
-    </When>
-    <When Condition="$(TargetFramework.StartsWith('net8.0'))">
-      <PropertyGroup>
-        <AssemblyConfiguration>.NET 8.0 $(Configuration)</AssemblyConfiguration>
-      </PropertyGroup>
-    </When>
-    <When Condition="$(TargetFramework.StartsWith('net9.0'))">
-      <PropertyGroup>
-        <AssemblyConfiguration>.NET 9.0 $(Configuration)</AssemblyConfiguration>
-      </PropertyGroup>
-    </When>
-    <When Condition="$(TargetFramework.StartsWith('net10.0'))">
-      <PropertyGroup>
-        <AssemblyConfiguration>.NET 10.0 $(Configuration)</AssemblyConfiguration>
+        <_FrameworkVersion>$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)', 3))</_FrameworkVersion>
+        <AssemblyConfiguration>.NET Framework $(_FrameworkVersion) $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </When>
     <Otherwise>
       <PropertyGroup>
-        <AssemblyConfiguration />
+        <_FrameworkVersion>$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)'))</_FrameworkVersion>
+        <AssemblyConfiguration>.NET $(_FrameworkVersion) $(Configuration)</AssemblyConfiguration>
       </PropertyGroup>
     </Otherwise>
   </Choose>
