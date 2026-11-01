@@ -1234,6 +1234,9 @@ namespace NUnit.Framework.Tests.Constraints
 
         public class UsingModifier
         {
+            private readonly NeverEqual<string?> _neverEqualComparer = new();
+            private readonly EverythingIsNull<string?> _everythingIsNullComparer = new();
+
             [Test]
             public void UsesProvidedIComparer()
             {
@@ -1702,6 +1705,29 @@ namespace NUnit.Framework.Tests.Constraints
                 var constraint = Is.EqualTo(new[] { 1, 2 }).Using<int>((x, y) => x == y).Within(1);
 
                 Assert.That(() => constraint.ApplyTo(new[] { 1, 2 }), Throws.TypeOf<NotSupportedException>());
+            }
+
+            [Test]
+            public void UsesProvidedComparersForItemComparisonWithSelf()
+            {
+                var a = "a";
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(_neverEqualComparer.Equals));
+                    Assert.That(new[] { a }, Is.Not.EqualTo(new[] { a }).Using<string?>(_everythingIsNullComparer.Equals));
+                }
+            }
+
+            [Test]
+            public void UsesProvidedComparisonsForItemComparisonWithNull()
+            {
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(new[] { "a" }, Is.EqualTo(new string?[] { null }).Using<string?>(_everythingIsNullComparer.Equals));
+                    Assert.That(new string?[] { null }, Is.EqualTo(new[] { "a" }).Using<string?>(_everythingIsNullComparer.Equals));
+                    Assert.That(new string?[] { null }, Is.Not.EqualTo(new string?[] { null }).Using<string?>(_neverEqualComparer.Equals));
+                }
             }
 
             private sealed class NeverEqual<T> : IComparer, IComparer<T>, IEqualityComparer, IEqualityComparer<T>
