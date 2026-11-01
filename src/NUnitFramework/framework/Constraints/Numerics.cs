@@ -653,8 +653,7 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T relativeError = (expected >= actual ? expected - actual : actual - expected) / expected;
+                    T relativeError = T.Abs((expected - actual) / expected);
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
