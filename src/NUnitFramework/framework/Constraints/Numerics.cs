@@ -95,6 +95,25 @@ namespace NUnit.Framework.Constraints
         {
             return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
         }
+
+#if !NETFRAMEWORK
+        private static readonly Int128 Int128DecimalMinValue = (Int128)decimal.MinValue;
+        private static readonly Int128 Int128DecimalMaxValue = (Int128)decimal.MaxValue;
+        private static readonly UInt128 UInt128DecimalMaxValue = (UInt128)decimal.MaxValue;
+#endif
+
+        private static bool IsWithinDecimalRange(object value)
+        {
+#if !NETFRAMEWORK
+            // Check 128-bit integers exactly, as rounding to double can move values
+            // just outside the decimal range onto its boundary.
+            if (value is Int128 int128Value)
+                return int128Value >= Int128DecimalMinValue && int128Value <= Int128DecimalMaxValue;
+            if (value is UInt128 uint128Value)
+                return uint128Value <= UInt128DecimalMaxValue;
+#endif
+            return IsWithinDecimalRange(ConvertToValue<double>(value));
+        }
         #endregion
 
         #region Numeric Equality
@@ -112,14 +131,6 @@ namespace NUnit.Framework.Constraints
             // Step from highest precision to lowest, converting as necessary.
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
-
-            if (expected is Int128 || actual is Int128)
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
-#endif
-
             if (expected is double || actual is double)
                 return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
 
@@ -135,7 +146,21 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
 
             if (expected is decimal || actual is decimal)
-                return AreEqual(Convert.ToDecimal(expected), Convert.ToDecimal(actual), tolerance);
+            {
+                // Treat as decimal if both values fit, otherwise fall back to double
+                if (IsWithinDecimalRange(expected) && IsWithinDecimalRange(actual))
+                    return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
+
+                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
+            }
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
+
+            if (expected is Int128 || actual is Int128)
+                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
+#endif
 
             if (expected is ulong || actual is ulong)
                 return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
@@ -445,9 +470,9 @@ namespace NUnit.Framework.Constraints
             if (expected is decimal || actual is decimal)
             {
                 // Treat as decimal if one is decimal and other can be treated as decimal
-                if (expected is decimal eDec && IsWithinDecimalRange(ConvertToValue<double>(actual)))
+                if (expected is decimal eDec && IsWithinDecimalRange(actual))
                     return eDec.CompareTo(ConvertToValue<decimal>(actual));
-                else if (actual is decimal aDec && IsWithinDecimalRange(ConvertToValue<double>(expected)))
+                else if (actual is decimal aDec && IsWithinDecimalRange(expected))
                     return ConvertToValue<decimal>(expected).CompareTo(aDec);
                 else
                     return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
@@ -523,24 +548,17 @@ namespace NUnit.Framework.Constraints
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
 
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
-
-            if (expected is Int128 || actual is Int128)
-                return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
-#endif
-
             // Treat as decimal if one is decimal and other can be treated as decimal
-            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+            if (expected is decimal eDec && IsWithinDecimalRange(actual))
             {
-                var difference = eDec - Convert.ToDecimal(actual);
+                var difference = eDec - ConvertToValue<decimal>(actual);
                 return isAbsolute ? difference : difference / eDec * 100;
             }
-            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+            else if (actual is decimal aDec && IsWithinDecimalRange(expected))
             {
-                var difference = Convert.ToDecimal(expected) - aDec;
-                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+                decimal expectedValue = ConvertToValue<decimal>(expected);
+                var difference = expectedValue - aDec;
+                return isAbsolute ? difference : difference / expectedValue * 100;
             }
 
 #if !NETFRAMEWORK
@@ -557,6 +575,14 @@ namespace NUnit.Framework.Constraints
                 var difference = ConvertToValue<double>(expected) - ConvertToValue<double>(actual);
                 return isAbsolute ? difference : difference / ConvertToValue<double>(expected) * 100;
             }
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
+
+            if (expected is Int128 || actual is Int128)
+                return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
+#endif
 
             if (expected is nuint || actual is nuint)
             {
@@ -734,6 +760,14 @@ namespace NUnit.Framework.Constraints
                 return T.CreateChecked(nintValue);
             if (o is nuint nuintValue)
                 return T.CreateChecked(nuintValue);
+
+            // Convert values that do not fit exactly in a double directly
+            if (o is long longValue)
+                return T.CreateChecked(longValue);
+            if (o is ulong ulongValue)
+                return T.CreateChecked(ulongValue);
+            if (o is decimal decimalValue)
+                return T.CreateChecked(decimalValue);
             return T.CreateChecked(Convert.ToDouble(o));
         }
 #endif
