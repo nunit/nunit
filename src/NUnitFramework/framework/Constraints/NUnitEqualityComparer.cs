@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         ///     <see langword="null"/> if the objects cannot be compared using the method.
         ///     Otherwise the result of the comparison is returned.
         /// </returns>
-        private delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
+        internal delegate EqualMethodResult EqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer);
 
         /// <summary>
         /// List of comparers used to compare pairs of objects.
@@ -256,12 +256,9 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return EqualMethodResult.ComparedEqual;
 
-            foreach (EqualMethod equalMethod in Comparers)
-            {
-                EqualMethodResult result = equalMethod(x, y, ref tolerance, state, this);
-                if (result != EqualMethodResult.TypesNotSupported)
-                    return result;
-            }
+            EqualMethod? equalMethod = FindEqualMethod(x, y, ref tolerance, state, out EqualMethodResult result);
+            if (equalMethod is not null)
+                return result;
 
             if (_compareProperties)
             {
@@ -291,6 +288,39 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
+            return null;
+        }
+
+        internal EqualMethod? FindEqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, out EqualMethodResult result)
+        {
+            if (_externalComparers is not null)
+            {
+                foreach (EqualityAdapter adapter in _externalComparers)
+                {
+                    if (adapter.CanCompare(x, y))
+                    {
+                        result = adapter.AreEqual(x, y) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                        return (object a, object b, ref Tolerance _, ComparisonState _, NUnitEqualityComparer _) =>
+                            adapter.AreEqual(a, b) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
+                    }
+                }
+            }
+
+            foreach (EqualMethod equalMethod in Comparers)
+            {
+                result = equalMethod(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return equalMethod;
+            }
+
+            if (_compareProperties)
+            {
+                result = PropertiesComparer.Equal(x, y, ref tolerance, state, this);
+                if (result != EqualMethodResult.TypesNotSupported)
+                    return PropertiesComparer.Equal;
+            }
+
+            result = EqualMethodResult.TypesNotSupported;
             return null;
         }
 
