@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Numerics;
+#endif
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -411,6 +414,134 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             ];
+        }
+
+        [TestCaseSource(nameof(NegativeSignedAndUnsignedTestCases))]
+        public void NegativeSignedDoesNotEqualUnsigned_Issue5472(object signed, object unsigned)
+        {
+            Assert.That(Numerics.AreEqual(signed, unsigned, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(unsigned, signed, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(NegativeSignedAndUnsignedTestCases))]
+        public void NegativeSignedComparesLessThanUnsigned_Issue5472(object signed, object unsigned)
+        {
+            Assert.That(Numerics.Compare(signed, unsigned), Is.LessThan(0));
+            Assert.That(Numerics.Compare(unsigned, signed), Is.GreaterThan(0));
+        }
+
+        private static TestCaseData[] NegativeSignedAndUnsignedTestCases()
+        {
+            return [
+                new TestCaseData((sbyte)-1, 1u),
+                new TestCaseData((short)-1, 1u),
+                new TestCaseData(-1, 1u),
+                new TestCaseData(int.MinValue, uint.MaxValue),
+                new TestCaseData(-1, 1ul),
+                new TestCaseData(-1L, 1ul),
+                new TestCaseData(-1L, ulong.MaxValue),
+                new TestCaseData(long.MinValue, ulong.MaxValue),
+                new TestCaseData(-1, (nuint)1),
+                new TestCaseData((nint)(-1), 1u),
+                new TestCaseData((nint)(-1), (nuint)1),
+                new TestCaseData((nint)(-1), ulong.MaxValue),
+#if !NETFRAMEWORK
+                new TestCaseData((Int128)(-1), 1u),
+                new TestCaseData((Int128)(-1), ulong.MaxValue),
+                new TestCaseData(-1, (UInt128)1),
+                new TestCaseData((Int128)(-1), (UInt128)1),
+                new TestCaseData(Int128.MinValue, UInt128.MaxValue),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(EqualSignedAndUnsignedTestCases))]
+        public void NonNegativeSignedEqualsUnsigned(object signed, object unsigned)
+        {
+            Assert.That(Numerics.AreEqual(signed, unsigned, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual(unsigned, signed, ref _zeroTolerance), Is.True);
+        }
+
+        [TestCaseSource(nameof(EqualSignedAndUnsignedTestCases))]
+        public void NonNegativeSignedComparesEqualToUnsigned(object signed, object unsigned)
+        {
+            Assert.That(Numerics.Compare(signed, unsigned), Is.Zero);
+            Assert.That(Numerics.Compare(unsigned, signed), Is.Zero);
+        }
+
+        private static TestCaseData[] EqualSignedAndUnsignedTestCases()
+        {
+            return [
+                new TestCaseData(0, 0u),
+                new TestCaseData(int.MaxValue, (uint)int.MaxValue),
+                new TestCaseData(5, 5ul),
+                new TestCaseData(long.MaxValue, (ulong)long.MaxValue),
+                new TestCaseData((nint)5, (nuint)5),
+#if !NETFRAMEWORK
+                new TestCaseData(5, (UInt128)5),
+                new TestCaseData(Int128.MaxValue, (UInt128)Int128.MaxValue),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(SignedAndUnsignedWithinToleranceTestCases))]
+        public void NegativeSignedEqualsUnsignedWithinTolerance(object signed, object unsigned, Tolerance tolerance)
+        {
+            Assert.That(Numerics.AreEqual(signed, unsigned, ref tolerance), Is.True);
+        }
+
+        private static TestCaseData[] SignedAndUnsignedWithinToleranceTestCases()
+        {
+            return [
+                new TestCaseData(-1, 1u, new Tolerance(2)),
+                new TestCaseData(-1L, 1ul, new Tolerance(2ul)),
+                new TestCaseData((nint)(-1), (nuint)1, new Tolerance(2)),
+                new TestCaseData(-10, 9u, new Tolerance(200).Percent),
+                new TestCaseData(-10L, 9ul, new Tolerance(200).Percent),
+#if !NETFRAMEWORK
+                new TestCaseData((Int128)(-1), (UInt128)1, new Tolerance(2)),
+                new TestCaseData((Int128)(-10), (UInt128)9, new Tolerance(200).Percent),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(SignedAndUnsignedDifferenceTestCases))]
+        public void CanCalculateDifferenceBetweenSignedAndUnsigned(object expected, object actual, ToleranceMode mode, object expectedDifference)
+        {
+            Assert.That(Numerics.Difference(expected, actual, mode), Is.EqualTo(expectedDifference));
+        }
+
+        private static TestCaseData[] SignedAndUnsignedDifferenceTestCases()
+        {
+            return [
+                new TestCaseData(-1, 1u, ToleranceMode.Linear, -2),
+                new TestCaseData(1u, -1, ToleranceMode.Linear, 2),
+                new TestCaseData(-1L, 1ul, ToleranceMode.Linear, -2),
+                new TestCaseData(ulong.MaxValue, -1L, ToleranceMode.Linear, (decimal)ulong.MaxValue + 1),
+                new TestCaseData((nint)(-1), (nuint)1, ToleranceMode.Linear, -2),
+                new TestCaseData(-10, 5u, ToleranceMode.Percent, 150),
+                new TestCaseData(-10L, 5ul, ToleranceMode.Percent, 150),
+                new TestCaseData(0L, 5ul, ToleranceMode.Percent, double.NegativeInfinity),
+#if !NETFRAMEWORK
+                new TestCaseData((Int128)(-1), (UInt128)1, ToleranceMode.Linear, (BigInteger)(-2)),
+                new TestCaseData(UInt128.MaxValue, Int128.MinValue, ToleranceMode.Linear, (BigInteger)UInt128.MaxValue - (BigInteger)Int128.MinValue),
+                new TestCaseData((Int128)(-10), (UInt128)5, ToleranceMode.Percent, 150),
+#endif
+            ];
+        }
+
+        [Test]
+        public void MixedSignedAndUnsignedConstraints_Issue5472()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(-10, Is.Not.EqualTo(10u));
+                Assert.That(-1L, Is.Not.EqualTo(ulong.MaxValue));
+                Assert.That(-1, Is.EqualTo(1u).Within(2));
+                Assert.That(1u, Is.EqualTo(-1).Within(2u));
+                Assert.That(-1, Is.LessThan(1u));
+                Assert.That(1ul, Is.GreaterThan(-1L));
+            }
         }
 
         [Test]
