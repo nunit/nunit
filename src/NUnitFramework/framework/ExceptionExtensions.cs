@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -58,6 +59,16 @@ namespace NUnit.Framework
             {
                 return Result.Error<IDictionary>(ex.GetType().Name + " was thrown by the Exception.Data property.");
             }
+        }
+
+        /// <summary>
+        /// Sets the result state and message of the current test before the exception is thrown,
+        /// so code that catches the exception can read them from <see cref="TestContext.Result"/>.
+        /// </summary>
+        public static ResultStateException SetPreliminaryResult(this ResultStateException exception)
+        {
+            TestExecutionContext.CurrentContext.CurrentResult.SetPreliminaryResult(exception.ResultState, exception.Message);
+            return exception;
         }
     }
 }

@@ -63,6 +63,7 @@ namespace NUnit.Framework.Internal
         private ResultState _resultState;
         private string _message;
         private string? _stackTrace;
+        private string? _childResultsMessage;
 
         private readonly List<AssertionResult> _assertionResults = new();
         private readonly List<TestAttachment> _testAttachments = new();
@@ -99,6 +100,7 @@ namespace NUnit.Framework.Internal
             _resultState = other._resultState;
             _message = other._message;
             _stackTrace = other._stackTrace;
+            _childResultsMessage = other._childResultsMessage;
             _duration = other._duration;
             StartTime = other.StartTime;
             EndTime = other.EndTime;
@@ -682,6 +684,41 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Sets a preliminary result before a <see cref="ResultStateException"/> propagates, unless the outcome
+        /// is already decided or the new state would rank lower than the current one.
+        /// A TearDown that swallows the exception then does not change the outcome of the test.
+        /// </summary>
+        internal void SetPreliminaryResult(ResultState resultState, string message)
+        {
+            if (!IsOutcomeDecided && resultState.Status >= ResultState.Status)
+            {
+                SetResult(resultState, message);
+            }
+        }
+
+        /// <summary>
+        /// Records a warning and updates the result at once, so the test can read it from
+        /// <see cref="TestContext.Result"/>. A result set by child results is updated
+        /// later, when the suite completes, because updating it here would replace the child message.
+        /// </summary>
+        internal void RecordWarning(string message, string? stackTrace)
+        {
+            RecordAssertion(AssertionStatus.Warning, message, stackTrace);
+            if (!IsSetByChildResults)
+            {
+                RecordTestCompletion();
+            }
+        }
+
+        /// <summary>
+        /// True when an exception has been recorded as an assertion result,
+        /// or when the result is set by child results.
+        /// </summary>
+        private bool IsOutcomeDecided => AssertionResultCount > 0 || IsSetByChildResults;
+
+        private bool IsSetByChildResults => ResultState.Site == FailureSite.Child;
+
+        /// <summary>
         /// Set the test result based on the type of exception thrown
         /// </summary>
         /// <param name="ex">The exception that was thrown</param>
@@ -819,21 +856,52 @@ namespace NUnit.Framework.Internal
                         break;
                     case 1:
                         AssertionResult assertionResult = _assertionResults[0];
-                        SetResult(
-                            resultState ?? AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site),
+                        SetCompletionResult(
+                            resultState ?? KeepWorseChildResult(AssertionStatusToResultState(assertionResult.Status).WithSite(assertionResult.Site)),
                             assertionResult.Message,
                             assertionResult.StackTrace);
                         break;
                     default:
-                        SetResult(
-                            resultState ?? AssertionStatusToResultState(WorstAssertionStatus),
-                            CreateLegacyFailureMessage());
+                        SetCompletionResult(
+                            resultState ?? KeepWorseChildResult(AssertionStatusToResultState(WorstAssertionStatus)),
+                            CreateLegacyFailureMessage(),
+                            null);
                         break;
                 }
             }
             finally
             {
                 RwLock.ExitUpgradeableReadLock();
+            }
+        }
+
+        /// <summary>
+        /// A warning recorded after the child results, for example in OneTimeTearDown,
+        /// must not hide a worse result set by the child results.
+        /// </summary>
+        private ResultState KeepWorseChildResult(ResultState fromAssertions)
+            => IsSetByChildResults && ResultState.Status > fromAssertions.Status ? ResultState : fromAssertions;
+
+        /// <summary>
+        /// Sets the result from the assertion results. Once the child results have set the result,
+        /// the message is the child message followed by the current assertion message.
+        /// It is rebuilt on every call, so messages from earlier calls are not repeated.
+        /// </summary>
+        private void SetCompletionResult(ResultState resultState, string message, string? stackTrace)
+        {
+            RwLock.EnterWriteLock();
+            try
+            {
+                if (IsSetByChildResults)
+                    _childResultsMessage ??= Message;
+
+                Message = _childResultsMessage is null ? message : _childResultsMessage + Environment.NewLine + message;
+                ResultState = resultState;
+                StackTrace = stackTrace;
+            }
+            finally
+            {
+                RwLock.ExitWriteLock();
             }
         }
 

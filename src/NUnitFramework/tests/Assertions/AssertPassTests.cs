@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Interfaces;
+
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
@@ -19,6 +21,24 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(
                 () => Assert.Pass("MESSAGE"),
                 Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE"));
+        }
+
+        [Test]
+        public void SetsCurrentResultBeforeThrowing()
+        {
+            try
+            {
+                Assert.Pass("MESSAGE");
+            }
+            catch (SuccessException)
+            {
+            }
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(TestContext.CurrentContext.Result.Outcome, Is.EqualTo(ResultState.Success));
+                Assert.That(TestContext.CurrentContext.Result.Message, Is.EqualTo("MESSAGE"));
+            }
         }
 
         [Test]

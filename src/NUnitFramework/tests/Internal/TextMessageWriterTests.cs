@@ -147,6 +147,28 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(message, Does.Not.Contain("Off by"));
         }
 
+        [Test]
+        public void DisplayDifferences_Unsigned_LinearTolerance_NoUnderflow()
+        {
+            _writer.DisplayDifferences(1UL, 3UL, new Tolerance(1UL));
+            string message = _writer.ToString();
+            Assert.That(message, Is.EqualTo(
+                TextMessageWriter.Pfx_Expected + "1 +/- 1" + NL +
+                TextMessageWriter.Pfx_Actual + "3" + NL +
+                TextMessageWriter.Pfx_Difference + "2.0d" + NL));
+        }
+
+        [Test]
+        public void DisplayDifferences_Unsigned_PercentTolerance_NoUnderflow()
+        {
+            _writer.DisplayDifferences(100UL, 120UL, new Tolerance(10.0).Percent);
+            string message = _writer.ToString();
+            Assert.That(message, Is.EqualTo(
+                TextMessageWriter.Pfx_Expected + "100 +/- 10.0d Percent" + NL +
+                TextMessageWriter.Pfx_Actual + "120" + NL +
+                TextMessageWriter.Pfx_Difference + "20.0d Percent" + NL));
+        }
+
         private string Q(string s)
         {
             return "\"" + s + "\"";

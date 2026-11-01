@@ -288,6 +288,23 @@ namespace NUnit.Framework.Tests.Internal
             });
         }
 
+        [Test]
+        public static void InvokeMethodUnwrapsTargetInvocationException()
+        {
+            Assert.That(() => Reflect.InvokeMethod(GetPrivateMethod(nameof(MethodThrowingException)), null),
+                Throws.TypeOf<NUnitException>().With.InnerException.TypeOf<Exception>());
+        }
+
+        [Test]
+        public static void InvokeMethodDoesNotUnwrapTargetInvocationExceptionThrownByInvokedMethod_Issue5521()
+        {
+            // Regression: InvokeMethod used to decide what to unwrap by looking for "NUnit.Framework" in the
+            // stack trace. That removed this method's own exception, because its stack trace mentions
+            // NUnit.Framework.Tests, and kept the reflection wrapper under NativeAOT with StackTraceSupport=false.
+            Assert.That(() => Reflect.InvokeMethod(GetPrivateMethod(nameof(MethodThrowingTargetInvocationException)), null),
+                Throws.TypeOf<NUnitException>().With.InnerException.TypeOf<TargetInvocationException>());
+        }
+
         private static int MethodReturning42() => 42;
 
         private static int MethodThrowingException()

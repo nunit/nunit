@@ -4,7 +4,6 @@ using System;
 #if !NETFRAMEWORK
 using System.Numerics;
 #endif
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -217,12 +216,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -261,12 +255,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -453,14 +442,6 @@ namespace NUnit.Framework.Constraints
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
 
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
-
-            if (expected is Int128 || actual is Int128)
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-
             if (expected is decimal || actual is decimal)
             {
                 // Treat as decimal if one is decimal and other can be treated as decimal
@@ -481,6 +462,14 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
                 return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
+#endif
+
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
+
+            if (expected is Int128 || actual is Int128)
+                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
 #endif
 
             if (expected is nuint || actual is nuint)
@@ -574,7 +563,7 @@ namespace NUnit.Framework.Constraints
                 nuint expectedValue = ConvertToValue<nuint>(expected);
                 nuint actualValue = ConvertToValue<nuint>(actual);
 
-                var difference = expectedValue - actualValue;
+                var difference = expectedValue >= actualValue ? expectedValue - actualValue : actualValue - expectedValue;
                 return isAbsolute ? difference : difference / (double)expectedValue * 100;
             }
 
@@ -589,8 +578,10 @@ namespace NUnit.Framework.Constraints
 
             if (expected is ulong || actual is ulong)
             {
-                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+                var eUlong = Convert.ToUInt64(expected);
+                var aUlong = Convert.ToUInt64(actual);
+                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
+                return isAbsolute ? difference : difference / (double)eUlong * 100;
             }
 
             if (expected is long || actual is long)
@@ -601,8 +592,10 @@ namespace NUnit.Framework.Constraints
 
             if (expected is uint || actual is uint)
             {
-                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+                var eUint = Convert.ToUInt32(expected);
+                var aUint = Convert.ToUInt32(actual);
+                var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
+                return isAbsolute ? difference : difference / (double)eUint * 100;
             }
 
             var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
@@ -616,6 +609,17 @@ namespace NUnit.Framework.Constraints
         {
             var difference = expected - actual;
             var hundred = T.CreateChecked(100);
+
+            return isAbsolute ? difference : difference * hundred / expected;
+        }
+
+        // Unsigned-only overload: subtract the smaller value from the larger one
+        // so the difference can never underflow when the actual value exceeds
+        // the expected value (e.g. UInt128).
+        private static UInt128 Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
+        {
+            var difference = expected >= actual ? expected - actual : actual - expected;
+            var hundred = UInt128.CreateChecked(100);
 
             return isAbsolute ? difference : difference * hundred / expected;
         }
@@ -635,12 +639,7 @@ namespace NUnit.Framework.Constraints
                 return expected.Equals(actual);
             }
 
-            if (tolerance.IsUnsetOrDefault)
-            {
-                var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp is not null && !temp.IsUnsetOrDefault)
-                    tolerance = temp;
-            }
+            Tolerance.ApplyDefaultFloatingPointTolerance(ref tolerance);
 
             switch (tolerance.Mode)
             {
@@ -654,8 +653,7 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T relativeError = (expected >= actual ? expected - actual : actual - expected) / expected;
+                    T relativeError = T.Abs((expected - actual) / expected);
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
@@ -699,15 +697,22 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static T ConvertToValue<T>(object o)
+        internal static T ConvertToValue<T>(object o)
 #if NETFRAMEWORK
         {
             if (o is T tol)
                 return tol;
+
+            // nint and nuint are not IConvertible, so we need to convert them to long/ulong first
+            if (o is nint nintValue)
+                o = (long)nintValue;
+            else if (o is nuint nuintValue)
+                o = (ulong)nuintValue;
+
             if (typeof(T) == typeof(nint))
-                return (T)(object)Convert.ToInt64(o);
+                return (T)(object)new IntPtr(Convert.ToInt64(o));
             if (typeof(T) == typeof(nuint))
-                return (T)(object)Convert.ToUInt64(o);
+                return (T)(object)new UIntPtr(Convert.ToUInt64(o));
             if (typeof(T) == typeof(double))
                 return (T)(object)Convert.ToDouble(o);
             if (typeof(T) == typeof(float))

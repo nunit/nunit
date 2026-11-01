@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestFixtureSourceData;
 
@@ -146,6 +147,57 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(suite.Tests[1].Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Runs long"));
                 Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Explicit));
             });
+        }
+
+        [Test]
+        public void CanSetCategoriesOnIndividualFixtures()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(suite.Properties[PropertyNames.Category], Is.EquivalentTo(new[] { "FromAttribute" }));
+                Assert.That(suite.Tests[0].Properties[PropertyNames.Category], Is.Empty);
+                Assert.That(suite.Tests[1].Properties[PropertyNames.Category], Is.EquivalentTo(new[] { "Regression", "Slow" }));
+            }
+        }
+
+        [Test]
+        public void CategoryFilterSelectsTestsInFixtureWithCategoryFromSource()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
+            var filter = new CategoryFilter("Regression");
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(filter.Pass(suite.Tests[0].Tests[0]), Is.False);
+                Assert.That(filter.Pass(suite.Tests[1].Tests[0]), Is.True);
+            }
+        }
+
+        [Test]
+        public void CanSetDescriptionOnIndividualFixtures()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(suite.Tests[0].Properties.Get(PropertyNames.Description), Is.Null);
+                Assert.That(suite.Tests[2].Properties.Get(PropertyNames.Description), Is.EqualTo("Fixture description"));
+            }
+        }
+
+        [Test]
+        public void CanSetPropertiesOnIndividualFixtures()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(IndividualInstancesMayHaveCategoriesAndProperties));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(suite.Tests[3].Properties.Get("Owner"), Is.EqualTo("NUnit"));
+                Assert.That(suite.Tests[3].Properties.Get("Priority"), Is.EqualTo(1));
+                Assert.That(suite.Tests[3].Properties.Get("Weight"), Is.EqualTo(1.5));
+            }
         }
 
         #region Test name tests

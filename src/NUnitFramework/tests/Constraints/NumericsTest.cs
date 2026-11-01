@@ -237,18 +237,22 @@ namespace NUnit.Framework.Tests.Constraints
             [
                 new TestCaseData<decimal>(10000m, 9500m) { ExpectedResult = 500m },
                 new TestCaseData<ulong>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<ulong>(0, 500) { ExpectedResult = 500 },
                 new TestCaseData<int>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<uint>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<uint>(0, 500) { ExpectedResult = 500 },
                 new TestCaseData<nint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(10000, 9500) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(500, 0) { ExpectedResult = 500 },
+                new TestCaseData<nuint>(0, 500) { ExpectedResult = 500 },
                 new TestCaseData<ushort>(500, 0) { ExpectedResult = 500 },
                 new TestCaseData<ushort>(0, 500) { ExpectedResult = -500 },
 #if !NETFRAMEWORK
                 new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
-                new TestCaseData<UInt128>((UInt128)500, (UInt128)0) { ExpectedResult = 500 }
+                new TestCaseData<UInt128>((UInt128)500, (UInt128)0) { ExpectedResult = 500 },
+                new TestCaseData<UInt128>((UInt128)0, (UInt128)500) { ExpectedResult = 500 }
 #endif
             ];
         }
@@ -283,14 +287,17 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<int, int, object>(10000, 8500, 15),
                 new TestCaseData<int, int, object>(10000, 11500, -15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
+                new TestCaseData<uint, uint, object>(10000u, 11500u, 15),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
                 new TestCaseData<long, long, object>(10000, 11500, -15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
+                new TestCaseData<ulong, ulong, object>(10000u, 11500u, 15),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
                 new TestCaseData<nint, nint, object>(10000, 11500, -15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
+                new TestCaseData<nuint, nuint, object>(10000u, 11500u, 15),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
@@ -412,6 +419,49 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsOnDecimalAbovePercentage()
         {
             Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 11500m, ref _tenPercent), Is.True));
+        }
+
+        [TestCaseSource(nameof(NegativeFloatingPointOutsideOfPercentageTestCases))]
+        public void FailsOnNegativeFloatingPointOutsideOfPercentage_Issue5500(object expected, object actual)
+        {
+            Assert.That(Numerics.AreEqual(expected, actual, ref _tenPercent), Is.False);
+        }
+
+        private static TestCaseData[] NegativeFloatingPointOutsideOfPercentageTestCases()
+        {
+            return [
+                new TestCaseData(-10000d, -8500d),
+                new TestCaseData(-10000d, -11500d),
+                new TestCaseData(-10000d, 10000d),
+                new TestCaseData(-10000f, -8500f),
+                new TestCaseData(-10000f, -11500f),
+                new TestCaseData(-10000f, 10000f),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)(-10000), (Half)(-8500)),
+                new TestCaseData((Half)(-10000), (Half)(-11500)),
+                new TestCaseData((Half)(-10000), (Half)10000),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(NegativeFloatingPointWithinPercentageTestCases))]
+        public void CanMatchNegativeFloatingPointWithPercentage(object expected, object actual)
+        {
+            Assert.That(Numerics.AreEqual(expected, actual, ref _tenPercent), Is.True);
+        }
+
+        private static TestCaseData[] NegativeFloatingPointWithinPercentageTestCases()
+        {
+            return [
+                new TestCaseData(-10000d, -9500d),
+                new TestCaseData(-10000d, -10500d),
+                new TestCaseData(-10000f, -9500f),
+                new TestCaseData(-10000f, -10500f),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)(-10000), (Half)(-9500)),
+                new TestCaseData((Half)(-10000), (Half)(-10500)),
+#endif
+            ];
         }
 
         [Test]

@@ -415,7 +415,8 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException e)
             {
-                throw new NUnitException("Rethrown", e.Unwrap());
+                // The TargetInvocationException comes from method.Invoke above, so exactly one level is ours to remove.
+                throw new NUnitException("Rethrown", e.InnerException ?? e);
             }
             catch (Exception e)
 #if THREAD_ABORT

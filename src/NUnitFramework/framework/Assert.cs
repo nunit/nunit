@@ -83,7 +83,7 @@ namespace NUnit.Framework
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
-            throw new SuccessException(message);
+            throw new SuccessException(message).SetPreliminaryResult();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace NUnit.Framework
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
-            throw new IgnoreException(message);
+            throw new IgnoreException(message).SetPreliminaryResult();
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace NUnit.Framework
             if (TestExecutionContext.CurrentContext.IsInsideMultipleAssert)
                 throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
 
-            throw new InconclusiveException(message);
+            throw new InconclusiveException(message).SetPreliminaryResult();
         }
 
         /// <summary>
@@ -363,8 +363,7 @@ namespace NUnit.Framework
 
         private static void IssueWarning(string message)
         {
-            var result = TestExecutionContext.CurrentContext.CurrentResult;
-            result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());
+            TestExecutionContext.CurrentContext.CurrentResult.RecordWarning(message, GetStackTrace());
         }
 
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
