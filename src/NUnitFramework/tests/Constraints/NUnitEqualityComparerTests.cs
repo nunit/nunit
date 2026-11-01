@@ -409,14 +409,12 @@ namespace NUnit.Framework.Tests.Constraints
     /// <summary>
     /// Treats strings as equal when their lengths differ by at most the tolerance.
     /// </summary>
-    internal sealed class LengthWithinToleranceAdapter : EqualityAdapter
+    internal sealed class LengthWithinToleranceAdapter : EqualityAdapter<string>
     {
-        public override bool CanCompare(object? x, object? y) => x is string && y is string;
+        public override bool AreEqual(string x, string y) => x.Length == y.Length;
 
-        public override bool AreEqual(object? x, object? y) => ((string)x!).Length == ((string)y!).Length;
-
-        public override bool AreEqual(object? x, object? y, ref Tolerance tolerance)
-            => Math.Abs(((string)x!).Length - ((string)y!).Length) <= (int)tolerance.Amount;
+        public override bool AreEqual(string x, string y, ref Tolerance tolerance)
+            => Math.Abs(x.Length - y.Length) <= (int)tolerance.Amount;
     }
 
     internal class SelfContainer : IEnumerable
