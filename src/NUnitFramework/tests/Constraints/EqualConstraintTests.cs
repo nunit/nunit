@@ -1700,6 +1700,14 @@ namespace NUnit.Framework.Tests.Constraints
             }
 
             [Test]
+            public void ToleranceWithProvidedComparerIsNotSupportedForItemComparison()
+            {
+                var constraint = Is.EqualTo(new[] { 1, 2 }).Using<int>((x, y) => x == y).Within(1);
+
+                Assert.That(() => constraint.ApplyTo(new[] { 1, 2 }), Throws.TypeOf<NotSupportedException>());
+            }
+
+            [Test]
             public void UsesProvidedComparersForItemComparisonWithSelf()
             {
                 var a = "a";
