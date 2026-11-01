@@ -273,7 +273,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         public sealed override bool AreEqual(object? x, object? y)
         {
-            if (ReferenceEquals(x, y))
+            if (x is null && y is null)
                 return true;
             if (x is null || y is null)
                 return false;
@@ -283,7 +283,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         public sealed override bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
-            if (ReferenceEquals(x, y))
+            if (x is null && y is null)
                 return true;
             if (x is null || y is null)
                 return false;
