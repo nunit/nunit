@@ -11,6 +11,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 #if NETFRAMEWORK
@@ -124,6 +125,7 @@ namespace NUnit.Framework.Internal
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
             CurrentValueFormatter = other.CurrentValueFormatter;
+            CurrentNullEquivalentPredicate = other.CurrentNullEquivalentPredicate;
 
             Dispatcher = other.Dispatcher;
             ParallelScope = other.ParallelScope;
@@ -404,6 +406,12 @@ namespace NUnit.Framework.Internal
         public ValueFormatter CurrentValueFormatter { get; private set; }
 
         /// <summary>
+        /// Identifies non-null values that null and equality constraints treat as null,
+        /// or <see langword="null"/> if no predicate was added.
+        /// </summary>
+        internal Func<object, bool>? CurrentNullEquivalentPredicate { get; private set; }
+
+        /// <summary>
         /// If true, all tests must run on the same thread. No new thread may be spawned.
         /// </summary>
         public bool IsSingleThreaded { get; set; }
@@ -493,6 +501,47 @@ namespace NUnit.Framework.Internal
         {
             CurrentValueFormatter = formatterFactory(CurrentValueFormatter);
         }
+
+        /// <summary>
+        /// Adds a predicate that identifies non-null values that null and equality
+        /// constraints treat as null. Predicates added earlier still apply.
+        /// Values of types that NUnit compares with their default equality
+        /// (strings, primitives, enums, other numeric types and <see cref="DateTime"/>)
+        /// are never passed to the predicate.
+        /// </summary>
+        /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null.</param>
+        public void AddNullEquivalent(Func<object, bool> isNullEquivalent)
+        {
+            ArgumentNullException.ThrowIfNull(isNullEquivalent);
+
+            Func<object, bool>? previous = CurrentNullEquivalentPredicate;
+            CurrentNullEquivalentPredicate = previous is null
+                ? isNullEquivalent
+                : value => previous(value) || isNullEquivalent(value);
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="value"/> is null, or is equivalent to null
+        /// according to the predicates added to the current context.
+        /// </summary>
+        internal static bool IsNullOrNullEquivalent([NotNullWhen(false)] object? value)
+        {
+            if (value is null)
+                return true;
+
+            Func<object, bool>? predicate = GetNullEquivalentPredicate();
+
+            // Collections of these types are compared with EqualityComparer<T>.Default, which never
+            // calls the predicate, so they are excluded everywhere to keep all constraints consistent.
+            return predicate is not null && !value.GetType().CanUseDefaultEquality() && predicate(value);
+        }
+
+        /// <summary>
+        /// True if a null-equivalent predicate applies in the current context.
+        /// </summary>
+        internal static bool HasNullEquivalentPredicate => GetNullEquivalentPredicate() is not null;
+
+        private static Func<object, bool>? GetNullEquivalentPredicate() => CurrentContext.CurrentNullEquivalentPredicate;
 
         private TestExecutionContext CreateIsolatedContext()
         {

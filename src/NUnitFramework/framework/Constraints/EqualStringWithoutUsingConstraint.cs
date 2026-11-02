@@ -4,6 +4,8 @@ using System;
 using System.Text;
 using NUnit.Framework.Constraints.Comparers;
 
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -133,7 +135,7 @@ namespace NUnit.Framework.Constraints
         {
             bool hasSucceeded;
 
-            if (actual is null)
+            if (TestExecutionContext.IsNullOrNullEquivalent(actual))
             {
                 hasSucceeded = _expected is null;
             }

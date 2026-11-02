@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints.Comparers;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -172,7 +173,14 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !MayContainNullEquivalentItems(type);
+        }
+
+        // A tuple's default equality compares its items without the null-equivalent predicate,
+        // while NUnitEqualityComparer applies it to each item.
+        private static bool MayContainNullEquivalentItems(Type type)
+        {
+            return TestExecutionContext.HasNullEquivalentPredicate && type.IsTupleOrValueTuple() && !type.CanUseDefaultEquality();
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -182,7 +190,30 @@ namespace NUnit.Framework.Constraints
             typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public)!;
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
-            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
+        {
+            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalentPredicate || (Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanUseDefaultEquality()
+                ? EqualityComparer<T>.Default
+                : NullEquivalentEqualityComparer<T>.Instance;
+
+            return NonUniqueItemsInternal(actual, comparer);
+        }
+
+        // Default equality, except that all null and null-equivalent items are equal to each other.
+        private sealed class NullEquivalentEqualityComparer<T> : IEqualityComparer<T>
+        {
+            public static readonly NullEquivalentEqualityComparer<T> Instance = new();
+
+            public bool Equals(T? x, T? y)
+            {
+                bool xIsNull = TestExecutionContext.IsNullOrNullEquivalent(x);
+                bool yIsNull = TestExecutionContext.IsNullOrNullEquivalent(y);
+
+                return xIsNull || yIsNull ? xIsNull && yIsNull : EqualityComparer<T>.Default.Equals(x, y);
+            }
+
+            public int GetHashCode(T obj)
+                => TestExecutionContext.IsNullOrNullEquivalent(obj) ? 0 : EqualityComparer<T>.Default.GetHashCode(obj);
+        }
 
         private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, IgnoringLineEndingFormat));

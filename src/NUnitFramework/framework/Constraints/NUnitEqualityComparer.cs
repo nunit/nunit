@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints.Comparers;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -245,6 +246,14 @@ namespace NUnit.Framework.Constraints
                 {
                     return EqualMethodResult.ToleranceNotSupported;
                 }
+            }
+
+            if (TestExecutionContext.HasNullEquivalentPredicate)
+            {
+                if (TestExecutionContext.IsNullOrNullEquivalent(x))
+                    x = null;
+                if (TestExecutionContext.IsNullOrNullEquivalent(y))
+                    y = null;
             }
 
             if (x is null && y is null)
