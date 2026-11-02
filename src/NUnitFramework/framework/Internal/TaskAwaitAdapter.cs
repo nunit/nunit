@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -9,6 +12,13 @@ namespace NUnit.Framework.Internal
 {
     internal static class TaskAwaitAdapter
     {
+#if !NETFRAMEWORK
+        [DynamicDependency(nameof(Task<object>.GetAwaiter), typeof(Task<>))]
+        [DynamicDependency("get_IsCompleted", typeof(TaskAwaiter<>))]
+        [DynamicDependency(nameof(TaskAwaiter<object>.GetResult), typeof(TaskAwaiter<>))]
+        [DynamicDependency(nameof(TaskAwaiter<object>.OnCompleted), typeof(TaskAwaiter<>))]
+        [DynamicDependency(nameof(TaskAwaiter<object>.UnsafeOnCompleted), typeof(TaskAwaiter<>))]
+#endif
         public static AwaitAdapter Create(Task task)
         {
             var genericTaskType = task
@@ -18,6 +28,16 @@ namespace NUnit.Framework.Internal
 
             if (genericTaskType is not null)
             {
+#if !NETFRAMEWORK
+                // NativeAOT cannot generate GenericAdapter<T> for a runtime-only T,
+                // including the private result type used by async Task methods.
+                if (!RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return CSharpPatternBasedAwaitAdapter.TryCreate(task, genericTaskType)
+                        ?? throw new NotSupportedException($"Cannot await task of type {task.GetType()}.");
+                }
+#endif
+
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
 
                 // A non-generic async method or lambda returns a Task<VoidTaskResult> at runtime.

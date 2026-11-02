@@ -110,5 +110,34 @@ The other test projects contain tests designed to fail purposely for integration
 
 1. By design, the Package target does not depend on Build. This is to allow re-packaging when necessary without changing the binaries themselves. Of course, this means that you have to be very careful that the build is up to date before packaging.
 
+### NativeAOT regression tests
+
+The standalone `src/NUnitFramework/nativeaot-tests` executable covers task and
+value-task results, exceptions, cancellation, async lifecycle methods, and
+single-threaded continuations under NativeAOT (see [#5358](https://github.com/nunit/nunit/issues/5358)).
+It is intentionally separate from `dotnet test`: running these tests on CoreCLR
+does not exercise the NativeAOT dispatch path.
+
+For example, on an Apple Silicon Mac with the native compiler prerequisites installed:
+
+```sh
+dotnet publish src/NUnitFramework/nativeaot-tests/nunit.nativeaot.tests.csproj \
+  -c Release -f net10.0 -r osx-arm64 -o artifacts/nativeaot-tests
+./artifacts/nativeaot-tests/nunit.nativeaot.tests --workers=0
+```
+
+Use the appropriate native runtime identifier on other platforms. This executable
+preserves its fixture explicitly rather than rooting the entire application.
+NUnit still emits trimming/AOT analysis warnings for other reflection-based
+features; this project leaves those diagnostics visible, but does not promote
+them to errors. Its complete-metadata settings do not imply that NUnit supports
+arbitrary applications with default trimming.
+
+NativeAOT cannot generate arbitrary closed generic test methods at runtime.
+Preserving the generic method's metadata with `DynamicDependency` is not enough:
+each value-type instantiation must also be statically available. The executable's
+entry point retains a strongly typed delegate to `GenericValueType<int>` as an
+example of that explicit bootstrap contract. A generated bootstrap can do the same
+for known test cases; runtime-only generic shapes remain unsupported.
 
 
