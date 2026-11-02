@@ -19,6 +19,13 @@ namespace NUnit.Framework.Internal
             if (genericTaskType is not null)
             {
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
+
+                // A non-generic async method or lambda returns a Task<VoidTaskResult> at runtime.
+                // Its result is meaningless, so don't construct a GenericAdapter<VoidTaskResult>
+                // through MakeGenericType, which needs runtime code generation under NativeAOT.
+                if (IsVoidTaskResult(typeArgument))
+                    return new NonGenericAdapter(task);
+
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                      .MakeGenericType(typeArgument)
                      .GetConstructor(new[] { typeof(Task<>).MakeGenericType(typeArgument) })!
@@ -26,6 +33,12 @@ namespace NUnit.Framework.Internal
             }
 
             return new NonGenericAdapter(task);
+        }
+
+        private static bool IsVoidTaskResult(Type type)
+        {
+            return type.Assembly == typeof(Task).Assembly
+                && type.FullName == "System.Threading.Tasks.VoidTaskResult";
         }
 
         private sealed class NonGenericAdapter : AwaitAdapter

@@ -61,6 +61,50 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(AwaitAdapter.GetResultType(typeof(DerivedTask)), Is.EqualTo(typeof(void)));
         }
 
+        [Test]
+        public void NonGenericAsyncMethodResultIsNull()
+        {
+            Task task = NonGenericAsyncMethod();
+            Assert.That(task.GetType().IsGenericType, Is.True, "precondition: the runtime type is Task<VoidTaskResult>");
+
+            var adapter = AwaitAdapter.FromAwaitable(task);
+            adapter.BlockUntilCompleted();
+
+            Assert.That(adapter.GetResult(), Is.Null);
+        }
+
+        [Test]
+        public void GenericAsyncMethodResultIsReturned()
+        {
+            var adapter = AwaitAdapter.FromAwaitable(GenericAsyncMethod());
+            adapter.BlockUntilCompleted();
+
+            Assert.That(adapter.GetResult(), Is.EqualTo(42));
+        }
+
+        [Test]
+        public void GenericValueTaskAsyncMethodResultIsReturned()
+        {
+            var adapter = AwaitAdapter.FromAwaitable(GenericValueTaskAsyncMethod());
+            adapter.BlockUntilCompleted();
+
+            Assert.That(adapter.GetResult(), Is.EqualTo(42));
+        }
+
+        private static async Task NonGenericAsyncMethod() => await Task.Yield();
+
+        private static async ValueTask<int> GenericValueTaskAsyncMethod()
+        {
+            await Task.Yield();
+            return 42;
+        }
+
+        private static async Task<int> GenericAsyncMethod()
+        {
+            await Task.Yield();
+            return 42;
+        }
+
         private sealed class DerivedTask : Task
         {
             public DerivedTask() : base(() => { })
