@@ -128,6 +128,11 @@ dotnet publish src/NUnitFramework/nativeaot-tests/nunit.nativeaot.tests.csproj \
 
 Use the appropriate native runtime identifier on other platforms. This executable
 preserves its fixture explicitly rather than rooting the entire application.
+It requires dynamic code to be disabled and all 21 regression cases to pass;
+running it on CoreCLR, filtering out cases, or discovering no tests fails the
+verification. Update the expected count in `Program.cs` when adding test cases.
+The synchronous exception constraints deliberately pass faulted and canceled
+tasks through NUnit's await adapters instead of awaiting them directly in C#.
 NUnit still emits trimming/AOT analysis warnings for other reflection-based
 features; this project leaves those diagnostics visible, but does not promote
 them to errors. Its complete-metadata settings do not imply that NUnit supports
@@ -139,5 +144,4 @@ each value-type instantiation must also be statically available. The executable'
 entry point retains a strongly typed delegate to `GenericValueType<int>` as an
 example of that explicit bootstrap contract. A generated bootstrap can do the same
 for known test cases; runtime-only generic shapes remain unsupported.
-
 

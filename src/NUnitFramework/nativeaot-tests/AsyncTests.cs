@@ -5,6 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.NativeAotTests
 {
@@ -136,22 +137,55 @@ namespace NUnit.Framework.NativeAotTests
         }
 
         [Test]
-        public async Task TaskExceptionIsNotWrapped()
+        public void TaskExceptionIsNotWrapped()
         {
             var exception = new InvalidOperationException("Expected exception");
-            Assert.That(await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            Func<Task<int>> code = async () =>
             {
                 await Task.Yield();
                 throw exception;
-            }), Is.SameAs(exception));
+            };
+
+            Assert.That(code, Throws.Exception.SameAs(exception));
         }
 
         [Test]
-        public async Task TaskCancellationIsNotWrapped()
+        public void TaskCancellationIsNotWrapped()
         {
             using var cancellation = new CancellationTokenSource();
             cancellation.Cancel();
-            await Assert.ThrowsAsync<TaskCanceledException>(() => Task.FromCanceled<int>(cancellation.Token));
+            Func<Task<int>> code = () => Task.FromCanceled<int>(cancellation.Token);
+            var constraint = new ThrowsConstraint(Is.TypeOf<TaskCanceledException>());
+
+            Assert.That(code, constraint);
+            var exception = (TaskCanceledException)constraint.ActualException!;
+            Assert.That(exception.CancellationToken, Is.EqualTo(cancellation.Token));
+        }
+
+        [Test]
+        public void ValueTaskExceptionIsNotWrapped()
+        {
+            var exception = new InvalidOperationException("Expected exception");
+            Func<ValueTask<int>> code = async () =>
+            {
+                await Task.Yield();
+                throw exception;
+            };
+
+            Assert.That(code, Throws.Exception.SameAs(exception));
+        }
+
+        [Test]
+        public void ValueTaskCancellationIsNotWrapped()
+        {
+            using var cancellation = new CancellationTokenSource();
+            cancellation.Cancel();
+            Func<ValueTask<int>> code = () => new ValueTask<int>(Task.FromCanceled<int>(cancellation.Token));
+            var constraint = new ThrowsConstraint(Is.TypeOf<TaskCanceledException>());
+
+            Assert.That(code, constraint);
+            var exception = (TaskCanceledException)constraint.ActualException!;
+            Assert.That(exception.CancellationToken, Is.EqualTo(cancellation.Token));
         }
 
         [TestCase(1, 2)]
