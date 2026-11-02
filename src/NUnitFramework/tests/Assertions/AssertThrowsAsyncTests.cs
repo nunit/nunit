@@ -139,9 +139,9 @@ namespace NUnit.Framework.Tests.Assertions
         private static void VerifyArgumentExceptionWithNullMessage(Exception? ex)
         {
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.Contain(
+            Assert.That(ex.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  null" + Environment.NewLine));
+                "  But was:  no exception thrown" + Environment.NewLine));
         }
 
         private static void VerifyArgumentExceptionWithNullRefExceptionAndMyMessage(Exception? ex)
