@@ -85,13 +85,27 @@ namespace NUnit.Framework.Tests.SolutionTests
 
                 var doc = XDocument.Parse(xml);
 
+                var legacyFramework = doc.Descendants("PropertyGroup")
+                    .Descendants("LegacyFramework")
+                    .FirstOrDefault()?.Value;
+
                 foreach (var itemGroup in doc.Descendants("PropertyGroup"))
                 {
                     XElement? packageReferences = itemGroup.Descendants("NUnitLibraryFrameworks").LastOrDefault();
 
                     if (packageReferences is not null)
                     {
-                        return packageReferences.Value.Split(';');
+                        var tfms = packageReferences.Value.Split(';');
+
+                        // Only build NET Framework on Windows
+                        if (!string.IsNullOrEmpty(legacyFramework))
+                        {
+                            var tfmList = new List<string>(tfms);
+                            tfmList.Insert(0, legacyFramework);
+                            tfms = tfmList.ToArray();
+                        }
+
+                        return tfms;
                     }
                 }
 
