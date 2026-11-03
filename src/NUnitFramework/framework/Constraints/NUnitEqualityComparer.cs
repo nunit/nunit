@@ -291,33 +291,17 @@ namespace NUnit.Framework.Constraints
             return null;
         }
 
+        /// <summary>
+        /// Finds the first of the built-in <see cref="Comparers"/> that supports <paramref name="x"/> and <paramref name="y"/>.
+        /// </summary>
+        /// <returns>The comparer that was used, or <see langword="null"/> if none supports the types.</returns>
         internal EqualMethod? FindEqualMethod(object x, object y, ref Tolerance tolerance, ComparisonState state, out EqualMethodResult result)
         {
-            if (_externalComparers is not null)
-            {
-                foreach (EqualityAdapter adapter in _externalComparers)
-                {
-                    if (adapter.CanCompare(x, y))
-                    {
-                        result = adapter.AreEqual(x, y) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
-                        return (object a, object b, ref Tolerance _, ComparisonState _, NUnitEqualityComparer _) =>
-                            adapter.AreEqual(a, b) ? EqualMethodResult.ComparedEqual : EqualMethodResult.ComparedNotEqual;
-                    }
-                }
-            }
-
             foreach (EqualMethod equalMethod in Comparers)
             {
                 result = equalMethod(x, y, ref tolerance, state, this);
                 if (result != EqualMethodResult.TypesNotSupported)
                     return equalMethod;
-            }
-
-            if (_compareProperties)
-            {
-                result = PropertiesComparer.Equal(x, y, ref tolerance, state, this);
-                if (result != EqualMethodResult.TypesNotSupported)
-                    return PropertiesComparer.Equal;
             }
 
             result = EqualMethodResult.TypesNotSupported;
