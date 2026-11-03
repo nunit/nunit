@@ -3,12 +3,17 @@
   <PropertyGroup>
     <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">14</LangVersion>
     <Features>strict</Features>
+    <!-- TFM configuration -->
+    <LegacyFramework>net462</LegacyFramework>
+    <NUnitLibraryFrameworks>net8.0;net10.0</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>net8.0;net9.0;net10.0;net11.0</NUnitRuntimeFrameworks>
+    <NUnitWindowsTestFrameworks>net10.0-windows10.0.19041.0</NUnitWindowsTestFrameworks>
     <!-- MinVer configuration - calculates version from git tags -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerAutoIncrement>minor</MinVerAutoIncrement>
     <!-- Only show MinVer output once for main framework project (first TFM) -->
-    <MinVerVerbosity Condition="'$(MSBuildProjectName)' == 'nunit.framework' AND '$(TargetFramework)' == 'net462'">normal</MinVerVerbosity>
-    <MinVerVerbosity Condition="'$(MSBuildProjectName)' != 'nunit.framework' OR '$(TargetFramework)' != 'net462'">quiet</MinVerVerbosity>
+    <MinVerVerbosity Condition="'$(MSBuildProjectName)' == 'nunit.framework' AND '$(TargetFramework)' == '$(LegacyFramework)'">normal</MinVerVerbosity>
+    <MinVerVerbosity Condition="'$(MSBuildProjectName)' != 'nunit.framework' OR '$(TargetFramework)' != '$(LegacyFramework)'">quiet</MinVerVerbosity>
   </PropertyGroup>
 
   <!-- Build targets (for example, SetAssemblyVersion) are defined in Directory.Build.targets
@@ -19,8 +24,6 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NUnitLibraryFrameworks>net462;net8.0;net10.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;net8.0;net9.0;net10.0;net11.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
@@ -33,6 +36,12 @@
     <Product>NUnit 5</Product>
     <Copyright>Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt</Copyright>
     <Trademark>NUnit is a trademark of NUnit Software</Trademark>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <NUnitLibraryFrameworks>$(LegacyFramework);$(NUnitLibraryFrameworks)</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>$(LegacyFramework);$(NUnitRuntimeFrameworks)</NUnitRuntimeFrameworks>        
+    <NUnitWindowsTestFrameworks>$(LegacyFramework);$(NUnitWindowsTestFrameworks)</NUnitWindowsTestFrameworks>        
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
