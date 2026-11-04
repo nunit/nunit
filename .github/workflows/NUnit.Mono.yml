@@ -1,0 +1,45 @@
+name: Mono compatibility
+
+on:
+  push:
+    branches: [main, release, v3]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  test-mono-linux:
+    name: Framework tests on Mono (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+
+      - name: Install Mono
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes mono-devel
+
+      - name: Build and run Framework suites under Mono
+        run: bash .github/scripts/test-mono.sh
+
+      - name: Upload Mono results and runtime evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: Test results (Mono Linux)
+          path: TestResults/Mono
+          if-no-files-found: error
