@@ -47,8 +47,7 @@ var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitLibraryFrameworks").Split(';');
-var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
+// Automatically determined from generated binaries
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -187,9 +186,10 @@ Task("TestNUnitLite")
     .Does(() =>
     {
         // Run nunitlite.tests for each runtime framework
-        foreach (var runtime in RuntimeFrameworks)
+        var runtimeFrameworks = GetSubDirectories(NUNITLITETESTSBIN);
+        foreach (var dir in runtimeFrameworks)
         {
-            var dir = NUNITLITETESTSBIN + runtime + "/";
+            var runtime = dir.GetDirectoryName();
 
             if (runtime.StartsWith("net4"))
             {
@@ -288,8 +288,10 @@ Task("CreateImage")
         };
         foreach (var dir in directories)
         {
-            foreach (var runtime in LibraryFrameworks)
+            var frameworks = GetSubDirectories(dir);
+            foreach (var framework in frameworks)
             {
+                var runtime = framework.GetDirectoryName();
                 var targetDir = imageBinDir + Directory(runtime);
                 var sourceDir = Directory(dir) + Directory(runtime);
                 CreateDirectory(targetDir);
@@ -309,8 +311,10 @@ Task("CreateImage")
             }
         }    
         Information("Finished copying framework files");
-        foreach (var dir in RuntimeFrameworks)
+        var runtimeFrameworks = GetSubDirectories(NUNITLITERUNNERBIN);
+        foreach (var runtimeFramework in runtimeFrameworks)
         {
+            var dir = runtimeFramework.GetDirectoryName();
             var targetDir = imageBinDir + Directory(dir);
             var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
             Information("Copying " + sourceDir.ToString() + " to " + targetDir.ToString());
@@ -347,8 +351,7 @@ Task("PackageZip")
         CreateDirectory(PACKAGE_DIR);
 
         var zipFiles = GetFiles(CurrentImageDir + "*.*");
-        foreach (var framework in LibraryFrameworks)
-            zipFiles += GetFiles(CurrentImageDir + "bin/"+ framework + "/**/*.*");
+        zipFiles += GetFiles(CurrentImageDir + "bin/*/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
