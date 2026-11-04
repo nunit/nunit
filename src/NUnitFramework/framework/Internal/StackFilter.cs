@@ -13,36 +13,55 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class StackFilter
     {
-        private const string DEFAULT_TOP_OF_STACK_PATTERN = @" NUnit\.Framework\.(Assert|Assume|Warn|CollectionAssert|StringAssert|FileAssert|DirectoryAssert)\.| NUnit\.Framework\.Internal\.ConstraintEvaluator\.";
-        private const string DEFAULT_BOTTOM_OF_STACK_PATTERN = @" System\.(Reflection|RuntimeMethodHandle|Threading\.ExecutionContext)\.";
+        private const string DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN = @"^ +\w+:? (?:NUnit\.Framework|NUnitLite)\.";
+        private const string DEFAULT_SYSTEM_STACK_PATTERN = @"^ +\w+:? (?:\(wrapper managed-to-native\) )?(?:InvokeStub_|System\.(?:Reflection|Runtime|RuntimeMethodHandle|Threading)\.|System\.Environment\.[A-Za-z_]*StackTrace)|^--- .+ ---$";
+
+#if NETFRAMEWORK
+        private const string AsyncStateMachineMethodPattern = @"\.<(.*)>d__[0-9]+(?:`[0-9]+)?\.MoveNext *\(\)";
+        private const string AsyncStateMachineMethodReplacementPattern = @".$1()";
+
+        private static readonly Regex AsyncStateMachineMethodRegex = new(AsyncStateMachineMethodPattern, RegexOptions.Compiled);
+#endif
 
         /// <summary>
         /// Single instance of our default filter
         /// </summary>
+        /// <remarks>
+        /// Kept as non-readonly for backwards compatibility. Althought it should not be written to, some users may have done so.
+        /// If we make it readonly, they will get a runtime error.
+        /// </remarks>
         public static StackFilter DefaultFilter = new();
 
-        private readonly Regex? _topOfStackRegex;
-        private readonly Regex? _bottomOfStackRegex;
+        private readonly Regex? _nunitStackRegex;
+        private readonly Regex? _systemStackRegex;
 
         /// <summary>
         /// Construct a stack filter instance
         /// </summary>
-        /// <param name="topOfStackPattern">Regex pattern used to delete lines from the top of the stack</param>
-        /// <param name="bottomOfStackPattern">Regex pattern used to delete lines from the bottom of the stack</param>
+        /// <remarks>
+        /// Parameter names retained for backwards compatibility.
+        /// The patterns are no longer restricted to top and bottom of the stack, but are used to filter any lines in the stack trace.
+        /// </remarks>
+        /// <param name="topOfStackPattern">Regex pattern used to delete matching lines from the stack trace.</param>
+        /// <param name="bottomOfStackPattern">Additional regex pattern used to delete matching lines from the stack trace.</param>
         public StackFilter(string? topOfStackPattern, string? bottomOfStackPattern)
         {
             if (topOfStackPattern is not null)
-                _topOfStackRegex = new Regex(topOfStackPattern, RegexOptions.Compiled);
+                _nunitStackRegex = new Regex(topOfStackPattern, RegexOptions.Compiled);
             if (bottomOfStackPattern is not null)
-                _bottomOfStackRegex = new Regex(bottomOfStackPattern, RegexOptions.Compiled);
+                _systemStackRegex = new Regex(bottomOfStackPattern, RegexOptions.Compiled);
         }
 
         /// <summary>
         /// Construct a stack filter instance
         /// </summary>
-        /// <param name="topOfStackPattern">Regex pattern used to delete lines from the top of the stack</param>
+        /// <remarks>
+        /// Constructor overload and parameter names retained for backwards compatibility.
+        /// The patterns are no longer restricted to top and bottom of the stack, but are used to filter any lines in the stack trace.
+        /// </remarks>
+        /// <param name="topOfStackPattern">Regex pattern used to delete matching lines from the stack trace.</param>
         public StackFilter(string topOfStackPattern)
-            : this(topOfStackPattern, DEFAULT_BOTTOM_OF_STACK_PATTERN)
+            : this(topOfStackPattern, DEFAULT_SYSTEM_STACK_PATTERN)
         {
         }
 
@@ -50,7 +69,7 @@ namespace NUnit.Framework.Internal
         /// Construct a stack filter instance
         /// </summary>
         public StackFilter()
-            : this(DEFAULT_TOP_OF_STACK_PATTERN, DEFAULT_BOTTOM_OF_STACK_PATTERN)
+            : this(DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN, DEFAULT_SYSTEM_STACK_PATTERN)
         {
         }
 
@@ -64,31 +83,24 @@ namespace NUnit.Framework.Internal
             if (rawTrace is null)
                 return null;
 
-            StringReader sr = new StringReader(rawTrace);
-            StringWriter sw = new StringWriter();
+            var sr = new StringReader(rawTrace);
+            var sw = new StringWriter();
 
             try
             {
-                var line = sr.ReadLine();
-
-                if (_topOfStackRegex is not null)
+                for (var line = sr.ReadLine(); line is not null; line = sr.ReadLine())
                 {
-                    // First, skip past any Assert, Assume or MultipleAssertBlock lines
-                    while (line is not null && _topOfStackRegex.IsMatch(line))
-                        line = sr.ReadLine();
-                }
+                    if (_nunitStackRegex?.IsMatch(line) == true)
+                        continue;
 
-                // Copy lines down to the line that invoked the failing method.
-                // This is actually only needed for the compact framework, but
-                // we do it on all platforms for simplicity. Desktop platforms
-                // won't have any System.Reflection lines.
-                while (line is not null)
-                {
-                    if (_bottomOfStackRegex is not null && _bottomOfStackRegex.IsMatch(line))
-                        break;
+                    if (_systemStackRegex?.IsMatch(line) == true)
+                        continue;
+
+#if NETFRAMEWORK
+                    line = AsyncStateMachineMethodRegex.Replace(line, AsyncStateMachineMethodReplacementPattern);
+#endif
 
                     sw.WriteLine(line);
-                    line = sr.ReadLine();
                 }
             }
             catch (Exception)
