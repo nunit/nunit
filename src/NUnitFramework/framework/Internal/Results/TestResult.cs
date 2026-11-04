@@ -810,7 +810,7 @@ namespace NUnit.Framework.Internal
                 {
                     ResultState = exception.ResultState.WithSite(site);
                     Message = ex.GetMessageWithoutThrowing();
-                    StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
+                    StackTrace = ex.GetStackTraceWithoutThrowing();
                 }
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.GlobalCancellationToken.IsCancellationRequested)
                 {
