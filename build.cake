@@ -194,7 +194,7 @@ Task("TestNUnitLite")
             if (runtime.StartsWith("net4"))
             {
                 // .NET Framework - run exe directly
-                var exePath = dir + EXECUTABLE_NUNITLITE_TESTS_EXE;
+                var exePath = dir + File(EXECUTABLE_NUNITLITE_TESTS_EXE);
                 if (FileExists(exePath))
                 {
                     Information($"Running NUnitLite tests for {runtime}");
@@ -206,7 +206,7 @@ Task("TestNUnitLite")
             else
             {
                 // .NET Core - run with dotnet
-                var dllPath = dir + EXECUTABLE_NUNITLITE_TESTS_DLL;
+                var dllPath = dir + File(EXECUTABLE_NUNITLITE_TESTS_DLL);
                 if (FileExists(dllPath))
                 {
                     Information($"Running NUnitLite tests for {runtime}");
