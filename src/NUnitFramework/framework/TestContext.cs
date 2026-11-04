@@ -378,9 +378,10 @@ namespace NUnit.Framework
         /// The scope of the change is the current TestContext.
         /// </summary>
         /// <typeparam name="TSupported">The type the predicate applies to. It can't be a type that NUnit
-        /// compares with its default equality (a string, primitive, enum, other numeric type or <see cref="DateTime"/>), and not a <see cref="Nullable{T}"/>.</typeparam>
+        /// compares with its default equality or a dedicated constraint (a string, primitive, enum, other numeric type,
+        /// <see cref="DateTime"/>, <see cref="DateTimeOffset"/> or <see cref="TimeSpan"/>), an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>.</typeparam>
         /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null</param>
-        /// <exception cref="ArgumentException"><typeparamref name="TSupported"/> is compared with its default equality, or is a <see cref="Nullable{T}"/>.</exception>
+        /// <exception cref="ArgumentException"><typeparamref name="TSupported"/> is one of the excluded types.</exception>
         public static void AddNullEquivalent<TSupported>(Func<TSupported, bool> isNullEquivalent)
         {
             ArgumentNullException.ThrowIfNull(isNullEquivalent);
@@ -390,10 +391,10 @@ namespace NUnit.Framework
                     $"A non-null {typeof(TSupported)} is boxed as its underlying type, so the predicate would never be called. Add it for {Nullable.GetUnderlyingType(typeof(TSupported))} instead.");
             }
 
-            if (typeof(TSupported).CanUseDefaultEquality())
+            if (!typeof(TSupported).CanBeNullEquivalent())
             {
                 throw new ArgumentException(
-                    $"Values of type {typeof(TSupported)} are compared with their default equality and can't be treated as null.");
+                    $"Values of type {typeof(TSupported)} are compared with their default equality or a dedicated constraint and can't be treated as null.");
             }
 
             TestExecutionContext.CurrentContext.AddNullEquivalent(value => value is TSupported supported && isNullEquivalent(supported));

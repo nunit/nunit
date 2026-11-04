@@ -505,9 +505,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Adds a predicate that identifies non-null values that null and equality
         /// constraints treat as null. Predicates added earlier still apply.
-        /// Values of types that NUnit compares with their default equality
-        /// (strings, primitives, enums, other numeric types and <see cref="DateTime"/>)
-        /// are never passed to the predicate.
+        /// Values of types that NUnit compares with their default equality or a dedicated constraint
+        /// (strings, primitives, enums, other numeric types, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>,
+        /// <see cref="TimeSpan"/>) and <see cref="ArraySegment{T}"/> are never passed to the predicate.
         /// </summary>
         /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null.</param>
         public void AddNullEquivalent(Func<object, bool> isNullEquivalent)
@@ -531,9 +531,7 @@ namespace NUnit.Framework.Internal
 
             Func<object, bool>? predicate = GetNullEquivalentPredicate();
 
-            // Collections of these types are compared with EqualityComparer<T>.Default, which never
-            // calls the predicate, so they are excluded everywhere to keep all constraints consistent.
-            return predicate is not null && !value.GetType().CanUseDefaultEquality() && predicate(value);
+            return predicate is not null && value.GetType().CanBeNullEquivalent() && predicate(value);
         }
 
         /// <summary>

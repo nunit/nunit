@@ -74,6 +74,8 @@ namespace NUnit.Framework.Tests.Constraints
             var items = new List<Handle> { Valid, Handle.Invalid };
 
             Assert.That(items, Has.Member(null));
+            Assert.That(items, Contains.Item(null));
+            Assert.That(Matches(Is.All.Not.Null, items), Is.False);
             Assert.That(items, Is.EqualTo(new Handle?[] { Valid, null }));
             Assert.That(items, Is.EquivalentTo(new Handle?[] { null, Valid }));
         }
@@ -92,6 +94,53 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Matches(Is.Unique, new List<(Handle, int)> { (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
             Assert.That(new List<(Handle, int)> { (Handle.Invalid, 1), (Handle.Invalid, 2) }, Is.Unique);
             Assert.That(Matches(Is.Unique, new List<(int, string)> { (1, "a"), (1, "a") }), Is.False);
+            Assert.That(Matches(Is.Unique, new List<(Handle, int)?> { (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
+            Assert.That(Matches(Is.Unique, new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
+            Assert.That(new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
+        }
+
+        [Test]
+        public void DictionaryValues_AreComparedForTheMatchingKey()
+        {
+            TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
+            var expected = new Dictionary<Handle, object?> { [Handle.Invalid] = null };
+
+            Assert.That(Matches(Is.EqualTo(expected), new Dictionary<Handle, object?> { [new Handle(0)] = new object() }), Is.False);
+            Assert.That(new Dictionary<Handle, object?> { [new Handle(0)] = null }, Is.EqualTo(expected));
+
+            // A key matched exactly on the other side isn't reused for another null-equivalent key.
+            var a = new Handle(0);
+            var b = new Handle(0);
+            Assert.That(
+                new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [b] = "v2" },
+                Is.EqualTo(new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [a] = "v2" }));
+
+            // Distinct null-equivalent keys are paired by their values.
+            Assert.That(
+                new Dictionary<Handle, int> { [new Handle(0)] = 1, [new Handle(0)] = 2 },
+                Is.EqualTo(new Dictionary<Handle, int> { [new Handle(0)] = 2, [new Handle(0)] = 1 }));
+        }
+
+        [Test]
+        public void FailureMessage_DoesNotEnumerateNullEquivalent()
+        {
+            TestContext.AddNullEquivalent<DetachedRange>(r => ReferenceEquals(r, DetachedRange.Detached));
+
+            var notNull = Assert.Throws<AssertionException>(() => Assert.That(DetachedRange.Detached, Is.Not.Null));
+            Assert.That(notNull.Message, Does.Contain("Expected: not null").And.Contain("But was:  <"));
+
+            var notEqual = Assert.Throws<AssertionException>(() => Assert.That(DetachedRange.Detached, Is.Not.EqualTo(null)));
+            Assert.That(notEqual.Message, Does.Contain("Expected: not equal to null"));
+        }
+
+        [Test]
+        public void FailureMessage_UsesAddedFormattersForNullEquivalent()
+        {
+            TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
+            TestContext.AddFormatter<Handle>(h => $"handle #{((Handle)h).Id}");
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Handle.Invalid, Is.Not.Null));
+            Assert.That(ex.Message, Does.Contain("handle #0"));
         }
 
         [Test]
@@ -162,6 +211,9 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<int?>(i => i == int.MinValue));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<DayOfWeek?>(d => d == DayOfWeek.Sunday));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<DateTime?>(d => d == DateTime.MinValue));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<TimeSpan>(t => t == TimeSpan.Zero));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<DateTimeOffset>(d => d == DateTimeOffset.MinValue));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<ArraySegment<int>>(a => a.Array is null));
         }
 
         private struct Slot
@@ -191,11 +243,13 @@ namespace NUnit.Framework.Tests.Constraints
         {
             // A predicate on object would match strings and numbers, but the collection constraints
             // compare those with EqualityComparer<T>.Default, so every constraint ignores them.
-            TestContext.AddNullEquivalent<object>(v => v is string { Length: 0 } or 0);
+            TestContext.AddNullEquivalent<object>(v => v is string { Length: 0 } or 0 || v is TimeSpan t && t == TimeSpan.Zero);
 
             Assert.That(string.Empty, Is.Not.Null);
             Assert.That(string.Empty, Is.Not.EqualTo(null));
             Assert.That(0, Is.Not.EqualTo((object?)null));
+            Assert.That(TimeSpan.Zero, Is.Not.EqualTo((object?)null));
+            Assert.That(Matches(Is.Null, TimeSpan.Zero), Is.False);
             Assert.That(new List<string> { "x", string.Empty }, Is.Not.EquivalentTo(new string?[] { "x", null }));
             Assert.That(new List<object> { "x", string.Empty }, Is.Not.EquivalentTo(new object?[] { "x", null }));
         }

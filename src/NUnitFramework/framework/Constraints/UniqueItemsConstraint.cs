@@ -176,11 +176,18 @@ namespace NUnit.Framework.Constraints
             return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !MayContainNullEquivalentItems(type);
         }
 
-        // A tuple's default equality compares its items without the null-equivalent predicate,
-        // while NUnitEqualityComparer applies it to each item.
+        // The default equality of a tuple or key/value pair compares its parts without the null-equivalent
+        // predicate, while NUnitEqualityComparer applies it to each part.
         private static bool MayContainNullEquivalentItems(Type type)
         {
-            return TestExecutionContext.HasNullEquivalentPredicate && type.IsTupleOrValueTuple() && !type.CanUseDefaultEquality();
+            if (!TestExecutionContext.HasNullEquivalentPredicate)
+                return false;
+
+            Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+            bool isComposite = underlyingType.IsTupleOrValueTuple()
+                || (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>));
+
+            return isComposite && underlyingType.GetGenericArguments().Any(argument => (Nullable.GetUnderlyingType(argument) ?? argument).CanBeNullEquivalent());
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -191,7 +198,7 @@ namespace NUnit.Framework.Constraints
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
         {
-            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalentPredicate || (Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanUseDefaultEquality()
+            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalentPredicate || !(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanBeNullEquivalent()
                 ? EqualityComparer<T>.Default
                 : NullEquivalentEqualityComparer<T>.Instance;
 

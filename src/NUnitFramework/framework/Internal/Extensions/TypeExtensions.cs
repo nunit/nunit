@@ -28,6 +28,19 @@ namespace NUnit.Framework.Internal.Extensions
             return true;
         }
 
+        /// <summary>
+        /// Whether values of <paramref name="type"/> can be null-equivalent. Types that NUnit compares with their
+        /// default equality or with a dedicated constraint, or that <see cref="Constraints.EqualConstraint"/> rewrites,
+        /// never call the predicate on some paths, so they are excluded everywhere.
+        /// </summary>
+        public static bool CanBeNullEquivalent(this Type type)
+        {
+            if (type.CanUseDefaultEquality() || type == typeof(TimeSpan) || type == typeof(DateTimeOffset))
+                return false;
+
+            return !(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ArraySegment<>));
+        }
+
         public static bool CanUseDefaultEquality(this Type type)
         {
             if (type.IsPrimitive)
