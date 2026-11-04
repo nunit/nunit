@@ -16,14 +16,17 @@ namespace NUnit.Framework
         {
             ArgumentNullException.ThrowIfNull(exception);
 
+            string? stackTrace;
             try
             {
-                return exception.StackTrace;
+                stackTrace = exception.StackTrace;
             }
             catch (Exception ex)
             {
                 return ex.GetType().Name + " was thrown by the Exception.StackTrace property.";
             }
+
+            return StackFilter.DefaultFilter.Filter(stackTrace);
         }
 
         /// <summary>
