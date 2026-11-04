@@ -130,12 +130,12 @@ namespace NUnitLite.Tests
                 Assert.That(lines[3], Is.EqualTo("Method is not public"));
                 Assert.That(lines[5], Is.EqualTo("2) Failed : NUnit.Tests.Assemblies.MockTestFixture.FailingTest"));
                 Assert.That(lines[6], Is.EqualTo("Intentional failure"));
-                Assert.That(lines[9], Is.EqualTo("3) Warning : NUnit.Tests.Assemblies.MockTestFixture.WarningTest"));
-                Assert.That(lines[10], Is.EqualTo("Warning Message"));
-                Assert.That(lines[13], Is.EqualTo("4) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
-                Assert.That(lines[14], Is.EqualTo("No arguments were provided"));
-                Assert.That(lines[16], Is.EqualTo("5) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
-                Assert.That(lines[17], Is.EqualTo("System.Exception : Intentional Exception"));
+                Assert.That(lines[10], Is.EqualTo("3) Warning : NUnit.Tests.Assemblies.MockTestFixture.WarningTest"));
+                Assert.That(lines[11], Is.EqualTo("Warning Message"));
+                Assert.That(lines[15], Is.EqualTo("4) Invalid : NUnit.Tests.Assemblies.MockTestFixture.NotRunnableTest"));
+                Assert.That(lines[16], Is.EqualTo("No arguments were provided"));
+                Assert.That(lines[18], Is.EqualTo("5) Error : NUnit.Tests.Assemblies.MockTestFixture.TestWithException"));
+                Assert.That(lines[19], Is.EqualTo("System.Exception : Intentional Exception"));
             }
         }
 

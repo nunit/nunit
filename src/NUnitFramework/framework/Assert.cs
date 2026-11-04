@@ -366,11 +366,8 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.CurrentResult.RecordWarning(message, GetStackTrace());
         }
 
-        // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
-        private static readonly StackFilter SystemEnvironmentFilter = new(@" System\.Environment\.");
-
         private static string? GetStackTrace() =>
-            StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(GetEnvironmentStackTraceWithoutThrowing()));
+            StackFilter.DefaultFilter.Filter(GetEnvironmentStackTraceWithoutThrowing());
 
         /// <summary>
         /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the
