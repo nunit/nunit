@@ -248,11 +248,11 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            if (TestExecutionContext.HasNullEquivalentPredicate)
+            if (TestExecutionContext.GetNullEquivalents() is NullEquivalents nullEquivalents)
             {
-                if (TestExecutionContext.IsNullOrNullEquivalent(x))
+                if (x is not null && nullEquivalents.IsNullEquivalent(x))
                     x = null;
-                if (TestExecutionContext.IsNullOrNullEquivalent(y))
+                if (y is not null && nullEquivalents.IsNullEquivalent(y))
                     y = null;
             }
 

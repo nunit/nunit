@@ -375,29 +375,21 @@ namespace NUnit.Framework
         /// constraints (<see cref="Is.Null"/>, <see cref="Is.EqualTo(object)"/> with null, and
         /// collection constraints that compare items for equality). Use it for types that
         /// represent "no value" with a sentinel instance instead of a null reference.
+        /// Failure messages show such a value as <paramref name="formattedValue"/>.
         /// The scope of the change is the current TestContext.
         /// </summary>
-        /// <typeparam name="TSupported">The type the predicate applies to. It can't be a type that NUnit
-        /// compares with its default equality or a dedicated constraint (a string, primitive, enum, other numeric type,
-        /// <see cref="DateTime"/>, <see cref="DateTimeOffset"/> or <see cref="TimeSpan"/>), an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>.</typeparam>
+        /// <typeparam name="TSupported">The type the predicate applies to. It can't be <see cref="object"/>,
+        /// a type that NUnit compares with its default equality or a dedicated constraint (a string, primitive, enum,
+        /// other numeric type, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="TimeSpan"/>,
+        /// or a tuple of those),
+        /// an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>.</typeparam>
         /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null</param>
+        /// <param name="formattedValue">How failure messages show a null-equivalent value.
+        /// Defaults to <c>null</c> followed by the type name.</param>
         /// <exception cref="ArgumentException"><typeparamref name="TSupported"/> is one of the excluded types.</exception>
-        public static void AddNullEquivalent<TSupported>(Func<TSupported, bool> isNullEquivalent)
+        public static void AddNullEquivalent<TSupported>(Func<TSupported, bool> isNullEquivalent, string? formattedValue = null)
         {
-            ArgumentNullException.ThrowIfNull(isNullEquivalent);
-            if (Nullable.GetUnderlyingType(typeof(TSupported)) is not null)
-            {
-                throw new ArgumentException(
-                    $"A non-null {typeof(TSupported)} is boxed as its underlying type, so the predicate would never be called. Add it for {Nullable.GetUnderlyingType(typeof(TSupported))} instead.");
-            }
-
-            if (!typeof(TSupported).CanBeNullEquivalent())
-            {
-                throw new ArgumentException(
-                    $"Values of type {typeof(TSupported)} are compared with their default equality or a dedicated constraint and can't be treated as null.");
-            }
-
-            TestExecutionContext.CurrentContext.AddNullEquivalent(value => value is TSupported supported && isNullEquivalent(supported));
+            TestExecutionContext.CurrentContext.AddNullEquivalent(isNullEquivalent, formattedValue);
         }
 
         /// <summary>

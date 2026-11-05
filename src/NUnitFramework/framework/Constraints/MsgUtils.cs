@@ -182,17 +182,11 @@ namespace NUnit.Framework.Constraints
                 return Fmt_Null;
 
             var context = TestExecutionContext.CurrentContext;
-            ValueFormatter formatter = context is not null ? context.CurrentValueFormatter : DefaultValueFormatter;
 
-            try
-            {
-                return formatter(val);
-            }
-            catch (Exception) when (TestExecutionContext.IsNullOrNullEquivalent(val))
-            {
-                // A null-equivalent value may be a collection that can't be enumerated, like a destroyed object.
-                return FormatValueWithoutThrowing(val);
-            }
+            if (context is not null)
+                return context.CurrentValueFormatter(val);
+            else
+                return DefaultValueFormatter(val);
         }
 
         /// <summary>

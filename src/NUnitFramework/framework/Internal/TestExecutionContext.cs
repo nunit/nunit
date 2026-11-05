@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
             CurrentValueFormatter = other.CurrentValueFormatter;
-            CurrentNullEquivalentPredicate = other.CurrentNullEquivalentPredicate;
+            CurrentNullEquivalents = other.CurrentNullEquivalents;
 
             Dispatcher = other.Dispatcher;
             ParallelScope = other.ParallelScope;
@@ -407,9 +407,9 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Identifies non-null values that null and equality constraints treat as null,
-        /// or <see langword="null"/> if no predicate was added.
+        /// or <see langword="null"/> if none were added.
         /// </summary>
-        internal Func<object, bool>? CurrentNullEquivalentPredicate { get; private set; }
+        internal NullEquivalents? CurrentNullEquivalents { get; private set; }
 
         /// <summary>
         /// If true, all tests must run on the same thread. No new thread may be spawned.
@@ -503,21 +503,47 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Adds a predicate that identifies non-null values that null and equality
-        /// constraints treat as null. Predicates added earlier still apply.
-        /// Values of types that NUnit compares with their default equality or a dedicated constraint
-        /// (strings, primitives, enums, other numeric types, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>,
-        /// <see cref="TimeSpan"/>) and <see cref="ArraySegment{T}"/> are never passed to the predicate.
+        /// Treats non-null values of type <typeparamref name="TSupported"/> for which
+        /// <paramref name="isNullEquivalent"/> returns true as null in null and equality constraints,
+        /// and formats them as <paramref name="formattedValue"/> in failure messages.
+        /// Predicates added earlier still apply.
         /// </summary>
+        /// <typeparam name="TSupported">The type the predicate applies to. It can't be <see cref="object"/>,
+        /// a type that NUnit compares with its default equality or a dedicated constraint (a string, primitive, enum,
+        /// other numeric type, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="TimeSpan"/>,
+        /// or a tuple of those),
+        /// an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>. Values of those types are never passed
+        /// to a predicate added for a base type or interface either.</typeparam>
         /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null.</param>
-        public void AddNullEquivalent(Func<object, bool> isNullEquivalent)
+        /// <param name="formattedValue">How failure messages show a null-equivalent value.
+        /// Defaults to <c>null</c> followed by the type name.</param>
+        /// <exception cref="ArgumentException"><typeparamref name="TSupported"/> is one of the excluded types.</exception>
+        public void AddNullEquivalent<TSupported>(Func<TSupported, bool> isNullEquivalent, string? formattedValue = null)
         {
             ArgumentNullException.ThrowIfNull(isNullEquivalent);
 
-            Func<object, bool>? previous = CurrentNullEquivalentPredicate;
-            CurrentNullEquivalentPredicate = previous is null
-                ? isNullEquivalent
-                : value => previous(value) || isNullEquivalent(value);
+            Type type = typeof(TSupported);
+            if (type == typeof(object))
+                throw new ArgumentException("Add it for the type that has null-equivalent values, not for object.");
+
+            if (Nullable.GetUnderlyingType(type) is Type underlyingType)
+            {
+                throw new ArgumentException(
+                    $"A non-null {type} is boxed as its underlying type, so the predicate would never be called. Add it for {underlyingType} instead.");
+            }
+
+            if (!type.CanBeNullEquivalent())
+            {
+                throw new ArgumentException(
+                    $"Values of type {type} are compared with their default equality or a dedicated constraint and can't be treated as null.");
+            }
+
+            CurrentNullEquivalents = NullEquivalents.Add(CurrentNullEquivalents, type, value => isNullEquivalent((TSupported)value));
+
+            string formatted = formattedValue ?? $"null {type.GetDisplayName()}";
+            AddFormatter(next => value => value is TSupported supported && value.GetType().CanBeNullEquivalent() && isNullEquivalent(supported)
+                ? formatted
+                : next(value));
         }
 
         /// <summary>
@@ -529,17 +555,20 @@ namespace NUnit.Framework.Internal
             if (value is null)
                 return true;
 
-            Func<object, bool>? predicate = GetNullEquivalentPredicate();
+            NullEquivalents? nullEquivalents = GetNullEquivalents();
 
-            return predicate is not null && value.GetType().CanBeNullEquivalent() && predicate(value);
+            return nullEquivalents is not null && nullEquivalents.IsNullEquivalent(value);
         }
 
         /// <summary>
-        /// True if a null-equivalent predicate applies in the current context.
+        /// True if null-equivalent predicates apply in the current context.
         /// </summary>
-        internal static bool HasNullEquivalentPredicate => GetNullEquivalentPredicate() is not null;
+        internal static bool HasNullEquivalents => GetNullEquivalents() is not null;
 
-        private static Func<object, bool>? GetNullEquivalentPredicate() => CurrentContext.CurrentNullEquivalentPredicate;
+        /// <summary>
+        /// The null-equivalent predicates of the current context, or <see langword="null"/> if none were added.
+        /// </summary>
+        internal static NullEquivalents? GetNullEquivalents() => CurrentContext.CurrentNullEquivalents;
 
         private TestExecutionContext CreateIsolatedContext()
         {

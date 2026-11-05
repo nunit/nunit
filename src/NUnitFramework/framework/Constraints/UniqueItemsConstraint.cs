@@ -180,7 +180,7 @@ namespace NUnit.Framework.Constraints
         // predicate, while NUnitEqualityComparer applies it to each part.
         private static bool MayContainNullEquivalentItems(Type type)
         {
-            if (!TestExecutionContext.HasNullEquivalentPredicate)
+            if (!TestExecutionContext.HasNullEquivalents)
                 return false;
 
             Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -201,7 +201,7 @@ namespace NUnit.Framework.Constraints
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
         {
-            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalentPredicate || !(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanBeNullEquivalent()
+            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalents || !(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanBeNullEquivalent()
                 ? EqualityComparer<T>.Default
                 : NullEquivalentEqualityComparer<T>.Instance;
 

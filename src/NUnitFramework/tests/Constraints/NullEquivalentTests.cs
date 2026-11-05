@@ -26,6 +26,32 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly Handle Valid = new(1);
 
+        // A dictionary with a single null key, which the BCL dictionaries don't allow.
+        private sealed class NullKeyDictionary : IDictionary
+        {
+            public object? this[object key]
+            {
+                get => key is null ? 1 : null;
+                set => throw new NotSupportedException();
+            }
+
+            public ICollection Keys => new object?[] { null };
+            public ICollection Values => new object[] { 1 };
+            public bool IsReadOnly => true;
+            public bool IsFixedSize => true;
+            public int Count => 1;
+            public object SyncRoot => this;
+            public bool IsSynchronized => false;
+
+            public bool Contains(object key) => key is null;
+            public IDictionaryEnumerator GetEnumerator() => new Hashtable().GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public void Add(object key, object? value) => throw new NotSupportedException();
+            public void Clear() => throw new NotSupportedException();
+            public void Remove(object key) => throw new NotSupportedException();
+            public void CopyTo(Array array, int index) => throw new NotSupportedException();
+        }
+
         private sealed class HandleIdComparer : IEqualityComparer<Handle>
         {
             public static readonly HandleIdComparer Instance = new();
@@ -111,32 +137,32 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void DictionaryValues_AreComparedForTheMatchingKey()
+        public void DictionaryKeys_AreNotNullEquivalent()
         {
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
-            var expected = new Dictionary<Handle, object?> { [Handle.Invalid] = null };
 
-            Assert.That(Matches(Is.EqualTo(expected), new Dictionary<Handle, object?> { [new Handle(0)] = new object() }), Is.False);
-            Assert.That(new Dictionary<Handle, object?> { [new Handle(0)] = null }, Is.EqualTo(expected));
-
-            // A key matched exactly on the other side isn't reused for another null-equivalent key.
-            var a = new Handle(0);
-            var b = new Handle(0);
+            // A dictionary key can't be null, so a null-equivalent key only matches the same key.
+            var key = new Handle(0);
+            Assert.That(new Dictionary<Handle, int> { [key] = 1 }, Is.EqualTo(new Dictionary<Handle, int> { [key] = 1 }));
             Assert.That(
-                new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [b] = "v2" },
-                Is.EqualTo(new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [a] = "v2" }));
+                Matches(Is.EqualTo(new Dictionary<Handle, int> { [Handle.Invalid] = 1 }), new Dictionary<Handle, int> { [new Handle(0)] = 1 }),
+                Is.False);
 
-            // Entries pair one-to-one, also when the dictionaries' own key comparers differ.
+            // Values are still null-equivalent.
+            Assert.That(new Dictionary<int, Handle?> { [1] = Handle.Invalid }, Is.EqualTo(new Dictionary<int, Handle?> { [1] = null }));
+
+            // Each dictionary's own key equality decides, also when their key comparers differ.
+            Assert.That(
+                new Dictionary<Handle, int> { [key] = 1 },
+                Is.EqualTo(new Dictionary<Handle, int>(HandleIdComparer.Instance) { [key] = 1 }));
             TestContext.AddNullEquivalent<Handle>(h => h.Id < 0);
             var byReference = new Dictionary<Handle, int> { [new Handle(-1)] = 10, [new Handle(-1)] = 10 };
             var byId = new Dictionary<Handle, int>(HandleIdComparer.Instance) { [new Handle(-1)] = 10, [new Handle(-2)] = 20 };
             Assert.That(Matches(Is.EqualTo(byId), byReference), Is.False);
             Assert.That(Matches(Is.EqualTo(byReference), byId), Is.False);
 
-            // Distinct null-equivalent keys are paired by their values.
-            Assert.That(
-                new Dictionary<Handle, int> { [new Handle(0)] = 1, [new Handle(0)] = 2 },
-                Is.EqualTo(new Dictionary<Handle, int> { [new Handle(0)] = 2, [new Handle(0)] = 1 }));
+            // A real null key in a custom dictionary isn't looked up in the other one.
+            Assert.That(Matches(Is.EqualTo(new Dictionary<string, int> { ["a"] = 1 }), new NullKeyDictionary()), Is.False);
         }
 
         [Test]
@@ -145,20 +171,22 @@ namespace NUnit.Framework.Tests.Constraints
             TestContext.AddNullEquivalent<DetachedRange>(r => ReferenceEquals(r, DetachedRange.Detached));
 
             var notNull = Assert.Throws<AssertionException>(() => Assert.That(DetachedRange.Detached, Is.Not.Null));
-            Assert.That(notNull.Message, Does.Contain("Expected: not null").And.Contain("But was:  <"));
+            Assert.That(notNull.Message, Does.Contain("Expected: not null").And.Contain("But was:  null NullEquivalentTests+DetachedRange"));
 
             var notEqual = Assert.Throws<AssertionException>(() => Assert.That(DetachedRange.Detached, Is.Not.EqualTo(null)));
-            Assert.That(notEqual.Message, Does.Contain("Expected: not equal to null").And.Contain("But was:  <"));
+            Assert.That(notEqual.Message, Does.Contain("Expected: not equal to null").And.Contain("But was:  null NullEquivalentTests+DetachedRange"));
         }
 
         [Test]
-        public void FailureMessage_UsesAddedFormattersForNullEquivalent()
+        public void FailureMessage_UsesFormattedValue()
         {
-            TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
-            TestContext.AddFormatter<Handle>(h => $"handle #{((Handle)h).Id}");
+            TestContext.AddNullEquivalent<Handle>(h => h.Id == 0, "<released handle>");
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Handle.Invalid, Is.Not.Null));
-            Assert.That(ex.Message, Does.Contain("handle #0"));
+            Assert.That(ex.Message, Does.Contain("But was:  <released handle>"));
+
+            ex = Assert.Throws<AssertionException>(() => Assert.That(Valid, Is.Null));
+            Assert.That(ex.Message, Does.Contain("But was:  <Handle(1)>"));
         }
 
         [Test]
@@ -223,6 +251,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DefaultEqualityTypes_CanNotBeRegistered()
         {
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<object>(o => o is Handle { Id: 0 }));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<string>(s => s.Length == 0));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<int>(i => i == 0));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<DayOfWeek>(d => d == DayOfWeek.Sunday));
@@ -250,26 +279,19 @@ namespace NUnit.Framework.Tests.Constraints
         {
             TestContext.AddNullEquivalent<Slot>(s => s.Index < 0);
 
-            // Assert.That(aStruct, Is.Null) is rejected by the NUnit analyzer, so apply the constraints directly.
-            Assert.That(Matches(Is.Null, new Slot { Index = -1 }), Is.True);
-            Assert.That(Matches(Is.EqualTo((object?)null), new Slot { Index = -1 }), Is.True);
-            Assert.That(Matches(Is.Null, new Slot { Index = 1 }), Is.False);
-
-            // Each y entry pairs with at most one x entry, also for value-type keys.
-            var actual = new Dictionary<Slot, int> { [new Slot { Index = -1 }] = 10, [new Slot { Index = -2 }] = 10 };
-            var expected = new Dictionary<Slot, int> { [new Slot { Index = -3 }] = 10, [new Slot { Index = -4 }] = 20 };
-            Assert.That(Matches(Is.EqualTo(expected), actual), Is.False);
-            Assert.That(
-                new Dictionary<Slot, int> { [new Slot { Index = -1 }] = 10, [new Slot { Index = -2 }] = 20 },
-                Is.EqualTo(new Dictionary<Slot, int> { [new Slot { Index = -3 }] = 20, [new Slot { Index = -4 }] = 10 }));
+            // The analyzer doesn't know about null-equivalent value types.
+#pragma warning disable NUnit2023 // Invalid NullConstraint usage
+            Assert.That(new Slot { Index = -1 }, Is.Null);
+            Assert.That(new Slot { Index = 1 }, Is.Not.Null);
+#pragma warning restore NUnit2023 // Invalid NullConstraint usage
+            Assert.That(new Slot { Index = -1 }, Is.EqualTo((object?)null));
         }
 
         [Test]
         public void DefaultEqualityTypes_AreNeverNullEquivalent()
         {
-            // A predicate on object would match strings and numbers, but the collection constraints
-            // compare those with EqualityComparer<T>.Default, so every constraint ignores them.
-            TestContext.AddNullEquivalent<object>(v => v is string { Length: 0 } or 0 || v is TimeSpan t && t == TimeSpan.Zero);
+            // A predicate on an interface can match strings, numbers or a TimeSpan, but values of those types are never null-equivalent.
+            TestContext.AddNullEquivalent<IComparable>(v => v is string { Length: 0 } or 0 || v is TimeSpan t && t == TimeSpan.Zero);
 
             Assert.That(string.Empty, Is.Not.Null);
             Assert.That(string.Empty, Is.Not.EqualTo(null));
