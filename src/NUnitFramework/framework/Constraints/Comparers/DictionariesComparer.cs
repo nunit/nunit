@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -24,14 +25,13 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.ComparedNotEqual;
 
             ComparisonState comparisonState = state.PushComparison(x, y);
-            List<int>? usedKeys = null;
+            bool hasNullEquivalentPredicate = TestExecutionContext.HasNullEquivalentPredicate;
+            List<object?>? xNullEquivalentKeyValues = null;
             foreach (object key in xDictionary.Keys)
             {
-                if (!yDictionary.Contains(key))
+                if (hasNullEquivalentPredicate && TestExecutionContext.IsNullOrNullEquivalent(key))
                 {
-                    if (!TryFindMatchingEntry(key, xDictionary, yDictionary, ref usedKeys, ref tolerance, comparisonState, equalityComparer))
-                        return EqualMethodResult.ComparedNotEqual;
-
+                    (xNullEquivalentKeyValues ??= new List<object?>()).Add(xDictionary[key]);
                     continue;
                 }
 
@@ -40,37 +40,34 @@ namespace NUnit.Framework.Constraints.Comparers
                     return result;
             }
 
-            return EqualMethodResult.ComparedEqual;
-        }
+            if (xNullEquivalentKeyValues is null)
+                return EqualMethodResult.ComparedEqual;
 
-        // The keys matched with NUnit equality (for example null-equivalent keys) but not with the dictionary's own
-        // key equality. Find an unused entry whose key and value both match, skipping keys that match another key exactly.
-        private static bool TryFindMatchingEntry(
-            object key,
-            IDictionary xDictionary,
-            IDictionary yDictionary,
-            ref List<int>? usedKeys,
-            ref Tolerance tolerance,
-            ComparisonState state,
-            NUnitEqualityComparer equalityComparer)
-        {
-            // Track used entries by position: value-type keys are boxed anew on each enumeration.
-            int index = -1;
-            foreach (object candidate in yDictionary.Keys)
+            // Null-equivalent keys all compare equal to each other, so neither dictionary's own key lookup can pair
+            // them. Match their entries one-to-one by value instead. The key tally guarantees both sides have as many.
+            var yNullEquivalentKeyValues = new List<object?>();
+            foreach (object key in yDictionary.Keys)
             {
-                index++;
-                if (xDictionary.Contains(candidate) || (usedKeys is not null && usedKeys.Contains(index)))
-                    continue;
-
-                if (equalityComparer.AreEqual(key, candidate, ref tolerance, state) == EqualMethodResult.ComparedEqual &&
-                    equalityComparer.AreEqual(xDictionary[key], yDictionary[candidate], ref tolerance, state) == EqualMethodResult.ComparedEqual)
-                {
-                    (usedKeys ??= new List<int>()).Add(index);
-                    return true;
-                }
+                if (TestExecutionContext.IsNullOrNullEquivalent(key))
+                    yNullEquivalentKeyValues.Add(yDictionary[key]);
             }
 
-            return false;
+            foreach (object? xValue in xNullEquivalentKeyValues)
+            {
+                int match = 0;
+                while (match < yNullEquivalentKeyValues.Count &&
+                       equalityComparer.AreEqual(xValue, yNullEquivalentKeyValues[match], ref tolerance, comparisonState) != EqualMethodResult.ComparedEqual)
+                {
+                    match++;
+                }
+
+                if (match == yNullEquivalentKeyValues.Count)
+                    return EqualMethodResult.ComparedNotEqual;
+
+                yNullEquivalentKeyValues.RemoveAt(match);
+            }
+
+            return EqualMethodResult.ComparedEqual;
         }
     }
 }

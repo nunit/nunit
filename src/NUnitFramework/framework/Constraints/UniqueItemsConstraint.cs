@@ -176,7 +176,7 @@ namespace NUnit.Framework.Constraints
             return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !MayContainNullEquivalentItems(type);
         }
 
-        // The default equality of a tuple or key/value pair compares its parts without the null-equivalent
+        // The default equality of a tuple, key/value pair or dictionary entry compares its parts without the null-equivalent
         // predicate, while NUnitEqualityComparer applies it to each part.
         private static bool MayContainNullEquivalentItems(Type type)
         {
@@ -184,6 +184,9 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+            if (underlyingType == typeof(DictionaryEntry))
+                return true;
+
             bool isComposite = underlyingType.IsTupleOrValueTuple()
                 || (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>));
 

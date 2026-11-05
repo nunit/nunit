@@ -26,6 +26,15 @@ namespace NUnit.Framework.Tests.Constraints
 
         private static readonly Handle Valid = new(1);
 
+        private sealed class HandleIdComparer : IEqualityComparer<Handle>
+        {
+            public static readonly HandleIdComparer Instance = new();
+
+            public bool Equals(Handle? x, Handle? y) => x?.Id == y?.Id;
+
+            public int GetHashCode(Handle obj) => obj.Id;
+        }
+
         // Resolves the whole expression: Is.Not.EqualTo(x).ApplyTo would apply only the inner EqualConstraint.
         private static bool Matches(IResolveConstraint constraint, object? actual) => constraint.Resolve().ApplyTo(actual).IsSuccess;
 
@@ -97,6 +106,8 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Matches(Is.Unique, new List<(Handle, int)?> { (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
             Assert.That(Matches(Is.Unique, new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
             Assert.That(new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
+            Assert.That(Matches(Is.Unique, new List<DictionaryEntry> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
+            Assert.That(new List<DictionaryEntry> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
         }
 
         [Test]
@@ -114,6 +125,13 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(
                 new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [b] = "v2" },
                 Is.EqualTo(new Dictionary<Handle, string> { [Handle.Invalid] = "v1", [a] = "v2" }));
+
+            // Entries pair one-to-one, also when the dictionaries' own key comparers differ.
+            TestContext.AddNullEquivalent<Handle>(h => h.Id < 0);
+            var byReference = new Dictionary<Handle, int> { [new Handle(-1)] = 10, [new Handle(-1)] = 10 };
+            var byId = new Dictionary<Handle, int>(HandleIdComparer.Instance) { [new Handle(-1)] = 10, [new Handle(-2)] = 20 };
+            Assert.That(Matches(Is.EqualTo(byId), byReference), Is.False);
+            Assert.That(Matches(Is.EqualTo(byReference), byId), Is.False);
 
             // Distinct null-equivalent keys are paired by their values.
             Assert.That(
