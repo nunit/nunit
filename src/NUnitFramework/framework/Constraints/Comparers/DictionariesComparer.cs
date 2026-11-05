@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return EqualMethodResult.ComparedNotEqual;
 
             ComparisonState comparisonState = state.PushComparison(x, y);
-            List<object>? usedKeys = null;
+            List<int>? usedKeys = null;
             foreach (object key in xDictionary.Keys)
             {
                 if (!yDictionary.Contains(key))
@@ -49,20 +49,23 @@ namespace NUnit.Framework.Constraints.Comparers
             object key,
             IDictionary xDictionary,
             IDictionary yDictionary,
-            ref List<object>? usedKeys,
+            ref List<int>? usedKeys,
             ref Tolerance tolerance,
             ComparisonState state,
             NUnitEqualityComparer equalityComparer)
         {
+            // Track used entries by position: value-type keys are boxed anew on each enumeration.
+            int index = -1;
             foreach (object candidate in yDictionary.Keys)
             {
-                if (xDictionary.Contains(candidate) || (usedKeys is not null && usedKeys.Exists(used => ReferenceEquals(used, candidate))))
+                index++;
+                if (xDictionary.Contains(candidate) || (usedKeys is not null && usedKeys.Contains(index)))
                     continue;
 
                 if (equalityComparer.AreEqual(key, candidate, ref tolerance, state) == EqualMethodResult.ComparedEqual &&
                     equalityComparer.AreEqual(xDictionary[key], yDictionary[candidate], ref tolerance, state) == EqualMethodResult.ComparedEqual)
                 {
-                    (usedKeys ??= new List<object>()).Add(candidate);
+                    (usedKeys ??= new List<int>()).Add(index);
                     return true;
                 }
             }

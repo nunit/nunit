@@ -35,6 +35,7 @@ namespace NUnit.Framework.Internal.Extensions
         /// </summary>
         public static bool CanBeNullEquivalent(this Type type)
         {
+            type = Nullable.GetUnderlyingType(type) ?? type;
             if (type.CanUseDefaultEquality() || type == typeof(TimeSpan) || type == typeof(DateTimeOffset))
                 return false;
 

@@ -130,7 +130,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(notNull.Message, Does.Contain("Expected: not null").And.Contain("But was:  <"));
 
             var notEqual = Assert.Throws<AssertionException>(() => Assert.That(DetachedRange.Detached, Is.Not.EqualTo(null)));
-            Assert.That(notEqual.Message, Does.Contain("Expected: not equal to null"));
+            Assert.That(notEqual.Message, Does.Contain("Expected: not equal to null").And.Contain("But was:  <"));
         }
 
         [Test]
@@ -236,6 +236,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(Matches(Is.Null, new Slot { Index = -1 }), Is.True);
             Assert.That(Matches(Is.EqualTo((object?)null), new Slot { Index = -1 }), Is.True);
             Assert.That(Matches(Is.Null, new Slot { Index = 1 }), Is.False);
+
+            // Each y entry pairs with at most one x entry, also for value-type keys.
+            var actual = new Dictionary<Slot, int> { [new Slot { Index = -1 }] = 10, [new Slot { Index = -2 }] = 10 };
+            var expected = new Dictionary<Slot, int> { [new Slot { Index = -3 }] = 10, [new Slot { Index = -4 }] = 20 };
+            Assert.That(Matches(Is.EqualTo(expected), actual), Is.False);
+            Assert.That(
+                new Dictionary<Slot, int> { [new Slot { Index = -1 }] = 10, [new Slot { Index = -2 }] = 20 },
+                Is.EqualTo(new Dictionary<Slot, int> { [new Slot { Index = -3 }] = 20, [new Slot { Index = -4 }] = 10 }));
         }
 
         [Test]
