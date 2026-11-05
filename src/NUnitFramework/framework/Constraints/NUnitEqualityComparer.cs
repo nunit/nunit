@@ -207,8 +207,15 @@ namespace NUnit.Framework.Constraints
         /// Compares two objects for equality within a tolerance.
         /// </summary>
         public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
+            => AreEqual(x, y, ref tolerance, TestExecutionContext.GetNullEquivalents());
+
+        /// <summary>
+        /// Compares two objects for equality within a tolerance, with the null-equivalent predicates
+        /// the caller read once for many comparisons.
+        /// </summary>
+        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, NullEquivalents? nullEquivalents)
         {
-            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
+            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true, nullEquivalents));
 
             switch (result)
             {
@@ -248,6 +255,10 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
+            // Also covers two nulls. The same instance is equal to itself, null-equivalent or not.
+            if (object.ReferenceEquals(x, y))
+                return EqualMethodResult.ComparedEqual;
+
             if (state.NullEquivalents is NullEquivalents nullEquivalents)
             {
                 if (x is not null && nullEquivalents.IsNullEquivalent(x))
@@ -261,9 +272,6 @@ namespace NUnit.Framework.Constraints
 
             if (x is null || y is null)
                 return EqualMethodResult.ComparedNotEqual;
-
-            if (object.ReferenceEquals(x, y))
-                return EqualMethodResult.ComparedEqual;
 
             foreach (EqualMethod equalMethod in Comparers)
             {

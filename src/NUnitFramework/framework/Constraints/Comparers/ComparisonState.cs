@@ -27,7 +27,12 @@ namespace NUnit.Framework.Constraints.Comparers
         private readonly ImmutableStack<Comparison> _comparisons;
 
         public ComparisonState(bool topLevelComparison)
-            : this(topLevelComparison, 0, ImmutableStack<Comparison>.Empty, TestExecutionContext.GetNullEquivalents())
+            : this(topLevelComparison, TestExecutionContext.GetNullEquivalents())
+        {
+        }
+
+        public ComparisonState(bool topLevelComparison, NullEquivalents? nullEquivalents)
+            : this(topLevelComparison, 0, ImmutableStack<Comparison>.Empty, nullEquivalents)
         {
         }
 

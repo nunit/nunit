@@ -134,6 +134,26 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
             Assert.That(Matches(Is.Unique, new List<DictionaryEntry> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
             Assert.That(new List<DictionaryEntry> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
+            Assert.That(Matches(Is.Unique, new List<((Handle, int), int)> { ((Handle.Invalid, 1), 1), ((new Handle(0), 1), 1) }), Is.False);
+            Assert.That(
+                Matches(Is.Unique, new List<(int, int, int, int, int, int, int, Handle)> { (1, 2, 3, 4, 5, 6, 7, Handle.Invalid), (1, 2, 3, 4, 5, 6, 7, new Handle(0)) }),
+                Is.False);
+            Assert.That(Matches(Is.Unique, new ArrayList { Valid, (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
+            Assert.That(new ArrayList { Valid, (Handle.Invalid, 1), (Valid, 1) }, Is.Unique);
+
+            // Tuple.Equals accepts a subclass, so its parts are compared too.
+            Assert.That(Matches(Is.Unique, new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Valid), 1), (new HandleTuple(Valid), 1) }), Is.False);
+            Assert.That(Matches(Is.Unique, new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Handle.Invalid), 1), (new HandleTuple(new Handle(0)), 1) }), Is.False);
+            Assert.That(Matches(Is.Unique, new List<HandleTuple> { new(Handle.Invalid), new(new Handle(0)) }), Is.False);
+            Assert.That(Matches(Is.Unique, new List<(HandleTuple, int)> { (new(Handle.Invalid), 1), (new(new Handle(0)), 1) }), Is.False);
+        }
+
+        private sealed class HandleTuple : Tuple<Handle>
+        {
+            public HandleTuple(Handle handle)
+                : base(handle)
+            {
+            }
         }
 
         [Test]
@@ -353,6 +373,60 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That("text", Is.Not.Null);
             Assert.That((object)0, Is.Not.Null);
             Assert.That(calls, Is.Zero);
+        }
+    }
+
+    // Large collections with a predicate registered stay on the hash-based paths instead of comparing all pairs.
+    [TestFixture]
+    public class NullEquivalentPerformanceTests
+    {
+        private const int Size = 10_000;
+        private const int WarnTime = 50;
+        private const int FailTime = 250;
+
+        private sealed class Handle
+        {
+            public Handle(int id) => Id = id;
+
+            public int Id { get; }
+        }
+
+        [SetUp]
+        public void AddNullEquivalent() => TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
+
+        [Test, MaxTime(FailTime, WarningTime = WarnTime)]
+        public void Unique_ItemsOfTheRegisteredType()
+        {
+            var items = new List<Handle>(Size);
+            for (int i = 1; i <= Size; i++)
+                items.Add(new Handle(i));
+
+            Assert.That(items, Is.Unique);
+        }
+
+        [Test, MaxTime(FailTime, WarningTime = WarnTime)]
+        public void Unique_TuplesWithAPartOfTheRegisteredType()
+        {
+            var items = new List<(Handle, int)>(Size);
+            for (int i = 1; i <= Size; i++)
+                items.Add((new Handle(i), i));
+
+            Assert.That(items, Is.Unique);
+        }
+
+        [Test, MaxTime(FailTime, WarningTime = WarnTime)]
+        public void EqualTo_ListsOfTheRegisteredType()
+        {
+            var expected = new List<Handle>(Size);
+            var actual = new List<Handle>(Size);
+            for (int i = 1; i <= Size; i++)
+            {
+                var handle = new Handle(i);
+                expected.Add(handle);
+                actual.Add(handle);
+            }
+
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 
