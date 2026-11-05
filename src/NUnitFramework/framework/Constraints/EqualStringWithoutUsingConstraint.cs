@@ -135,13 +135,13 @@ namespace NUnit.Framework.Constraints
         {
             bool hasSucceeded;
 
-            if (TestExecutionContext.IsNullOrNullEquivalent(actual))
-            {
-                hasSucceeded = _expected is null;
-            }
-            else if (actual is string actualString)
+            if (actual is string actualString)
             {
                 return ApplyTo(actualString);
+            }
+            else if (TestExecutionContext.IsNullOrNullEquivalent(actual))
+            {
+                hasSucceeded = _expected is null;
             }
             else if (actual is IEquatable<string> equatableString)
             {

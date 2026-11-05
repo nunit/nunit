@@ -137,6 +137,15 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void UniqueConstraint_ChecksCovariantArrayItems()
+        {
+            TestContext.AddNullEquivalent<IReadOnlyList<string>>(l => l.Count == 0);
+
+            // An object[] item can hold a string[], which the predicate applies to.
+            Assert.That(Matches(Is.Unique, new List<(object[]?, int)> { (Array.Empty<string>(), 1), (null, 1) }), Is.False);
+        }
+
+        [Test]
         public void DictionaryKeys_AreNotNullEquivalent()
         {
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);

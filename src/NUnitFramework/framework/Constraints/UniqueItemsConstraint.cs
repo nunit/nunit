@@ -3,12 +3,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints.Comparers;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -180,7 +180,8 @@ namespace NUnit.Framework.Constraints
         // predicate, while NUnitEqualityComparer applies it to each part.
         private static bool MayContainNullEquivalentItems(Type type)
         {
-            if (!TestExecutionContext.HasNullEquivalents)
+            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
+            if (nullEquivalents is null)
                 return false;
 
             Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
@@ -190,7 +191,7 @@ namespace NUnit.Framework.Constraints
             bool isComposite = underlyingType.IsTupleOrValueTuple()
                 || (underlyingType.IsGenericType && underlyingType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>));
 
-            return isComposite && underlyingType.GetGenericArguments().Any(argument => (Nullable.GetUnderlyingType(argument) ?? argument).CanBeNullEquivalent());
+            return isComposite && underlyingType.GetGenericArguments().Any(argument => nullEquivalents.MayApplyTo(Nullable.GetUnderlyingType(argument) ?? argument));
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -201,9 +202,10 @@ namespace NUnit.Framework.Constraints
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
         {
-            IEqualityComparer<T> comparer = !TestExecutionContext.HasNullEquivalents || !(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)).CanBeNullEquivalent()
-                ? EqualityComparer<T>.Default
-                : NullEquivalentEqualityComparer<T>.Instance;
+            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
+            IEqualityComparer<T> comparer = nullEquivalents is not null && nullEquivalents.MayApplyTo(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T))
+                ? new NullEquivalentEqualityComparer<T>(nullEquivalents)
+                : EqualityComparer<T>.Default;
 
             return NonUniqueItemsInternal(actual, comparer);
         }
@@ -211,18 +213,22 @@ namespace NUnit.Framework.Constraints
         // Default equality, except that all null and null-equivalent items are equal to each other.
         private sealed class NullEquivalentEqualityComparer<T> : IEqualityComparer<T>
         {
-            public static readonly NullEquivalentEqualityComparer<T> Instance = new();
+            private readonly NullEquivalents _nullEquivalents;
+
+            public NullEquivalentEqualityComparer(NullEquivalents nullEquivalents) => _nullEquivalents = nullEquivalents;
 
             public bool Equals(T? x, T? y)
             {
-                bool xIsNull = TestExecutionContext.IsNullOrNullEquivalent(x);
-                bool yIsNull = TestExecutionContext.IsNullOrNullEquivalent(y);
+                bool xIsNull = IsNull(x);
+                bool yIsNull = IsNull(y);
 
                 return xIsNull || yIsNull ? xIsNull && yIsNull : EqualityComparer<T>.Default.Equals(x, y);
             }
 
             public int GetHashCode(T obj)
-                => TestExecutionContext.IsNullOrNullEquivalent(obj) ? 0 : EqualityComparer<T>.Default.GetHashCode(obj);
+                => IsNull(obj) ? 0 : EqualityComparer<T>.Default.GetHashCode(obj);
+
+            private bool IsNull([NotNullWhen(false)] T? value) => value is null || _nullEquivalents.IsNullEquivalent(value);
         }
 
         private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)

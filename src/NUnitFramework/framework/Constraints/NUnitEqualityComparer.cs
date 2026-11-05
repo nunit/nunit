@@ -248,7 +248,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            if (TestExecutionContext.GetNullEquivalents() is NullEquivalents nullEquivalents)
+            if (state.NullEquivalents is NullEquivalents nullEquivalents)
             {
                 if (x is not null && nullEquivalents.IsNullEquivalent(x))
                     x = null;

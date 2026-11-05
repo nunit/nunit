@@ -19,6 +19,9 @@ namespace NUnit.Framework.Internal
         private readonly ConcurrentDictionary<Type, Func<object, bool>?> _predicateByType = new();
         private readonly Func<Type, Func<object, bool>?> _createPredicate;
 
+        // Items of a collection usually share their type, so remember the last lookup.
+        private TypePredicate? _last;
+
         private NullEquivalents(Registration[] registrations)
         {
             _registrations = registrations;
@@ -37,10 +40,43 @@ namespace NUnit.Framework.Internal
         public bool IsNullEquivalent(object value)
         {
             Type type = value.GetType();
-            if (!_predicateByType.TryGetValue(type, out Func<object, bool>? predicate))
-                predicate = _predicateByType.GetOrAdd(type, _createPredicate);
+            TypePredicate? last = _last;
+            Func<object, bool>? predicate;
+            if (last is not null && last.Type == type)
+            {
+                predicate = last.Predicate;
+            }
+            else
+            {
+                if (!_predicateByType.TryGetValue(type, out predicate))
+                    predicate = _predicateByType.GetOrAdd(type, _createPredicate);
+                _last = new TypePredicate(type, predicate);
+            }
 
             return predicate is not null && predicate(value);
+        }
+
+        /// <summary>
+        /// Whether a value of static type <paramref name="type"/> may be null-equivalent,
+        /// so callers can skip the check for collections of unrelated types.
+        /// </summary>
+        public bool MayApplyTo(Type type)
+        {
+            if (!type.CanBeNullEquivalent())
+                return false;
+
+            foreach (Registration registration in _registrations)
+            {
+                // The value's runtime type derives from both type and the registered type.
+                // An array is sealed, but a reference-type array can hold an array of a derived type.
+                if (registration.Type.IsAssignableFrom(type) || type.IsAssignableFrom(registration.Type) ||
+                    (registration.Type.IsInterface && (!type.IsSealed || type.IsArray)) || (type.IsInterface && !registration.Type.IsSealed))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private Func<object, bool>? CreatePredicate(Type type)
@@ -60,6 +96,19 @@ namespace NUnit.Framework.Internal
             }
 
             return combined;
+        }
+
+        private sealed class TypePredicate
+        {
+            public TypePredicate(Type type, Func<object, bool>? predicate)
+            {
+                Type = type;
+                Predicate = predicate;
+            }
+
+            public Type Type { get; }
+
+            public Func<object, bool>? Predicate { get; }
         }
 
         private readonly struct Registration

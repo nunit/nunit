@@ -539,6 +539,7 @@ namespace NUnit.Framework.Internal
             }
 
             CurrentNullEquivalents = NullEquivalents.Add(CurrentNullEquivalents, type, value => isNullEquivalent((TSupported)value));
+            _anyNullEquivalentsAdded = true;
 
             string formatted = formattedValue ?? $"null {type.GetDisplayName()}";
             AddFormatter(next => value => value is TSupported supported && value.GetType().CanBeNullEquivalent() && isNullEquivalent(supported)
@@ -561,14 +562,13 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// True if null-equivalent predicates apply in the current context.
-        /// </summary>
-        internal static bool HasNullEquivalents => GetNullEquivalents() is not null;
-
-        /// <summary>
         /// The null-equivalent predicates of the current context, or <see langword="null"/> if none were added.
         /// </summary>
-        internal static NullEquivalents? GetNullEquivalents() => CurrentContext.CurrentNullEquivalents;
+        internal static NullEquivalents? GetNullEquivalents() => _anyNullEquivalentsAdded ? CurrentContext.CurrentNullEquivalents : null;
+
+        // Equality constraints look up the null-equivalent predicates for every compared pair.
+        // Until a test adds one, skip reading the current context.
+        private static volatile bool _anyNullEquivalentsAdded;
 
         private TestExecutionContext CreateIsolatedContext()
         {
