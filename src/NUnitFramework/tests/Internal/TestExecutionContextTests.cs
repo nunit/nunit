@@ -41,6 +41,16 @@ namespace NUnit.Framework.Tests.Internal
         private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
         private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
+        [Test]
+        public void AdhocContextHasAnAdhocTestMethod()
+        {
+            var context = new TestExecutionContext.AdhocContext();
+
+            Assert.That(context.CurrentTest.Method, Is.Not.Null);
+            Assert.That(context.CurrentTest.Method!.Name, Is.EqualTo("AdhocTestMethod"));
+            Assert.That(context.CurrentTest.Method.TypeInfo.Type, Is.EqualTo(typeof(TestExecutionContext.AdhocContext)));
+        }
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using NUnit.Compatibility;
@@ -575,7 +576,10 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public AdhocContext()
             {
-                CurrentTest = new TestMethod(new MethodWrapper(GetType(), nameof(AdhocTestMethod)));
+                // A constant name on typeof(AdhocContext), so that trimming tools keep AdhocTestMethod.
+                var adhocTestMethod = typeof(AdhocContext).GetMethod(nameof(AdhocTestMethod), BindingFlags.NonPublic | BindingFlags.Instance)
+                    ?? throw new InvalidOperationException($"Method {typeof(AdhocContext).FullName}.{nameof(AdhocTestMethod)} not found");
+                CurrentTest = new TestMethod(new MethodWrapper(typeof(AdhocContext), adhocTestMethod));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

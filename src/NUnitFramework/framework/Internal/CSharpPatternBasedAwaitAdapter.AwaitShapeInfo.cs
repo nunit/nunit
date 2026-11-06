@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -37,10 +38,11 @@ namespace NUnit.Framework.Internal
                     return null;
 
                 var awaiterType = getAwaiterMethod.ReturnType;
-                var notifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.INotifyCompletion");
-                if (notifyCompletionInterface is null)
+                // typeof(...).GetMethod with a constant name, so that trimming tools keep these interface members.
+                if (!typeof(INotifyCompletion).IsAssignableFrom(awaiterType))
                     return null;
-                var onCompletedMethod = notifyCompletionInterface.GetNonGenericPublicInstanceMethod("OnCompleted", new[] { typeof(Action) });
+                var onCompletedMethod = typeof(INotifyCompletion).GetMethod(
+                    nameof(INotifyCompletion.OnCompleted), BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(Action) }, null);
                 if (onCompletedMethod is null)
                     return null;
 
@@ -55,8 +57,10 @@ namespace NUnit.Framework.Internal
                 if (getResultMethod is null)
                     return null;
 
-                var criticalNotifyCompletionInterface = awaiterType.GetInterface("System.Runtime.CompilerServices.ICriticalNotifyCompletion");
-                var unsafeOnCompletedMethod = criticalNotifyCompletionInterface?.GetNonGenericPublicInstanceMethod("UnsafeOnCompleted", new[] { typeof(Action) });
+                var unsafeOnCompletedMethod = typeof(ICriticalNotifyCompletion).IsAssignableFrom(awaiterType)
+                    ? typeof(ICriticalNotifyCompletion).GetMethod(
+                        nameof(ICriticalNotifyCompletion.UnsafeOnCompleted), BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(Action) }, null)
+                    : null;
 
                 return new AwaitShapeInfo(
                     getAwaiterMethod,
