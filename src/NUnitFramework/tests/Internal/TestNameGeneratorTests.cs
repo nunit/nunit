@@ -209,7 +209,7 @@ namespace NUnit.Framework.Tests.Internal
                 CreateTestCaseData(UInt128.MaxValue),
                 CreateTestCaseData(UInt128.MinValue),
 #endif
-                ];
+            ];
 
             static TestCaseData CreateTestCaseData<T>(T value, [CallerArgumentExpression(nameof(value))] string displayName = "")
                 => new TestCaseData(value).SetArgDisplayNames(displayName).Returns(displayName);
