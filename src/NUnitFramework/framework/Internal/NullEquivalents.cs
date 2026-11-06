@@ -59,8 +59,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Whether a value of static type <paramref name="type"/> may be null-equivalent,
-        /// so callers can skip the check for collections of unrelated types.
+        /// Whether a value of static type <paramref name="type"/>, such as the item type of a collection, may be
+        /// null-equivalent, so callers can skip the check for collections of unrelated types.
+        /// This is conservative: it can be true when <see cref="CreatePredicate"/>, which is exact for a runtime type, finds none.
         /// </summary>
         public bool MayApplyTo(Type type)
         {
