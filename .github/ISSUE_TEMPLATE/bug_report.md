@@ -16,7 +16,7 @@ assignees: ''
 
 ### .NET version
 
-<!-- For example: 5.0.0 -->
+<!-- For example: .NET 10 -->
 
 ### Describe the issue
 
