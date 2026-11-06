@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -556,6 +557,19 @@ namespace NUnit.TestData
         public static async Task WarningAfterAwaitTaskDelay()
         {
             await Task.Delay(1);
+            Assert.Warn("(Warning message)");
+        }
+
+        [Test]
+        public static async Task WarningInUserMethodAfterAwaitTaskDelay()
+        {
+            await Task.Delay(1);
+            IssueWarning();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void IssueWarning()
+        {
             Assert.Warn("(Warning message)");
         }
 
