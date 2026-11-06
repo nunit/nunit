@@ -87,7 +87,7 @@ namespace NUnit.Framework.Tests.SolutionTests
 
                 foreach (var itemGroup in doc.Descendants("PropertyGroup"))
                 {
-                    XElement? packageReferences = itemGroup.Descendants("NUnitLibraryFrameworks").LastOrDefault();
+                    XElement? packageReferences = itemGroup.Descendants("NUnitLibraryFrameworks").FirstOrDefault();
 
                     if (packageReferences is not null)
                     {
