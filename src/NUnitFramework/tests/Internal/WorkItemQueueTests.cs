@@ -90,7 +90,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void EnqueueBeforeDequeue()
         {
-            string[] names = new[] { "Test1", "Test2", "Test3" };
+            string[] names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
 
             EnqueueWorkItems(names);
             _queue.Start();
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Internal
         public void DequeueBeforeEnqueue()
         {
             _queue.Start();
-            var names = new[] { "Test1", "Test2", "Test3" };
+            var names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
 
             new Thread(new ThreadStart(() =>
             {
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void EnqueueAndDequeueWhilePaused()
         {
-            string[] names = new[] { "Test1", "Test2", "Test3" };
+            string[] names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
             EnqueueWorkItems(names);
 
             new Thread(new ThreadStart(() =>
@@ -133,11 +133,11 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void PriorityIsHonored()
         {
-            EnqueueWorkItem("Test1", NORMAL_PRIORITY);
-            EnqueueWorkItem("Test2", HIGH_PRIORITY);
-            EnqueueWorkItem("Test3", NORMAL_PRIORITY);
+            EnqueueWorkItem(nameof(Test1), NORMAL_PRIORITY);
+            EnqueueWorkItem(nameof(Test2), HIGH_PRIORITY);
+            EnqueueWorkItem(nameof(Test3), NORMAL_PRIORITY);
             _queue.Start();
-            VerifyQueueContents("Test2", "Test1", "Test3");
+            VerifyQueueContents(nameof(Test2), nameof(Test1), nameof(Test3));
         }
 
         [Test]
@@ -148,11 +148,11 @@ namespace NUnit.Framework.Tests.Internal
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
             Assert.That(fixtureItem, Is.Not.Null);
             var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem);
-            EnqueueWorkItem("Test1");
+            EnqueueWorkItem(nameof(Test1));
             _queue.Enqueue(tearDown);
-            EnqueueWorkItem("Test2");
+            EnqueueWorkItem(nameof(Test2));
             _queue.Start();
-            VerifyQueueContents("WorkItemQueueTests+MyFixture", "Test1", "Test2");
+            VerifyQueueContents("WorkItemQueueTests+MyFixture", nameof(Test1), nameof(Test2));
         }
 
         private void EnqueueWorkItems(params string[] names)

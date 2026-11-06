@@ -32,6 +32,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private readonly Lock _syncRoot = new();
         private int _busyCount = 0;
+        private int _active = 0;
 
         /// <summary>
         /// Construct a WorkShift
@@ -39,7 +40,6 @@ namespace NUnit.Framework.Internal.Execution
         public WorkShift(string name)
         {
             Name = name;
-            IsActive = false;
         }
 
         #region Public Events and Properties
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets a flag indicating whether the shift is currently active
         /// </summary>
-        public bool IsActive { get; private set; }
+        public bool IsActive => _active == 1;
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do
@@ -69,6 +69,12 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var q in Queues)
                 {
                     if (!q.IsEmpty)
+                        return true;
+                }
+
+                foreach (var w in Workers)
+                {
+                    if (w.IsBusy)
                         return true;
                 }
 
@@ -84,13 +90,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets a list of the queues associated with this shift.
         /// </summary>
         /// <remarks>Internal for testing - immutable once initialized</remarks>
-        internal IList<WorkItemQueue> Queues { get; } = new List<WorkItemQueue>();
+        internal List<WorkItemQueue> Queues { get; } = new();
 
         /// <summary>
         /// Gets the list of workers associated with this shift.
         /// </summary>
         /// <remarks>Internal for testing - immutable once initialized</remarks>
-        internal IList<TestWorker> Workers { get; } = new List<TestWorker>();
+        internal List<TestWorker> Workers { get; } = new();
 
         #endregion
 
@@ -128,18 +134,25 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            Log.Info("{0} shift starting", Name);
-
-            IsActive = true;
-
-            if (_firstStart)
+            lock (_syncRoot)
             {
-                _firstStart = false;
-                StartWorkers();
-            }
+                if (Interlocked.Exchange(ref _active, 1) == 1)
+                {
+                    Log.Info("{0} shift already started", Name);
+                    return;
+                }
 
-            foreach (var q in Queues)
-                q.Start();
+                Log.Info("{0} shift starting", Name);
+
+                if (_firstStart)
+                {
+                    _firstStart = false;
+                    StartWorkers();
+                }
+
+                foreach (var q in Queues)
+                    q.Start();
+            }
         }
 
         private void StartWorkers()
@@ -174,13 +187,20 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            Log.Info("{0} shift ending", Name);
+            lock (_syncRoot)
+            {
+                if (Interlocked.Exchange(ref _active, 0) == 0)
+                {
+                    Log.Info("{0} shift already ended", Name);
+                    return;
+                }
 
-            IsActive = false;
+                Log.Info("{0} shift ending", Name);
 
-            // Pause all queues for this shift
-            foreach (var q in Queues)
-                q.Pause();
+                // Pause all queues for this shift
+                foreach (var q in Queues)
+                    q.Pause();
+            }
 
             // Signal the dispatcher that shift ended
             EndOfShift?.Invoke(this);
@@ -191,7 +211,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void ShutDown()
         {
-            IsActive = false;
+            if (Interlocked.Exchange(ref _active, 0) == 1)
+            {
+                Log.Info("{0} shutdown with active shift", Name);
+            }
 
             foreach (var q in Queues)
                 q.Stop();

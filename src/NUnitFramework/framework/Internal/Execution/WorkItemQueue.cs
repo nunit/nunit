@@ -212,14 +212,29 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns>A WorkItem or null if the queue has stopped</returns>
         public WorkItem? Dequeue()
         {
+            TryDequeue(out WorkItem? work);
+            return work;
+        }
+
+        /// <summary>
+        /// Dequeue a WorkItem for processing
+        /// </summary>
+        /// <param name="work">The WorkItem dequeued, or null if the queue has stopped</param>
+        /// <returns>True if a WorkItem was dequeued, false if the queue has stopped</returns>
+        internal bool TryDequeue([NotNullWhen(true)] out WorkItem? work)
+        {
             SpinWait sw = new SpinWait();
+
+            work = null;
 
             do
             {
                 WorkItemQueueState cachedState = State;
 
                 if (cachedState == WorkItemQueueState.Stopped)
-                    return null; // Tell worker to terminate
+                {
+                    return false; // Tell worker to terminate
+                }
 
                 int cachedRemoveId = _removeId;
                 int cachedAddId = _addId;
@@ -257,7 +272,6 @@ namespace NUnit.Framework.Internal.Execution
                     continue;
 
                 // Dequeue our work item
-                WorkItem? work = null;
                 while (work is null)
                 {
                     foreach (var q in _innerQueues)
@@ -270,7 +284,7 @@ namespace NUnit.Framework.Internal.Execution
                 // Add to items processed using CAS
                 Interlocked.Increment(ref _itemsProcessed);
 
-                return work;
+                return true;
             }
             while (true);
         }
