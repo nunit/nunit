@@ -1,0 +1,32 @@
+blank_issues_enabled: true
+contact_links:
+  - name: NUnit Visual Studio Adapter
+    url: https://github.com/nunit/nunit3-vs-adapter/issues/new
+    about: Report issues with running NUnit tests in Visual Studio or dotnet test.
+  - name: NUnit Analyzers
+    url: https://github.com/nunit/nunit.analyzers/issues/new
+    about: Report issues with NUnit analyzers or code fixes.
+  - name: NUnit Console and Engine
+    url: https://github.com/nunit/nunit-console/issues/new
+    about: Report issues with the NUnit Console Runner or engine.
+  - name: NUnit Visual Studio Test Generator
+    url: https://github.com/nunit/nunit-vs-testgenerator/issues/new
+    about: Report issues with the NUnit Visual Studio Test Generator.
+  - name: NUnit 2 Visual Studio Adapter
+    url: https://github.com/nunit/nunit-vs-adapter/issues/new
+    about: Report issues with the NUnit 2 Visual Studio Adapter.
+  - name: NUnit 2 Driver
+    url: https://github.com/nunit/nunit-v2-framework-driver/issues/new
+    about: Report issues with running NUnit 2 tests through the NUnit engine.
+  - name: NUnit 2 Result Writer
+    url: https://github.com/nunit/nunit-v2-result-writer/issues/new
+    about: Report issues with writing NUnit 2 format test results.
+  - name: Visual Studio Project Loader
+    url: https://github.com/nunit/vs-project-loader/issues/new
+    about: Report issues with loading Visual Studio projects in the NUnit engine.
+  - name: NUnit Project Loader
+    url: https://github.com/nunit/nunit-project-loader/issues/new
+    about: Report issues with loading NUnit projects.
+  - name: .NET Test Templates
+    url: https://github.com/dotnet/test-templates/issues/new
+    about: Report issues with NUnit templates included in the .NET SDK.
