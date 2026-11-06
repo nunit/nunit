@@ -29,9 +29,9 @@ namespace NUnit.Framework.Internal.Extensions
         }
 
         /// <summary>
-        /// Whether values of <paramref name="type"/> can be null-equivalent. Types that NUnit compares with their
+        /// Whether a predicate can be added for <paramref name="type"/>. Types that NUnit compares with their
         /// default equality or with a dedicated constraint, or that <see cref="Constraints.EqualConstraint"/> rewrites,
-        /// never call the predicate on some paths, so they are excluded everywhere.
+        /// never call the predicate on some paths.
         /// </summary>
         public static bool CanBeNullEquivalent(this Type type)
         {

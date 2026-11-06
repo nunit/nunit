@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -65,15 +64,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool MayApplyTo(Type type)
         {
-            if (!type.CanBeNullEquivalent())
-                return false;
-
             foreach (Registration registration in _registrations)
             {
-                // The value's runtime type derives from both type and the registered type.
-                // An array is sealed, but a reference-type array can hold an array of a derived type.
+                // A value of static type 'type' is of a type derived from the registered type, or the other way round.
+                // An interface can also be implemented by a class that derives from the registered type.
                 if (registration.Type.IsAssignableFrom(type) || type.IsAssignableFrom(registration.Type) ||
-                    (registration.Type.IsInterface && (!type.IsSealed || type.IsArray)) || (type.IsInterface && !registration.Type.IsSealed))
+                    (type.IsInterface && !registration.Type.IsSealed))
                 {
                     return true;
                 }
@@ -84,9 +80,6 @@ namespace NUnit.Framework.Internal
 
         private Func<object, bool>? CreatePredicate(Type type)
         {
-            if (!type.CanBeNullEquivalent())
-                return null;
-
             Func<object, bool>? combined = null;
             foreach (Registration registration in _registrations)
             {

@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void UniqueConstraint_ChecksCovariantArrayItems()
         {
-            TestContext.AddNullEquivalent<IReadOnlyList<string>>(l => l.Count == 0);
+            TestContext.AddNullEquivalent<string[]>(l => l.Length == 0);
 
             // An object[] item can hold a string[], which the predicate applies to.
             Assert.That(new List<(object[]?, int)> { (Array.Empty<string>(), 1), (null, 1) }, Is.Not.Unique);
@@ -217,6 +217,9 @@ namespace NUnit.Framework.Tests.Constraints
         public void DefaultEqualityTypes_CanNotBeRegistered()
         {
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<object>(o => o is Handle { Id: 0 }));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<ValueType>(v => v is Slot { Index: 0 }));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<Enum>(e => e.Equals(DayOfWeek.Sunday)));
+            Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<IComparable>(c => c.CompareTo(0) == 0));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<string>(s => s.Length == 0));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<int>(i => i == 0));
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<DayOfWeek>(d => d == DayOfWeek.Sunday));
@@ -248,10 +251,9 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void DefaultEqualityTypes_AreNeverNullEquivalent()
+        public void DefaultEqualityTypes_AreNotAffectedByPredicates()
         {
-            // A predicate on an interface can match strings, numbers or a TimeSpan, but values of those types are never null-equivalent.
-            TestContext.AddNullEquivalent<IComparable>(v => v is string { Length: 0 } or 0 || v is TimeSpan t && t == TimeSpan.Zero);
+            TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
             Assert.That(string.Empty, Is.Not.Null);
             Assert.That(string.Empty, Is.Not.EqualTo(null));

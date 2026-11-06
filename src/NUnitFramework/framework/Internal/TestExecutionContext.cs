@@ -508,12 +508,12 @@ namespace NUnit.Framework.Internal
         /// and formats them as <paramref name="formattedValue"/> in failure messages.
         /// Predicates added earlier still apply.
         /// </summary>
-        /// <typeparam name="TSupported">The type the predicate applies to. It can't be <see cref="object"/>,
+        /// <typeparam name="TSupported">The type the predicate applies to, which also applies to types derived from it.
+        /// It can't be an interface, <see cref="object"/>, <see cref="ValueType"/>, <see cref="Enum"/>,
         /// a type that NUnit compares with its default equality or a dedicated constraint (a string, primitive, enum,
         /// other numeric type, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="TimeSpan"/>,
         /// or a tuple of those),
-        /// an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>. Values of those types are never passed
-        /// to a predicate added for a base type or interface either.</typeparam>
+        /// an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>.</typeparam>
         /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null.</param>
         /// <param name="formattedValue">How failure messages show a null-equivalent value.
         /// Defaults to <c>null</c> followed by the type name.</param>
@@ -523,8 +523,8 @@ namespace NUnit.Framework.Internal
             ArgumentNullException.ThrowIfNull(isNullEquivalent);
 
             Type type = typeof(TSupported);
-            if (type == typeof(object))
-                throw new ArgumentException("Add it for the type that has null-equivalent values, not for object.");
+            if (type == typeof(object) || type == typeof(ValueType) || type == typeof(Enum) || type.IsInterface)
+                throw new ArgumentException("Add it for the concrete or base class that has null-equivalent values, not for an interface, object, ValueType or Enum.");
 
             if (Nullable.GetUnderlyingType(type) is Type underlyingType)
             {
@@ -542,7 +542,7 @@ namespace NUnit.Framework.Internal
             _anyNullEquivalentsAdded = true;
 
             string formatted = formattedValue ?? $"null {type.GetDisplayName()}";
-            AddFormatter(next => value => value is TSupported supported && value.GetType().CanBeNullEquivalent() && isNullEquivalent(supported)
+            AddFormatter(next => value => value is TSupported supported && isNullEquivalent(supported)
                 ? formatted
                 : next(value));
         }
