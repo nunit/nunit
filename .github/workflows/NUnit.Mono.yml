@@ -15,7 +15,7 @@ env:
 jobs:
   test-mono-linux:
     name: Framework tests on Mono (Linux)
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     steps:
       - name: Checkout source
