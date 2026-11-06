@@ -17,9 +17,13 @@ namespace NUnit.Framework.Internal
         // Equality constraints check every compared value, so the predicates that apply to a runtime type
         // are combined once. Types that no predicate applies to map to null and cost a single lookup.
         private readonly ConcurrentDictionary<Type, Func<object, bool>?> _predicateByType = new();
+
+        // A method group would allocate a new delegate on every GetOrAdd call, and the overload that takes
+        // an argument instead doesn't exist on .NET Framework.
         private readonly Func<Type, Func<object, bool>?> _createPredicate;
 
         // Items of a collection usually share their type, so remember the last lookup.
+        // A class, so that type and predicate are replaced together by a single reference write.
         private TypePredicate? _last;
 
         private NullEquivalents(Registration[] registrations)
@@ -48,8 +52,7 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                if (!_predicateByType.TryGetValue(type, out predicate))
-                    predicate = _predicateByType.GetOrAdd(type, _createPredicate);
+                predicate = _predicateByType.GetOrAdd(type, _createPredicate);
                 _last = new TypePredicate(type, predicate);
             }
 
@@ -98,30 +101,8 @@ namespace NUnit.Framework.Internal
             return combined;
         }
 
-        private sealed class TypePredicate
-        {
-            public TypePredicate(Type type, Func<object, bool>? predicate)
-            {
-                Type = type;
-                Predicate = predicate;
-            }
+        private sealed record class TypePredicate(Type Type, Func<object, bool>? Predicate);
 
-            public Type Type { get; }
-
-            public Func<object, bool>? Predicate { get; }
-        }
-
-        private readonly struct Registration
-        {
-            public Registration(Type type, Func<object, bool> isNullEquivalent)
-            {
-                Type = type;
-                IsNullEquivalent = isNullEquivalent;
-            }
-
-            public Type Type { get; }
-
-            public Func<object, bool> IsNullEquivalent { get; }
-        }
+        private readonly record struct Registration(Type Type, Func<object, bool> IsNullEquivalent);
     }
 }

@@ -1,10 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+// These tests call Is.EqualTo(null) and Is.Not.EqualTo(null) on purpose: null binds to the EqualTo(string?) overload.
+#pragma warning disable NUnit4002 // Use Specific constraint
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -12,71 +14,13 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class NullEquivalentTests
     {
-        // A type that represents "no value" with a sentinel instance, like a released handle.
-        private sealed class Handle
-        {
-            public static readonly Handle Invalid = new(0);
-
-            public Handle(int id) => Id = id;
-
-            public int Id { get; }
-
-            public override string ToString() => $"Handle({Id})";
-        }
-
         private static readonly Handle Valid = new(1);
-
-        // A dictionary with a single null key, which the BCL dictionaries don't allow.
-        private sealed class NullKeyDictionary : IDictionary
-        {
-            public object? this[object key]
-            {
-                get => key is null ? 1 : null;
-                set => throw new NotSupportedException();
-            }
-
-            public ICollection Keys => new object?[] { null };
-            public ICollection Values => new object[] { 1 };
-            public bool IsReadOnly => true;
-            public bool IsFixedSize => true;
-            public int Count => 1;
-            public object SyncRoot => this;
-            public bool IsSynchronized => false;
-
-            public bool Contains(object key) => key is null;
-            public IDictionaryEnumerator GetEnumerator() => new Hashtable().GetEnumerator();
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-            public void Add(object key, object? value) => throw new NotSupportedException();
-            public void Clear() => throw new NotSupportedException();
-            public void Remove(object key) => throw new NotSupportedException();
-            public void CopyTo(Array array, int index) => throw new NotSupportedException();
-        }
-
-        private sealed class HandleIdComparer : IEqualityComparer<Handle>
-        {
-            public static readonly HandleIdComparer Instance = new();
-
-            public bool Equals(Handle? x, Handle? y) => x?.Id == y?.Id;
-
-            public int GetHashCode(Handle obj) => obj.Id;
-        }
-
-        // Resolves the whole expression: Is.Not.EqualTo(x).ApplyTo would apply only the inner EqualConstraint.
-        private static bool Matches(IResolveConstraint constraint, object? actual) => constraint.Resolve().ApplyTo(actual).IsSuccess;
-
-        // A sentinel that is also a collection and can't be enumerated, like a destroyed native object.
-        private sealed class DetachedRange : IEnumerable
-        {
-            public static readonly DetachedRange Detached = new();
-
-            public IEnumerator GetEnumerator() => throw new InvalidOperationException("The range is detached.");
-        }
 
         [Test]
         public void WithoutPredicate_SentinelIsNotNull()
         {
-            Assert.That(Is.Null.ApplyTo(Handle.Invalid).IsSuccess, Is.False);
-            Assert.That(Is.EqualTo((object?)null).ApplyTo(Handle.Invalid).IsSuccess, Is.False);
+            Assert.That(Handle.Invalid, Is.Not.Null);
+            Assert.That(Handle.Invalid, Is.Not.EqualTo((object?)null));
         }
 
         [Test]
@@ -110,7 +54,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(items, Has.Member(null));
             Assert.That(items, Contains.Item(null));
-            Assert.That(Matches(Is.All.Not.Null, items), Is.False);
+            Assert.That(items, Has.Some.Null);
             Assert.That(items, Is.EqualTo(new Handle?[] { Valid, null }));
             Assert.That(items, Is.EquivalentTo(new Handle?[] { null, Valid }));
         }
@@ -120,40 +64,32 @@ namespace NUnit.Framework.Tests.Constraints
         {
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
-            Assert.That(Matches(Is.Unique, new List<Handle?> { Handle.Invalid, new Handle(0) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<Handle?> { Handle.Invalid, null }), Is.False);
+            Assert.That(new List<Handle?> { Handle.Invalid, new Handle(0) }, Is.Not.Unique);
+            Assert.That(new List<Handle?> { Handle.Invalid, null }, Is.Not.Unique);
             Assert.That(new List<Handle?> { Valid, Handle.Invalid }, Is.Unique);
             Assert.That(new List<Handle?> { Valid, new Handle(2), Handle.Invalid }, Is.Unique);
-            Assert.That(Matches(Is.Unique, new List<Handle> { Valid, Valid }), Is.False);
-            Assert.That(Matches(Is.Unique, new ArrayList { Handle.Invalid, new Handle(0) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<(Handle, int)> { (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
+            Assert.That(new List<Handle> { Valid, Valid }, Is.Not.Unique);
+            Assert.That(new ArrayList { Handle.Invalid, new Handle(0) }, Is.Not.Unique);
+            Assert.That(new List<(Handle, int)> { (Handle.Invalid, 1), (new Handle(0), 1) }, Is.Not.Unique);
             Assert.That(new List<(Handle, int)> { (Handle.Invalid, 1), (Handle.Invalid, 2) }, Is.Unique);
-            Assert.That(Matches(Is.Unique, new List<(int, string)> { (1, "a"), (1, "a") }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<(Handle, int)?> { (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
+            Assert.That(new List<(int, string)> { (1, "a"), (1, "a") }, Is.Not.Unique);
+            Assert.That(new List<(Handle, int)?> { (Handle.Invalid, 1), (new Handle(0), 1) }, Is.Not.Unique);
+            Assert.That(new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(new Handle(0), 1) }, Is.Not.Unique);
             Assert.That(new List<KeyValuePair<Handle, int>> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
-            Assert.That(Matches(Is.Unique, new List<DictionaryEntry> { new(Handle.Invalid, 1), new(new Handle(0), 1) }), Is.False);
+            Assert.That(new List<DictionaryEntry> { new(Handle.Invalid, 1), new(new Handle(0), 1) }, Is.Not.Unique);
             Assert.That(new List<DictionaryEntry> { new(Handle.Invalid, 1), new(Handle.Invalid, 2) }, Is.Unique);
-            Assert.That(Matches(Is.Unique, new List<((Handle, int), int)> { ((Handle.Invalid, 1), 1), ((new Handle(0), 1), 1) }), Is.False);
+            Assert.That(new List<((Handle, int), int)> { ((Handle.Invalid, 1), 1), ((new Handle(0), 1), 1) }, Is.Not.Unique);
             Assert.That(
-                Matches(Is.Unique, new List<(int, int, int, int, int, int, int, Handle)> { (1, 2, 3, 4, 5, 6, 7, Handle.Invalid), (1, 2, 3, 4, 5, 6, 7, new Handle(0)) }),
-                Is.False);
-            Assert.That(Matches(Is.Unique, new ArrayList { Valid, (Handle.Invalid, 1), (new Handle(0), 1) }), Is.False);
+                new List<(int, int, int, int, int, int, int, Handle)> { (1, 2, 3, 4, 5, 6, 7, Handle.Invalid), (1, 2, 3, 4, 5, 6, 7, new Handle(0)) },
+                Is.Not.Unique);
+            Assert.That(new ArrayList { Valid, (Handle.Invalid, 1), (new Handle(0), 1) }, Is.Not.Unique);
             Assert.That(new ArrayList { Valid, (Handle.Invalid, 1), (Valid, 1) }, Is.Unique);
 
             // Tuple.Equals accepts a subclass, so its parts are compared too.
-            Assert.That(Matches(Is.Unique, new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Valid), 1), (new HandleTuple(Valid), 1) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Handle.Invalid), 1), (new HandleTuple(new Handle(0)), 1) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<HandleTuple> { new(Handle.Invalid), new(new Handle(0)) }), Is.False);
-            Assert.That(Matches(Is.Unique, new List<(HandleTuple, int)> { (new(Handle.Invalid), 1), (new(new Handle(0)), 1) }), Is.False);
-        }
-
-        private sealed class HandleTuple : Tuple<Handle>
-        {
-            public HandleTuple(Handle handle)
-                : base(handle)
-            {
-            }
+            Assert.That(new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Valid), 1), (new HandleTuple(Valid), 1) }, Is.Not.Unique);
+            Assert.That(new List<(Tuple<Handle>, int)> { (new Tuple<Handle>(Handle.Invalid), 1), (new HandleTuple(new Handle(0)), 1) }, Is.Not.Unique);
+            Assert.That(new List<HandleTuple> { new(Handle.Invalid), new(new Handle(0)) }, Is.Not.Unique);
+            Assert.That(new List<(HandleTuple, int)> { (new(Handle.Invalid), 1), (new(new Handle(0)), 1) }, Is.Not.Unique);
         }
 
         [Test]
@@ -162,7 +98,7 @@ namespace NUnit.Framework.Tests.Constraints
             TestContext.AddNullEquivalent<IReadOnlyList<string>>(l => l.Count == 0);
 
             // An object[] item can hold a string[], which the predicate applies to.
-            Assert.That(Matches(Is.Unique, new List<(object[]?, int)> { (Array.Empty<string>(), 1), (null, 1) }), Is.False);
+            Assert.That(new List<(object[]?, int)> { (Array.Empty<string>(), 1), (null, 1) }, Is.Not.Unique);
         }
 
         [Test]
@@ -174,8 +110,8 @@ namespace NUnit.Framework.Tests.Constraints
             var key = new Handle(0);
             Assert.That(new Dictionary<Handle, int> { [key] = 1 }, Is.EqualTo(new Dictionary<Handle, int> { [key] = 1 }));
             Assert.That(
-                Matches(Is.EqualTo(new Dictionary<Handle, int> { [Handle.Invalid] = 1 }), new Dictionary<Handle, int> { [new Handle(0)] = 1 }),
-                Is.False);
+                new Dictionary<Handle, int> { [new Handle(0)] = 1 },
+                Is.Not.EqualTo(new Dictionary<Handle, int> { [Handle.Invalid] = 1 }));
 
             // Values are still null-equivalent.
             Assert.That(new Dictionary<int, Handle?> { [1] = Handle.Invalid }, Is.EqualTo(new Dictionary<int, Handle?> { [1] = null }));
@@ -187,11 +123,11 @@ namespace NUnit.Framework.Tests.Constraints
             TestContext.AddNullEquivalent<Handle>(h => h.Id < 0);
             var byReference = new Dictionary<Handle, int> { [new Handle(-1)] = 10, [new Handle(-1)] = 10 };
             var byId = new Dictionary<Handle, int>(HandleIdComparer.Instance) { [new Handle(-1)] = 10, [new Handle(-2)] = 20 };
-            Assert.That(Matches(Is.EqualTo(byId), byReference), Is.False);
-            Assert.That(Matches(Is.EqualTo(byReference), byId), Is.False);
+            Assert.That(byReference, Is.Not.EqualTo(byId));
+            Assert.That(byId, Is.Not.EqualTo(byReference));
 
             // A real null key in a custom dictionary isn't looked up in the other one.
-            Assert.That(Matches(Is.EqualTo(new Dictionary<string, int> { ["a"] = 1 }), new NullKeyDictionary()), Is.False);
+            Assert.That(new NullKeyDictionary(), Is.Not.EqualTo(new Dictionary<string, int> { ["a"] = 1 }));
         }
 
         [Test]
@@ -242,9 +178,9 @@ namespace NUnit.Framework.Tests.Constraints
         {
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
-            Assert.That(Matches(Is.Not.EqualTo((object?)null), Handle.Invalid), Is.False);
-            Assert.That(Matches(Is.Not.EqualTo(null), Handle.Invalid), Is.False);
-            Assert.That(Matches(Is.Not.Null, Handle.Invalid), Is.False);
+            Assert.Throws<AssertionException>(() => Assert.That(Handle.Invalid, Is.Not.EqualTo((object?)null)));
+            Assert.Throws<AssertionException>(() => Assert.That(Handle.Invalid, Is.Not.EqualTo(null)));
+            Assert.Throws<AssertionException>(() => Assert.That(Handle.Invalid, Is.Not.Null));
         }
 
         [Test]
@@ -253,7 +189,7 @@ namespace NUnit.Framework.Tests.Constraints
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
             Assert.That((Handle?)null, Is.EqualTo(Handle.Invalid));
-            Assert.That(Is.EqualTo(Handle.Invalid).ApplyTo(Valid).IsSuccess, Is.False);
+            Assert.That(Valid, Is.Not.EqualTo(Handle.Invalid));
         }
 
         [Test]
@@ -292,11 +228,6 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<ArgumentException>(() => TestContext.AddNullEquivalent<ArraySegment<int>>(a => a.Array is null));
         }
 
-        private struct Slot
-        {
-            public int Index;
-        }
-
         [Test]
         public void NullableTypes_CanNotBeRegistered()
         {
@@ -326,7 +257,9 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(string.Empty, Is.Not.EqualTo(null));
             Assert.That(0, Is.Not.EqualTo((object?)null));
             Assert.That(TimeSpan.Zero, Is.Not.EqualTo((object?)null));
-            Assert.That(Matches(Is.Null, TimeSpan.Zero), Is.False);
+#pragma warning disable NUnit2023 // Invalid NullConstraint usage
+            Assert.That(TimeSpan.Zero, Is.Not.Null);
+#pragma warning restore NUnit2023 // Invalid NullConstraint usage
             Assert.That(new List<string> { "x", string.Empty }, Is.Not.EquivalentTo(new string?[] { "x", null }));
             Assert.That(new List<object> { "x", string.Empty }, Is.Not.EquivalentTo(new object?[] { "x", null }));
         }
@@ -340,13 +273,13 @@ namespace NUnit.Framework.Tests.Constraints
 
                 using (new TestExecutionContext.IsolatedContext())
                 {
-                    Assert.That(Is.Null.ApplyTo(Handle.Invalid).IsSuccess, Is.True, "child context");
+                    Assert.That(Handle.Invalid, Is.Null, "child context");
                 }
 
-                Assert.That(Is.Null.ApplyTo(Handle.Invalid).IsSuccess, Is.True, "context that added the predicate");
+                Assert.That(Handle.Invalid, Is.Null, "context that added the predicate");
             }
 
-            Assert.That(Is.Null.ApplyTo(Handle.Invalid).IsSuccess, Is.False, "parent context");
+            Assert.That(Handle.Invalid, Is.Not.Null, "parent context");
         }
 
         [Test]
@@ -354,9 +287,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
-            bool isNull = await Task.Run(() => Is.Null.ApplyTo(Handle.Invalid).IsSuccess);
-
-            Assert.That(isNull, Is.True);
+            await Task.Run(() => Assert.That(Handle.Invalid, Is.Null));
         }
 
         [Test]
@@ -374,6 +305,74 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That((object)0, Is.Not.Null);
             Assert.That(calls, Is.Zero);
         }
+
+        // A type that represents "no value" with a sentinel instance, like a released handle.
+        private sealed class Handle
+        {
+            public static readonly Handle Invalid = new(0);
+
+            public Handle(int id) => Id = id;
+
+            public int Id { get; }
+
+            public override string ToString() => $"Handle({Id})";
+        }
+
+        // A dictionary with a single null key, which the BCL dictionaries don't allow.
+        private sealed class NullKeyDictionary : IDictionary
+        {
+            public object? this[object key]
+            {
+                get => key is null ? 1 : null;
+                set => throw new NotSupportedException();
+            }
+
+            public ICollection Keys => new object?[] { null };
+            public ICollection Values => new object[] { 1 };
+            public bool IsReadOnly => true;
+            public bool IsFixedSize => true;
+            public int Count => 1;
+            public object SyncRoot => this;
+            public bool IsSynchronized => false;
+
+            public bool Contains(object key) => key is null;
+            public IDictionaryEnumerator GetEnumerator() => new Hashtable().GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public void Add(object key, object? value) => throw new NotSupportedException();
+            public void Clear() => throw new NotSupportedException();
+            public void Remove(object key) => throw new NotSupportedException();
+            public void CopyTo(Array array, int index) => throw new NotSupportedException();
+        }
+
+        private sealed class HandleIdComparer : IEqualityComparer<Handle>
+        {
+            public static readonly HandleIdComparer Instance = new();
+
+            public bool Equals(Handle? x, Handle? y) => x?.Id == y?.Id;
+
+            public int GetHashCode(Handle obj) => obj.Id;
+        }
+
+        // A sentinel that is also a collection and can't be enumerated, like a destroyed native object.
+        private sealed class DetachedRange : IEnumerable
+        {
+            public static readonly DetachedRange Detached = new();
+
+            public IEnumerator GetEnumerator() => throw new InvalidOperationException("The range is detached.");
+        }
+
+        private sealed class HandleTuple : Tuple<Handle>
+        {
+            public HandleTuple(Handle handle)
+                : base(handle)
+            {
+            }
+        }
+
+        private struct Slot
+        {
+            public int Index;
+        }
     }
 
     // Large collections with a predicate registered stay on the hash-based paths instead of comparing all pairs.
@@ -383,13 +382,6 @@ namespace NUnit.Framework.Tests.Constraints
         private const int Size = 10_000;
         private const int WarnTime = 50;
         private const int FailTime = 250;
-
-        private sealed class Handle
-        {
-            public Handle(int id) => Id = id;
-
-            public int Id { get; }
-        }
 
         [SetUp]
         public void AddNullEquivalent() => TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
@@ -428,16 +420,18 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(actual, Is.EqualTo(expected));
         }
+
+        private sealed class Handle
+        {
+            public Handle(int id) => Id = id;
+
+            public int Id { get; }
+        }
     }
 
     [TestFixture]
     public class NullEquivalentOneTimeSetUpTests
     {
-        private sealed class Handle
-        {
-            public static readonly Handle Invalid = new();
-        }
-
         [OneTimeSetUp]
         public void AddPredicate()
         {
@@ -449,6 +443,11 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(Handle.Invalid, Is.Null);
             Assert.That(Handle.Invalid, Is.EqualTo((object?)null));
+        }
+
+        private sealed class Handle
+        {
+            public static readonly Handle Invalid = new();
         }
     }
 }

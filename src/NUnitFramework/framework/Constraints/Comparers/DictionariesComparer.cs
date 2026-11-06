@@ -22,13 +22,13 @@ namespace NUnit.Framework.Constraints.Comparers
             // it must be a key of both dictionaries. NUnit equality still matches the other keys.
             NullEquivalents? nullEquivalents = state.NullEquivalents;
             if (nullEquivalents is not null &&
-                (!NullEquivalentKeysAreIn(xDictionary, yDictionary, nullEquivalents) || !NullEquivalentKeysAreIn(yDictionary, xDictionary, nullEquivalents)))
+                (!OtherContainsAllNullEquivalentKeys(xDictionary, yDictionary, nullEquivalents) || !OtherContainsAllNullEquivalentKeys(yDictionary, xDictionary, nullEquivalents)))
             {
                 return EqualMethodResult.ComparedNotEqual;
             }
 
-            var tally = new CollectionTally<object>(nullEquivalents is not null ? KeysWithoutNullEquivalents(xDictionary, nullEquivalents) : xDictionary.Keys, equalityComparer);
-            tally.TryRemove(nullEquivalents is not null ? KeysWithoutNullEquivalents(yDictionary, nullEquivalents) : yDictionary.Keys);
+            var tally = new CollectionTally<object>(KeysWithoutNullEquivalents(xDictionary, nullEquivalents), equalityComparer);
+            tally.TryRemove(KeysWithoutNullEquivalents(yDictionary, nullEquivalents));
             if ((tally.Result.MissingItems.Count > 0) || (tally.Result.ExtraItems.Count > 0))
                 return EqualMethodResult.ComparedNotEqual;
 
@@ -43,7 +43,8 @@ namespace NUnit.Framework.Constraints.Comparers
             return EqualMethodResult.ComparedEqual;
         }
 
-        private static bool NullEquivalentKeysAreIn(IDictionary dictionary, IDictionary other, NullEquivalents nullEquivalents)
+        // True when every null-equivalent key of dictionary is also a key of other (or there are none).
+        private static bool OtherContainsAllNullEquivalentKeys(IDictionary dictionary, IDictionary other, NullEquivalents nullEquivalents)
         {
             foreach (object? key in dictionary.Keys)
             {
@@ -54,7 +55,10 @@ namespace NUnit.Framework.Constraints.Comparers
             return true;
         }
 
-        private static IEnumerable KeysWithoutNullEquivalents(IDictionary dictionary, NullEquivalents nullEquivalents)
+        private static IEnumerable KeysWithoutNullEquivalents(IDictionary dictionary, NullEquivalents? nullEquivalents)
+            => nullEquivalents is null ? dictionary.Keys : NonNullEquivalentKeys(dictionary, nullEquivalents);
+
+        private static IEnumerable NonNullEquivalentKeys(IDictionary dictionary, NullEquivalents nullEquivalents)
         {
             foreach (object? key in dictionary.Keys)
             {
