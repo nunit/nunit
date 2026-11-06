@@ -186,7 +186,7 @@ namespace NUnit.Framework.Constraints
             {
                 // Like C#, promote uint mixed with a signed type of 32 bits or less to long
                 if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
+                    return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
 
 #if NETFRAMEWORK
                 return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
@@ -207,31 +207,21 @@ namespace NUnit.Framework.Constraints
 #endif
 
             if (expected is ulong || actual is ulong)
-                return AreEqual(Convert.ToUInt64(expected), Convert.ToUInt64(actual), tolerance);
+                return AreEqual(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), tolerance);
 
             if (expected is long || actual is long)
-                return AreEqual(Convert.ToInt64(expected), Convert.ToInt64(actual), tolerance);
+                return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
 
             if (expected is nuint || actual is nuint)
-            {
-                nuint expectedValue = expected is nuint x ? x : (nuint)Convert.ToUInt64(expected);
-                nuint actualValue = actual is nuint y ? y : (nuint)Convert.ToUInt64(actual);
-
-                return AreEqual(expectedValue, actualValue, tolerance);
-            }
+                return AreEqual(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), tolerance);
 
             if (expected is nint || actual is nint)
-            {
-                nint expectedValue = expected is nint x ? x : (nint)Convert.ToInt64(expected);
-                nint actualValue = actual is nint y ? y : (nint)Convert.ToInt64(actual);
-
-                return AreEqual(expectedValue, actualValue, tolerance);
-            }
+                return AreEqual(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), tolerance);
 
             if (expected is uint || actual is uint)
-                return AreEqual(Convert.ToUInt32(expected), Convert.ToUInt32(actual), tolerance);
+                return AreEqual(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), tolerance);
 
-            return AreEqual(Convert.ToInt32(expected), Convert.ToInt32(actual), tolerance);
+            return AreEqual(ConvertToValue<int>(expected), ConvertToValue<int>(actual), tolerance);
         }
 
         /// <summary>
@@ -539,7 +529,7 @@ namespace NUnit.Framework.Constraints
             {
                 // Like C#, promote uint mixed with a signed type of 32 bits or less to long
                 if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
+                    return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
 
 #if NETFRAMEWORK
                 return ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual));
@@ -566,15 +556,15 @@ namespace NUnit.Framework.Constraints
                 return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
 
             if (expected is ulong || actual is ulong)
-                return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
+                return ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual));
 
             if (expected is long || actual is long)
-                return Convert.ToInt64(expected).CompareTo(Convert.ToInt64(actual));
+                return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
 
             if (expected is uint || actual is uint)
-                return Convert.ToUInt32(expected).CompareTo(Convert.ToUInt32(actual));
+                return ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual));
 
-            return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
+            return ConvertToValue<int>(expected).CompareTo(ConvertToValue<int>(actual));
         }
         #endregion
 
@@ -645,8 +635,8 @@ namespace NUnit.Framework.Constraints
                 // Like C#, promote uint mixed with a signed type of 32 bits or less to long
                 if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
                 {
-                    long expectedValue = Convert.ToInt64(expected);
-                    var difference = expectedValue - Convert.ToInt64(actual);
+                    long expectedValue = ConvertToValue<long>(expected);
+                    var difference = expectedValue - ConvertToValue<long>(actual);
                     return isAbsolute ? difference : difference / (double)expectedValue * 100;
                 }
 
@@ -690,28 +680,28 @@ namespace NUnit.Framework.Constraints
 
             if (expected is ulong || actual is ulong)
             {
-                var eUlong = Convert.ToUInt64(expected);
-                var aUlong = Convert.ToUInt64(actual);
+                var eUlong = ConvertToValue<ulong>(expected);
+                var aUlong = ConvertToValue<ulong>(actual);
                 var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
                 return isAbsolute ? difference : difference / (double)eUlong * 100;
             }
 
             if (expected is long || actual is long)
             {
-                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
-                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+                var difference = ConvertToValue<long>(expected) - ConvertToValue<long>(actual);
+                return isAbsolute ? difference : difference / (double)ConvertToValue<long>(expected) * 100;
             }
 
             if (expected is uint || actual is uint)
             {
-                var eUint = Convert.ToUInt32(expected);
-                var aUint = Convert.ToUInt32(actual);
+                var eUint = ConvertToValue<uint>(expected);
+                var aUint = ConvertToValue<uint>(actual);
                 var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
                 return isAbsolute ? difference : difference / (double)eUint * 100;
             }
 
-            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
-            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
+            var intDifference = ConvertToValue<int>(expected) - ConvertToValue<int>(actual);
+            return isAbsolute ? intDifference : intDifference / (double)ConvertToValue<int>(expected) * 100;
         }
         #endregion
 
@@ -819,52 +809,123 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
+        /// <summary>
+        /// Converts a numeric value to <typeparamref name="T"/>.
+        /// All operand conversions in this class should use this method, as it also handles
+        /// types that <see cref="Convert"/> does not, like <see cref="nint"/>, <see cref="nuint"/>
+        /// and <see cref="char"/> to floating point types.
+        /// </summary>
         internal static T ConvertToValue<T>(object o)
 #if NETFRAMEWORK
         {
-            if (o is T tol)
-                return tol;
+            if (o is T value)
+                return value;
 
-            // nint and nuint are not IConvertible, so we need to convert them to long/ulong first
+            // nint and nuint are not IConvertible, so convert them from long/ulong.
             if (o is nint nintValue)
-                o = (long)nintValue;
-            else if (o is nuint nuintValue)
-                o = (ulong)nuintValue;
+                return ConvertFromInt64<T>(nintValue);
+            if (o is nuint nuintValue)
+                return ConvertFromUInt64<T>(nuintValue);
 
+            if (typeof(T) == typeof(int))
+                return (T)(object)Convert.ToInt32(o);
+            if (typeof(T) == typeof(uint))
+                return (T)(object)Convert.ToUInt32(o);
+            if (typeof(T) == typeof(long))
+                return (T)(object)Convert.ToInt64(o);
+            if (typeof(T) == typeof(ulong))
+                return (T)(object)Convert.ToUInt64(o);
             if (typeof(T) == typeof(nint))
                 return (T)(object)new IntPtr(Convert.ToInt64(o));
             if (typeof(T) == typeof(nuint))
                 return (T)(object)new UIntPtr(Convert.ToUInt64(o));
+
+            // Convert cannot convert char to floating point types, so use an implicit conversion instead.
             if (typeof(T) == typeof(double))
-                return (T)(object)Convert.ToDouble(o);
+                return (T)(object)(o is char doubleChar ? doubleChar : Convert.ToDouble(o));
             if (typeof(T) == typeof(float))
-                return (T)(object)Convert.ToSingle(o);
+                return (T)(object)(o is char floatChar ? floatChar : Convert.ToSingle(o));
+            if (typeof(T) == typeof(decimal))
+                return (T)(object)(o is char decimalChar ? decimalChar : Convert.ToDecimal(o));
             return (T)Convert.ChangeType(o, typeof(T));
         }
 #else
             where T : INumber<T>
         {
-            if (o is T tol)
-                return tol;
-            if (o is Int128 int128)
-                return T.CreateChecked(int128);
-            if (o is UInt128 uint128)
-                return T.CreateChecked(uint128);
-            if (o is Half half)
-                return T.CreateChecked(half);
-            if (o is nint nintValue)
-                return T.CreateChecked(nintValue);
-            if (o is nuint nuintValue)
-                return T.CreateChecked(nuintValue);
+            // Convert directly from the source type, so values are converted exactly and
+            // fractions truncated, instead of going through double or Convert which rounds.
+            return o switch
+            {
+                T value => value,
+                int intValue => T.CreateChecked(intValue),
+                long longValue => T.CreateChecked(longValue),
+                double doubleValue => T.CreateChecked(doubleValue),
+                uint uintValue => T.CreateChecked(uintValue),
+                ulong ulongValue => T.CreateChecked(ulongValue),
+                decimal decimalValue => T.CreateChecked(decimalValue),
+                float floatValue => T.CreateChecked(floatValue),
+                short shortValue => T.CreateChecked(shortValue),
+                ushort ushortValue => T.CreateChecked(ushortValue),
+                byte byteValue => T.CreateChecked(byteValue),
+                sbyte sbyteValue => T.CreateChecked(sbyteValue),
+                char charValue => T.CreateChecked(charValue),
+                nint nintValue => T.CreateChecked(nintValue),
+                nuint nuintValue => T.CreateChecked(nuintValue),
+                Int128 int128Value => T.CreateChecked(int128Value),
+                UInt128 uint128Value => T.CreateChecked(uint128Value),
+                Half halfValue => T.CreateChecked(halfValue),
+                _ => T.CreateChecked(Convert.ToDouble(o)),
+            };
+        }
+#endif
 
-            // Convert values that do not fit exactly in a double directly
-            if (o is long longValue)
-                return T.CreateChecked(longValue);
-            if (o is ulong ulongValue)
-                return T.CreateChecked(ulongValue);
-            if (o is decimal decimalValue)
-                return T.CreateChecked(decimalValue);
-            return T.CreateChecked(Convert.ToDouble(o));
+#if NETFRAMEWORK
+        // Converts nint values without boxing them as long.
+        private static T ConvertFromInt64<T>(long value)
+        {
+            if (typeof(T) == typeof(int))
+                return (T)(object)checked((int)value);
+            if (typeof(T) == typeof(uint))
+                return (T)(object)checked((uint)value);
+            if (typeof(T) == typeof(long))
+                return (T)(object)value;
+            if (typeof(T) == typeof(ulong))
+                return (T)(object)checked((ulong)value);
+            if (typeof(T) == typeof(nint))
+                return (T)(object)new IntPtr(value);
+            if (typeof(T) == typeof(nuint))
+                return (T)(object)new UIntPtr(checked((ulong)value));
+            if (typeof(T) == typeof(double))
+                return (T)(object)(double)value;
+            if (typeof(T) == typeof(float))
+                return (T)(object)(float)value;
+            if (typeof(T) == typeof(decimal))
+                return (T)(object)(decimal)value;
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        // Converts nuint values without boxing them as ulong.
+        private static T ConvertFromUInt64<T>(ulong value)
+        {
+            if (typeof(T) == typeof(int))
+                return (T)(object)checked((int)value);
+            if (typeof(T) == typeof(uint))
+                return (T)(object)checked((uint)value);
+            if (typeof(T) == typeof(long))
+                return (T)(object)checked((long)value);
+            if (typeof(T) == typeof(ulong))
+                return (T)(object)value;
+            if (typeof(T) == typeof(nint))
+                return (T)(object)new IntPtr(checked((long)value));
+            if (typeof(T) == typeof(nuint))
+                return (T)(object)new UIntPtr(value);
+            if (typeof(T) == typeof(double))
+                return (T)(object)(double)value;
+            if (typeof(T) == typeof(float))
+                return (T)(object)(float)value;
+            if (typeof(T) == typeof(decimal))
+                return (T)(object)(decimal)value;
+            return (T)Convert.ChangeType(value, typeof(T));
         }
 #endif
     }
