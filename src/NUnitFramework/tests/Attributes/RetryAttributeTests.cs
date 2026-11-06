@@ -11,6 +11,15 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public class RetryAttributeTests
     {
+        [TestCase(1)]
+        [TestCase(3)]
+        public void TryCountReturnsConstructorArgument(int tryCount)
+        {
+            var attribute = new RetryAttribute(tryCount);
+
+            Assert.That(attribute.TryCount, Is.EqualTo(tryCount));
+        }
+
         [TestCase(typeof(RetrySucceedsOnFirstTryFixture), "Passed", 1)]
         [TestCase(typeof(RetrySucceedsOnSecondTryFixture), "Passed", 2)]
         [TestCase(typeof(RetrySucceedsOnThirdTryFixture), "Passed", 3)]

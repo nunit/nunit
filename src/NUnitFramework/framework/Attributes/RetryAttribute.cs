@@ -14,16 +14,20 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RetryAttribute : NUnitAttribute, IRepeatTest
     {
-        private readonly int _tryCount;
-
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
         /// </summary>
         /// <param name="tryCount">The maximum number of times the test should be run if it fails</param>
         public RetryAttribute(int tryCount)
         {
-            _tryCount = tryCount;
+            TryCount = tryCount;
         }
+
+        /// <summary>
+        /// The maximum number of times the test should be run if it fails,
+        /// as passed to the constructor.
+        /// </summary>
+        public int TryCount { get; }
 
         /// <summary>
         /// An array of exception types, that trigger a retry when thrown.
@@ -40,7 +44,7 @@ namespace NUnit.Framework
         /// <returns>The wrapped command</returns>
         public TestCommand Wrap(TestCommand command)
         {
-            return new RetryCommand(command, _tryCount, RetryExceptions);
+            return new RetryCommand(command, TryCount, RetryExceptions);
         }
 
         #endregion
