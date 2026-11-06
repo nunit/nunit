@@ -14,9 +14,13 @@ assignees: ''
 
 <!-- How are you running the tests? Ex: dotnet test, inside an IDE, using nunit-console, or nunitlite -->
 
+### .NET version
+
+<!-- For example: 5.0.0 -->
+
 ### Describe the issue
 
-<!-- A clear description of what is not working as expected. -->
+<!-- A clear description of what is not working as expected. Include any other referenced libraries if relevant-->
 
 ### Reproduction code
 
