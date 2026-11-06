@@ -8,11 +8,11 @@ assignees: ''
 
 ### NUnit library version
 
-<!-- For example: 4.3.2 -->
+<!-- For example: 5.0.0 -->
 
 ### Runner type
 
-<!-- Choose one: in-IDE, dotnet test, nunit-console, or nunitlite -->
+<!-- How are you running the tests? Ex: dotnet test, inside an IDE, using nunit-console, or nunitlite -->
 
 ### Describe the issue
 
