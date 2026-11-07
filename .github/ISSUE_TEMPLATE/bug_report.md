@@ -6,33 +6,27 @@ labels: bug
 assignees: ''
 ---
 
-### NUnit library version
+### Initial Information
 
-<!-- For example: 5.0.0 -->
+- .NET Version: <!-- Ex: .NET 10, .NET Framework 4.7.2 -->
+- NUnit Framework Version: <!-- Ex: v5.0.0 -->
+- Runner: <!-- Ex: dotnet test, Visual Studio, nunit-console -->
 
-### Runner type
-
-<!-- How are you running the tests? Ex: dotnet test, inside an IDE, using nunit-console, or nunitlite -->
-
-### .NET version
-
-<!-- For example: .NET 10 -->
-
-### Describe the issue
+### Describe the Issue
 
 <!-- A clear description of what is not working as expected. Include any other referenced libraries if relevant-->
 
-### Reproduction code
+### Reproduction Code
 
 <!-- Include the smallest code sample that reproduces the issue. -->
-```
+```csharp
 
 ```
 
-### Expected behavior
+### Expected Behavior
 
 <!-- What did you expect to happen? -->
 
-### Actual behavior
+### Actual Behavior
 
 <!-- What happened instead? Include any relevant error messages or stack traces. -->
