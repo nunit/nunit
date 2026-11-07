@@ -2,12 +2,15 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints.Comparers;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -182,7 +185,157 @@ namespace NUnit.Framework.Constraints
             typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public)!;
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
-            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
+        {
+            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
+            IEqualityComparer<T> comparer = nullEquivalents is not null && MayHoldNullEquivalents(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T), nullEquivalents)
+                ? new NullEquivalentEqualityComparer<T>(nullEquivalents)
+                : EqualityComparer<T>.Default;
+
+            return NonUniqueItemsInternal(actual, comparer);
+        }
+
+        // Whether an item may be null-equivalent, or be a tuple, key/value pair or dictionary entry with a part that may be.
+        private static bool MayHoldNullEquivalents(Type type, NullEquivalents nullEquivalents)
+        {
+            if (nullEquivalents.MayApplyTo(type) || type == typeof(DictionaryEntry))
+                return true;
+
+            return CompositeParts.Get(type) is CompositeParts composite
+                && composite.CompositeType.GetGenericArguments().Any(argument => MayHoldNullEquivalents(Nullable.GetUnderlyingType(argument) ?? argument, nullEquivalents));
+        }
+
+        // Default equality, except that null and null-equivalent values are equal to each other, also as parts of
+        // tuples, key/value pairs and dictionary entries, matching how NUnitEqualityComparer treats them.
+        private sealed class NullEquivalentEqualityComparer<T> : IEqualityComparer<T>
+        {
+            // A sealed item type that isn't composite never has parts to look at.
+            private static readonly bool ItemsMayHaveParts = !typeof(T).IsSealed || CompositeParts.Get(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)) is not null;
+
+            private readonly NullEquivalents _nullEquivalents;
+
+            public NullEquivalentEqualityComparer(NullEquivalents nullEquivalents) => _nullEquivalents = nullEquivalents;
+
+            public bool Equals(T? x, T? y)
+            {
+                if (x is null || (ItemsMayHaveParts && CompositeParts.Get(x.GetType()) is not null))
+                    return PartsEqual(x, y);
+
+                if (IsNull(x))
+                    return IsNull(y);
+
+                return !IsNull(y) && EqualityComparer<T>.Default.Equals(x, y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                if (obj is not null && (!ItemsMayHaveParts || CompositeParts.Get(obj.GetType()) is null))
+                    return IsNull(obj) ? 0 : EqualityComparer<T>.Default.GetHashCode(obj);
+
+                return PartsHashCode(obj);
+            }
+
+            private bool PartsEqual(object? x, object? y)
+            {
+                if (IsNull(x))
+                    return IsNull(y);
+                if (IsNull(y))
+                    return false;
+
+                CompositeParts? xParts = CompositeParts.Get(x.GetType());
+                CompositeParts? yParts = CompositeParts.Get(y.GetType());
+                if (xParts is null || yParts is null)
+                    return xParts is null && yParts is null && x.Equals(y);
+
+                // Hash codes of composites come from their parts, so only the same kind of composite can be equal.
+                if (xParts.CompositeType != yParts.CompositeType)
+                    return false;
+
+                foreach (Func<object, object?> part in xParts.Parts)
+                {
+                    if (!PartsEqual(part(x), part(y)))
+                        return false;
+                }
+
+                return true;
+            }
+
+            private int PartsHashCode(object? value)
+            {
+                if (IsNull(value))
+                    return 0;
+
+                CompositeParts? parts = CompositeParts.Get(value.GetType());
+                if (parts is null)
+                    return value.GetHashCode();
+
+                int hashCode = 17;
+                foreach (Func<object, object?> part in parts.Parts)
+                    hashCode = unchecked((hashCode * 31) + PartsHashCode(part(value)));
+
+                return hashCode;
+            }
+
+            private bool IsNull([NotNullWhen(false)] object? value) => value is null || _nullEquivalents.IsNullEquivalent(value);
+        }
+
+        // Reads the parts of tuples, key/value pairs and dictionary entries, or null for other types.
+        private sealed class CompositeParts
+        {
+            private static readonly ConcurrentDictionary<Type, CompositeParts?> PartsByType = new();
+            private static readonly Func<Type, CompositeParts?> CreateFunc = Create;
+
+            private CompositeParts(Type compositeType, Func<object, object?>[] parts)
+            {
+                CompositeType = compositeType;
+                Parts = parts;
+            }
+
+            // The tuple, key/value pair or dictionary entry type, also for a subclass of a Tuple class.
+            public Type CompositeType { get; }
+
+            public Func<object, object?>[] Parts { get; }
+
+            public static CompositeParts? Get(Type type) => PartsByType.GetOrAdd(type, CreateFunc);
+
+            private static CompositeParts? Create(Type type)
+            {
+                if (type == typeof(DictionaryEntry))
+                    return new CompositeParts(type, new Func<object, object?>[] { value => ((DictionaryEntry)value).Key, value => ((DictionaryEntry)value).Value });
+
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+                {
+                    PropertyInfo key = type.GetProperty(nameof(KeyValuePair<object, object>.Key))!;
+                    PropertyInfo value = type.GetProperty(nameof(KeyValuePair<object, object>.Value))!;
+                    return new CompositeParts(type, new Func<object, object?>[] { key.GetValue, value.GetValue });
+                }
+
+                // Tuple classes aren't sealed, and Tuple.Equals accepts a subclass.
+                for (Type? tupleType = type; tupleType is not null; tupleType = tupleType.BaseType)
+                {
+#if !NETFRAMEWORK
+                    // ITuple reads items without reflection. It flattens Rest, so use it below 8 items only.
+                    if (tupleType.IsTupleOrValueTuple() && typeof(System.Runtime.CompilerServices.ITuple).IsAssignableFrom(tupleType))
+                    {
+                        int length = tupleType.GetGenericArguments().Length;
+                        if (length < 8)
+                        {
+                            var itemParts = Enumerable.Range(0, length)
+                                .Select(index => (Func<object, object?>)(value => ((System.Runtime.CompilerServices.ITuple)value)[index]))
+                                .ToArray();
+                            return new CompositeParts(tupleType, itemParts);
+                        }
+                    }
+#endif
+                    if (TupleTypeValuesSupplier.For(tupleType) is ITupleTypeValuesSupplier tuple)
+                    {
+                        var parts = Enumerable.Range(0, tuple.Length).Select(index => (Func<object, object?>)(value => tuple.GetValue(value, index))).ToArray();
+                        return new CompositeParts(tupleType, parts);
+                    }
+                }
+
+                return null;
+            }
+        }
 
         private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, IgnoringLineEndingFormat));
