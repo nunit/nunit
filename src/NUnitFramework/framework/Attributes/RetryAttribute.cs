@@ -26,6 +26,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// The maximum number of times the test should be run if it fails,
+        /// as passed to the constructor.
+        /// </summary>
+        public int TryCount => _tryCount;
+
+        /// <summary>
         /// An array of exception types, that trigger a retry when thrown.
         /// These are in addition to the normal behavior of retrying only on an assertion failure.
         /// </summary>
