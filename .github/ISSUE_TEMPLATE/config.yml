@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: NUnit Visual Studio Adapter
+    url: https://github.com/nunit/nunit3-vs-adapter/issues/new
+    about: Report issues with running NUnit tests in Visual Studio or dotnet test.
+  - name: NUnit Analyzers
+    url: https://github.com/nunit/nunit.analyzers/issues/new
+    about: Report issues with NUnit analyzers or code fixes.
+  - name: NUnit Console and Engine
+    url: https://github.com/nunit/nunit-console/issues/new
+    about: Report issues with the NUnit Console Runner or engine.
