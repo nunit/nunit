@@ -145,6 +145,25 @@ namespace NUnit.Framework.Api
         }
 
         /// <summary>
+        /// Loads the tests found in the given types, which must all belong to the same assembly
+        /// </summary>
+        internal ITest Load(Type[] types, IDictionary<string, object> settings)
+        {
+            if (_builder is not DefaultTestAssemblyBuilder defaultBuilder)
+                throw new NotSupportedException("Loading from types requires a DefaultTestAssemblyBuilder.");
+
+            Settings = settings;
+
+            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
+            {
+                Randomizer.InitialSeed = ConvertSetting<int>(randomSeed);
+            }
+
+            LoadedTest = WrapInNUnitCallContext(() => defaultBuilder.Build(types, settings));
+            return LoadedTest;
+        }
+
+        /// <summary>
         /// Count Test Cases using a filter
         /// </summary>
         /// <param name="filter">The filter to apply</param>

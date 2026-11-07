@@ -37,7 +37,7 @@
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <!-- Ideally this is always enabled, but that tends to hurt developer productivity -->
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>

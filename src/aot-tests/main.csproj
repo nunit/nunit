@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PublishAot>true</PublishAot>
+    <AssemblyName>CustomTests</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="../NUnitFramework/framework/bin/Release/net10.0/NUnit.Framework.dll" />
+    <Reference Include="../NUnitFramework/nunitlite/bin/Release/net10.0/nunitlite.dll" />
+  </ItemGroup>
+
+  <PropertyGroup>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<PublishAot>true</PublishAot>
+		<!-- Show each trim/AOT warning instead of one summary line per assembly -->
+		<TrimmerSingleWarn>false</TrimmerSingleWarn>
+  </PropertyGroup>
+
+  <!-- <ItemGroup>
+		<TrimmerRootAssembly Include="CustomTests" />
+  </ItemGroup> -->
+
+</Project>

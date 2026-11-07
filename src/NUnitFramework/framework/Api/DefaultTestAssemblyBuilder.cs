@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -55,6 +56,11 @@ namespace NUnit.Framework.Api
         {
             Log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
+            return Build(assembly, GetSuiteName(assembly), options);
+        }
+
+        private static string GetSuiteName(Assembly assembly)
+        {
             string? suiteName = assembly.GetName().Name;
 
             try
@@ -77,11 +83,11 @@ namespace NUnit.Framework.Api
                 suiteName = "<Unnamed>";
             }
 
-            return Build(assembly, suiteName, options);
+            return suiteName!;
         }
 
         /// <summary>
-        /// Build a suite of tests given the name or the location of an assembly
+        /// Build a suite of tests given the name
         /// </summary>
         /// <param name="assemblyNameOrPath">The name or the location of the assembly.</param>
         /// <param name="options">A dictionary of options to use in building the suite</param>
@@ -108,7 +114,16 @@ namespace NUnit.Framework.Api
             return testAssembly;
         }
 
-        private TestSuite Build(Assembly assembly, string assemblyNameOrPath, IDictionary<string, object> options)
+        /// <summary>
+        /// Build a suite of tests from the given types, all of which must belong to the same assembly.
+        /// </summary>
+        internal ITest Build(Type[] types, IDictionary<string, object> options)
+        {
+            var assembly = types[0].Assembly;
+            return Build(assembly, GetSuiteName(assembly), options, types);
+        }
+
+        private TestSuite Build(Assembly assembly, string assemblyNameOrPath, IDictionary<string, object> options, Type[]? types = null)
         {
             TestSuite testAssembly;
 
@@ -161,7 +176,7 @@ namespace NUnit.Framework.Api
                         filter.Add(filterText);
                 }
 
-                var fixtures = GetFixtures(assembly, filter);
+                var fixtures = GetFixtures(assembly, filter, types);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyNameOrPath, fixtures);
             }
@@ -178,12 +193,14 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList<Test> GetFixtures(Assembly assembly, PreFilter filter)
+        private IList<Test> GetFixtures(Assembly assembly, PreFilter filter, Type[]? types)
         {
             var fixtures = new List<Test>();
             Log.Debug("Examining assembly for test fixtures");
 
-            var testTypes = GetCandidateFixtureTypes(assembly, filter);
+            var testTypes = types is null
+                ? GetCandidateFixtureTypes(assembly, filter)
+                : types.Where(filter.IsMatch).ToList();
 
             Log.Debug("Found {0} classes to examine", testTypes.Count);
             var timer = Stopwatch.StartNew();

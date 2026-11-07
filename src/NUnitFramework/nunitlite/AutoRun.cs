@@ -1,11 +1,49 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Common;
 
 namespace NUnitLite
 {
+#if NET10_0_OR_GREATER
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+
+    public class TypedFixtureBuilder
+    {
+        private readonly List<Type> _types = new List<Type>();
+
+        public TypedFixtureBuilder Add<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+        {
+            _types.Add(typeof(T));
+            return this;
+        }
+
+        public void Validate()
+        {
+            if (_types.Count == 0)
+                throw new InvalidOperationException("At least one type must be specified.");
+
+            if (_types.Contains(null))
+                throw new InvalidOperationException("Types cannot be null.");
+
+            // TODO: Validate that all types are from the same assembly
+        }
+
+        internal Type[] GetTypes()
+        {
+            return _types.ToArray();
+        }
+
+        internal Assembly GetAssembly()
+        {
+            return _types[0].Assembly;
+        }
+    }
+#endif
+
     /// <summary>
     /// The AutoRun class is used by executable test
     /// assemblies to control their own execution.
@@ -30,6 +68,21 @@ namespace NUnitLite
     public class AutoRun
     {
         private readonly Assembly _testAssembly;
+        private readonly Type[] _testTypes;
+
+#if NET10_0_OR_GREATER
+        /// <summary>
+        /// Constructor taking the test types to run. All types are assumed
+        /// to be from the same assembly.
+        /// </summary>
+        /// <param name="builder">The built types</param>
+        public AutoRun(TypedFixtureBuilder builder)
+        {
+            builder.Validate();
+            _testTypes = builder.GetTypes();
+            _testAssembly = builder.GetAssembly();
+        }
+#endif
 
         /// <summary>
         /// Constructor for use where GetCallingAssembly is not
@@ -55,7 +108,7 @@ namespace NUnitLite
         /// <param name="args">arguments for NUnitLite to use</param>
         public int Execute(string[] args)
         {
-            return new TextRunner(_testAssembly).Execute(args);
+            return CreateRunner().Execute(args);
         }
 
         /// <summary>
@@ -69,7 +122,12 @@ namespace NUnitLite
         /// <param name="reader">A TextReader used when waiting for input</param>
         public int Execute(string[] args, ExtendedTextWriter writer, TextReader reader)
         {
-            return new TextRunner(_testAssembly).Execute(writer, reader, args);
+            return CreateRunner().Execute(writer, reader, args);
+        }
+
+        private TextRunner CreateRunner()
+        {
+            return _testTypes is not null ? new TextRunner(_testTypes) : new TextRunner(_testAssembly);
         }
     }
 }

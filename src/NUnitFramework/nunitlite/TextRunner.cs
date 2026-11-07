@@ -52,6 +52,7 @@ namespace NUnitLite
         #endregion
 
         private Assembly _testAssembly;
+        private Type[] _testTypes;
         private ITestAssemblyRunner _runner;
 
         private NUnitLiteOptions _options;
@@ -80,11 +81,30 @@ namespace NUnitLite
             _testAssembly = testAssembly;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextRunner"/> class
+        /// specifying the test types to run. All types must be from the same assembly.
+        /// </summary>
+        /// <param name="testTypes">The types containing tests</param>
+        public TextRunner(Type[] testTypes)
+        {
+            ArgumentNullException.ThrowIfNull(testTypes);
+            if (testTypes.Length == 0)
+                throw new ArgumentException("At least one type must be specified.", nameof(testTypes));
+            if (Array.IndexOf(testTypes, null) >= 0)
+                throw new ArgumentException("Types must not contain null.", nameof(testTypes));
+
+            _testTypes = testTypes;
+            _testAssembly = testTypes[0].Assembly;
+        }
+
         #endregion
 
         #region Properties
 
         public ResultSummary Summary { get; private set; }
+
+        internal Assembly TestAssembly => _testAssembly;
 
         #endregion
 
@@ -262,7 +282,10 @@ namespace NUnitLite
         private void LoadTests(IDictionary<string, object> runSettings)
         {
             TimeStamp startTime = new TimeStamp();
-            _runner.Load(_testAssembly, runSettings);
+            if (_testTypes is not null)
+                ((NUnitTestAssemblyRunner)_runner).Load(_testTypes, runSettings);
+            else
+                _runner.Load(_testAssembly, runSettings);
             TimeStamp endTime = new TimeStamp();
 
             _textUI.DisplayDiscoveryReport(startTime, endTime);
