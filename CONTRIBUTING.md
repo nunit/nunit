@@ -117,7 +117,8 @@ Requests for new features and bug reports are what keep the project moving forwa
 - If you're using NUnit3TestAdapter, include its version.
 - Tell us how you're running your tests, including any command-line arguments or `runsettings`.
 - Include clear steps to reproduce the issue.
-- Include a short code example that reproduces the issue. You can also attach a ZIP file containing a minimal repro project, or submit a PR to the [NUnit.Issues](https://github.com/nunit/nunit.issues) repository. Create a folder with a name like `Issue1234`, matching the number of your GitHub issue.
+- Include a short code example in the issue that reproduces the problem. A few lines of test code are usually enough.
+- If the repro is complex - e.g. using multiple files, or references extra NuGet packages, please submit it as a PR to the [NUnit.Issues](https://github.com/nunit/nunit.issues) repository instead. Put it in a folder named like `Issue1234`, matching the number of your GitHub issue, and make sure it builds and runs with `dotnet test`.
 - Use [Markdown formatting](https://guides.github.com/features/mastering-markdown/) where appropriate to make the issue and code easier to read.
 - Screenshots are always appreciated, where applicable.
 
