@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug Report
 about: Report a problem with the NUnit Test Framework
 title: ''
 labels: bug
