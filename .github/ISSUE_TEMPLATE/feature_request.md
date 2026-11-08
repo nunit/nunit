@@ -1,5 +1,5 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest an idea for the NUnit Test Framework
 title: ''
 labels: enhancement
