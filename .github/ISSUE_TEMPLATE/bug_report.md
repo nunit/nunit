@@ -9,8 +9,9 @@ assignees: ''
 ### Initial Information
 
 - .NET Version: <!-- Ex: .NET 10, .NET Framework 4.7.2 -->
-- NUnit Framework Version: <!-- Ex: v5.0.0 -->
-- Runner: <!-- Ex: dotnet test, Visual Studio, nunit-console -->
+- NUnit Version: <!-- Ex: v5.0.0 -->
+- Runner (and version if relevant): <!-- Ex: dotnet test, Visual Studio 2026, nunit-console 3.22.0 -->
+- NUnit3TestAdapter version (if relevant): <!-- Ex: v6.3.1  -->
 
 ### Describe the Issue
 
