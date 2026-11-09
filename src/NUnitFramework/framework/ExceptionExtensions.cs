@@ -9,24 +9,24 @@ namespace NUnit.Framework
     internal static class ExceptionExtensions
     {
         /// <summary>
-        /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the Exception.StackTrace
-        /// property." See also <see cref="Assert.GetEnvironmentStackTraceWithoutThrowing"/>.
+        /// Returns <see cref="Exception.StackTrace"/> filtered by <paramref name="filter"/>, or unfiltered if
+        /// <paramref name="filter"/> is <see langword="null"/>. If <see cref="Exception.StackTrace"/> throws,
+        /// returns "SomeException was thrown by the Exception.StackTrace property." unfiltered.
+        /// See also <see cref="Assert.GetCallerStackTraceWithoutThrowing"/>.
         /// </summary>
-        public static string? GetStackTraceWithoutThrowing(this Exception exception)
+        public static string? GetStackTraceWithoutThrowing(this Exception exception, StackFilter? filter)
         {
             ArgumentNullException.ThrowIfNull(exception);
 
-            string? stackTrace;
             try
             {
-                stackTrace = exception.StackTrace;
+                string? stackTrace = exception.StackTrace;
+                return filter is null ? stackTrace : filter.Filter(stackTrace);
             }
             catch (Exception ex)
             {
                 return ex.GetType().Name + " was thrown by the Exception.StackTrace property.";
             }
-
-            return StackFilter.DefaultFilter.Filter(stackTrace);
         }
 
         /// <summary>

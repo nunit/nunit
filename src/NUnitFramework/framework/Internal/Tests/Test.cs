@@ -382,7 +382,7 @@ namespace NUnit.Framework.Internal
             ArgumentException.ThrowIfNullOrEmpty(reason);
 
             MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));
-            Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
+            Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception, StackFilter.DefaultFilter));
         }
 
         /// <summary>

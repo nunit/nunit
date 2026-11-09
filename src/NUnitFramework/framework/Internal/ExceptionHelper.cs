@@ -64,18 +64,24 @@ namespace NUnit.Framework.Internal
         /// as well as any InnerExceptions.
         /// </summary>
         /// <param name="exception">The exception.</param>
+        /// <param name="filter">
+        /// The filter applied to the stack trace of each exception separately,
+        /// or <see langword="null"/> to keep the stack traces unfiltered.
+        /// </param>
         /// <returns>A combined stack trace.</returns>
-        public static string BuildStackTrace(Exception exception)
+        public static string BuildStackTrace(Exception exception, StackFilter? filter)
         {
-            var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
+            var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing(filter));
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
-                sb.Append(Environment.NewLine);
+                // A filtered stack trace already ends with a newline.
+                if (sb.Length == 0 || sb[sb.Length - 1] != '\n')
+                    sb.Append(Environment.NewLine);
                 sb.Append("--");
                 sb.Append(inner.GetType().Name);
                 sb.Append(Environment.NewLine);
-                sb.Append(inner.GetStackTraceWithoutThrowing());
+                sb.Append(inner.GetStackTraceWithoutThrowing(filter));
             }
 
             return sb.ToString();
