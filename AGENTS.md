@@ -6,7 +6,9 @@ Before pushing or opening a PR, the agent MUST:
 
 1. **Verify the .NET SDK is available** (see below). Install it if missing, or ask the user if elevation is required.
 2. **Keep the change scoped** — only modify files related to the stated task. If the IDE, LSP, or package tooling touched unrelated files, revert those before committing. One topic per PR. No unnecessary refactoring.
-3. **Build clean**: `dotnet build nunit.slnx -c Release`. No new warnings. Fix warnings in code you wrote — don't `#pragma warning disable`.
+3. **Build clean**: `dotnet build nunit.slnx -c Release`. No new warnings. Fix warnings in code you wrote rather than suppressing them. Only when a warning cannot be fixed without breaking public API compatibility (see the binary-compatibility rules in the `nunit-api-design` skill) may it be suppressed, and then:
+   - inline, around the smallest possible scope (`#pragma warning disable`/`restore` around the one member), never project-wide;
+   - with a comment or `<remarks>` explaining why the fix would be a breaking change.
 4. **Test**: `dotnet test nunit.slnx -c Release`.
 5. Push and open the PR **only after build and tests pass**. Never push a failing build.
 
