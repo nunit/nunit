@@ -335,8 +335,7 @@ Task("PackageFramework")
             BasePath = CurrentImageDir,
             OutputDirectory = PACKAGE_DIR,
             Symbols = true,
-            // snupkg is not yet supported by Cake, https://github.com/cake-build/cake/issues/2362
-            ArgumentCustomization = args => args.Append("-SymbolPackageFormat snupkg")
+            SymbolPackageFormat = "snupkg"
         };
 
         NuGetPack("nuget/framework/nunit.nuspec", settings);
