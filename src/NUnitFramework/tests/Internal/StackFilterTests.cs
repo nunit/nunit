@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Linq;
 using System.Text;
 using NUnit.Framework.Internal;
@@ -9,8 +10,7 @@ using NUnit.TestData;
 namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
-    [NonParallelizable] // Disabling parallelization because the tests modify the static StackFilter.DefaultFilter property.
-    public class StackFilterTests
+    public class StackFilterTests : DefaultStackFilterFixture
     {
         #region Test Data
 
@@ -66,8 +66,7 @@ namespace NUnit.Framework.Tests.Internal
         """;
 
         private static readonly string QueueUserItemTrace = """
-           at System.Environment.get_StackTrace()
-           at NUnit.Framework.Assert.GetEnvironmentStackTraceWithoutThrowing() in D:\Development\3rd\NUnit\nunit\src\NUnitFramework\framework\Assert.cs:line 383
+           at NUnit.Framework.Assert.GetCallerStackTraceWithoutThrowing() in D:\Development\3rd\NUnit\nunit\src\NUnitFramework\framework\Assert.cs:line 383
            at NUnit.Framework.Assert.GetStackTrace() in D:\Development\3rd\NUnit\nunit\src\NUnitFramework\framework\Assert.cs:line 374
            at NUnit.Framework.Assert.IssueWarning(String message) in D:\Development\3rd\NUnit\nunit\src\NUnitFramework\framework\Assert.cs:line 367
            at NUnit.Framework.Assert.Warn(String message) in D:\Development\3rd\NUnit\nunit\src\NUnitFramework\framework\Assert.cs:line 132
@@ -153,24 +152,80 @@ namespace NUnit.Framework.Tests.Internal
 
         """;
 
+        // Mono wrapper frames are removed, except where the exception was thrown and for dynamic-method and synchronized,
+        // as those represent user code.
+        private static readonly string MonoWrapperStackTrace = """
+          at (wrapper castclass) System.Object.__castclass_with_cache(object,intptr,intptr)
+          at (wrapper dynamic-method) System.Object.lambda_method(System.Runtime.CompilerServices.Closure,object)
+          at (wrapper delegate-invoke) System.Func`2[System.Object,System.String].invoke_TResult_T(object)
+          at (wrapper synchronized) MyNamespace.MyAppsTests.ConvertLocked(object)
+          at MyNamespace.MyAppsTests.CastTest () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0
+          at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+          at (wrapper runtime-invoke) object.runtime_invoke_void__this___object(object,intptr,intptr,intptr)
+        """;
+
+        private static readonly string MonoWrapperStackTrace_Result = """
+          at (wrapper castclass) System.Object.__castclass_with_cache(object,intptr,intptr)
+          at (wrapper dynamic-method) System.Object.lambda_method(System.Runtime.CompilerServices.Closure,object)
+          at (wrapper synchronized) MyNamespace.MyAppsTests.ConvertLocked(object)
+          at MyNamespace.MyAppsTests.CastTest () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0
+
+        """;
+
+        // On Linux and macOS an async continuation can be posted to the default SynchronizationContext.
+        private static readonly string SynchronizationContextPostTrace = """
+           at NUnit.Framework.Assert.Warn(String message)
+           at NUnit.TestData.WarningFixture.WarningAfterAwaitTaskYield() in /_/src/NUnitFramework/testdata/WarningFixture.cs:line 560
+           at System.Threading.SynchronizationContext.<>c.<Post>b__8_0(KeyValuePair`2 s)
+           at System.Threading.ThreadPoolWorkQueue.Dispatch()
+        """;
+
+        private static readonly string SynchronizationContextPostTrace_Result = """
+           at NUnit.TestData.WarningFixture.WarningAfterAwaitTaskYield() in /_/src/NUnitFramework/testdata/WarningFixture.cs:line 560
+
+        """;
+
+        // System frames at the top of the stack show where the exception was thrown and must be kept.
+        private static readonly string ThrownBySystemMethodTrace = """
+           at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+           at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+           at System.Threading.Tasks.Task.Wait()
+           at MyNamespace.MyAppsTests.WaitForFaultedTask()
+           at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+           at NUnit.Framework.Internal.Reflect.InvokeMethod(MethodInfo method, Object fixture, Object[] args)
+        """;
+
+        private static readonly string ThrownBySystemMethodTrace_Result = """
+           at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
+           at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+           at System.Threading.Tasks.Task.Wait()
+           at MyNamespace.MyAppsTests.WaitForFaultedTask()
+
+        """;
+
+        // Everything below the NUnit execution pipeline belongs to the runner or host and is cut off.
+        private static readonly string RunnerAndHostTrace = """
+           at NUnit.Framework.Assert.Warn(String message)
+           at MyNamespace.MyAppsTests.WarnTest()
+           at NUnit.Framework.Internal.Reflect.InvokeMethod(MethodInfo method, Object fixture, Object[] args)
+           at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+           at MyNamespace.MyRunnerTests.RunInnerTest()
+           at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod(TestExecutionContext context)
+           at Microsoft.VisualStudio.TestPlatform.TestHost.Program.Main(String[] args)
+        """;
+
+        private static readonly string RunnerAndHostTrace_Result = """
+           at MyNamespace.MyAppsTests.WarnTest()
+
+        """;
+
+        // An exception thrown inside NUnit itself would be filtered away completely, so the raw trace is returned.
+        private static readonly string ThrownInsideNUnitTrace = """
+           at NUnit.Framework.Internal.TestExecutionContext.get_CurrentResult()
+           at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute(TestExecutionContext context)
+        """;
+
         #endregion
-
-        // As we are testing the filter we need to be sure it is enabled to its default state.
-        // The tests assembly has a `SetUpFixture` that disables the filter for debugging.
-        private StackFilter _savedFilter;
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _savedFilter = StackFilter.DefaultFilter;
-            StackFilter.DefaultFilter = new();
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            StackFilter.DefaultFilter = _savedFilter;
-        }
 
         // NOTE: Using individual tests rather than test cases
         // to make the error messages easier to read.
@@ -205,10 +260,116 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(StackFilter.DefaultFilter.Filter(ThrownExceptionInAsyncMethodTrace), Is.EqualTo(ThrownExceptionInAsyncMethodTrace_Result));
         }
 
+#if NETFRAMEWORK
+        // Mono writes nested types with '+' and includes generic parameters, unlike .NET Framework.
+        private static readonly string MonoThrownExceptionInAsyncMethodTrace = """
+          at NUnit.TestData.StackFilterFixture+<ThrowExceptionAsync>d__8`1[T].MoveNext () [0x0001e] in <97520dab6bc24aceb801551affd7b633>:0
+        --- End of stack trace from previous location where exception was thrown ---
+          at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw () [0x00011] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess (System.Threading.Tasks.Task task) [0x0003e] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification (System.Threading.Tasks.Task task) [0x00028] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter.GetResult () [0x00006] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at NUnit.TestData.StackFilterFixture+<ThrowExceptionInAsyncUserMethod>d__7.MoveNext () [0x0004c] in <97520dab6bc24aceb801551affd7b633>:0
+        --- End of stack trace from previous location where exception was thrown ---
+          at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw () [0x00011] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess (System.Threading.Tasks.Task task) [0x0003e] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification (System.Threading.Tasks.Task task) [0x00028] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at System.Runtime.CompilerServices.TaskAwaiter`1[TResult].GetResult () [0x00000] in <12b418a7818c4ca0893feeaaf67f1e7f>:0
+          at NUnit.Framework.Internal.TaskAwaitAdapter+GenericAdapter`1[T].BlockUntilCompleted () [0x00000] in <4c62b2b2a4b04e9d8b6c5a8c2d9e4f3a>:0
+          at NUnit.Framework.Internal.AsyncToSyncAdapter.Await (NUnit.Framework.Internal.TestExecutionContext context, System.Func`1[TResult] invoke) [0x0002d] in <4c62b2b2a4b04e9d8b6c5a8c2d9e4f3a>:0
+          at NUnit.Framework.Internal.Commands.TestMethodCommand.RunTestMethod (NUnit.Framework.Internal.TestExecutionContext context) [0x00041] in <4c62b2b2a4b04e9d8b6c5a8c2d9e4f3a>:0
+          at NUnit.Framework.Internal.Commands.TestMethodCommand.Execute (NUnit.Framework.Internal.TestExecutionContext context) [0x00000] in <4c62b2b2a4b04e9d8b6c5a8c2d9e4f3a>:0
+        """;
+
+        private static readonly string MonoThrownExceptionInAsyncMethodTrace_Result = """
+          at NUnit.TestData.StackFilterFixture.ThrowExceptionAsync () [0x0001e] in <97520dab6bc24aceb801551affd7b633>:0
+          at NUnit.TestData.StackFilterFixture.ThrowExceptionInAsyncUserMethod () [0x0004c] in <97520dab6bc24aceb801551affd7b633>:0
+
+        """;
+
+        [Test]
+        public void FilterThrownExceptionInAsyncMethodTraceUnderMono()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(MonoThrownExceptionInAsyncMethodTrace), Is.EqualTo(MonoThrownExceptionInAsyncMethodTrace_Result));
+        }
+#endif
+
         [Test]
         public void FilterThrownExceptionUnderMono()
         {
             Assert.That(StackFilter.DefaultFilter.Filter(MonoStackTrace), Is.EqualTo(MonoStackTrace_Result));
+        }
+
+        [Test]
+        public void FilterMonoWrapperFrames()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(MonoWrapperStackTrace), Is.EqualTo(MonoWrapperStackTrace_Result));
+        }
+
+        [Test]
+        public void FilterSynchronizationContextPostTrace()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(SynchronizationContextPostTrace), Is.EqualTo(SynchronizationContextPostTrace_Result));
+        }
+
+        [Test]
+        public void FilterKeepsSystemFramesWhereExceptionWasThrown()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(ThrownBySystemMethodTrace), Is.EqualTo(ThrownBySystemMethodTrace_Result));
+        }
+
+        [Test]
+        public void FilterCutsOffRunnerAndHostFrames()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(RunnerAndHostTrace), Is.EqualTo(RunnerAndHostTrace_Result));
+        }
+
+        [Test]
+        public void CreateWithoutNUnitPatternKeepsNUnitFrames()
+        {
+            var filter = StackFilter.Create(nunitStackPattern: null);
+
+            Assert.That(filter.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Assert + System.Environment.NewLine));
+        }
+
+        [Test]
+        public void CreateWithoutRunnerPatternDoesNotCutOffTrace()
+        {
+            var filter = StackFilter.Create(nunitStackPattern: @"^ +\w+:? NUnit\.", systemStackPattern: null, runnerStackPattern: null);
+
+            Assert.That(filter.Filter(RunnerAndHostTrace), Is.EqualTo("""
+                   at MyNamespace.MyAppsTests.WarnTest()
+                   at MyNamespace.MyRunnerTests.RunInnerTest()
+                   at Microsoft.VisualStudio.TestPlatform.TestHost.Program.Main(String[] args)
+
+                """));
+        }
+
+        [Test]
+        [Obsolete("Tests the obsolete constructor")]
+        public void ObsoleteConstructorCutsOffTraceAtBottomOfStackPattern()
+        {
+            var filter = new StackFilter(@"^ +\w+:? NUnit\.", @"^ +\w+:? Microsoft\.VisualStudio\.");
+
+            Assert.That(filter.Filter(RunnerAndHostTrace), Is.EqualTo("""
+                   at MyNamespace.MyAppsTests.WarnTest()
+                   at MyNamespace.MyRunnerTests.RunInnerTest()
+
+                """));
+        }
+
+        [Test]
+        public void FilterReturnsRawTraceIfNothingIsLeft()
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(ThrownInsideNUnitTrace), Is.EqualTo(ThrownInsideNUnitTrace + Environment.NewLine));
+        }
+
+        [Test]
+        public void FilterDoesNotAddSecondNewLineToRawTrace()
+        {
+            string rawTrace = ThrownInsideNUnitTrace + Environment.NewLine;
+
+            Assert.That(StackFilter.DefaultFilter.Filter(rawTrace), Is.EqualTo(rawTrace));
         }
 
         [TestCase(nameof(StackFilterFixture.AssertThatFailure))]
@@ -219,6 +380,11 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(nameof(StackFilterFixture.ThrowExceptionInUserMethod), nameof(StackFilterFixture.ThrowException), nameof(StackFilterFixture.ThrowExceptionInUserMethod))]
         [TestCase(nameof(StackFilterFixture.ThrowExceptionAsync))]
         [TestCase(nameof(StackFilterFixture.ThrowExceptionInAsyncUserMethod), nameof(StackFilterFixture.ThrowSpecifiedExceptionAsync), nameof(StackFilterFixture.ThrowExceptionInAsyncUserMethod))]
+        // The type-qualified names are only present if the async state machine frames are rewritten.
+        [TestCase(nameof(StackFilterFixture.ThrowExceptionInNestedClassAsyncMethod),
+            nameof(StackFilterFixture.NestedClass) + "." + nameof(StackFilterFixture.NestedClass.ThrowSpecifiedExceptionAsync),
+            nameof(StackFilterFixture.NestedClass) + "." + nameof(StackFilterFixture.NestedClass.ThrowExceptionInAsyncMethod),
+            nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInNestedClassAsyncMethod))]
         public static void StackTracesAreFiltered(string methodName, params string[] methodsOnStack)
         {
             var result = TestBuilder.RunTestCase(typeof(StackFilterFixture), methodName);
@@ -247,9 +413,6 @@ namespace NUnit.Framework.Tests.Internal
                 sb.AppendLine(string.Join(System.Environment.NewLine, methodsOnStack));
                 Assert.Fail(sb.ToString());
             }
-
-            Assert.That(numberOfStackTraceLines, Is.EqualTo(expectedStackTraceLines),
-                "Mismatch in number of method(s) in stacktrace");
 
             foreach (var otherMethod in methodsOnStack)
             {

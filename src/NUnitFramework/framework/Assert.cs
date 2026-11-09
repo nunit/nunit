@@ -367,21 +367,22 @@ namespace NUnit.Framework
         }
 
         private static string? GetStackTrace() =>
-            StackFilter.DefaultFilter.Filter(GetEnvironmentStackTraceWithoutThrowing());
+            StackFilter.DefaultFilter.Filter(GetCallerStackTraceWithoutThrowing());
 
         /// <summary>
-        /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the
-        /// Environment.StackTrace property." See also <see cref="ExceptionExtensions.GetStackTraceWithoutThrowing"/>.
+        /// Captures the current stack trace without the System.Environment frames that <see cref="Environment.StackTrace"/> adds.
+        /// If capturing throws, returns "SomeException was thrown while capturing the stack trace."
+        /// See also <see cref="ExceptionExtensions.GetStackTraceWithoutThrowing"/>.
         /// </summary>
-        private static string GetEnvironmentStackTraceWithoutThrowing()
+        private static string GetCallerStackTraceWithoutThrowing()
         {
             try
             {
-                return Environment.StackTrace;
+                return new System.Diagnostics.StackTrace(fNeedFileInfo: true).ToString();
             }
             catch (Exception ex)
             {
-                return ex.GetType().Name + " was thrown by the Environment.StackTrace property.";
+                return ex.GetType().Name + " was thrown while capturing the stack trace.";
             }
         }
 
