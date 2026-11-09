@@ -12,27 +12,8 @@ using NUnit.TestData;
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
-    [NonParallelizable] // Disabling parallelization because the tests modify the static StackFilter.DefaultFilter property.
-    public class WarningTests
+    public class WarningTests : DefaultStackFilterFixture
     {
-        // Not sure why we are testing the filter here
-        // Because of that we need to be sure it is enabled to its default state.
-        // The tests assembly has a `SetUpFixture` that disables the filter for debugging.
-        private StackFilter _savedFilter;
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _savedFilter = StackFilter.DefaultFilter;
-            StackFilter.DefaultFilter = new();
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            StackFilter.DefaultFilter = _savedFilter;
-        }
-
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Boolean))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Boolean))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessage))]
@@ -334,13 +315,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(warningStackTrace, Does.Contain(methodName));
             int numberOfStackTraceLines = warningStackTrace.Count(x => x == '\n');
 
-            // On .NET Framework async method are called from the state machine, so the actual test method is not on the stack.
-            // On .NET Core this is corrected by the framework, so the actual test method is on the stack.
-            // The actual test method only shows up on synchronous methods.
-            // Similarly on all framework using a separate Thread or Task to run the warning, the actual test method is not on the stack.
-            if (warningStackTrace.Contains(nameof(StackTracesAreFiltered)))
-                expectedStackTraceLines++;
-
             if (numberOfStackTraceLines != expectedStackTraceLines)
             {
                 StringBuilder sb = new();
@@ -349,9 +323,6 @@ namespace NUnit.Framework.Tests.Assertions
                 sb.AppendLine(warningStackTrace);
                 Assert.Fail(sb.ToString());
             }
-
-            Assert.That(numberOfStackTraceLines, Is.EqualTo(expectedStackTraceLines),
-                "Mismatch in number of method(s) in stacktrace");
         }
     }
 }

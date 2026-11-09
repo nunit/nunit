@@ -74,5 +74,33 @@ namespace NUnit.TestData
             await Task.Yield();
             throw (T)Activator.CreateInstance(typeof(T), "Message")!;
         }
+
+        [Test]
+        public static async Task ThrowExceptionInNestedClassAsyncMethod()
+        {
+            await Task.Yield();
+            await NestedClass.ThrowExceptionInAsyncMethod();
+        }
+
+        // The async state machines of these methods are nested types of a nested type.
+        // .NET Framework writes them as "StackFilterFixture.NestedClass.<Method>d__N.MoveNext()",
+        // Mono as "StackFilterFixture+NestedClass+<Method>d__N.MoveNext ()", including generic parameters.
+        public static class NestedClass
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static async Task ThrowExceptionInAsyncMethod()
+            {
+                await Task.Yield();
+                await ThrowSpecifiedExceptionAsync<InvalidOperationException>();
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static async Task ThrowSpecifiedExceptionAsync<T>()
+                where T : Exception
+            {
+                await Task.Yield();
+                throw (T)Activator.CreateInstance(typeof(T), "Message")!;
+            }
+        }
     }
 }
