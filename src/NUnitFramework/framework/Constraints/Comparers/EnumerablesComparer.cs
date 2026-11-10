@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -73,11 +74,11 @@ namespace NUnit.Framework.Constraints.Comparers
         private static EqualMethodResult CompareItems(object? expected, object? actual, ref Tolerance tolerance, ComparisonState state,
             NUnitEqualityComparer equalityComparer, ref Type? cachedType, ref NUnitEqualityComparer.EqualMethod? cachedMethod)
         {
-            if (expected is null || actual is null ||
-                expected.GetType() != actual.GetType() || state.DidCompare(expected, actual))
-            {
+            if (!CanUseCachedMethod(expected, actual))
                 return equalityComparer.AreEqual(expected, actual, ref tolerance, state);
-            }
+
+            if (state.DidCompare(expected, actual))
+                return EqualMethodResult.ComparisonPending;
 
             if (ReferenceEquals(expected, actual))
                 return EqualMethodResult.ComparedEqual;
@@ -93,6 +94,14 @@ namespace NUnit.Framework.Constraints.Comparers
             return cachedMethod is not null
                 ? cachedMethod(expected, actual, ref tolerance, state, equalityComparer)
                 : equalityComparer.AreEqual(expected, actual, ref tolerance, state);
+        }
+
+        /// <summary>
+        /// The cached method only applies to non-null items of the same type.
+        /// </summary>
+        private static bool CanUseCachedMethod([NotNullWhen(true)] object? expected, [NotNullWhen(true)] object? actual)
+        {
+            return expected is not null && actual is not null && expected.GetType() == actual.GetType();
         }
     }
 }
