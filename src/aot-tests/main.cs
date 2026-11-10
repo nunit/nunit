@@ -4,7 +4,7 @@ using NUnitLite;
 Console.WriteLine(typeof(CustomTests).Assembly.GetName());
 
 return new AutoRun(
-    new TypedFixtureBuilder().Add<CustomTests>()
+    new TestRunBuilder().AddFixture<CustomTests>()
 ).Execute(args);
 
 [TestFixture]

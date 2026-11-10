@@ -11,13 +11,22 @@ namespace NUnitLite
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    public class TypedFixtureBuilder
+    public class TestRunBuilder
     {
         private readonly List<Type> _types = new List<Type>();
+        private Assembly? _assembly = null;
+        private bool _doesAssemblyVary = false;
 
-        public TypedFixtureBuilder Add<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
+        public TestRunBuilder AddFixture<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.PublicConstructors)] T>()
         {
+            if (!_doesAssemblyVary && _assembly != typeof(T).Assembly)
+            {
+                _doesAssemblyVary = true;
+            }
+
             _types.Add(typeof(T));
+            _assembly = typeof(T).Assembly;
+
             return this;
         }
 
@@ -29,17 +38,25 @@ namespace NUnitLite
             if (_types.Contains(null))
                 throw new InvalidOperationException("Types cannot be null.");
 
-            // TODO: Validate that all types are from the same assembly
+            if (_assembly is null)
+                throw new InvalidOperationException("Assembly cannot be null.");
+
+            if (_doesAssemblyVary)
+                throw new InvalidOperationException("All types must be from the same assembly.");
         }
 
         internal Type[] GetTypes()
         {
+            Validate();
+
             return _types.ToArray();
         }
 
         internal Assembly GetAssembly()
         {
-            return _types[0].Assembly;
+            Validate();
+
+            return _assembly;
         }
     }
 #endif
@@ -76,7 +93,7 @@ namespace NUnitLite
         /// to be from the same assembly.
         /// </summary>
         /// <param name="builder">The built types</param>
-        public AutoRun(TypedFixtureBuilder builder)
+        public AutoRun(TestRunBuilder builder)
         {
             builder.Validate();
             _testTypes = builder.GetTypes();
