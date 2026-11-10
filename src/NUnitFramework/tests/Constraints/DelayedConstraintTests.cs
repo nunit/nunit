@@ -258,7 +258,6 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        // [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         [Test]
         public void ThatPollingCallsDelegateCorrectNumberOfTimes()
         {
@@ -268,7 +267,6 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(pollCount, Is.GreaterThanOrEqualTo(2).And.LessThanOrEqualTo(15 + 1));
         }
 
-        // [Test, Platform(Exclude = PlatformNames.MacOSX, Reason = "Doesn't seem to work correctly with timing, something to ponder later")]
         [Test]
         public void ThatPollingCallsAsyncDelegateCorrectNumberOfTimes()
         {
