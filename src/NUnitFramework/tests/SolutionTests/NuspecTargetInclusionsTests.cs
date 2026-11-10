@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +34,10 @@ namespace NUnit.Framework.Tests.SolutionTests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _csprojTargetFrameworks = PackageVersionReader.ExtractTargetFrameworks(_propsPath);
+            _csprojTargetFrameworks = PackageVersionReader.ExtractTargetFrameworks(_propsPath)
+                                                          .ToArray();
+
+            Assert.That(_csprojTargetFrameworks, Is.Not.Empty, $"No target frameworks found in {_propsPath}");
         }
 
         [Test]
@@ -78,7 +80,7 @@ namespace NUnit.Framework.Tests.SolutionTests
         private static class PackageVersionReader
         {
             // Function to extract packages from the .csproj file
-            public static string[] ExtractTargetFrameworks(string path)
+            public static IEnumerable<string> ExtractTargetFrameworks(string path)
             {
                 Assert.That(path, Does.Exist, $"props file at {path} not found.");
                 string xml = File.ReadAllText(path);
@@ -87,15 +89,23 @@ namespace NUnit.Framework.Tests.SolutionTests
 
                 foreach (var itemGroup in doc.Descendants("PropertyGroup"))
                 {
-                    XElement? packageReferences = itemGroup.Descendants("NUnitLibraryFrameworks").LastOrDefault();
+                    XElement? targetFramework = itemGroup.Descendants("NUnitFrameworkTarget").FirstOrDefault();
 
-                    if (packageReferences is not null)
+                    if (targetFramework is not null)
                     {
-                        return packageReferences.Value.Split(';');
+                        yield return targetFramework.Value;
+                    }
+
+                    targetFramework = itemGroup.Descendants("NUnitLibraryFrameworks").FirstOrDefault();
+
+                    if (targetFramework is not null)
+                    {
+                        foreach (var framework in targetFramework.Value.Split(';'))
+                        {
+                            yield return framework;
+                        }
                     }
                 }
-
-                throw new Exception("No 'NUnitLibraryFrameworks' property found in Directory.Build.props");
             }
         }
 
