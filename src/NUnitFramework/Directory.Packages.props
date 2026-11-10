@@ -7,8 +7,6 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageVersion Include="System.Memory" Version="4.6.3" />
     <PackageVersion Include="System.ValueTuple" Version="4.6.2" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageVersion Include="System.Collections.Immutable" Version="11.0.0" />
   </ItemGroup>
   <!-- Build tooling -->
@@ -17,7 +15,6 @@
   </ItemGroup>
   <!-- General Packages -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="FSharp.Core" Version="11.0.101" />
   </ItemGroup>
