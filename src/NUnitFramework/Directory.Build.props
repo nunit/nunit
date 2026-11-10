@@ -91,7 +91,6 @@
 
   <ItemGroup>
     <PackageReference Include="MinVer" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" PrivateAssets="all" />
     <PackageReference Include="IsExternalInit" PrivateAssets="all" />

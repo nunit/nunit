@@ -29,9 +29,6 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <PackageReference Include="System.Memory" />
         <PackageReference Include="System.ValueTuple" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="System.Collections.Immutable" />
     </ItemGroup>
 
