@@ -44,7 +44,10 @@ namespace NUnit.Framework.Internal.Commands
             // if the debugger is not attached when the timer expires.
             using var testCancellationTokenSource = new CancellationTokenSource();
             using var timedCancellationTokenSource = new CancellationTokenSource(_timeout);
-            timedCancellationTokenSource.Token.Register(() =>
+
+            // The registration is disposed before both token sources. Disposing it waits for a
+            // callback that is already running, so the callback can't use a disposed source.
+            using var registration = timedCancellationTokenSource.Token.Register(() =>
             {
                 if (!_debugger.IsAttached)
                     testCancellationTokenSource.Cancel();
