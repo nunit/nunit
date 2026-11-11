@@ -43,3 +43,32 @@ jobs:
           name: Test results (Mono Linux)
           path: TestResults/Mono
           if-no-files-found: error
+
+  test-mono-macos:
+    name: Framework tests on Mono (macOS)
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+        with:
+          global-json-file: global.json
+
+      - name: Install Mono
+        run: brew install mono
+
+      - name: Build and run Framework suites under Mono
+        run: bash .github/scripts/test-mono.sh
+
+      - name: Upload Mono results and runtime evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: Test results (Mono macOS)
+          path: TestResults/Mono
+          if-no-files-found: error
