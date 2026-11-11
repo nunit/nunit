@@ -12,6 +12,8 @@
     <NUnitLibraryFrameworks Condition="$(_OmitLegacyFramework) != 'true'">$(NUnitLibraryFrameworks);$(NUnitFrameworkTarget)</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks Condition="$(_OmitLegacyFramework) != 'true'">$(NUnitRuntimeFrameworks);$(NUnitFrameworkTarget)</NUnitRuntimeFrameworks>        
     <NUnitWindowsTestFrameworks Condition="$(_OmitLegacyFramework) != 'true'">$(NUnitWindowsTestFrameworks);$(NUnitFrameworkTarget)</NUnitWindowsTestFrameworks>   
+
+    <Features Condition="'$(TargetFramework)' == 'net11.0'">$(Features);runtime-async=on</Features>
   </PropertyGroup>
 
   <PropertyGroup>     
