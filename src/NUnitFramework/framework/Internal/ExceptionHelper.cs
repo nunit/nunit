@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
         /// or <see langword="null"/> to keep the stack traces unfiltered.
         /// </param>
         /// <returns>A combined stack trace.</returns>
-        public static string BuildStackTrace(Exception exception, StackFilter? filter)
+        public static string BuildStackTrace(Exception exception, StackFilter? filter = null)
         {
             var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing(filter));
 
