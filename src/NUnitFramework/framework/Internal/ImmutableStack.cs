@@ -32,13 +32,41 @@ namespace NUnit.Framework.Internal
             return new ImmutableStack<T>(new Node(value, _head));
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public Enumerator GetEnumerator() => new(this);
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             for (var current = _head; current is not null; current = current.Next)
                 yield return current.Value;
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
+
+        /// <summary>
+        /// Allocation-free enumerator, used by <see langword="foreach"/> when the stack is not accessed through an interface.
+        /// </summary>
+        public struct Enumerator
+        {
+            private Node? _next;
+
+            internal Enumerator(ImmutableStack<T> stack)
+            {
+                _next = stack._head;
+                Current = default!;
+            }
+
+            public T Current { get; private set; }
+
+            public bool MoveNext()
+            {
+                if (_next is null)
+                    return false;
+
+                Current = _next.Value;
+                _next = _next.Next;
+                return true;
+            }
+        }
 
         private sealed class Node
         {

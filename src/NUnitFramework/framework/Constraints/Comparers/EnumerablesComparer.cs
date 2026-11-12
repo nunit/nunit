@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -14,6 +15,10 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             if (x is not IEnumerable xIEnumerable || y is not IEnumerable yIEnumerable)
                 return EqualMethodResult.TypesNotSupported;
+
+            bool useCache = !equalityComparer.IsModified;
+            Type? cachedType = null;
+            NUnitEqualityComparer.EqualMethod? cachedMethod = null;
 
             var expectedEnum = xIEnumerable.GetEnumerator();
             using (expectedEnum as IDisposable)
@@ -36,6 +41,10 @@ namespace NUnit.Framework.Constraints.Comparers
                         {
                             result = EqualMethodResult.ComparedNotEqual;
                         }
+                        else if (useCache)
+                        {
+                            result = CompareItems(expectedEnum.Current, actualEnum.Current, ref tolerance, comparisonState, equalityComparer, ref cachedType, ref cachedMethod);
+                        }
                         else
                         {
                             result = equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, comparisonState);
@@ -57,6 +66,42 @@ namespace NUnit.Framework.Constraints.Comparers
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Compares two items, reusing the comparer found for the previous items if they have the same type.
+        /// </summary>
+        private static EqualMethodResult CompareItems(object? expected, object? actual, ref Tolerance tolerance, ComparisonState state,
+            NUnitEqualityComparer equalityComparer, ref Type? cachedType, ref NUnitEqualityComparer.EqualMethod? cachedMethod)
+        {
+            if (!CanUseCachedMethod(expected, actual))
+                return equalityComparer.AreEqual(expected, actual, ref tolerance, state);
+
+            if (state.DidCompare(expected, actual))
+                return EqualMethodResult.ComparisonPending;
+
+            if (ReferenceEquals(expected, actual))
+                return EqualMethodResult.ComparedEqual;
+
+            if (expected.GetType() != cachedType)
+            {
+                cachedType = expected.GetType();
+                cachedMethod = equalityComparer.FindEqualMethod(expected, actual, ref tolerance, state, out EqualMethodResult result);
+                if (cachedMethod is not null)
+                    return result;
+            }
+
+            return cachedMethod is not null
+                ? cachedMethod(expected, actual, ref tolerance, state, equalityComparer)
+                : equalityComparer.AreEqual(expected, actual, ref tolerance, state);
+        }
+
+        /// <summary>
+        /// The cached method only applies to non-null items of the same type.
+        /// </summary>
+        private static bool CanUseCachedMethod([NotNullWhen(true)] object? expected, [NotNullWhen(true)] object? actual)
+        {
+            return expected is not null && actual is not null && expected.GetType() == actual.GetType();
         }
     }
 }
