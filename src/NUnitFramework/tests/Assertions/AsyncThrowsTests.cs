@@ -89,6 +89,31 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Throws<AssertionException>(() => Assert.That(_throwsAsyncGenericTask, Throws.Nothing));
         }
 
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionPass()
+        {
+            Assert.That(_throwsAsyncTask,
+                        Throws.Exception.Not.TypeOf<ArgumentNullException>()
+                                        .And
+                                        .Not.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
+        public void AssertNotThrowingSpecifiedExceptionFail()
+        {
+            Assert.That(() =>
+                        Assert.That(_throwsAsyncTask,
+                                    Throws.Exception.Not.TypeOf<InvalidOperationException>()),
+                        Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        public void AssertNotSpecificExceptionNotThrowingAtAll()
+        {
+            Assert.That(ReturnOne,
+                        Throws.Exception.Not.InstanceOf<ArgumentException>());
+        }
+
         private static async System.Threading.Tasks.Task ThrowAsyncTask()
         {
             await ReturnOne();
