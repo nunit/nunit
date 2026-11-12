@@ -64,12 +64,21 @@ namespace NUnit.Framework.Internal
         /// as well as any InnerExceptions.
         /// </summary>
         /// <param name="exception">The exception.</param>
+        /// <returns>A combined unfiltered stack trace.</returns>
+        public static string BuildStackTrace(Exception exception)
+            => BuildStackTrace(exception, null);
+
+        /// <summary>
+        /// Builds up a message, using the Message field of the specified exception
+        /// as well as any InnerExceptions.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
         /// <param name="filter">
         /// The filter applied to the stack trace of each exception separately,
         /// or <see langword="null"/> to keep the stack traces unfiltered.
         /// </param>
         /// <returns>A combined stack trace.</returns>
-        public static string BuildStackTrace(Exception exception, StackFilter? filter = null)
+        public static string BuildStackTrace(Exception exception, StackFilter? filter)
         {
             var sb = new StringBuilder(exception.GetStackTraceWithoutThrowing(filter));
 
