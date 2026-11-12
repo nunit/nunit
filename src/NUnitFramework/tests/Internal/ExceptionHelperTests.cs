@@ -107,7 +107,7 @@ namespace NUnit.Framework.Tests.Internal
             var exception = new FixedStackTraceException(OuterTrace, new FixedStackTraceException(InnerTrace, null));
 
             Assert.That(
-                ExceptionHelper.BuildStackTrace(exception, filter: null),
+                ExceptionHelper.BuildStackTrace(exception),
                 Is.EqualTo(OuterTrace + Environment.NewLine + "--" + nameof(FixedStackTraceException) + Environment.NewLine + InnerTrace));
         }
 
