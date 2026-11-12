@@ -13,7 +13,6 @@
     <NUnitRuntimeFrameworks Condition="$(_OmitLegacyFramework) != 'true'">$(NUnitRuntimeFrameworks);$(NUnitFrameworkTarget)</NUnitRuntimeFrameworks>        
     <NUnitWindowsTestFrameworks Condition="$(_OmitLegacyFramework) != 'true'">$(NUnitWindowsTestFrameworks);$(NUnitFrameworkTarget)</NUnitWindowsTestFrameworks>   
 
-    <Features Condition="'$(TargetFramework)' == 'net11.0'">$(Features);runtime-async=on</Features>
   </PropertyGroup>
 
   <PropertyGroup>     
@@ -22,6 +21,8 @@
   <PropertyGroup>
     <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">14</LangVersion>
     <Features>strict</Features>
+    <Features Condition="'$(TargetFramework)' == 'net11.0'">$(Features);runtime-async=on</Features>
+
     <!-- MinVer configuration - calculates version from git tags -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerAutoIncrement>minor</MinVerAutoIncrement>
