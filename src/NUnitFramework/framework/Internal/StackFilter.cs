@@ -39,9 +39,11 @@ namespace NUnit.Framework.Internal
 #if NETFRAMEWORK
         // .NET Framework writes the state machine as a nested type with '.', Mono with '+' and its generic parameters,
         // e.g. "Fixture.<Method>d__8`1.MoveNext()" and "Fixture+<Method>d__8`1[T].MoveNext ()".
+        // The state machines of lambdas and local functions have no ordinal suffix, e.g. "Fixture.<>c.<<Test>b__1_0>d.MoveNext()".
+        // The method name cannot contain '.' or '+', so the match cannot start at an enclosing compiler-generated type like "<>c".
         // The space before the parentheses is kept, so the frame keeps the runtime's formatting.
         private const string AsyncStateMachineMethodName = "MoveNext";
-        private const string AsyncStateMachineMethodPattern = $@"[.+]<(.*)>d__[0-9]+(?:`[0-9]+)?(?:\[[^\]]*\])?\.{AsyncStateMachineMethodName}( *)\(\)";
+        private const string AsyncStateMachineMethodPattern = $@"[.+]<([^.+]*)>d(?:__[0-9]+)?(?:`[0-9]+)?(?:\[[^\]]*\])?\.{AsyncStateMachineMethodName}( *)\(\)";
         private const string AsyncStateMachineMethodReplacementPattern = @".$1$2()";
 
         private static readonly Regex AsyncStateMachineMethodRegex = new(AsyncStateMachineMethodPattern, RegexOptions.Compiled);
