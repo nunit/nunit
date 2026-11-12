@@ -182,7 +182,7 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex, filter: null));
+                        Log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
                     }
                 }
 
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                Log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex, filter: null));
+                Log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
             }
             finally
             {
