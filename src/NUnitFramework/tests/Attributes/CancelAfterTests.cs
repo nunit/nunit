@@ -92,6 +92,24 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
+        private sealed class CallbackRaceTests : BaseTestsClass
+        {
+            private readonly BlockingDebugger _debugger;
+
+            public CallbackRaceTests(BlockingDebugger debugger)
+            {
+                _debugger = debugger;
+            }
+
+            [CancelAfter(CancelAfter)]
+            public void TestThatEndsWhileCancelAfterCallbackIsRunning()
+            {
+                // End the test only once the CancelAfter timer has fired and its callback is running.
+                _debugger.CallbackStarted.Wait(TimeSpan.FromSeconds(10));
+                TestRanToCompletion = true;
+            }
+        }
+
         [Test, CancelAfter(500), SetCulture("fr-BE"), SetUICulture("es-BO")]
         public void TestWithCancelAfterRespectsCulture()
         {
@@ -162,6 +180,35 @@ namespace NUnit.Framework.Tests.Attributes
 
             // then
             Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
+        }
+
+        [Test]
+        public void TestThatEndsWhileCancelAfterCallbackIsRunningWaitsForTheCallbackToFinish()
+        {
+            // given
+            var testThatEndsWhileCallbackIsRunning =
+                TestBuilder.MakeTestCase(typeof(CallbackRaceTests), nameof(CallbackRaceTests.TestThatEndsWhileCancelAfterCallbackIsRunning));
+
+            var debugger = new BlockingDebugger();
+            var callbackRaceTests = new CallbackRaceTests(debugger);
+
+            // when
+            var run = Task.Run(() => TestBuilder.RunTest(testThatEndsWhileCallbackIsRunning, callbackRaceTests, debugger));
+
+            // then
+            try
+            {
+                Assert.That(debugger.CallbackStarted.Wait(TimeSpan.FromSeconds(10)), Is.True, "CancelAfter callback did not start");
+                Assert.That(run.Wait(TimeSpan.FromMilliseconds(500)), Is.False, "Test completed while the CancelAfter callback was still running");
+            }
+            finally
+            {
+                debugger.ReleaseCallback();
+            }
+
+            Assert.That(run.Wait(TimeSpan.FromSeconds(10)), Is.True, "Test did not complete after the CancelAfter callback finished");
+            Assert.That(callbackRaceTests.TestRanToCompletion, "Test did not run to completion");
+            Assert.That(run.Result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
         [Test]
@@ -503,6 +550,32 @@ namespace NUnit.Framework.Tests.Attributes
         private sealed class StubDebugger : IDebugger
         {
             public bool IsAttached { get; set; }
+        }
+
+        /// <summary>
+        /// Holds the CancelAfter timer callback inside <see cref="IsAttached"/> until <see cref="ReleaseCallback"/> is called.
+        /// </summary>
+        private sealed class BlockingDebugger : IDebugger
+        {
+            private readonly TaskCompletionSource<bool> _callbackStarted = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            private readonly TaskCompletionSource<bool> _callbackReleased = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public Task CallbackStarted => _callbackStarted.Task;
+
+            public bool IsAttached
+            {
+                get
+                {
+                    _callbackStarted.TrySetResult(true);
+                    _callbackReleased.Task.Wait();
+
+                    // Report a debugger as attached so the callback does not cancel the test:
+                    // if the token sources were already disposed, cancelling here would crash the test run.
+                    return true;
+                }
+            }
+
+            public void ReleaseCallback() => _callbackReleased.TrySetResult(true);
         }
     }
 }
