@@ -292,6 +292,17 @@ namespace NUnit.Framework.Tests.Internal
         {
             Assert.That(StackFilter.DefaultFilter.Filter(MonoThrownExceptionInAsyncMethodTrace), Is.EqualTo(MonoThrownExceptionInAsyncMethodTrace_Result));
         }
+
+        // The rewrite must start at the state machine, not at an enclosing compiler-generated type like "<>c".
+        [TestCase("   at Fixture.<>c.<<TestAsync>b__1_0>d__0.MoveNext()", "   at Fixture.<>c.<TestAsync>b__1_0()")]
+        [TestCase("   at Fixture.<>c.<<TestAsync>b__1_0>d.MoveNext()", "   at Fixture.<>c.<TestAsync>b__1_0()")]
+        [TestCase("   at Fixture.<>c__DisplayClass1_0.<<TestAsync>b__0>d.MoveNext()", "   at Fixture.<>c__DisplayClass1_0.<TestAsync>b__0()")]
+        [TestCase("   at Fixture.<<TestAsync>g__Local|1_0>d.MoveNext()", "   at Fixture.<TestAsync>g__Local|1_0()")]
+        [TestCase("  at Fixture+<>c+<<TestAsync>b__1_0>d.MoveNext () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0", "  at Fixture+<>c.<TestAsync>b__1_0 () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0")]
+        public void FilterRewritesAsyncStateMachineFrame(string frame, string expected)
+        {
+            Assert.That(StackFilter.DefaultFilter.Filter(frame), Is.EqualTo(expected + Environment.NewLine));
+        }
 #endif
 
         [Test]
@@ -385,6 +396,21 @@ namespace NUnit.Framework.Tests.Internal
             nameof(StackFilterFixture.NestedClass) + "." + nameof(StackFilterFixture.NestedClass.ThrowSpecifiedExceptionAsync),
             nameof(StackFilterFixture.NestedClass) + "." + nameof(StackFilterFixture.NestedClass.ThrowExceptionInAsyncMethod),
             nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInNestedClassAsyncMethod))]
+#if NETFRAMEWORK
+        // .NET Framework and Mono frames are rewritten. Mono keeps '+' between the nested types: "StackFilterFixture+<>c.<...>b__".
+        [TestCase(nameof(StackFilterFixture.ThrowExceptionInAsyncLambda),
+            "<>c.<" + nameof(StackFilterFixture.ThrowExceptionInAsyncLambda) + ">b__",
+            nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInAsyncLambda))]
+#else
+        // .NET 8-10 do not resolve the state machine of a lambda ("<>c.<<...>b__1_0>d.MoveNext()"),
+        // while runtime-async (.NET 11) has no state machine ("<>c.<...>b__1_0()"). Both contain the lambda's name.
+        [TestCase(nameof(StackFilterFixture.ThrowExceptionInAsyncLambda),
+            "<" + nameof(StackFilterFixture.ThrowExceptionInAsyncLambda) + ">b__",
+            nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInAsyncLambda))]
+#endif
+        [TestCase(nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction),
+            nameof(StackFilterFixture) + ".<" + nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction) + ">g__ThrowAsync|",
+            nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction))]
         public static void StackTracesAreFiltered(string methodName, params string[] methodsOnStack)
         {
             var result = TestBuilder.RunTestCase(typeof(StackFilterFixture), methodName);
