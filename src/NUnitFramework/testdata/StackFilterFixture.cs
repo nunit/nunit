@@ -82,6 +82,35 @@ namespace NUnit.TestData
             await NestedClass.ThrowExceptionInAsyncMethod();
         }
 
+        // The async lambda is a method of the compiler-generated class "<>c",
+        // its async state machine a nested type of that class.
+        [Test]
+        public static async Task ThrowExceptionInAsyncLambda()
+        {
+            Func<Task> throwAsync = async () =>
+            {
+                await Task.Yield();
+                throw new InvalidOperationException("Not allowed at this time.");
+            };
+
+            await Task.Yield();
+            await throwAsync();
+        }
+
+        // The async state machine of a local function is a nested type of the declaring class.
+        [Test]
+        public static async Task ThrowExceptionInAsyncLocalFunction()
+        {
+            await Task.Yield();
+            await ThrowAsync();
+
+            static async Task ThrowAsync()
+            {
+                await Task.Yield();
+                throw new InvalidOperationException("Not allowed at this time.");
+            }
+        }
+
         // The async state machines of these methods are nested types of a nested type.
         // .NET Framework writes them as "StackFilterFixture.NestedClass.<Method>d__N.MoveNext()",
         // Mono as "StackFilterFixture+NestedClass+<Method>d__N.MoveNext ()", including generic parameters.
