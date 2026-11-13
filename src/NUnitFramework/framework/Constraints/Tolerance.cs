@@ -90,7 +90,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromDays(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromDays(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromHours(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromHours(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMinutes(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromMinutes(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromSeconds(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromSeconds(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMilliseconds(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromMilliseconds(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromTicks(Convert.ToInt64(Amount)));
+                return new Tolerance(TimeSpan.FromTicks(Numerics.ConvertToValue<long>(Amount)));
             }
         }
 
@@ -260,171 +260,13 @@ namespace NUnit.Framework.Constraints
 
         private Range LinearRange(object value)
         {
-            if (Amount is double || value is double)
-            {
-                var v = Numerics.ConvertToValue<double>(value);
-                var offset = Numerics.ConvertToValue<double>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-            if (Amount is float || value is float)
-            {
-                var v = Numerics.ConvertToValue<float>(value);
-                var offset = Numerics.ConvertToValue<float>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-#if !NETFRAMEWORK
-            if (Amount is Half || value is Half)
-            {
-                var v = Numerics.ConvertToValue<Half>(value);
-                var offset = Numerics.ConvertToValue<Half>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((decimal)v - (decimal)offset, (decimal)v + (decimal)offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-#endif
-
-            if (Amount is decimal || value is decimal)
-            {
-                var v = Numerics.ConvertToValue<decimal>(value);
-                var offset = Numerics.ConvertToValue<decimal>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-#if !NETFRAMEWORK
-            if (Amount is UInt128 || value is UInt128)
-            {
-                var v = Numerics.ConvertToValue<UInt128>(value);
-                var offset = Numerics.ConvertToValue<UInt128>(Amount);
-
-                // We can type promote smaller precision types, but not here
-                // So we naively calculate the range and let it overflow if needed.
-                // There is not much we can do about it, and this will provide the clearest failure message.
-                return new Range(v - offset, v + offset);
-            }
-
-            if (Amount is Int128 || value is Int128)
-            {
-                var v = Numerics.ConvertToValue<Int128>(value);
-                var offset = Numerics.ConvertToValue<Int128>(Amount);
-
-                // We can type promote smaller precision types, but not here
-                // So we naively calculate the range and let it overflow if needed.
-                // There is not much we can do about it, and this will provide the clearest failure message.
-                return new Range(v - offset, v + offset);
-            }
-#endif
-
-            if (Amount is nuint || value is nuint)
-            {
-                var v = Numerics.ConvertToValue<nuint>(value);
-                var offset = Numerics.ConvertToValue<nuint>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is nint || value is nint)
-            {
-                var v = Numerics.ConvertToValue<nint>(value);
-                var offset = Numerics.ConvertToValue<nint>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is ulong || value is ulong)
-            {
-                var v = Convert.ToUInt64(value);
-                var offset = Convert.ToUInt64(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is long || value is long)
-            {
-                var v = Convert.ToInt64(value);
-                var offset = Convert.ToInt64(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is uint || value is uint)
-            {
-                var v = Convert.ToUInt32(value);
-                var offset = Convert.ToUInt32(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((long)v - offset, (long)v + offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Numerics.IsFixedPointNumeric(Amount) && Numerics.IsFixedPointNumeric(value))
-            {
-                var v = Convert.ToInt32(value);
-                var offset = Convert.ToInt32(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((long)v - offset, (long)v + offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
             if (Amount is TimeSpan interval && value is DateTime dateTime)
-            {
                 return new Range(dateTime - interval, dateTime + interval);
-            }
 
-            throw new InvalidOperationException("Cannot create range for a non-numeric value");
+            if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
+                throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            static Range GetInt128Range(object value, object amount)
-            {
-#if !NETFRAMEWORK
-                var v = Numerics.ConvertToValue<Int128>(value);
-                var offset = Numerics.ConvertToValue<Int128>(amount);
-                return new Range(v - offset, v + offset);
-#else
-                throw new InvalidOperationException("The requested values are out of calculable range.");
-#endif
-            }
+            return Numerics.LinearRange(value, Amount);
         }
 
         private Range PercentRange(object value)
@@ -432,15 +274,7 @@ namespace NUnit.Framework.Constraints
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            double v = value is IConvertible ? Convert.ToDouble(value) : Numerics.ConvertToValue<double>(value);
-            double amount = Amount is IConvertible ? Convert.ToDouble(Amount) : Numerics.ConvertToValue<double>(Amount);
-
-            // Calculate the absolute value of the offset in case 'value' is negative to ensure lower bounds is always less than upper bounds
-            double offset = Math.Abs(v * amount / 100.0);
-
-            double lowerBound = v - offset;
-            double upperBound = v + offset;
-            return new Range(lowerBound, upperBound);
+            return Numerics.PercentRange(value, Amount);
         }
 
         #endregion

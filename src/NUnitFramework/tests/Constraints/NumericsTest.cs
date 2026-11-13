@@ -121,8 +121,8 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
         public void CanCalculateDifferenceBetweenWideIntegerJustOutsideDecimalRangeAndDecimal(object wide, double wideAsDouble)
         {
-            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(wideAsDouble));
-            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(-wideAsDouble));
+            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(Math.Abs(wideAsDouble)));
+            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(Math.Abs(wideAsDouble)));
         }
 
         private static TestCaseData[] WideIntegerJustOutsideDecimalRangeTestCases()
@@ -353,7 +353,7 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData<nuint>(500, 0) { ExpectedResult = 500 },
                 new TestCaseData<nuint>(0, 500) { ExpectedResult = 500 },
                 new TestCaseData<ushort>(500, 0) { ExpectedResult = 500 },
-                new TestCaseData<ushort>(0, 500) { ExpectedResult = -500 },
+                new TestCaseData<ushort>(0, 500) { ExpectedResult = 500 },
 #if !NETFRAMEWORK
                 new TestCaseData<Int128>(Int128.MaxValue, Int128.MaxValue - 500) { ExpectedResult = 500 },
                 new TestCaseData<UInt128>(UInt128.MaxValue, UInt128.MaxValue - 500) { ExpectedResult = 500 },
@@ -368,7 +368,7 @@ namespace NUnit.Framework.Tests.Constraints
             return
             [
                 new TestCaseData<double, double, double>(0.1, 0.05, 0.05),
-                new TestCaseData<double, double, double>(0.1, 0.15, -0.05),
+                new TestCaseData<double, double, double>(0.1, 0.15, 0.05),
 #if !NETFRAMEWORK
                 new TestCaseData<Half, Half, Half>((Half)0.1, (Half)0.05, (Half)0.05),
                 new TestCaseData<Half, Half, double>((Half)0.1, (Half)0.05, 0.05),
@@ -388,29 +388,29 @@ namespace NUnit.Framework.Tests.Constraints
             return
             [
                 new TestCaseData<decimal, decimal, object>(10000m, 8500m, 15),
-                new TestCaseData<decimal, decimal, object>(10000m, 11500m, -15),
+                new TestCaseData<decimal, decimal, object>(10000m, 11500m, 15),
 
                 new TestCaseData<int, int, object>(10000, 8500, 15),
-                new TestCaseData<int, int, object>(10000, 11500, -15),
+                new TestCaseData<int, int, object>(10000, 11500, 15),
                 new TestCaseData<uint, uint, object>(10000u, 8500u, 15),
                 new TestCaseData<uint, uint, object>(10000u, 11500u, 15),
 
                 new TestCaseData<long, long, object>(10000, 8500, 15),
-                new TestCaseData<long, long, object>(10000, 11500, -15),
+                new TestCaseData<long, long, object>(10000, 11500, 15),
                 new TestCaseData<ulong, ulong, object>(10000u, 8500u, 15),
                 new TestCaseData<ulong, ulong, object>(10000u, 11500u, 15),
 
                 new TestCaseData<nint, nint, object>(10000, 8500, 15),
-                new TestCaseData<nint, nint, object>(10000, 11500, -15),
+                new TestCaseData<nint, nint, object>(10000, 11500, 15),
                 new TestCaseData<nuint, nuint, object>(10000u, 8500u, 15),
                 new TestCaseData<nuint, nuint, object>(10000u, 11500u, 15),
 #if !NETFRAMEWORK
                 new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)8500, 15),
-                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, -15),
+                new TestCaseData<Int128, Int128, object>((Int128)10000, (Int128)11500, 15),
                 new TestCaseData<UInt128, UInt128, object>((UInt128)10000, (UInt128)8500, 15),
 
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, (Half)15.04),
-                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, (Half)(-15.04)),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)8500, 15.04),
+                new TestCaseData<Half, Half, object>((Half)10000, (Half)11500, 15.04),
                 new TestCaseData<Half, Half, object>((Half)5, (Half)0, 100),
 #endif
             ];
@@ -514,16 +514,16 @@ namespace NUnit.Framework.Tests.Constraints
         private static TestCaseData[] SignedAndUnsignedDifferenceTestCases()
         {
             return [
-                new TestCaseData(-1, 1u, ToleranceMode.Linear, -2),
+                new TestCaseData(-1, 1u, ToleranceMode.Linear, 2),
                 new TestCaseData(1u, -1, ToleranceMode.Linear, 2),
-                new TestCaseData(-1L, 1ul, ToleranceMode.Linear, -2),
+                new TestCaseData(-1L, 1ul, ToleranceMode.Linear, 2),
                 new TestCaseData(ulong.MaxValue, -1L, ToleranceMode.Linear, (decimal)ulong.MaxValue + 1),
-                new TestCaseData((nint)(-1), (nuint)1, ToleranceMode.Linear, -2),
+                new TestCaseData((nint)(-1), (nuint)1, ToleranceMode.Linear, 2),
                 new TestCaseData(-10, 5u, ToleranceMode.Percent, 150),
                 new TestCaseData(-10L, 5ul, ToleranceMode.Percent, 150),
-                new TestCaseData(0L, 5ul, ToleranceMode.Percent, double.NegativeInfinity),
+                new TestCaseData(0L, 5ul, ToleranceMode.Percent, double.PositiveInfinity),
 #if !NETFRAMEWORK
-                new TestCaseData((Int128)(-1), (UInt128)1, ToleranceMode.Linear, (BigInteger)(-2)),
+                new TestCaseData((Int128)(-1), (UInt128)1, ToleranceMode.Linear, (BigInteger)2),
                 new TestCaseData(UInt128.MaxValue, Int128.MinValue, ToleranceMode.Linear, (BigInteger)UInt128.MaxValue - (BigInteger)Int128.MinValue),
                 new TestCaseData((Int128)(-10), (UInt128)5, ToleranceMode.Percent, 150),
 #endif
@@ -642,6 +642,192 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void ToleranceDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The difference between these values does not fit in an int.
+                Assert.That(int.MaxValue, Is.Not.EqualTo(int.MinValue).Within(1));
+                Assert.That(int.MinValue, Is.Not.Zero.Within(1));
+                Assert.That(int.MinValue, Is.Not.EqualTo(int.MaxValue).Within(10).Percent);
+            }
+        }
+
+        [Test]
+        public void ComparisonWithToleranceDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // A negative value with an unsigned tolerance.
+                Assert.That(-2, Is.GreaterThan(-1).Within(2u));
+                Assert.That(-3, Is.Not.GreaterThan(-1).Within(2u));
+                Assert.That(-5L, Is.LessThanOrEqualTo(-8L).Within(3ul));
+
+                // Bounds outside the range of the type.
+                Assert.That(int.MinValue, Is.GreaterThanOrEqualTo(int.MinValue).Within(1));
+                Assert.That(long.MaxValue, Is.LessThan(long.MaxValue).Within(1L));
+                Assert.That(ulong.MaxValue, Is.LessThanOrEqualTo(ulong.MaxValue - 3).Within(3ul));
+                Assert.That(ulong.MaxValue, Is.Not.LessThanOrEqualTo(ulong.MaxValue - 4).Within(3ul));
+
+                // Bounds of values that a double cannot represent exactly.
+                Assert.That(long.MaxValue - 1, Is.GreaterThan(long.MaxValue).Within(2.0));
+                Assert.That(long.MaxValue - 2, Is.Not.GreaterThan(long.MaxValue).Within(2.0));
+                Assert.That(long.MaxValue - 2, Is.GreaterThanOrEqualTo(long.MaxValue).Within(2.0));
+
+                // A percentage of an integer is usually fractional: 1% of 202 is 2.02.
+                Assert.That(200, Is.GreaterThan(202).Within(1).Percent);
+                Assert.That(199, Is.Not.GreaterThan(202).Within(1).Percent);
+                Assert.That(200, Is.GreaterThanOrEqualTo(202).Within(1).Percent);
+                Assert.That(199, Is.Not.GreaterThanOrEqualTo(202).Within(1).Percent);
+                Assert.That(204, Is.LessThan(202).Within(1).Percent);
+                Assert.That(205, Is.Not.LessThanOrEqualTo(202).Within(1).Percent);
+            }
+        }
+
+        [Test]
+        public void ComparisonOfIntegerWithFractionalToleranceThrows()
+        {
+            // There is no integer bound that is correct for both > and >=: a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
+            Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(5).Within(1.5).ApplyTo(4));
+            Assert.Throws<InvalidOperationException>(() => Is.LessThanOrEqualTo(5L).Within(0.5m).ApplyTo(4));
+        }
+
+        [TestCaseSource(nameof(ToleranceRangeTypeTestCases))]
+        public void ToleranceRangeUsesTypeOfValue(object value, Tolerance tolerance, object expectedLowerBound, object expectedUpperBound)
+        {
+            Tolerance.Range range = tolerance.ApplyToValue(value);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(range.LowerBound, Is.EqualTo(expectedLowerBound).And.TypeOf(expectedLowerBound.GetType()));
+                Assert.That(range.UpperBound, Is.EqualTo(expectedUpperBound).And.TypeOf(expectedUpperBound.GetType()));
+            }
+        }
+
+        private static TestCaseData[] ToleranceRangeTypeTestCases()
+        {
+            return [
+                // The type of the amount does not matter.
+                new TestCaseData(5, new Tolerance(2L), 3, 7),
+                new TestCaseData(5, new Tolerance(2.0), 3, 7),
+                new TestCaseData(5L, new Tolerance(2), 3L, 7L),
+                new TestCaseData(5u, new Tolerance(2ul), 3u, 7u),
+                new TestCaseData(5.0, new Tolerance(2), 3.0, 7.0),
+                new TestCaseData(5.0f, new Tolerance(2.5), 2.5f, 7.5f),
+                new TestCaseData(5m, new Tolerance(2.5), 2.5m, 7.5m),
+
+                // A bound that does not fit in the type of the value uses decimal.
+                new TestCaseData(-1, new Tolerance(2u), -3, 1),
+                new TestCaseData(1u, new Tolerance(2), -1m, 3u),
+                new TestCaseData(int.MaxValue, new Tolerance(1), int.MaxValue - 1, (decimal)int.MaxValue + 1),
+                new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (decimal)ulong.MaxValue + 1),
+
+                // A fractional offset of an integer value uses decimal.
+                new TestCaseData(202, new Tolerance(1).Percent, 199.98m, 204.02m),
+                new TestCaseData(200, new Tolerance(1).Percent, 198, 202),
+            ];
+        }
+
+        [TestCaseSource(nameof(ToleranceTestCases))]
+        public bool AreEqualWithTolerance(object expected, object actual, Tolerance tolerance)
+        {
+            return Numerics.AreEqual(expected, actual, ref tolerance);
+        }
+
+        private static TestCaseData[] ToleranceTestCases()
+        {
+            return [
+                // The difference does not fit in the type, but does in the unsigned type of the same size.
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(uint.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(ulong.MaxValue)) { ExpectedResult = true },
+                new TestCaseData((nint)(-5), (nint)5, new Tolerance(10)) { ExpectedResult = true },
+                new TestCaseData(int.MinValue, 0, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(int.MinValue, int.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(long.MinValue, long.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(long.MinValue, long.MaxValue, new Tolerance(200).Percent) { ExpectedResult = true },
+
+                // A tolerance larger than the type allows any difference.
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(long.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30).Percent) { ExpectedResult = true },
+
+                // A fractional tolerance is rounded down, as the difference between integers is a whole number.
+                new TestCaseData(2, 4, new Tolerance(1.5)) { ExpectedResult = false },
+                new TestCaseData(2, 3, new Tolerance(1.5)) { ExpectedResult = true },
+                new TestCaseData(2, 4, new Tolerance(2.5m)) { ExpectedResult = true },
+                new TestCaseData(2, 3, new Tolerance(0.1)) { ExpectedResult = false },
+
+                // A percentage of an integer allows the difference rounded down: 1% of 202 is 2.02.
+                new TestCaseData(202, 200, new Tolerance(1).Percent) { ExpectedResult = true },
+                new TestCaseData(202, 199, new Tolerance(1).Percent) { ExpectedResult = false },
+                new TestCaseData(2, 3, new Tolerance(1.5).Percent) { ExpectedResult = false },
+                new TestCaseData(0, 0, new Tolerance(10).Percent) { ExpectedResult = true },
+                new TestCaseData(0, 1, new Tolerance(10).Percent) { ExpectedResult = false },
+
+                // The difference between decimals can be outside the decimal range.
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent) { ExpectedResult = true },
+                new TestCaseData(1.5m, 2.75m, new Tolerance(1.25m)) { ExpectedResult = true },
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, new Tolerance(1)) { ExpectedResult = false },
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, new Tolerance(UInt128.MaxValue)) { ExpectedResult = true },
+                new TestCaseData(Int128.MinValue, Int128.MaxValue, new Tolerance(10).Percent) { ExpectedResult = false },
+                new TestCaseData(Int128.MinValue, Int128.MaxValue, new Tolerance(200).Percent) { ExpectedResult = true },
+                new TestCaseData(UInt128.MaxValue, UInt128.MinValue, new Tolerance(1e40)) { ExpectedResult = true },
+
+                // Mixed sign UInt128 values are compared as BigInteger.
+                new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(10)) { ExpectedResult = true },
+                new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(9.5)) { ExpectedResult = false },
+                new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
+                new TestCaseData((Int128)(-100), (UInt128)50, new Tolerance(150).Percent) { ExpectedResult = true },
+                new TestCaseData((Int128)(-100), (UInt128)51, new Tolerance(150).Percent) { ExpectedResult = false },
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(AbsoluteDifferenceTestCases))]
+        public void AbsoluteDifferenceIsPositiveAndOfTheUnsignedType(object expected, object actual, object expectedDifference)
+        {
+            Assert.That(Numerics.Difference(expected, actual, ToleranceMode.Linear), Is.EqualTo(expectedDifference).And.TypeOf(expectedDifference.GetType()));
+            Assert.That(Numerics.Difference(actual, expected, ToleranceMode.Linear), Is.EqualTo(expectedDifference).And.TypeOf(expectedDifference.GetType()));
+        }
+
+        private static TestCaseData[] AbsoluteDifferenceTestCases()
+        {
+            // The difference between two integers fits in the unsigned type of the same size.
+            return [
+                new TestCaseData(2, 5, 3u),
+                new TestCaseData(int.MaxValue, int.MinValue, uint.MaxValue),
+                new TestCaseData((short)-3, (byte)4, 7u),
+                new TestCaseData(2u, 5u, 3u),
+                new TestCaseData(long.MaxValue, long.MinValue, ulong.MaxValue),
+                new TestCaseData(2ul, 5ul, 3ul),
+                new TestCaseData(-1, 1u, 2ul),
+                new TestCaseData((nint)(-5), (nint)5, (nuint)10),
+                new TestCaseData(1.5, 2.25, 0.75),
+                new TestCaseData(1.5m, 2.25m, 0.75m),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, 2 * (double)decimal.MaxValue),
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, Int128.MinValue, UInt128.MaxValue),
+                new TestCaseData((Half)1.5, (Half)2.25, (Half)0.75),
+#endif
+            ];
+        }
+
+        [Test]
+        public void PercentDifferenceIsPositive()
+        {
+            Assert.That(Numerics.Difference(-200, -150, ToleranceMode.Percent), Is.EqualTo(25.0));
+            Assert.That(Numerics.Difference(200, 250, ToleranceMode.Percent), Is.EqualTo(25.0));
+            Assert.That(Numerics.Difference(int.MinValue, int.MaxValue, ToleranceMode.Percent), Is.EqualTo((double)uint.MaxValue * 100 / 2147483648.0));
+        }
+
+        [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
             Assert.That(Numerics.Difference(new object(), new object(), _tenPercent.Mode), Is.EqualTo(double.NaN));
@@ -685,20 +871,11 @@ namespace NUnit.Framework.Tests.Constraints
             ];
         }
 
-        [TestCaseSource(nameof(WideAndNativeIntegerDifferenceTestCases))]
-        public void CanCalculateDifferenceBetweenWideIntegerAndNativeInteger(object wide, object native, long reverseDifference)
+        [TestCaseSource(nameof(WideAndNativeIntegerTestCases))]
+        public void CanCalculateDifferenceBetweenWideIntegerAndNativeInteger(object wide, object native)
         {
             Assert.That(Numerics.Difference(wide, native, ToleranceMode.Linear), Is.EqualTo(4_999_999_999L));
-            Assert.That(Numerics.Difference(native, wide, ToleranceMode.Linear), Is.EqualTo(reverseDifference));
-        }
-
-        private static TestCaseData[] WideAndNativeIntegerDifferenceTestCases()
-        {
-            // The unsigned difference is always positive.
-            return [
-                new TestCaseData(5_000_000_000ul, (nuint)1, 4_999_999_999L),
-                new TestCaseData(5_000_000_000L, (nint)1, -4_999_999_999L),
-            ];
+            Assert.That(Numerics.Difference(native, wide, ToleranceMode.Linear), Is.EqualTo(4_999_999_999L));
         }
 
         private static TestCaseData[] NonConvertibleOperandTestCases()
