@@ -84,9 +84,6 @@ jobs:
             8.0.x
             10.0.x
 
-    - name: 🛠️ Install F#
-      run: sudo apt-get install fsharp
-
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
