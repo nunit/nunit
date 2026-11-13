@@ -12,6 +12,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     internal static class Numerics
     {
+        private const string UlpsRequiresFloatingPoint = "Ulps may only be specified for floating point arguments";
+
         #region Numeric Type Recognition
         /// <summary>
         /// Checks the type of the object, returning true if
@@ -117,11 +119,6 @@ namespace NUnit.Framework.Constraints
         private static bool Is32BitOrSmallerInteger(object value)
             => value is sbyte or byte or short or ushort or char or int or uint;
 
-        private static bool IsWithinDecimalRange(double value)
-        {
-            return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
-        }
-
 #if !NETFRAMEWORK
         private static readonly Int128 Int128DecimalMinValue = (Int128)decimal.MinValue;
         private static readonly Int128 Int128DecimalMaxValue = (Int128)decimal.MaxValue;
@@ -130,15 +127,28 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsWithinDecimalRange(object value)
         {
+            switch (value)
+            {
+                case decimal:
+                    return true;
+
+                case double or float:
+                    // decimal.MaxValue rounds up to 2^96 as double or float, which is outside the decimal range.
+                    return Math.Abs(ConvertToValue<double>(value)) < (double)decimal.MaxValue;
+
 #if !NETFRAMEWORK
-            // Check 128-bit integers exactly, as rounding to double can move values
-            // just outside the decimal range onto its boundary.
-            if (value is Int128 int128Value)
-                return int128Value >= Int128DecimalMinValue && int128Value <= Int128DecimalMaxValue;
-            if (value is UInt128 uint128Value)
-                return uint128Value <= UInt128DecimalMaxValue;
+                // Check 128-bit integers exactly, as rounding to double can move values
+                // just outside the decimal range onto its boundary.
+                case Int128 int128Value:
+                    return int128Value >= Int128DecimalMinValue && int128Value <= Int128DecimalMaxValue;
+                case UInt128 uint128Value:
+                    return uint128Value <= UInt128DecimalMaxValue;
 #endif
-            return IsWithinDecimalRange(ConvertToValue<double>(value));
+
+                default:
+                    // Half and all other integer types fit in a decimal.
+                    return true;
+            }
         }
         #endregion
 
@@ -157,6 +167,19 @@ namespace NUnit.Framework.Constraints
             // Step from highest precision to lowest, converting as necessary.
             // Use the most precise type that can hold both values.
             // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+
+            if (expected is decimal || actual is decimal)
+            {
+                // Treat as decimal if both values fit, otherwise fall back to double, like Compare does
+                if (!IsWithinDecimalRange(expected) || !IsWithinDecimalRange(actual))
+                    return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
+
+                if (tolerance.Mode == ToleranceMode.Ulps)
+                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+
+                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
+            }
+
             if (expected is double || actual is double)
                 return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
 
@@ -169,16 +192,7 @@ namespace NUnit.Framework.Constraints
 #endif
 
             if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
-
-            if (expected is decimal || actual is decimal)
-            {
-                // Treat as decimal if both values fit, otherwise fall back to double
-                if (IsWithinDecimalRange(expected) && IsWithinDecimalRange(actual))
-                    return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-
-                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-            }
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             // Converting a negative value to an unsigned type would overflow,
             // so use a signed type that can hold both values.
@@ -243,7 +257,7 @@ namespace NUnit.Framework.Constraints
                 return AreIeeeFloatsEqual(expected.ToSingle(null), actual.ToSingle(null), ref tolerance);
 
             if (tolerance.Mode == ToleranceMode.Ulps)
-                throw new InvalidOperationException("Ulps may only be specified for floating point arguments");
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             if (expected is decimal || actual is decimal)
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
@@ -333,33 +347,6 @@ namespace NUnit.Framework.Constraints
                 case ToleranceMode.Ulps:
                     return FloatingPointNumerics.AreAlmostEqualUlps(
                         expected, actual, Convert.ToInt32(tolerance.Amount));
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
-        }
-
-        private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
-        {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    decimal decimalTolerance = Convert.ToDecimal(tolerance.Amount);
-                    if (decimalTolerance > 0m)
-                        return Math.Abs(expected - actual) <= decimalTolerance;
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0m)
-                        return expected.Equals(actual);
-
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -482,6 +469,49 @@ namespace NUnit.Framework.Constraints
             }
         }
 #endif
+
+        // Used on .NET and .NET Framework, as decimal arithmetic can overflow.
+        private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return expected.Equals(actual);
+
+                case ToleranceMode.Linear:
+                    // A difference outside the decimal range can still be within a tolerance outside the decimal range.
+                    if (!TryAbsoluteDifference(expected, actual, out decimal difference))
+                        return Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
+
+                    return !IsWithinDecimalRange(tolerance.Amount) || difference <= ConvertToValue<decimal>(tolerance.Amount);
+
+                case ToleranceMode.Percent:
+                    if (expected == 0m)
+                        return expected.Equals(actual);
+
+                    double absoluteDifference = TryAbsoluteDifference(expected, actual, out decimal exactDifference)
+                        ? (double)exactDifference
+                        : Math.Abs((double)expected - (double)actual);
+                    double relativeError = absoluteDifference / Math.Abs((double)expected);
+                    return relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0;
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+
+        // Subtracting decimals with different signs can exceed the decimal range.
+        private static bool TryAbsoluteDifference(decimal x, decimal y, out decimal difference)
+        {
+            if ((x < 0m) != (y < 0m) && Math.Abs(x) > decimal.MaxValue - Math.Abs(y))
+            {
+                difference = decimal.MaxValue;
+                return false;
+            }
+
+            difference = Math.Abs(x - y);
+            return true;
+        }
         #endregion
 
         #region Numeric Comparisons
