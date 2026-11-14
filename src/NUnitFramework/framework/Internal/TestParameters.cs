@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         {
             Properties = new PropertyBag();
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
-            Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
+            Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception, StackFilter.DefaultFilter));
         }
 
         /// <summary>

@@ -2,16 +2,17 @@
 
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
-    public class WarningTests
+    public class WarningTests : DefaultStackFilterFixture
     {
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Boolean))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Boolean))]
@@ -106,8 +107,8 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(message, Is.Not.Null, "Assertion Message should not be null");
             string? stackTrace = result.AssertionResults[0].StackTrace;
             Assert.That(stackTrace, Is.Not.Null, "StackTrace should not be null");
-            Assert.That(stackTrace, Does.Contain("WarningFixture"));
-            Assert.That(stackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
+            Assert.That(stackTrace, Does.Contain(methodName));
+            Assert.That(stackTrace.Count(x => x == '\n'), Is.EqualTo(1), "Expected only one method");
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
             Assert.That(result.Message, Contains.Substring(expectedMethodName), "Result message should contain assert method name");
@@ -262,7 +263,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-            Assert.That(exception!.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+            Assert.That(exception.StackTrace, Does.Contain(nameof(ThrowExceptionGenericTask)));
         }
 
         [Test]
@@ -272,7 +273,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-            Assert.That(exception!.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+            Assert.That(exception.StackTrace, Does.Contain(nameof(ThrowExceptionGenericTask)));
         }
 
         private static Task<int> One()
@@ -289,30 +290,21 @@ namespace NUnit.Framework.Tests.Assertions
         // We decided to trim ExecutionContext and below because ten lines per warning adds up
         // and makes it hard to read build logs.
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
-        [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
-        [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = PlatformNames.Mono, Reason = "Warning has no effect inside BeginInvoke on Mono")]
-#if NET11_0_OR_GREATER
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 6, IncludePlatform = PlatformNames.Win)]
-#elif NET10_0_OR_GREATER
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = PlatformNames.Win)]
-#elif NET7_0_OR_GREATER
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4, ExcludePlatform = PlatformNames.MacOSX)]
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = PlatformNames.MacOSX)]
-#else
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
-#endif
-        [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
-        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 5)]
-        public static void StackTracesAreFiltered(string methodName, int maxLineCount)
+        // Remove all NUnit.Framework and System.Environment lines from the top of the stack trace,
+        // and all System.Reflection, System.Runtime.Remoting, System.RuntimeMethodHandle, and System.Threading lines from the bottom of the stack trace.
+        // See https://github.com/nunit/nunit/issues/5043
+        // The first would stop the stack trace at Async state machine methods, hiding further methods on the stack.
+        // We now skip those methods and show the rest of the stack trace.
+        [TestCase(nameof(WarningFixture.WarningSynchronous))]
+        [TestCase(nameof(WarningFixture.WarningInThreadStart))]
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), IncludePlatform = PlatformNames.NETFramework)]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem))]
+        [TestCase(nameof(WarningFixture.WarningInTaskRun))]
+        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskYield))]
+        [TestCase(nameof(WarningFixture.WarningInUserMethodAfterAwaitTaskYield), 2)]
+        public static void StackTracesAreFiltered(string methodName, int expectedStackTraceLines = 1)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
-            if (result.FailCount != 0 &&
-                result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName()))
-            {
-                return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
-            }
-
             if (result.AssertionResults.Count != 1 || result.AssertionResults[0].Status != AssertionStatus.Warning)
             {
                 Assert.Fail("Expected a single warning assertion. Message: " + result.Message);
@@ -320,18 +312,16 @@ namespace NUnit.Framework.Tests.Assertions
 
             var warningStackTrace = result.AssertionResults[0].StackTrace;
             Assert.That(warningStackTrace, Is.Not.Null);
-            var lines = warningStackTrace!.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.That(warningStackTrace, Does.Contain(methodName));
+            int numberOfStackTraceLines = warningStackTrace.Count(x => x == '\n');
 
-            if (maxLineCount < lines.Length)
+            if (numberOfStackTraceLines != expectedStackTraceLines)
             {
-                Assert.Fail(
-                    $"Expected the number of lines to be no more than {maxLineCount}, but it was {lines.Length}:" + Environment.NewLine
-                    + Environment.NewLine
-                    + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine).ToArray())
-                    + "(end)");
-
-                // ^ Most of that is to differentiate it from the current method's stack trace
-                // reported directly underneath at the same level of indentation.
+                StringBuilder sb = new();
+                sb.AppendLine($"Expected {expectedStackTraceLines} method(s) on stack, but found {numberOfStackTraceLines}.");
+                sb.AppendLine("Stacktrace:");
+                sb.AppendLine(warningStackTrace);
+                Assert.Fail(sb.ToString());
             }
         }
     }

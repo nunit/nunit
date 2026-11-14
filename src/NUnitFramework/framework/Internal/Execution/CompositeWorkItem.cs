@@ -266,7 +266,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void SkipFixture(ResultState resultState, string message, string? stackTrace)
         {
-            Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
+            Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, stackTrace);
             SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message, stackTrace);
         }
 
