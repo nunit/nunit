@@ -411,6 +411,10 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction),
             nameof(StackFilterFixture) + ".<" + nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction) + ">g__ThrowAsync|",
             nameof(StackFilterFixture) + "." + nameof(StackFilterFixture.ThrowExceptionInAsyncLocalFunction))]
+        [TestCase(nameof(StackFilterFixture.FailureInUserCommandWrapper), "FailingCommand.Execute")]
+        [TestCase(nameof(StackFilterFixture.FailureInTestWrappedByUserCommand), nameof(StackFilterFixture.AssertThatFailure), nameof(StackFilterFixture.FailureInTestWrappedByUserCommand))]
+        [TestCase(nameof(StackFilterFixture.FailureInExecutionHook), nameof(StackFilterFixture.FailingExecutionHookAttribute.BeforeTestHook))]
+        [TestCase(nameof(StackFilterFixture.FailureInTestAction), nameof(StackFilterFixture.FailingTestActionAttribute.BeforeTest))]
         public static void StackTracesAreFiltered(string methodName, params string[] methodsOnStack)
         {
             var result = TestBuilder.RunTestCase(typeof(StackFilterFixture), methodName);
