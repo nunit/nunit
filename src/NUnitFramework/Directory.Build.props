@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">14</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">15</LangVersion>
     <Features>strict</Features>
     <Features Condition="'$(TargetFramework)' == 'net11.0'">$(Features);runtime-async=on</Features>
 

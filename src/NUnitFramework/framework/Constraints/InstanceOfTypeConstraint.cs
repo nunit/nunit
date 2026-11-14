@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            return typeof(TExpected).IsInstanceOfType(actual);
+            return GetActualType(actual) is Type actualType && typeof(TExpected).IsAssignableFrom(actualType);
         }
     }
 
@@ -60,7 +60,10 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
-            return expectedType is null ? actual is null : expectedType.IsInstanceOfType(actual);
+            if (expectedType is null)
+                return actual is null;
+
+            return actualType is not null && expectedType.IsAssignableFrom(actualType);
         }
     }
 }
