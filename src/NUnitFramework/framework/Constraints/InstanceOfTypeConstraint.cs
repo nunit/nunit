@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -30,7 +31,8 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            return typeof(TExpected).IsInstanceOfType(actual);
+            return typeof(TExpected).IsInstanceOfType(actual)
+                || (UnionHelper.TryGetUnionValue(actual, out var unionValue) && typeof(TExpected).IsInstanceOfType(unionValue));
         }
     }
 
@@ -60,7 +62,11 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
-            return expectedType is null ? actual is null : expectedType.IsInstanceOfType(actual);
+            if (expectedType is null)
+                return actual is null;
+
+            return expectedType.IsInstanceOfType(actual)
+                || (UnionHelper.TryGetUnionValue(actual, out var unionValue) && expectedType.IsInstanceOfType(unionValue));
         }
     }
 }

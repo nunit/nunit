@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">14</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">15</LangVersion>
     <Features>strict</Features>
     <!-- MinVer configuration - calculates version from git tags -->
     <MinVerTagPrefix>v</MinVerTagPrefix>
