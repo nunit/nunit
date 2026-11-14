@@ -4,6 +4,10 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.ExecutionHooks;
 
 namespace NUnit.TestData
 {
@@ -108,6 +112,96 @@ namespace NUnit.TestData
             {
                 await Task.Yield();
                 throw new InvalidOperationException("Not allowed at this time.");
+            }
+        }
+
+        // User extensions run inside the NUnit command pipeline (NUnit.Framework.Internal.Commands),
+        // their frames must survive the cut-off at that pipeline.
+        [Test]
+        [FailingCommandWrapper]
+        public static void FailureInUserCommandWrapper()
+        {
+        }
+
+        [Test]
+        [PassingCommandWrapper]
+        public static void FailureInTestWrappedByUserCommand()
+        {
+            AssertThatFailure();
+        }
+
+        [Test]
+        [FailingExecutionHook]
+        public static void FailureInExecutionHook()
+        {
+        }
+
+        [Test]
+        [FailingTestAction]
+        public static void FailureInTestAction()
+        {
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        public sealed class FailingCommandWrapperAttribute : Attribute, IWrapTestMethod
+        {
+            public TestCommand Wrap(TestCommand command) => new FailingCommand(command);
+
+            private sealed class FailingCommand : DelegatingTestCommand
+            {
+                public FailingCommand(TestCommand innerCommand)
+                    : base(innerCommand)
+                {
+                }
+
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                public override TestResult Execute(TestExecutionContext context)
+                {
+                    Assert.Fail("Failure in user command wrapper.");
+                    return innerCommand.Execute(context);
+                }
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        public sealed class PassingCommandWrapperAttribute : Attribute, IWrapTestMethod
+        {
+            public TestCommand Wrap(TestCommand command) => new PassingCommand(command);
+
+            private sealed class PassingCommand : DelegatingTestCommand
+            {
+                public PassingCommand(TestCommand innerCommand)
+                    : base(innerCommand)
+                {
+                }
+
+                public override TestResult Execute(TestExecutionContext context) => innerCommand.Execute(context);
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        public sealed class FailingExecutionHookAttribute : ExecutionHookAttribute
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public override void BeforeTestHook(HookData hookData)
+            {
+                Assert.Fail("Failure in user execution hook.");
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        public sealed class FailingTestActionAttribute : Attribute, ITestAction
+        {
+            public ActionTargets Targets => ActionTargets.Test;
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public void BeforeTest(ITest test)
+            {
+                Assert.Fail("Failure in user test action.");
+            }
+
+            public void AfterTest(ITest test)
+            {
             }
         }
 
