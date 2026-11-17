@@ -553,22 +553,31 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(NonConvertibleOperandTestCases))]
         public void CanMatchNonConvertibleOperands_Issue5535(object a, object b)
         {
-            Assert.That(Numerics.AreEqual(a, b, ref _zeroTolerance), Is.True);
-            Assert.That(Numerics.AreEqual(b, a, ref _zeroTolerance), Is.True);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(a, b, ref _zeroTolerance), Is.True);
+                Assert.That(Numerics.AreEqual(b, a, ref _zeroTolerance), Is.True);
+            }
         }
 
         [TestCaseSource(nameof(NonConvertibleOperandTestCases))]
         public void CanCompareNonConvertibleOperands_Issue5535(object a, object b)
         {
-            Assert.That(Numerics.Compare(a, b), Is.Zero);
-            Assert.That(Numerics.Compare(b, a), Is.Zero);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.Compare(a, b), Is.Zero);
+                Assert.That(Numerics.Compare(b, a), Is.Zero);
+            }
         }
 
         [TestCaseSource(nameof(NonConvertibleOperandTestCases))]
         public void CanCalculateDifferenceBetweenNonConvertibleOperands_Issue5535(object a, object b)
         {
-            Assert.That(Numerics.Difference(a, b, ToleranceMode.Linear), Is.Zero);
-            Assert.That(Numerics.Difference(b, a, ToleranceMode.Linear), Is.Zero);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.Difference(a, b, ToleranceMode.Linear), Is.Zero);
+                Assert.That(Numerics.Difference(b, a, ToleranceMode.Linear), Is.Zero);
+            }
         }
 
         private static TestCaseData[] NonConvertibleOperandTestCases()
