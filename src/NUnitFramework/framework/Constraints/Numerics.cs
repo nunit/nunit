@@ -873,13 +873,22 @@ namespace NUnit.Framework.Constraints
 
         private static Tolerance.Range DecimalRange(decimal value, object amount)
         {
-            if (TryGetDecimal(amount, out decimal offset) && offset <= decimal.MaxValue - Math.Abs(value))
-                return new Tolerance.Range(value - offset, value + offset);
-
-            // The bounds are outside the decimal range.
             double approximateValue = (double)value;
             double approximateOffset = ConvertToValue<double>(amount);
-            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+
+            // The bounds are outside the decimal range.
+            if (!TryGetDecimal(amount, out decimal offset))
+                return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+
+            // Only a bound that is outside the decimal range uses double, the other bound stays exact.
+            // As the offset fits in a decimal, the lower bound of a value that is not negative fits,
+            // and so does the upper bound of a value that is not positive.
+            // The bounds are cast to object, as decimal and double have no common type.
+            bool lowerBoundFits = value >= 0m || offset <= decimal.MaxValue + value;
+            bool upperBoundFits = value <= 0m || offset <= decimal.MaxValue - value;
+            return new Tolerance.Range(
+                lowerBoundFits ? value - offset : (object)(approximateValue - approximateOffset),
+                upperBoundFits ? value + offset : (object)(approximateValue + approximateOffset));
         }
 
         private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)
