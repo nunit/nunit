@@ -893,6 +893,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void DecimalPercentageRangeIsComparedAsDecimal()
+        {
+            // The upper bound is 100000001m. As a decimal it is compared exactly with the float,
+            // which as an Int128 bound would be rounded to 100000000f.
+            Assert.That(100000000f, Is.LessThan(50000000.5m).Within(100).Percent);
+        }
+
+        [Test]
         public void ComparisonOfIntegerWithFloatingPointActualAllowsFractionalTolerance()
         {
             // The expected value is often an integer constant, while the actual value is a double, float or decimal.
@@ -985,6 +993,9 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (decimal)ulong.MaxValue + 1),
                 new TestCaseData(0u, new Tolerance(1e19), -10000000000000000000m, 10000000000000000000m),
 #endif
+
+                // A percentage of a decimal value keeps decimal bounds, also whole ones.
+                new TestCaseData(5m, new Tolerance(20).Percent, 4m, 6m),
 
                 // A fractional offset of an integer value uses decimal.
                 new TestCaseData(202, new Tolerance(1).Percent, 199.98m, 204.02m),
