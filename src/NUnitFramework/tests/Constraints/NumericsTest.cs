@@ -819,6 +819,28 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FloatingPointComparisonRangeIsNotRoundedToTheTypeOfTheValue()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The lower bound 0.99 rounds to 0.99f as a float.
+                Assert.That(0.99f, Is.GreaterThan(1f).Within(1).Percent);
+                Assert.That(0.99f, Is.GreaterThan(1f).Within(0.01));
+#if !NETFRAMEWORK
+                Assert.That((Half)0.99, Is.GreaterThan((Half)1).Within(1).Percent);
+#endif
+
+                // Infinity minus an offset that overflows to infinity in the type of the value is NaN.
+                Assert.That(0f, Is.Not.GreaterThan(float.PositiveInfinity).Within(5e38));
+                Assert.That(0f, Is.Not.LessThan(float.NegativeInfinity).Within(5e38));
+#if !NETFRAMEWORK
+                Assert.That((Half)0, Is.Not.GreaterThan(Half.PositiveInfinity).Within(70000d));
+                Assert.That((Half)0, Is.Not.LessThan(Half.NegativeInfinity).Within(70000d));
+#endif
+            }
+        }
+
+        [Test]
         public void DecimalComparisonRangeWithOneBoundOutsideDecimalRange_Issue5507()
         {
             using (Assert.EnterMultipleScope())
@@ -894,8 +916,9 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(5.0f, new Tolerance(2.5), 2.5f, 7.5f),
                 new TestCaseData(5m, new Tolerance(2.5), 2.5m, 7.5m),
 
-                // A floating point bound that does not fit in the type of the value uses double.
-                new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
+                // A floating point bound that is not exact in the type of the value uses double.
+                new TestCaseData(float.MaxValue, new Tolerance(1e38), (double)float.MaxValue - 1e38, (double)float.MaxValue + 1e38),
+                new TestCaseData(1f, new Tolerance(0.01), 1 - 0.01, 1 + 0.01),
 
                 // A binary floating point amount is the decimal value it is written as,
                 // also on runtimes that round its conversion to decimal to 15 significant digits.
