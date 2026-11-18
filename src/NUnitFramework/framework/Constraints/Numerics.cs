@@ -906,6 +906,23 @@ namespace NUnit.Framework.Constraints
                     NarrowToTypeOf(value, decimalValue + decimalOffset));
             }
 
+#if !NETFRAMEWORK
+            // An integer value or offset outside the decimal range: a whole offset is calculated exactly, as in LinearRange.
+            // A fractional offset is not, as no integer bound is correct for both > and >=, and decimal cannot hold it.
+            if (IsFixedPointNumeric(value) && !IsPositiveInfinity(percentage))
+            {
+                GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
+                BigInteger bigValue = ConvertToValue<BigInteger>(value);
+                BigInteger bigOffset = BigInteger.DivRem(BigInteger.Abs(bigValue) * numerator, 100 * denominator, out BigInteger remainder);
+                if (remainder.IsZero)
+                {
+                    return new Tolerance.Range(
+                        NarrowToTypeOf(value, bigValue - bigOffset, isLowerBound: true),
+                        NarrowToTypeOf(value, bigValue + bigOffset, isLowerBound: false));
+                }
+            }
+#endif
+
             // Values or percentages outside the decimal range.
             double approximateValue = ConvertToValue<double>(value);
             double approximateOffset = PercentageOffset(approximateValue, ConvertToValue<double>(percentage));
