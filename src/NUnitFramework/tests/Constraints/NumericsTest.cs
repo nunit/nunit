@@ -650,6 +650,33 @@ namespace NUnit.Framework.Tests.Constraints
             ];
         }
 
+#if !NETFRAMEWORK
+        [TestCaseSource(nameof(NonFiniteHalfTestCases))]
+        public void DecimalAndNonFiniteHalfAreComparedAsDouble(Half half)
+        {
+            double asDouble = (double)half;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(1m, half, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.AreEqual(half, 1m, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.Compare(1m, half), Is.EqualTo(Numerics.Compare(1m, asDouble)));
+                Assert.That(Numerics.Compare(half, 1m), Is.EqualTo(Numerics.Compare(asDouble, 1m)));
+                Assert.That(Numerics.Difference(1m, half, ToleranceMode.Linear), Is.EqualTo(Numerics.Difference(1m, asDouble, ToleranceMode.Linear)));
+                Assert.That(Numerics.Difference(half, 1m, ToleranceMode.Linear), Is.EqualTo(Numerics.Difference(asDouble, 1m, ToleranceMode.Linear)));
+            }
+        }
+
+        private static TestCaseData[] NonFiniteHalfTestCases()
+        {
+            return [
+                new TestCaseData(Half.NaN),
+                new TestCaseData(Half.PositiveInfinity),
+                new TestCaseData(Half.NegativeInfinity),
+            ];
+        }
+#endif
+
         [TestCaseSource(nameof(DecimalDifferenceOutsideDecimalRangeTestCases))]
         public void DecimalToleranceDoesNotOverflow(object expected, object actual, Tolerance tolerance, bool expectedResult)
         {

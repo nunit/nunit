@@ -143,10 +143,14 @@ namespace NUnit.Framework.Constraints
                     return int128Value >= Int128DecimalMinValue && int128Value <= Int128DecimalMaxValue;
                 case UInt128 uint128Value:
                     return uint128Value <= UInt128DecimalMaxValue;
+
+                case Half halfValue:
+                    // Every finite Half fits in a decimal.
+                    return Half.IsFinite(halfValue);
 #endif
 
                 default:
-                    // Half and all other integer types fit in a decimal.
+                    // All other integer types fit in a decimal.
                     return true;
             }
         }
