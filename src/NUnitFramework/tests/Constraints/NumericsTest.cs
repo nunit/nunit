@@ -698,6 +698,31 @@ namespace NUnit.Framework.Tests.Constraints
         }
 #endif
 
+        [Test]
+        public void LinearToleranceOutsideDecimalRangeIsNotSupportedForDecimal()
+        {
+            var tolerance = new Tolerance(1e30);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual<decimal>(decimal.MaxValue, decimal.MinValue, ref tolerance));
+                Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual((object)decimal.MaxValue, decimal.MinValue, ref tolerance));
+
+                // Also when the values are compared as double, as that depends on the types and not on the values.
+                Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(1m, double.MaxValue, ref tolerance));
+
+                // Also for comparisons, including an integer expected value that is compared as decimal.
+                Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(decimal.MaxValue).Within(1e30).ApplyTo(0m));
+                Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(0).Within(1e30).ApplyTo(0m));
+#if !NETFRAMEWORK
+                Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(decimal.MaxValue).Within((UInt128)1 << 96).ApplyTo(0m));
+#endif
+
+                // decimal.MaxValue itself is within the range.
+                Assert.That(decimal.MaxValue, Is.EqualTo(0m).Within(decimal.MaxValue));
+                Assert.That(0m, Is.GreaterThanOrEqualTo(decimal.MaxValue).Within(decimal.MaxValue));
+            }
+        }
+
         [TestCaseSource(nameof(DecimalDifferenceOutsideDecimalRangeTestCases))]
         public void DecimalToleranceDoesNotOverflow(object expected, object actual, Tolerance tolerance, bool expectedResult)
         {
@@ -720,7 +745,7 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(decimal.MaxValue, -0.25d, new Tolerance(decimal.MaxValue), false),
                 new TestCaseData(-0.25d, decimal.MaxValue, new Tolerance(decimal.MaxValue), false),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1), false),
-                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30), true),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(decimal.MaxValue), false),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent, false),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent, true),
             ];
@@ -751,7 +776,6 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(5e38), false),
                 new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(1e39), true),
                 new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.MaxValue), false),
-                new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.PositiveInfinity), true),
                 // The difference is 200% of the expected value.
                 new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(150).Percent, false),
                 new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(300).Percent, true),
@@ -776,10 +800,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(-1e308, Is.Not.GreaterThan(1e307).Within(200).Percent);
                 Assert.That(2.9e307, Is.LessThan(1e307).Within(200).Percent);
                 Assert.That(1e308, Is.Not.LessThan(1e307).Within(200).Percent);
-
-                // An infinite percentage of a value too small to divide by 100 is still infinite.
-                Assert.That(0d, Is.LessThan(double.Epsilon).Within(double.PositiveInfinity).Percent);
-                Assert.That(-1e308, Is.GreaterThan(double.Epsilon).Within(double.PositiveInfinity).Percent);
             }
         }
 
@@ -894,10 +914,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(Int128.MaxValue, Is.LessThan(Int128.MinValue).Within(200).Percent);
                 Assert.That(Int128.MinValue, Is.Not.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
                 Assert.That(Int128.MinValue + 1, Is.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
-
-                // Bounds beyond the range of double are infinite.
-                Assert.That(0, Is.LessThan(1000).Within(1e308).Percent);
-                Assert.That(0, Is.GreaterThan(1000).Within(1e308).Percent);
             }
         }
 #endif
@@ -1009,9 +1025,6 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(Int128.MaxValue, new Tolerance(1e20f), Int128.MaxValue - E20, (UInt128)Int128.MaxValue + (UInt128)E20),
 #endif
 
-                // Any percentage of zero is zero, also an infinite one.
-                new TestCaseData(0d, new Tolerance(double.PositiveInfinity).Percent, 0d, 0d),
-
                 // An offset too small for the precision of the value would not move the bound, so it uses double.
                 new TestCaseData(100000000f, new Tolerance(1), 99999999.0, 100000001.0),
 #if !NETFRAMEWORK
@@ -1049,10 +1062,6 @@ namespace NUnit.Framework.Tests.Constraints
                 // A whole percentage offset of an integer value outside the decimal range is exact, as a linear one.
                 new TestCaseData(Int128.MinValue, new Tolerance(200).Percent, -3 * Math.Pow(2, 127), (UInt128)1 << 127),
                 new TestCaseData(Int128.MaxValue, new Tolerance(200).Percent, Int128.MinValue + 1, 3 * Math.Pow(2, 127)),
-
-                // A bound beyond the range of double is infinite.
-                new TestCaseData(1000, new Tolerance(1e308).Percent, double.NegativeInfinity, double.PositiveInfinity),
-                new TestCaseData(UInt128.MaxValue, new Tolerance(1e308).Percent, double.NegativeInfinity, double.PositiveInfinity),
 #endif
 
                 // A percentage of a decimal value keeps decimal bounds, also whole ones.
@@ -1088,9 +1097,12 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // A tolerance larger than the type allows any difference.
                 new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(long.MaxValue)) { ExpectedResult = true },
-                new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
                 new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
-                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30).Percent) { ExpectedResult = true },
+                new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e28).Percent) { ExpectedResult = true },
+
+                // Also for mixed signed and unsigned integers, which .NET Framework compares as decimal.
+                new TestCaseData(-1L, ulong.MaxValue, new Tolerance(1e30)) { ExpectedResult = true },
+                new TestCaseData(-1L, ulong.MaxValue, new Tolerance(1)) { ExpectedResult = false },
 
                 // A binary floating point amount is the decimal value it is written as, as for comparison ranges:
                 // 1e11f is 10^11, not 99999997952, 1e20f is 10^20, not 100000002004087734272, and 0.1f is 0.1.
@@ -1136,7 +1148,6 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // The difference between decimals can be outside the decimal range.
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1)) { ExpectedResult = false },
-                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent) { ExpectedResult = false },
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent) { ExpectedResult = true },
                 new TestCaseData(1.5m, 2.75m, new Tolerance(1.25m)) { ExpectedResult = true },
@@ -1150,18 +1161,16 @@ namespace NUnit.Framework.Tests.Constraints
                 // Mixed sign UInt128 values are compared as BigInteger.
                 new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(10)) { ExpectedResult = true },
                 new TestCaseData((Int128)(-5), (UInt128)5, new Tolerance(9.5)) { ExpectedResult = false },
-                new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
+                new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(1e39)) { ExpectedResult = true },
+                new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(1e38)) { ExpectedResult = false },
                 new TestCaseData((Int128)(-100), (UInt128)50, new Tolerance(150).Percent) { ExpectedResult = true },
                 new TestCaseData((Int128)(-100), (UInt128)51, new Tolerance(150).Percent) { ExpectedResult = false },
 
                 // Percentages of 128-bit values outside the decimal range.
-                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(1e41).Percent) { ExpectedResult = true },
-                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(1e38).Percent) { ExpectedResult = false },
-                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
-                new TestCaseData((Int128)(-1), UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
-                new TestCaseData((UInt128)0, (UInt128)0, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
-                new TestCaseData((UInt128)0, (UInt128)1, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = false },
-                new TestCaseData((Int128)0, UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = false },
+                new TestCaseData(Exp10UInt128(20), UInt128.MaxValue, new Tolerance(1e21).Percent) { ExpectedResult = true },
+                new TestCaseData(Exp10UInt128(20), UInt128.MaxValue, new Tolerance(1e18).Percent) { ExpectedResult = false },
+                new TestCaseData((Int128)(-1), UInt128.MaxValue, new Tolerance(decimal.MaxValue).Percent) { ExpectedResult = false },
+                new TestCaseData((Int128)0, UInt128.MaxValue, new Tolerance(decimal.MaxValue).Percent) { ExpectedResult = false },
 
                 // Percentages too small for the decimal precision: 1e-30 percent of 10^38 is 10^6.
                 new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 1000000, new Tolerance(1e-30).Percent) { ExpectedResult = true },

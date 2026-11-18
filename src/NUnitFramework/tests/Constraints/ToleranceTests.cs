@@ -102,6 +102,37 @@ namespace NUnit.Framework.Tests.Constraints
                 Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be negative"));
         }
 
+        [TestCase(double.PositiveInfinity)]
+        [TestCase(double.NegativeInfinity)]
+        [TestCase(double.NaN)]
+        [TestCase(float.PositiveInfinity)]
+        [TestCase(float.NaN)]
+        public void TestNumericToleranceMustNotBeNaNOrInfinite(object amount)
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => new Tolerance(amount),
+                    Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
+                Assert.That(() => Is.EqualTo(1.0).Within(Convert.ToDouble(amount)),
+                    Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
+            }
+        }
+
+        [Test]
+        public void TestPercentageToleranceMustBeWithinDecimalRange()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => new Tolerance(1e29).Percent,
+                    Throws.TypeOf<InvalidOperationException>().With.Message.Contains("range of decimal"));
+                Assert.That(() => Is.EqualTo(1).Within(double.MaxValue).Percent,
+                    Throws.TypeOf<InvalidOperationException>().With.Message.Contains("range of decimal"));
+
+                Assert.That(new Tolerance(decimal.MaxValue).Percent.Mode, Is.EqualTo(ToleranceMode.Percent));
+                Assert.That(new Tolerance(1e28).Percent.Mode, Is.EqualTo(ToleranceMode.Percent));
+            }
+        }
+
         [Test]
         public void TicksToleranceMustBeAWholeNumber()
         {

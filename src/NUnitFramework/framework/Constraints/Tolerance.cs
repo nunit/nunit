@@ -21,6 +21,8 @@ namespace NUnit.Framework.Constraints
         private const string MultipleToleranceModes = "Tried to use multiple tolerance modes at the same time";
         private const string NumericToleranceRequired = "A numeric tolerance is required";
         private const string NoNegativeTolerance = "Tolerance amount must not be negative";
+        private const string NoNaNOrInfiniteTolerance = "Tolerance amount must not be NaN or infinite";
+        private const string PercentageOutsideDecimalRange = "A percentage tolerance must be within the range of decimal";
 
         /// <summary>
         /// Returns a default Tolerance object, equivalent to a default matching rules.
@@ -39,6 +41,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
         /// </summary>
+        /// <exception cref="ArgumentException">The amount is negative, NaN or infinite.</exception>
         public Tolerance(object amount) : this(amount, ToleranceMode.Linear)
         {
         }
@@ -48,6 +51,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private Tolerance(object amount, ToleranceMode mode)
         {
+            if (Numerics.IsNaNOrInfinity(amount))
+                throw new ArgumentException(NoNaNOrInfiniteTolerance);
+
             CheckNotNegative(amount);
             Amount = amount;
             Mode = mode;
@@ -60,11 +66,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a new tolerance, using the current amount as a percentage.
         /// </summary>
+        /// <exception cref="InvalidOperationException">The amount is outside the range of decimal.</exception>
         public Tolerance Percent
         {
             get
             {
                 CheckLinearAndNumeric();
+
+                // A larger percentage is not meaningful, as it allows practically any difference.
+                if (!Numerics.IsWithinDecimalRange(Amount))
+                    throw new InvalidOperationException(PercentageOutsideDecimalRange);
+
                 return new Tolerance(Amount, ToleranceMode.Percent);
             }
         }
