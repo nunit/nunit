@@ -781,8 +781,7 @@ namespace NUnit.Framework.Constraints
                     return new Tolerance.Range(doubleValue - doubleOffset, doubleValue + doubleOffset);
 
                 case float floatValue:
-                    float floatOffset = ConvertToValue<float>(amount);
-                    return new Tolerance.Range(floatValue - floatOffset, floatValue + floatOffset);
+                    return FloatRange(floatValue, ConvertToValue<float>(amount), ConvertToValue<double>(amount));
 
 #if !NETFRAMEWORK
                 case Half halfValue:
@@ -840,7 +839,7 @@ namespace NUnit.Framework.Constraints
                     case double doubleValue:
                         return new Tolerance.Range(doubleValue - offset, doubleValue + offset);
                     case float floatValue:
-                        return new Tolerance.Range(floatValue - (float)offset, floatValue + (float)offset);
+                        return FloatRange(floatValue, (float)offset, offset);
 #if !NETFRAMEWORK
                     case Half halfValue:
                         return HalfRange(halfValue, offset);
@@ -883,7 +882,23 @@ namespace NUnit.Framework.Constraints
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
         }
 
+        private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)
+        {
+            return new Tolerance.Range(
+                FiniteBound(value - offset, value - offsetAsDouble),
+                FiniteBound(value + offset, value + offsetAsDouble));
+        }
+
+        // A bound that overflows the type of the value to infinity can still be finite in double.
+        // Keep bounds that fit in the type of the value, so custom comparers see that type whenever possible.
+        // The bound is cast to object, as otherwise the conditional would convert it to double.
+        private static object FiniteBound(float bound, double boundAsDouble)
+            => float.IsInfinity(bound) && !double.IsInfinity(boundAsDouble) ? boundAsDouble : (object)bound;
+
 #if !NETFRAMEWORK
+        private static object FiniteBound(Half bound, double boundAsDouble)
+            => Half.IsInfinity(bound) && !double.IsInfinity(boundAsDouble) ? boundAsDouble : (object)bound;
+
         private static Tolerance.Range HalfRange(Half value, double offset)
         {
             Half halfOffset = (Half)offset;
@@ -894,7 +909,9 @@ namespace NUnit.Framework.Constraints
             if (!double.IsInfinity(offset) && (lowerBound >= value || upperBound <= value))
                 return new Tolerance.Range((decimal)value - (decimal)offset, (decimal)value + (decimal)offset);
 
-            return new Tolerance.Range(lowerBound, upperBound);
+            return new Tolerance.Range(
+                FiniteBound(lowerBound, (double)value - offset),
+                FiniteBound(upperBound, (double)value + offset));
         }
 #endif
 

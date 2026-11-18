@@ -780,6 +780,26 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FloatingPointComparisonRangeDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The offset does not fit in a float, but the lower bound does: it is about -1.6e38.
+                Assert.That(-1e38f, Is.GreaterThan(float.MaxValue).Within(5e38));
+                Assert.That(-float.MaxValue, Is.Not.GreaterThan(float.MaxValue).Within(5e38));
+                Assert.That(-float.MaxValue, Is.Not.GreaterThan(float.MaxValue).Within(150).Percent);
+                Assert.That(float.MaxValue, Is.Not.LessThan(-float.MaxValue).Within(150).Percent);
+#if !NETFRAMEWORK
+                // Half.MaxValue is 65504, the lower bounds are -10000 and -30000.
+                Assert.That((Half)(-5000), Is.GreaterThan((Half)60000).Within(70000));
+                Assert.That((Half)(-60000), Is.Not.GreaterThan((Half)60000).Within(70000));
+                Assert.That((Half)(-60000), Is.Not.GreaterThan((Half)60000).Within(150).Percent);
+                Assert.That((Half)60000, Is.Not.LessThan((Half)(-60000)).Within(150).Percent);
+#endif
+            }
+        }
+
+        [Test]
         public void ComparisonWithToleranceDoesNotOverflow_Issue5507()
         {
             using (Assert.EnterMultipleScope())
@@ -841,6 +861,9 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(5.0, new Tolerance(2), 3.0, 7.0),
                 new TestCaseData(5.0f, new Tolerance(2.5), 2.5f, 7.5f),
                 new TestCaseData(5m, new Tolerance(2.5), 2.5m, 7.5m),
+
+                // A floating point bound that does not fit in the type of the value uses double.
+                new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
 
                 // A bound that does not fit in the type of the value uses decimal.
                 new TestCaseData(-1, new Tolerance(2u), -3, 1),
