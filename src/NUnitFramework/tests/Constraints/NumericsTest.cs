@@ -544,14 +544,17 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        // Whether these values are equal as decimal depends on the runtime: up to .NET 10 the conversion
+        // from double or float to decimal rounds to 15 or 7 significant digits, since .NET 11 it does not.
+        // Whatever the outcome, AreEqual and Compare must agree.
         [TestCaseSource(nameof(DecimalAndBinaryFloatingPointTestCases))]
-        public void DecimalAndBinaryFloatingPointAreComparedAsDecimal_Issue5539(decimal value, object floatingPoint)
+        public void AreEqualAndCompareAgreeForDecimalAndBinaryFloatingPoint_Issue5539(decimal value, object floatingPoint)
         {
-            // AreEqual and Compare must agree.
-            Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.True);
-            Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.True);
-            Assert.That(Numerics.Compare(value, floatingPoint), Is.Zero);
-            Assert.That(Numerics.Compare(floatingPoint, value), Is.Zero);
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.EqualTo(Numerics.Compare(value, floatingPoint) == 0));
+                Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.EqualTo(Numerics.Compare(floatingPoint, value) == 0));
+            }
         }
 
         private static TestCaseData[] DecimalAndBinaryFloatingPointTestCases()
@@ -559,23 +562,51 @@ namespace NUnit.Framework.Tests.Constraints
             return [
                 new TestCaseData(0.3m, 0.1d + 0.2d),
                 new TestCaseData(0.1m, 0.1f),
+                new TestCaseData(0.1m, 0.1d),
 #if !NETFRAMEWORK
-                new TestCaseData(0.5m, (Half)0.5),
+                new TestCaseData(0.1m, (Half)0.1),
 #endif
             ];
         }
 
         [Test]
-        public void EqualityAndComparisonOfDecimalAndDoubleAgree_Issue5539()
+        public void EqualityAndComparisonConstraintsOfDecimalAndDoubleAgree_Issue5539()
         {
             double value = 0.1 + 0.2;
 
+            bool isEqual = Is.EqualTo(0.3m).ApplyTo(value).IsSuccess;
+            bool isLessThanOrEqual = Is.LessThanOrEqualTo(0.3m).ApplyTo(value).IsSuccess;
+            bool isGreaterThanOrEqual = Is.GreaterThanOrEqualTo(0.3m).ApplyTo(value).IsSuccess;
+
+            Assert.That(isEqual, Is.EqualTo(isLessThanOrEqual && isGreaterThanOrEqual));
+        }
+
+        [TestCaseSource(nameof(DecimalAndExactBinaryFloatingPointTestCases))]
+        public void DecimalAndExactlyRepresentableBinaryFloatingPointAreEqual_Issue5539(decimal value, object floatingPoint)
+        {
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(value, Is.EqualTo(0.3m));
-                Assert.That(value, Is.LessThanOrEqualTo(0.3m));
-                Assert.That(value, Is.GreaterThanOrEqualTo(0.3m));
+                Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.True);
+                Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.True);
+                Assert.That(Numerics.Compare(value, floatingPoint), Is.Zero);
+                Assert.That(Numerics.Compare(floatingPoint, value), Is.Zero);
+                Assert.That(floatingPoint, Is.EqualTo(value));
+                Assert.That(floatingPoint, Is.LessThanOrEqualTo(value));
+                Assert.That(floatingPoint, Is.GreaterThanOrEqualTo(value));
             }
+        }
+
+        private static TestCaseData[] DecimalAndExactBinaryFloatingPointTestCases()
+        {
+            return [
+                new TestCaseData(0.5m, 0.5d),
+                new TestCaseData(0.25m, 0.25f),
+                new TestCaseData(-1.375m, -1.375d),
+                new TestCaseData(1024.125m, 1024.125f),
+#if !NETFRAMEWORK
+                new TestCaseData(0.5m, (Half)0.5),
+#endif
+            ];
         }
 
         [Test]
