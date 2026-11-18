@@ -897,6 +897,11 @@ namespace NUnit.Framework.Tests.Constraints
                 // A floating point bound that does not fit in the type of the value uses double.
                 new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
 
+                // A binary floating point amount is the decimal value it is written as,
+                // also on runtimes that round its conversion to decimal to 15 significant digits.
+                new TestCaseData(10000000000000002L, new Tolerance(10000000000000002d), 0L, 20000000000000004L),
+                new TestCaseData(1m, new Tolerance(10000000000000002d), -10000000000000001m, 10000000000000003m),
+
                 // Any percentage of zero is zero, also an infinite one.
                 new TestCaseData(0d, new Tolerance(double.PositiveInfinity).Percent, 0d, 0d),
 
@@ -961,6 +966,11 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(2, 3, new Tolerance(1.5).Percent) { ExpectedResult = false },
                 new TestCaseData(0, 0, new Tolerance(10).Percent) { ExpectedResult = true },
                 new TestCaseData(0, 1, new Tolerance(10).Percent) { ExpectedResult = false },
+
+                // A binary floating point percentage is the decimal value it is written as,
+                // also on runtimes that round its conversion to decimal to 15 significant digits.
+                new TestCaseData(100, 200, new Tolerance(99.99999999999999d).Percent) { ExpectedResult = false },
+                new TestCaseData(3, 4, new Tolerance(100d / 3).Percent) { ExpectedResult = true },
 
                 // decimal.MaxValue / 2 rounds up to 2^95, so the product of 2 and 2^95 must not be calculated.
                 new TestCaseData(2, 1000, new Tolerance(39614081257132168796771975168m).Percent) { ExpectedResult = true },

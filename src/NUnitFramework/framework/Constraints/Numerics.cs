@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-#if !NETFRAMEWORK
 using System.Globalization;
+#if !NETFRAMEWORK
 using System.Numerics;
 #endif
 
@@ -750,8 +750,22 @@ namespace NUnit.Framework.Constraints
                 return decimalValue;
 
             return ConvertToValue<double>(percentage) < (double)decimal.MaxValue
-                ? ConvertToValue<decimal>(percentage)
+                ? ToleranceAsDecimal(percentage)
                 : decimal.MaxValue;
+        }
+
+        /// <summary>
+        /// Converts a tolerance amount within the decimal range to decimal. A binary floating point amount is taken as
+        /// the decimal value it is written as, its shortest round-trip representation, so the result does not depend on
+        /// the runtime: before .NET 11 the conversion rounds a double to 15 and a float to 7 significant digits.
+        /// </summary>
+        private static decimal ToleranceAsDecimal(object amount)
+        {
+            if (!IsBinaryFloatingPoint(amount))
+                return ConvertToValue<decimal>(amount);
+
+            string text = ((IFormattable)amount).ToString("R", CultureInfo.InvariantCulture);
+            return decimal.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture);
         }
 
         private static bool IsBinaryFloatingPoint(object value)
@@ -943,10 +957,11 @@ namespace NUnit.Framework.Constraints
             return true;
         }
 
+        // Used for integer and decimal values and for tolerance amounts, so binary floating point values are amounts.
         private static bool TryGetDecimal(object value, out decimal decimalValue)
         {
             bool fits = IsWithinDecimalRange(value);
-            decimalValue = fits ? ConvertToValue<decimal>(value) : 0m;
+            decimalValue = fits ? ToleranceAsDecimal(value) : 0m;
             return fits;
         }
 
