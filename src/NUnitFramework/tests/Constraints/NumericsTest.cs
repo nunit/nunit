@@ -800,6 +800,21 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void FloatingPointComparisonRangeWithOffsetTooSmallForPrecision()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // Floats around 1e8 are 8 apart, Halfs around 60000 are 32 apart: 1 does not change them.
+                Assert.That(100000000f, Is.GreaterThan(100000000f).Within(1));
+                Assert.That(100000000f, Is.LessThan(100000000f).Within(1));
+#if !NETFRAMEWORK
+                Assert.That((Half)60000, Is.GreaterThan((Half)60000).Within(1));
+                Assert.That((Half)60000, Is.LessThan((Half)60000).Within(1));
+#endif
+            }
+        }
+
+        [Test]
         public void DecimalComparisonRangeWithOneBoundOutsideDecimalRange_Issue5507()
         {
             using (Assert.EnterMultipleScope())
@@ -877,6 +892,13 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // A floating point bound that does not fit in the type of the value uses double.
                 new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
+
+                // An offset too small for the precision of the value would not move the bound, so it uses double.
+                new TestCaseData(100000000f, new Tolerance(1), 99999999.0, 100000001.0),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)60000, new Tolerance(1), 59999.0, 60001.0),
+                new TestCaseData((Half)60000, new Tolerance(64), (Half)59936, (Half)60064),
+#endif
 
                 // A decimal bound that does not fit in a decimal uses double, the other bound stays exact.
                 new TestCaseData(decimal.MaxValue, new Tolerance(1m), decimal.MaxValue - 1, (double)decimal.MaxValue + 1),
