@@ -863,12 +863,17 @@ namespace NUnit.Framework.Constraints
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
         }
 
-        // Multiplying first keeps round percentages exact, but when the product overflows to infinity
-        // the offset itself can still be finite, so divide first then.
+        // Multiplying first keeps round percentages exact, but when the product of a finite percentage overflows
+        // to infinity the offset itself can still be finite, so divide first then. An infinite percentage gives
+        // an infinite offset, but would give NaN for a value that becomes zero when divided by 100.
+        // Any percentage of zero is zero, also an infinite one, as for equality.
         private static double PercentageOffset(double value, double percentage)
         {
+            if (value == 0)
+                return 0;
+
             double product = value * percentage;
-            return Math.Abs(double.IsInfinity(product) ? value / 100 * percentage : product / 100);
+            return Math.Abs(double.IsInfinity(product) && !double.IsInfinity(percentage) ? value / 100 * percentage : product / 100);
         }
 
         private static Tolerance.Range DecimalRange(decimal value, object amount)
