@@ -2,7 +2,9 @@
 
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+#if NET11_0_OR_GREATER
 using NUnit.TestData;
+#endif
 
 namespace NUnit.Framework.Tests.Constraints
 {
