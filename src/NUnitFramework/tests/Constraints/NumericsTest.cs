@@ -884,6 +884,20 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        [Test]
+        public void IntegerPercentageRangeOutsideDecimalRangeIsExact()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The upper bound is 2^127, one more than Int128.MaxValue; the lower bound is Int128.MinValue + 1.
+                Assert.That(Int128.MaxValue, Is.LessThan(Int128.MinValue).Within(200).Percent);
+                Assert.That(Int128.MinValue, Is.Not.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
+                Assert.That(Int128.MinValue + 1, Is.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
+            }
+        }
+#endif
+
         [Test]
         public void ComparisonOfIntegerWithFractionalToleranceThrows()
         {
@@ -996,6 +1010,12 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(0ul, new Tolerance(1), -1m, 1ul),
                 new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (decimal)ulong.MaxValue + 1),
                 new TestCaseData(0u, new Tolerance(1e19), -10000000000000000000m, 10000000000000000000m),
+#endif
+
+#if !NETFRAMEWORK
+                // A whole percentage offset of an integer value outside the decimal range is exact, as a linear one.
+                new TestCaseData(Int128.MinValue, new Tolerance(200).Percent, -3 * Math.Pow(2, 127), (UInt128)1 << 127),
+                new TestCaseData(Int128.MaxValue, new Tolerance(200).Percent, Int128.MinValue + 1, 3 * Math.Pow(2, 127)),
 #endif
 
                 // A percentage of a decimal value keeps decimal bounds, also whole ones.
