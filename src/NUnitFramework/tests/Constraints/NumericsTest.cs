@@ -695,6 +695,9 @@ namespace NUnit.Framework.Tests.Constraints
                 // The difference exceeds the tolerance by 1, but both round to the same double.
                 new TestCaseData(decimal.MaxValue, -1d, new Tolerance(decimal.MaxValue), false),
                 new TestCaseData(-1d, decimal.MaxValue, new Tolerance(decimal.MaxValue), false),
+                // decimal.MaxValue - 0.25m rounds back to decimal.MaxValue, which must not hide the overflow.
+                new TestCaseData(decimal.MaxValue, -0.25d, new Tolerance(decimal.MaxValue), false),
+                new TestCaseData(-0.25d, decimal.MaxValue, new Tolerance(decimal.MaxValue), false),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1), false),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30), true),
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent, false),
