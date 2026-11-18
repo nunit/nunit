@@ -2,6 +2,7 @@
 
 using System;
 #if !NETFRAMEWORK
+using System.Globalization;
 using System.Numerics;
 #endif
 
@@ -539,7 +540,11 @@ namespace NUnit.Framework.Constraints
                     return IsPositiveInfinity(tolerance.Amount) || difference <= ConvertToValue<BigInteger>(tolerance.Amount);
 
                 case ToleranceMode.Percent:
-                    return difference <= PercentageOf(BigInteger.Abs(expected), PercentageAsDecimal(tolerance.Amount));
+                    // An infinite percentage allows any difference, except for an expected value of zero.
+                    if (IsPositiveInfinity(tolerance.Amount))
+                        return !expected.IsZero || difference.IsZero;
+
+                    return difference <= PercentageOf(BigInteger.Abs(expected), tolerance.Amount);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -677,18 +682,63 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
         private static UInt128 PercentageOf(UInt128 magnitude, object percentage)
         {
-            BigInteger maxDifference = PercentageOf((BigInteger)magnitude, PercentageAsDecimal(percentage));
+            if (IsPositiveInfinity(percentage))
+                return magnitude == UInt128.Zero ? UInt128.Zero : UInt128.MaxValue;
+
+            BigInteger maxDifference = PercentageOf((BigInteger)magnitude, percentage);
             return maxDifference >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)maxDifference;
         }
 
-        // Calculates exactly using the decimal's mantissa and scale: magnitude * mantissa / (100 * 10^scale).
-        private static BigInteger PercentageOf(BigInteger magnitude, decimal percent)
+        /// <summary>
+        /// Calculates floor(magnitude * percentage / 100) exactly for a finite percentage,
+        /// also when the percentage is outside the range or precision of decimal.
+        /// </summary>
+        private static BigInteger PercentageOf(BigInteger magnitude, object percentage)
         {
-            int[] bits = decimal.GetBits(percent);
-            BigInteger mantissa = ((BigInteger)(uint)bits[2] << 64) | ((BigInteger)(uint)bits[1] << 32) | (uint)bits[0];
-            int scale = (bits[3] >> 16) & 0xFF;
+            GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
+            return magnitude * numerator / (100 * denominator);
+        }
 
-            return magnitude * mantissa / (100 * BigInteger.Pow(10, scale));
+        /// <summary>
+        /// Gets a finite numeric value as the fraction numerator / denominator.
+        /// A binary floating point value is taken as the decimal value it is written as, its shortest round-trip
+        /// representation: 0.1 is one tenth, not the binary approximation 0.1000000000000000055511151231257827.
+        /// </summary>
+        private static void GetExactFraction(object value, out BigInteger numerator, out BigInteger denominator)
+        {
+            string text;
+            switch (value)
+            {
+                case decimal decimalValue:
+                    text = decimalValue.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case double or float or Half:
+                    text = ((IFormattable)value).ToString("R", CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    numerator = ConvertToValue<BigInteger>(value);
+                    denominator = BigInteger.One;
+                    return;
+            }
+
+            // The text is [-]digits[.digits][E[+|-]digits]
+            int exponentIndex = text.IndexOfAny(['E', 'e']);
+            int exponent = exponentIndex < 0 ? 0 : int.Parse(text.Substring(exponentIndex + 1), CultureInfo.InvariantCulture);
+            string mantissa = exponentIndex < 0 ? text : text.Substring(0, exponentIndex);
+
+            int pointIndex = mantissa.IndexOf('.');
+            if (pointIndex >= 0)
+            {
+                exponent -= mantissa.Length - pointIndex - 1;
+                mantissa = mantissa.Remove(pointIndex, 1);
+            }
+
+            numerator = BigInteger.Parse(mantissa, CultureInfo.InvariantCulture);
+            denominator = BigInteger.One;
+            if (exponent >= 0)
+                numerator *= BigInteger.Pow(10, exponent);
+            else
+                denominator = BigInteger.Pow(10, -exponent);
         }
 #endif
 

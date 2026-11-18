@@ -916,9 +916,31 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(Int128.MinValue, UInt128.MaxValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
                 new TestCaseData((Int128)(-100), (UInt128)50, new Tolerance(150).Percent) { ExpectedResult = true },
                 new TestCaseData((Int128)(-100), (UInt128)51, new Tolerance(150).Percent) { ExpectedResult = false },
+
+                // Percentages of 128-bit values outside the decimal range.
+                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(1e41).Percent) { ExpectedResult = true },
+                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(1e38).Percent) { ExpectedResult = false },
+                new TestCaseData((UInt128)1, UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
+                new TestCaseData((Int128)(-1), UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
+                new TestCaseData((UInt128)0, (UInt128)0, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = true },
+                new TestCaseData((UInt128)0, (UInt128)1, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = false },
+                new TestCaseData((Int128)0, UInt128.MaxValue, new Tolerance(double.PositiveInfinity).Percent) { ExpectedResult = false },
+
+                // Percentages too small for the decimal precision: 1e-30 percent of 10^38 is 10^6.
+                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 1000000, new Tolerance(1e-30).Percent) { ExpectedResult = true },
+                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 1000001, new Tolerance(1e-30).Percent) { ExpectedResult = false },
+
+                // A binary floating point percentage is the decimal value it is written as:
+                // 1e-17f is not exactly 1e-17, but 1e-17 percent of 10^20 is 10.
+                new TestCaseData((Int128)Exp10UInt128(20), (Int128)Exp10UInt128(20) + 10, new Tolerance(1e-17f).Percent) { ExpectedResult = true },
+                new TestCaseData((Int128)Exp10UInt128(20), (Int128)Exp10UInt128(20) + 11, new Tolerance(1e-17f).Percent) { ExpectedResult = false },
 #endif
             ];
         }
+
+#if !NETFRAMEWORK
+        private static UInt128 Exp10UInt128(int exponent) => (UInt128)BigInteger.Pow(10, exponent);
+#endif
 
         [TestCaseSource(nameof(AbsoluteDifferenceTestCases))]
         public void AbsoluteDifferenceIsPositiveAndOfTheUnsignedType(object expected, object actual, object expectedDifference)
