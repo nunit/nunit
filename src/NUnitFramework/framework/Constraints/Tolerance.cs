@@ -230,6 +230,14 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+        /// <summary>
+        /// Apply the tolerance to an expected value that is compared with an actual value and return
+        /// a Tolerance.Range that represents the acceptable values. An integer expected value is
+        /// converted to the type in which it is compared with a floating point or decimal actual value first.
+        /// </summary>
+        internal Range ApplyToValue(object expected, object actual)
+            => ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual));
+
         #endregion
 
         #region Helper Methods

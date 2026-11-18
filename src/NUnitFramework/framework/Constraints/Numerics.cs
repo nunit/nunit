@@ -790,6 +790,29 @@ namespace NUnit.Framework.Constraints
         #region Tolerance Ranges
 
         /// <summary>
+        /// Converts an integer expected value to the type in which it is compared with the actual value
+        /// when that is a floating point or decimal type, so the range of a tolerance is calculated in that type.
+        /// The expected value is often an integer constant, e.g. 0, while the actual value is a double:
+        /// a fractional tolerance is then valid, while it is not for an integer actual value.
+        /// </summary>
+        internal static object ToComparisonType(object expected, object actual)
+        {
+            if (!IsFixedPointNumeric(expected) || !IsNumericType(actual))
+                return expected;
+
+            return GetCommonNumericType(expected, actual) switch
+            {
+                CommonNumericType.Double => ConvertToValue<double>(expected),
+                CommonNumericType.Single => ConvertToValue<float>(expected),
+#if !NETFRAMEWORK
+                CommonNumericType.Half => ConvertToValue<Half>(expected),
+#endif
+                CommonNumericType.Decimal => ConvertToValue<decimal>(expected),
+                _ => expected,
+            };
+        }
+
+        /// <summary>
         /// Calculates the range value - amount to value + amount, used by the comparison constraints.
         /// The type of the value determines the type of the bounds. Bounds that do not fit in that type
         /// use a wider type, so custom comparers see the type of the value whenever possible.
