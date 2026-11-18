@@ -947,6 +947,27 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        [Test]
+        public void IntegerThatDoesNotFitInHalfOrSingleIsComparedAsDouble()
+        {
+            // The analyzer does not know that Half and int are comparable, so apply the constraints directly.
+            // As Half or float, 100000 and UInt128.MaxValue would become infinite.
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Is.GreaterThan(100000).Within(50000).ApplyTo((Half)60000).IsSuccess, Is.True);
+                Assert.That(Is.EqualTo(100000).Within(50000).ApplyTo((Half)60000).IsSuccess, Is.True);
+                Assert.That(Is.EqualTo(100000).ApplyTo(Half.PositiveInfinity).IsSuccess, Is.False);
+                Assert.That(Numerics.Compare(100000, Half.PositiveInfinity), Is.LessThan(0));
+
+                Assert.That(Is.GreaterThan(UInt128.MaxValue).Within(1e38).ApplyTo(3e38f).IsSuccess, Is.True);
+                Assert.That(Is.EqualTo(UInt128.MaxValue).Within(1e38).ApplyTo(3e38f).IsSuccess, Is.True);
+                Assert.That(Is.EqualTo(UInt128.MaxValue).ApplyTo(float.PositiveInfinity).IsSuccess, Is.False);
+                Assert.That(Numerics.Compare(UInt128.MaxValue, float.PositiveInfinity), Is.LessThan(0));
+            }
+        }
+#endif
+
         [TestCaseSource(nameof(ToleranceRangeTypeTestCases))]
         public void ToleranceRangeUsesTypeOfValue(object value, Tolerance tolerance, object expectedLowerBound, object expectedUpperBound)
         {

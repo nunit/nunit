@@ -195,12 +195,22 @@ namespace NUnit.Framework.Constraints
             if (expected is double || actual is double)
                 return CommonNumericType.Double;
 
+            // Treat as float or Half if an integer value fits, otherwise fall back to double, like decimal does:
+            // an integer that does not fit would become infinite.
             if (expected is float || actual is float)
-                return CommonNumericType.Single;
+            {
+                return FitsInSingle(expected) && FitsInSingle(actual)
+                    ? CommonNumericType.Single
+                    : CommonNumericType.Double;
+            }
 
 #if !NETFRAMEWORK
             if (expected is Half || actual is Half)
-                return CommonNumericType.Half;
+            {
+                return FitsInHalf(expected) && FitsInHalf(actual)
+                    ? CommonNumericType.Half
+                    : CommonNumericType.Double;
+            }
 #endif
 
             // Converting a negative value to an unsigned type would overflow,
@@ -246,6 +256,15 @@ namespace NUnit.Framework.Constraints
 
             return CommonNumericType.Int32;
         }
+
+        // Only UInt128 values can be too large for float.
+        private static bool FitsInSingle(object value)
+            => !IsFixedPointNumeric(value) || !float.IsInfinity(ConvertToValue<float>(value));
+
+#if !NETFRAMEWORK
+        private static bool FitsInHalf(object value)
+            => !IsFixedPointNumeric(value) || !Half.IsInfinity(ConvertToValue<Half>(value));
+#endif
         #endregion
 
         #region Numeric Equality
