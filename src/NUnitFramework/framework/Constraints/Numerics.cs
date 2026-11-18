@@ -966,15 +966,17 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Converts a bound to the type in which the integer value is compared if it is a whole number that fits,
-        /// otherwise keeps it as decimal.
+        /// Converts a whole bound to the type of the integer value if it fits, otherwise to the next wider integer type,
+        /// as C# promotes: long for 32-bit values and Int128 for wider values. On .NET Framework, which has no Int128,
+        /// and for fractional bounds, it keeps the bound as decimal.
         /// </summary>
         private static object NarrowToTypeOf(object value, decimal bound)
         {
             if (bound != decimal.Truncate(bound))
                 return bound;
 
-            switch (GetCommonNumericType(value, value))
+            CommonNumericType type = GetCommonNumericType(value, value);
+            switch (type)
             {
                 case CommonNumericType.Int32 when bound >= int.MinValue && bound <= int.MaxValue:
                     return (int)bound;
@@ -994,9 +996,19 @@ namespace NUnit.Framework.Constraints
                 case CommonNumericType.UInt128 when bound >= 0m:
                     return (UInt128)bound;
 #endif
-                default:
-                    return bound;
             }
+
+            bool is32BitValue = type is CommonNumericType.Int32 or CommonNumericType.UInt32 ||
+                                (type is CommonNumericType.NInt or CommonNumericType.NUInt && IntPtr.Size == 4);
+            if (is32BitValue && bound >= long.MinValue && bound <= long.MaxValue)
+                return (long)bound;
+
+#if NETFRAMEWORK
+            return bound;
+#else
+            // Every whole number in the decimal range fits in an Int128.
+            return (Int128)bound;
+#endif
         }
 
 #if !NETFRAMEWORK
