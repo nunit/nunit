@@ -776,6 +776,10 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(-1e308, Is.Not.GreaterThan(1e307).Within(200).Percent);
                 Assert.That(2.9e307, Is.LessThan(1e307).Within(200).Percent);
                 Assert.That(1e308, Is.Not.LessThan(1e307).Within(200).Percent);
+
+                // An infinite percentage of a value too small to divide by 100 is still infinite.
+                Assert.That(0d, Is.LessThan(double.Epsilon).Within(double.PositiveInfinity).Percent);
+                Assert.That(-1e308, Is.GreaterThan(double.Epsilon).Within(double.PositiveInfinity).Percent);
             }
         }
 
@@ -892,6 +896,9 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // A floating point bound that does not fit in the type of the value uses double.
                 new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
+
+                // Any percentage of zero is zero, also an infinite one.
+                new TestCaseData(0d, new Tolerance(double.PositiveInfinity).Percent, 0d, 0d),
 
                 // An offset too small for the precision of the value would not move the bound, so it uses double.
                 new TestCaseData(100000000f, new Tolerance(1), 99999999.0, 100000001.0),
