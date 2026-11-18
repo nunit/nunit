@@ -800,6 +800,19 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void DecimalComparisonRangeWithOneBoundOutsideDecimalRange_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The upper bound does not fit in a decimal, but the lower bound decimal.MaxValue - 1 does.
+                Assert.That(decimal.MaxValue, Is.GreaterThan(decimal.MaxValue).Within(1m));
+                Assert.That(decimal.MaxValue - 1, Is.Not.GreaterThan(decimal.MaxValue).Within(1m));
+                Assert.That(decimal.MinValue, Is.LessThan(decimal.MinValue).Within(1m));
+                Assert.That(decimal.MinValue + 1, Is.Not.LessThan(decimal.MinValue).Within(1m));
+            }
+        }
+
+        [Test]
         public void ComparisonWithToleranceDoesNotOverflow_Issue5507()
         {
             using (Assert.EnterMultipleScope())
@@ -864,6 +877,10 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // A floating point bound that does not fit in the type of the value uses double.
                 new TestCaseData(float.MaxValue, new Tolerance(1e38), float.MaxValue - 1e38f, (double)float.MaxValue + 1e38),
+
+                // A decimal bound that does not fit in a decimal uses double, the other bound stays exact.
+                new TestCaseData(decimal.MaxValue, new Tolerance(1m), decimal.MaxValue - 1, (double)decimal.MaxValue + 1),
+                new TestCaseData(decimal.MinValue, new Tolerance(1m), (double)decimal.MinValue - 1, decimal.MinValue + 1),
 
                 // A bound that does not fit in the type of the value uses decimal.
                 new TestCaseData(-1, new Tolerance(2u), -3, 1),
