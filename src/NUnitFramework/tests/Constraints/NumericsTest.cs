@@ -40,6 +40,109 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(Numerics.AreEqual(a, b, ref _zeroTolerance), Is.True);
         }
+
+        [TestCaseSource(nameof(FractionalAndWideIntegerTestCases))]
+        public void FractionalValueDoesNotEqualTruncatedWideInteger(object fractional, object integer)
+        {
+            Assert.That(Numerics.AreEqual(fractional, integer, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(integer, fractional, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(FractionalAndWideIntegerTestCases))]
+        public void FractionalValueComparesWithWideInteger(object fractional, object integer)
+        {
+            Assert.That(Numerics.Compare(fractional, integer), Is.GreaterThan(0));
+            Assert.That(Numerics.Compare(integer, fractional), Is.LessThan(0));
+        }
+
+        private static TestCaseData[] FractionalAndWideIntegerTestCases()
+        {
+            return [
+                new TestCaseData(1.5d, (Int128)1),
+                new TestCaseData(1.5d, (UInt128)1),
+                new TestCaseData(1.5f, (Int128)1),
+                new TestCaseData(1.5f, (UInt128)1),
+                new TestCaseData((Half)1.5, (Int128)1),
+                new TestCaseData((Half)1.5, (UInt128)1),
+                new TestCaseData(1.5m, (Int128)1),
+                new TestCaseData(1.5m, (UInt128)1),
+            ];
+        }
+
+        [TestCaseSource(nameof(WideIntegerAndExactValueTestCases))]
+        public void WideIntegerEqualsSameValueWithoutPrecisionLoss(object wide, object other)
+        {
+            Assert.That(Numerics.AreEqual(wide, other, ref _zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual(other, wide, ref _zeroTolerance), Is.True);
+        }
+
+        [TestCaseSource(nameof(WideIntegerAndExactValueTestCases))]
+        public void WideIntegerComparesSameValueWithoutPrecisionLoss(object wide, object other)
+        {
+            Assert.That(Numerics.Compare(wide, other), Is.Zero);
+            Assert.That(Numerics.Compare(other, wide), Is.Zero);
+        }
+
+        private static TestCaseData[] WideIntegerAndExactValueTestCases()
+        {
+            return [
+                new TestCaseData((Int128)long.MaxValue, long.MaxValue),
+                new TestCaseData((UInt128)long.MaxValue, long.MaxValue),
+                new TestCaseData((Int128)ulong.MaxValue, ulong.MaxValue),
+                new TestCaseData((UInt128)ulong.MaxValue, ulong.MaxValue),
+                new TestCaseData((Int128)decimal.MaxValue, decimal.MaxValue),
+                new TestCaseData((UInt128)decimal.MaxValue, decimal.MaxValue),
+            ];
+        }
+
+        [Test]
+        public void WideIntegerOutsideDecimalRangeDoesNotEqualDecimal()
+        {
+            Assert.That(Numerics.AreEqual(UInt128.MaxValue, decimal.MaxValue, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void WideIntegerJustOutsideDecimalRangeDoesNotEqualDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.AreEqual(wide, 0m, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(0m, wide, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void WideIntegerJustOutsideDecimalRangeComparesWithDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.Compare(wide, 0m), Is.EqualTo(Math.Sign(wideAsDouble)));
+            Assert.That(Numerics.Compare(0m, wide), Is.EqualTo(-Math.Sign(wideAsDouble)));
+        }
+
+        [TestCaseSource(nameof(WideIntegerJustOutsideDecimalRangeTestCases))]
+        public void CanCalculateDifferenceBetweenWideIntegerJustOutsideDecimalRangeAndDecimal(object wide, double wideAsDouble)
+        {
+            Assert.That(Numerics.Difference(wide, 0m, ToleranceMode.Linear), Is.EqualTo(wideAsDouble));
+            Assert.That(Numerics.Difference(0m, wide, ToleranceMode.Linear), Is.EqualTo(-wideAsDouble));
+        }
+
+        private static TestCaseData[] WideIntegerJustOutsideDecimalRangeTestCases()
+        {
+            // Rounded to double these values equal the rounded decimal limits.
+            return [
+                new TestCaseData((Int128)decimal.MaxValue + 1, (double)decimal.MaxValue),
+                new TestCaseData((UInt128)decimal.MaxValue + 1, (double)decimal.MaxValue),
+                new TestCaseData((Int128)decimal.MinValue - 1, (double)decimal.MinValue),
+            ];
+        }
+
+        [Test]
+        public void CanCalculateDifferenceBetweenWideIntegerAndDouble()
+        {
+            Assert.That(Numerics.Difference((Int128)10, 1.5d, ToleranceMode.Linear), Is.EqualTo(8.5d));
+        }
+
+        [Test]
+        public void CanCalculateDifferenceBetweenWideIntegerAndDecimal()
+        {
+            Assert.That(Numerics.Difference((UInt128)10, 1.5m, ToleranceMode.Linear), Is.EqualTo(8.5m));
+        }
 #endif
 
         private static TestCaseData[] FloatingPointEqualsTestCases
