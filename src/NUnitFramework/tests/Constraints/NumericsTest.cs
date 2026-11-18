@@ -752,11 +752,31 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(1e39), true),
                 new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.MaxValue), false),
                 new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.PositiveInfinity), true),
+                // The difference is 200% of the expected value.
+                new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(150).Percent, false),
+                new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(300).Percent, true),
+                new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(150).Percent, false),
+                new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(300).Percent, true),
 #if !NETFRAMEWORK
                 new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(70000), false),
                 new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(130000), true),
+                new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(150).Percent, false),
+                new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(300).Percent, true),
 #endif
             ];
+        }
+
+        [Test]
+        public void FloatingPointComparisonWithPercentageDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // 200% of 1e307 is 2e307, but 1e307 * 200 does not fit in a double. The range is -1e307 to 3e307.
+                Assert.That(-0.9e307, Is.GreaterThan(1e307).Within(200).Percent);
+                Assert.That(-1e308, Is.Not.GreaterThan(1e307).Within(200).Percent);
+                Assert.That(2.9e307, Is.LessThan(1e307).Within(200).Percent);
+                Assert.That(1e308, Is.Not.LessThan(1e307).Within(200).Percent);
+            }
         }
 
         [Test]
