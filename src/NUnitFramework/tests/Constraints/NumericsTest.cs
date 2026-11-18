@@ -892,6 +892,31 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<InvalidOperationException>(() => Is.LessThanOrEqualTo(5L).Within(0.5m).ApplyTo(4));
         }
 
+        [Test]
+        public void ComparisonOfIntegerWithFloatingPointActualAllowsFractionalTolerance()
+        {
+            // The expected value is often an integer constant, while the actual value is a double, float or decimal.
+            // The range is then calculated in the type in which both are compared.
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(0.9999999, Is.GreaterThanOrEqualTo(1).Within(1e-6));
+                Assert.That(0.999998, Is.Not.GreaterThanOrEqualTo(1).Within(1e-6));
+                Assert.That(0.3, Is.GreaterThan(0).Within(0.5));
+                Assert.That(-0.6, Is.Not.GreaterThan(0).Within(0.5));
+                Assert.That(0.5f, Is.LessThanOrEqualTo(0).Within(0.5));
+                Assert.That(0.6f, Is.Not.LessThanOrEqualTo(0).Within(0.5));
+                Assert.That(0.3m, Is.LessThan(0L).Within(0.5m));
+                Assert.That(0.6m, Is.Not.LessThan(0L).Within(0.5m));
+#if !NETFRAMEWORK
+                // The analyzer does not know that Half and int are comparable, so apply the constraint directly.
+                Assert.That(Is.LessThanOrEqualTo(0).Within(0.5).ApplyTo((Half)0.5).IsSuccess, Is.True);
+#endif
+
+                // A double actual is compared with a double bound, not with an exact decimal bound of 199.98.
+                Assert.That(199.98000000000002, Is.GreaterThan(202).Within(1).Percent);
+            }
+        }
+
         [TestCaseSource(nameof(ToleranceRangeTypeTestCases))]
         public void ToleranceRangeUsesTypeOfValue(object value, Tolerance tolerance, object expectedLowerBound, object expectedUpperBound)
         {
