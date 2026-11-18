@@ -948,7 +948,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private static bool IsWholeNumber(object amount)
+        internal static bool IsWholeNumber(object amount)
         {
             if (amount is decimal decimalValue)
                 return decimalValue == decimal.Truncate(decimalValue);

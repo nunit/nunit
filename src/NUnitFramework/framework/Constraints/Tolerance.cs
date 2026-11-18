@@ -150,11 +150,17 @@ namespace NUnit.Framework.Constraints
         /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of clock ticks.
         /// </summary>
+        /// <exception cref="InvalidOperationException">The amount is not a whole number.</exception>
         public Tolerance Ticks
         {
             get
             {
                 CheckLinearAndNumeric();
+
+                // Ticks are whole numbers, so a fractional tolerance cannot be meant.
+                if (!Numerics.IsWholeNumber(Amount))
+                    throw new InvalidOperationException($"Tolerance {Amount} must be a whole number of ticks");
+
                 return new Tolerance(TimeSpan.FromTicks(Numerics.ConvertToValue<long>(Amount)));
             }
         }

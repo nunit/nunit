@@ -103,6 +103,22 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void TicksToleranceMustBeAWholeNumber()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => new Tolerance(1.5).Ticks,
+                    Throws.TypeOf<InvalidOperationException>().With.Message.Contains("whole number of ticks"));
+                Assert.That(() => Is.EqualTo(DateTime.Now).Within(1.5).Ticks,
+                    Throws.TypeOf<InvalidOperationException>().With.Message.Contains("whole number of ticks"));
+
+                Assert.That(new Tolerance(2.0).Ticks.Amount, Is.EqualTo(TimeSpan.FromTicks(2)));
+                Assert.That(new DateTime(2000, 1, 1).AddTicks(2), Is.EqualTo(new DateTime(2000, 1, 1)).Within(2.0).Ticks);
+                Assert.That(new DateTime(2000, 1, 1).AddTicks(3), Is.Not.EqualTo(new DateTime(2000, 1, 1)).Within(2.0).Ticks);
+            }
+        }
+
+        [Test]
         public void TestTimeSpanToleranceMustNotBeNegative()
         {
             Assert.That(() => new Tolerance(new TimeSpan(-1)),

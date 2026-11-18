@@ -75,7 +75,18 @@ namespace NUnit.Framework.Constraints
         /// Causes the tolerance to be interpreted as a TimeSpan in clock ticks.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualTimeBasedConstraintWithTimeSpanTolerance<T> Ticks => Within(TimeSpan.FromTicks((long)_tolerance));
+        /// <exception cref="InvalidOperationException">The tolerance is not a whole number.</exception>
+        public EqualTimeBasedConstraintWithTimeSpanTolerance<T> Ticks
+        {
+            get
+            {
+                // Ticks are whole numbers, so a fractional tolerance cannot be meant.
+                if (Math.Floor(_tolerance) != _tolerance)
+                    throw new InvalidOperationException($"Tolerance {_tolerance} must be a whole number of ticks");
+
+                return Within(TimeSpan.FromTicks((long)_tolerance));
+            }
+        }
 
         private EqualTimeBasedConstraintWithTimeSpanTolerance<T> Within(TimeSpan amount)
         {
