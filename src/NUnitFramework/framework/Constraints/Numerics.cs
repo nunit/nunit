@@ -508,7 +508,13 @@ namespace NUnit.Framework.Constraints
         // Subtracting decimals with different signs can exceed the decimal range.
         private static bool TryAbsoluteDifference(decimal x, decimal y, out decimal difference)
         {
-            if ((x < 0m) != (y < 0m) && Math.Abs(x) > decimal.MaxValue - Math.Abs(y))
+            decimal absX = Math.Abs(x);
+            decimal absY = Math.Abs(y);
+
+            // Subtract the larger magnitude from the limit: when the sum can overflow, the larger magnitude
+            // has no fractional digits, so the subtraction is exact. Subtracting a small fractional magnitude
+            // instead could round back to decimal.MaxValue and hide the overflow.
+            if ((x < 0m) != (y < 0m) && Math.Min(absX, absY) > decimal.MaxValue - Math.Max(absX, absY))
             {
                 difference = decimal.MaxValue;
                 return false;
