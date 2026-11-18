@@ -364,7 +364,11 @@ namespace NUnit.Framework.Constraints
                     if (expected == 0.0)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    double signedDifference = expected - actual;
+                    double relativeError = double.IsInfinity(signedDifference)
+                        ? Math.Abs((expected / 2 - actual / 2) / expected) * 2
+                        : Math.Abs(signedDifference / expected);
                     return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
 
                 case ToleranceMode.Ulps:
@@ -408,7 +412,11 @@ namespace NUnit.Framework.Constraints
                 case ToleranceMode.Percent:
                     if (expected == 0.0f)
                         return expected.Equals(actual);
-                    float relativeError = Math.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    float signedDifference = expected - actual;
+                    float relativeError = float.IsInfinity(signedDifference)
+                        ? Math.Abs((expected / 2 - actual / 2) / expected) * 2
+                        : Math.Abs(signedDifference / expected);
                     return (relativeError <= Convert.ToSingle(tolerance.Amount) / 100.0f);
 
                 case ToleranceMode.Ulps:
@@ -773,7 +781,7 @@ namespace NUnit.Framework.Constraints
         {
             if (IsBinaryFloatingPoint(value))
             {
-                double offset = Math.Abs(ConvertToValue<double>(value) * ConvertToValue<double>(percentage) / 100);
+                double offset = PercentageOffset(ConvertToValue<double>(value), ConvertToValue<double>(percentage));
 
                 switch (value)
                 {
@@ -800,8 +808,16 @@ namespace NUnit.Framework.Constraints
 
             // Values or percentages outside the decimal range.
             double approximateValue = ConvertToValue<double>(value);
-            double approximateOffset = Math.Abs(approximateValue * ConvertToValue<double>(percentage) / 100);
+            double approximateOffset = PercentageOffset(approximateValue, ConvertToValue<double>(percentage));
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+        }
+
+        // Multiplying first keeps round percentages exact, but when the product overflows to infinity
+        // the offset itself can still be finite, so divide first then.
+        private static double PercentageOffset(double value, double percentage)
+        {
+            double product = value * percentage;
+            return Math.Abs(double.IsInfinity(product) ? value / 100 * percentage : product / 100);
         }
 
         private static Tolerance.Range DecimalRange(decimal value, object amount)
@@ -1123,7 +1139,12 @@ namespace NUnit.Framework.Constraints
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    T relativeError = T.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    T signedDifference = expected - actual;
+                    T two = T.One + T.One;
+                    T relativeError = T.IsInfinity(signedDifference)
+                        ? T.Abs((expected / two - actual / two) / expected) * two
+                        : T.Abs(signedDifference / expected);
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
