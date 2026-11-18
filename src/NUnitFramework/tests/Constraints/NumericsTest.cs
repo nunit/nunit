@@ -1011,6 +1011,13 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(100, 200, new Tolerance(99.99999999999999d).Percent) { ExpectedResult = false },
                 new TestCaseData(3, 4, new Tolerance(100d / 3).Percent) { ExpectedResult = true },
 
+#if !NETFRAMEWORK
+                // 12 * 83.33333333333333333333333333 rounds to 1000 as decimal, but the allowed difference is below 10.
+                // .NET Framework has no BigInteger to calculate it exactly.
+                new TestCaseData(12, 2, new Tolerance(83.33333333333333333333333333m).Percent) { ExpectedResult = false },
+                new TestCaseData(12, 3, new Tolerance(83.33333333333333333333333333m).Percent) { ExpectedResult = true },
+#endif
+
                 // decimal.MaxValue / 2 rounds up to 2^95, so the product of 2 and 2^95 must not be calculated.
                 new TestCaseData(2, 1000, new Tolerance(39614081257132168796771975168m).Percent) { ExpectedResult = true },
                 new TestCaseData(2ul, ulong.MaxValue, new Tolerance(39614081257132168796771975168m).Percent) { ExpectedResult = true },

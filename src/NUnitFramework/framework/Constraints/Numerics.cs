@@ -665,6 +665,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private static ulong PercentageOf(ulong magnitude, object percentage)
         {
+#if !NETFRAMEWORK
+            // Calculate exactly, as decimal arithmetic rounds the product to 28 or 29 significant digits:
+            // 12 * 83.33333333333333333333333333 rounds to 1000, but floor(12 * 83.33...3 / 100) is 9.
+            UInt128 maxDifference = PercentageOf((UInt128)magnitude, percentage);
+            return maxDifference >= ulong.MaxValue ? ulong.MaxValue : (ulong)maxDifference;
+#else
+            // .NET Framework has no BigInteger, so a product with more significant digits than a decimal can hold is rounded.
             decimal percent = PercentageAsDecimal(percentage);
             if (magnitude == 0)
                 return 0;
@@ -677,6 +684,7 @@ namespace NUnit.Framework.Constraints
 
             decimal maxDifference = decimal.Floor(magnitude * percent / 100m);
             return maxDifference >= UInt64Range ? ulong.MaxValue : (ulong)maxDifference;
+#endif
         }
 
 #if !NETFRAMEWORK
