@@ -483,9 +483,10 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    // A difference outside the decimal range can still be within a tolerance outside the decimal range.
+                    // A difference outside the decimal range exceeds any tolerance within it,
+                    // but can still be within a tolerance outside the decimal range.
                     if (!TryAbsoluteDifference(expected, actual, out decimal difference))
-                        return Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
+                        return !IsWithinDecimalRange(tolerance.Amount) && Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
 
                     return !IsWithinDecimalRange(tolerance.Amount) || difference <= ConvertToValue<decimal>(tolerance.Amount);
 
