@@ -892,9 +892,12 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
+            // The offset |value| * percent / 100 and the bounds fit in a decimal if |value| * percent does not exceed the limit.
+            // For |value| <= 1 that holds if percent does not exceed it, and dividing the limit by |value| would overflow.
             const decimal limit = decimal.MaxValue / 2;
             if (TryGetDecimal(value, out decimal decimalValue) && TryGetDecimal(percentage, out decimal percent) &&
-                Math.Abs(decimalValue) <= limit && (decimalValue == 0 || percent <= limit / Math.Abs(decimalValue)))
+                Math.Abs(decimalValue) <= limit &&
+                percent <= (Math.Abs(decimalValue) <= 1m ? limit : limit / Math.Abs(decimalValue)))
             {
                 decimal decimalOffset = Math.Abs(decimalValue) * percent / 100;
                 return new Tolerance.Range(

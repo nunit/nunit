@@ -996,6 +996,8 @@ namespace NUnit.Framework.Tests.Constraints
 
                 // A percentage of a decimal value keeps decimal bounds, also whole ones.
                 new TestCaseData(5m, new Tolerance(20).Percent, 4m, 6m),
+                new TestCaseData(0.5m, new Tolerance(200).Percent, -0.5m, 1.5m),
+                new TestCaseData(0.1m, new Tolerance(10).Percent, 0.09m, 0.11m),
 
                 // A fractional offset of an integer value uses decimal.
                 new TestCaseData(202, new Tolerance(1).Percent, 199.98m, 204.02m),
