@@ -1000,7 +1000,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private static object NarrowToTypeOf(object value, decimal bound)
         {
-            if (bound != decimal.Truncate(bound))
+            // A bound of a decimal value stays decimal, also a whole one.
+            if (value is decimal || bound != decimal.Truncate(bound))
                 return bound;
 
             CommonNumericType type = GetCommonNumericType(value, value);
