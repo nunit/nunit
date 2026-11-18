@@ -1020,6 +1020,19 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
+        public void PercentDifferenceDoesNotOverflow_Issue5507()
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                // The difference times 100 does not fit in a double.
+                Assert.That(Numerics.Difference(1e307, 0d, ToleranceMode.Percent), Is.EqualTo(100.0));
+
+                // The difference itself does not fit in a double.
+                Assert.That(Numerics.Difference(double.MaxValue, -double.MaxValue, ToleranceMode.Percent), Is.EqualTo(200.0));
+            }
+        }
+
+        [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
             Assert.That(Numerics.Difference(new object(), new object(), _tenPercent.Mode), Is.EqualTo(double.NaN));

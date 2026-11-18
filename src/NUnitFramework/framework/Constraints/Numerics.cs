@@ -1151,7 +1151,14 @@ namespace NUnit.Framework.Constraints
         private static object Difference(double expected, double actual, bool isAbsolute)
         {
             double difference = Math.Abs(expected - actual);
-            return isAbsolute ? difference : RelativeDifference(difference, expected);
+            if (isAbsolute)
+                return difference;
+
+            // When the difference of two finite values overflows to infinity, use half of each value, which cannot overflow.
+            if (double.IsInfinity(difference) && !double.IsInfinity(expected) && !double.IsInfinity(actual))
+                return RelativeDifference(Math.Abs(expected / 2 - actual / 2), expected) * 2;
+
+            return RelativeDifference(difference, expected);
         }
 
 #if !NETFRAMEWORK
@@ -1176,8 +1183,14 @@ namespace NUnit.Framework.Constraints
 
         // The difference as a percentage of the expected value. Multiplying first keeps
         // round percentages exact, e.g. 1504 * 100 / 10000 is 15.04, but 1504 / 10000 * 100 is not.
+        // When the product overflows to infinity the percentage itself can still be finite, so divide first then.
         private static double RelativeDifference(double difference, double expected)
-            => difference * 100 / Math.Abs(expected);
+        {
+            double product = difference * 100;
+            return double.IsInfinity(product)
+                ? difference / Math.Abs(expected) * 100
+                : product / Math.Abs(expected);
+        }
         #endregion
 
 #if !NETFRAMEWORK
