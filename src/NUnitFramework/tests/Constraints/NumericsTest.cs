@@ -738,6 +738,27 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        [TestCaseSource(nameof(FloatingPointDifferenceOutsideRangeTestCases))]
+        public void FloatingPointToleranceDoesNotOverflow_Issue5507(object expected, object actual, Tolerance tolerance, bool expectedResult)
+        {
+            // The difference between these values does not fit in their type.
+            Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(expectedResult));
+        }
+
+        private static TestCaseData[] FloatingPointDifferenceOutsideRangeTestCases()
+        {
+            return [
+                new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(5e38), false),
+                new TestCaseData(float.MaxValue, -float.MaxValue, new Tolerance(1e39), true),
+                new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.MaxValue), false),
+                new TestCaseData(double.MaxValue, -double.MaxValue, new Tolerance(double.PositiveInfinity), true),
+#if !NETFRAMEWORK
+                new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(70000), false),
+                new TestCaseData((Half)60000, (Half)(-60000), new Tolerance(130000), true),
+#endif
+            ];
+        }
+
         [Test]
         public void ComparisonWithToleranceDoesNotOverflow_Issue5507()
         {

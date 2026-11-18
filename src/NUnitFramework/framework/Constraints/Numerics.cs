@@ -397,7 +397,13 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return Math.Abs(expected - actual) <= Convert.ToDouble(tolerance.Amount);
+                    float difference = Math.Abs(expected - actual);
+
+                    // The difference of two finite values overflows to infinity when it exceeds the range of float.
+                    if (float.IsInfinity(difference))
+                        return Math.Abs((double)expected - (double)actual) <= Convert.ToDouble(tolerance.Amount);
+
+                    return difference <= Convert.ToDouble(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (expected == 0.0f)
@@ -1104,7 +1110,14 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return T.Abs(expected - actual) <= ConvertToValue<T>(tolerance.Amount);
+                    T difference = T.Abs(expected - actual);
+
+                    // The difference of two finite values overflows to infinity when it exceeds the range of T.
+                    // Compare in double then, as converting the tolerance to T could overflow to infinity as well.
+                    if (T.IsInfinity(difference))
+                        return Math.Abs(double.CreateChecked(expected) - double.CreateChecked(actual)) <= ConvertToValue<double>(tolerance.Amount);
+
+                    return difference <= ConvertToValue<T>(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (T.IsZero(expected))
