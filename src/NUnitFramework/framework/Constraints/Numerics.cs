@@ -14,6 +14,7 @@ namespace NUnit.Framework.Constraints
     internal static class Numerics
     {
         private const string UlpsRequiresFloatingPoint = "Ulps may only be specified for floating point arguments";
+        private const string ToleranceOutsideDecimalRange = "A tolerance for decimal values must be within the range of decimal";
 
         #region Numeric Type Recognition
         /// <summary>
@@ -126,7 +127,7 @@ namespace NUnit.Framework.Constraints
         private static readonly UInt128 UInt128DecimalMaxValue = (UInt128)decimal.MaxValue;
 #endif
 
-        private static bool IsWithinDecimalRange(object value)
+        internal static bool IsWithinDecimalRange(object value)
         {
             switch (value)
             {
@@ -279,10 +280,15 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
-            // Ulps are not supported for decimal, also when the values do not fit in a decimal and are compared as double,
-            // so whether they are supported depends on the types and not on the values.
-            if (tolerance.Mode == ToleranceMode.Ulps && (expected is decimal || actual is decimal))
-                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+            // Ulps and tolerances outside the decimal range are not supported for decimal, also when the values
+            // do not fit in a decimal and are compared as double, so that depends on the types and not on the values.
+            if (expected is decimal || actual is decimal)
+            {
+                if (tolerance.Mode == ToleranceMode.Ulps)
+                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+                if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
+                    throw new InvalidOperationException(ToleranceOutsideDecimalRange);
+            }
 
             CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
@@ -341,7 +347,12 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             if (expected is decimal || actual is decimal)
+            {
+                if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
+                    throw new InvalidOperationException(ToleranceOutsideDecimalRange);
+
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+            }
 
             if (expected is ulong || actual is ulong)
                 return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
@@ -508,12 +519,12 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    // A difference outside the decimal range exceeds any tolerance within it,
-                    // but can still be within a tolerance outside the decimal range.
-                    if (!TryAbsoluteDifference(expected, actual, out decimal difference))
-                        return !IsWithinDecimalRange(tolerance.Amount) && Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
+                    // Only integers that .NET Framework compares as decimal can have a tolerance outside the decimal range,
+                    // which allows any difference between them. A difference outside the decimal range exceeds any tolerance within it.
+                    if (!IsWithinDecimalRange(tolerance.Amount))
+                        return true;
 
-                    return !IsWithinDecimalRange(tolerance.Amount) || difference <= ToleranceAsDecimal(tolerance.Amount);
+                    return TryAbsoluteDifference(expected, actual, out decimal difference) && difference <= ToleranceAsDecimal(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (expected == 0m)
@@ -556,13 +567,9 @@ namespace NUnit.Framework.Constraints
                     return difference.IsZero;
 
                 case ToleranceMode.Linear:
-                    return IsPositiveInfinity(tolerance.Amount) || difference <= WholePartOf(tolerance.Amount);
+                    return difference <= WholePartOf(tolerance.Amount);
 
                 case ToleranceMode.Percent:
-                    // An infinite percentage allows any difference, except for an expected value of zero.
-                    if (IsPositiveInfinity(tolerance.Amount))
-                        return !expected.IsZero || difference.IsZero;
-
                     return difference <= PercentageOf(BigInteger.Abs(expected), tolerance.Amount);
 
                 default:
@@ -668,9 +675,6 @@ namespace NUnit.Framework.Constraints
                     return UInt128.Zero;
 
                 case ToleranceMode.Linear:
-                    if (IsPositiveInfinity(tolerance.Amount))
-                        return UInt128.MaxValue;
-
                     BigInteger wholePart = WholePartOf(tolerance.Amount);
                     return wholePart >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)wholePart;
 
@@ -693,7 +697,7 @@ namespace NUnit.Framework.Constraints
             return maxDifference >= ulong.MaxValue ? ulong.MaxValue : (ulong)maxDifference;
 #else
             // .NET Framework has no BigInteger, so a product with more significant digits than a decimal can hold is rounded.
-            decimal percent = PercentageAsDecimal(percentage);
+            decimal percent = ToleranceAsDecimal(percentage);
             if (magnitude == 0)
                 return 0;
 
@@ -711,16 +715,13 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
         private static UInt128 PercentageOf(UInt128 magnitude, object percentage)
         {
-            if (IsPositiveInfinity(percentage))
-                return magnitude == UInt128.Zero ? UInt128.Zero : UInt128.MaxValue;
-
             BigInteger maxDifference = PercentageOf((BigInteger)magnitude, percentage);
             return maxDifference >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)maxDifference;
         }
 
         /// <summary>
-        /// Calculates floor(magnitude * percentage / 100) exactly for a finite percentage,
-        /// also when the percentage is outside the range or precision of decimal.
+        /// Calculates floor(magnitude * percentage / 100) exactly, also when the product is outside the range
+        /// or precision of decimal.
         /// </summary>
         private static BigInteger PercentageOf(BigInteger magnitude, object percentage)
         {
@@ -780,18 +781,6 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        // A percentage that does not fit in a decimal is so large that any difference is allowed.
-        // The amount is never negative or NaN, as Tolerance does not allow that.
-        private static decimal PercentageAsDecimal(object percentage)
-        {
-            if (percentage is decimal decimalValue)
-                return decimalValue;
-
-            return ConvertToValue<double>(percentage) < (double)decimal.MaxValue
-                ? ToleranceAsDecimal(percentage)
-                : decimal.MaxValue;
-        }
-
         /// <summary>
         /// Converts a tolerance amount within the decimal range to decimal. A binary floating point amount is taken as
         /// the decimal value it is written as, its shortest round-trip representation, so the result does not depend on
@@ -813,8 +802,17 @@ namespace NUnit.Framework.Constraints
             => value is double or float or Half;
 #endif
 
-        private static bool IsPositiveInfinity(object amount)
-            => IsBinaryFloatingPoint(amount) && double.IsPositiveInfinity(ConvertToValue<double>(amount));
+        /// <summary>
+        /// Whether a value is NaN or infinite, which a tolerance amount cannot be.
+        /// </summary>
+        internal static bool IsNaNOrInfinity(object value)
+        {
+            if (!IsBinaryFloatingPoint(value))
+                return false;
+
+            double doubleValue = ConvertToValue<double>(value);
+            return double.IsNaN(doubleValue) || double.IsInfinity(doubleValue);
+        }
         #endregion
 
         #region Tolerance Ranges
@@ -867,9 +865,6 @@ namespace NUnit.Framework.Constraints
                 case decimal decimalValue:
                     return DecimalRange(decimalValue, amount);
             }
-
-            if (IsPositiveInfinity(amount))
-                return new Tolerance.Range(double.NegativeInfinity, double.PositiveInfinity);
 
             // A range of integers cannot be fractional: there is no bound that is correct for both > and >=,
             // e.g. a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
@@ -925,8 +920,10 @@ namespace NUnit.Framework.Constraints
 
             // The offset |value| * percent / 100 and the bounds fit in a decimal if |value| * percent does not exceed the limit.
             // For |value| <= 1 that holds if percent does not exceed it, and dividing the limit by |value| would overflow.
+            // A percentage always fits in a decimal, as Tolerance does not allow larger ones.
             const decimal limit = decimal.MaxValue / 2;
-            if (TryGetDecimal(value, out decimal decimalValue) && TryGetDecimal(percentage, out decimal percent) &&
+            decimal percent = ToleranceAsDecimal(percentage);
+            if (TryGetDecimal(value, out decimal decimalValue) &&
                 Math.Abs(decimalValue) <= limit &&
                 percent <= (Math.Abs(decimalValue) <= 1m ? limit : limit / Math.Abs(decimalValue)))
             {
@@ -939,7 +936,7 @@ namespace NUnit.Framework.Constraints
 #if !NETFRAMEWORK
             // An integer value or offset outside the decimal range: a whole offset is calculated exactly, as in LinearRange.
             // A fractional offset is not, as no integer bound is correct for both > and >=, and decimal cannot hold it.
-            if (IsFixedPointNumeric(value) && !IsPositiveInfinity(percentage))
+            if (IsFixedPointNumeric(value))
             {
                 GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
                 BigInteger bigValue = ConvertToValue<BigInteger>(value);
@@ -953,33 +950,27 @@ namespace NUnit.Framework.Constraints
             }
 #endif
 
-            // Values or percentages outside the decimal range.
+            // Values, or offsets of values, outside the decimal range.
             double approximateValue = ConvertToValue<double>(value);
             double approximateOffset = PercentageOffset(approximateValue, ConvertToValue<double>(percentage));
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
         }
 
-        // Multiplying first keeps round percentages exact, but when the product of a finite percentage overflows
-        // to infinity the offset itself can still be finite, so divide first then. An infinite percentage gives
-        // an infinite offset, but would give NaN for a value that becomes zero when divided by 100.
-        // Any percentage of zero is zero, also an infinite one, as for equality.
+        // Multiplying first keeps round percentages exact, but when the product overflows
+        // to infinity the offset itself can still be finite, so divide first then.
         private static double PercentageOffset(double value, double percentage)
         {
-            if (value == 0)
-                return 0;
-
             double product = value * percentage;
-            return Math.Abs(double.IsInfinity(product) && !double.IsInfinity(percentage) ? value / 100 * percentage : product / 100);
+            return Math.Abs(double.IsInfinity(product) ? value / 100 * percentage : product / 100);
         }
 
         private static Tolerance.Range DecimalRange(decimal value, object amount)
         {
-            double approximateValue = (double)value;
-            double approximateOffset = ConvertToValue<double>(amount);
-
-            // The bounds are outside the decimal range.
             if (!TryGetDecimal(amount, out decimal offset))
-                return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+                throw new InvalidOperationException(ToleranceOutsideDecimalRange);
+
+            double approximateValue = (double)value;
+            double approximateOffset = (double)offset;
 
             // Only a bound that is outside the decimal range uses double, the other bound stays exact.
             // As the offset fits in a decimal, the lower bound of a value that is not negative fits,
@@ -1110,10 +1101,7 @@ namespace NUnit.Framework.Constraints
             if (bound >= 0 && bound <= UInt128.MaxValue)
                 return (UInt128)bound;
 
-            // A bound beyond the range of double is infinite, which BigInteger cannot represent to check the rounding.
             double approximation = (double)bound;
-            if (double.IsInfinity(approximation))
-                return approximation;
             if (isLowerBound && (BigInteger)approximation > bound)
                 approximation = Math.BitDecrement(approximation);
             else if (!isLowerBound && (BigInteger)approximation < bound)
