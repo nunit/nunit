@@ -916,11 +916,27 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(decimal.MaxValue, new Tolerance(1m), decimal.MaxValue - 1, (double)decimal.MaxValue + 1),
                 new TestCaseData(decimal.MinValue, new Tolerance(1m), (double)decimal.MinValue - 1, decimal.MinValue + 1),
 
-                // A bound that does not fit in the type of the value uses decimal.
+                // A whole bound that does not fit in the type of the value uses the next wider integer type, as C# promotes:
+                // long for 32-bit values and Int128 for 64-bit values. The other bound keeps the type of the value.
                 new TestCaseData(-1, new Tolerance(2u), -3, 1),
-                new TestCaseData(1u, new Tolerance(2), -1m, 3u),
-                new TestCaseData(int.MaxValue, new Tolerance(1), int.MaxValue - 1, (decimal)int.MaxValue + 1),
+                new TestCaseData(0u, new Tolerance(1), -1L, 1u),
+                new TestCaseData(1u, new Tolerance(2), -1L, 3u),
+                new TestCaseData(int.MaxValue, new Tolerance(1), int.MaxValue - 1, (long)int.MaxValue + 1),
+                new TestCaseData(int.MinValue, new Tolerance(1), (long)int.MinValue - 1, int.MinValue + 1),
+#if !NETFRAMEWORK
+                new TestCaseData(0ul, new Tolerance(1), (Int128)(-1), 1ul),
+                new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (Int128)ulong.MaxValue + 1),
+                new TestCaseData(long.MinValue, new Tolerance(1), (Int128)long.MinValue - 1, long.MinValue + 1),
+                new TestCaseData((UInt128)0, new Tolerance(1), (Int128)(-1), (UInt128)1),
+
+                // A bound that does not fit in long uses Int128.
+                new TestCaseData(0u, new Tolerance(1e19), -(Int128)10000000000000000000ul, (Int128)10000000000000000000ul),
+#else
+                // .NET Framework has no Int128, so a bound of a 64-bit value that does not fit uses decimal.
+                new TestCaseData(0ul, new Tolerance(1), -1m, 1ul),
                 new TestCaseData(ulong.MaxValue, new Tolerance(1), ulong.MaxValue - 1, (decimal)ulong.MaxValue + 1),
+                new TestCaseData(0u, new Tolerance(1e19), -10000000000000000000m, 10000000000000000000m),
+#endif
 
                 // A fractional offset of an integer value uses decimal.
                 new TestCaseData(202, new Tolerance(1).Percent, 199.98m, 204.02m),
