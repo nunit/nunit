@@ -893,6 +893,10 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(0, 0, new Tolerance(10).Percent) { ExpectedResult = true },
                 new TestCaseData(0, 1, new Tolerance(10).Percent) { ExpectedResult = false },
 
+                // decimal.MaxValue / 2 rounds up to 2^95, so the product of 2 and 2^95 must not be calculated.
+                new TestCaseData(2, 1000, new Tolerance(39614081257132168796771975168m).Percent) { ExpectedResult = true },
+                new TestCaseData(2ul, ulong.MaxValue, new Tolerance(39614081257132168796771975168m).Percent) { ExpectedResult = true },
+
                 // The difference between decimals can be outside the decimal range.
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1)) { ExpectedResult = false },
                 new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30)) { ExpectedResult = true },

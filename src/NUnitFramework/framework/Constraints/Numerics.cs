@@ -665,7 +665,9 @@ namespace NUnit.Framework.Constraints
                 return 0;
 
             // The result does not fit in a ulong if the product does not fit in a decimal.
-            if (percent > decimal.MaxValue / magnitude)
+            // The quotient can round up, so the product may not fit when it is equal to the percentage.
+            // A percentage that large allows a difference far larger than ulong.MaxValue anyway.
+            if (percent >= decimal.MaxValue / magnitude)
                 return ulong.MaxValue;
 
             decimal maxDifference = decimal.Floor(magnitude * percent / 100m);
