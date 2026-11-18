@@ -890,6 +890,10 @@ namespace NUnit.Framework.Tests.Constraints
             // There is no integer bound that is correct for both > and >=: a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
             Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(5).Within(1.5).ApplyTo(4));
             Assert.Throws<InvalidOperationException>(() => Is.LessThanOrEqualTo(5L).Within(0.5m).ApplyTo(4));
+
+            // Also for mixed signed and unsigned integers, which .NET Framework compares as decimal.
+            Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(-1).Within(0.5).ApplyTo(0ul));
+            Assert.Throws<InvalidOperationException>(() => Is.GreaterThan(0ul).Within(0.5).ApplyTo(-1L));
         }
 
         [Test]

@@ -797,7 +797,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         internal static object ToComparisonType(object expected, object actual)
         {
-            if (!IsFixedPointNumeric(expected) || !IsNumericType(actual))
+            // Two integers keep their type, also when .NET Framework compares mixed signed and unsigned integers as decimal.
+            if (!IsFixedPointNumeric(expected) || !IsNumericType(actual) || IsFixedPointNumeric(actual))
                 return expected;
 
             return GetCommonNumericType(expected, actual) switch
