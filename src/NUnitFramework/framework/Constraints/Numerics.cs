@@ -1080,7 +1080,10 @@ namespace NUnit.Framework.Constraints
             if (bound >= 0 && bound <= UInt128.MaxValue)
                 return (UInt128)bound;
 
+            // A bound beyond the range of double is infinite, which BigInteger cannot represent to check the rounding.
             double approximation = (double)bound;
+            if (double.IsInfinity(approximation))
+                return approximation;
             if (isLowerBound && (BigInteger)approximation > bound)
                 approximation = Math.BitDecrement(approximation);
             else if (!isLowerBound && (BigInteger)approximation < bound)

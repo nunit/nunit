@@ -894,6 +894,10 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(Int128.MaxValue, Is.LessThan(Int128.MinValue).Within(200).Percent);
                 Assert.That(Int128.MinValue, Is.Not.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
                 Assert.That(Int128.MinValue + 1, Is.GreaterThanOrEqualTo(Int128.MaxValue).Within(200).Percent);
+
+                // Bounds beyond the range of double are infinite.
+                Assert.That(0, Is.LessThan(1000).Within(1e308).Percent);
+                Assert.That(0, Is.GreaterThan(1000).Within(1e308).Percent);
             }
         }
 #endif
@@ -1016,6 +1020,10 @@ namespace NUnit.Framework.Tests.Constraints
                 // A whole percentage offset of an integer value outside the decimal range is exact, as a linear one.
                 new TestCaseData(Int128.MinValue, new Tolerance(200).Percent, -3 * Math.Pow(2, 127), (UInt128)1 << 127),
                 new TestCaseData(Int128.MaxValue, new Tolerance(200).Percent, Int128.MinValue + 1, 3 * Math.Pow(2, 127)),
+
+                // A bound beyond the range of double is infinite.
+                new TestCaseData(1000, new Tolerance(1e308).Percent, double.NegativeInfinity, double.PositiveInfinity),
+                new TestCaseData(UInt128.MaxValue, new Tolerance(1e308).Percent, double.NegativeInfinity, double.PositiveInfinity),
 #endif
 
                 // A percentage of a decimal value keeps decimal bounds, also whole ones.
