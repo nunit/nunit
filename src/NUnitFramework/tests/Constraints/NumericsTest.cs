@@ -980,6 +980,10 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+#if !NETFRAMEWORK
+        private static readonly Int128 E20 = (Int128)10000000000 * 10000000000;
+#endif
+
         private static TestCaseData[] ToleranceRangeTypeTestCases()
         {
             return [
@@ -1000,6 +1004,10 @@ namespace NUnit.Framework.Tests.Constraints
                 // also on runtimes that round its conversion to decimal to 15 significant digits.
                 new TestCaseData(10000000000000002L, new Tolerance(10000000000000002d), 0L, 20000000000000004L),
                 new TestCaseData(1m, new Tolerance(10000000000000002d), -10000000000000001m, 10000000000000003m),
+                new TestCaseData(0L, new Tolerance(1e11f), -100000000000L, 100000000000L),
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, new Tolerance(1e20f), Int128.MaxValue - E20, (UInt128)Int128.MaxValue + (UInt128)E20),
+#endif
 
                 // Any percentage of zero is zero, also an infinite one.
                 new TestCaseData(0d, new Tolerance(double.PositiveInfinity).Percent, 0d, 0d),
@@ -1083,6 +1091,19 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(int.MaxValue, int.MinValue, new Tolerance(double.PositiveInfinity)) { ExpectedResult = true },
                 new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30)) { ExpectedResult = true },
                 new TestCaseData(long.MaxValue, long.MinValue, new Tolerance(1e30).Percent) { ExpectedResult = true },
+
+                // A binary floating point amount is the decimal value it is written as, as for comparison ranges:
+                // 1e11f is 10^11, not 99999997952, 1e20f is 10^20, not 100000002004087734272, and 0.1f is 0.1.
+                new TestCaseData(0L, 100000000000L, new Tolerance(1e11f)) { ExpectedResult = true },
+                new TestCaseData(0L, 100000000001L, new Tolerance(1e11f)) { ExpectedResult = false },
+                new TestCaseData(1m, 1.1m, new Tolerance(0.1f)) { ExpectedResult = true },
+                new TestCaseData(1m, 1.1000000001m, new Tolerance(0.1f)) { ExpectedResult = false },
+#if !NETFRAMEWORK
+                new TestCaseData(Int128.MaxValue, Int128.MaxValue - E20, new Tolerance(1e20f)) { ExpectedResult = true },
+                new TestCaseData(Int128.MaxValue, Int128.MaxValue - E20 - 1, new Tolerance(1e20f)) { ExpectedResult = false },
+                new TestCaseData((UInt128)E20 - 1, (Int128)(-1), new Tolerance(1e20f)) { ExpectedResult = true },
+                new TestCaseData((UInt128)E20 - 1, (Int128)(-2), new Tolerance(1e20f)) { ExpectedResult = false },
+#endif
 
                 // A fractional tolerance is rounded down, as the difference between integers is a whole number.
                 new TestCaseData(2, 4, new Tolerance(1.5)) { ExpectedResult = false },

@@ -513,7 +513,7 @@ namespace NUnit.Framework.Constraints
                     if (!TryAbsoluteDifference(expected, actual, out decimal difference))
                         return !IsWithinDecimalRange(tolerance.Amount) && Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
 
-                    return !IsWithinDecimalRange(tolerance.Amount) || difference <= ConvertToValue<decimal>(tolerance.Amount);
+                    return !IsWithinDecimalRange(tolerance.Amount) || difference <= ToleranceAsDecimal(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (expected == 0m)
@@ -556,7 +556,7 @@ namespace NUnit.Framework.Constraints
                     return difference.IsZero;
 
                 case ToleranceMode.Linear:
-                    return IsPositiveInfinity(tolerance.Amount) || difference <= ConvertToValue<BigInteger>(tolerance.Amount);
+                    return IsPositiveInfinity(tolerance.Amount) || difference <= WholePartOf(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     // An infinite percentage allows any difference, except for an expected value of zero.
@@ -643,7 +643,7 @@ namespace NUnit.Framework.Constraints
                     if (IsBinaryFloatingPoint(tolerance.Amount))
                     {
                         double doubleValue = ConvertToValue<double>(tolerance.Amount);
-                        return doubleValue >= (double)UInt64Range ? ulong.MaxValue : (ulong)doubleValue;
+                        return doubleValue >= (double)UInt64Range ? ulong.MaxValue : (ulong)ToleranceAsDecimal(tolerance.Amount);
                     }
 #if !NETFRAMEWORK
                     if (tolerance.Amount is Int128 or UInt128)
@@ -668,9 +668,11 @@ namespace NUnit.Framework.Constraints
                     return UInt128.Zero;
 
                 case ToleranceMode.Linear:
-                    return IsBinaryFloatingPoint(tolerance.Amount)
-                        ? UInt128.CreateSaturating(ConvertToValue<double>(tolerance.Amount))
-                        : ConvertToValue<UInt128>(tolerance.Amount);
+                    if (IsPositiveInfinity(tolerance.Amount))
+                        return UInt128.MaxValue;
+
+                    BigInteger wholePart = WholePartOf(tolerance.Amount);
+                    return wholePart >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)wholePart;
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -724,6 +726,15 @@ namespace NUnit.Framework.Constraints
         {
             GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
             return magnitude * numerator / (100 * denominator);
+        }
+
+        /// <summary>
+        /// Gets the whole part of a finite tolerance amount, which is never negative, as the value it is written as.
+        /// </summary>
+        private static BigInteger WholePartOf(object amount)
+        {
+            GetExactFraction(amount, out BigInteger numerator, out BigInteger denominator);
+            return numerator / denominator;
         }
 
         /// <summary>
@@ -875,7 +886,7 @@ namespace NUnit.Framework.Constraints
 
 #if !NETFRAMEWORK
             BigInteger bigValue = ConvertToValue<BigInteger>(value);
-            BigInteger bigOffset = ConvertToValue<BigInteger>(amount);
+            BigInteger bigOffset = WholePartOf(amount);
             return new Tolerance.Range(
                 NarrowToTypeOf(value, bigValue - bigOffset, isLowerBound: true),
                 NarrowToTypeOf(value, bigValue + bigOffset, isLowerBound: false));
