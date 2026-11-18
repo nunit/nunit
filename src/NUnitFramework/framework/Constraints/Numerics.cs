@@ -174,12 +174,14 @@ namespace NUnit.Framework.Constraints
 
             if (expected is decimal || actual is decimal)
             {
+                // Ulps are not supported for decimal, also when the values do not fit in a decimal and are compared as double,
+                // so whether they are supported depends on the types and not on the values.
+                if (tolerance.Mode == ToleranceMode.Ulps)
+                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+
                 // Treat as decimal if both values fit, otherwise fall back to double, like Compare does
                 if (!IsWithinDecimalRange(expected) || !IsWithinDecimalRange(actual))
                     return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-
-                if (tolerance.Mode == ToleranceMode.Ulps)
-                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
                 return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
             }

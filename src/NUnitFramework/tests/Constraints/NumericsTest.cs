@@ -616,6 +616,27 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(0.3m, 0.3d, ref tolerance));
         }
 
+        [TestCaseSource(nameof(DecimalAndValueOutsideDecimalRangeTestCases))]
+        public void UlpsToleranceIsNotSupportedForDecimalAndValueOutsideDecimalRange(object expected, object actual)
+        {
+            // Whether Ulps are supported depends on the types, not on whether the values are compared as double.
+            var tolerance = new Tolerance(1).Ulps;
+            Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(expected, actual, ref tolerance));
+        }
+
+        private static TestCaseData[] DecimalAndValueOutsideDecimalRangeTestCases()
+        {
+            return [
+                new TestCaseData(decimal.MaxValue, double.MaxValue),
+                new TestCaseData(double.MaxValue, decimal.MaxValue),
+                new TestCaseData(decimal.MaxValue, float.MaxValue),
+#if !NETFRAMEWORK
+                new TestCaseData(1m, Int128.MaxValue),
+                new TestCaseData(UInt128.MaxValue, 1m),
+#endif
+            ];
+        }
+
         [Test]
         public void DecimalAndValueOutsideDecimalRangeAreComparedAsDouble()
         {
