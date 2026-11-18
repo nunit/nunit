@@ -913,33 +913,30 @@ namespace NUnit.Framework.Constraints
         private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)
         {
             return new Tolerance.Range(
-                BoundOrDouble(value, value - offset, value - offsetAsDouble),
-                BoundOrDouble(value, value + offset, value + offsetAsDouble));
+                BoundOrDouble(value - offset, value - offsetAsDouble),
+                BoundOrDouble(value + offset, value + offsetAsDouble));
         }
 
         /// <summary>
-        /// Uses the bound calculated in double when the bound in the type of the value is wrong:
-        /// it overflowed to infinity, or the offset is too small for the precision of the type to move it away from the value.
-        /// Other bounds keep the type of the value, so custom comparers see that type whenever possible.
+        /// Keeps a bound in the type of the value only when it is exactly the bound calculated in double,
+        /// so custom comparers see that type whenever possible. Otherwise the bound in the type of the value is wrong:
+        /// it was rounded, e.g. 1 - 0.01 to 0.99f, which equals 0.99f; it overflowed to infinity; the offset was too small
+        /// for the precision of the type to move it away from the value; or infinity minus an offset that overflowed gave NaN.
         /// The bound is cast to object, as otherwise the conditional would convert it to double.
         /// </summary>
-        private static object BoundOrDouble(float value, float bound, double boundAsDouble)
-            => (float.IsInfinity(bound) || bound == value) && boundAsDouble != value && !double.IsInfinity(boundAsDouble)
-                ? boundAsDouble
-                : (object)bound;
+        private static object BoundOrDouble(float bound, double boundAsDouble)
+            => ((double)bound).Equals(boundAsDouble) ? bound : (object)boundAsDouble;
 
 #if !NETFRAMEWORK
-        private static object BoundOrDouble(Half value, Half bound, double boundAsDouble)
-            => (Half.IsInfinity(bound) || bound == value) && boundAsDouble != (double)value && !double.IsInfinity(boundAsDouble)
-                ? boundAsDouble
-                : (object)bound;
+        private static object BoundOrDouble(Half bound, double boundAsDouble)
+            => ((double)bound).Equals(boundAsDouble) ? bound : (object)boundAsDouble;
 
         private static Tolerance.Range HalfRange(Half value, double offset)
         {
             Half halfOffset = (Half)offset;
             return new Tolerance.Range(
-                BoundOrDouble(value, value - halfOffset, (double)value - offset),
-                BoundOrDouble(value, value + halfOffset, (double)value + offset));
+                BoundOrDouble(value - halfOffset, (double)value - offset),
+                BoundOrDouble(value + halfOffset, (double)value + offset));
         }
 #endif
 
