@@ -1172,9 +1172,9 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData((Int128)(-1), UInt128.MaxValue, new Tolerance(decimal.MaxValue).Percent) { ExpectedResult = false },
                 new TestCaseData((Int128)0, UInt128.MaxValue, new Tolerance(decimal.MaxValue).Percent) { ExpectedResult = false },
 
-                // Percentages too small for the decimal precision: 1e-30 percent of 10^38 is 10^6.
-                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 1000000, new Tolerance(1e-30).Percent) { ExpectedResult = true },
-                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 1000001, new Tolerance(1e-30).Percent) { ExpectedResult = false },
+                // The smallest decimal percentage: 1e-28 percent of 10^38 is 10^8. A smaller percentage is rounded to a decimal.
+                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 100000000, new Tolerance(1e-28).Percent) { ExpectedResult = true },
+                new TestCaseData(Exp10UInt128(38), Exp10UInt128(38) + 100000001, new Tolerance(1e-28).Percent) { ExpectedResult = false },
 
                 // A binary floating point percentage is the decimal value it is written as:
                 // 1e-17f is not exactly 1e-17, but 1e-17 percent of 10^20 is 10.
