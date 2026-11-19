@@ -118,6 +118,11 @@ single-threaded continuations under NativeAOT (see [#5358](https://github.com/nu
 It is intentionally separate from `dotnet test`: running these tests on CoreCLR
 does not exercise the NativeAOT dispatch path.
 
+Ordinary `async Task` awaiting is already supported by the non-generic adapter.
+The reflection fallback handles result-bearing `Task<T>` and `ValueTask<T>` when
+dynamic code is unavailable, including value-type results for which NUnit's
+generic adapters have not been compiled.
+
 For example, on an Apple Silicon Mac with the native compiler prerequisites installed:
 
 ```sh
@@ -135,8 +140,10 @@ The synchronous exception constraints deliberately pass faulted and canceled
 tasks through NUnit's await adapters instead of awaiting them directly in C#.
 NUnit still emits trimming/AOT analysis warnings for other reflection-based
 features; this project leaves those diagnostics visible, but does not promote
-them to errors. Its complete-metadata settings do not imply that NUnit supports
-arbitrary applications with default trimming.
+them to errors. It retains complete metadata to isolate task awaiting from
+unrelated reflection issues, including `IEquatable<T>` dispatch when comparing
+cancellation tokens. Passing this bounded suite does not establish support for
+arbitrary applications with default metadata trimming.
 
 NativeAOT cannot generate arbitrary closed generic test methods at runtime.
 Preserving the generic method's metadata with `DynamicDependency` is not enough:

@@ -14,10 +14,8 @@ namespace NUnit.Framework.Internal
     {
 #if !NETFRAMEWORK
         [DynamicDependency(nameof(Task<object>.GetAwaiter), typeof(Task<>))]
-        [DynamicDependency("get_IsCompleted", typeof(TaskAwaiter<>))]
+        [DynamicDependency(nameof(TaskAwaiter<object>.IsCompleted), typeof(TaskAwaiter<>))]
         [DynamicDependency(nameof(TaskAwaiter<object>.GetResult), typeof(TaskAwaiter<>))]
-        [DynamicDependency(nameof(TaskAwaiter<object>.OnCompleted), typeof(TaskAwaiter<>))]
-        [DynamicDependency(nameof(TaskAwaiter<object>.UnsafeOnCompleted), typeof(TaskAwaiter<>))]
 #endif
         public static AwaitAdapter Create(Task task)
         {
@@ -28,16 +26,6 @@ namespace NUnit.Framework.Internal
 
             if (genericTaskType is not null)
             {
-#if !NETFRAMEWORK
-                // NativeAOT cannot generate GenericAdapter<T> for a runtime-only T,
-                // including the private result type used by async Task methods.
-                if (!RuntimeFeature.IsDynamicCodeSupported)
-                {
-                    return CSharpPatternBasedAwaitAdapter.TryCreate(task, genericTaskType)
-                        ?? throw new NotSupportedException($"Cannot await task of type {task.GetType()}.");
-                }
-#endif
-
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
 
                 // A non-generic async method or lambda returns a Task<VoidTaskResult> at runtime.
@@ -45,6 +33,15 @@ namespace NUnit.Framework.Internal
                 // through MakeGenericType, which needs runtime code generation under NativeAOT.
                 if (IsVoidTaskResult(typeArgument))
                     return new NonGenericAdapter(task);
+
+#if !NETFRAMEWORK
+                // NativeAOT cannot generate GenericAdapter<T> for a runtime-only result type.
+                if (!RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return CSharpPatternBasedAwaitAdapter.TryCreate(task, genericTaskType)
+                        ?? throw new NotSupportedException($"Cannot await task of type {task.GetType()}.");
+                }
+#endif
 
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                      .MakeGenericType(typeArgument)

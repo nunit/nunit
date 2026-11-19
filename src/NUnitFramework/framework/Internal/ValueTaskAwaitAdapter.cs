@@ -18,10 +18,8 @@ namespace NUnit.Framework.Internal
 
 #if !NETFRAMEWORK
         [DynamicDependency(nameof(ValueTask<object>.GetAwaiter), typeof(ValueTask<>))]
-        [DynamicDependency("get_IsCompleted", typeof(ValueTaskAwaiter<>))]
+        [DynamicDependency(nameof(ValueTaskAwaiter<object>.IsCompleted), typeof(ValueTaskAwaiter<>))]
         [DynamicDependency(nameof(ValueTaskAwaiter<object>.GetResult), typeof(ValueTaskAwaiter<>))]
-        [DynamicDependency(nameof(ValueTaskAwaiter<object>.OnCompleted), typeof(ValueTaskAwaiter<>))]
-        [DynamicDependency(nameof(ValueTaskAwaiter<object>.UnsafeOnCompleted), typeof(ValueTaskAwaiter<>))]
 #endif
         public static AwaitAdapter? TryCreate(object task)
         {
