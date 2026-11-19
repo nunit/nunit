@@ -730,54 +730,24 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Gets the whole part of a finite tolerance amount, which is never negative, as the value it is written as.
+        /// Gets the whole part of a tolerance amount, which is never negative: as written within the decimal range,
+        /// otherwise its value, which is a whole number for a binary floating point amount that large.
         /// </summary>
         private static BigInteger WholePartOf(object amount)
-        {
-            GetExactFraction(amount, out BigInteger numerator, out BigInteger denominator);
-            return numerator / denominator;
-        }
+            => IsWithinDecimalRange(amount)
+                ? new BigInteger(decimal.Truncate(ToleranceAsDecimal(amount)))
+                : ConvertToValue<BigInteger>(amount);
 
         /// <summary>
-        /// Gets a finite numeric value as the fraction numerator / denominator.
-        /// A binary floating point value is taken as the decimal value it is written as, its shortest round-trip
-        /// representation: 0.1 is one tenth, not the binary approximation 0.1000000000000000055511151231257827.
+        /// Gets a percentage, which always fits in a decimal and is never negative, as the fraction
+        /// numerator / denominator of the decimal value it is written as.
         /// </summary>
-        private static void GetExactFraction(object value, out BigInteger numerator, out BigInteger denominator)
+        private static void GetExactFraction(object percentage, out BigInteger numerator, out BigInteger denominator)
         {
-            string text;
-            switch (value)
-            {
-                case decimal decimalValue:
-                    text = decimalValue.ToString(CultureInfo.InvariantCulture);
-                    break;
-                case double or float or Half:
-                    text = ((IFormattable)value).ToString("R", CultureInfo.InvariantCulture);
-                    break;
-                default:
-                    numerator = ConvertToValue<BigInteger>(value);
-                    denominator = BigInteger.One;
-                    return;
-            }
-
-            // The text is [-]digits[.digits][E[+|-]digits]
-            int exponentIndex = text.IndexOfAny(['E', 'e']);
-            int exponent = exponentIndex < 0 ? 0 : int.Parse(text.Substring(exponentIndex + 1), CultureInfo.InvariantCulture);
-            string mantissa = exponentIndex < 0 ? text : text.Substring(0, exponentIndex);
-
-            int pointIndex = mantissa.IndexOf('.');
-            if (pointIndex >= 0)
-            {
-                exponent -= mantissa.Length - pointIndex - 1;
-                mantissa = mantissa.Remove(pointIndex, 1);
-            }
-
-            numerator = BigInteger.Parse(mantissa, CultureInfo.InvariantCulture);
-            denominator = BigInteger.One;
-            if (exponent >= 0)
-                numerator *= BigInteger.Pow(10, exponent);
-            else
-                denominator = BigInteger.Pow(10, -exponent);
+            Span<int> bits = stackalloc int[4];
+            decimal.GetBits(ToleranceAsDecimal(percentage), bits);
+            numerator = ((BigInteger)(uint)bits[2] << 64) | ((BigInteger)(uint)bits[1] << 32) | (uint)bits[0];
+            denominator = BigInteger.Pow(10, (bits[3] >> 16) & 0xFF);
         }
 #endif
 
