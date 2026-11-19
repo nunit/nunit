@@ -115,6 +115,10 @@ namespace NUnit.Framework.Tests.Constraints
                     Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
                 Assert.That(() => Is.EqualTo(1.0).Within(Convert.ToDouble(amount)),
                     Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
+                Assert.That(() => Is.EqualTo(DateTime.Now).Within(Convert.ToDouble(amount)),
+                    Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
+                Assert.That(() => Is.EqualTo(TimeSpan.Zero).Within(Convert.ToDouble(amount)),
+                    Throws.TypeOf<ArgumentException>().With.Message.Contains("must not be NaN or infinite"));
             }
         }
 
@@ -146,6 +150,18 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(new Tolerance(2.0).Ticks.Amount, Is.EqualTo(TimeSpan.FromTicks(2)));
                 Assert.That(new DateTime(2000, 1, 1).AddTicks(2), Is.EqualTo(new DateTime(2000, 1, 1)).Within(2.0).Ticks);
                 Assert.That(new DateTime(2000, 1, 1).AddTicks(3), Is.Not.EqualTo(new DateTime(2000, 1, 1)).Within(2.0).Ticks);
+            }
+        }
+
+        [TestCase(1e19)]
+        [TestCase(9223372036854775808.0)] // 2^63, the first double beyond long.MaxValue
+        public void TicksToleranceMustBeWithinRangeOfLong(double amount)
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => new Tolerance(amount).Ticks, Throws.TypeOf<OverflowException>());
+                Assert.That(() => Is.EqualTo(DateTime.Now).Within(amount).Ticks, Throws.TypeOf<OverflowException>());
+                Assert.That(() => Is.EqualTo(TimeSpan.Zero).Within(amount).Ticks, Throws.TypeOf<OverflowException>());
             }
         }
 
