@@ -25,8 +25,12 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         /// <param name="getTicks">Method to extract the Ticks from an instance of <typeparamref name="T"/>.</param>
         /// <param name="tolerance">The tolerance to apply when qualified with a unit.</param>
+        /// <exception cref="ArgumentException">The tolerance is NaN or infinite.</exception>
         public EqualTimeBasedConstraintWithNumericTolerance(T expected, Func<T, long> getTicks, double tolerance)
         {
+            if (double.IsNaN(tolerance) || double.IsInfinity(tolerance))
+                throw new ArgumentException("Tolerance amount must not be NaN or infinite", nameof(tolerance));
+
             _expected = expected;
             _tolerance = tolerance;
             _getTicks = getTicks;
@@ -76,6 +80,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <returns>Self</returns>
         /// <exception cref="InvalidOperationException">The tolerance is not a whole number.</exception>
+        /// <exception cref="OverflowException">The tolerance is outside the range of <see cref="long"/>.</exception>
         public EqualTimeBasedConstraintWithTimeSpanTolerance<T> Ticks
         {
             get
@@ -84,7 +89,7 @@ namespace NUnit.Framework.Constraints
                 if (Math.Floor(_tolerance) != _tolerance)
                     throw new InvalidOperationException($"Tolerance {_tolerance} must be a whole number of ticks");
 
-                return Within(TimeSpan.FromTicks((long)_tolerance));
+                return Within(TimeSpan.FromTicks(checked((long)_tolerance)));
             }
         }
 
