@@ -314,6 +314,10 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase("\x0085", "\\x0085", Description = "Next line character")]
         [TestCase("\x2028", "\\x2028", Description = "Line separator character")]
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
+        [TestCase("\x200E", "\\x200E", Description = "Left-to-right mark")]
+        [TestCase("\x200F", "\\x200F", Description = "Right-to-left mark")]
+        [TestCase("\x200B", "\\x200B", Description = "Zero-width space")]
+        [TestCase("\xFEFF", "\\xFEFF", Description = "Zero-width no-break space")]
         public static void EscapeControlCharsTest(string? input, string? expected)
         {
             Assert.That(MsgUtils.EscapeControlChars(input), Is.EqualTo(expected));
@@ -321,6 +325,7 @@ namespace NUnit.Framework.Tests.Constraints
 
         [TestCase("Hello\r\nWorld", 4, "Hello\\r\\nWorld", 4)]
         [TestCase("Hello\r\nWorld", 7, "Hello\\r\\nWorld", 9)]
+        [TestCase("\x200E-12", 2, "\\x200E-12", 7)]
         public static void EscapeControlCharsWithIndexTest(string? input, int index, string? expected, int expectedIndex)
         {
             Assert.That(MsgUtils.EscapeControlChars(input, ref index), Is.EqualTo(expected));
