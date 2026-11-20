@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal
     internal static class UnionHelper
     {
         private const string UnionAttributeFullName = "System.Runtime.CompilerServices.UnionAttribute";
-        private static readonly ConditionalWeakTable<Type, UnionTypeContextCache> UnionTypeInfoCache = new();
+        private static readonly ConditionalWeakTable<Type, UnionTypeContext?> UnionTypeInfoCache = new();
 
         internal static bool TryGetUnionValue(object? obj, out object? value)
         {
@@ -18,17 +18,12 @@ namespace NUnit.Framework.Internal
             if (obj is null)
                 return false;
 
-            var unionTypeInfo = GetUnionTypeInfo(obj.GetType());
+            var unionTypeInfo = UnionTypeInfoCache.GetValue(obj.GetType(), static type => CreateUnionTypeContext(type));
             if (unionTypeInfo is null)
                 return false;
 
             value = unionTypeInfo.ValueAccessor.Invoke(obj, null);
             return true;
-        }
-
-        private static UnionTypeContext? GetUnionTypeInfo(Type unionType)
-        {
-            return UnionTypeInfoCache.GetValue(unionType, static type => new UnionTypeContextCache(type)).Context;
         }
 
         private static UnionTypeContext? CreateUnionTypeContext(Type unionType)
@@ -47,16 +42,6 @@ namespace NUnit.Framework.Internal
                 return null;
 
             return new UnionTypeContext(valuePropertyAccessor);
-        }
-
-        private sealed class UnionTypeContextCache
-        {
-            public UnionTypeContext? Context { get; }
-
-            public UnionTypeContextCache(Type unionType)
-            {
-                Context = CreateUnionTypeContext(unionType);
-            }
         }
 
         private sealed class UnionTypeContext
