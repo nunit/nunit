@@ -30,8 +30,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            return actual?.GetType() == typeof(TExpected)
-                || GetActualType(actual) == typeof(TExpected);
+            return GetActualType(actual) == typeof(TExpected);
         }
     }
 
@@ -61,7 +60,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches(object? actual)
         {
-            return actual?.GetType() == expectedType || actualType == expectedType;
+            return actualType == expectedType;
         }
     }
 }

@@ -67,14 +67,14 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetUnionTestCases))]
-        public void CanUseWithUnions<T>(T u)
+        public void CanUseWithUnions<TUnion>(TUnion u)
         {
-            Assert.That(u, Is.InstanceOf<T>());
             Assert.That(u, Is.InstanceOf<UnionMember>());
+            Assert.That(u, Is.Not.InstanceOf<TUnion>());
             Assert.That(u, Is.Not.InstanceOf<int>());
 
-            Assert.That(u, Is.InstanceOf(typeof(T)));
             Assert.That(u, Is.InstanceOf(typeof(UnionMember)));
+            Assert.That(u, Is.Not.InstanceOf(typeof(TUnion)));
             Assert.That(u, Is.Not.InstanceOf(typeof(int)));
         }
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetDerivedUnionTestCases))]
-        public void CanUseWithUnionsOfDerivedTypes<T>(T u)
+        public void CanUseWithUnionsOfDerivedTypes<TUnion>(TUnion u)
         {
             Assert.That(u, Is.InstanceOf<UnionMember>());
             Assert.That(u, Is.InstanceOf<DerivedUnionMember>());
