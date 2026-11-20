@@ -100,21 +100,18 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [TestCaseSource(nameof(GetUnionTestCases))]
-        public void FailureMessagesUseContainedUnionType<T>(T u)
+        public void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
         {
-            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf<int>(), u, typeof(T));
-            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf(typeof(int)), u, typeof(T));
+            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf<int>(), u, typeof(TUnion));
+            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf(typeof(int)), u, typeof(TUnion));
         }
 
         private static void AssertFailureMessageUsesContainedUnionType(IConstraint constraint, object? actual, Type unionType)
         {
-            var result = constraint.ApplyTo(actual);
-            Assert.That(result.IsSuccess, Is.False);
+            var message = constraint.ApplyTo(actual).GetFailureMessage();
 
-            var writer = new TextMessageWriter();
-            result.WriteMessageTo(writer);
-            Assert.That(writer.ToString(), Does.Contain(typeof(UnionMember).Name));
-            Assert.That(writer.ToString(), Does.Not.Contain(unionType.Name));
+            Assert.That(message, Does.Contain(typeof(UnionMember).Name));
+            Assert.That(message, Does.Not.Contain(unionType.Name));
         }
     }
 }
