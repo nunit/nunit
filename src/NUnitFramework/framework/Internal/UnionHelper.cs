@@ -1,18 +1,18 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Internal
 {
     internal static class UnionHelper
     {
-        private static readonly Type? UnionAttributeType = Type.GetType("System.Runtime.CompilerServices.UnionAttribute");
+        private const string UnionAttributeFullName = "System.Runtime.CompilerServices.UnionAttribute";
+        private static readonly ConditionalWeakTable<Type, UnionTypeContextCache> UnionTypeInfoCache = new();
 
-        internal static bool TryGetUnionValue(object? obj, [NotNullWhen(true)] out object? value)
+        internal static bool TryGetUnionValue(object? obj, out object? value)
         {
             value = null;
             if (obj is null)
@@ -23,68 +23,48 @@ namespace NUnit.Framework.Internal
                 return false;
 
             value = unionTypeInfo.ValueAccessor.Invoke(obj, null);
-            return value is not null;
+            return true;
         }
 
-        internal static UnionTypeContext? GetUnionTypeInfo(Type unionType)
+        private static UnionTypeContext? GetUnionTypeInfo(Type unionType)
         {
-            if (UnionAttributeType is null)
-                return null;
+            return UnionTypeInfoCache.GetValue(unionType, static type => new UnionTypeContextCache(type)).Context;
+        }
 
-            var unionAttribute = unionType.GetCustomAttributes(false).FirstOrDefault(o => o.GetType() == UnionAttributeType);
+        private static UnionTypeContext? CreateUnionTypeContext(Type unionType)
+        {
+            var unionAttribute = unionType.GetCustomAttributes(false).FirstOrDefault(attribute =>
+                string.Equals(attribute.GetType().FullName, UnionAttributeFullName, StringComparison.Ordinal));
             if (unionAttribute is null)
                 return null;
 
-            var valueProperty = unionType.GetProperty("Value", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            if (valueProperty is null)
-                return null;
-
-            var valuePropertyType = valueProperty.PropertyType;
-            if (valuePropertyType != typeof(object))
+            var valueProperty = unionType.GetProperty("Value", BindingFlags.Public | BindingFlags.Instance);
+            if (valueProperty is null || valueProperty.PropertyType != typeof(object))
                 return null;
 
             var valuePropertyAccessor = valueProperty.GetGetMethod();
             if (valuePropertyAccessor is null)
                 return null;
 
-            var candidateTypes = GetMemberTypes(unionType);
-            if (candidateTypes.Length == 0)
-                return null;
-
-            return new UnionTypeContext(unionType, candidateTypes, valuePropertyAccessor);
+            return new UnionTypeContext(valuePropertyAccessor);
         }
 
-        private static Type[] GetMemberTypes(Type unionType)
+        private sealed class UnionTypeContextCache
         {
-            var constructors = unionType.GetConstructors().Where(static o => o.IsPublic);
+            public UnionTypeContext? Context { get; }
 
-            var memberTypes = new List<Type>();
-            foreach (var constructor in constructors)
+            public UnionTypeContextCache(Type unionType)
             {
-                var parameters = constructor.GetParameters();
-                if (parameters.Length != 1)
-                    continue;
-
-                var parameter = parameters[0];
-                if (parameter.IsRetval || parameter.IsOut)
-                    continue;
-
-                memberTypes.Add(parameter.ParameterType);
+                Context = CreateUnionTypeContext(unionType);
             }
-
-            return memberTypes.ToArray();
         }
 
-        internal class UnionTypeContext
+        private sealed class UnionTypeContext
         {
-            public Type UnionType { get; }
-            public Type[] MemberTypes { get; }
             public MethodInfo ValueAccessor { get; }
 
-            public UnionTypeContext(Type unionType, Type[] memberTypes, MethodInfo valueAccessor)
+            public UnionTypeContext(MethodInfo valueAccessor)
             {
-                UnionType = unionType;
-                MemberTypes = memberTypes;
                 ValueAccessor = valueAccessor;
             }
         }

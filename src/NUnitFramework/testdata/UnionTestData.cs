@@ -1,5 +1,4 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-#if NET11_0_OR_GREATER
 
 namespace NUnit.TestData
 {
@@ -22,4 +21,3 @@ namespace NUnit.TestData
         public object Value { get; }
     }
 }
-#endif

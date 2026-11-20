@@ -1,10 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
-#if NET11_0_OR_GREATER
+using NUnit.Framework.Internal;
 using NUnit.TestData;
-#endif
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -55,7 +55,6 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 
-#if NET11_0_OR_GREATER
     [TestFixture]
     public class ExactTypeConstraintTests_GeneralCases
     {
@@ -98,6 +97,23 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(u, Is.TypeOf(typeof(DerivedUnionMember)));
             Assert.That(u, Is.Not.TypeOf(typeof(UnionMember)));
         }
+
+        [TestCaseSource(nameof(GetUnionTestCases))]
+        public void FailureMessagesUseContainedUnionType<T>(T u)
+        {
+            AssertFailureMessageUsesContainedUnionType(Is.TypeOf<int>(), u, typeof(T));
+            AssertFailureMessageUsesContainedUnionType(Is.TypeOf(typeof(int)), u, typeof(T));
+        }
+
+        private static void AssertFailureMessageUsesContainedUnionType(IConstraint constraint, object? actual, Type unionType)
+        {
+            var result = constraint.ApplyTo(actual);
+            Assert.That(result.IsSuccess, Is.False);
+
+            var writer = new TextMessageWriter();
+            result.WriteMessageTo(writer);
+            Assert.That(writer.ToString(), Does.Contain(typeof(UnionMember).Name));
+            Assert.That(writer.ToString(), Does.Not.Contain(unionType.Name));
+        }
     }
-#endif
 }
