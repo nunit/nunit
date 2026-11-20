@@ -12,6 +12,11 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool TopLevelComparison { get; }
 
         /// <summary>
+        /// The null-equivalent predicates of the test context, read once per top-level comparison.
+        /// </summary>
+        public NullEquivalents? NullEquivalents { get; }
+
+        /// <summary>
         /// The number of items on the comparison stack
         /// </summary>
         public int StackDepth { get; }
@@ -22,15 +27,21 @@ namespace NUnit.Framework.Constraints.Comparers
         private readonly ImmutableStack<Comparison> _comparisons;
 
         public ComparisonState(bool topLevelComparison)
-            : this(topLevelComparison, 0, ImmutableStack<Comparison>.Empty)
+            : this(topLevelComparison, TestExecutionContext.GetNullEquivalents())
         {
         }
 
-        private ComparisonState(bool topLevelComparison, int stackDepth, ImmutableStack<Comparison> comparisons)
+        public ComparisonState(bool topLevelComparison, NullEquivalents? nullEquivalents)
+            : this(topLevelComparison, 0, ImmutableStack<Comparison>.Empty, nullEquivalents)
+        {
+        }
+
+        private ComparisonState(bool topLevelComparison, int stackDepth, ImmutableStack<Comparison> comparisons, NullEquivalents? nullEquivalents)
         {
             TopLevelComparison = topLevelComparison;
             StackDepth = stackDepth;
             _comparisons = comparisons;
+            NullEquivalents = nullEquivalents;
         }
 
         public ComparisonState PushComparison(object x, object y)
@@ -38,7 +49,8 @@ namespace NUnit.Framework.Constraints.Comparers
             return new ComparisonState(
                 false,
                 StackDepth + 1,
-                _comparisons.Push(new Comparison(x, y)));
+                _comparisons.Push(new Comparison(x, y)),
+                NullEquivalents);
         }
 
         public bool DidCompare(object? x, object? y)
