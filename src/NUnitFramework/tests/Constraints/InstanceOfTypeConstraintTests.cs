@@ -63,6 +63,7 @@ namespace NUnit.Framework.Tests.Constraints
             [
                 TestCaseData.Create<GeneratedUnionType>(new UnionMember()),
                 TestCaseData.Create<CustomUnionType>(new UnionMember()),
+                TestCaseData.Create<ExplicitIUnionType>(new UnionMember()),
             ];
         }
 
@@ -84,6 +85,7 @@ namespace NUnit.Framework.Tests.Constraints
             [
                 TestCaseData.Create<GeneratedUnionType>(new DerivedUnionMember()),
                 TestCaseData.Create<CustomUnionType>(new DerivedUnionMember()),
+                TestCaseData.Create<ExplicitIUnionType>(new DerivedUnionMember()),
             ];
         }
 

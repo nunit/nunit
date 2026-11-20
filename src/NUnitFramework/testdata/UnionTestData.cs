@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Runtime.CompilerServices;
+
 namespace NUnit.TestData
 {
     public record DerivedUnionMember() : UnionMember();
@@ -7,7 +9,7 @@ namespace NUnit.TestData
 
     public readonly union GeneratedUnionType(UnionMember, int);
 
-    [System.Runtime.CompilerServices.Union]
+    [Union]
     public class CustomUnionType
     {
         public CustomUnionType(UnionMember value)
@@ -19,5 +21,22 @@ namespace NUnit.TestData
             Value = value;
         }
         public object Value { get; }
+    }
+
+    [Union]
+    public class ExplicitIUnionType : IUnion
+    {
+        private readonly object _value;
+
+        public ExplicitIUnionType(UnionMember value)
+        {
+            _value = value;
+        }
+        public ExplicitIUnionType(int value)
+        {
+            _value = value;
+        }
+
+        public object? Value => _value;
     }
 }
