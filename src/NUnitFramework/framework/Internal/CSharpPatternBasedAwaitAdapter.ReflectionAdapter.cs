@@ -1,7 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Reflection;
+#if !NETFRAMEWORK
+using System.Runtime.CompilerServices;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -14,6 +20,10 @@ namespace NUnit.Framework.Internal
             private readonly Action<Action> _awaiterOnCompleted;
             private readonly MethodInfo _getResultMethod;
 
+#if !NETFRAMEWORK
+            [DynamicDependency(nameof(INotifyCompletion.OnCompleted), typeof(INotifyCompletion))]
+            [DynamicDependency(nameof(ICriticalNotifyCompletion.UnsafeOnCompleted), typeof(ICriticalNotifyCompletion))]
+#endif
             public ReflectionAdapter(object? awaiter, MethodInfo isCompletedGetter, MethodInfo onCompletedMethod, MethodInfo getResultMethod)
             {
                 _awaiter = awaiter;
