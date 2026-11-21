@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -20,6 +21,48 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object?[] SuccessData = new object?[] { null };
         private static readonly object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
 #pragma warning restore IDE0052 // Remove unread private members
+
+        [Test]
+        public void NonNullUnionCases()
+        {
+            UnionMember member = new();
+
+            GeneratedUnionType generatedUnion = member;
+            CustomUnionType customUnion = member;
+            ExplicitIUnionType explicitUnion = member;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(generatedUnion is not null);
+#pragma warning disable NUnit2023 // Invalid NullConstraint usage
+                Assert.That(generatedUnion, Is.Not.Null);
+#pragma warning restore NUnit2023 // Invalid NullConstraint usage
+
+                Assert.That(customUnion is not null);
+                Assert.That(customUnion, Is.Not.Null);
+
+                Assert.That(explicitUnion is not null);
+                Assert.That(explicitUnion, Is.Not.Null);
+            }
+        }
+
+        [Test]
+        public void NullUnionCases()
+        {
+            GeneratedUnionType generatedUnion = default;
+            ExplicitIUnionType explicitUnion = new(default(UnionMember));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(generatedUnion is null);
+#pragma warning disable NUnit2023 // Invalid NullConstraint usage
+                Assert.That(generatedUnion, Is.Null);
+#pragma warning restore NUnit2023 // Invalid NullConstraint usage
+
+                Assert.That(explicitUnion is null);
+                Assert.That(explicitUnion, Is.Null);
+            }
+        }
     }
 
     [TestFixture]
