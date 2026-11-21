@@ -33,6 +33,10 @@ namespace NUnit.Framework.Internal.Execution
         private readonly Lock _syncRoot = new();
         private int _busyCount = 0;
 
+        // Incremented on every Busy event, never decremented. Lets an idle worker
+        // detect that another worker became busy while it was checking for work.
+        private int _busyGeneration;
+
         // Only written while holding _syncRoot. Volatile so IsActive can be read without the lock.
         private volatile bool _active;
 
@@ -160,18 +164,34 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var worker in Workers)
             {
-                worker.Busy += (_, _) => Interlocked.Increment(ref _busyCount);
-                worker.Idle += (_, _) =>
+                worker.Busy += (_, _) =>
                 {
-                    // EndShift is deliberately not called while holding _syncRoot:
-                    // it raises EndOfShift, which starts the next shift and takes that
-                    // shift's lock. Nesting the two locks could deadlock when two shifts
-                    // end concurrently. EndShift itself guarantees it only ends once.
-                    if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
-                        EndShift();
+                    Interlocked.Increment(ref _busyGeneration);
+                    Interlocked.Increment(ref _busyCount);
                 };
+                worker.Idle += (_, _) => OnWorkerIdle();
 
                 worker.Start();
+            }
+        }
+
+        private void OnWorkerIdle()
+        {
+            // Read the generation before the decrement. If any worker raises Busy after
+            // this point, it may run an item that enqueues work into a queue that the
+            // HasWork scan below has already passed. In that case leave ending the
+            // shift to that worker's own Idle event.
+            int busyGeneration = Volatile.Read(ref _busyGeneration);
+
+            // EndShift is deliberately not called while holding _syncRoot:
+            // it raises EndOfShift, which starts the next shift and takes that
+            // shift's lock. Nesting the two locks could deadlock when two shifts
+            // end concurrently. EndShift itself guarantees it only ends once.
+            if (Interlocked.Decrement(ref _busyCount) == 0 &&
+                !HasWork &&
+                Volatile.Read(ref _busyGeneration) == busyGeneration)
+            {
+                EndShift();
             }
         }
 

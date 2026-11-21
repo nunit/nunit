@@ -253,5 +253,86 @@ namespace NUnit.Framework.Tests.Internal
                 _shift.EndOfShift -= OnEndOfShift;
             }
         }
+
+        [Test]
+        public void ShiftDoesNotEndWhileDequeuedItemIsWaitingForBusy()
+        {
+            // Regression test for #5447: a worker that has dequeued an item but not yet
+            // been counted as busy by the shift must still count as work.
+            const int timeout = BusyWorkerFixture.Timeout;
+
+            using var blockedInBusy = new ManualResetEventSlim(initialState: false);
+            using var releaseBusy = new ManualResetEventSlim(initialState: false);
+            using var otherWorkerIdle = new ManualResetEventSlim(initialState: false);
+            using var endOfShift = new ManualResetEventSlim(initialState: false);
+
+            var q = CreateQueue("test");
+            var workers = new[] { new TestWorker(q, "worker-1"), new TestWorker(q, "worker-2") };
+            int blockOnce = 0;
+            TestWorker? blockedWorker = null;
+
+            void BlockFirstWorkerInBusy(TestWorker worker, WorkItem work)
+            {
+                if (Interlocked.Exchange(ref blockOnce, 1) == 0)
+                {
+                    Volatile.Write(ref blockedWorker, worker);
+                    blockedInBusy.Set();
+                    releaseBusy.Wait(timeout);
+                }
+            }
+
+            void SignalOtherWorkerIdle(TestWorker worker, WorkItem work)
+            {
+                if (!ReferenceEquals(worker, Volatile.Read(ref blockedWorker)))
+                    otherWorkerIdle.Set();
+            }
+
+            void OnEndOfShift(WorkShift shift) => endOfShift.Set();
+
+            _shift.AddQueue(q);
+            foreach (var worker in workers)
+            {
+                _shift.Assign(worker);
+
+                // Subscribed before the shift subscribes its own handlers in Start(),
+                // so this runs before the shift counts the worker as busy.
+                worker.Busy += BlockFirstWorkerInBusy;
+            }
+
+            _shift.EndOfShift += OnEndOfShift;
+
+            try
+            {
+                _shift.Start();
+
+                // Subscribed after the shift's handlers, so this runs once the
+                // shift has decided whether to end.
+                foreach (var worker in workers)
+                    worker.Idle += SignalOtherWorkerIdle;
+
+                q.Enqueue(Fakes.GetWorkItem(this, "Test1"));
+                q.Enqueue(Fakes.GetWorkItem(this, "Test1"));
+
+                Assert.That(blockedInBusy.Wait(timeout), Is.True, "No worker got blocked in Busy");
+                Assert.That(otherWorkerIdle.Wait(timeout), Is.True, "Other worker did not become idle");
+
+                using (Assert.EnterMultipleScope())
+                {
+                    Assert.That(q.IsEmpty, Is.True, "Queue should be drained");
+                    Assert.That(endOfShift.IsSet, Is.False, "Shift ended while a dequeued item was not yet executed");
+                    Assert.That(_shift.IsActive, Is.True, "Shift should still be active");
+                }
+
+                releaseBusy.Set();
+
+                Assert.That(endOfShift.Wait(timeout), Is.True, "Shift did not end after the blocked worker completed");
+            }
+            finally
+            {
+                releaseBusy.Set();
+                _shift.ShutDown();
+                _shift.EndOfShift -= OnEndOfShift;
+            }
+        }
     }
 }
