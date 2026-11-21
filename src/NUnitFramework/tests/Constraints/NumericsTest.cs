@@ -1234,6 +1234,39 @@ namespace NUnit.Framework.Tests.Constraints
             ];
         }
 
+        [TestCaseSource(nameof(MixedTypeBoundTestCases))]
+        public void ComparisonRangeUsesTypeOfComparison(object expected, object actual, object amount, bool isNotLess, bool isNotGreater)
+        {
+            // The range is calculated in the type in which equality compares the values.
+            var tolerance = new Tolerance(amount);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Is.GreaterThanOrEqualTo(expected).Within(amount).ApplyTo(actual).IsSuccess, Is.EqualTo(isNotLess), ">=");
+                Assert.That(Is.LessThanOrEqualTo(expected).Within(amount).ApplyTo(actual).IsSuccess, Is.EqualTo(isNotGreater), "<=");
+                Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(isNotLess && isNotGreater), "AreEqual");
+            });
+        }
+
+        private static TestCaseData[] MixedTypeBoundTestCases()
+        {
+            // The upper bound of 0.1f + 0.1, calculated as double.
+            double upperBound = (double)0.1f + 0.1;
+            double aboveUpperBound = BitConverter.Int64BitsToDouble(BitConverter.DoubleToInt64Bits(upperBound) + 1);
+
+            return [
+                // A decimal compared with a double outside the decimal range is compared as double,
+                // so a decimal bound outside the decimal range does not accept every double.
+                new TestCaseData(decimal.MaxValue, 1e29, 1m, true, false),
+                new TestCaseData(decimal.MaxValue, 8e28, 7e26m, true, false),
+                new TestCaseData(decimal.MaxValue, 8e28, 1e28m, true, true),
+                new TestCaseData(decimal.MinValue, -1e29, 1m, false, true),
+                // A float compared with a double is compared as double, which a float range did as well.
+                new TestCaseData(0.1f, upperBound, 0.1, true, true),
+                new TestCaseData(0.1f, aboveUpperBound, 0.1, true, false),
+                new TestCaseData(0.1f, (double)0.1f - 0.1, 0.1, true, true),
+            ];
+        }
+
         [Test]
         public void StrictComparisonsAcceptEveryDecimalBeyondAnOverflowingBound()
         {

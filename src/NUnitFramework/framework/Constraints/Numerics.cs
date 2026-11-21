@@ -876,12 +876,12 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Converts an expected value to the type in which it is compared with the actual value, so the range of a tolerance
-        /// is calculated in that type: an integer expected value when the actual value is a floating point or decimal type,
-        /// and any expected value that is compared as decimal.
+        /// is calculated in that type, unless both are integers. It is converted as AreEqual converts it, so a value is equal
+        /// to it exactly when it is both greater than or equal to and less than or equal to it.
         /// The expected value is often an integer constant, e.g. 0, while the actual value is a double:
         /// a fractional tolerance is then valid, while it is not for an integer actual value.
-        /// A floating point expected value that is compared as decimal is converted as AreEqual converts it,
-        /// so a value is equal to it exactly when it is both greater than or equal to and less than or equal to it.
+        /// A decimal expected value compared with a double outside the decimal range is compared as double,
+        /// so its range is too: a decimal range cannot bound a double beyond it.
         /// </summary>
         internal static object ToComparisonType(object expected, object actual)
         {
@@ -892,14 +892,7 @@ namespace NUnit.Framework.Constraints
             if (IsFixedPointNumeric(expected) && IsFixedPointNumeric(actual))
                 return expected;
 
-            CommonNumericType commonType = GetCommonNumericType(expected, actual);
-            if (commonType == CommonNumericType.Decimal)
-                return ConvertToValue<decimal>(expected);
-
-            if (!IsFixedPointNumeric(expected))
-                return expected;
-
-            return commonType switch
+            return GetCommonNumericType(expected, actual) switch
             {
                 CommonNumericType.Double => ConvertToValue<double>(expected),
                 CommonNumericType.Single => ConvertToValue<float>(expected),
