@@ -13,6 +13,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class StackFilter
     {
+        private const string StackFilterIsForInternalUseOnly = "StackFilter is used internally by NUnit to give clear stack trace of user errors without exposing internal frames.";
+
         private const string DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN = @"^ +\w+:? (?:NUnit\.Framework|NUnitLite)\.";
 
         // Infrastructure frames: reflection invocation, async/await machinery and thread (pool) start-up.
@@ -76,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// Regex pattern for the first line at which the stack trace is cut off,
         /// or <see langword="null"/> to not cut off the stack trace.
         /// </param>
-        [Obsolete("Use StackFilter.Create(nunitStackPattern: topOfStackPattern, systemStackPattern: null, runnerStackPattern: bottomOfStackPattern) instead.")]
+        [Obsolete(StackFilterIsForInternalUseOnly)]
         public StackFilter(string? topOfStackPattern, string? bottomOfStackPattern)
             : this(topOfStackPattern, null, bottomOfStackPattern)
         {
@@ -90,7 +92,7 @@ namespace NUnit.Framework.Internal
         /// Despite its name, the pattern is not restricted to the top of the stack trace.
         /// </remarks>
         /// <param name="topOfStackPattern">Regex pattern used to delete matching lines anywhere in the stack trace.</param>
-        [Obsolete("Use StackFilter.Create(nunitStackPattern) instead.")]
+        [Obsolete(StackFilterIsForInternalUseOnly)]
         public StackFilter(string topOfStackPattern)
             : this(topOfStackPattern, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN)
         {
