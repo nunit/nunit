@@ -31,12 +31,23 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Type? actualType = GetActualType(actual);
+            Type? actualType;
+            bool success;
+            if (UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            {
+                actualType = unionValue?.GetType();
+                success = Matches(unionValue);
+            }
+            else
+            {
+                actualType = GetActualType(actual);
+                success = Matches(actual);
+            }
 
             if (actual is Exception)
-                return new ConstraintResult(this, actual, Matches(actual));
+                return new ConstraintResult(this, actual, success);
 
-            return new ConstraintResult(this, actualType, Matches(actual));
+            return new ConstraintResult(this, actualType, success);
         }
 
         private protected static Type? GetActualType<TActual>(TActual? actual)
@@ -103,12 +114,22 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            actualType = UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
+            object? actualValue;
+            if (UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            {
+                actualType = unionValue?.GetType();
+                actualValue = unionValue;
+            }
+            else
+            {
+                actualType = actual?.GetType();
+                actualValue = actual;
+            }
 
-            if (actual is Exception)
-                return new ConstraintResult(this, actual, Matches(actual));
+            if (actualValue is Exception)
+                return new ConstraintResult(this, actual, Matches(actualValue));
 
-            return new ConstraintResult(this, actualType, Matches(actual));
+            return new ConstraintResult(this, actualType, Matches(actualValue));
         }
 
         /// <summary>

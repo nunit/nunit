@@ -378,6 +378,9 @@ namespace NUnit.Framework.Internal
             if (BuiltInNumericalConversions.TryGetValue(from, out var types) && types.Contains(to))
                 return true;
 
+            if (UnionHelper.TryGetUnionMemberTypes(to, out var memberTypes) && memberTypes.Any(t => t.CanImplicitlyConvertTo(from)))
+                return true;
+
             return from
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Any(m => m.ReturnType == to && m.Name == "op_Implicit");

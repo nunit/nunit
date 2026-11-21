@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -89,6 +90,28 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     TypeArgs = typeArgs
                 }.SetArgDisplayNames("generic");
+            }
+        }
+
+        [Test]
+        public static void UnionCases()
+        {
+            UnionMember member = new();
+
+            // The code below is what the compiler allows, so should we.
+            GeneratedUnionType generatedUnion = member;
+            CustomUnionType customUnion = member;
+            ExplicitIUnionType explicitUnion = member;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(generatedUnion, Is.AssignableFrom<UnionMember>());
+                Assert.That(customUnion, Is.AssignableFrom<UnionMember>());
+                Assert.That(explicitUnion, Is.AssignableFrom<UnionMember>());
+
+                Assert.That(generatedUnion, Is.AssignableFrom(typeof(UnionMember)));
+                Assert.That(customUnion, Is.AssignableFrom(typeof(UnionMember)));
+                Assert.That(explicitUnion, Is.AssignableFrom(typeof(UnionMember)));
             }
         }
     }
