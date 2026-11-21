@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            return GetActualType(actual) == typeof(TExpected);
+            return actual?.GetType() == typeof(TExpected);
         }
     }
 
