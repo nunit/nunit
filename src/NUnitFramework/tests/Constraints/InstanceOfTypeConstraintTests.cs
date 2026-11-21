@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
@@ -102,16 +101,15 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(GetUnionTestCases))]
         public void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
         {
-            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf<int>(), u, typeof(TUnion));
-            AssertFailureMessageUsesContainedUnionType(Is.InstanceOf(typeof(int)), u, typeof(TUnion));
-        }
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.InstanceOf<int>(),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
 
-        private static void AssertFailureMessageUsesContainedUnionType(IConstraint constraint, object? actual, Type unionType)
-        {
-            var message = constraint.ApplyTo(actual).GetFailureMessage();
-
-            Assert.That(message, Does.Contain(typeof(UnionMember).Name));
-            Assert.That(message, Does.Not.Contain(unionType.Name));
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.InstanceOf(typeof(int)),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
         }
     }
 }
