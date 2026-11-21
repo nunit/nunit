@@ -25,8 +25,12 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value.</param>
         /// <param name="getTicks">Method to extract the Ticks from an instance of <typeparamref name="T"/>.</param>
         /// <param name="tolerance">The tolerance to apply when qualified with a unit.</param>
+        /// <exception cref="ArgumentException">The tolerance is NaN or infinite.</exception>
         public EqualTimeBasedConstraintWithNumericTolerance(T expected, Func<T, long> getTicks, double tolerance)
         {
+            if (double.IsNaN(tolerance) || double.IsInfinity(tolerance))
+                throw new ArgumentException("Tolerance amount must not be NaN or infinite", nameof(tolerance));
+
             _expected = expected;
             _tolerance = tolerance;
             _getTicks = getTicks;
@@ -75,7 +79,19 @@ namespace NUnit.Framework.Constraints
         /// Causes the tolerance to be interpreted as a TimeSpan in clock ticks.
         /// </summary>
         /// <returns>Self</returns>
-        public EqualTimeBasedConstraintWithTimeSpanTolerance<T> Ticks => Within(TimeSpan.FromTicks((long)_tolerance));
+        /// <exception cref="InvalidOperationException">The tolerance is not a whole number.</exception>
+        /// <exception cref="OverflowException">The tolerance is outside the range of <see cref="long"/>.</exception>
+        public EqualTimeBasedConstraintWithTimeSpanTolerance<T> Ticks
+        {
+            get
+            {
+                // Ticks are whole numbers, so a fractional tolerance cannot be meant.
+                if (Math.Floor(_tolerance) != _tolerance)
+                    throw new InvalidOperationException($"Tolerance {_tolerance} must be a whole number of ticks");
+
+                return Within(TimeSpan.FromTicks(checked((long)_tolerance)));
+            }
+        }
 
         private EqualTimeBasedConstraintWithTimeSpanTolerance<T> Within(TimeSpan amount)
         {

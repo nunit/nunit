@@ -21,6 +21,8 @@ namespace NUnit.Framework.Constraints
         private const string MultipleToleranceModes = "Tried to use multiple tolerance modes at the same time";
         private const string NumericToleranceRequired = "A numeric tolerance is required";
         private const string NoNegativeTolerance = "Tolerance amount must not be negative";
+        private const string NoNaNOrInfiniteTolerance = "Tolerance amount must not be NaN or infinite";
+        private const string PercentageOutsideDecimalRange = "A percentage tolerance must be within the range of decimal";
 
         /// <summary>
         /// Returns a default Tolerance object, equivalent to a default matching rules.
@@ -39,6 +41,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs a linear tolerance of a specified amount
         /// </summary>
+        /// <exception cref="ArgumentException">The amount is negative, NaN or infinite.</exception>
         public Tolerance(object amount) : this(amount, ToleranceMode.Linear)
         {
         }
@@ -48,6 +51,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private Tolerance(object amount, ToleranceMode mode)
         {
+            if (Numerics.IsNaNOrInfinity(amount))
+                throw new ArgumentException(NoNaNOrInfiniteTolerance);
+
             CheckNotNegative(amount);
             Amount = amount;
             Mode = mode;
@@ -60,11 +66,17 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a new tolerance, using the current amount as a percentage.
         /// </summary>
+        /// <exception cref="InvalidOperationException">The amount is outside the range of decimal.</exception>
         public Tolerance Percent
         {
             get
             {
                 CheckLinearAndNumeric();
+
+                // A larger percentage is not meaningful, as it allows practically any difference.
+                if (!Numerics.IsWithinDecimalRange(Amount))
+                    throw new InvalidOperationException(PercentageOutsideDecimalRange);
+
                 return new Tolerance(Amount, ToleranceMode.Percent);
             }
         }
@@ -90,7 +102,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromDays(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromDays(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -103,7 +115,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromHours(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromHours(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -116,7 +128,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMinutes(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromMinutes(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -129,7 +141,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromSeconds(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromSeconds(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -142,7 +154,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromMilliseconds(Convert.ToDouble(Amount)));
+                return new Tolerance(TimeSpan.FromMilliseconds(Numerics.ConvertToValue<double>(Amount)));
             }
         }
 
@@ -150,12 +162,18 @@ namespace NUnit.Framework.Constraints
         /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of clock ticks.
         /// </summary>
+        /// <exception cref="InvalidOperationException">The amount is not a whole number.</exception>
         public Tolerance Ticks
         {
             get
             {
                 CheckLinearAndNumeric();
-                return new Tolerance(TimeSpan.FromTicks(Convert.ToInt64(Amount)));
+
+                // Ticks are whole numbers, so a fractional tolerance cannot be meant.
+                if (!Numerics.IsWholeNumber(Amount))
+                    throw new InvalidOperationException($"Tolerance {Amount} must be a whole number of ticks");
+
+                return new Tolerance(TimeSpan.FromTicks(Numerics.ConvertToValue<long>(Amount)));
             }
         }
 
@@ -205,7 +223,14 @@ namespace NUnit.Framework.Constraints
         /// Apply the tolerance to an expected value and return
         /// a Tolerance.Range that represents the acceptable values.
         /// </summary>
-        public Range ApplyToValue(object value)
+        public Range ApplyToValue(object value) => ApplyToValue(value, forStrictComparison: false);
+
+        /// <summary>
+        /// Apply the tolerance to an expected value and return a Tolerance.Range that represents the acceptable values,
+        /// for > and &lt; when <paramref name="forStrictComparison"/> is set, otherwise for >= and &lt;=.
+        /// They differ only for a decimal bound that cannot be represented exactly.
+        /// </summary>
+        private Range ApplyToValue(object value, bool forStrictComparison)
         {
             // TODO: This should really be a generic, but we will
             // first have to make Tolerance and the constraints
@@ -217,11 +242,26 @@ namespace NUnit.Framework.Constraints
                     return new Range(value, value);
 
                 case ToleranceMode.Linear:
-                    return LinearRange(value);
+                    return LinearRange(value, forStrictComparison);
 
                 case ToleranceMode.Percent:
-                    return PercentRange(value);
+                    return PercentRange(value, forStrictComparison);
             }
+        }
+
+        /// <summary>
+        /// Apply the tolerance to an expected value that is compared with an actual value and return
+        /// a Tolerance.Range that represents the acceptable values. An integer expected value is
+        /// converted to the type in which it is compared with a floating point or decimal actual value first.
+        /// The range is for > and &lt; when <paramref name="forStrictComparison"/> is set, otherwise for >= and &lt;=.
+        /// </summary>
+        internal Range ApplyToValue(object expected, object actual, bool forStrictComparison)
+        {
+            // Check both values as given, as only an integer expected value is converted to the type of the actual value.
+            if (expected is decimal || actual is decimal)
+                Numerics.CheckDecimalTolerance(this);
+
+            return ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual), forStrictComparison);
         }
 
         #endregion
@@ -258,189 +298,23 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException(NumericToleranceRequired);
         }
 
-        private Range LinearRange(object value)
+        private Range LinearRange(object value, bool forStrictComparison)
         {
-            if (Amount is double || value is double)
-            {
-                var v = Numerics.ConvertToValue<double>(value);
-                var offset = Numerics.ConvertToValue<double>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-            if (Amount is float || value is float)
-            {
-                var v = Numerics.ConvertToValue<float>(value);
-                var offset = Numerics.ConvertToValue<float>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-#if !NETFRAMEWORK
-            if (Amount is Half || value is Half)
-            {
-                var v = Numerics.ConvertToValue<Half>(value);
-                var offset = Numerics.ConvertToValue<Half>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((decimal)v - (decimal)offset, (decimal)v + (decimal)offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-#endif
-
-            if (Amount is decimal || value is decimal)
-            {
-                var v = Numerics.ConvertToValue<decimal>(value);
-                var offset = Numerics.ConvertToValue<decimal>(Amount);
-
-                return new Range(v - offset, v + offset);
-            }
-
-#if !NETFRAMEWORK
-            if (Amount is UInt128 || value is UInt128)
-            {
-                var v = Numerics.ConvertToValue<UInt128>(value);
-                var offset = Numerics.ConvertToValue<UInt128>(Amount);
-
-                // We can type promote smaller precision types, but not here
-                // So we naively calculate the range and let it overflow if needed.
-                // There is not much we can do about it, and this will provide the clearest failure message.
-                return new Range(v - offset, v + offset);
-            }
-
-            if (Amount is Int128 || value is Int128)
-            {
-                var v = Numerics.ConvertToValue<Int128>(value);
-                var offset = Numerics.ConvertToValue<Int128>(Amount);
-
-                // We can type promote smaller precision types, but not here
-                // So we naively calculate the range and let it overflow if needed.
-                // There is not much we can do about it, and this will provide the clearest failure message.
-                return new Range(v - offset, v + offset);
-            }
-#endif
-
-            if (Amount is nuint || value is nuint)
-            {
-                var v = Numerics.ConvertToValue<nuint>(value);
-                var offset = Numerics.ConvertToValue<nuint>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is nint || value is nint)
-            {
-                var v = Numerics.ConvertToValue<nint>(value);
-                var offset = Numerics.ConvertToValue<nint>(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is ulong || value is ulong)
-            {
-                var v = Convert.ToUInt64(value);
-                var offset = Convert.ToUInt64(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is long || value is long)
-            {
-                var v = Convert.ToInt64(value);
-                var offset = Convert.ToInt64(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return GetInt128Range(v, offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Amount is uint || value is uint)
-            {
-                var v = Convert.ToUInt32(value);
-                var offset = Convert.ToUInt32(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((long)v - offset, (long)v + offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
-            if (Numerics.IsFixedPointNumeric(Amount) && Numerics.IsFixedPointNumeric(value))
-            {
-                var v = Convert.ToInt32(value);
-                var offset = Convert.ToInt32(Amount);
-
-                var lowerBound = v - offset;
-                var upperBound = v + offset;
-
-                if (lowerBound >= v || upperBound <= v) // overflow or underflow
-                    return new Range((long)v - offset, (long)v + offset);
-
-                return new Range(lowerBound, upperBound);
-            }
-
             if (Amount is TimeSpan interval && value is DateTime dateTime)
-            {
                 return new Range(dateTime - interval, dateTime + interval);
-            }
 
-            throw new InvalidOperationException("Cannot create range for a non-numeric value");
+            if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
+                throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            static Range GetInt128Range(object value, object amount)
-            {
-#if !NETFRAMEWORK
-                var v = Numerics.ConvertToValue<Int128>(value);
-                var offset = Numerics.ConvertToValue<Int128>(amount);
-                return new Range(v - offset, v + offset);
-#else
-                throw new InvalidOperationException("The requested values are out of calculable range.");
-#endif
-            }
+            return Numerics.LinearRange(value, Amount, forStrictComparison);
         }
 
-        private Range PercentRange(object value)
+        private Range PercentRange(object value, bool forStrictComparison)
         {
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            double v = value is IConvertible ? Convert.ToDouble(value) : Numerics.ConvertToValue<double>(value);
-            double amount = Amount is IConvertible ? Convert.ToDouble(Amount) : Numerics.ConvertToValue<double>(Amount);
-
-            // Calculate the absolute value of the offset in case 'value' is negative to ensure lower bounds is always less than upper bounds
-            double offset = Math.Abs(v * amount / 100.0);
-
-            double lowerBound = v - offset;
-            double upperBound = v + offset;
-            return new Range(lowerBound, upperBound);
+            return Numerics.PercentRange(value, Amount, forStrictComparison);
         }
 
         #endregion
