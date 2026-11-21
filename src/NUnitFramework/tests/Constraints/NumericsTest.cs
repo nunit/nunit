@@ -1032,9 +1032,10 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData((Half)60000, new Tolerance(64), (Half)59936, (Half)60064),
 #endif
 
-                // A decimal bound that does not fit in a decimal uses double, the other bound stays exact.
-                new TestCaseData(decimal.MaxValue, new Tolerance(1m), decimal.MaxValue - 1, (double)decimal.MaxValue + 1),
-                new TestCaseData(decimal.MinValue, new Tolerance(1m), (double)decimal.MinValue - 1, decimal.MinValue + 1),
+                // A decimal bound that does not fit in a decimal is a double beyond every decimal, the other bound stays exact.
+                // It is not (double)decimal.MaxValue, which decimal.MaxValue is compared as, so it would not be less than it.
+                new TestCaseData(decimal.MaxValue, new Tolerance(1m), decimal.MaxValue - 1, 2 * (double)decimal.MaxValue),
+                new TestCaseData(decimal.MinValue, new Tolerance(1m), 2 * (double)decimal.MinValue, decimal.MinValue + 1),
 
                 // A whole bound that does not fit in the type of the value uses the next wider integer type, as C# promotes:
                 // long for 32-bit values and Int128 for 64-bit values. The other bound keeps the type of the value.
@@ -1187,6 +1188,62 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(decimal.MaxValue, decimal.MaxValue / 2, 50),
                 new TestCaseData(decimal.MinValue, 0m, 100m),
             ];
+        }
+
+        [TestCaseSource(nameof(DecimalBoundTestCases))]
+        public void DecimalToleranceBoundsAreExact(decimal expected, decimal actual, Tolerance tolerance, bool isNotLess, bool isNotGreater)
+        {
+            // actual >= expected - offset, actual <= expected + offset and equality, which is both,
+            // also where expected ± offset needs more digits than a decimal has or is outside the decimal range.
+            Assert.Multiple(() =>
+            {
+                Assert.That(WithTolerance(Is.GreaterThanOrEqualTo(expected), tolerance).ApplyTo(actual).IsSuccess, Is.EqualTo(isNotLess), ">=");
+                Assert.That(WithTolerance(Is.LessThanOrEqualTo(expected), tolerance).ApplyTo(actual).IsSuccess, Is.EqualTo(isNotGreater), "<=");
+                Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(isNotLess && isNotGreater), "AreEqual");
+            });
+        }
+
+        private static ComparisonConstraint WithTolerance(ComparisonConstraint constraint, Tolerance tolerance)
+            => tolerance.Mode == ToleranceMode.Percent ? constraint.Within(tolerance.Amount).Percent : constraint.Within(tolerance.Amount);
+
+        private static TestCaseData[] DecimalBoundTestCases()
+        {
+            // 1e-26 percent of decimal.MaxValue is 7.9228162514264337593543950335.
+            const decimal tinyPercentage = 0.00000000000000000000000001m;
+            return [
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 1m, new Tolerance(0m).Percent, false, true),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 100m, new Tolerance(tinyPercentage).Percent, false, true),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 8m, new Tolerance(tinyPercentage).Percent, false, true),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 7m, new Tolerance(tinyPercentage).Percent, true, true),
+                new TestCaseData(decimal.MinValue, decimal.MinValue + 8m, new Tolerance(tinyPercentage).Percent, true, false),
+                new TestCaseData(decimal.MinValue, decimal.MinValue + 7m, new Tolerance(tinyPercentage).Percent, true, true),
+                // 9e27 ± 0.6 rounds to 9e27 ± 1.
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(0.6m), true, false),
+                new TestCaseData(9e27m, 9e27m - 1m, new Tolerance(0.6m), false, true),
+                new TestCaseData(-9e27m, -9e27m + 1m, new Tolerance(0.6m), true, false),
+                new TestCaseData(-9e27m, -9e27m - 1m, new Tolerance(0.6m), false, true),
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(1m), true, true),
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(0.0000000000000000000000000067m).Percent, true, false),
+                new TestCaseData(-9e27m, -9e27m - 1m, new Tolerance(0.0000000000000000000000000067m).Percent, false, true),
+                // A bound outside the decimal range is beyond every decimal, the other bound is exact.
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 1m, new Tolerance(0.6m), false, true),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue - 1m, new Tolerance(1m), true, true),
+                new TestCaseData(decimal.MinValue, decimal.MinValue + 1m, new Tolerance(0.6m), true, false),
+                new TestCaseData(decimal.MaxValue, 0m, new Tolerance(50m).Percent, false, true),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue / 2, new Tolerance(50m).Percent, true, true),
+            ];
+        }
+
+        [Test]
+        public void StrictComparisonsAcceptEveryDecimalBeyondAnOverflowingBound()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(decimal.MaxValue, Is.LessThan(decimal.MaxValue).Within(1m));
+                Assert.That(decimal.MinValue, Is.GreaterThan(decimal.MinValue).Within(1m));
+                Assert.That(decimal.MaxValue, Is.LessThan(decimal.MaxValue).Within(1m).Percent);
+                Assert.That(decimal.MinValue, Is.GreaterThan(decimal.MinValue).Within(1m).Percent);
+            });
         }
 
         private static TestCaseData[] ToleranceTestCases()
