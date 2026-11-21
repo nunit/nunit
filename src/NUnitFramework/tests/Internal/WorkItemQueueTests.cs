@@ -127,6 +127,36 @@ namespace NUnit.Framework.Tests.Internal
             VerifyQueueContents(names);
         }
 
+        [Test]
+        public void HasWorkUntilDequeuedItemIsCompleted()
+        {
+            Assert.That(_queue.HasWork, Is.False, "Should not have work initially");
+
+            EnqueueWorkItem("Test1");
+            Assert.That(_queue.HasWork, Is.True, "Should have work after enqueue");
+
+            _queue.Start();
+            Assert.That(_queue.TryDequeue(out _), Is.True, "Should dequeue an item");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_queue.IsEmpty, Is.True, "Queue should be empty after dequeue");
+                Assert.That(_queue.HasWork, Is.True, "Dequeued item is still in flight");
+            }
+
+            _queue.ItemCompleted();
+            Assert.That(_queue.HasWork, Is.False, "Should not have work after item completed");
+        }
+
+        [Test]
+        public void DequeueDoesNotTrackItemInFlight()
+        {
+            EnqueueWorkItem("Test1");
+            _queue.Start();
+
+            Assert.That(_queue.Dequeue(), Is.Not.Null, "Should dequeue an item");
+            Assert.That(_queue.HasWork, Is.False, "Dequeue should not track the item as in flight");
+        }
+
         private const int HIGH_PRIORITY = 0;
         private const int NORMAL_PRIORITY = 1;
 

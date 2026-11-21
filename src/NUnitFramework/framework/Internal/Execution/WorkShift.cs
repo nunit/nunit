@@ -31,7 +31,18 @@ namespace NUnit.Framework.Internal.Execution
         private static readonly Logger Log = InternalTrace.GetLogger("WorkShift");
 
         private readonly Lock _syncRoot = new();
+
+        // Guards _busyCount and _busyGeneration so that an idle worker can take a
+        // generation snapshot atomically with the decrement that makes the count zero.
+        private readonly Lock _busyLock = new();
         private int _busyCount = 0;
+
+        // Incremented on every Busy event, never decremented. Lets an idle worker
+        // detect that another worker became busy while it was checking for work.
+        private int _busyGeneration;
+
+        // Only written while holding _syncRoot. Volatile so IsActive can be read without the lock.
+        private volatile bool _active;
 
         /// <summary>
         /// Construct a WorkShift
@@ -39,7 +50,6 @@ namespace NUnit.Framework.Internal.Execution
         public WorkShift(string name)
         {
             Name = name;
-            IsActive = false;
         }
 
         #region Public Events and Properties
@@ -57,7 +67,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets a flag indicating whether the shift is currently active
         /// </summary>
-        public bool IsActive { get; private set; }
+        public bool IsActive => _active;
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do
@@ -66,9 +76,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
+                // WorkItemQueue.HasWork includes items dequeued by a worker but not yet
+                // completed, so a worker that has just taken an item counts as work even
+                // before it raises its Busy event.
                 foreach (var q in Queues)
                 {
-                    if (!q.IsEmpty)
+                    if (q.HasWork)
                         return true;
                 }
 
@@ -84,13 +97,13 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets a list of the queues associated with this shift.
         /// </summary>
         /// <remarks>Internal for testing - immutable once initialized</remarks>
-        internal IList<WorkItemQueue> Queues { get; } = new List<WorkItemQueue>();
+        internal List<WorkItemQueue> Queues { get; } = new();
 
         /// <summary>
         /// Gets the list of workers associated with this shift.
         /// </summary>
         /// <remarks>Internal for testing - immutable once initialized</remarks>
-        internal IList<TestWorker> Workers { get; } = new List<TestWorker>();
+        internal List<TestWorker> Workers { get; } = new();
 
         #endregion
 
@@ -128,44 +141,75 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            Log.Info("{0} shift starting", Name);
-
-            IsActive = true;
-
-            if (_firstStart)
+            lock (_syncRoot)
             {
-                _firstStart = false;
-                StartWorkers();
-            }
+                if (_active)
+                {
+                    Log.Info("{0} shift already started", Name);
+                    return;
+                }
 
-            foreach (var q in Queues)
-                q.Start();
+                Log.Info("{0} shift starting", Name);
+
+                _active = true;
+
+                if (_firstStart)
+                {
+                    _firstStart = false;
+                    StartWorkers();
+                }
+
+                foreach (var q in Queues)
+                    q.Start();
+            }
         }
 
         private void StartWorkers()
         {
             foreach (var worker in Workers)
             {
-                worker.Busy += (_, _) => Interlocked.Increment(ref _busyCount);
-                worker.Idle += (_, _) =>
-                {
-                    // Quick check first using Interlocked.Decrement
-                    if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
-                    {
-                        lock (_syncRoot)
-                        {
-                            // Check again under the lock. If there is no work
-                            // we can end the shift.
-                            if (_busyCount == 0 && !HasWork)
-                            {
-                                EndShift();
-                            }
-                        }
-                    }
-                };
+                worker.Busy += (_, _) => OnWorkerBusy();
+                worker.Idle += (_, _) => OnWorkerIdle();
 
                 worker.Start();
             }
+        }
+
+        private void OnWorkerBusy()
+        {
+            lock (_busyLock)
+            {
+                _busyGeneration++;
+                _busyCount++;
+            }
+        }
+
+        private void OnWorkerIdle()
+        {
+            int busyGeneration;
+
+            lock (_busyLock)
+            {
+                // Only the worker whose decrement makes the count zero checks for the end
+                // of the shift. Taking the generation snapshot in the same step means any
+                // worker that raises Busy afterwards will itself be counted, and so the
+                // last of them to become idle performs the check again.
+                if (--_busyCount != 0)
+                    return;
+
+                busyGeneration = _busyGeneration;
+            }
+
+            // If another worker raised Busy during the HasWork scan, it may have run an
+            // item that enqueued work into a queue the scan had already passed. Leave
+            // ending the shift to that worker's own Idle event.
+            //
+            // EndShift is deliberately not called while holding a lock: it raises
+            // EndOfShift, which starts the next shift and takes that shift's lock.
+            // Nesting the locks could deadlock when two shifts end concurrently.
+            // EndShift itself guarantees it only ends once.
+            if (!HasWork && Volatile.Read(ref _busyGeneration) == busyGeneration)
+                EndShift();
         }
 
         /// <summary>
@@ -174,15 +218,25 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            Log.Info("{0} shift ending", Name);
+            lock (_syncRoot)
+            {
+                if (!_active)
+                {
+                    Log.Info("{0} shift already ended", Name);
+                    return;
+                }
 
-            IsActive = false;
+                Log.Info("{0} shift ending", Name);
 
-            // Pause all queues for this shift
-            foreach (var q in Queues)
-                q.Pause();
+                _active = false;
 
-            // Signal the dispatcher that shift ended
+                // Pause all queues for this shift
+                foreach (var q in Queues)
+                    q.Pause();
+            }
+
+            // Signal the dispatcher that shift ended.
+            // Raised outside the lock, see the Idle handler in StartWorkers.
             EndOfShift?.Invoke(this);
         }
 
@@ -191,10 +245,17 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void ShutDown()
         {
-            IsActive = false;
+            lock (_syncRoot)
+            {
+                if (_active)
+                {
+                    Log.Info("{0} shutdown with active shift", Name);
+                    _active = false;
+                }
 
-            foreach (var q in Queues)
-                q.Stop();
+                foreach (var q in Queues)
+                    q.Stop();
+            }
         }
 
         /// <summary>

@@ -49,6 +49,17 @@ namespace NUnit.Framework.Tests.TestUtilities
             return GetWorkItem(GetTestMethod(type, name));
         }
 
+        public static FakeWorkItem GetWorkItem(Action testAction)
+        {
+            System.Reflection.MethodInfo method = testAction.Method;
+            Type type = method.DeclaringType ?? typeof(Fakes);
+            string name = method.Name;
+
+            var workItem = GetWorkItem(GetTestMethod(type, name));
+            workItem.TestAction = testAction;
+            return workItem;
+        }
+
         public static FakeWorkItem GetWorkItem(object obj, string name, TestExecutionContext context)
         {
             return GetWorkItem(obj.GetType(), name, context);
@@ -91,6 +102,8 @@ namespace NUnit.Framework.Tests.TestUtilities
     {
         public event EventHandler? Executed;
 
+        public Action? TestAction { get; set; }
+
         public FakeWorkItem(Test test)
             : this(test, new TestExecutionContext())
         {
@@ -104,6 +117,7 @@ namespace NUnit.Framework.Tests.TestUtilities
 
         public override void Execute()
         {
+            TestAction?.Invoke();
             Executed?.Invoke(this, EventArgs.Empty);
         }
 

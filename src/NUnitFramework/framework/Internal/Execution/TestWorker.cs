@@ -81,6 +81,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private WorkItem? _currentWorkItem;
 
+        /// <summary>
+        /// Indicates whether the worker is currently executing a WorkItem
+        /// </summary>
+        internal bool IsBusy => _currentWorkItem is not null;
+
         private void TestWorkerThreadProc()
         {
             _running = true;
@@ -89,8 +94,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (_running)
                 {
-                    _currentWorkItem = WorkQueue.Dequeue();
-                    if (_currentWorkItem is null)
+                    if (!WorkQueue.TryDequeue(out _currentWorkItem))
                         break;
 
                     Log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
@@ -110,10 +114,15 @@ namespace NUnit.Framework.Internal.Execution
                     // is saved, its children end up in the new queue set.
                     _currentWorkItem.Execute();
 
+                    WorkItem lastWorkItem = Interlocked.Exchange(ref _currentWorkItem, null);
+
+                    // Must happen before Idle, so the shift sees no work in flight for this worker.
+                    WorkQueue.ItemCompleted();
+
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
                     // the queues unless all child items have finished.
-                    Idle?.Invoke(this, _currentWorkItem);
+                    Idle?.Invoke(this, lastWorkItem);
 
                     ++_workItemCount;
                 }
@@ -160,9 +169,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_cancelLock)
             {
-                if (_workerThread is not null && _currentWorkItem is not null)
+                // Read the field once: the worker thread resets it to null after
+                // each item, which could happen between a check and the call.
+                WorkItem? currentWorkItem = Volatile.Read(ref _currentWorkItem);
+                if (_workerThread is not null && currentWorkItem is not null)
                 {
-                    _currentWorkItem.Cancel();
+                    currentWorkItem.Cancel();
                 }
             }
         }
