@@ -1081,6 +1081,114 @@ namespace NUnit.Framework.Tests.Constraints
             return Numerics.AreEqual(expected, actual, ref tolerance);
         }
 
+        [TestCaseSource(nameof(FloatToleranceForDecimalTestCases))]
+        public void FloatToleranceForDecimalThrows(object expected, object actual, Tolerance tolerance)
+        {
+            // A float cannot represent most decimal amounts, e.g. 0.7f is 0.699999988079071,
+            // so equality and the comparison constraints, in either operand order, require a decimal or double tolerance.
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => Numerics.AreEqual(expected, actual, ref tolerance), Throws.InvalidOperationException);
+                Assert.That(() => Numerics.AreEqual(actual, expected, ref tolerance), Throws.InvalidOperationException);
+                Assert.That(() => tolerance.ApplyToValue(expected, actual), Throws.InvalidOperationException);
+                Assert.That(() => tolerance.ApplyToValue(actual, expected), Throws.InvalidOperationException);
+            }
+        }
+
+        private static TestCaseData[] FloatToleranceForDecimalTestCases()
+        {
+            return [
+                new TestCaseData(1m, 1.1m, new Tolerance(0.1f)),
+                new TestCaseData(100m, 100000000100m, new Tolerance(1e11f).Percent),
+                new TestCaseData(1m, 1.1, new Tolerance(0.1f)),
+                new TestCaseData(1m, 2, new Tolerance(1f)),
+#if !NETFRAMEWORK
+                new TestCaseData(1m, 1.1m, new Tolerance((Half)0.1)),
+#endif
+            ];
+        }
+
+        [TestCaseSource(nameof(ToleranceOutsideDecimalRangeTestCases))]
+        public void ToleranceOutsideDecimalRangeThrowsForEitherOperandOrder(object expected, object actual)
+        {
+            // Copilot review: Is.GreaterThan(0d).Within(1e30).ApplyTo(0m) succeeded, while the reverse threw.
+            var tolerance = new Tolerance(1e30);
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(() => Numerics.AreEqual(expected, actual, ref tolerance), Throws.InvalidOperationException);
+                Assert.That(() => Numerics.AreEqual(actual, expected, ref tolerance), Throws.InvalidOperationException);
+                Assert.That(() => Is.GreaterThan(expected).Within(1e30).ApplyTo(actual), Throws.InvalidOperationException);
+                Assert.That(() => Is.GreaterThan(actual).Within(1e30).ApplyTo(expected), Throws.InvalidOperationException);
+                Assert.That(() => Is.LessThanOrEqualTo(expected).Within(1e30).ApplyTo(actual), Throws.InvalidOperationException);
+                Assert.That(() => Is.LessThanOrEqualTo(actual).Within(1e30).ApplyTo(expected), Throws.InvalidOperationException);
+            }
+        }
+
+        private static TestCaseData[] ToleranceOutsideDecimalRangeTestCases()
+        {
+            return [
+                new TestCaseData(0d, 0m),
+                new TestCaseData(0f, 0m),
+                new TestCaseData(0, 0m),
+                new TestCaseData(0m, 0m),
+            ];
+        }
+
+        [TestCaseSource(nameof(DecimalLinearConsistencyTestCases))]
+        public void DecimalLinearEqualityAgreesWithComparisons(object expected, object actual, object amount)
+        {
+            // Equal exactly when both greater than or equal to and less than or equal to the expected value.
+            var tolerance = new Tolerance(amount);
+            bool areEqual = Numerics.AreEqual(expected, actual, ref tolerance);
+            bool isGreaterThanOrEqual = Is.GreaterThanOrEqualTo(expected).Within(amount).ApplyTo(actual).IsSuccess;
+            bool isLessThanOrEqual = Is.LessThanOrEqualTo(expected).Within(amount).ApplyTo(actual).IsSuccess;
+
+            Assert.That(areEqual, Is.EqualTo(isGreaterThanOrEqual && isLessThanOrEqual));
+        }
+
+        private static TestCaseData[] DecimalLinearConsistencyTestCases()
+        {
+            // A double expected value is compared as decimal, also for the comparison constraints,
+            // so the result is consistent, whatever the conversion of the runtime gives.
+            return [
+                new TestCaseData(-914.4d, -914.5m, 0.1),
+                new TestCaseData(0.26d, 0.36m, 0.1),
+                new TestCaseData(0.9d, 1.2m, 0.3),
+                new TestCaseData(-102.705d, -102.405m, 0.3),
+                new TestCaseData(1m, 1.1m, 0.1),
+            ];
+        }
+
+        [TestCaseSource(nameof(DecimalPercentConsistencyTestCases))]
+        public void DecimalPercentEqualityAgreesWithComparisons(object expected, object actual, object percentage)
+        {
+            // Equal exactly when both greater than or equal to and less than or equal to the expected value.
+            var tolerance = new Tolerance(percentage).Percent;
+            bool areEqual = Numerics.AreEqual(expected, actual, ref tolerance);
+            bool isGreaterThanOrEqual = Is.GreaterThanOrEqualTo(expected).Within(percentage).Percent.ApplyTo(actual).IsSuccess;
+            bool isLessThanOrEqual = Is.LessThanOrEqualTo(expected).Within(percentage).Percent.ApplyTo(actual).IsSuccess;
+
+            Assert.That(areEqual, Is.EqualTo(isGreaterThanOrEqual && isLessThanOrEqual));
+        }
+
+        private static TestCaseData[] DecimalPercentConsistencyTestCases()
+        {
+            return [
+                new TestCaseData(-1d, -2m, 99.99999999999999),
+                // The percentage is used as written, not as its binary value 99999999999.99998474121094.
+                new TestCaseData(100m, 100000000100m, 1e11),
+                new TestCaseData(100m, 100000000101m, 1e11),
+                new TestCaseData(1000m, 1003m, 0.3),
+                new TestCaseData(1000m, 997m, 0.3),
+                new TestCaseData(1000m, 1003.0000000001m, 0.3),
+                new TestCaseData(-1d, decimal.MaxValue, 200),
+                new TestCaseData(decimal.MaxValue, -1d, 200),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue / 2, 50),
+                new TestCaseData(decimal.MinValue, 0m, 100m),
+            ];
+        }
+
         private static TestCaseData[] ToleranceTestCases()
         {
             return [
@@ -1105,11 +1213,12 @@ namespace NUnit.Framework.Tests.Constraints
                 new TestCaseData(-1L, ulong.MaxValue, new Tolerance(1)) { ExpectedResult = false },
 
                 // A binary floating point amount is the decimal value it is written as, as for comparison ranges:
-                // 1e11f is 10^11, not 99999997952, 1e20f is 10^20, not 100000002004087734272, and 0.1f is 0.1.
+                // 1e11f is 10^11, not 99999997952, 1e20f is 10^20, not 100000002004087734272, and 0.1 is 0.1.
+                // A float tolerance cannot be used for decimal values, see FloatToleranceForDecimalThrows.
                 new TestCaseData(0L, 100000000000L, new Tolerance(1e11f)) { ExpectedResult = true },
                 new TestCaseData(0L, 100000000001L, new Tolerance(1e11f)) { ExpectedResult = false },
-                new TestCaseData(1m, 1.1m, new Tolerance(0.1f)) { ExpectedResult = true },
-                new TestCaseData(1m, 1.1000000001m, new Tolerance(0.1f)) { ExpectedResult = false },
+                new TestCaseData(1m, 1.1m, new Tolerance(0.1)) { ExpectedResult = true },
+                new TestCaseData(1m, 1.1000000001m, new Tolerance(0.1)) { ExpectedResult = false },
 #if !NETFRAMEWORK
                 new TestCaseData(Int128.MaxValue, Int128.MaxValue - E20, new Tolerance(1e20f)) { ExpectedResult = true },
                 new TestCaseData(Int128.MaxValue, Int128.MaxValue - E20 - 1, new Tolerance(1e20f)) { ExpectedResult = false },
