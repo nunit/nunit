@@ -1091,8 +1091,8 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 Assert.That(() => Numerics.AreEqual(expected, actual, ref tolerance), Throws.InvalidOperationException);
                 Assert.That(() => Numerics.AreEqual(actual, expected, ref tolerance), Throws.InvalidOperationException);
-                Assert.That(() => tolerance.ApplyToValue(expected, actual), Throws.InvalidOperationException);
-                Assert.That(() => tolerance.ApplyToValue(actual, expected), Throws.InvalidOperationException);
+                Assert.That(() => tolerance.ApplyToValue(expected, actual, forStrictComparison: false), Throws.InvalidOperationException);
+                Assert.That(() => tolerance.ApplyToValue(actual, expected, forStrictComparison: false), Throws.InvalidOperationException);
             }
         }
 
@@ -1277,6 +1277,49 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(decimal.MaxValue, Is.LessThan(decimal.MaxValue).Within(1m).Percent);
                 Assert.That(decimal.MinValue, Is.GreaterThan(decimal.MinValue).Within(1m).Percent);
             });
+        }
+
+        [TestCaseSource(nameof(StrictDecimalBoundTestCases))]
+        public void StrictComparisonBoundsAreExact(object expected, object actual, Tolerance tolerance, bool isGreater, bool isLess)
+        {
+            // actual > expected - offset and actual < expected + offset, also where expected ± offset needs more digits
+            // than a decimal has: a strict comparison uses the bound rounded away from the expected value.
+            Assert.Multiple(() =>
+            {
+                Assert.That(WithTolerance(Is.GreaterThan(expected), tolerance).ApplyTo(actual).IsSuccess, Is.EqualTo(isGreater), ">");
+                Assert.That(WithTolerance(Is.LessThan(expected), tolerance).ApplyTo(actual).IsSuccess, Is.EqualTo(isLess), "<");
+            });
+        }
+
+        private static TestCaseData[] StrictDecimalBoundTestCases()
+        {
+            // 0.0000000000000000000000000067 percent of 9e27 is 0.603.
+            const decimal smallPercentage = 0.0000000000000000000000000067m;
+            return [
+                // 9e27 ± 0.6 rounds to 9e27 ± 1.
+                new TestCaseData(9e27m, 9e27m, new Tolerance(0.6m), true, true),
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(0.6m), true, false),
+                new TestCaseData(9e27m, 9e27m - 1m, new Tolerance(0.6m), false, true),
+                new TestCaseData(-9e27m, -9e27m, new Tolerance(0.6m), true, true),
+                new TestCaseData(-9e27m, -9e27m + 1m, new Tolerance(0.6m), true, false),
+                new TestCaseData(-9e27m, -9e27m - 1m, new Tolerance(0.6m), false, true),
+                new TestCaseData(9e27m, 9e27m, new Tolerance(smallPercentage).Percent, true, true),
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(smallPercentage).Percent, true, false),
+                new TestCaseData(-9e27m, -9e27m - 1m, new Tolerance(smallPercentage).Percent, false, true),
+                // Exact bounds exclude a value equal to them.
+                new TestCaseData(9e27m, 9e27m + 1m, new Tolerance(1m), true, false),
+                new TestCaseData(9e27m, 9e27m - 1m, new Tolerance(1m), false, true),
+                // decimal.MaxValue - 1 + 0.6 rounds up to decimal.MaxValue, decimal.MaxValue + 0.4 down to it.
+                new TestCaseData(decimal.MaxValue - 1m, decimal.MaxValue, new Tolerance(0.6m), true, false),
+                new TestCaseData(decimal.MaxValue, decimal.MaxValue, new Tolerance(0.4m), true, true),
+                new TestCaseData(decimal.MinValue, decimal.MinValue, new Tolerance(0.4m), true, true),
+                // An integer value with a percentage offset that needs more decimal places than fit: 9e18 ± 6.3e-11.
+                new TestCaseData(9000000000000000000L, 9000000000000000000L, new Tolerance(0.0000000000000000000000000007m).Percent, true, true),
+#if !NETFRAMEWORK
+                new TestCaseData((Int128)9e27m, (Int128)9e27m, new Tolerance(smallPercentage).Percent, true, true),
+                new TestCaseData((Int128)9e27m, (Int128)9e27m + 1, new Tolerance(smallPercentage).Percent, true, false),
+#endif
+            ];
         }
 
         private static TestCaseData[] ToleranceTestCases()

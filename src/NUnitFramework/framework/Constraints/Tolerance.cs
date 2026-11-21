@@ -223,7 +223,14 @@ namespace NUnit.Framework.Constraints
         /// Apply the tolerance to an expected value and return
         /// a Tolerance.Range that represents the acceptable values.
         /// </summary>
-        public Range ApplyToValue(object value)
+        public Range ApplyToValue(object value) => ApplyToValue(value, forStrictComparison: false);
+
+        /// <summary>
+        /// Apply the tolerance to an expected value and return a Tolerance.Range that represents the acceptable values,
+        /// for > and &lt; when <paramref name="forStrictComparison"/> is set, otherwise for >= and &lt;=.
+        /// They differ only for a decimal bound that cannot be represented exactly.
+        /// </summary>
+        private Range ApplyToValue(object value, bool forStrictComparison)
         {
             // TODO: This should really be a generic, but we will
             // first have to make Tolerance and the constraints
@@ -235,10 +242,10 @@ namespace NUnit.Framework.Constraints
                     return new Range(value, value);
 
                 case ToleranceMode.Linear:
-                    return LinearRange(value);
+                    return LinearRange(value, forStrictComparison);
 
                 case ToleranceMode.Percent:
-                    return PercentRange(value);
+                    return PercentRange(value, forStrictComparison);
             }
         }
 
@@ -246,14 +253,15 @@ namespace NUnit.Framework.Constraints
         /// Apply the tolerance to an expected value that is compared with an actual value and return
         /// a Tolerance.Range that represents the acceptable values. An integer expected value is
         /// converted to the type in which it is compared with a floating point or decimal actual value first.
+        /// The range is for > and &lt; when <paramref name="forStrictComparison"/> is set, otherwise for >= and &lt;=.
         /// </summary>
-        internal Range ApplyToValue(object expected, object actual)
+        internal Range ApplyToValue(object expected, object actual, bool forStrictComparison)
         {
             // Check both values as given, as only an integer expected value is converted to the type of the actual value.
             if (expected is decimal || actual is decimal)
                 Numerics.CheckDecimalTolerance(this);
 
-            return ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual));
+            return ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual), forStrictComparison);
         }
 
         #endregion
@@ -290,7 +298,7 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException(NumericToleranceRequired);
         }
 
-        private Range LinearRange(object value)
+        private Range LinearRange(object value, bool forStrictComparison)
         {
             if (Amount is TimeSpan interval && value is DateTime dateTime)
                 return new Range(dateTime - interval, dateTime + interval);
@@ -298,15 +306,15 @@ namespace NUnit.Framework.Constraints
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            return Numerics.LinearRange(value, Amount);
+            return Numerics.LinearRange(value, Amount, forStrictComparison);
         }
 
-        private Range PercentRange(object value)
+        private Range PercentRange(object value, bool forStrictComparison)
         {
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
 
-            return Numerics.PercentRange(value, Amount);
+            return Numerics.PercentRange(value, Amount, forStrictComparison);
         }
 
         #endregion

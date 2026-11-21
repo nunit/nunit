@@ -908,8 +908,10 @@ namespace NUnit.Framework.Constraints
         /// Calculates the range value - amount to value + amount, used by the comparison constraints.
         /// The type of the value determines the type of the bounds. Bounds that do not fit in that type
         /// use a wider type, so custom comparers see the type of the value whenever possible.
+        /// A decimal bound that cannot be represented exactly is rounded towards the value, so it is exact for >= and &lt;=,
+        /// or away from it when <paramref name="forStrictComparison"/> is set, so it is exact for > and &lt;.
         /// </summary>
-        internal static Tolerance.Range LinearRange(object value, object amount)
+        internal static Tolerance.Range LinearRange(object value, object amount, bool forStrictComparison)
         {
             switch (value)
             {
@@ -926,7 +928,7 @@ namespace NUnit.Framework.Constraints
 #endif
 
                 case decimal decimalValue:
-                    return DecimalRange(decimalValue, amount);
+                    return DecimalRange(decimalValue, amount, forStrictComparison);
             }
 
             // A range of integers cannot be fractional: there is no bound that is correct for both > and >=,
@@ -961,8 +963,9 @@ namespace NUnit.Framework.Constraints
         /// used by the comparison constraints. The type of the value determines the type of the bounds.
         /// As the offset of an integer value is usually fractional, it uses exact decimal bounds unless
         /// a bound is a whole number that fits in the type of the value.
+        /// A decimal bound is rounded as in <see cref="LinearRange"/>.
         /// </summary>
-        internal static Tolerance.Range PercentRange(object value, object percentage)
+        internal static Tolerance.Range PercentRange(object value, object percentage, bool forStrictComparison)
         {
             if (IsBinaryFloatingPoint(value))
             {
@@ -987,11 +990,11 @@ namespace NUnit.Framework.Constraints
                 TryGetPercentageOffset(decimalValue, percent, out decimal decimalOffset))
             {
                 if (value is decimal)
-                    return DecimalBounds(decimalValue, decimalOffset);
+                    return DecimalBounds(decimalValue, decimalOffset, forStrictComparison);
 
                 // A bound of an integer value that is outside the decimal range is calculated below.
-                if (TryGetLowerBound(decimalValue, decimalOffset, out decimal lowerBound) &&
-                    TryGetUpperBound(decimalValue, decimalOffset, out decimal upperBound))
+                if (TryGetLowerBound(decimalValue, decimalOffset, forStrictComparison, out decimal lowerBound) &&
+                    TryGetUpperBound(decimalValue, decimalOffset, forStrictComparison, out decimal upperBound))
                 {
                     return new Tolerance.Range(NarrowToTypeOf(value, lowerBound), NarrowToTypeOf(value, upperBound));
                 }
@@ -1065,44 +1068,46 @@ namespace NUnit.Framework.Constraints
         private const double BeyondDecimalRange = 2 * 7.9228162514264337593543950335e28;
 
         /// <summary>
-        /// The range value - offset to value + offset of a decimal value.
+        /// The range value - offset to value + offset of a decimal value, rounded as in <see cref="TryGetUpperBound"/>.
         /// A bound that is outside the decimal range is a double beyond it.
         /// The bounds are cast to object, as decimal and double have no common type.
         /// </summary>
-        private static Tolerance.Range DecimalBounds(decimal value, decimal offset)
+        private static Tolerance.Range DecimalBounds(decimal value, decimal offset, bool forStrictComparison)
         {
             return new Tolerance.Range(
-                TryGetLowerBound(value, offset, out decimal lowerBound) ? lowerBound : (object)-BeyondDecimalRange,
-                TryGetUpperBound(value, offset, out decimal upperBound) ? upperBound : (object)BeyondDecimalRange);
+                TryGetLowerBound(value, offset, forStrictComparison, out decimal lowerBound) ? lowerBound : (object)-BeyondDecimalRange,
+                TryGetUpperBound(value, offset, forStrictComparison, out decimal upperBound) ? upperBound : (object)BeyondDecimalRange);
         }
 
         /// <summary>
-        /// Whether a decimal value is within the bounds of <see cref="DecimalBounds"/>.
+        /// Whether a decimal value is within the bounds of <see cref="DecimalBounds"/> for >= and &lt;=.
         /// </summary>
         private static bool IsWithinBounds(decimal actual, decimal expected, decimal offset)
-            => (!TryGetLowerBound(expected, offset, out decimal lowerBound) || actual >= lowerBound) &&
-               (!TryGetUpperBound(expected, offset, out decimal upperBound) || actual <= upperBound);
+            => (!TryGetLowerBound(expected, offset, forStrictComparison: false, out decimal lowerBound) || actual >= lowerBound) &&
+               (!TryGetUpperBound(expected, offset, forStrictComparison: false, out decimal upperBound) || actual <= upperBound);
 
         /// <summary>
-        /// Gets the smallest decimal that is not less than value - offset, unless that is below the decimal range.
+        /// Gets the decimal bound value - offset, rounded as in <see cref="TryGetUpperBound"/>, unless it is below the decimal range.
         /// </summary>
-        private static bool TryGetLowerBound(decimal value, decimal offset, out decimal bound)
+        private static bool TryGetLowerBound(decimal value, decimal offset, bool forStrictComparison, out decimal bound)
         {
-            bool fits = TryGetUpperBound(-value, offset, out decimal negatedBound);
+            bool fits = TryGetUpperBound(-value, offset, forStrictComparison, out decimal negatedBound);
             bound = -negatedBound;
             return fits;
         }
 
         /// <summary>
-        /// Gets the largest decimal that is not greater than value + offset, unless that is above the decimal range.
+        /// Gets the decimal bound value + offset, unless it is above the decimal range: the largest decimal that is not greater,
+        /// for >= and &lt;=, or the smallest decimal that is not less, for > and &lt;, when <paramref name="forStrictComparison"/> is set.
         /// </summary>
         /// <remarks>
         /// Decimal addition rounds a sum that needs more than 28 or 29 significant digits to the nearest decimal,
-        /// e.g. 9e27 + 0.6 to 9e27 + 1, which would be within the tolerance although it is not.
-        /// Rounding towards the value keeps every decimal within the bounds exactly when it is within the tolerance,
-        /// so >=, &lt;= and equality agree with the tolerance. Only &lt; and > then exclude a value equal to a rounded bound.
+        /// e.g. 9e27 + 0.6 to 9e27 + 1, which would be within the tolerance for &lt;= although it is not.
+        /// No decimal is between the two decimals around such a sum, so a decimal is not greater than the sum exactly
+        /// when it is not greater than the decimal below it, and less than the sum exactly when it is less than the decimal above it.
+        /// So >=, &lt;= and equality use the bound rounded towards the value, and > and &lt; the bound rounded away from it.
         /// </remarks>
-        private static bool TryGetUpperBound(decimal value, decimal offset, out decimal bound)
+        private static bool TryGetUpperBound(decimal value, decimal offset, bool forStrictComparison, out decimal bound)
         {
             // Only a positive value can overflow, and only when the offset is close to what is left of the range.
             if (value > 0m && offset >= decimal.MaxValue - value - 1m)
@@ -1123,10 +1128,24 @@ namespace NUnit.Framework.Constraints
             }
 
             // Subtracting the larger operand from the sum is exact, as the remainder is no larger than the other operand,
-            // so the sum was rounded up when the remainder exceeds the other operand.
+            // so the sum was rounded up when the remainder exceeds the other operand, and down when it is less.
             bool valueIsLarger = Math.Abs(value) >= offset;
-            if (bound - (valueIsLarger ? value : offset) > (valueIsLarger ? offset : value))
+            int rounding = (bound - (valueIsLarger ? value : offset)).CompareTo(valueIsLarger ? offset : value);
+            if (forStrictComparison)
+            {
+                if (rounding < 0)
+                {
+                    // A sum rounded down to decimal.MaxValue is above the decimal range.
+                    if (bound == decimal.MaxValue)
+                        return false;
+
+                    bound += UnitInLastPlace(bound);
+                }
+            }
+            else if (rounding > 0)
+            {
                 bound -= UnitInLastPlace(bound);
+            }
 
             return true;
         }
@@ -1158,12 +1177,12 @@ namespace NUnit.Framework.Constraints
             return Math.Abs(double.IsInfinity(product) ? value / 100 * percentage : product / 100);
         }
 
-        private static Tolerance.Range DecimalRange(decimal value, object amount)
+        private static Tolerance.Range DecimalRange(decimal value, object amount, bool forStrictComparison)
         {
             if (!TryGetDecimal(amount, out decimal offset))
                 throw new InvalidOperationException(ToleranceOutsideDecimalRange);
 
-            return DecimalBounds(value, offset);
+            return DecimalBounds(value, offset, forStrictComparison);
         }
 
         private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)

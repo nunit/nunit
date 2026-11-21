@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance)
         {
-            return comparer.Compare(actual, tolerance.ApplyToValue(expected, actual).UpperBound) < 0;
+            return comparer.Compare(actual, tolerance.ApplyToValue(expected, actual, forStrictComparison: true).UpperBound) < 0;
         }
     }
 }
