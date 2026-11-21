@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -100,6 +101,30 @@ namespace NUnit.Framework.Tests.Constraints
                 {
                     TypeArgs = typeArgs
                 }.SetArgDisplayNames("generic");
+            }
+        }
+
+        [Test]
+        public static void UnionCases()
+        {
+            UnionMember member = new();
+
+            // The code below is what the compiler allows, so should we.
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
+            GeneratedUnionType generatedUnion = member;
+            CustomUnionType customUnion = member;
+            ExplicitIUnionType explicitUnion = member;
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(member, Is.AssignableTo<GeneratedUnionType>());
+                Assert.That(member, Is.AssignableTo<CustomUnionType>());
+                Assert.That(member, Is.AssignableTo<ExplicitIUnionType>());
+
+                Assert.That(member, Is.AssignableTo(typeof(GeneratedUnionType)));
+                Assert.That(member, Is.AssignableTo(typeof(CustomUnionType)));
+                Assert.That(member, Is.AssignableTo(typeof(ExplicitIUnionType)));
             }
         }
     }
