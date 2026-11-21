@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests
             if (result.IsSuccess)
                 throw new InvalidOperationException("Cannot get failure message for a successful result.");
 
-            using var writer = new TextMessageWriter();
+            var writer = new TextMessageWriter();
             result.WriteMessageTo(writer);
 
             return writer.ToString();
