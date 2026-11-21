@@ -280,15 +280,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
-            // Ulps and tolerances outside the decimal range are not supported for decimal, also when the values
-            // do not fit in a decimal and are compared as double, so that depends on the types and not on the values.
             if (expected is decimal || actual is decimal)
-            {
-                if (tolerance.Mode == ToleranceMode.Ulps)
-                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
-                if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
-                    throw new InvalidOperationException(ToleranceOutsideDecimalRange);
-            }
+                CheckDecimalTolerance(tolerance);
 
             CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
@@ -326,6 +319,32 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Checks that a tolerance can be used when either value is decimal, also when the values do not fit in a decimal
+        /// and are compared as double, so that depends on the types and not on the values. Equality and the comparison
+        /// constraints use the same check, so they agree on which tolerances are valid.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The tolerance is not valid for decimal values.</exception>
+        internal static void CheckDecimalTolerance(Tolerance tolerance)
+        {
+            if (tolerance.Mode == ToleranceMode.Ulps)
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+
+            if (tolerance.Mode == ToleranceMode.Unset)
+                return;
+
+            // A float or Half cannot represent most decimal amounts, e.g. 0.7f is 0.699999988079071,
+            // and the amount as it was written cannot be recovered from it reliably.
+            if (IsBinaryFloatingPoint(tolerance.Amount) && tolerance.Amount is not double)
+            {
+                throw new InvalidOperationException(
+                    $"A {tolerance.Amount.GetType().Name} tolerance of {tolerance.Amount} cannot be used for decimal values, use a decimal or double tolerance instead");
+            }
+
+            if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
+                throw new InvalidOperationException(ToleranceOutsideDecimalRange);
+        }
+
+        /// <summary>
         /// Test two numeric values for equality, performing the usual numeric
         /// conversions and using a provided or default tolerance. If the tolerance
         /// provided is Empty, this method may set it to a default tolerance.
@@ -348,9 +367,7 @@ namespace NUnit.Framework.Constraints
 
             if (expected is decimal || actual is decimal)
             {
-                if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
-                    throw new InvalidOperationException(ToleranceOutsideDecimalRange);
-
+                CheckDecimalTolerance(tolerance);
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
             }
 
@@ -527,14 +544,16 @@ namespace NUnit.Framework.Constraints
                     return TryAbsoluteDifference(expected, actual, out decimal difference) && difference <= ToleranceAsDecimal(tolerance.Amount);
 
                 case ToleranceMode.Percent:
-                    if (expected == 0m)
-                        return expected.Equals(actual);
+                    // Calculated as PercentRange does, so equality agrees with the comparison constraints:
+                    // a value is equal exactly when it is both greater than or equal to and less than or equal to the expected value.
+                    decimal percent = ToleranceAsDecimal(tolerance.Amount);
+                    if (TryGetPercentageOffset(expected, percent, out decimal offset))
+                        return TryAbsoluteDifference(expected, actual, out decimal exactDifference) && exactDifference <= offset;
 
-                    double absoluteDifference = TryAbsoluteDifference(expected, actual, out decimal exactDifference)
-                        ? (double)exactDifference
-                        : Math.Abs((double)expected - (double)actual);
-                    double relativeError = absoluteDifference / Math.Abs((double)expected);
-                    return relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0;
+                    double approximateExpected = (double)expected;
+                    double approximateOffset = PercentageOffset(approximateExpected, (double)percent);
+                    return CompareWithBound(actual, approximateExpected - approximateOffset) >= 0 &&
+                           CompareWithBound(actual, approximateExpected + approximateOffset) <= 0;
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
@@ -788,18 +807,31 @@ namespace NUnit.Framework.Constraints
         #region Tolerance Ranges
 
         /// <summary>
-        /// Converts an integer expected value to the type in which it is compared with the actual value
-        /// when that is a floating point or decimal type, so the range of a tolerance is calculated in that type.
+        /// Converts an expected value to the type in which it is compared with the actual value, so the range of a tolerance
+        /// is calculated in that type: an integer expected value when the actual value is a floating point or decimal type,
+        /// and any expected value that is compared as decimal.
         /// The expected value is often an integer constant, e.g. 0, while the actual value is a double:
         /// a fractional tolerance is then valid, while it is not for an integer actual value.
+        /// A floating point expected value that is compared as decimal is converted as AreEqual converts it,
+        /// so a value is equal to it exactly when it is both greater than or equal to and less than or equal to it.
         /// </summary>
         internal static object ToComparisonType(object expected, object actual)
         {
-            // Two integers keep their type, also when .NET Framework compares mixed signed and unsigned integers as decimal.
-            if (!IsFixedPointNumeric(expected) || !IsNumericType(actual) || IsFixedPointNumeric(actual))
+            if (!IsNumericType(expected) || !IsNumericType(actual))
                 return expected;
 
-            return GetCommonNumericType(expected, actual) switch
+            // Two integers keep their type, also when .NET Framework compares mixed signed and unsigned integers as decimal.
+            if (IsFixedPointNumeric(expected) && IsFixedPointNumeric(actual))
+                return expected;
+
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
+            if (commonType == CommonNumericType.Decimal)
+                return ConvertToValue<decimal>(expected);
+
+            if (!IsFixedPointNumeric(expected))
+                return expected;
+
+            return commonType switch
             {
                 CommonNumericType.Double => ConvertToValue<double>(expected),
                 CommonNumericType.Single => ConvertToValue<float>(expected),
@@ -888,16 +920,11 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            // The offset |value| * percent / 100 and the bounds fit in a decimal if |value| * percent does not exceed the limit.
-            // For |value| <= 1 that holds if percent does not exceed it, and dividing the limit by |value| would overflow.
             // A percentage always fits in a decimal, as Tolerance does not allow larger ones.
-            const decimal limit = decimal.MaxValue / 2;
             decimal percent = ToleranceAsDecimal(percentage);
             if (TryGetDecimal(value, out decimal decimalValue) &&
-                Math.Abs(decimalValue) <= limit &&
-                percent <= (Math.Abs(decimalValue) <= 1m ? limit : limit / Math.Abs(decimalValue)))
+                TryGetPercentageOffset(decimalValue, percent, out decimal decimalOffset))
             {
-                decimal decimalOffset = Math.Abs(decimalValue) * percent / 100;
                 return new Tolerance.Range(
                     NarrowToTypeOf(value, decimalValue - decimalOffset),
                     NarrowToTypeOf(value, decimalValue + decimalOffset));
@@ -922,9 +949,37 @@ namespace NUnit.Framework.Constraints
 
             // Values, or offsets of values, outside the decimal range.
             double approximateValue = ConvertToValue<double>(value);
-            double approximateOffset = PercentageOffset(approximateValue, ConvertToValue<double>(percentage));
+            double approximateOffset = PercentageOffset(approximateValue, (double)percent);
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
         }
+
+        /// <summary>
+        /// Calculates the offset |value| * percent / 100 of a decimal value, if it and the bounds fit in a decimal,
+        /// which they do when |value| * percent does not exceed the limit. For |value| &lt;= 1 that holds when percent
+        /// does not exceed it, and dividing the limit by |value| would overflow.
+        /// </summary>
+        private static bool TryGetPercentageOffset(decimal value, decimal percent, out decimal offset)
+        {
+            const decimal limit = decimal.MaxValue / 2;
+            decimal magnitude = Math.Abs(value);
+            if (magnitude <= limit && percent <= (magnitude <= 1m ? limit : limit / magnitude))
+            {
+                offset = magnitude * percent / 100;
+                return true;
+            }
+
+            offset = 0m;
+            return false;
+        }
+
+        /// <summary>
+        /// Compares a decimal value with a bound of type double as <see cref="Compare(object, object)"/> does:
+        /// as decimal when the bound is within the decimal range, otherwise as double.
+        /// </summary>
+        private static int CompareWithBound(decimal value, double bound)
+            => Math.Abs(bound) < (double)decimal.MaxValue
+                ? value.CompareTo(ConvertToValue<decimal>(bound))
+                : ((double)value).CompareTo(bound);
 
         // Multiplying first keeps round percentages exact, but when the product overflows
         // to infinity the offset itself can still be finite, so divide first then.

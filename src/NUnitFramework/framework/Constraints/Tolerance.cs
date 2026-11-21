@@ -248,7 +248,13 @@ namespace NUnit.Framework.Constraints
         /// converted to the type in which it is compared with a floating point or decimal actual value first.
         /// </summary>
         internal Range ApplyToValue(object expected, object actual)
-            => ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual));
+        {
+            // Check both values as given, as only an integer expected value is converted to the type of the actual value.
+            if (expected is decimal || actual is decimal)
+                Numerics.CheckDecimalTolerance(this);
+
+            return ApplyToValue(Mode == ToleranceMode.Unset ? expected : Numerics.ToComparisonType(expected, actual));
+        }
 
         #endregion
 
