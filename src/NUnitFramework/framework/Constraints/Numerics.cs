@@ -772,16 +772,83 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Converts a tolerance amount within the decimal range to decimal. A binary floating point amount is taken as
-        /// the decimal value it is written as, its shortest round-trip representation, so the result does not depend on
-        /// the runtime: before .NET 11 the conversion rounds a double to 15 and a float to 7 significant digits.
+        /// the decimal value it is written as, its round-trip representation, rather than its exact binary value.
+        /// The conversion operator cannot be used as is: before .NET 11 it rounds a double to 15 and a float to
+        /// 7 significant digits, and from .NET 11 it does not round at all.
         /// </summary>
         private static decimal ToleranceAsDecimal(object amount)
         {
             if (!IsBinaryFloatingPoint(amount))
                 return ConvertToValue<decimal>(amount);
 
+            if (amount is double value && TryGetShortDecimal(value, out decimal result))
+                return result;
+
+            // A double that needs more than 15 significant digits, or a float or Half.
             string text = ((IFormattable)amount).ToString("R", CultureInfo.InvariantCulture);
             return decimal.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        private const int ShortDecimalMinExponent = -8;
+        private const int ShortDecimalMaxExponent = 14;
+
+        // 10^-8 to 10^15, which are exact in decimal.
+        private static readonly decimal[] ShortDecimalPowersOf10 = GetShortDecimalPowersOf10();
+
+        private static decimal[] GetShortDecimalPowersOf10()
+        {
+            var powers = new decimal[ShortDecimalMaxExponent - ShortDecimalMinExponent + 2];
+            decimal power = 0.00000001m;
+            for (int i = 0; i < powers.Length; i++, power *= 10m)
+                powers[i] = power;
+            return powers;
+        }
+
+        /// <summary>
+        /// Gets the decimal with at most 15 significant digits that converts back to <paramref name="value"/>,
+        /// which is the value as it is written, without formatting and parsing it.
+        /// </summary>
+        /// <remarks>
+        /// The spacing of decimals with 15 significant digits is wider than that of doubles,
+        /// so at most one of them converts back to a double and it is also the shortest one.
+        /// Converting it back is correctly rounded, as its integer mantissa is below 2^53 and it has at most 22 decimal places,
+        /// so both are exact doubles and the conversion is a single division.
+        /// </remarks>
+        private static bool TryGetShortDecimal(double value, out decimal result)
+        {
+            double magnitude = Math.Abs(value);
+            if (magnitude == 0)
+            {
+                result = 0m;
+                return true;
+            }
+
+            result = 0m;
+            if (!(magnitude >= 1e-8 && magnitude < 1e15))
+                return false;
+
+            // The conversion gives at least 15 significant digits, possibly inexact before .NET Core 3.0.
+            decimal converted = (decimal)value;
+            decimal convertedMagnitude = Math.Abs(converted);
+
+            // Find the exponent of the converted value exactly, starting from an estimate.
+            int exponent = Math.Min(Math.Max((int)Math.Floor(Math.Log10(magnitude)), ShortDecimalMinExponent), ShortDecimalMaxExponent);
+            while (exponent > ShortDecimalMinExponent && convertedMagnitude < ShortDecimalPowersOf10[exponent - ShortDecimalMinExponent])
+                exponent--;
+            while (exponent < ShortDecimalMaxExponent && convertedMagnitude >= ShortDecimalPowersOf10[exponent + 1 - ShortDecimalMinExponent])
+                exponent++;
+            if (convertedMagnitude < ShortDecimalPowersOf10[exponent - ShortDecimalMinExponent] ||
+                convertedMagnitude >= ShortDecimalPowersOf10[exponent + 1 - ShortDecimalMinExponent])
+            {
+                return false;
+            }
+
+            decimal rounded = decimal.Round(converted, 14 - exponent, MidpointRounding.ToEven);
+            if ((double)rounded != value)
+                return false;
+
+            result = rounded;
+            return true;
         }
 
         private static bool IsBinaryFloatingPoint(object value)
