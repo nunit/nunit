@@ -26,9 +26,9 @@ namespace NUnit.TestData
     [Union]
     public class ExplicitIUnionType : IUnion
     {
-        private readonly object _value;
+        private readonly object? _value;
 
-        public ExplicitIUnionType(UnionMember value)
+        public ExplicitIUnionType(UnionMember? value)
         {
             _value = value;
         }
