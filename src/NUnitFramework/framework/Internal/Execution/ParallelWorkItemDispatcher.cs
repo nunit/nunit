@@ -326,7 +326,12 @@ namespace NUnit.Framework.Internal.Execution
                     WorkShift? nextShift = SelectNextShift();
                     if (nextShift is not null)
                     {
-                        ShiftStarting?.Invoke(nextShift);
+                        // The selected shift may already be active, e.g. when one of its
+                        // workers is still executing an item. Start() is then a no-op,
+                        // so don't report it as starting.
+                        if (!nextShift.IsActive)
+                            ShiftStarting?.Invoke(nextShift);
+
                         nextShift.Start();
                         return;
                     }

@@ -90,7 +90,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void EnqueueBeforeDequeue()
         {
-            string[] names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
+            string[] names = new[] { "Test1", "Test2", "Test3" };
 
             EnqueueWorkItems(names);
             _queue.Start();
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Tests.Internal
         public void DequeueBeforeEnqueue()
         {
             _queue.Start();
-            var names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
+            var names = new[] { "Test1", "Test2", "Test3" };
 
             new Thread(new ThreadStart(() =>
             {
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void EnqueueAndDequeueWhilePaused()
         {
-            string[] names = new[] { nameof(Test1), nameof(Test2), nameof(Test3) };
+            string[] names = new[] { "Test1", "Test2", "Test3" };
             EnqueueWorkItems(names);
 
             new Thread(new ThreadStart(() =>
@@ -127,17 +127,47 @@ namespace NUnit.Framework.Tests.Internal
             VerifyQueueContents(names);
         }
 
+        [Test]
+        public void HasWorkUntilDequeuedItemIsCompleted()
+        {
+            Assert.That(_queue.HasWork, Is.False, "Should not have work initially");
+
+            EnqueueWorkItem("Test1");
+            Assert.That(_queue.HasWork, Is.True, "Should have work after enqueue");
+
+            _queue.Start();
+            Assert.That(_queue.TryDequeue(out _), Is.True, "Should dequeue an item");
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_queue.IsEmpty, Is.True, "Queue should be empty after dequeue");
+                Assert.That(_queue.HasWork, Is.True, "Dequeued item is still in flight");
+            }
+
+            _queue.ItemCompleted();
+            Assert.That(_queue.HasWork, Is.False, "Should not have work after item completed");
+        }
+
+        [Test]
+        public void DequeueDoesNotTrackItemInFlight()
+        {
+            EnqueueWorkItem("Test1");
+            _queue.Start();
+
+            Assert.That(_queue.Dequeue(), Is.Not.Null, "Should dequeue an item");
+            Assert.That(_queue.HasWork, Is.False, "Dequeue should not track the item as in flight");
+        }
+
         private const int HIGH_PRIORITY = 0;
         private const int NORMAL_PRIORITY = 1;
 
         [Test]
         public void PriorityIsHonored()
         {
-            EnqueueWorkItem(nameof(Test1), NORMAL_PRIORITY);
-            EnqueueWorkItem(nameof(Test2), HIGH_PRIORITY);
-            EnqueueWorkItem(nameof(Test3), NORMAL_PRIORITY);
+            EnqueueWorkItem("Test1", NORMAL_PRIORITY);
+            EnqueueWorkItem("Test2", HIGH_PRIORITY);
+            EnqueueWorkItem("Test3", NORMAL_PRIORITY);
             _queue.Start();
-            VerifyQueueContents(nameof(Test2), nameof(Test1), nameof(Test3));
+            VerifyQueueContents("Test2", "Test1", "Test3");
         }
 
         [Test]
@@ -148,11 +178,11 @@ namespace NUnit.Framework.Tests.Internal
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
             Assert.That(fixtureItem, Is.Not.Null);
             var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem);
-            EnqueueWorkItem(nameof(Test1));
+            EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
-            EnqueueWorkItem(nameof(Test2));
+            EnqueueWorkItem("Test2");
             _queue.Start();
-            VerifyQueueContents("WorkItemQueueTests+MyFixture", nameof(Test1), nameof(Test2));
+            VerifyQueueContents("WorkItemQueueTests+MyFixture", "Test1", "Test2");
         }
 
         private void EnqueueWorkItems(params string[] names)

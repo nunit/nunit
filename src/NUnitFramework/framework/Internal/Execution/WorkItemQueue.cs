@@ -81,6 +81,14 @@ namespace NUnit.Framework.Internal.Execution
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
+        /* Number of items that have been claimed by a dequeuer but not yet reported
+         * as completed via ItemCompleted. It is incremented BEFORE the item is removed
+         * from the inner queue, so an observer can never see an empty queue while an
+         * item is in transit to a worker. It is not part of the saved state: items in
+         * flight keep running regardless of queue isolation.
+         */
+        private int _inFlight;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
@@ -164,6 +172,17 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
+        /// <summary>
+        /// Gets a bool indicating whether the queue has items waiting
+        /// or items that have been dequeued but not yet completed.
+        /// </summary>
+        /// <remarks>
+        /// The order of the checks matters: a dequeuer increments the in-flight count
+        /// before it removes the item from the inner queue. So if we observe the queue
+        /// as empty, the subsequent read of the in-flight count sees that increment.
+        /// </remarks>
+        internal bool HasWork => !IsEmpty || Volatile.Read(ref _inFlight) > 0;
+
         #endregion
 
         #region Public Methods
@@ -210,18 +229,27 @@ namespace NUnit.Framework.Internal.Execution
         /// Dequeue a WorkItem for processing
         /// </summary>
         /// <returns>A WorkItem or null if the queue has stopped</returns>
+        /// <remarks>
+        /// The item is not tracked as in flight, see <see cref="TryDequeue"/>.
+        /// </remarks>
         public WorkItem? Dequeue()
         {
-            TryDequeue(out WorkItem? work);
+            TryDequeueCore(out WorkItem? work, trackInFlight: false);
             return work;
         }
 
         /// <summary>
-        /// Dequeue a WorkItem for processing
+        /// Dequeue a WorkItem for processing and track it as in flight
+        /// until <see cref="ItemCompleted"/> is called.
         /// </summary>
         /// <param name="work">The WorkItem dequeued, or null if the queue has stopped</param>
         /// <returns>True if a WorkItem was dequeued, false if the queue has stopped</returns>
         internal bool TryDequeue([NotNullWhen(true)] out WorkItem? work)
+        {
+            return TryDequeueCore(out work, trackInFlight: true);
+        }
+
+        private bool TryDequeueCore([NotNullWhen(true)] out WorkItem? work, bool trackInFlight)
         {
             SpinWait sw = new SpinWait();
 
@@ -271,6 +299,10 @@ namespace NUnit.Framework.Internal.Execution
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
+                // Mark the item as in flight before it leaves the inner queue, see HasWork.
+                if (trackInFlight)
+                    Interlocked.Increment(ref _inFlight);
+
                 // Dequeue our work item
                 while (work is null)
                 {
@@ -287,6 +319,15 @@ namespace NUnit.Framework.Internal.Execution
                 return true;
             }
             while (true);
+        }
+
+        /// <summary>
+        /// Signal that a WorkItem obtained from <see cref="TryDequeue"/>
+        /// has finished executing.
+        /// </summary>
+        internal void ItemCompleted()
+        {
+            Interlocked.Decrement(ref _inFlight);
         }
 
         /// <summary>

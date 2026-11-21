@@ -116,6 +116,9 @@ namespace NUnit.Framework.Internal.Execution
 
                     WorkItem lastWorkItem = Interlocked.Exchange(ref _currentWorkItem, null);
 
+                    // Must happen before Idle, so the shift sees no work in flight for this worker.
+                    WorkQueue.ItemCompleted();
+
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
                     // the queues unless all child items have finished.
@@ -166,9 +169,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_cancelLock)
             {
-                if (_workerThread is not null && _currentWorkItem is not null)
+                // Read the field once: the worker thread resets it to null after
+                // each item, which could happen between a check and the call.
+                WorkItem? currentWorkItem = Volatile.Read(ref _currentWorkItem);
+                if (_workerThread is not null && currentWorkItem is not null)
                 {
-                    _currentWorkItem.Cancel();
+                    currentWorkItem.Cancel();
                 }
             }
         }

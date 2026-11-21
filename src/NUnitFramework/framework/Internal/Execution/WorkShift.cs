@@ -32,7 +32,9 @@ namespace NUnit.Framework.Internal.Execution
 
         private readonly Lock _syncRoot = new();
         private int _busyCount = 0;
-        private int _active = 0;
+
+        // Only written while holding _syncRoot. Volatile so IsActive can be read without the lock.
+        private volatile bool _active;
 
         /// <summary>
         /// Construct a WorkShift
@@ -57,7 +59,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets a flag indicating whether the shift is currently active
         /// </summary>
-        public bool IsActive => _active == 1;
+        public bool IsActive => _active;
 
         /// <summary>
         /// Gets a bool indicating whether this shift has any work to do
@@ -66,15 +68,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             get
             {
+                // WorkItemQueue.HasWork includes items dequeued by a worker but not yet
+                // completed, so a worker that has just taken an item counts as work even
+                // before it raises its Busy event.
                 foreach (var q in Queues)
                 {
-                    if (!q.IsEmpty)
-                        return true;
-                }
-
-                foreach (var w in Workers)
-                {
-                    if (w.IsBusy)
+                    if (q.HasWork)
                         return true;
                 }
 
@@ -136,13 +135,15 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_syncRoot)
             {
-                if (Interlocked.Exchange(ref _active, 1) == 1)
+                if (_active)
                 {
                     Log.Info("{0} shift already started", Name);
                     return;
                 }
 
                 Log.Info("{0} shift starting", Name);
+
+                _active = true;
 
                 if (_firstStart)
                 {
@@ -162,19 +163,12 @@ namespace NUnit.Framework.Internal.Execution
                 worker.Busy += (_, _) => Interlocked.Increment(ref _busyCount);
                 worker.Idle += (_, _) =>
                 {
-                    // Quick check first using Interlocked.Decrement
+                    // EndShift is deliberately not called while holding _syncRoot:
+                    // it raises EndOfShift, which starts the next shift and takes that
+                    // shift's lock. Nesting the two locks could deadlock when two shifts
+                    // end concurrently. EndShift itself guarantees it only ends once.
                     if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)
-                    {
-                        lock (_syncRoot)
-                        {
-                            // Check again under the lock. If there is no work
-                            // we can end the shift.
-                            if (_busyCount == 0 && !HasWork)
-                            {
-                                EndShift();
-                            }
-                        }
-                    }
+                        EndShift();
                 };
 
                 worker.Start();
@@ -189,7 +183,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (_syncRoot)
             {
-                if (Interlocked.Exchange(ref _active, 0) == 0)
+                if (!_active)
                 {
                     Log.Info("{0} shift already ended", Name);
                     return;
@@ -197,12 +191,15 @@ namespace NUnit.Framework.Internal.Execution
 
                 Log.Info("{0} shift ending", Name);
 
+                _active = false;
+
                 // Pause all queues for this shift
                 foreach (var q in Queues)
                     q.Pause();
             }
 
-            // Signal the dispatcher that shift ended
+            // Signal the dispatcher that shift ended.
+            // Raised outside the lock, see the Idle handler in StartWorkers.
             EndOfShift?.Invoke(this);
         }
 
@@ -211,13 +208,17 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void ShutDown()
         {
-            if (Interlocked.Exchange(ref _active, 0) == 1)
+            lock (_syncRoot)
             {
-                Log.Info("{0} shutdown with active shift", Name);
-            }
+                if (_active)
+                {
+                    Log.Info("{0} shutdown with active shift", Name);
+                    _active = false;
+                }
 
-            foreach (var q in Queues)
-                q.Stop();
+                foreach (var q in Queues)
+                    q.Stop();
+            }
         }
 
         /// <summary>

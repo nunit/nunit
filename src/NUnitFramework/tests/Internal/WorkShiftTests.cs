@@ -83,10 +83,81 @@ namespace NUnit.Framework.Tests.Internal
             var q = CreateQueue("test");
             _shift.AddQueue(q);
             Assert.That(_shift.HasWork, Is.False, "Should not have work initially");
-            q.Enqueue(Fakes.GetWorkItem(this, nameof(Test1)));
+            q.Enqueue(Fakes.GetWorkItem(this, "Test1"));
             Assert.That(_shift.HasWork, "Should have work after enqueue");
             _shift.Start();
             Assert.That(_shift.HasWork, "Should have work after starting");
+        }
+
+        [Test]
+        public void StartTwiceIsIgnored()
+        {
+            var q = CreateQueue("test");
+            _shift.AddQueue(q);
+
+            _shift.Start();
+            q.Pause();
+            _shift.Start();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_shift.IsActive, Is.True, "Shift should still be active");
+                Assert.That(q.State, Is.EqualTo(WorkItemQueueState.Paused), "Second Start should not restart the queues");
+            }
+        }
+
+        [Test]
+        public void EndShiftTwiceRaisesEndOfShiftOnce()
+        {
+            var q = CreateQueue("test");
+            _shift.AddQueue(q);
+            int endOfShiftCount = 0;
+            _shift.EndOfShift += _ => endOfShiftCount++;
+
+            _shift.Start();
+            _shift.EndShift();
+            q.Start();
+            _shift.EndShift();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(endOfShiftCount, Is.EqualTo(1), "EndOfShift should be raised once");
+                Assert.That(_shift.IsActive, Is.False, "Shift should not be active");
+                Assert.That(q.State, Is.EqualTo(WorkItemQueueState.Running), "Second EndShift should not pause the queues");
+            }
+        }
+
+        [Test]
+        public void EndShiftWithoutStartIsIgnored()
+        {
+            int endOfShiftCount = 0;
+            _shift.EndOfShift += _ => endOfShiftCount++;
+
+            _shift.EndShift();
+
+            Assert.That(endOfShiftCount, Is.Zero, "EndOfShift should not be raised for an inactive shift");
+        }
+
+        [Test]
+        public void ShutDownActiveShift()
+        {
+            var q = CreateQueue("test");
+            _shift.AddQueue(q);
+            int endOfShiftCount = 0;
+            _shift.EndOfShift += _ => endOfShiftCount++;
+
+            _shift.Start();
+            _shift.ShutDown();
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(_shift.IsActive, Is.False, "Shift should not be active after shutdown");
+                Assert.That(q.State, Is.EqualTo(WorkItemQueueState.Stopped), "Queues should be stopped");
+                Assert.That(endOfShiftCount, Is.Zero, "ShutDown should not raise EndOfShift");
+            }
+
+            _shift.EndShift();
+            Assert.That(endOfShiftCount, Is.Zero, "EndShift after ShutDown should be ignored");
         }
 
         private void Test1()
@@ -175,6 +246,10 @@ namespace NUnit.Framework.Tests.Internal
             }
             finally
             {
+                // Always release and stop the worker. TestWorker threads are foreground
+                // threads, so a worker left waiting on its queue would keep the process alive.
+                fixture.Finish.Set();
+                _shift.ShutDown();
                 _shift.EndOfShift -= OnEndOfShift;
             }
         }
