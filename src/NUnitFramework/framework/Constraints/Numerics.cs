@@ -541,14 +541,15 @@ namespace NUnit.Framework.Constraints
                     if (!IsWithinDecimalRange(tolerance.Amount))
                         return true;
 
-                    return TryAbsoluteDifference(expected, actual, out decimal difference) && difference <= ToleranceAsDecimal(tolerance.Amount);
+                    // Uses the bounds of DecimalRange, so equality agrees with the comparison constraints:
+                    // a value is equal exactly when it is both greater than or equal to and less than or equal to the expected value.
+                    return IsWithinBounds(actual, expected, ToleranceAsDecimal(tolerance.Amount));
 
                 case ToleranceMode.Percent:
-                    // Calculated as PercentRange does, so equality agrees with the comparison constraints:
-                    // a value is equal exactly when it is both greater than or equal to and less than or equal to the expected value.
+                    // Uses the bounds of PercentRange, for the same reason.
                     decimal percent = ToleranceAsDecimal(tolerance.Amount);
                     if (TryGetPercentageOffset(expected, percent, out decimal offset))
-                        return TryAbsoluteDifference(expected, actual, out decimal exactDifference) && exactDifference <= offset;
+                        return IsWithinBounds(actual, expected, offset);
 
                     double approximateExpected = (double)expected;
                     double approximateOffset = PercentageOffset(approximateExpected, (double)percent);
@@ -992,9 +993,15 @@ namespace NUnit.Framework.Constraints
             if (TryGetDecimal(value, out decimal decimalValue) &&
                 TryGetPercentageOffset(decimalValue, percent, out decimal decimalOffset))
             {
-                return new Tolerance.Range(
-                    NarrowToTypeOf(value, decimalValue - decimalOffset),
-                    NarrowToTypeOf(value, decimalValue + decimalOffset));
+                if (value is decimal)
+                    return DecimalBounds(decimalValue, decimalOffset);
+
+                // A bound of an integer value that is outside the decimal range is calculated below.
+                if (TryGetLowerBound(decimalValue, decimalOffset, out decimal lowerBound) &&
+                    TryGetUpperBound(decimalValue, decimalOffset, out decimal upperBound))
+                {
+                    return new Tolerance.Range(NarrowToTypeOf(value, lowerBound), NarrowToTypeOf(value, upperBound));
+                }
             }
 
 #if !NETFRAMEWORK
@@ -1020,23 +1027,125 @@ namespace NUnit.Framework.Constraints
             return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
         }
 
+        // A limit for |value| * percent, calculated in double, below which multiplying the decimals cannot overflow.
+        // It is below decimal.MaxValue, about 7.92e28, by far more than the relative error of the double product, about 1e-16.
+        private const double MaxSafeDecimalProduct = 7e28;
+
+        // The same limit for the offset |value| * percent / 100, which is what has to fit when dividing by 100 first.
+        private const double MaxSafeDecimalPercentageProduct = 100 * MaxSafeDecimalProduct;
+
         /// <summary>
-        /// Calculates the offset |value| * percent / 100 of a decimal value, if it and the bounds fit in a decimal,
-        /// which they do when |value| * percent does not exceed the limit. For |value| &lt;= 1 that holds when percent
-        /// does not exceed it, and dividing the limit by |value| would overflow.
+        /// Calculates the offset |value| * percent / 100 of a decimal value, if it fits in a decimal.
+        /// Multiplying first keeps the offset exact for most percentages, unless the product overflows.
         /// </summary>
         private static bool TryGetPercentageOffset(decimal value, decimal percent, out decimal offset)
         {
-            const decimal limit = decimal.MaxValue / 2;
             decimal magnitude = Math.Abs(value);
-            if (magnitude <= limit && percent <= (magnitude <= 1m ? limit : limit / magnitude))
+            double approximateProduct = (double)magnitude * (double)percent;
+            if (approximateProduct < MaxSafeDecimalProduct)
             {
                 offset = magnitude * percent / 100;
                 return true;
             }
 
-            offset = 0m;
-            return false;
+            if (approximateProduct < MaxSafeDecimalPercentageProduct)
+            {
+                offset = magnitude / 100 * percent;
+                return true;
+            }
+
+            // Close to or beyond the decimal range, which only the exact calculation can tell.
+            try
+            {
+                offset = magnitude / 100 * percent;
+                return true;
+            }
+            catch (OverflowException)
+            {
+                offset = 0m;
+                return false;
+            }
+        }
+
+        // A bound of a decimal value that is outside the decimal range, which any decimal is within.
+        // It cannot be (double)decimal.MaxValue, as decimal.MaxValue is compared as that double and so is not less than it.
+        private const double BeyondDecimalRange = 2 * 7.9228162514264337593543950335e28;
+
+        /// <summary>
+        /// The range value - offset to value + offset of a decimal value.
+        /// A bound that is outside the decimal range is a double beyond it.
+        /// The bounds are cast to object, as decimal and double have no common type.
+        /// </summary>
+        private static Tolerance.Range DecimalBounds(decimal value, decimal offset)
+        {
+            return new Tolerance.Range(
+                TryGetLowerBound(value, offset, out decimal lowerBound) ? lowerBound : (object)-BeyondDecimalRange,
+                TryGetUpperBound(value, offset, out decimal upperBound) ? upperBound : (object)BeyondDecimalRange);
+        }
+
+        /// <summary>
+        /// Whether a decimal value is within the bounds of <see cref="DecimalBounds"/>.
+        /// </summary>
+        private static bool IsWithinBounds(decimal actual, decimal expected, decimal offset)
+            => (!TryGetLowerBound(expected, offset, out decimal lowerBound) || actual >= lowerBound) &&
+               (!TryGetUpperBound(expected, offset, out decimal upperBound) || actual <= upperBound);
+
+        /// <summary>
+        /// Gets the smallest decimal that is not less than value - offset, unless that is below the decimal range.
+        /// </summary>
+        private static bool TryGetLowerBound(decimal value, decimal offset, out decimal bound)
+        {
+            bool fits = TryGetUpperBound(-value, offset, out decimal negatedBound);
+            bound = -negatedBound;
+            return fits;
+        }
+
+        /// <summary>
+        /// Gets the largest decimal that is not greater than value + offset, unless that is above the decimal range.
+        /// </summary>
+        /// <remarks>
+        /// Decimal addition rounds a sum that needs more than 28 or 29 significant digits to the nearest decimal,
+        /// e.g. 9e27 + 0.6 to 9e27 + 1, which would be within the tolerance although it is not.
+        /// Rounding towards the value keeps every decimal within the bounds exactly when it is within the tolerance,
+        /// so >=, &lt;= and equality agree with the tolerance. Only &lt; and > then exclude a value equal to a rounded bound.
+        /// </remarks>
+        private static bool TryGetUpperBound(decimal value, decimal offset, out decimal bound)
+        {
+            // Only a positive value can overflow, and only when the offset is close to what is left of the range.
+            if (value > 0m && offset >= decimal.MaxValue - value - 1m)
+            {
+                try
+                {
+                    bound = value + offset;
+                }
+                catch (OverflowException)
+                {
+                    bound = 0m;
+                    return false;
+                }
+            }
+            else
+            {
+                bound = value + offset;
+            }
+
+            // Subtracting the larger operand from the sum is exact, as the remainder is no larger than the other operand,
+            // so the sum was rounded up when the remainder exceeds the other operand.
+            bool valueIsLarger = Math.Abs(value) >= offset;
+            if (bound - (valueIsLarger ? value : offset) > (valueIsLarger ? offset : value))
+                bound -= UnitInLastPlace(bound);
+
+            return true;
+        }
+
+        private static decimal UnitInLastPlace(decimal value)
+        {
+#if NETFRAMEWORK
+            byte scale = (byte)((decimal.GetBits(value)[3] >> 16) & 0xFF);
+#else
+            byte scale = value.Scale;
+#endif
+            return new decimal(1, 0, 0, false, scale);
         }
 
         /// <summary>
@@ -1061,18 +1170,7 @@ namespace NUnit.Framework.Constraints
             if (!TryGetDecimal(amount, out decimal offset))
                 throw new InvalidOperationException(ToleranceOutsideDecimalRange);
 
-            double approximateValue = (double)value;
-            double approximateOffset = (double)offset;
-
-            // Only a bound that is outside the decimal range uses double, the other bound stays exact.
-            // As the offset fits in a decimal, the lower bound of a value that is not negative fits,
-            // and so does the upper bound of a value that is not positive.
-            // The bounds are cast to object, as decimal and double have no common type.
-            bool lowerBoundFits = value >= 0m || offset <= decimal.MaxValue + value;
-            bool upperBoundFits = value <= 0m || offset <= decimal.MaxValue - value;
-            return new Tolerance.Range(
-                lowerBoundFits ? value - offset : (object)(approximateValue - approximateOffset),
-                upperBoundFits ? value + offset : (object)(approximateValue + approximateOffset));
+            return DecimalBounds(value, offset);
         }
 
         private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)
