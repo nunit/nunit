@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Tests.TestUtilities;
@@ -184,11 +185,37 @@ namespace NUnit.Framework.Tests.Internal
             }
         }
 
+        /// <summary>
+        /// Waits for the worker threads to exit after the shift was shut down.
+        /// </summary>
+        /// <remarks>
+        /// Wait handles used by the workers may only be disposed once this returns true.
+        /// Otherwise a worker that is still running could use a disposed handle, and the
+        /// resulting exception on the worker thread would terminate the test process.
+        /// </remarks>
+        private static bool WaitForWorkersToExit(params TestWorker[] workers)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            foreach (var worker in workers)
+            {
+                while (worker.IsAlive)
+                {
+                    if (stopwatch.ElapsedMilliseconds > BusyWorkerFixture.Timeout)
+                        return false;
+
+                    Thread.Sleep(10);
+                }
+            }
+
+            return true;
+        }
+
         [Test]
         public void HasWorkWhenWorkerIsBusy()
         {
-            using var fixture = new BusyWorkerFixture();
-            using var endOfShift = new ManualResetEventSlim(initialState: false);
+            // Not using 'using': only dispose once the worker has exited, see WaitForWorkersToExit.
+            var fixture = new BusyWorkerFixture();
+            var endOfShift = new ManualResetEventSlim(initialState: false);
 
             var q = CreateQueue("test");
             var w = new TestWorker(q, "test-worker");
@@ -251,6 +278,12 @@ namespace NUnit.Framework.Tests.Internal
                 fixture.Finish.Set();
                 _shift.ShutDown();
                 _shift.EndOfShift -= OnEndOfShift;
+
+                if (WaitForWorkersToExit(w))
+                {
+                    fixture.Dispose();
+                    endOfShift.Dispose();
+                }
             }
         }
 
@@ -261,10 +294,11 @@ namespace NUnit.Framework.Tests.Internal
             // been counted as busy by the shift must still count as work.
             const int timeout = BusyWorkerFixture.Timeout;
 
-            using var blockedInBusy = new ManualResetEventSlim(initialState: false);
-            using var releaseBusy = new ManualResetEventSlim(initialState: false);
-            using var otherWorkerIdle = new ManualResetEventSlim(initialState: false);
-            using var endOfShift = new ManualResetEventSlim(initialState: false);
+            // Not using 'using': only dispose once the workers have exited, see WaitForWorkersToExit.
+            var blockedInBusy = new ManualResetEventSlim(initialState: false);
+            var releaseBusy = new ManualResetEventSlim(initialState: false);
+            var otherWorkerIdle = new ManualResetEventSlim(initialState: false);
+            var endOfShift = new ManualResetEventSlim(initialState: false);
 
             var q = CreateQueue("test");
             var workers = new[] { new TestWorker(q, "worker-1"), new TestWorker(q, "worker-2") };
@@ -332,6 +366,14 @@ namespace NUnit.Framework.Tests.Internal
                 releaseBusy.Set();
                 _shift.ShutDown();
                 _shift.EndOfShift -= OnEndOfShift;
+
+                if (WaitForWorkersToExit(workers))
+                {
+                    blockedInBusy.Dispose();
+                    releaseBusy.Dispose();
+                    otherWorkerIdle.Dispose();
+                    endOfShift.Dispose();
+                }
             }
         }
     }

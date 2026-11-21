@@ -31,6 +31,10 @@ namespace NUnit.Framework.Internal.Execution
         private static readonly Logger Log = InternalTrace.GetLogger("WorkShift");
 
         private readonly Lock _syncRoot = new();
+
+        // Guards _busyCount and _busyGeneration so that an idle worker can take a
+        // generation snapshot atomically with the decrement that makes the count zero.
+        private readonly Lock _busyLock = new();
         private int _busyCount = 0;
 
         // Incremented on every Busy event, never decremented. Lets an idle worker
@@ -164,35 +168,48 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var worker in Workers)
             {
-                worker.Busy += (_, _) =>
-                {
-                    Interlocked.Increment(ref _busyGeneration);
-                    Interlocked.Increment(ref _busyCount);
-                };
+                worker.Busy += (_, _) => OnWorkerBusy();
                 worker.Idle += (_, _) => OnWorkerIdle();
 
                 worker.Start();
             }
         }
 
+        private void OnWorkerBusy()
+        {
+            lock (_busyLock)
+            {
+                _busyGeneration++;
+                _busyCount++;
+            }
+        }
+
         private void OnWorkerIdle()
         {
-            // Read the generation before the decrement. If any worker raises Busy after
-            // this point, it may run an item that enqueues work into a queue that the
-            // HasWork scan below has already passed. In that case leave ending the
-            // shift to that worker's own Idle event.
-            int busyGeneration = Volatile.Read(ref _busyGeneration);
+            int busyGeneration;
 
-            // EndShift is deliberately not called while holding _syncRoot:
-            // it raises EndOfShift, which starts the next shift and takes that
-            // shift's lock. Nesting the two locks could deadlock when two shifts
-            // end concurrently. EndShift itself guarantees it only ends once.
-            if (Interlocked.Decrement(ref _busyCount) == 0 &&
-                !HasWork &&
-                Volatile.Read(ref _busyGeneration) == busyGeneration)
+            lock (_busyLock)
             {
-                EndShift();
+                // Only the worker whose decrement makes the count zero checks for the end
+                // of the shift. Taking the generation snapshot in the same step means any
+                // worker that raises Busy afterwards will itself be counted, and so the
+                // last of them to become idle performs the check again.
+                if (--_busyCount != 0)
+                    return;
+
+                busyGeneration = _busyGeneration;
             }
+
+            // If another worker raised Busy during the HasWork scan, it may have run an
+            // item that enqueued work into a queue the scan had already passed. Leave
+            // ending the shift to that worker's own Idle event.
+            //
+            // EndShift is deliberately not called while holding a lock: it raises
+            // EndOfShift, which starts the next shift and takes that shift's lock.
+            // Nesting the locks could deadlock when two shifts end concurrently.
+            // EndShift itself guarantees it only ends once.
+            if (!HasWork && Volatile.Read(ref _busyGeneration) == busyGeneration)
+                EndShift();
         }
 
         /// <summary>
