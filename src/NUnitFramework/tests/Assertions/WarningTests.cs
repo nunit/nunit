@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -12,7 +10,7 @@ using NUnit.TestData;
 namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
-    public class WarningTests : DefaultStackFilterFixture
+    public class WarningTests
     {
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Boolean))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Boolean))]
@@ -108,7 +106,6 @@ namespace NUnit.Framework.Tests.Assertions
             string? stackTrace = result.AssertionResults[0].StackTrace;
             Assert.That(stackTrace, Is.Not.Null, "StackTrace should not be null");
             Assert.That(stackTrace, Does.Contain(methodName));
-            Assert.That(stackTrace.Count(x => x == '\n'), Is.EqualTo(1), "Expected only one method");
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
             Assert.That(result.Message, Contains.Substring(expectedMethodName), "Result message should contain assert method name");
@@ -285,44 +282,6 @@ namespace NUnit.Framework.Tests.Assertions
         {
             await One();
             throw new InvalidOperationException();
-        }
-
-        // We decided to trim ExecutionContext and below because ten lines per warning adds up
-        // and makes it hard to read build logs.
-        // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
-        // Remove all NUnit.Framework and System.Environment lines from the top of the stack trace,
-        // and all System.Reflection, System.Runtime.Remoting, System.RuntimeMethodHandle, and System.Threading lines from the bottom of the stack trace.
-        // See https://github.com/nunit/nunit/issues/5043
-        // The first would stop the stack trace at Async state machine methods, hiding further methods on the stack.
-        // We now skip those methods and show the rest of the stack trace.
-        [TestCase(nameof(WarningFixture.WarningSynchronous))]
-        [TestCase(nameof(WarningFixture.WarningInThreadStart))]
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), IncludePlatform = PlatformNames.NETFramework)]
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem))]
-        [TestCase(nameof(WarningFixture.WarningInTaskRun))]
-        [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskYield))]
-        [TestCase(nameof(WarningFixture.WarningInUserMethodAfterAwaitTaskYield), 2)]
-        public static void StackTracesAreFiltered(string methodName, int expectedStackTraceLines = 1)
-        {
-            var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
-            if (result.AssertionResults.Count != 1 || result.AssertionResults[0].Status != AssertionStatus.Warning)
-            {
-                Assert.Fail("Expected a single warning assertion. Message: " + result.Message);
-            }
-
-            var warningStackTrace = result.AssertionResults[0].StackTrace;
-            Assert.That(warningStackTrace, Is.Not.Null);
-            Assert.That(warningStackTrace, Does.Contain(methodName));
-            int numberOfStackTraceLines = warningStackTrace.Count(x => x == '\n');
-
-            if (numberOfStackTraceLines != expectedStackTraceLines)
-            {
-                StringBuilder sb = new();
-                sb.AppendLine($"Expected {expectedStackTraceLines} method(s) on stack, but found {numberOfStackTraceLines}.");
-                sb.AppendLine("Stacktrace:");
-                sb.AppendLine(warningStackTrace);
-                Assert.Fail(sb.ToString());
-            }
         }
     }
 }
