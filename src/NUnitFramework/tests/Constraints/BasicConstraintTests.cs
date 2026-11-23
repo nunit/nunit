@@ -22,46 +22,16 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
 #pragma warning restore IDE0052 // Remove unread private members
 
-        [Test]
-        public void NonNullUnionCases()
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedValueTestCases))]
+        public void NonNullUnionCases<TUnion>(TUnion instance)
         {
-            UnionMember member = new();
-
-            GeneratedUnionType generatedUnion = member;
-            CustomUnionType customUnion = member;
-            ExplicitIUnionType explicitUnion = member;
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(generatedUnion is not null);
-#pragma warning disable NUnit2023 // Invalid NullConstraint usage
-                Assert.That(generatedUnion, Is.Not.Null);
-#pragma warning restore NUnit2023 // Invalid NullConstraint usage
-
-                Assert.That(customUnion is not null);
-                Assert.That(customUnion, Is.Not.Null);
-
-                Assert.That(explicitUnion is not null);
-                Assert.That(explicitUnion, Is.Not.Null);
-            }
+            Assert.That(instance, Is.Not.Default);
         }
 
-        [Test]
-        public void NullUnionCases()
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.DefaultValueTestCases))]
+        public void NullUnionCases<TUnion>(TUnion instance)
         {
-            GeneratedUnionType generatedUnion = default;
-            ExplicitIUnionType explicitUnion = new(default(UnionMember));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(generatedUnion is null);
-#pragma warning disable NUnit2023 // Invalid NullConstraint usage
-                Assert.That(generatedUnion, Is.Null);
-#pragma warning restore NUnit2023 // Invalid NullConstraint usage
-
-                Assert.That(explicitUnion is null);
-                Assert.That(explicitUnion, Is.Null);
-            }
+            Assert.That(instance, Is.Default);
         }
     }
 

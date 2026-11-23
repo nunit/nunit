@@ -25,34 +25,35 @@ namespace NUnit.Framework.Constraints
         public override string Description { get; }
 
         /// <summary>
+        /// Gets a value indicating whether union member types are used for the actula value.
+        /// </summary>
+        protected virtual bool UseUnionMember => true;
+
+        private protected Type? ActualType { get; private set; }
+
+        /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Type? actualType;
             bool success;
-            if (UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            if (UseUnionMember && UnionHelper.TryGetUnionValue(actual, out var unionValue))
             {
-                actualType = unionValue?.GetType();
+                ActualType = unionValue?.GetType();
                 success = Matches(unionValue);
             }
             else
             {
-                actualType = GetActualType(actual);
+                ActualType = actual?.GetType();
                 success = Matches(actual);
             }
 
             if (actual is Exception)
                 return new ConstraintResult(this, actual, success);
 
-            return new ConstraintResult(this, actualType, success);
-        }
-
-        private protected static Type? GetActualType<TActual>(TActual? actual)
-        {
-            return UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
+            return new ConstraintResult(this, ActualType, success);
         }
 
         /// <summary>
@@ -108,6 +109,11 @@ namespace NUnit.Framework.Constraints
         public override string Description { get; }
 
         /// <summary>
+        /// Gets a value indicating whether union member types are used for the actula value.
+        /// </summary>
+        protected virtual bool UseUnionMember => true;
+
+        /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
@@ -115,7 +121,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             object? actualValue;
-            if (UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            if (UseUnionMember && UnionHelper.TryGetUnionValue(actual, out var unionValue))
             {
                 actualType = unionValue?.GetType();
                 actualValue = unionValue;

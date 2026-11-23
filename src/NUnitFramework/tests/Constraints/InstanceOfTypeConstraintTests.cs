@@ -56,17 +56,7 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class InstanceOfTypeConstraintTests_GeneralCases
     {
-        private static TestCaseData[] GetUnionTestCases()
-        {
-            return
-            [
-                TestCaseData.Create<GeneratedUnionType>(new UnionMember()),
-                TestCaseData.Create<CustomUnionType>(new UnionMember()),
-                TestCaseData.Create<ExplicitIUnionType>(new UnionMember()),
-            ];
-        }
-
-        [TestCaseSource(nameof(GetUnionTestCases))]
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithDerivedUnionMemberTestCases))]
         public void CanUseWithUnions<TUnion>(TUnion u)
         {
             Assert.That(u, Is.InstanceOf<UnionMember>());
@@ -78,17 +68,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(u, Is.Not.InstanceOf(typeof(int)));
         }
 
-        private static TestCaseData[] GetDerivedUnionTestCases()
-        {
-            return
-            [
-                TestCaseData.Create<GeneratedUnionType>(new DerivedUnionMember()),
-                TestCaseData.Create<CustomUnionType>(new DerivedUnionMember()),
-                TestCaseData.Create<ExplicitIUnionType>(new DerivedUnionMember()),
-            ];
-        }
-
-        [TestCaseSource(nameof(GetDerivedUnionTestCases))]
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithDerivedUnionMemberTestCases))]
         public void CanUseWithUnionsOfDerivedTypes<TUnion>(TUnion u)
         {
             Assert.That(u, Is.InstanceOf<UnionMember>());
@@ -98,7 +78,19 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(u, Is.InstanceOf(typeof(DerivedUnionMember)));
         }
 
-        [TestCaseSource(nameof(GetUnionTestCases))]
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithInt32TestCases))]
+        public void CanUseWithUnionsValueType<TUnion>(TUnion u)
+        {
+            Assert.That(u, Is.Not.InstanceOf<UnionMember>());
+            Assert.That(u, Is.Not.InstanceOf<TUnion>());
+            Assert.That(u, Is.InstanceOf<int>());
+
+            Assert.That(u, Is.Not.InstanceOf(typeof(UnionMember)));
+            Assert.That(u, Is.Not.InstanceOf(typeof(TUnion)));
+            Assert.That(u, Is.InstanceOf(typeof(int)));
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
         public void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
         {
             ConstraintAssert.MatchesFailureMessage(

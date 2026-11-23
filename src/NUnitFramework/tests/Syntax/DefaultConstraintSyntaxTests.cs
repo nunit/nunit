@@ -13,34 +13,16 @@ namespace NUnit.Framework.Tests.Syntax
             BuilderSyntax = Builder().Default;
         }
 
-        [Test]
-        public void NonDefaultUnionCases()
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedValueTestCases))]
+        public void NonDefaultUnionCases<TUnion>(TUnion instance)
         {
-            UnionMember member = new();
-
-            GeneratedUnionType generatedUnion = member;
-            CustomUnionType customUnion = member;
-            ExplicitIUnionType explicitUnion = member;
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(generatedUnion, Is.Not.Default);
-                Assert.That(customUnion, Is.Not.Default);
-                Assert.That(explicitUnion, Is.Not.Default);
-            }
+            Assert.That(instance, Is.Not.Default);
         }
 
-        [Test]
-        public void DefaultUnionCases()
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.DefaultValueTestCases))]
+        public void DefaultUnionCases<TUnion>(TUnion instance)
         {
-            GeneratedUnionType generatedUnion = default;
-            ExplicitIUnionType explicitUnion = new(default(UnionMember));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(generatedUnion, Is.Default);
-                Assert.That(explicitUnion, Is.Default);
-            }
+            Assert.That(instance, Is.Default);
         }
     }
 }

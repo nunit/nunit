@@ -104,28 +104,30 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        [Test]
-        public static void UnionCases()
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void UnionCases<TUnion>(TUnion _)
         {
-            UnionMember member = new();
-
-            // The code below is what the compiler allows, so should we.
-#pragma warning disable IDE0059 // Unnecessary assignment of a value
-            GeneratedUnionType generatedUnion = member;
-            CustomUnionType customUnion = member;
-            ExplicitIUnionType explicitUnion = member;
-#pragma warning restore IDE0059 // Unnecessary assignment of a value
+            int member = 123;
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(member, Is.AssignableTo<GeneratedUnionType>());
-                Assert.That(member, Is.AssignableTo<CustomUnionType>());
-                Assert.That(member, Is.AssignableTo<ExplicitIUnionType>());
-
-                Assert.That(member, Is.AssignableTo(typeof(GeneratedUnionType)));
-                Assert.That(member, Is.AssignableTo(typeof(CustomUnionType)));
-                Assert.That(member, Is.AssignableTo(typeof(ExplicitIUnionType)));
+                Assert.That(member, Is.AssignableTo<TUnion>());
+                Assert.That(member, Is.AssignableTo(typeof(TUnion)));
             }
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
+        {
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableTo<int>(),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
+
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableTo(typeof(int)),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
         }
     }
 }
