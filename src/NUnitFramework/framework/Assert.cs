@@ -367,7 +367,7 @@ namespace NUnit.Framework
         }
 
         private static string? GetStackTrace() =>
-            StackFilter.DefaultFilter.Filter(GetCallerStackTraceWithoutThrowing());
+            StackFilter.Current.Filter(GetCallerStackTraceWithoutThrowing());
 
         /// <summary>
         /// Captures the current stack trace without the System.Environment frames that <see cref="Environment.StackTrace"/> adds.

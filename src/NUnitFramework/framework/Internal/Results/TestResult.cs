@@ -827,7 +827,7 @@ namespace NUnit.Framework.Internal
                     Message = ExceptionHelper.BuildMessage(ex);
                 }
 
-                StackTrace = ExceptionHelper.BuildStackTrace(ex, StackFilter.DefaultFilter);
+                StackTrace = ExceptionHelper.BuildFilteredStackTrace(ex);
             }
         }
 

@@ -98,9 +98,6 @@ namespace NUnit.Framework.Tests.Internal
         private const string OuterTrace = "   at NUnit.Framework.Internal.Outer()\r\n   at User.Outer()";
         private const string InnerTrace = "   at NUnit.Framework.Internal.Inner()\r\n   at User.Inner()";
 
-        private static readonly StackFilter NUnitOnlyFilter = StackFilter.Create(
-            nunitStackPattern: @"^ +at NUnit\.", systemStackPattern: null, runnerStackPattern: null);
-
         [Test]
         public static void BuildStackTraceWithoutFilterKeepsStackTracesUnchanged()
         {
@@ -112,15 +109,19 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        [NonParallelizable]
         public static void BuildStackTraceFiltersEachExceptionSeparately()
         {
             var exception = new FixedStackTraceException(OuterTrace, new FixedStackTraceException(InnerTrace, null));
 
-            Assert.That(
-                ExceptionHelper.BuildStackTrace(exception, NUnitOnlyFilter),
-                Is.EqualTo("   at User.Outer()" + Environment.NewLine +
-                           "--" + nameof(FixedStackTraceException) + Environment.NewLine +
-                           "   at User.Inner()" + Environment.NewLine));
+            using (StackFilter.SetCurrentFilterToDefault())
+            {
+                Assert.That(
+                    ExceptionHelper.BuildFilteredStackTrace(exception),
+                    Is.EqualTo("   at User.Outer()" + Environment.NewLine +
+                               "--" + nameof(FixedStackTraceException) + Environment.NewLine +
+                               "   at User.Inner()" + Environment.NewLine));
+            }
         }
 
         private sealed class FixedStackTraceException : Exception
