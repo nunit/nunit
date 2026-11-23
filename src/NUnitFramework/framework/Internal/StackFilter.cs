@@ -58,9 +58,8 @@ namespace NUnit.Framework.Internal
         /// Kept as non-readonly field for backwards compatibility.
         /// If we make it readonly or convert to a property, they would get a runtime error.
         /// </remarks>
-#pragma warning disable CA2211 // Non-constant fields should not be visible
-        public static StackFilter DefaultFilter = new();
-#pragma warning restore CA2211 // Non-constant fields should not be visible
+        [Obsolete(StackFilterIsForInternalUseOnly)]
+        public static StackFilter DefaultFilter = new(DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN);
 
         private readonly Regex? _nunitStackRegex;
         private readonly Regex? _systemStackRegex;
@@ -70,7 +69,6 @@ namespace NUnit.Framework.Internal
         /// Construct a stack filter instance
         /// </summary>
         /// <remarks>
-        /// Equivalent to <c>StackFilter.Create(topOfStackPattern, null, bottomOfStackPattern)</c>.
         /// Despite its name, <paramref name="topOfStackPattern"/> is not restricted to the top of the stack trace.
         /// </remarks>
         /// <param name="topOfStackPattern">Regex pattern used to delete matching lines anywhere in the stack trace.</param>
@@ -88,7 +86,6 @@ namespace NUnit.Framework.Internal
         /// Construct a stack filter instance
         /// </summary>
         /// <remarks>
-        /// Equivalent to <c>StackFilter.Create(topOfStackPattern)</c>.
         /// Despite its name, the pattern is not restricted to the top of the stack trace.
         /// </remarks>
         /// <param name="topOfStackPattern">Regex pattern used to delete matching lines anywhere in the stack trace.</param>
@@ -102,32 +99,11 @@ namespace NUnit.Framework.Internal
         /// Construct a stack filter instance that removes NUnit frames and infrastructure frames,
         /// and cuts off the stack trace at the NUnit test execution pipeline.
         /// </summary>
+        [Obsolete(StackFilterIsForInternalUseOnly)]
         public StackFilter()
             : this(DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN)
         {
         }
-
-        private StackFilter(string? nunitStackPattern, string? systemStackPattern, string? runnerStackPattern)
-        {
-            if (nunitStackPattern is not null)
-                _nunitStackRegex = new Regex(nunitStackPattern, RegexOptions.Compiled);
-            if (systemStackPattern is not null)
-                _systemStackRegex = new Regex(systemStackPattern, RegexOptions.Compiled);
-            if (runnerStackPattern is not null)
-                _runnerStackRegex = new Regex(runnerStackPattern, RegexOptions.Compiled);
-        }
-
-        /// <summary>
-        /// Creates a stack filter that uses a custom pattern for NUnit frames,
-        /// combined with NUnit's default patterns for infrastructure frames and the test execution pipeline.
-        /// </summary>
-        /// <param name="nunitStackPattern">
-        /// Regex pattern used to delete matching lines anywhere in the stack trace,
-        /// or <see langword="null"/> to keep all NUnit frames.
-        /// </param>
-        /// <returns>A new <see cref="StackFilter"/>.</returns>
-        public static StackFilter Create(string? nunitStackPattern)
-            => new(nunitStackPattern, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN);
 
         /// <summary>
         /// Creates a stack filter with custom patterns.
@@ -135,10 +111,10 @@ namespace NUnit.Framework.Internal
         /// <remarks>
         /// Lines are processed from the top of the stack trace down:
         /// <list type="number">
-        /// <item>A line matching <paramref name="runnerStackPattern"/> ends the trace; it and all lines below it are removed.</item>
-        /// <item>A line matching <paramref name="nunitStackPattern"/> is removed.</item>
-        /// <item>A line matching <paramref name="systemStackPattern"/> is removed, unless all lines above it also match
-        /// <paramref name="systemStackPattern"/>, as those lines show where the exception was thrown.</item>
+        /// <item><description>A line matching <paramref name="runnerStackPattern"/> ends the trace; it and all lines below it are removed.</description></item>
+        /// <item><description>A line matching <paramref name="nunitStackPattern"/> is removed.</description></item>
+        /// <item><description>A line matching <paramref name="systemStackPattern"/> is removed, unless all lines above it also match
+        /// <paramref name="systemStackPattern"/>, as those lines show where the exception was thrown.</description></item>
         /// </list>
         /// The result ends with a newline.
         /// If no lines remain, the original stack trace is returned, with a newline appended if it does not end with one.
@@ -156,8 +132,57 @@ namespace NUnit.Framework.Internal
         /// or <see langword="null"/> to not cut off the stack trace.
         /// </param>
         /// <returns>A new <see cref="StackFilter"/>.</returns>
-        public static StackFilter Create(string? nunitStackPattern, string? systemStackPattern, string? runnerStackPattern)
-            => new(nunitStackPattern, systemStackPattern, runnerStackPattern);
+        internal StackFilter(string? nunitStackPattern, string? systemStackPattern, string? runnerStackPattern)
+        {
+            if (nunitStackPattern is not null)
+                _nunitStackRegex = new Regex(nunitStackPattern, RegexOptions.Compiled);
+            if (systemStackPattern is not null)
+                _systemStackRegex = new Regex(systemStackPattern, RegexOptions.Compiled);
+            if (runnerStackPattern is not null)
+                _runnerStackRegex = new Regex(runnerStackPattern, RegexOptions.Compiled);
+        }
+
+        /// <summary>
+        /// Gets the current stack filter.
+        /// </summary>
+        internal static StackFilter Current
+        {
+            // TODO: Convert to anonymous property once `DefaultFilter` is removed.
+#pragma warning disable CS0618 // Type or member is obsolete
+            get => DefaultFilter;
+            private set => DefaultFilter = value;
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        /// <summary>
+        /// Sets the current stack filter with the specified patterns for NUnit.
+        /// </summary>
+        /// <param name="nunitStackPattern">
+        /// Regex pattern used to delete matching lines anywhere in the stack trace,
+        /// or <see langword="null"/> to not delete any lines with it.
+        /// </param>
+        /// <returns>An <see cref="IDisposable"/> that restores the previous current filter when disposed.</returns>
+        internal static IDisposable SetNUnitFilter(string? nunitStackPattern)
+            => SetCurrentFilter(new StackFilter(nunitStackPattern, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN));
+
+        /// <summary>
+        /// Sets the current filter to a new stack filter.
+        /// </summary>
+        /// <returns>A disposable object that restores the previous filter when disposed.</returns>
+        internal static IDisposable SetCurrentFilterToDefault()
+            => SetCurrentFilter(new StackFilter(DEFAULT_NUNIT_FRAMEWORK_STACK_PATTERN, DEFAULT_SYSTEM_STACK_PATTERN, NUNIT_RUNNER_STACK_PATTERN));
+
+        /// <summary>
+        /// Sets the current stack filter.
+        /// </summary>
+        /// <param name="filter">The filter to set as the current filter.</param>
+        /// <returns>An <see cref="IDisposable"/> that restores the previous current filter when disposed.</returns>
+        private static IDisposable SetCurrentFilter(StackFilter filter)
+        {
+            var previous = Current;
+            Current = filter;
+            return On.Dispose(() => Current = previous);
+        }
 
         /// <summary>
         /// Filters a raw stack trace and returns the result.

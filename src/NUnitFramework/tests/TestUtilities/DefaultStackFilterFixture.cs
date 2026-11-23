@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.TestUtilities
@@ -9,24 +10,23 @@ namespace NUnit.Framework.Tests.TestUtilities
     /// The tests assembly has a <c>SetUpFixture</c> that replaces it so NUnit's own test code is not filtered out.
     /// </summary>
     /// <remarks>
-    /// Derived fixtures are not parallelizable because <see cref="StackFilter.DefaultFilter"/> is static.
+    /// Derived fixtures are not parallelizable because <see cref="StackFilter.Current"/> is static.
     /// </remarks>
     [NonParallelizable]
     public abstract class DefaultStackFilterFixture
     {
-        private StackFilter _savedFilter;
+        private IDisposable _stackFilter;
 
         [OneTimeSetUp]
         public void UseDefaultStackFilter()
         {
-            _savedFilter = StackFilter.DefaultFilter;
-            StackFilter.DefaultFilter = new();
+            _stackFilter = StackFilter.SetCurrentFilterToDefault();
         }
 
         [OneTimeTearDown]
         public void RestoreStackFilter()
         {
-            StackFilter.DefaultFilter = _savedFilter;
+            _stackFilter.Dispose();
         }
     }
 }

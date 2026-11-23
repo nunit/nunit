@@ -233,31 +233,31 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void FilterShortTraceWithAssert()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Result));
+            Assert.That(StackFilter.Current.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Result));
         }
 
         [Test]
         public void FilterShortTraceWithAssume_Trace1()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(ShortTrace_Assume), Is.EqualTo(ShortTrace_Result));
+            Assert.That(StackFilter.Current.Filter(ShortTrace_Assume), Is.EqualTo(ShortTrace_Result));
         }
 
         [Test]
         public void FilterLongTrace()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(LongTrace), Is.EqualTo(LongTrace_Result));
+            Assert.That(StackFilter.Current.Filter(LongTrace), Is.EqualTo(LongTrace_Result));
         }
 
         [Test]
         public void FilterQueueUserWorkItemTrace()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(QueueUserItemTrace), Is.EqualTo(QueueUserItemTrace_Result));
+            Assert.That(StackFilter.Current.Filter(QueueUserItemTrace), Is.EqualTo(QueueUserItemTrace_Result));
         }
 
         [Test]
         public void FilterThrownExceptionInAsyncMethodTrace()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(ThrownExceptionInAsyncMethodTrace), Is.EqualTo(ThrownExceptionInAsyncMethodTrace_Result));
+            Assert.That(StackFilter.Current.Filter(ThrownExceptionInAsyncMethodTrace), Is.EqualTo(ThrownExceptionInAsyncMethodTrace_Result));
         }
 
 #if NETFRAMEWORK
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void FilterThrownExceptionInAsyncMethodTraceUnderMono()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(MonoThrownExceptionInAsyncMethodTrace), Is.EqualTo(MonoThrownExceptionInAsyncMethodTrace_Result));
+            Assert.That(StackFilter.Current.Filter(MonoThrownExceptionInAsyncMethodTrace), Is.EqualTo(MonoThrownExceptionInAsyncMethodTrace_Result));
         }
 
         // The rewrite must start at the state machine, not at an enclosing compiler-generated type like "<>c".
@@ -301,52 +301,53 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase("  at Fixture+<>c+<<TestAsync>b__1_0>d.MoveNext () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0", "  at Fixture+<>c.<TestAsync>b__1_0 () [0x00001] in <97520dab6bc24aceb801551affd7b633>:0")]
         public void FilterRewritesAsyncStateMachineFrame(string frame, string expected)
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(frame), Is.EqualTo(expected + Environment.NewLine));
+            Assert.That(StackFilter.Current.Filter(frame), Is.EqualTo(expected + Environment.NewLine));
         }
 #endif
 
         [Test]
         public void FilterThrownExceptionUnderMono()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(MonoStackTrace), Is.EqualTo(MonoStackTrace_Result));
+            Assert.That(StackFilter.Current.Filter(MonoStackTrace), Is.EqualTo(MonoStackTrace_Result));
         }
 
         [Test]
         public void FilterMonoWrapperFrames()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(MonoWrapperStackTrace), Is.EqualTo(MonoWrapperStackTrace_Result));
+            Assert.That(StackFilter.Current.Filter(MonoWrapperStackTrace), Is.EqualTo(MonoWrapperStackTrace_Result));
         }
 
         [Test]
         public void FilterSynchronizationContextPostTrace()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(SynchronizationContextPostTrace), Is.EqualTo(SynchronizationContextPostTrace_Result));
+            Assert.That(StackFilter.Current.Filter(SynchronizationContextPostTrace), Is.EqualTo(SynchronizationContextPostTrace_Result));
         }
 
         [Test]
         public void FilterKeepsSystemFramesWhereExceptionWasThrown()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(ThrownBySystemMethodTrace), Is.EqualTo(ThrownBySystemMethodTrace_Result));
+            Assert.That(StackFilter.Current.Filter(ThrownBySystemMethodTrace), Is.EqualTo(ThrownBySystemMethodTrace_Result));
         }
 
         [Test]
         public void FilterCutsOffRunnerAndHostFrames()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(RunnerAndHostTrace), Is.EqualTo(RunnerAndHostTrace_Result));
+            Assert.That(StackFilter.Current.Filter(RunnerAndHostTrace), Is.EqualTo(RunnerAndHostTrace_Result));
         }
 
         [Test]
         public void CreateWithoutNUnitPatternKeepsNUnitFrames()
         {
-            var filter = StackFilter.Create(nunitStackPattern: null);
-
-            Assert.That(filter.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Assert + System.Environment.NewLine));
+            using (StackFilter.SetNUnitFilter(nunitStackPattern: null))
+            {
+                Assert.That(StackFilter.Current.Filter(ShortTrace_Assert), Is.EqualTo(ShortTrace_Assert + Environment.NewLine));
+            }
         }
 
         [Test]
         public void CreateWithoutRunnerPatternDoesNotCutOffTrace()
         {
-            var filter = StackFilter.Create(nunitStackPattern: @"^ +\w+:? NUnit\.", systemStackPattern: null, runnerStackPattern: null);
+            var filter = new StackFilter(nunitStackPattern: @"^ +\w+:? NUnit\.", systemStackPattern: null, runnerStackPattern: null);
 
             Assert.That(filter.Filter(RunnerAndHostTrace), Is.EqualTo("""
                    at MyNamespace.MyAppsTests.WarnTest()
@@ -372,7 +373,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void FilterReturnsRawTraceIfNothingIsLeft()
         {
-            Assert.That(StackFilter.DefaultFilter.Filter(ThrownInsideNUnitTrace), Is.EqualTo(ThrownInsideNUnitTrace + Environment.NewLine));
+            Assert.That(StackFilter.Current.Filter(ThrownInsideNUnitTrace), Is.EqualTo(ThrownInsideNUnitTrace + Environment.NewLine));
         }
 
         [Test]
@@ -380,7 +381,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             string rawTrace = ThrownInsideNUnitTrace + Environment.NewLine;
 
-            Assert.That(StackFilter.DefaultFilter.Filter(rawTrace), Is.EqualTo(rawTrace));
+            Assert.That(StackFilter.Current.Filter(rawTrace), Is.EqualTo(rawTrace));
         }
 
         [TestCase(nameof(StackFilterFixture.AssertThatFailure))]
