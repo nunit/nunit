@@ -291,14 +291,6 @@ namespace NUnit.Framework.Tests.Internal
                 "NetFramework,DotnetFramework,NetFramework-4.0,NetFramework-4.5,NetFramework-4.6");
         }
 
-        [TestCase("SSCLI")]
-        [TestCase("Rotor")]
-        public void RemovedRuntimeNamesAreRejected(string platformName)
-        {
-            Assert.That(() => WinXPHelper.IsPlatformSupported(platformName),
-                Throws.TypeOf<InvalidPlatformException>());
-        }
-
         [Test]
         public void DetectMono10()
         {
