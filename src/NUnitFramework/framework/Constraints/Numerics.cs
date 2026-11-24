@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Globalization;
 #if !NETFRAMEWORK
 using System.Numerics;
 #endif
@@ -13,6 +14,7 @@ namespace NUnit.Framework.Constraints
     internal static class Numerics
     {
         private const string UlpsRequiresFloatingPoint = "Ulps may only be specified for floating point arguments";
+        private const string ToleranceOutsideDecimalRange = "A tolerance for decimal values must be within the range of decimal";
 
         #region Numeric Type Recognition
         /// <summary>
@@ -125,7 +127,7 @@ namespace NUnit.Framework.Constraints
         private static readonly UInt128 UInt128DecimalMaxValue = (UInt128)decimal.MaxValue;
 #endif
 
-        private static bool IsWithinDecimalRange(object value)
+        internal static bool IsWithinDecimalRange(object value)
         {
             switch (value)
             {
@@ -154,6 +156,116 @@ namespace NUnit.Framework.Constraints
                     return true;
             }
         }
+
+        /// <summary>
+        /// The type in which two numeric values are compared.
+        /// </summary>
+        private enum CommonNumericType
+        {
+            Int32,
+            UInt32,
+            Int64,
+            UInt64,
+            NInt,
+            NUInt,
+            Decimal,
+            Single,
+            Double,
+#if !NETFRAMEWORK
+            Half,
+            Int128,
+            UInt128,
+            BigInteger,
+#endif
+        }
+
+        /// <summary>
+        /// Determines the most precise type that can hold both numeric values.
+        /// All operations on two numeric values should use this, so they convert them consistently.
+        /// </summary>
+        private static CommonNumericType GetCommonNumericType(object expected, object actual)
+        {
+            if (expected is decimal || actual is decimal)
+            {
+                // Treat as decimal if both values fit, otherwise fall back to double
+                return IsWithinDecimalRange(expected) && IsWithinDecimalRange(actual)
+                    ? CommonNumericType.Decimal
+                    : CommonNumericType.Double;
+            }
+
+            if (expected is double || actual is double)
+                return CommonNumericType.Double;
+
+            // Treat as float or Half if an integer value fits, otherwise fall back to double, like decimal does:
+            // an integer that does not fit would become infinite.
+            if (expected is float || actual is float)
+            {
+                return FitsInSingle(expected) && FitsInSingle(actual)
+                    ? CommonNumericType.Single
+                    : CommonNumericType.Double;
+            }
+
+#if !NETFRAMEWORK
+            if (expected is Half || actual is Half)
+            {
+                return FitsInHalf(expected) && FitsInHalf(actual)
+                    ? CommonNumericType.Half
+                    : CommonNumericType.Double;
+            }
+#endif
+
+            // Converting a negative value to an unsigned type would overflow,
+            // so use a signed type that can hold both values.
+            if (IsMixedSignInteger(expected, actual))
+            {
+                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
+                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
+                    return CommonNumericType.Int64;
+
+#if NETFRAMEWORK
+                return CommonNumericType.Decimal;
+#else
+                return expected is UInt128 || actual is UInt128
+                    ? CommonNumericType.BigInteger
+                    : CommonNumericType.Int128;
+#endif
+            }
+
+            // Check the widest types first, as nuint and nint can be smaller than ulong and long.
+#if !NETFRAMEWORK
+            if (expected is UInt128 || actual is UInt128)
+                return CommonNumericType.UInt128;
+
+            if (expected is Int128 || actual is Int128)
+                return CommonNumericType.Int128;
+#endif
+
+            if (expected is ulong || actual is ulong)
+                return CommonNumericType.UInt64;
+
+            if (expected is long || actual is long)
+                return CommonNumericType.Int64;
+
+            if (expected is nuint || actual is nuint)
+                return CommonNumericType.NUInt;
+
+            if (expected is nint || actual is nint)
+                return CommonNumericType.NInt;
+
+            if (expected is uint || actual is uint)
+                return CommonNumericType.UInt32;
+
+            return CommonNumericType.Int32;
+        }
+
+        // Only UInt128 values can be too large for float.
+        private static bool FitsInSingle(object value)
+            => !IsFixedPointNumeric(value) || !float.IsInfinity(ConvertToValue<float>(value));
+
+#if !NETFRAMEWORK
+        private static bool FitsInHalf(object value)
+            => !IsFixedPointNumeric(value) || !Half.IsInfinity(ConvertToValue<Half>(value));
+#endif
         #endregion
 
         #region Numeric Equality
@@ -168,80 +280,68 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the values are equal</returns>
         public static bool AreEqual(object expected, object actual, ref Tolerance tolerance)
         {
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
-
             if (expected is decimal || actual is decimal)
+                CheckDecimalTolerance(tolerance);
+
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
+
+            switch (commonType)
             {
-                // Ulps are not supported for decimal, also when the values do not fit in a decimal and are compared as double,
-                // so whether they are supported depends on the types and not on the values.
-                if (tolerance.Mode == ToleranceMode.Ulps)
-                    throw new InvalidOperationException(UlpsRequiresFloatingPoint);
-
-                // Treat as decimal if both values fit, otherwise fall back to double, like Compare does
-                if (!IsWithinDecimalRange(expected) || !IsWithinDecimalRange(actual))
+                case CommonNumericType.Double:
                     return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-
-                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-            }
-
-            if (expected is double || actual is double)
-                return AreIeeeFloatsEqual(ConvertToValue<double>(expected), ConvertToValue<double>(actual), ref tolerance);
-
-            if (expected is float || actual is float)
-                return AreIeeeFloatsEqual(ConvertToValue<float>(expected), ConvertToValue<float>(actual), ref tolerance);
-
+                case CommonNumericType.Single:
+                    return AreIeeeFloatsEqual(ConvertToValue<float>(expected), ConvertToValue<float>(actual), ref tolerance);
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-                return AreIeeeFloatsEqual(ConvertToValue<Half>(expected), ConvertToValue<Half>(actual), ref tolerance);
+                case CommonNumericType.Half:
+                    return AreIeeeFloatsEqual(ConvertToValue<Half>(expected), ConvertToValue<Half>(actual), ref tolerance);
 #endif
+            }
 
             if (tolerance.Mode == ToleranceMode.Ulps)
                 throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
+            return commonType switch
             {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
-
-#if NETFRAMEWORK
-                return AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance);
-#else
-                if (expected is UInt128 || actual is UInt128)
-                    return AreEqual(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), tolerance);
-
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
+                CommonNumericType.Decimal => AreEqual(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), tolerance),
+#if !NETFRAMEWORK
+                CommonNumericType.BigInteger => AreEqual(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), tolerance),
+                CommonNumericType.UInt128 => AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance),
+                CommonNumericType.Int128 => AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance),
 #endif
+                CommonNumericType.UInt64 => AreEqual(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), tolerance),
+                CommonNumericType.Int64 => AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance),
+                CommonNumericType.NUInt => AreEqual(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), tolerance),
+                CommonNumericType.NInt => AreEqual(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), tolerance),
+                CommonNumericType.UInt32 => AreEqual(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), tolerance),
+                CommonNumericType.Int32 => AreEqual(ConvertToValue<int>(expected), ConvertToValue<int>(actual), tolerance),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
+        }
+
+        /// <summary>
+        /// Checks that a tolerance can be used when either value is decimal, also when the values do not fit in a decimal
+        /// and are compared as double, so that depends on the types and not on the values. Equality and the comparison
+        /// constraints use the same check, so they agree on which tolerances are valid.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The tolerance is not valid for decimal values.</exception>
+        internal static void CheckDecimalTolerance(Tolerance tolerance)
+        {
+            if (tolerance.Mode == ToleranceMode.Ulps)
+                throw new InvalidOperationException(UlpsRequiresFloatingPoint);
+
+            if (tolerance.Mode == ToleranceMode.Unset)
+                return;
+
+            // A float or Half cannot represent most decimal amounts, e.g. 0.7f is 0.699999988079071,
+            // and the amount as it was written cannot be recovered from it reliably.
+            if (IsBinaryFloatingPoint(tolerance.Amount) && tolerance.Amount is not double)
+            {
+                throw new InvalidOperationException(
+                    $"A {tolerance.Amount.GetType().Name} tolerance of {tolerance.Amount} cannot be used for decimal values, use a decimal or double tolerance instead");
             }
 
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return AreEqual(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), tolerance);
-
-            if (expected is Int128 || actual is Int128)
-                return AreEqual(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), tolerance);
-#endif
-
-            if (expected is ulong || actual is ulong)
-                return AreEqual(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), tolerance);
-
-            if (expected is long || actual is long)
-                return AreEqual(ConvertToValue<long>(expected), ConvertToValue<long>(actual), tolerance);
-
-            if (expected is nuint || actual is nuint)
-                return AreEqual(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), tolerance);
-
-            if (expected is nint || actual is nint)
-                return AreEqual(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), tolerance);
-
-            if (expected is uint || actual is uint)
-                return AreEqual(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), tolerance);
-
-            return AreEqual(ConvertToValue<int>(expected), ConvertToValue<int>(actual), tolerance);
+            if (tolerance.Mode == ToleranceMode.Linear && !IsWithinDecimalRange(tolerance.Amount))
+                throw new InvalidOperationException(ToleranceOutsideDecimalRange);
         }
 
         /// <summary>
@@ -266,7 +366,10 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException(UlpsRequiresFloatingPoint);
 
             if (expected is decimal || actual is decimal)
+            {
+                CheckDecimalTolerance(tolerance);
                 return AreEqual(expected.ToDecimal(null), actual.ToDecimal(null), tolerance);
+            }
 
             if (expected is ulong || actual is ulong)
                 return AreEqual(expected.ToUInt64(null), actual.ToUInt64(null), tolerance);
@@ -309,7 +412,11 @@ namespace NUnit.Framework.Constraints
                     if (expected == 0.0)
                         return expected.Equals(actual);
 
-                    double relativeError = Math.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    double signedDifference = expected - actual;
+                    double relativeError = double.IsInfinity(signedDifference)
+                        ? Math.Abs((expected / 2 - actual / 2) / expected) * 2
+                        : Math.Abs(signedDifference / expected);
                     return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
 
                 case ToleranceMode.Ulps:
@@ -342,12 +449,22 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return Math.Abs(expected - actual) <= Convert.ToDouble(tolerance.Amount);
+                    float difference = Math.Abs(expected - actual);
+
+                    // The difference of two finite values overflows to infinity when it exceeds the range of float.
+                    if (float.IsInfinity(difference))
+                        return Math.Abs((double)expected - (double)actual) <= Convert.ToDouble(tolerance.Amount);
+
+                    return difference <= Convert.ToDouble(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (expected == 0.0f)
                         return expected.Equals(actual);
-                    float relativeError = Math.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    float signedDifference = expected - actual;
+                    float relativeError = float.IsInfinity(signedDifference)
+                        ? Math.Abs((expected / 2 - actual / 2) / expected) * 2
+                        : Math.Abs(signedDifference / expected);
                     return (relativeError <= Convert.ToSingle(tolerance.Amount) / 100.0f);
 
                 case ToleranceMode.Ulps:
@@ -358,125 +475,59 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+#endif
 
-        private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
+        // Integer comparisons: the difference between two integers is calculated without overflow in the
+        // unsigned type of the same size and compared with the largest difference the tolerance allows.
+        // For a percentage tolerance that is floor(|expected| * percentage / 100), as the difference is a whole number.
+        private static bool AreEqual(int expected, int actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    ulong ulongTolerance = Convert.ToUInt64(tolerance.Amount);
-                    if (ulongTolerance > 0ul)
-                    {
-                        ulong diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= ulongTolerance;
-                    }
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0ul)
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    ulong difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs((double)difference / (double)expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
-        }
-
-        private static bool AreEqual(long expected, long actual, Tolerance tolerance)
-        {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    long longTolerance = Convert.ToInt64(tolerance.Amount);
-                    if (longTolerance > 0L)
-                        return Math.Abs(expected - actual) <= longTolerance;
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0L)
-                        return expected.Equals(actual);
-
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
 
         private static bool AreEqual(uint expected, uint actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    uint uintTolerance = Convert.ToUInt32(tolerance.Amount);
-                    if (uintTolerance > 0)
-                    {
-                        uint diff = expected >= actual ? expected - actual : actual - expected;
-                        return diff <= uintTolerance;
-                    }
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0u)
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Math.Abs() here since it's unsigned
-                    double difference = Math.Max(expected, actual) - Math.Min(expected, actual);
-                    double relativeError = Math.Abs(difference / expected);
-                    return (relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0);
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
 
-        private static bool AreEqual(int expected, int actual, Tolerance tolerance)
+        private static bool AreEqual(long expected, long actual, Tolerance tolerance)
         {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    int intTolerance = Convert.ToInt32(tolerance.Amount);
-                    if (intTolerance > 0)
-                        return Math.Abs(expected - actual) <= intTolerance;
-
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Percent:
-                    if (expected == 0)
-                        return expected.Equals(actual);
-
-                    double relativeError = Math.Abs(
-                        (double)(expected - actual) / (double)expected);
-                    return relativeError <= Convert.ToDouble(tolerance.Amount) / 100.0;
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
         }
-#endif
 
-        // Used on .NET and .NET Framework, as decimal arithmetic can overflow.
+        private static bool AreEqual(ulong expected, ulong actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(nint expected, nint actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, 0), tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(nuint expected, nuint actual, Tolerance tolerance)
+        {
+            ulong maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {
             switch (tolerance.Mode)
@@ -485,27 +536,99 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    // A difference outside the decimal range exceeds any tolerance within it,
-                    // but can still be within a tolerance outside the decimal range.
-                    if (!TryAbsoluteDifference(expected, actual, out decimal difference))
-                        return !IsWithinDecimalRange(tolerance.Amount) && Math.Abs((double)expected - (double)actual) <= ConvertToValue<double>(tolerance.Amount);
+                    // Only integers that .NET Framework compares as decimal can have a tolerance outside the decimal range,
+                    // which allows any difference between them. A difference outside the decimal range exceeds any tolerance within it.
+                    if (!IsWithinDecimalRange(tolerance.Amount))
+                        return true;
 
-                    return !IsWithinDecimalRange(tolerance.Amount) || difference <= ConvertToValue<decimal>(tolerance.Amount);
+                    // Uses the bounds of DecimalRange, so equality agrees with the comparison constraints:
+                    // a value is equal exactly when it is both greater than or equal to and less than or equal to the expected value.
+                    return IsWithinBounds(actual, expected, ToleranceAsDecimal(tolerance.Amount));
 
                 case ToleranceMode.Percent:
-                    if (expected == 0m)
-                        return expected.Equals(actual);
+                    // Uses the bounds of PercentRange, for the same reason.
+                    decimal percent = ToleranceAsDecimal(tolerance.Amount);
+                    if (TryGetPercentageOffset(expected, percent, out decimal offset))
+                        return IsWithinBounds(actual, expected, offset);
 
-                    double absoluteDifference = TryAbsoluteDifference(expected, actual, out decimal exactDifference)
-                        ? (double)exactDifference
-                        : Math.Abs((double)expected - (double)actual);
-                    double relativeError = absoluteDifference / Math.Abs((double)expected);
-                    return relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0;
+                    double approximateExpected = (double)expected;
+                    double approximateOffset = PercentageOffset(approximateExpected, (double)percent);
+                    return CompareWithBound(actual, approximateExpected - approximateOffset) >= 0 &&
+                           CompareWithBound(actual, approximateExpected + approximateOffset) <= 0;
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
+
+#if !NETFRAMEWORK
+        private static bool AreEqual(Int128 expected, Int128 actual, Tolerance tolerance)
+        {
+            UInt128 maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(AbsoluteDifference(expected, Int128.Zero), tolerance.Amount)
+                : MaxLinearDifference128(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(UInt128 expected, UInt128 actual, Tolerance tolerance)
+        {
+            UInt128 maxDifference = tolerance.Mode == ToleranceMode.Percent
+                ? PercentageOf(expected, tolerance.Amount)
+                : MaxLinearDifference128(tolerance);
+            return AbsoluteDifference(expected, actual) <= maxDifference;
+        }
+
+        private static bool AreEqual(BigInteger expected, BigInteger actual, Tolerance tolerance)
+        {
+            BigInteger difference = AbsoluteDifference(expected, actual);
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return difference.IsZero;
+
+                case ToleranceMode.Linear:
+                    return difference <= WholePartOf(tolerance.Amount);
+
+                case ToleranceMode.Percent:
+                    return difference <= PercentageOf(BigInteger.Abs(expected), tolerance.Amount);
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+#endif
+
+        // The difference between two integers fits in the unsigned type of the same size.
+        // Subtracting the smaller from the larger value using unsigned arithmetic gives the exact result,
+        // even when the signed subtraction would overflow, e.g. int.MaxValue - int.MinValue.
+        private static uint AbsoluteDifference(int x, int y)
+            => x >= y ? unchecked((uint)x - (uint)y) : unchecked((uint)y - (uint)x);
+
+        private static uint AbsoluteDifference(uint x, uint y)
+            => x >= y ? x - y : y - x;
+
+        private static ulong AbsoluteDifference(long x, long y)
+            => x >= y ? unchecked((ulong)x - (ulong)y) : unchecked((ulong)y - (ulong)x);
+
+        private static ulong AbsoluteDifference(ulong x, ulong y)
+            => x >= y ? x - y : y - x;
+
+        private static nuint AbsoluteDifference(nint x, nint y)
+            => x >= y ? unchecked((nuint)x - (nuint)y) : unchecked((nuint)y - (nuint)x);
+
+        private static nuint AbsoluteDifference(nuint x, nuint y)
+            => x >= y ? x - y : y - x;
+
+#if !NETFRAMEWORK
+        private static UInt128 AbsoluteDifference(Int128 x, Int128 y)
+            => x >= y ? unchecked((UInt128)x - (UInt128)y) : unchecked((UInt128)y - (UInt128)x);
+
+        private static UInt128 AbsoluteDifference(UInt128 x, UInt128 y)
+            => x >= y ? x - y : y - x;
+
+        private static BigInteger AbsoluteDifference(BigInteger x, BigInteger y)
+            => BigInteger.Abs(x - y);
+#endif
 
         // Subtracting decimals with different signs can exceed the decimal range.
         private static bool TryAbsoluteDifference(decimal x, decimal y, out decimal difference)
@@ -525,6 +648,670 @@ namespace NUnit.Framework.Constraints
             difference = Math.Abs(x - y);
             return true;
         }
+
+        // 2^64 as decimal, the first value that no longer fits in a ulong.
+        private const decimal UInt64Range = 18446744073709551616m;
+
+        /// <summary>
+        /// The largest difference between two integers allowed by a tolerance that is not a percentage.
+        /// A fractional amount is rounded down, which is exact as the difference is a whole number:
+        /// it is within 1.5 exactly when it is within 1. An amount too large for the type allows any difference.
+        /// </summary>
+        private static ulong MaxLinearDifference(Tolerance tolerance)
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return 0;
+
+                case ToleranceMode.Linear:
+                    if (tolerance.Amount is decimal decimalValue)
+                        return decimalValue >= UInt64Range ? ulong.MaxValue : (ulong)decimalValue;
+                    if (IsBinaryFloatingPoint(tolerance.Amount))
+                    {
+                        double doubleValue = ConvertToValue<double>(tolerance.Amount);
+                        return doubleValue >= (double)UInt64Range ? ulong.MaxValue : (ulong)ToleranceAsDecimal(tolerance.Amount);
+                    }
+#if !NETFRAMEWORK
+                    if (tolerance.Amount is Int128 or UInt128)
+                    {
+                        UInt128 wideValue = ConvertToValue<UInt128>(tolerance.Amount);
+                        return wideValue > ulong.MaxValue ? ulong.MaxValue : (ulong)wideValue;
+                    }
+#endif
+                    return ConvertToValue<ulong>(tolerance.Amount);
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+
+#if !NETFRAMEWORK
+        private static UInt128 MaxLinearDifference128(Tolerance tolerance)
+        {
+            switch (tolerance.Mode)
+            {
+                case ToleranceMode.Unset:
+                    return UInt128.Zero;
+
+                case ToleranceMode.Linear:
+                    BigInteger wholePart = WholePartOf(tolerance.Amount);
+                    return wholePart >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)wholePart;
+
+                default:
+                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
+            }
+        }
+#endif
+
+        /// <summary>
+        /// The largest difference between two integers allowed by a percentage of the expected value:
+        /// floor(|expected| * percentage / 100), as the difference is a whole number.
+        /// </summary>
+        private static ulong PercentageOf(ulong magnitude, object percentage)
+        {
+#if !NETFRAMEWORK
+            // Calculate exactly, as decimal arithmetic rounds the product to 28 or 29 significant digits:
+            // 12 * 83.33333333333333333333333333 rounds to 1000, but floor(12 * 83.33...3 / 100) is 9.
+            UInt128 maxDifference = PercentageOf((UInt128)magnitude, percentage);
+            return maxDifference >= ulong.MaxValue ? ulong.MaxValue : (ulong)maxDifference;
+#else
+            // .NET Framework has no BigInteger, so a product with more significant digits than a decimal can hold is rounded.
+            decimal percent = ToleranceAsDecimal(percentage);
+            if (magnitude == 0)
+                return 0;
+
+            // The result does not fit in a ulong if the product does not fit in a decimal.
+            // The quotient can round up, so the product may not fit when it is equal to the percentage.
+            // A percentage that large allows a difference far larger than ulong.MaxValue anyway.
+            if (percent >= decimal.MaxValue / magnitude)
+                return ulong.MaxValue;
+
+            decimal maxDifference = decimal.Floor(magnitude * percent / 100m);
+            return maxDifference >= UInt64Range ? ulong.MaxValue : (ulong)maxDifference;
+#endif
+        }
+
+#if !NETFRAMEWORK
+        private static UInt128 PercentageOf(UInt128 magnitude, object percentage)
+        {
+            BigInteger maxDifference = PercentageOf((BigInteger)magnitude, percentage);
+            return maxDifference >= UInt128.MaxValue ? UInt128.MaxValue : (UInt128)maxDifference;
+        }
+
+        /// <summary>
+        /// Calculates floor(magnitude * percentage / 100) exactly, also when the product is outside the range
+        /// or precision of decimal.
+        /// </summary>
+        private static BigInteger PercentageOf(BigInteger magnitude, object percentage)
+        {
+            GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
+            return magnitude * numerator / (100 * denominator);
+        }
+
+        /// <summary>
+        /// Gets the whole part of a tolerance amount, which is never negative: as written within the decimal range,
+        /// otherwise its value, which is a whole number for a binary floating point amount that large.
+        /// </summary>
+        private static BigInteger WholePartOf(object amount)
+            => IsWithinDecimalRange(amount)
+                ? new BigInteger(decimal.Truncate(ToleranceAsDecimal(amount)))
+                : ConvertToValue<BigInteger>(amount);
+
+        /// <summary>
+        /// Gets a percentage, which always fits in a decimal and is never negative, as the fraction
+        /// numerator / denominator of the decimal value it is written as.
+        /// </summary>
+        private static void GetExactFraction(object percentage, out BigInteger numerator, out BigInteger denominator)
+        {
+            Span<int> bits = stackalloc int[4];
+            decimal.GetBits(ToleranceAsDecimal(percentage), bits);
+            numerator = ((BigInteger)(uint)bits[2] << 64) | ((BigInteger)(uint)bits[1] << 32) | (uint)bits[0];
+            denominator = BigInteger.Pow(10, (bits[3] >> 16) & 0xFF);
+        }
+#endif
+
+        /// <summary>
+        /// Converts a tolerance amount within the decimal range to decimal. A binary floating point amount is taken as
+        /// the decimal value it is written as, its round-trip representation, rather than its exact binary value.
+        /// The conversion operator cannot be used as is: before .NET 11 it rounds a double to 15 and a float to
+        /// 7 significant digits, and from .NET 11 it does not round at all.
+        /// </summary>
+        private static decimal ToleranceAsDecimal(object amount)
+        {
+            if (!IsBinaryFloatingPoint(amount))
+                return ConvertToValue<decimal>(amount);
+
+            if (amount is double value && TryGetShortDecimal(value, out decimal result))
+                return result;
+
+            // A double that needs more than 15 significant digits, or a float or Half.
+            string text = ((IFormattable)amount).ToString("R", CultureInfo.InvariantCulture);
+            return decimal.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        private const int ShortDecimalMinExponent = -8;
+        private const int ShortDecimalMaxExponent = 14;
+
+        // 10^-8 to 10^15, which are exact in decimal.
+        private static readonly decimal[] ShortDecimalPowersOf10 = GetShortDecimalPowersOf10();
+
+        private static decimal[] GetShortDecimalPowersOf10()
+        {
+            var powers = new decimal[ShortDecimalMaxExponent - ShortDecimalMinExponent + 2];
+            decimal power = 0.00000001m;
+            for (int i = 0; i < powers.Length; i++, power *= 10m)
+                powers[i] = power;
+            return powers;
+        }
+
+        /// <summary>
+        /// Gets the decimal with at most 15 significant digits that converts back to <paramref name="value"/>,
+        /// which is the value as it is written, without formatting and parsing it.
+        /// </summary>
+        /// <remarks>
+        /// The spacing of decimals with 15 significant digits is wider than that of doubles,
+        /// so at most one of them converts back to a double and it is also the shortest one.
+        /// Converting it back is correctly rounded, as its integer mantissa is below 2^53 and it has at most 22 decimal places,
+        /// so both are exact doubles and the conversion is a single division.
+        /// </remarks>
+        private static bool TryGetShortDecimal(double value, out decimal result)
+        {
+            double magnitude = Math.Abs(value);
+            if (magnitude == 0)
+            {
+                result = 0m;
+                return true;
+            }
+
+            result = 0m;
+            if (!(magnitude >= 1e-8 && magnitude < 1e15))
+                return false;
+
+            // The conversion gives at least 15 significant digits, possibly inexact before .NET Core 3.0.
+            decimal converted = (decimal)value;
+            decimal convertedMagnitude = Math.Abs(converted);
+
+            // Find the exponent of the converted value exactly, starting from an estimate.
+            int exponent = Math.Min(Math.Max((int)Math.Floor(Math.Log10(magnitude)), ShortDecimalMinExponent), ShortDecimalMaxExponent);
+            while (exponent > ShortDecimalMinExponent && convertedMagnitude < ShortDecimalPowersOf10[exponent - ShortDecimalMinExponent])
+                exponent--;
+            while (exponent < ShortDecimalMaxExponent && convertedMagnitude >= ShortDecimalPowersOf10[exponent + 1 - ShortDecimalMinExponent])
+                exponent++;
+            if (convertedMagnitude < ShortDecimalPowersOf10[exponent - ShortDecimalMinExponent] ||
+                convertedMagnitude >= ShortDecimalPowersOf10[exponent + 1 - ShortDecimalMinExponent])
+            {
+                return false;
+            }
+
+            decimal rounded = decimal.Round(converted, 14 - exponent, MidpointRounding.ToEven);
+            if ((double)rounded != value)
+                return false;
+
+            result = rounded;
+            return true;
+        }
+
+        private static bool IsBinaryFloatingPoint(object value)
+#if NETFRAMEWORK
+            => value is double or float;
+#else
+            => value is double or float or Half;
+#endif
+
+        /// <summary>
+        /// Whether a value is NaN or infinite, which a tolerance amount cannot be.
+        /// </summary>
+        internal static bool IsNaNOrInfinity(object value)
+        {
+            if (!IsBinaryFloatingPoint(value))
+                return false;
+
+            double doubleValue = ConvertToValue<double>(value);
+            return double.IsNaN(doubleValue) || double.IsInfinity(doubleValue);
+        }
+        #endregion
+
+        #region Tolerance Ranges
+
+        /// <summary>
+        /// Converts an expected value to the type in which it is compared with the actual value, so the range of a tolerance
+        /// is calculated in that type, unless both are integers. It is converted as AreEqual converts it, so a value is equal
+        /// to it exactly when it is both greater than or equal to and less than or equal to it.
+        /// The expected value is often an integer constant, e.g. 0, while the actual value is a double:
+        /// a fractional tolerance is then valid, while it is not for an integer actual value.
+        /// A decimal expected value compared with a double outside the decimal range is compared as double,
+        /// so its range is too: a decimal range cannot bound a double beyond it.
+        /// </summary>
+        internal static object ToComparisonType(object expected, object actual)
+        {
+            if (!IsNumericType(expected) || !IsNumericType(actual))
+                return expected;
+
+            // Two integers keep their type, also when .NET Framework compares mixed signed and unsigned integers as decimal.
+            if (IsFixedPointNumeric(expected) && IsFixedPointNumeric(actual))
+                return expected;
+
+            return GetCommonNumericType(expected, actual) switch
+            {
+                CommonNumericType.Double => ConvertToValue<double>(expected),
+                CommonNumericType.Single => ConvertToValue<float>(expected),
+#if !NETFRAMEWORK
+                CommonNumericType.Half => ConvertToValue<Half>(expected),
+#endif
+                CommonNumericType.Decimal => ConvertToValue<decimal>(expected),
+                _ => expected,
+            };
+        }
+
+        /// <summary>
+        /// Calculates the range value - amount to value + amount, used by the comparison constraints.
+        /// The type of the value determines the type of the bounds. Bounds that do not fit in that type
+        /// use a wider type, so custom comparers see the type of the value whenever possible.
+        /// A decimal bound that cannot be represented exactly is rounded towards the value, so it is exact for >= and &lt;=,
+        /// or away from it when <paramref name="forStrictComparison"/> is set, so it is exact for > and &lt;.
+        /// </summary>
+        internal static Tolerance.Range LinearRange(object value, object amount, bool forStrictComparison)
+        {
+            switch (value)
+            {
+                case double doubleValue:
+                    double doubleOffset = ConvertToValue<double>(amount);
+                    return new Tolerance.Range(doubleValue - doubleOffset, doubleValue + doubleOffset);
+
+                case float floatValue:
+                    return FloatRange(floatValue, ConvertToValue<float>(amount), ConvertToValue<double>(amount));
+
+#if !NETFRAMEWORK
+                case Half halfValue:
+                    return HalfRange(halfValue, ConvertToValue<double>(amount));
+#endif
+
+                case decimal decimalValue:
+                    return DecimalRange(decimalValue, amount, forStrictComparison);
+            }
+
+            // A range of integers cannot be fractional: there is no bound that is correct for both > and >=,
+            // e.g. a > 3.5 is a > 3, but a >= 3.5 is a >= 4.
+            if (!IsWholeNumber(amount))
+                throw new InvalidOperationException($"Tolerance {amount} must be a whole number for the integer value {value}");
+
+            if (TryGetDecimal(value, out decimal decimalValueOfInteger) && TryGetDecimal(amount, out decimal offset) &&
+                offset <= decimal.MaxValue - Math.Abs(decimalValueOfInteger))
+            {
+                return new Tolerance.Range(
+                    NarrowToTypeOf(value, decimalValueOfInteger - offset),
+                    NarrowToTypeOf(value, decimalValueOfInteger + offset));
+            }
+
+#if !NETFRAMEWORK
+            BigInteger bigValue = ConvertToValue<BigInteger>(value);
+            BigInteger bigOffset = WholePartOf(amount);
+            return new Tolerance.Range(
+                NarrowToTypeOf(value, bigValue - bigOffset, isLowerBound: true),
+                NarrowToTypeOf(value, bigValue + bigOffset, isLowerBound: false));
+#else
+            // The amount does not fit in a decimal, so the bounds are far outside the range of any integer type.
+            double approximateValue = ConvertToValue<double>(value);
+            double approximateOffset = ConvertToValue<double>(amount);
+            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+#endif
+        }
+
+        /// <summary>
+        /// Calculates the range value - percentage of value to value + percentage of value,
+        /// used by the comparison constraints. The type of the value determines the type of the bounds.
+        /// As the offset of an integer value is usually fractional, it uses exact decimal bounds unless
+        /// a bound is a whole number that fits in the type of the value.
+        /// A decimal bound is rounded as in <see cref="LinearRange"/>.
+        /// </summary>
+        internal static Tolerance.Range PercentRange(object value, object percentage, bool forStrictComparison)
+        {
+            if (IsBinaryFloatingPoint(value))
+            {
+                double offset = PercentageOffset(ConvertToValue<double>(value), ConvertToValue<double>(percentage));
+
+                switch (value)
+                {
+                    case double doubleValue:
+                        return new Tolerance.Range(doubleValue - offset, doubleValue + offset);
+                    case float floatValue:
+                        return FloatRange(floatValue, (float)offset, offset);
+#if !NETFRAMEWORK
+                    case Half halfValue:
+                        return HalfRange(halfValue, offset);
+#endif
+                }
+            }
+
+            // A percentage always fits in a decimal, as Tolerance does not allow larger ones.
+            decimal percent = ToleranceAsDecimal(percentage);
+            if (TryGetDecimal(value, out decimal decimalValue) &&
+                TryGetPercentageOffset(decimalValue, percent, out decimal decimalOffset))
+            {
+                if (value is decimal)
+                    return DecimalBounds(decimalValue, decimalOffset, forStrictComparison);
+
+                // A bound of an integer value that is outside the decimal range is calculated below.
+                if (TryGetLowerBound(decimalValue, decimalOffset, forStrictComparison, out decimal lowerBound) &&
+                    TryGetUpperBound(decimalValue, decimalOffset, forStrictComparison, out decimal upperBound))
+                {
+                    return new Tolerance.Range(NarrowToTypeOf(value, lowerBound), NarrowToTypeOf(value, upperBound));
+                }
+            }
+
+#if !NETFRAMEWORK
+            // An integer value or offset outside the decimal range: a whole offset is calculated exactly, as in LinearRange.
+            // A fractional offset is not, as no integer bound is correct for both > and >=, and decimal cannot hold it.
+            if (IsFixedPointNumeric(value))
+            {
+                GetExactFraction(percentage, out BigInteger numerator, out BigInteger denominator);
+                BigInteger bigValue = ConvertToValue<BigInteger>(value);
+                BigInteger bigOffset = BigInteger.DivRem(BigInteger.Abs(bigValue) * numerator, 100 * denominator, out BigInteger remainder);
+                if (remainder.IsZero)
+                {
+                    return new Tolerance.Range(
+                        NarrowToTypeOf(value, bigValue - bigOffset, isLowerBound: true),
+                        NarrowToTypeOf(value, bigValue + bigOffset, isLowerBound: false));
+                }
+            }
+#endif
+
+            // Values, or offsets of values, outside the decimal range.
+            double approximateValue = ConvertToValue<double>(value);
+            double approximateOffset = PercentageOffset(approximateValue, (double)percent);
+            return new Tolerance.Range(approximateValue - approximateOffset, approximateValue + approximateOffset);
+        }
+
+        // A limit for |value| * percent, calculated in double, below which multiplying the decimals cannot overflow.
+        // It is below decimal.MaxValue, about 7.92e28, by far more than the relative error of the double product, about 1e-16.
+        private const double MaxSafeDecimalProduct = 7e28;
+
+        // The same limit for the offset |value| * percent / 100, which is what has to fit when dividing by 100 first.
+        private const double MaxSafeDecimalPercentageProduct = 100 * MaxSafeDecimalProduct;
+
+        /// <summary>
+        /// Calculates the offset |value| * percent / 100 of a decimal value, if it fits in a decimal.
+        /// Multiplying first keeps the offset exact for most percentages, unless the product overflows.
+        /// </summary>
+        private static bool TryGetPercentageOffset(decimal value, decimal percent, out decimal offset)
+        {
+            decimal magnitude = Math.Abs(value);
+            double approximateProduct = (double)magnitude * (double)percent;
+            if (approximateProduct < MaxSafeDecimalProduct)
+            {
+                offset = magnitude * percent / 100;
+                return true;
+            }
+
+            if (approximateProduct < MaxSafeDecimalPercentageProduct)
+            {
+                offset = magnitude / 100 * percent;
+                return true;
+            }
+
+            // Close to or beyond the decimal range, which only the exact calculation can tell.
+            try
+            {
+                offset = magnitude / 100 * percent;
+                return true;
+            }
+            catch (OverflowException)
+            {
+                offset = 0m;
+                return false;
+            }
+        }
+
+        // A bound of a decimal value that is outside the decimal range, which any decimal is within.
+        // It cannot be (double)decimal.MaxValue, as decimal.MaxValue is compared as that double and so is not less than it.
+        private const double BeyondDecimalRange = 2 * 7.9228162514264337593543950335e28;
+
+        /// <summary>
+        /// The range value - offset to value + offset of a decimal value, rounded as in <see cref="TryGetUpperBound"/>.
+        /// A bound that is outside the decimal range is a double beyond it.
+        /// The bounds are cast to object, as decimal and double have no common type.
+        /// </summary>
+        private static Tolerance.Range DecimalBounds(decimal value, decimal offset, bool forStrictComparison)
+        {
+            return new Tolerance.Range(
+                TryGetLowerBound(value, offset, forStrictComparison, out decimal lowerBound) ? lowerBound : (object)-BeyondDecimalRange,
+                TryGetUpperBound(value, offset, forStrictComparison, out decimal upperBound) ? upperBound : (object)BeyondDecimalRange);
+        }
+
+        /// <summary>
+        /// Whether a decimal value is within the bounds of <see cref="DecimalBounds"/> for >= and &lt;=.
+        /// </summary>
+        private static bool IsWithinBounds(decimal actual, decimal expected, decimal offset)
+            => (!TryGetLowerBound(expected, offset, forStrictComparison: false, out decimal lowerBound) || actual >= lowerBound) &&
+               (!TryGetUpperBound(expected, offset, forStrictComparison: false, out decimal upperBound) || actual <= upperBound);
+
+        /// <summary>
+        /// Gets the decimal bound value - offset, rounded as in <see cref="TryGetUpperBound"/>, unless it is below the decimal range.
+        /// </summary>
+        private static bool TryGetLowerBound(decimal value, decimal offset, bool forStrictComparison, out decimal bound)
+        {
+            bool fits = TryGetUpperBound(-value, offset, forStrictComparison, out decimal negatedBound);
+            bound = -negatedBound;
+            return fits;
+        }
+
+        /// <summary>
+        /// Gets the decimal bound value + offset, unless it is above the decimal range: the largest decimal that is not greater,
+        /// for >= and &lt;=, or the smallest decimal that is not less, for > and &lt;, when <paramref name="forStrictComparison"/> is set.
+        /// </summary>
+        /// <remarks>
+        /// Decimal addition rounds a sum that needs more than 28 or 29 significant digits to the nearest decimal,
+        /// e.g. 9e27 + 0.6 to 9e27 + 1, which would be within the tolerance for &lt;= although it is not.
+        /// No decimal is between the two decimals around such a sum, so a decimal is not greater than the sum exactly
+        /// when it is not greater than the decimal below it, and less than the sum exactly when it is less than the decimal above it.
+        /// So >=, &lt;= and equality use the bound rounded towards the value, and > and &lt; the bound rounded away from it.
+        /// </remarks>
+        private static bool TryGetUpperBound(decimal value, decimal offset, bool forStrictComparison, out decimal bound)
+        {
+            // Only a positive value can overflow, and only when the offset is close to what is left of the range.
+            if (value > 0m && offset >= decimal.MaxValue - value - 1m)
+            {
+                try
+                {
+                    bound = value + offset;
+                }
+                catch (OverflowException)
+                {
+                    bound = 0m;
+                    return false;
+                }
+            }
+            else
+            {
+                bound = value + offset;
+            }
+
+            // Subtracting the larger operand from the sum is exact, as the remainder is no larger than the other operand,
+            // so the sum was rounded up when the remainder exceeds the other operand, and down when it is less.
+            bool valueIsLarger = Math.Abs(value) >= offset;
+            int rounding = (bound - (valueIsLarger ? value : offset)).CompareTo(valueIsLarger ? offset : value);
+            if (forStrictComparison)
+            {
+                if (rounding < 0)
+                {
+                    // A sum rounded down to decimal.MaxValue is above the decimal range.
+                    if (bound == decimal.MaxValue)
+                        return false;
+
+                    bound += UnitInLastPlace(bound);
+                }
+            }
+            else if (rounding > 0)
+            {
+                bound -= UnitInLastPlace(bound);
+            }
+
+            return true;
+        }
+
+        private static decimal UnitInLastPlace(decimal value)
+        {
+#if NETFRAMEWORK
+            byte scale = (byte)((decimal.GetBits(value)[3] >> 16) & 0xFF);
+#else
+            byte scale = value.Scale;
+#endif
+            return new decimal(1, 0, 0, false, scale);
+        }
+
+        /// <summary>
+        /// Compares a decimal value with a bound of type double as <see cref="Compare(object, object)"/> does:
+        /// as decimal when the bound is within the decimal range, otherwise as double.
+        /// </summary>
+        private static int CompareWithBound(decimal value, double bound)
+            => Math.Abs(bound) < (double)decimal.MaxValue
+                ? value.CompareTo(ConvertToValue<decimal>(bound))
+                : ((double)value).CompareTo(bound);
+
+        // Multiplying first keeps round percentages exact, but when the product overflows
+        // to infinity the offset itself can still be finite, so divide first then.
+        private static double PercentageOffset(double value, double percentage)
+        {
+            double product = value * percentage;
+            return Math.Abs(double.IsInfinity(product) ? value / 100 * percentage : product / 100);
+        }
+
+        private static Tolerance.Range DecimalRange(decimal value, object amount, bool forStrictComparison)
+        {
+            if (!TryGetDecimal(amount, out decimal offset))
+                throw new InvalidOperationException(ToleranceOutsideDecimalRange);
+
+            return DecimalBounds(value, offset, forStrictComparison);
+        }
+
+        private static Tolerance.Range FloatRange(float value, float offset, double offsetAsDouble)
+        {
+            return new Tolerance.Range(
+                BoundOrDouble(value - offset, value - offsetAsDouble),
+                BoundOrDouble(value + offset, value + offsetAsDouble));
+        }
+
+        /// <summary>
+        /// Keeps a bound in the type of the value only when it is exactly the bound calculated in double,
+        /// so custom comparers see that type whenever possible. Otherwise the bound in the type of the value is wrong:
+        /// it was rounded, e.g. 1 - 0.01 to 0.99f, which equals 0.99f; it overflowed to infinity; the offset was too small
+        /// for the precision of the type to move it away from the value; or infinity minus an offset that overflowed gave NaN.
+        /// The bound is cast to object, as otherwise the conditional would convert it to double.
+        /// </summary>
+        private static object BoundOrDouble(float bound, double boundAsDouble)
+            => ((double)bound).Equals(boundAsDouble) ? bound : (object)boundAsDouble;
+
+#if !NETFRAMEWORK
+        private static object BoundOrDouble(Half bound, double boundAsDouble)
+            => ((double)bound).Equals(boundAsDouble) ? bound : (object)boundAsDouble;
+
+        private static Tolerance.Range HalfRange(Half value, double offset)
+        {
+            Half halfOffset = (Half)offset;
+            return new Tolerance.Range(
+                BoundOrDouble(value - halfOffset, (double)value - offset),
+                BoundOrDouble(value + halfOffset, (double)value + offset));
+        }
+#endif
+
+        internal static bool IsWholeNumber(object amount)
+        {
+            if (amount is decimal decimalValue)
+                return decimalValue == decimal.Truncate(decimalValue);
+
+            if (IsBinaryFloatingPoint(amount))
+            {
+                double doubleValue = ConvertToValue<double>(amount);
+                return Math.Floor(doubleValue) == doubleValue;
+            }
+
+            return true;
+        }
+
+        // Used for integer and decimal values and for tolerance amounts, so binary floating point values are amounts.
+        private static bool TryGetDecimal(object value, out decimal decimalValue)
+        {
+            bool fits = IsWithinDecimalRange(value);
+            decimalValue = fits ? ToleranceAsDecimal(value) : 0m;
+            return fits;
+        }
+
+        /// <summary>
+        /// Converts a whole bound to the type of the integer value if it fits, otherwise to the next wider integer type,
+        /// as C# promotes: long for 32-bit values and Int128 for wider values. On .NET Framework, which has no Int128,
+        /// and for fractional bounds, it keeps the bound as decimal.
+        /// </summary>
+        private static object NarrowToTypeOf(object value, decimal bound)
+        {
+            // A bound of a decimal value stays decimal, also a whole one.
+            if (value is decimal || bound != decimal.Truncate(bound))
+                return bound;
+
+            CommonNumericType type = GetCommonNumericType(value, value);
+            switch (type)
+            {
+                case CommonNumericType.Int32 when bound >= int.MinValue && bound <= int.MaxValue:
+                    return (int)bound;
+                case CommonNumericType.UInt32 when bound >= uint.MinValue && bound <= uint.MaxValue:
+                    return (uint)bound;
+                case CommonNumericType.Int64 when bound >= long.MinValue && bound <= long.MaxValue:
+                    return (long)bound;
+                case CommonNumericType.UInt64 when bound >= ulong.MinValue && bound <= ulong.MaxValue:
+                    return (ulong)bound;
+                case CommonNumericType.NInt when IntPtr.Size == 8 ? bound >= long.MinValue && bound <= long.MaxValue : bound >= int.MinValue && bound <= int.MaxValue:
+                    return (nint)(long)bound;
+                case CommonNumericType.NUInt when IntPtr.Size == 8 ? bound >= ulong.MinValue && bound <= ulong.MaxValue : bound >= uint.MinValue && bound <= uint.MaxValue:
+                    return (nuint)(ulong)bound;
+#if !NETFRAMEWORK
+                case CommonNumericType.Int128:
+                    return (Int128)bound;
+                case CommonNumericType.UInt128 when bound >= 0m:
+                    return (UInt128)bound;
+#endif
+            }
+
+            bool is32BitValue = type is CommonNumericType.Int32 or CommonNumericType.UInt32 ||
+                                (type is CommonNumericType.NInt or CommonNumericType.NUInt && IntPtr.Size == 4);
+            if (is32BitValue && bound >= long.MinValue && bound <= long.MaxValue)
+                return (long)bound;
+
+#if NETFRAMEWORK
+            return bound;
+#else
+            // Every whole number in the decimal range fits in an Int128.
+            return (Int128)bound;
+#endif
+        }
+
+#if !NETFRAMEWORK
+        private static readonly BigInteger DecimalMinValue = new(decimal.MinValue);
+        private static readonly BigInteger DecimalMaxValue = new(decimal.MaxValue);
+
+        /// <summary>
+        /// Converts a bound outside the decimal range to Int128 or UInt128 when it fits,
+        /// otherwise to double, rounded away from the range so it does not exclude any value in it.
+        /// </summary>
+        private static object NarrowToTypeOf(object value, BigInteger bound, bool isLowerBound)
+        {
+            if (bound >= DecimalMinValue && bound <= DecimalMaxValue)
+                return NarrowToTypeOf(value, (decimal)bound);
+
+            if (bound >= Int128.MinValue && bound <= Int128.MaxValue && !(value is UInt128 && bound >= 0))
+                return (Int128)bound;
+
+            if (bound >= 0 && bound <= UInt128.MaxValue)
+                return (UInt128)bound;
+
+            double approximation = (double)bound;
+            if (isLowerBound && (BigInteger)approximation > bound)
+                approximation = Math.BitDecrement(approximation);
+            else if (!isLowerBound && (BigInteger)approximation < bound)
+                approximation = Math.BitIncrement(approximation);
+
+            return approximation;
+        }
+#endif
         #endregion
 
         #region Numeric Comparisons
@@ -540,74 +1327,27 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
-            if (expected is decimal || actual is decimal)
+            return commonType switch
             {
-                // Treat as decimal if one is decimal and other can be treated as decimal
-                if (expected is decimal eDec && IsWithinDecimalRange(actual))
-                    return eDec.CompareTo(ConvertToValue<decimal>(actual));
-                else if (actual is decimal aDec && IsWithinDecimalRange(expected))
-                    return ConvertToValue<decimal>(expected).CompareTo(aDec);
-                else
-                    return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
-            }
-
-            if (expected is double || actual is double)
-                return ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual));
-
-            if (expected is float || actual is float)
-                return ConvertToValue<float>(expected).CompareTo(ConvertToValue<float>(actual));
-
+                CommonNumericType.Decimal => ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual)),
+                CommonNumericType.Double => ConvertToValue<double>(expected).CompareTo(ConvertToValue<double>(actual)),
+                CommonNumericType.Single => ConvertToValue<float>(expected).CompareTo(ConvertToValue<float>(actual)),
 #if !NETFRAMEWORK
-            if (expected is Half || actual is Half)
-                return ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual));
+                CommonNumericType.Half => ConvertToValue<Half>(expected).CompareTo(ConvertToValue<Half>(actual)),
+                CommonNumericType.BigInteger => ConvertToValue<BigInteger>(expected).CompareTo(ConvertToValue<BigInteger>(actual)),
+                CommonNumericType.UInt128 => ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual)),
+                CommonNumericType.Int128 => ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual)),
 #endif
-
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
-            {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                    return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
-
-#if NETFRAMEWORK
-                return ConvertToValue<decimal>(expected).CompareTo(ConvertToValue<decimal>(actual));
-#else
-                if (expected is UInt128 || actual is UInt128)
-                    return ConvertToValue<BigInteger>(expected).CompareTo(ConvertToValue<BigInteger>(actual));
-
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-            }
-
-#if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return ConvertToValue<UInt128>(expected).CompareTo(ConvertToValue<UInt128>(actual));
-
-            if (expected is Int128 || actual is Int128)
-                return ConvertToValue<Int128>(expected).CompareTo(ConvertToValue<Int128>(actual));
-#endif
-
-            if (expected is ulong || actual is ulong)
-                return ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual));
-
-            if (expected is long || actual is long)
-                return ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual));
-
-            if (expected is nuint || actual is nuint)
-                return ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual));
-
-            if (expected is nint || actual is nint)
-                return ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual));
-
-            if (expected is uint || actual is uint)
-                return ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual));
-
-            return ConvertToValue<int>(expected).CompareTo(ConvertToValue<int>(actual));
+                CommonNumericType.UInt64 => ConvertToValue<ulong>(expected).CompareTo(ConvertToValue<ulong>(actual)),
+                CommonNumericType.Int64 => ConvertToValue<long>(expected).CompareTo(ConvertToValue<long>(actual)),
+                CommonNumericType.NUInt => ConvertToValue<nuint>(expected).CompareTo(ConvertToValue<nuint>(actual)),
+                CommonNumericType.NInt => ConvertToValue<nint>(expected).CompareTo(ConvertToValue<nint>(actual)),
+                CommonNumericType.UInt32 => ConvertToValue<uint>(expected).CompareTo(ConvertToValue<uint>(actual)),
+                CommonNumericType.Int32 => ConvertToValue<int>(expected).CompareTo(ConvertToValue<int>(actual)),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
         }
         #endregion
 
@@ -639,146 +1379,126 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 return double.NaN;
 
-            // Step from highest precision to lowest, converting as necessary.
-            // Use the most precise type that can hold both values.
-            // Use ConvertToValue<T> to convert until the only remaining types are IConvertible.
+            CommonNumericType commonType = GetCommonNumericType(expected, actual);
 
-            // Treat as decimal if one is decimal and other can be treated as decimal
-            if (expected is decimal eDec && IsWithinDecimalRange(actual))
+            return commonType switch
             {
-                var difference = eDec - ConvertToValue<decimal>(actual);
-                return isAbsolute ? difference : difference / eDec * 100;
-            }
-            else if (actual is decimal aDec && IsWithinDecimalRange(expected))
-            {
-                decimal expectedValue = ConvertToValue<decimal>(expected);
-                var difference = expectedValue - aDec;
-                return isAbsolute ? difference : difference / expectedValue * 100;
-            }
-
+                CommonNumericType.Decimal => Difference(ConvertToValue<decimal>(expected), ConvertToValue<decimal>(actual), isAbsolute),
 #if !NETFRAMEWORK
-            // EXCEPTION: Check half before other floats to preserve precision of reported differences in certain cases.
-            if (expected is Half expectedHalf && actual is Half actualHalf)
-            {
-                var difference = expectedHalf - actualHalf;
-                return isAbsolute ? difference : difference / expectedHalf * Half.CreateChecked(100);
-            }
-#endif
-
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-            {
-                var difference = ConvertToValue<double>(expected) - ConvertToValue<double>(actual);
-                return isAbsolute ? difference : difference / ConvertToValue<double>(expected) * 100;
-            }
-
-            // Converting a negative value to an unsigned type would overflow,
-            // so use a signed type that can hold both values.
-            if (IsMixedSignInteger(expected, actual))
-            {
-                // Like C#, promote uint mixed with a signed type of 32 bits or less to long
-                if (Is32BitOrSmallerInteger(expected) && Is32BitOrSmallerInteger(actual))
-                {
-                    long expectedValue = ConvertToValue<long>(expected);
-                    var difference = expectedValue - ConvertToValue<long>(actual);
-                    return isAbsolute ? difference : difference / (double)expectedValue * 100;
-                }
-
-#if NETFRAMEWORK
-                decimal expectedDecimal = ConvertToValue<decimal>(expected);
-                var decimalDifference = expectedDecimal - ConvertToValue<decimal>(actual);
-                return isAbsolute ? decimalDifference : (double)decimalDifference / (double)expectedDecimal * 100;
+                // Keep the difference between two Half values as Half, as converting them to double shows their imprecision.
+                CommonNumericType.Half when isAbsolute && expected is Half expectedHalf && actual is Half actualHalf => Half.Abs(expectedHalf - actualHalf),
+                CommonNumericType.Double or CommonNumericType.Single or CommonNumericType.Half => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
+                CommonNumericType.BigInteger => Difference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute),
+                CommonNumericType.UInt128 => Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute),
+                CommonNumericType.Int128 => Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute),
 #else
-                if (expected is UInt128 || actual is UInt128)
-                    return SignedDifference(ConvertToValue<BigInteger>(expected), ConvertToValue<BigInteger>(actual), isAbsolute);
-
-                return SignedDifference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
+                CommonNumericType.Double or CommonNumericType.Single => Difference(ConvertToValue<double>(expected), ConvertToValue<double>(actual), isAbsolute),
 #endif
-            }
+                CommonNumericType.UInt64 => Difference(ConvertToValue<ulong>(expected), ConvertToValue<ulong>(actual), isAbsolute),
+                CommonNumericType.Int64 => Difference(ConvertToValue<long>(expected), ConvertToValue<long>(actual), isAbsolute),
+                CommonNumericType.NUInt => Difference(ConvertToValue<nuint>(expected), ConvertToValue<nuint>(actual), isAbsolute),
+                CommonNumericType.NInt => Difference(ConvertToValue<nint>(expected), ConvertToValue<nint>(actual), isAbsolute),
+                CommonNumericType.UInt32 => Difference(ConvertToValue<uint>(expected), ConvertToValue<uint>(actual), isAbsolute),
+                CommonNumericType.Int32 => Difference(ConvertToValue<int>(expected), ConvertToValue<int>(actual), isAbsolute),
+                _ => throw new InvalidOperationException($"Unexpected numeric type {commonType}"),
+            };
+        }
+
+        // The absolute difference is always positive. For integers it is a value of the unsigned type
+        // of the same size, which cannot overflow. The percentage of the expected value is a double.
+        // The absolute difference is cast to object, as otherwise the conditional would convert it to double.
+        private static object Difference(int expected, int actual, bool isAbsolute)
+        {
+            uint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(uint expected, uint actual, bool isAbsolute)
+        {
+            uint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(long expected, long actual, bool isAbsolute)
+        {
+            ulong difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(ulong expected, ulong actual, bool isAbsolute)
+        {
+            ulong difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(nint expected, nint actual, bool isAbsolute)
+        {
+            nuint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(nuint expected, nuint actual, bool isAbsolute)
+        {
+            nuint difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference(difference, expected);
+        }
+
+        private static object Difference(decimal expected, decimal actual, bool isAbsolute)
+        {
+            if (TryAbsoluteDifference(expected, actual, out decimal difference))
+                return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+
+            // The difference is outside the decimal range.
+            double approximateDifference = Math.Abs((double)expected - (double)actual);
+            return isAbsolute ? approximateDifference : RelativeDifference(approximateDifference, (double)expected);
+        }
+
+        private static object Difference(double expected, double actual, bool isAbsolute)
+        {
+            double difference = Math.Abs(expected - actual);
+            if (isAbsolute)
+                return difference;
+
+            // When the difference of two finite values overflows to infinity, use half of each value, which cannot overflow.
+            if (double.IsInfinity(difference) && !double.IsInfinity(expected) && !double.IsInfinity(actual))
+                return RelativeDifference(Math.Abs(expected / 2 - actual / 2), expected) * 2;
+
+            return RelativeDifference(difference, expected);
+        }
 
 #if !NETFRAMEWORK
-            if (expected is UInt128 || actual is UInt128)
-                return Difference(ConvertToValue<UInt128>(expected), ConvertToValue<UInt128>(actual), isAbsolute);
+        private static object Difference(Int128 expected, Int128 actual, bool isAbsolute)
+        {
+            UInt128 difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+        }
 
-            if (expected is Int128 || actual is Int128)
-                return Difference(ConvertToValue<Int128>(expected), ConvertToValue<Int128>(actual), isAbsolute);
+        private static object Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
+        {
+            UInt128 difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+        }
+
+        private static object Difference(BigInteger expected, BigInteger actual, bool isAbsolute)
+        {
+            BigInteger difference = AbsoluteDifference(expected, actual);
+            return isAbsolute ? (object)difference : RelativeDifference((double)difference, (double)expected);
+        }
 #endif
 
-            if (expected is ulong || actual is ulong)
-            {
-                var eUlong = ConvertToValue<ulong>(expected);
-                var aUlong = ConvertToValue<ulong>(actual);
-                var difference = eUlong >= aUlong ? eUlong - aUlong : aUlong - eUlong;
-                return isAbsolute ? difference : difference / (double)eUlong * 100;
-            }
-
-            if (expected is long || actual is long)
-            {
-                var difference = ConvertToValue<long>(expected) - ConvertToValue<long>(actual);
-                return isAbsolute ? difference : difference / (double)ConvertToValue<long>(expected) * 100;
-            }
-
-            if (expected is nuint || actual is nuint)
-            {
-                nuint expectedValue = ConvertToValue<nuint>(expected);
-                nuint actualValue = ConvertToValue<nuint>(actual);
-
-                var difference = expectedValue >= actualValue ? expectedValue - actualValue : actualValue - expectedValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is nint || actual is nint)
-            {
-                nint expectedValue = ConvertToValue<nint>(expected);
-                nint actualValue = ConvertToValue<nint>(actual);
-
-                var difference = expectedValue - actualValue;
-                return isAbsolute ? difference : difference / (double)expectedValue * 100;
-            }
-
-            if (expected is uint || actual is uint)
-            {
-                var eUint = ConvertToValue<uint>(expected);
-                var aUint = ConvertToValue<uint>(actual);
-                var difference = eUint >= aUint ? eUint - aUint : aUint - eUint;
-                return isAbsolute ? difference : difference / (double)eUint * 100;
-            }
-
-            var intDifference = ConvertToValue<int>(expected) - ConvertToValue<int>(actual);
-            return isAbsolute ? intDifference : intDifference / (double)ConvertToValue<int>(expected) * 100;
+        // The difference as a percentage of the expected value. Multiplying first keeps
+        // round percentages exact, e.g. 1504 * 100 / 10000 is 15.04, but 1504 / 10000 * 100 is not.
+        // When the product overflows to infinity the percentage itself can still be finite, so divide first then.
+        private static double RelativeDifference(double difference, double expected)
+        {
+            double product = difference * 100;
+            return double.IsInfinity(product)
+                ? difference / Math.Abs(expected) * 100
+                : product / Math.Abs(expected);
         }
         #endregion
 
 #if !NETFRAMEWORK
-        private static T Difference<T>(T expected, T actual, bool isAbsolute)
-            where T : INumber<T>
-        {
-            var difference = expected - actual;
-            var hundred = T.CreateChecked(100);
-
-            return isAbsolute ? difference : difference * hundred / expected;
-        }
-
-        // Signed overload used for mixed signed and unsigned values: calculate
-        // the percentage as double so an expected value of 0 does not throw.
-        private static object SignedDifference<T>(T expected, T actual, bool isAbsolute)
-            where T : INumber<T>
-        {
-            T difference = expected - actual;
-
-            return isAbsolute ? difference : double.CreateChecked(difference) / double.CreateChecked(expected) * 100;
-        }
-
-        // Unsigned-only overload: subtract the smaller value from the larger one
-        // so the difference can never underflow when the actual value exceeds
-        // the expected value (e.g. UInt128).
-        private static UInt128 Difference(UInt128 expected, UInt128 actual, bool isAbsolute)
-        {
-            var difference = expected >= actual ? expected - actual : actual - expected;
-            var hundred = UInt128.CreateChecked(100);
-
-            return isAbsolute ? difference : difference * hundred / expected;
-        }
-
         private static bool AreIeeeFloatsEqual<T>(T expected, T actual, ref Tolerance tolerance)
             where T : INumber<T>, IFloatingPointIeee754<T>
         {
@@ -802,49 +1522,31 @@ namespace NUnit.Framework.Constraints
                     return expected.Equals(actual);
 
                 case ToleranceMode.Linear:
-                    return T.Abs(expected - actual) <= ConvertToValue<T>(tolerance.Amount);
+                    T difference = T.Abs(expected - actual);
+
+                    // The difference of two finite values overflows to infinity when it exceeds the range of T.
+                    // Compare in double then, as converting the tolerance to T could overflow to infinity as well.
+                    if (T.IsInfinity(difference))
+                        return Math.Abs(double.CreateChecked(expected) - double.CreateChecked(actual)) <= ConvertToValue<double>(tolerance.Amount);
+
+                    return difference <= ConvertToValue<T>(tolerance.Amount);
 
                 case ToleranceMode.Percent:
                     if (T.IsZero(expected))
                         return expected.Equals(actual);
 
-                    T relativeError = T.Abs((expected - actual) / expected);
+                    // When the difference overflows to infinity, use half of each value, which cannot overflow.
+                    T signedDifference = expected - actual;
+                    T two = T.One + T.One;
+                    T relativeError = T.IsInfinity(signedDifference)
+                        ? T.Abs((expected / two - actual / two) / expected) * two
+                        : T.Abs(signedDifference / expected);
                     return (relativeError <= T.CreateChecked(ConvertToValue<double>(tolerance.Amount) / 100.0));
 
                 case ToleranceMode.Ulps:
                     // NOTE: We cannot convert types here because it will affect the ulps calculation.
                     // For example, converting a Half to a double will change the ulps distance.
                     return FloatingPointNumerics.AreAlmostEqualUlps(expected, actual, Convert.ToInt64(tolerance.Amount));
-
-                default:
-                    throw new ArgumentException("Unknown tolerance mode specified", "mode");
-            }
-        }
-
-        private static bool AreEqual<T>(T expected, T actual, Tolerance tolerance)
-            where T : INumber<T>
-        {
-            switch (tolerance.Mode)
-            {
-                case ToleranceMode.Unset:
-                    return expected.Equals(actual);
-
-                case ToleranceMode.Linear:
-                    T toleranceValue = ConvertToValue<T>(tolerance.Amount);
-                    if (T.IsZero(toleranceValue))
-                        return expected.Equals(actual);
-
-                    T diff = expected >= actual ? expected - actual : actual - expected;
-                    return diff <= toleranceValue;
-
-                case ToleranceMode.Percent:
-                    if (T.IsZero(expected))
-                        return expected.Equals(actual);
-
-                    // Can't do a simple Abs() here in case it's unsigned or could overflow
-                    T difference = (expected >= actual ? expected - actual : actual - expected);
-                    double relativeError = Math.Abs(double.CreateChecked(difference) / double.CreateChecked(expected));
-                    return (relativeError <= ConvertToValue<double>(tolerance.Amount) / 100.0);
 
                 default:
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
