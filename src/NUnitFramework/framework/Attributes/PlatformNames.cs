@@ -215,14 +215,6 @@ namespace NUnit.Framework
         /// </summary>
         public const string NETFramework = "NETFramework";
         /// <summary>
-        /// Platform: "SSCLI"
-        /// </summary>
-        public const string SSCLI = "SSCLI";
-        /// <summary>
-        /// Platform: "Rotor"
-        /// </summary>
-        public const string Rotor = "Rotor";
-        /// <summary>
         /// Platform: "Mono"
         /// </summary>
         public const string Mono = "Mono";

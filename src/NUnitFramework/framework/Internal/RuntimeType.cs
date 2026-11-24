@@ -12,13 +12,11 @@ namespace NUnit.Framework.Internal
         Any,
         /// <summary>Microsoft .NET Framework</summary>
         NetFramework,
-        /// <summary>Microsoft Shared Source CLI</summary>
-        SSCLI,
         /// <summary>Mono</summary>
-        Mono,
+        Mono = 3,
         /// <summary>MonoTouch</summary>
-        MonoTouch,
+        MonoTouch = 4,
         /// <summary>Microsoft .NET Core, including .NET 5+</summary>
-        NetCore
+        NetCore = 5
     }
 }
