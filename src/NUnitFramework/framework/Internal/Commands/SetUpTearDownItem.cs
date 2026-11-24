@@ -134,6 +134,9 @@ namespace NUnit.Framework.Internal.Commands
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
         {
+            if (HostOwnedReturnTypes.IsNotRunnableByNUnit(method.ReturnType.Type))
+                throw new InvalidOperationException(HostOwnedReturnTypes.SetUpTearDownNotRunByNUnitMessage(method.ReturnType.Type));
+
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
 

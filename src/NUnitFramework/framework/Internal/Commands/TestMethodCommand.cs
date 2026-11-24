@@ -47,6 +47,13 @@ namespace NUnit.Framework.Internal.Commands
             // make it impossible to write a wrapper command to
             // implement ExpectedException, among other things.
 
+            var returnType = _testMethod.Method.ReturnType.Type;
+            if (!_testMethod.HasExpectedResult && HostOwnedReturnTypes.IsNotRunnableByNUnit(returnType))
+            {
+                context.CurrentResult.SetResult(ResultState.NotRunnable, HostOwnedReturnTypes.NotRunByNUnitMessage(returnType));
+                return context.CurrentResult;
+            }
+
             var result = RunTestMethod(context);
 
             if (_testMethod.HasExpectedResult)

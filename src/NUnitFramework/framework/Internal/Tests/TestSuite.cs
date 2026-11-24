@@ -334,6 +334,10 @@ namespace NUnit.Framework.Internal
                 {
                     MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
                 }
+                else if (HostOwnedReturnTypes.Contains(method.ReturnType.Type))
+                {
+                    // Accepted; the test host runs it.
+                }
                 else if (methodInfo.IsAsyncOperation)
                 {
                     if (method.ReturnType.Type == typeof(void))

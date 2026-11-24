@@ -103,6 +103,19 @@ namespace NUnit
         public const string DefaultTestNamePattern = "DefaultTestNamePattern";
 
         /// <summary>
+        /// Full names of return types that the test host runs itself, for example
+        /// <c>System.Collections.IEnumerator</c> for a host that runs coroutines.
+        /// Test, setup and teardown methods returning one of these types are accepted
+        /// when the assembly is loaded. NUnit's own runner doesn't invoke them: such a test without an
+        /// expected result is reported as not runnable, and such a setup or teardown method fails with an error.
+        /// Types NUnit runs itself (void, F# unit, awaitables) are ignored.
+        /// The value is an <see cref="System.Collections.Generic.IEnumerable{T}"/> of <see cref="string"/>;
+        /// a generic type definition name, such as <c>System.Collections.Generic.IEnumerator`1</c>,
+        /// covers all of its constructed types.
+        /// </summary>
+        public const string HostOwnedReturnTypes = "HostOwnedReturnTypes";
+
+        /// <summary>
         /// Parameters to be passed on to the tests, serialized to a single string which needs parsing. Obsoleted by <see cref="TestParametersDictionary"/>; kept for backward compatibility.
         /// </summary>
         public const string TestParameters = "TestParameters";
