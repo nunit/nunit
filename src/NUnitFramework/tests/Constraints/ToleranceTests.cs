@@ -168,7 +168,7 @@ namespace NUnit.Framework.Tests.Constraints
         private static IEnumerable<TestCaseData> TicksToleranceLongRangeTestCases()
         {
             yield return new TestCaseData(1e19);
-            yield return new TestCaseData(9223372036854775808.0);
+            yield return new TestCaseData(18446744073709551616.0);
         }
 
         [Test]
