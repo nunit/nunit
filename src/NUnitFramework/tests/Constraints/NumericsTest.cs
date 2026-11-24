@@ -544,6 +544,188 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+        // Whether these values are equal as decimal depends on the runtime: up to .NET 10 the conversion
+        // from double or float to decimal rounds to 15 or 7 significant digits, since .NET 11 it does not.
+        // Whatever the outcome, AreEqual and Compare must agree.
+        [TestCaseSource(nameof(DecimalAndBinaryFloatingPointTestCases))]
+        public void AreEqualAndCompareAgreeForDecimalAndBinaryFloatingPoint_Issue5539(decimal value, object floatingPoint)
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.EqualTo(Numerics.Compare(value, floatingPoint) == 0));
+                Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.EqualTo(Numerics.Compare(floatingPoint, value) == 0));
+            }
+        }
+
+        private static TestCaseData[] DecimalAndBinaryFloatingPointTestCases()
+        {
+            return [
+                new TestCaseData(0.3m, 0.1d + 0.2d),
+                new TestCaseData(0.1m, 0.1f),
+                new TestCaseData(0.1m, 0.1d),
+#if !NETFRAMEWORK
+                new TestCaseData(0.1m, (Half)0.1),
+#endif
+            ];
+        }
+
+        [Test]
+        public void EqualityAndComparisonConstraintsOfDecimalAndDoubleAgree_Issue5539()
+        {
+            double value = 0.1 + 0.2;
+
+            bool isEqual = Is.EqualTo(0.3m).ApplyTo(value).IsSuccess;
+            bool isLessThanOrEqual = Is.LessThanOrEqualTo(0.3m).ApplyTo(value).IsSuccess;
+            bool isGreaterThanOrEqual = Is.GreaterThanOrEqualTo(0.3m).ApplyTo(value).IsSuccess;
+
+            Assert.That(isEqual, Is.EqualTo(isLessThanOrEqual && isGreaterThanOrEqual));
+        }
+
+        [TestCaseSource(nameof(DecimalAndExactBinaryFloatingPointTestCases))]
+        public void DecimalAndExactlyRepresentableBinaryFloatingPointAreEqual_Issue5539(decimal value, object floatingPoint)
+        {
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(value, floatingPoint, ref _zeroTolerance), Is.True);
+                Assert.That(Numerics.AreEqual(floatingPoint, value, ref _zeroTolerance), Is.True);
+                Assert.That(Numerics.Compare(value, floatingPoint), Is.Zero);
+                Assert.That(Numerics.Compare(floatingPoint, value), Is.Zero);
+                Assert.That(floatingPoint, Is.EqualTo(value));
+                Assert.That(floatingPoint, Is.LessThanOrEqualTo(value));
+                Assert.That(floatingPoint, Is.GreaterThanOrEqualTo(value));
+            }
+        }
+
+        private static TestCaseData[] DecimalAndExactBinaryFloatingPointTestCases()
+        {
+            return [
+                new TestCaseData(0.5m, 0.5d),
+                new TestCaseData(0.25m, 0.25f),
+                new TestCaseData(-1.375m, -1.375d),
+                new TestCaseData(1024.125m, 1024.125f),
+#if !NETFRAMEWORK
+                new TestCaseData(0.5m, (Half)0.5),
+#endif
+            ];
+        }
+
+        [Test]
+        public void UlpsToleranceIsNotSupportedForDecimalAndDouble()
+        {
+            var tolerance = new Tolerance(1).Ulps;
+            Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(0.3m, 0.3d, ref tolerance));
+        }
+
+        [TestCaseSource(nameof(DecimalAndValueOutsideDecimalRangeTestCases))]
+        public void UlpsToleranceIsNotSupportedForDecimalAndValueOutsideDecimalRange(object expected, object actual)
+        {
+            // Whether Ulps are supported depends on the types, not on whether the values are compared as double.
+            var tolerance = new Tolerance(1).Ulps;
+            Assert.Throws<InvalidOperationException>(() => Numerics.AreEqual(expected, actual, ref tolerance));
+        }
+
+        private static TestCaseData[] DecimalAndValueOutsideDecimalRangeTestCases()
+        {
+            return [
+                new TestCaseData(decimal.MaxValue, double.MaxValue),
+                new TestCaseData(double.MaxValue, decimal.MaxValue),
+                new TestCaseData(decimal.MaxValue, float.MaxValue),
+#if !NETFRAMEWORK
+                new TestCaseData(1m, Int128.MaxValue),
+                new TestCaseData(UInt128.MaxValue, 1m),
+#endif
+            ];
+        }
+
+        [Test]
+        public void DecimalAndValueOutsideDecimalRangeAreComparedAsDouble()
+        {
+            Assert.That(Numerics.AreEqual(decimal.MaxValue, float.MaxValue, ref _zeroTolerance), Is.False);
+            Assert.That(Numerics.AreEqual(float.MaxValue, decimal.MaxValue, ref _zeroTolerance), Is.False);
+        }
+
+        [TestCaseSource(nameof(BinaryFloatingPointAtDecimalBoundaryTestCases))]
+        public void BinaryFloatingPointAtDecimalBoundaryIsComparedAsDouble(object floatingPoint)
+        {
+            // decimal.MaxValue rounds up to 2^96 as double or float, which is just outside the decimal range.
+            int sign = Math.Sign(Numerics.ConvertToValue<double>(floatingPoint));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(floatingPoint, 1m, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.AreEqual(1m, floatingPoint, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.Compare(floatingPoint, 1m), Is.EqualTo(sign));
+                Assert.That(Numerics.Compare(1m, floatingPoint), Is.EqualTo(-sign));
+                Assert.That(() => Numerics.Difference(floatingPoint, 1m, ToleranceMode.Linear), Throws.Nothing);
+                Assert.That(() => Numerics.Difference(1m, floatingPoint, ToleranceMode.Linear), Throws.Nothing);
+            }
+        }
+
+        private static TestCaseData[] BinaryFloatingPointAtDecimalBoundaryTestCases()
+        {
+            return [
+                new TestCaseData((double)decimal.MaxValue),
+                new TestCaseData((double)decimal.MinValue),
+                new TestCaseData((float)decimal.MaxValue),
+                new TestCaseData((float)decimal.MinValue),
+            ];
+        }
+
+#if !NETFRAMEWORK
+        [TestCaseSource(nameof(NonFiniteHalfTestCases))]
+        public void DecimalAndNonFiniteHalfAreComparedAsDouble(Half half)
+        {
+            double asDouble = (double)half;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(Numerics.AreEqual(1m, half, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.AreEqual(half, 1m, ref _zeroTolerance), Is.False);
+                Assert.That(Numerics.Compare(1m, half), Is.EqualTo(Numerics.Compare(1m, asDouble)));
+                Assert.That(Numerics.Compare(half, 1m), Is.EqualTo(Numerics.Compare(asDouble, 1m)));
+                Assert.That(Numerics.Difference(1m, half, ToleranceMode.Linear), Is.EqualTo(Numerics.Difference(1m, asDouble, ToleranceMode.Linear)));
+                Assert.That(Numerics.Difference(half, 1m, ToleranceMode.Linear), Is.EqualTo(Numerics.Difference(asDouble, 1m, ToleranceMode.Linear)));
+            }
+        }
+
+        private static TestCaseData[] NonFiniteHalfTestCases()
+        {
+            return [
+                new TestCaseData(Half.NaN),
+                new TestCaseData(Half.PositiveInfinity),
+                new TestCaseData(Half.NegativeInfinity),
+            ];
+        }
+#endif
+
+        [TestCaseSource(nameof(DecimalDifferenceOutsideDecimalRangeTestCases))]
+        public void DecimalToleranceDoesNotOverflow(object expected, object actual, Tolerance tolerance, bool expectedResult)
+        {
+            // Both values fit in a decimal, but their difference does not.
+            Assert.That(Numerics.AreEqual(expected, actual, ref tolerance), Is.EqualTo(expectedResult));
+        }
+
+        private static TestCaseData[] DecimalDifferenceOutsideDecimalRangeTestCases()
+        {
+            // A percentage is relative to the expected value, so it is not symmetric.
+            return [
+                new TestCaseData(decimal.MaxValue, -1d, new Tolerance(200).Percent, true),
+                new TestCaseData(-1d, decimal.MaxValue, new Tolerance(200).Percent, false),
+                new TestCaseData(decimal.MaxValue, -1d, new Tolerance(1), false),
+                new TestCaseData(-1d, decimal.MaxValue, new Tolerance(1), false),
+                // The difference exceeds the tolerance by 1, but both round to the same double.
+                new TestCaseData(decimal.MaxValue, -1d, new Tolerance(decimal.MaxValue), false),
+                new TestCaseData(-1d, decimal.MaxValue, new Tolerance(decimal.MaxValue), false),
+                // decimal.MaxValue - 0.25m rounds back to decimal.MaxValue, which must not hide the overflow.
+                new TestCaseData(decimal.MaxValue, -0.25d, new Tolerance(decimal.MaxValue), false),
+                new TestCaseData(-0.25d, decimal.MaxValue, new Tolerance(decimal.MaxValue), false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1), false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(1e30), true),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(10).Percent, false),
+                new TestCaseData(decimal.MaxValue, decimal.MinValue, new Tolerance(300).Percent, true),
+            ];
+        }
+
         [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
