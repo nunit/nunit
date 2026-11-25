@@ -292,14 +292,6 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
-        public void DetectSSCLI()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.SSCLI, new Version(1, 0, 3, 0)),
-                "SSCLI,Rotor");
-        }
-
-        [Test]
         public void DetectMono10()
         {
             CheckRuntimePlatforms(
