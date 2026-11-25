@@ -201,21 +201,20 @@ namespace NUnit.Framework.Constraints
         public bool WithSameOffset { get; set; }
         #endregion
 
+        /// <summary>
+        /// The null-equivalent predicates of the current test context.
+        /// Read on each access, so a predicate added after the constraint was created still applies.
+        /// </summary>
+        internal NullEquivalents? NullEquivalents => TestExecutionContext.GetNullEquivalents();
+
         #region Public Methods
 
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
         public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
-            => AreEqual(x, y, ref tolerance, TestExecutionContext.GetNullEquivalents());
-
-        /// <summary>
-        /// Compares two objects for equality within a tolerance, with the null-equivalent predicates
-        /// the caller read once for many comparisons.
-        /// </summary>
-        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, NullEquivalents? nullEquivalents)
         {
-            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true, nullEquivalents));
+            EqualMethodResult result = AreEqual(x, y, ref tolerance, new ComparisonState(true));
 
             switch (result)
             {
@@ -259,7 +258,7 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return EqualMethodResult.ComparedEqual;
 
-            if (state.NullEquivalents is NullEquivalents nullEquivalents)
+            if (NullEquivalents is NullEquivalents nullEquivalents)
             {
                 if (x is not null && nullEquivalents.IsNullEquivalent(x))
                     x = null;

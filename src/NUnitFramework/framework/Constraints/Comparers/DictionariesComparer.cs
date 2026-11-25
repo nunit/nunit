@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             // A dictionary key can't be null, so a null-equivalent key isn't treated as null either:
             // it must be a key of both dictionaries. NUnit equality still matches the other keys.
-            NullEquivalents? nullEquivalents = state.NullEquivalents;
+            NullEquivalents? nullEquivalents = equalityComparer.NullEquivalents;
             if (nullEquivalents is not null &&
                 (!OtherContainsAllNullEquivalentKeys(xDictionary, yDictionary, nullEquivalents) || !OtherContainsAllNullEquivalentKeys(yDictionary, xDictionary, nullEquivalents)))
             {

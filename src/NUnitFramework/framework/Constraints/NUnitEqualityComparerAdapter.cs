@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -14,9 +13,6 @@ namespace NUnit.Framework.Constraints
     internal sealed class NUnitEqualityComparerAdapter<T> : IEqualityComparer<T>
     {
         private readonly NUnitEqualityComparer _comparer;
-
-        // An adapter serves one collection comparison, so read the predicates once.
-        private readonly NullEquivalents? _nullEquivalents = TestExecutionContext.GetNullEquivalents();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitEqualityComparerAdapter{T}"/> class.
@@ -36,7 +32,7 @@ namespace NUnit.Framework.Constraints
         public bool Equals(T? x, T? y)
         {
             Tolerance tolerance = Tolerance.Default;
-            return _comparer.AreEqual(x, y, ref tolerance, _nullEquivalents);
+            return _comparer.AreEqual(x, y, ref tolerance);
         }
 
         /// <summary>
