@@ -229,7 +229,19 @@ namespace NUnit.Framework.Constraints
             return type.IsArray
                 || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well
                 || typeof(System.IO.Stream).IsAssignableFrom(type) // Covers all streams
-                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type); // Unlikely to be derived, but just in case
+                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type) // Unlikely to be derived, but just in case
+                || IsComparedPartByPart(type);
+        }
+
+        // NUnit compares the parts of these with its own rules (case, tolerance, collections), not with Equals.
+        // IStructuralEquatable covers tuples, value tuples and classes derived from tuples.
+        private static bool IsComparedPartByPart(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            return typeof(IStructuralEquatable).IsAssignableFrom(type)
+                || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+                || type == typeof(DictionaryEntry);
         }
 
         private static Type? GetGenericTypeArgument(IEnumerable actual)

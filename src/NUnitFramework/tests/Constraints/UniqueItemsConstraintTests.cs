@@ -120,9 +120,30 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new[] { 2, 1, 2, 3, 2 }, new[] { 2 } },
             new object[] { new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 } },
             new object[] { new[] { "x", null, "x" }, new[] { "x" } },
-            new object[] { new[] { (1, "a"), (2, "b"), (1, "a") }, new[] { (1, "a") } },
-            new object[] { new[] { Tuple.Create(1, "a"), Tuple.Create(2, "b"), Tuple.Create(1, "a") }, new[] { Tuple.Create(1, "a") } }
+            new object[] { new[] { (1, "a"), (2, "b"), (1, "A") }, new[] { (1, "A") } },
+            new object[] { new[] { Tuple.Create(1, "a"), Tuple.Create(2, "b"), Tuple.Create(1, "A") }, new[] { Tuple.Create(1, "A") } },
+            new object[] { new[] { new KeyValuePair<int, string>(1, "a"), new KeyValuePair<int, string>(1, "A") }, new[] { new KeyValuePair<int, string>(1, "A") } },
+            new object[] { new[] { new DictionaryEntry(1, "a"), new DictionaryEntry(1, "A") }, new[] { new DictionaryEntry(1, "A") } },
+            new object[] { new SimpleObjectCollection((1, "a"), (1, "A")), new[] { (1, "A") } },
+            new object[] { new (int, string)?[] { (1, "a"), (1, "A") }, new (int, string)?[] { (1, "A") } },
+            new object[] { new[] { new StringTuple("a"), new StringTuple("A") }, new[] { new StringTuple("A") } },
         };
+
+        private sealed class StringTuple : Tuple<string>
+        {
+            public StringTuple(string item1)
+                : base(item1)
+            {
+            }
+        }
+
+        [Test]
+        public void ComparesValueTupleItemsWithNUnitEquality()
+        {
+            var items = new[] { (new[] { 1, 2 }, 1), (new[] { 1, 2 }, 1) };
+
+            Assert.That(items, Is.Not.Unique);
+        }
         private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10000);
         private static readonly TestCaseData[] PerformanceDataFastPath =
         {
