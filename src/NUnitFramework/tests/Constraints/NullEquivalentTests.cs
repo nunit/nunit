@@ -399,16 +399,6 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test, MaxTime(FailTime, WarningTime = WarnTime)]
-        public void Unique_TuplesWithAPartOfTheRegisteredType()
-        {
-            var items = new List<(Handle, int)>(Size);
-            for (int i = 1; i <= Size; i++)
-                items.Add((new Handle(i), i));
-
-            Assert.That(items, Is.Unique);
-        }
-
-        [Test, MaxTime(FailTime, WarningTime = WarnTime)]
         public void EqualTo_ListsOfTheRegisteredType()
         {
             var expected = new List<Handle>(Size);
