@@ -172,7 +172,15 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !IsAffectedByDefaultFloatingPointTolerance(type);
+        }
+
+        // The fast path compares with EqualityComparer<T>.Default, which ignores DefaultFloatingPointTolerance.
+        // Decimal is not affected: the default tolerance only applies to binary floating point.
+        private static bool IsAffectedByDefaultFloatingPointTolerance(Type type)
+        {
+            return Numerics.IsBinaryFloatingPoint(Nullable.GetUnderlyingType(type) ?? type)
+                && TestExecutionContext.CurrentContext.DefaultFloatingPointTolerance is { IsUnsetOrDefault: false };
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =

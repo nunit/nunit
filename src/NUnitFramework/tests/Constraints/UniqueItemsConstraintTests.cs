@@ -238,6 +238,42 @@ namespace NUnit.Framework.Tests.Constraints
             Assume.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(30));
         }
 
+        private static readonly TestCaseData[] FloatingPointData =
+        {
+            new TestCaseData(new[] { 1.0, 0.9, 3.0, 3.1 }, new[] { 0.9, 3.1 }),
+            new TestCaseData(new[] { 1.0f, 0.9f, 3.0f, 3.1f }, new[] { 0.9f, 3.1f }),
+            new TestCaseData(new double?[] { 1.0, 0.9, 3.0, 3.1 }, new double?[] { 0.9, 3.1 }),
+            new TestCaseData(new List<double> { 1.0, 0.9, 3.0, 3.1 }, new[] { 0.9, 3.1 }),
+            new TestCaseData(new object[] { 1.0, 0.9, 3.0, 3.1 }, new[] { 0.9, 3.1 }),
+            new TestCaseData(new SimpleObjectCollection(1.0, 0.9, 3.0, 3.1), new[] { 0.9, 3.1 }),
+#if !NETFRAMEWORK
+            new TestCaseData(new[] { (Half)1.0, (Half)0.9, (Half)3.0, (Half)3.1 }, new[] { (Half)0.9, (Half)3.1 }),
+#endif
+        };
+
+        [TestCaseSource(nameof(FloatingPointData))]
+        public void FloatingPointItemsAreUniqueWithoutTolerance(IEnumerable actual, IEnumerable duplicates)
+        {
+            Assert.That(actual, Is.Unique);
+        }
+
+        [TestCaseSource(nameof(FloatingPointData))]
+        [DefaultFloatingPointTolerance(0.5)]
+        public void HonorsDefaultFloatingPointTolerance(IEnumerable actual, IEnumerable duplicates)
+        {
+            var result = new UniqueItemsConstraint().ApplyTo(actual) as UniqueItemsConstraintResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.NonUniqueItems, Is.EqualTo(duplicates));
+        }
+
+        [Test]
+        [DefaultFloatingPointTolerance(0.5)]
+        public void DecimalItemsIgnoreDefaultFloatingPointTolerance()
+        {
+            Assert.That(new[] { 1.0m, 0.9m, 1.1m }, Is.Unique);
+        }
+
         [TestCaseSource(nameof(DuplicateItemsData))]
         public void DuplicateItemsTests(IEnumerable items, IEnumerable expectedFailures)
         {
