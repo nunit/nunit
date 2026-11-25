@@ -119,7 +119,9 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new[] { 1, 2, 3, 2 }, new[] { 2 } },
             new object[] { new[] { 2, 1, 2, 3, 2 }, new[] { 2 } },
             new object[] { new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 } },
-            new object[] { new[] { "x", null, "x" }, new[] { "x" } }
+            new object[] { new[] { "x", null, "x" }, new[] { "x" } },
+            new object[] { new[] { (1, "a"), (2, "b"), (1, "a") }, new[] { (1, "a") } },
+            new object[] { new[] { Tuple.Create(1, "a"), Tuple.Create(2, "b"), Tuple.Create(1, "a") }, new[] { Tuple.Create(1, "a") } }
         };
         private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10000);
         private static readonly TestCaseData[] PerformanceDataFastPath =
