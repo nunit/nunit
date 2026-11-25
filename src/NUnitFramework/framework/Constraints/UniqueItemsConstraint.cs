@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -173,7 +172,29 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !MayHoldNullEquivalents(type);
+        }
+
+        // NUnitEqualityComparer treats null-equivalent values as null, also as parts of tuples, key/value pairs and
+        // dictionary entries, so those are compared pairwise when a registered predicate may apply to them.
+        private static bool MayHoldNullEquivalents(Type type)
+        {
+            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
+            return nullEquivalents is not null && MayHoldNullEquivalents(type, nullEquivalents);
+        }
+
+        private static bool MayHoldNullEquivalents(Type type, NullEquivalents nullEquivalents)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (nullEquivalents.MayApplyTo(type) || type == typeof(DictionaryEntry))
+                return true;
+
+            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) || type.IsTupleOrValueTuple()))
+                return type.GetGenericArguments().Any(part => MayHoldNullEquivalents(part, nullEquivalents));
+
+            // For example a class derived from a tuple, which NUnit compares through IStructuralEquatable.
+            return typeof(IStructuralEquatable).IsAssignableFrom(type);
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -183,35 +204,7 @@ namespace NUnit.Framework.Constraints
             typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public)!;
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
-        {
-            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
-            IEqualityComparer<T> comparer = nullEquivalents is not null && nullEquivalents.MayApplyTo(Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T))
-                ? new NullEquivalentEqualityComparer<T>(nullEquivalents)
-                : EqualityComparer<T>.Default;
-
-            return NonUniqueItemsInternal(actual, comparer);
-        }
-
-        // Default equality, except that null and null-equivalent items are equal to each other, matching
-        // NUnitEqualityComparer. Tuples, key/value pairs and dictionary entries don't get here: they are compared pairwise.
-        private sealed class NullEquivalentEqualityComparer<T> : IEqualityComparer<T>
-        {
-            private readonly NullEquivalents _nullEquivalents;
-
-            public NullEquivalentEqualityComparer(NullEquivalents nullEquivalents) => _nullEquivalents = nullEquivalents;
-
-            public bool Equals(T? x, T? y)
-            {
-                if (IsNull(x))
-                    return IsNull(y);
-
-                return !IsNull(y) && EqualityComparer<T>.Default.Equals(x, y);
-            }
-
-            public int GetHashCode(T obj) => IsNull(obj) ? 0 : EqualityComparer<T>.Default.GetHashCode(obj);
-
-            private bool IsNull([NotNullWhen(false)] object? value) => value is null || _nullEquivalents.IsNullEquivalent(value);
-        }
+            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private ICollection<string> StringsUniqueIgnoringCaseOrWhiteSpaceOrLineEndingFormat(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase, IgnoringWhiteSpace, IgnoringLineEndingFormat));
@@ -258,19 +251,7 @@ namespace NUnit.Framework.Constraints
             return type.IsArray
                 || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well
                 || typeof(System.IO.Stream).IsAssignableFrom(type) // Covers all streams
-                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type) // Unlikely to be derived, but just in case
-                || IsComparedPartByPart(type);
-        }
-
-        // NUnit compares the parts of these with its own rules (case, tolerance, collections), not with Equals.
-        // IStructuralEquatable covers tuples, value tuples and classes derived from tuples.
-        private static bool IsComparedPartByPart(Type type)
-        {
-            type = Nullable.GetUnderlyingType(type) ?? type;
-
-            return typeof(IStructuralEquatable).IsAssignableFrom(type)
-                || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
-                || type == typeof(DictionaryEntry);
+                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type); // Unlikely to be derived, but just in case
         }
 
         private static Type? GetGenericTypeArgument(IEnumerable actual)

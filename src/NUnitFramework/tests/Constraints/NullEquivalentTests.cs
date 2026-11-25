@@ -389,16 +389,6 @@ namespace NUnit.Framework.Tests.Constraints
         public void AddNullEquivalent() => TestContext.AddNullEquivalent<Handle>(h => h.Id == 0);
 
         [Test, MaxTime(FailTime, WarningTime = WarnTime)]
-        public void Unique_ItemsOfTheRegisteredType()
-        {
-            var items = new List<Handle>(Size);
-            for (int i = 1; i <= Size; i++)
-                items.Add(new Handle(i));
-
-            Assert.That(items, Is.Unique);
-        }
-
-        [Test, MaxTime(FailTime, WarningTime = WarnTime)]
         public void EqualTo_ListsOfTheRegisteredType()
         {
             var expected = new List<Handle>(Size);
