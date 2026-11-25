@@ -202,10 +202,10 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         /// <summary>
-        /// The null-equivalent predicates of the current test context.
-        /// Read on each access, so a predicate added after the constraint was created still applies.
+        /// The null-equivalent predicates of the test context, read when the comparer is created.
+        /// Each constraint creates its own comparer.
         /// </summary>
-        internal NullEquivalents? NullEquivalents => TestExecutionContext.GetNullEquivalents();
+        internal NullEquivalents? NullEquivalents { get; } = TestExecutionContext.GetNullEquivalents();
 
         #region Public Methods
 
