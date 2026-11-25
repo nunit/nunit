@@ -860,6 +860,16 @@ namespace NUnit.Framework.Constraints
 #endif
 
         /// <summary>
+        /// Whether a type is double, float or Half, the types that DefaultFloatingPointTolerance applies to.
+        /// </summary>
+        internal static bool IsBinaryFloatingPoint(Type type)
+#if NETFRAMEWORK
+            => type == typeof(double) || type == typeof(float);
+#else
+            => type == typeof(double) || type == typeof(float) || type == typeof(Half);
+#endif
+
+        /// <summary>
         /// Whether a value is NaN or infinite, which a tolerance amount cannot be.
         /// </summary>
         internal static bool IsNaNOrInfinity(object value)

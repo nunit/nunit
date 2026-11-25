@@ -128,7 +128,9 @@ namespace NUnit.Framework.Constraints
         {
             if (type.IsGenericType)
             {
-                return type.FullName().StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
+                // Parts of different types can still be equal, like (1, "a") and (1L, "a").
+                return type.FullName().StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal)
+                    || type.IsTupleOrValueTuple();
             }
             else if (Numerics.IsNumericType(type))
             {
@@ -170,9 +172,43 @@ namespace NUnit.Framework.Constraints
             return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual })!;
         }
 
-        private static bool IsTypeSafeForFastPath(Type? type)
+        private bool IsTypeSafeForFastPath(Type? type)
         {
-            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !HasPartsNeedingNUnitEquality(type);
+        }
+
+        // NUnitEqualityComparer compares tuples, key/value pairs and dictionary entries part by part. Their own
+        // equality gives the same answer unless a part needs NUnit's rules (case, tolerance, collections).
+        private bool HasPartsNeedingNUnitEquality(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (type == typeof(DictionaryEntry))
+                return true; // Key and Value are object, so they could be anything
+
+            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) || type.IsTupleOrValueTuple()))
+                return type.GetGenericArguments().Any(part => !IsPartSafeForDefaultEquality(part));
+
+            // For example a class derived from a tuple, which NUnit compares through IStructuralEquatable.
+            return typeof(IStructuralEquatable).IsAssignableFrom(type);
+        }
+
+        private bool IsPartSafeForDefaultEquality(Type part)
+        {
+            part = Nullable.GetUnderlyingType(part) ?? part;
+
+            if (part == typeof(string) || part == typeof(char))
+                return !(IgnoringCase || IgnoringWhiteSpace || IgnoringLineEndingFormat);
+
+            return IsTypeSafeForFastPath(part) && !IsAffectedByDefaultFloatingPointTolerance(part);
+        }
+
+        // The fast path compares with EqualityComparer<T>.Default, which ignores DefaultFloatingPointTolerance.
+        // Decimal is not affected: the default tolerance only applies to binary floating point.
+        private static bool IsAffectedByDefaultFloatingPointTolerance(Type type)
+        {
+            return Numerics.IsBinaryFloatingPoint(Nullable.GetUnderlyingType(type) ?? type)
+                && TestExecutionContext.CurrentContext.DefaultFloatingPointTolerance is { IsUnsetOrDefault: false };
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -229,19 +265,7 @@ namespace NUnit.Framework.Constraints
             return type.IsArray
                 || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well
                 || typeof(System.IO.Stream).IsAssignableFrom(type) // Covers all streams
-                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type) // Unlikely to be derived, but just in case
-                || IsComparedPartByPart(type);
-        }
-
-        // NUnit compares the parts of these with its own rules (case, tolerance, collections), not with Equals.
-        // IStructuralEquatable covers tuples, value tuples and classes derived from tuples.
-        private static bool IsComparedPartByPart(Type type)
-        {
-            type = Nullable.GetUnderlyingType(type) ?? type;
-
-            return typeof(IStructuralEquatable).IsAssignableFrom(type)
-                || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
-                || type == typeof(DictionaryEntry);
+                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type); // Unlikely to be derived, but just in case
         }
 
         private static Type? GetGenericTypeArgument(IEnumerable actual)
