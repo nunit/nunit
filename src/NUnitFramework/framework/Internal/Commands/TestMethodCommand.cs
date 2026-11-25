@@ -47,14 +47,15 @@ namespace NUnit.Framework.Internal.Commands
             // make it impossible to write a wrapper command to
             // implement ExpectedException, among other things.
 
-            var returnType = _testMethod.Method.ReturnType.Type;
-            if (!_testMethod.HasExpectedResult && HostOwnedReturnTypes.IsNotRunnableByNUnit(returnType))
+            var methodInfo = MethodInfoCache.Get(_testMethod.Method);
+            if (!_testMethod.HasExpectedResult && !methodInfo.IsVoidOrUnit && !methodInfo.IsAsyncOperation)
             {
-                context.CurrentResult.SetResult(ResultState.NotRunnable, HostOwnedReturnTypes.NotRunByNUnitMessage(returnType));
+                context.CurrentResult.SetResult(ResultState.NotRunnable,
+                    HostOwnedReturnTypes.NotRunByNUnitMessage(_testMethod.Method.ReturnType.Type, "test method", "without an expected result"));
                 return context.CurrentResult;
             }
 
-            var result = RunTestMethod(context);
+            var result = RunTestMethod(context, methodInfo);
 
             if (_testMethod.HasExpectedResult)
                 Assert.That(result, Is.EqualTo(_testMethod.ExpectedResult));
@@ -70,10 +71,8 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private object? RunTestMethod(TestExecutionContext context)
+        private object? RunTestMethod(TestExecutionContext context, MethodInfoCache.TestMethodMetadata methodInfo)
         {
-            var methodInfo = MethodInfoCache.Get(_testMethod.Method);
-
             bool lastParameterAcceptsCancellationToken = methodInfo.Parameters.LastParameterAcceptsCancellationToken();
 
             if (methodInfo.IsAsyncOperation)

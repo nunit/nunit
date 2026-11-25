@@ -22,7 +22,8 @@ namespace NUnit.Framework.Internal
         internal static IDisposable BeginBuild(IEnumerable<string>? typeNames)
         {
             var names = typeNames is null ? null : new HashSet<string>(typeNames, StringComparer.Ordinal);
-            var scope = new Scope(Current.Value);
+            var previous = Current.Value;
+            var scope = On.Dispose(() => Current.Value = previous);
             Current.Value = names is { Count: > 0 } ? names : null;
             return scope;
         }
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Internal
             var names = Current.Value;
 
             // Types NUnit runs itself (void, unit, awaitables) keep NUnit's own rules.
-            if (names is null || !IsNotRunnableByNUnit(returnType))
+            if (names is null || Reflect.IsVoidOrUnit(returnType) || AwaitAdapter.IsAwaitable(returnType))
                 return false;
 
             // A generic type matches by its own full name or by its definition's,
@@ -42,29 +43,8 @@ namespace NUnit.Framework.Internal
                     && names.Contains(definition));
         }
 
-        /// <summary>
-        /// True for a return type NUnit cannot run itself: not void/unit and not awaitable.
-        /// Such a method only gets past load-time validation as a host-owned method
-        /// (or as a test with an expected result).
-        /// </summary>
-        internal static bool IsNotRunnableByNUnit(Type returnType) =>
-            !Reflect.IsVoidOrUnit(returnType) && !AwaitAdapter.IsAwaitable(returnType);
-
-        internal static string NotRunByNUnitMessage(Type returnType) =>
-            $"NUnit cannot run a test method returning '{returnType.FullName ?? returnType.ToString()}' without an expected result. " +
+        internal static string NotRunByNUnitMessage(Type returnType, string methodKind, string? condition = null) =>
+            $"NUnit cannot run a {methodKind} returning '{returnType.FullName ?? returnType.ToString()}'{(condition is null ? null : " " + condition)}. " +
             "Only a test host that runs this return type itself can run it (see FrameworkPackageSettings.HostOwnedReturnTypes).";
-
-        internal static string SetUpTearDownNotRunByNUnitMessage(Type returnType) =>
-            $"NUnit cannot run a setup or teardown method returning '{returnType.FullName ?? returnType.ToString()}'. " +
-            "Only a test host that runs this return type itself can run it (see FrameworkPackageSettings.HostOwnedReturnTypes).";
-
-        private sealed class Scope : IDisposable
-        {
-            private readonly HashSet<string>? _previous;
-
-            public Scope(HashSet<string>? previous) => _previous = previous;
-
-            public void Dispose() => Current.Value = _previous;
-        }
     }
 }
