@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -153,8 +154,7 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        [TestCase(1e19)]
-        [TestCase(9223372036854775808.0)] // 2^63, the first double beyond long.MaxValue
+        [TestCaseSource(nameof(TicksToleranceLongRangeTestCases))]
         public void TicksToleranceMustBeWithinRangeOfLong(double amount)
         {
             using (Assert.EnterMultipleScope())
@@ -163,6 +163,12 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(() => Is.EqualTo(DateTime.Now).Within(amount).Ticks, Throws.TypeOf<OverflowException>());
                 Assert.That(() => Is.EqualTo(TimeSpan.Zero).Within(amount).Ticks, Throws.TypeOf<OverflowException>());
             }
+        }
+
+        private static IEnumerable<TestCaseData> TicksToleranceLongRangeTestCases()
+        {
+            yield return new TestCaseData(1e19);
+            yield return new TestCaseData(18446744073709551616.0);
         }
 
         [Test]
