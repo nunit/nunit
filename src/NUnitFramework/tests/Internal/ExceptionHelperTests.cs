@@ -95,6 +95,48 @@ namespace NUnit.Framework.Tests.Internal
                 Is.SameAs(exceptionToThrow));
         }
 
+        private const string OuterTrace = "   at NUnit.Framework.Internal.Outer()\r\n   at User.Outer()";
+        private const string InnerTrace = "   at NUnit.Framework.Internal.Inner()\r\n   at User.Inner()";
+
+        [Test]
+        public static void BuildStackTraceWithoutFilterKeepsStackTracesUnchanged()
+        {
+            var exception = new FixedStackTraceException(OuterTrace, new FixedStackTraceException(InnerTrace, null));
+
+            Assert.That(
+                ExceptionHelper.BuildStackTrace(exception),
+                Is.EqualTo(OuterTrace + Environment.NewLine + "--" + nameof(FixedStackTraceException) + Environment.NewLine + InnerTrace));
+        }
+
+        [Test]
+        [NonParallelizable]
+        public static void BuildStackTraceFiltersEachExceptionSeparately()
+        {
+            var exception = new FixedStackTraceException(OuterTrace, new FixedStackTraceException(InnerTrace, null));
+
+            using (StackFilter.SetCurrentFilterToDefault())
+            {
+                Assert.That(
+                    ExceptionHelper.BuildFilteredStackTrace(exception),
+                    Is.EqualTo("   at User.Outer()" + Environment.NewLine +
+                               "--" + nameof(FixedStackTraceException) + Environment.NewLine +
+                               "   at User.Inner()" + Environment.NewLine));
+            }
+        }
+
+        private sealed class FixedStackTraceException : Exception
+        {
+            private readonly string _stackTrace;
+
+            public FixedStackTraceException(string stackTrace, Exception? innerException)
+                : base("message", innerException)
+            {
+                _stackTrace = stackTrace;
+            }
+
+            public override string StackTrace => _stackTrace;
+        }
+
         // Task.FromException was added in .NET Framework 4.6
         private static Task TaskFromException(Exception exception)
         {
