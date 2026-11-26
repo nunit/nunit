@@ -15,12 +15,13 @@ namespace NUnit.Framework.Tests
         /// <param name="errorConstraints">Validations to apply to the constraint.</param>
         public static void MatchesFailureMessage<TActual>(TActual actual, IConstraint constraint, params Constraint[] errorConstraints)
         {
-            using var scope = Assert.EnterMultipleScope();
-
             var message = constraint.ApplyTo(actual).GetFailureMessage();
-            foreach (var errorConstraint in errorConstraints)
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(message, errorConstraint);
+                foreach (var errorConstraint in errorConstraints)
+                {
+                    Assert.That(message, errorConstraint);
+                }
             }
         }
     }
