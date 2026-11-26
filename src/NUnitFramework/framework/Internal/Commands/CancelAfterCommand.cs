@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands
@@ -15,6 +16,7 @@ namespace NUnit.Framework.Internal.Commands
     {
         private readonly int _timeout;
         private readonly IDebugger _debugger;
+        private readonly FailureSite _failureSite;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
@@ -22,12 +24,29 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
-        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
+        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger)
+            : this(innerCommand, timeout, debugger, FailureSite.Test)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
+        /// </summary>
+        /// <param name="innerCommand">The inner command</param>
+        /// <param name="timeout">Timeout value</param>
+        /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
+        /// <param name="failureSite">
+        /// The <see cref="FailureSite"/> used to record a cancellation:
+        /// <see cref="FailureSite.SetUp"/> or <see cref="FailureSite.TearDown"/> when wrapping
+        /// the one-time setup or teardown of a fixture.
+        /// </param>
+        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger, FailureSite failureSite) : base(innerCommand)
         {
             _timeout = timeout;
             _debugger = debugger;
+            _failureSite = failureSite;
 
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "CancelAfterCommand may only apply to a TestMethod", nameof(innerCommand));
+            Guard.ArgumentValid(innerCommand.Test is TestMethod or TestSuite, "CancelAfterCommand may only apply to a TestMethod or TestSuite", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
             ArgumentNullException.ThrowIfNull(debugger);
         }
@@ -64,7 +83,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (OperationCanceledException ex)
             {
-                context.CurrentResult.RecordException(ex);
+                context.CurrentResult.RecordException(ex, _failureSite);
             }
             finally
             {

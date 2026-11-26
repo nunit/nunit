@@ -11,7 +11,14 @@ namespace NUnit.Framework
     /// When applied to a method, the test's cancellation token is cancelled if the timeout is exceeded.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The user has to monitor this cancellation token.
+    /// </para>
+    /// <para>
+    /// When applied to a class, the timeout applies to each test in the fixture and also,
+    /// separately, to all <see cref="OneTimeSetUpAttribute"/> and all <see cref="OneTimeTearDownAttribute"/>
+    /// methods of the fixture. Each of these phases gets its own cancellation token.
+    /// </para>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class CancelAfterAttribute : PropertyAttribute, IApplyToContext

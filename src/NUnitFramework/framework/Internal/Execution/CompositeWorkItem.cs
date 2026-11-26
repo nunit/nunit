@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Extensions;
@@ -19,6 +20,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         private readonly TestSuite _suite;
         private readonly TestSuiteResult _suiteResult;
+        private readonly IDebugger _debugger;
         private TestCommand? _setupCommand;
         private TestCommand? _teardownCommand;
 
@@ -41,10 +43,23 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="suite">The TestSuite to be executed</param>
         /// <param name="childFilter">A filter used to select child tests</param>
         public CompositeWorkItem(TestSuite suite, ITestFilter childFilter)
+            : this(suite, childFilter, new DebuggerProxy())
+        {
+        }
+
+        /// <summary>
+        /// Construct a CompositeWorkItem for executing a test suite
+        /// using a filter to select child tests.
+        /// </summary>
+        /// <param name="suite">The TestSuite to be executed</param>
+        /// <param name="childFilter">A filter used to select child tests</param>
+        /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
+        internal CompositeWorkItem(TestSuite suite, ITestFilter childFilter, IDebugger debugger)
             : base(suite, childFilter)
         {
             _suite = suite;
             _suiteResult = (TestSuiteResult)Result;
+            _debugger = debugger;
         }
 
         /// <summary>
@@ -164,6 +179,9 @@ namespace NUnit.Framework.Internal.Execution
                 // Construct the fixture if necessary
                 if (!Test.TypeInfo!.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                     command = new ConstructFixtureCommand(command);
+
+                // Inside ApplyChangesToContextCommand, so the context has the CancelAfter value when reporting it
+                command = WrapWithCancelAfterCommand(command, FailureSite.SetUp);
             }
 
             // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
@@ -190,7 +208,25 @@ namespace NUnit.Framework.Internal.Execution
             if (Test is IDisposableFixture && Test.IsFixture && DisposeHelper.IsDisposable(Test.TypeInfo!.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
+            if (Test.IsFixture)
+                command = WrapWithCancelAfterCommand(command, FailureSite.TearDown);
+
             return command;
+        }
+
+        /// <summary>
+        /// Wraps a one-time setup or teardown phase in a <see cref="CancelAfterCommand"/>
+        /// if a <see cref="CancelAfterAttribute"/> applies to this suite.
+        /// </summary>
+        private TestCommand WrapWithCancelAfterCommand(TestCommand command, FailureSite failureSite)
+        {
+            // Get the CancelAfter value set on this suite or at a higher level
+            int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
+            bool useCancellation = Test.Properties.TryGet(PropertyNames.UseCancellation, Context.UseCancellation);
+
+            return timeout > 0 && useCancellation
+                ? new CancelAfterCommand(command, timeout, _debugger, failureSite)
+                : command;
         }
 
         private void PerformOneTimeSetUp()

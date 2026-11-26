@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -103,6 +104,115 @@ namespace NUnit.TestData
         public async Task Test2ExceedsTimeout()
         {
             await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    [TestFixture, CancelAfter(50)]
+    public sealed class CancelAfterFixtureWithTimeoutInOneTimeSetUp
+    {
+        public bool TestWasRun;
+        public bool OneTimeTearDownWasRun;
+        public bool OneTimeTearDownTokenWasCancelled;
+
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
+        {
+            await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            OneTimeTearDownWasRun = true;
+            OneTimeTearDownTokenWasCancelled = TestContext.CurrentContext.CancellationToken.IsCancellationRequested;
+        }
+
+        [Test]
+        public void Test()
+        {
+            TestWasRun = true;
+        }
+    }
+
+    [TestFixture, CancelAfter(500)]
+    public sealed class CancelAfterFixtureWithOneTimeSetUpAndTearDownWithinCancelAfter
+    {
+        public CancellationToken OneTimeSetUpToken;
+        public CancellationToken TestToken;
+        public CancellationToken OneTimeTearDownToken;
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            OneTimeSetUpToken = TestContext.CurrentContext.CancellationToken;
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            OneTimeTearDownToken = TestContext.CurrentContext.CancellationToken;
+        }
+
+        [Test]
+        public void Test()
+        {
+            TestToken = TestContext.CurrentContext.CancellationToken;
+        }
+    }
+
+    public abstract class CancelAfterBaseFixtureWithOneTimeSetUp
+    {
+        public CancellationToken BaseOneTimeSetUpToken;
+
+        [OneTimeSetUp]
+        public void BaseOneTimeSetUp()
+        {
+            BaseOneTimeSetUpToken = TestContext.CurrentContext.CancellationToken;
+        }
+    }
+
+    [TestFixture, CancelAfter(500)]
+    public sealed class CancelAfterDerivedFixtureWithOneTimeSetUp : CancelAfterBaseFixtureWithOneTimeSetUp
+    {
+        public CancellationToken DerivedOneTimeSetUpToken;
+
+        [OneTimeSetUp]
+        public void DerivedOneTimeSetUp()
+        {
+            DerivedOneTimeSetUpToken = TestContext.CurrentContext.CancellationToken;
+        }
+
+        [Test]
+        public void Test()
+        {
+        }
+    }
+
+    [TestFixture]
+    public sealed class CancelAfterFixtureWithInheritedCancelAfterAndTimeoutInOneTimeSetUp : CancelAfterBaseFixtureWithCancelAfterOnFixture
+    {
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
+        {
+            await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    [TestFixture, CancelAfter(50)]
+    public sealed class CancelAfterFixtureWithTimeoutInOneTimeTearDown
+    {
+        public bool TestWasRun;
+
+        [OneTimeTearDown]
+        public async Task OneTimeTearDown()
+        {
+            await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+
+        [Test]
+        public void Test()
+        {
+            TestWasRun = true;
         }
     }
 }
