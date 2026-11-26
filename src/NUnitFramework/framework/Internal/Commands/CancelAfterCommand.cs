@@ -24,21 +24,10 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
-        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger)
-            : this(innerCommand, timeout, debugger, FailureSite.Test)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
-        /// </summary>
-        /// <param name="innerCommand">The inner command</param>
-        /// <param name="timeout">Timeout value</param>
-        /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
         /// <param name="failureSite">
         /// The <see cref="FailureSite"/> used to record a cancellation:
-        /// <see cref="FailureSite.SetUp"/> or <see cref="FailureSite.TearDown"/> when wrapping
-        /// the one-time setup or teardown of a fixture.
+        /// <see cref="FailureSite.Test"/> when wrapping a test, or <see cref="FailureSite.SetUp"/>
+        /// or <see cref="FailureSite.TearDown"/> when wrapping the one-time setup or teardown of a fixture.
         /// </param>
         internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger, FailureSite failureSite) : base(innerCommand)
         {
