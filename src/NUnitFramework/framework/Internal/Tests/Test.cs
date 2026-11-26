@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
@@ -106,7 +107,7 @@ namespace NUnit.Framework.Internal
 
         private static string GetNextId()
         {
-            return IdPrefix + unchecked(_nextID++);
+            return IdPrefix + unchecked(Interlocked.Increment(ref _nextID) - 1);
         }
 
         #endregion
