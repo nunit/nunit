@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -34,7 +36,7 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object[] SuccessData = new object[] { new D1(), new D2() };
         private static readonly object[] FailureData = new object[]
         {
-            new TestCaseData(new B(), "<" + typeof(B).FullName + ">")
+            new TestCaseData(new B(), $"<{typeof(B).FullName}>")
         };
 #pragma warning restore IDE0052 // Remove unread private members
 
@@ -48,6 +50,66 @@ namespace NUnit.Framework.Tests.Constraints
 
         private class D2 : D1
         {
+        }
+    }
+
+    [TestFixture]
+    public class InstanceOfTypeConstraintTests_GeneralCases
+    {
+        private static TestCaseData[] GetUnionTestCases()
+        {
+            return
+            [
+                TestCaseData.Create<GeneratedUnionType>(new UnionMember()),
+                TestCaseData.Create<CustomUnionType>(new UnionMember()),
+                TestCaseData.Create<ExplicitIUnionType>(new UnionMember()),
+            ];
+        }
+
+        [TestCaseSource(nameof(GetUnionTestCases))]
+        public void CanUseWithUnions<TUnion>(TUnion u)
+        {
+            Assert.That(u, Is.InstanceOf<UnionMember>());
+            Assert.That(u, Is.Not.InstanceOf<TUnion>());
+            Assert.That(u, Is.Not.InstanceOf<int>());
+
+            Assert.That(u, Is.InstanceOf(typeof(UnionMember)));
+            Assert.That(u, Is.Not.InstanceOf(typeof(TUnion)));
+            Assert.That(u, Is.Not.InstanceOf(typeof(int)));
+        }
+
+        private static TestCaseData[] GetDerivedUnionTestCases()
+        {
+            return
+            [
+                TestCaseData.Create<GeneratedUnionType>(new DerivedUnionMember()),
+                TestCaseData.Create<CustomUnionType>(new DerivedUnionMember()),
+                TestCaseData.Create<ExplicitIUnionType>(new DerivedUnionMember()),
+            ];
+        }
+
+        [TestCaseSource(nameof(GetDerivedUnionTestCases))]
+        public void CanUseWithUnionsOfDerivedTypes<TUnion>(TUnion u)
+        {
+            Assert.That(u, Is.InstanceOf<UnionMember>());
+            Assert.That(u, Is.InstanceOf<DerivedUnionMember>());
+
+            Assert.That(u, Is.InstanceOf(typeof(UnionMember)));
+            Assert.That(u, Is.InstanceOf(typeof(DerivedUnionMember)));
+        }
+
+        [TestCaseSource(nameof(GetUnionTestCases))]
+        public void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
+        {
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.InstanceOf<int>(),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
+
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.InstanceOf(typeof(int)),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
         }
     }
 }

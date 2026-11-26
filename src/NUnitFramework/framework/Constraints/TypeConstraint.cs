@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -30,15 +31,17 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
+            Type? actualType = GetActualType(actual);
+
             if (actual is Exception)
                 return new ConstraintResult(this, actual, Matches(actual));
 
-            return new ConstraintResult(this, actual?.GetType(), Matches(actual));
+            return new ConstraintResult(this, actualType, Matches(actual));
         }
 
         private protected static Type? GetActualType<TActual>(TActual? actual)
         {
-            return actual?.GetType();
+            return UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
         }
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            actualType = actual?.GetType();
+            actualType = UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
 
             if (actual is Exception)
                 return new ConstraintResult(this, actual, Matches(actual));
