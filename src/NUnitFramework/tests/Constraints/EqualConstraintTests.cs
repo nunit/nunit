@@ -1949,7 +1949,8 @@ namespace NUnit.Framework.Tests.Constraints
     /// ConvertibleComparer is used in testing to ensure that objects
     /// of different types can be compared when appropriate.
     /// </summary>
-    /// <remark>Introduced when testing issue 1897.
+    /// <remark>
+    /// Introduced when testing issue 1897.
     /// https://github.com/nunit/nunit/issues/1897
     /// </remark>
     public class ConvertibleComparer : IComparer<IConvertible>

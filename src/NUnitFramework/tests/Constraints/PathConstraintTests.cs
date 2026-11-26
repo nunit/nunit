@@ -26,7 +26,7 @@ namespace NUnit.Framework.Tests.Constraints
 
     /// <summary>
     /// Summary description for PathConstraintTests.
-    /// </summary>]
+    /// </summary>
     [TestFixture]
     public class SamePathTest_Windows : WindowsConstraintTests
     {

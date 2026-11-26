@@ -70,7 +70,8 @@ namespace NUnit.Framework.Interfaces
 
         /// <summary>
         /// Gets any stack trace associated with an
-        /// error or failure.</summary>
+        /// error or failure.
+        /// </summary>
         string? StackTrace
         {
             get;

@@ -160,7 +160,8 @@ namespace NUnit.Framework
         /// <returns>
         /// An instance of <see cref="TestCaseDataWithReturn{T, TReturn}"/> with
         /// the argument data from this instance and the supplied <paramref name="result"/>
-        /// value.</returns>
+        /// value.
+        /// </returns>
         public TestCaseDataWithReturn<T, TReturn> Returns<TReturn>(TReturn result)
         {
             return new TestCaseDataWithReturn<T, TReturn>(this).Returns(result);
@@ -200,7 +201,8 @@ namespace NUnit.Framework
         /// <returns>
         /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, TReturn}"/> with
         /// the argument data from this instance and the supplied <paramref name="result"/>
-        /// value.</returns>
+        /// value.
+        /// </returns>
         public TestCaseDataWithReturn<T1, T2, TReturn> Returns<TReturn>(TReturn result)
         {
             return new TestCaseDataWithReturn<T1, T2, TReturn>(this).Returns(result);
@@ -240,7 +242,8 @@ namespace NUnit.Framework
         /// <returns>
         /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, TReturn}"/> with
         /// the argument data from this instance and the supplied <paramref name="result"/>
-        /// value.</returns>
+        /// value.
+        /// </returns>
         public TestCaseDataWithReturn<T1, T2, T3, TReturn> Returns<TReturn>(TReturn result)
         {
             return new TestCaseDataWithReturn<T1, T2, T3, TReturn>(this).Returns(result);
@@ -280,7 +283,8 @@ namespace NUnit.Framework
         /// <returns>
         /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, T4, TReturn}"/> with
         /// the argument data from this instance and the supplied <paramref name="result"/>
-        /// value.</returns>
+        /// value.
+        /// </returns>
         public TestCaseDataWithReturn<T1, T2, T3, T4, TReturn> Returns<TReturn>(TReturn result)
         {
             return new TestCaseDataWithReturn<T1, T2, T3, T4, TReturn>(this).Returns(result);
@@ -320,7 +324,8 @@ namespace NUnit.Framework
         /// <returns>
         /// An instance of <see cref="TestCaseDataWithReturn{T1, T2, T3, T4, T5, TReturn}"/> with
         /// the argument data from this instance and the supplied <paramref name="result"/>
-        /// value.</returns>
+        /// value.
+        /// </returns>
         public TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn> Returns<TReturn>(TReturn result)
         {
             return new TestCaseDataWithReturn<T1, T2, T3, T4, T5, TReturn>(this).Returns(result);
