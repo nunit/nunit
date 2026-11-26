@@ -17,7 +17,8 @@ namespace NUnit.Framework.Internal
         /// <param name="paramName">Name of the parameter as passed into the checking method.</param>
         /// <param name="allowNull">
         /// If <see langword="true"/> and <typeparamref name="T"/> can be null, returns null rather than throwing when <paramref name="actual"/> is null.
-        /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.</param>
+        /// If <typeparamref name="T"/> cannot be null, this parameter is ignored.
+        /// </param>
         /// <typeparam name="T">The type to require.</typeparam>
         public static T? RequireActual<T>(object? actual, string paramName, bool allowNull)
         {

@@ -48,13 +48,7 @@ namespace NUnit.Framework.Tests.Internal
 
             foreach (string testPlatform in check)
             {
-                bool shouldPass = false;
-
-                foreach (string platform in expected)
-                {
-                    if (shouldPass = platform.ToLower() == testPlatform.ToLower())
-                        break;
-                }
+                bool shouldPass = Array.Exists(expected, platform => string.Equals(platform, testPlatform, StringComparison.OrdinalIgnoreCase));
 
                 bool didPass = helper.IsPlatformSupported(testPlatform);
 
