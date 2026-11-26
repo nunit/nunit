@@ -8,6 +8,10 @@ namespace NUnit.Framework
     /// Identifies a method to be called immediately after each test is run.
     /// The method is guaranteed to be called, even if an exception is thrown.
     /// </summary>
+    /// <remarks>
+    /// The method may have a single <see cref="System.Threading.CancellationToken"/> parameter,
+    /// which receives the same token as <see cref="TestContext.CancellationToken"/>.
+    /// </remarks>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TearDownAttribute : NUnitAttribute
     {
