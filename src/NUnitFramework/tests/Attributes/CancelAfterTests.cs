@@ -497,6 +497,117 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
+        [Test]
+        public void CancelAfterOnSetUpMethodCancelsSetUp()
+        {
+            var fixture = new CancelAfterOnSetUpMethodFixture();
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            ITestResult? result = TestFinder.Find(nameof(CancelAfterOnSetUpMethodFixture.Test), suiteResult, false);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(result.Message, Does.Contain("SetUp exceeded CancelAfter value of 50ms").And.Not.Contain("OneTimeSetUp"));
+                Assert.That(fixture.TestWasRun, Is.False, "Test was run");
+                Assert.That(fixture.TearDownWasRun, "TearDown was not run");
+            });
+        }
+
+        [Test]
+        public void CancelAfterOnTearDownMethodCancelsTearDown()
+        {
+            var fixture = new CancelAfterOnTearDownMethodFixture();
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            ITestResult? result = TestFinder.Find(nameof(CancelAfterOnTearDownMethodFixture.Test), suiteResult, false);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.TearDown));
+                Assert.That(result.Message, Does.Contain("TearDown exceeded CancelAfter value of 50ms").And.Not.Contain("OneTimeTearDown"));
+                Assert.That(fixture.TestWasRun, "Test was not run");
+            });
+        }
+
+        [Test]
+        public void CancelAfterOnOneTimeSetUpMethodCancelsOneTimeSetUp()
+        {
+            var fixture = new CancelAfterOnOneTimeSetUpMethodFixture();
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeSetUp exceeded CancelAfter value of 50ms"));
+                Assert.That(fixture.TestWasRun, Is.False, "Test was run");
+                Assert.That(fixture.OneTimeTearDownWasRun, "OneTimeTearDown was not run");
+                Assert.That(fixture.OneTimeTearDownTokenWasCancelled, Is.False, "OneTimeTearDown token was cancelled");
+            });
+        }
+
+        [Test]
+        public void CancelAfterOnOneTimeTearDownMethodCancelsOneTimeTearDown()
+        {
+            var fixture = new CancelAfterOnOneTimeTearDownMethodFixture();
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.TearDown));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeTearDown exceeded CancelAfter value of 50ms"));
+                Assert.That(fixture.TestWasRun, "Test was not run");
+            });
+        }
+
+        [Test]
+        public void SetUpMethodsWithCancelAfterHaveTheirOwnCancellationToken()
+        {
+            var fixture = new CancelAfterOnSetUpMethodsWithinLimitFixture();
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(fixture.OneTimeSetUpParameterToken, Is.EqualTo(fixture.OneTimeSetUpContextToken));
+                Assert.That(fixture.OneTimeSetUpContextToken.CanBeCanceled, "OneTimeSetUp token can't be cancelled");
+                Assert.That(fixture.SetUpToken.CanBeCanceled, "SetUp token can't be cancelled");
+                Assert.That(fixture.SetUpToken, Is.Not.EqualTo(fixture.OneTimeSetUpContextToken));
+                Assert.That(fixture.TestToken, Is.Not.EqualTo(fixture.SetUpToken));
+                Assert.That(fixture.TestToken, Is.Not.EqualTo(fixture.OneTimeSetUpContextToken));
+            });
+        }
+
+        [TestCase(typeof(CancelAfterOnSetUpMethodDoesNotApplyToTestFixture))]
+        [TestCase(typeof(CancelAfterOnBaseOneTimeSetUpMethodDoesNotApplyToDerivedFixture))]
+        public void CancelAfterOnSetUpMethodOnlyAppliesToThatMethod(Type fixtureType)
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixtureType);
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Success), suiteResult.Message);
+        }
+
+        [Test]
+        public void CancelAfterOnFixtureAppliesAfterOneTimeSetUpMethodWithCancelAfter()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterOnFixtureStillAppliesAfterOneTimeSetUpMethodWithCancelAfter));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeSetUp exceeded CancelAfter value of 100ms"));
+            });
+        }
+
+        [TestCase(typeof(CancelAfterOnOneTimeSetUpMethodShorterThanOnFixture), 50)]
+        [TestCase(typeof(CancelAfterOnOneTimeSetUpMethodLongerThanOnFixture), 50)]
+        public void OneTimeSetUpMethodIsCancelledByTheShortestCancelAfter(Type fixtureType, int expectedTimeout)
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(fixtureType);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.Message, Does.Contain($"OneTimeSetUp exceeded CancelAfter value of {expectedTimeout}ms"));
+            });
+        }
+
         private static ITestResult RunNamespaceOf(Type type)
         {
             var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());

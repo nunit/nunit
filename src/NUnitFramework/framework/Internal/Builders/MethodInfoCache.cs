@@ -40,6 +40,8 @@ namespace NUnit.Framework.Internal.Builders
                 WrapTestMethodAttributes = GetCustomAttributeFromChain<IWrapTestMethod>(method, true);
                 WrapSetupTearDownAttributes = GetCustomAttributeFromChain<IWrapSetUpTearDown>(method, true);
                 ApplyToContextAttributes = method.GetCustomAttributes<IApplyToContext>(true);
+                CancelAfterAttribute[] cancelAfterAttributes = method.GetCustomAttributes<CancelAfterAttribute>(true);
+                CancelAfterTimeout = cancelAfterAttributes.Length > 0 ? cancelAfterAttributes[0].Timeout : 0;
 
                 // non-inherited
                 TestBuilderAttributes = method.GetCustomAttributes<ITestBuilder>(false);
@@ -56,6 +58,11 @@ namespace NUnit.Framework.Internal.Builders
             public ITestAction[] TestActionAttributes { get; }
             public IWrapSetUpTearDown[] WrapSetupTearDownAttributes { get; }
             public IApplyToContext[] ApplyToContextAttributes { get; }
+
+            /// <summary>
+            /// The timeout of a <see cref="CancelAfterAttribute"/> on the method, or 0 if it has none.
+            /// </summary>
+            public int CancelAfterTimeout { get; }
 
             private T[] GetCustomAttributeFromChain<T>(IMethodInfo method, bool inherit)
                 where T : class
