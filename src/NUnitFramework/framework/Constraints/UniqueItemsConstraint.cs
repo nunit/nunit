@@ -172,7 +172,29 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type) && !MayHoldNullEquivalents(type);
+        }
+
+        // NUnitEqualityComparer treats null-equivalent values as null, also as parts of tuples, key/value pairs and
+        // dictionary entries, so those are compared pairwise when a registered predicate may apply to them.
+        private static bool MayHoldNullEquivalents(Type type)
+        {
+            NullEquivalents? nullEquivalents = TestExecutionContext.GetNullEquivalents();
+            return nullEquivalents is not null && MayHoldNullEquivalents(type, nullEquivalents);
+        }
+
+        private static bool MayHoldNullEquivalents(Type type, NullEquivalents nullEquivalents)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (nullEquivalents.MayApplyTo(type) || type == typeof(DictionaryEntry))
+                return true;
+
+            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) || type.IsTupleOrValueTuple()))
+                return type.GetGenericArguments().Any(part => MayHoldNullEquivalents(part, nullEquivalents));
+
+            // For example a class derived from a tuple, which NUnit compares through IStructuralEquatable.
+            return typeof(IStructuralEquatable).IsAssignableFrom(type);
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
@@ -229,9 +251,7 @@ namespace NUnit.Framework.Constraints
             return type.IsArray
                 || typeof(IEnumerable).IsAssignableFrom(type) // Covers lists, collections, dictionaries as well
                 || typeof(System.IO.Stream).IsAssignableFrom(type) // Covers all streams
-                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type) // Unlikely to be derived, but just in case
-                || type.FullName == "System.Tuple"
-                || type.FullName == "System.ValueTuple";
+                || typeof(System.IO.DirectoryInfo).IsAssignableFrom(type); // Unlikely to be derived, but just in case
         }
 
         private static Type? GetGenericTypeArgument(IEnumerable actual)

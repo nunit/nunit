@@ -370,6 +370,29 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Treats non-null values of type <typeparamref name="TSupported"/> for which
+        /// <paramref name="isNullEquivalent"/> returns true as null in null and equality
+        /// constraints (<see cref="Is.Null"/>, <see cref="Is.EqualTo(object)"/> with null, and
+        /// collection constraints that compare items for equality). Use it for types that
+        /// represent "no value" with a sentinel instance instead of a null reference.
+        /// Failure messages show such a value as <paramref name="formattedValue"/>.
+        /// The scope of the change is the current TestContext.
+        /// </summary>
+        /// <typeparam name="TSupported">The type the predicate applies to. It can't be <see cref="object"/>,
+        /// a type that NUnit compares with its default equality or a dedicated constraint (a string, primitive, enum,
+        /// other numeric type, <see cref="DateTime"/>, <see cref="DateTimeOffset"/>, <see cref="TimeSpan"/>,
+        /// or a tuple of those),
+        /// an <see cref="ArraySegment{T}"/>, or a <see cref="Nullable{T}"/>.</typeparam>
+        /// <param name="isNullEquivalent">Returns true for a value that is equivalent to null</param>
+        /// <param name="formattedValue">How failure messages show a null-equivalent value.
+        /// Defaults to <c>null</c> followed by the type name.</param>
+        /// <exception cref="ArgumentException"><typeparamref name="TSupported"/> is one of the excluded types.</exception>
+        public static void AddNullEquivalent<TSupported>(Func<TSupported, bool> isNullEquivalent, string? formattedValue = null)
+        {
+            TestExecutionContext.CurrentContext.AddNullEquivalent(isNullEquivalent, formattedValue);
+        }
+
+        /// <summary>
         /// Attach a file to the current test result
         /// </summary>
         /// <param name="filePath">Relative or absolute file path to attachment</param>

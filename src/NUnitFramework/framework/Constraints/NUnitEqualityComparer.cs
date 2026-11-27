@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints.Comparers;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -200,6 +201,12 @@ namespace NUnit.Framework.Constraints
         public bool WithSameOffset { get; set; }
         #endregion
 
+        /// <summary>
+        /// The null-equivalent predicates of the test context, read when the comparer is created.
+        /// Each constraint creates its own comparer.
+        /// </summary>
+        internal NullEquivalents? NullEquivalents { get; } = TestExecutionContext.GetNullEquivalents();
+
         #region Public Methods
 
         /// <summary>
@@ -247,14 +254,23 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
+            // Also covers two nulls. The same instance is equal to itself, null-equivalent or not.
+            if (object.ReferenceEquals(x, y))
+                return EqualMethodResult.ComparedEqual;
+
+            if (NullEquivalents is NullEquivalents nullEquivalents)
+            {
+                if (x is not null && nullEquivalents.IsNullEquivalent(x))
+                    x = null;
+                if (y is not null && nullEquivalents.IsNullEquivalent(y))
+                    y = null;
+            }
+
             if (x is null && y is null)
                 return EqualMethodResult.ComparedEqual;
 
             if (x is null || y is null)
                 return EqualMethodResult.ComparedNotEqual;
-
-            if (object.ReferenceEquals(x, y))
-                return EqualMethodResult.ComparedEqual;
 
             foreach (EqualMethod equalMethod in Comparers)
             {
