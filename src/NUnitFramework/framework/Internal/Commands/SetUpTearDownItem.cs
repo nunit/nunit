@@ -134,10 +134,12 @@ namespace NUnit.Framework.Internal.Commands
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
         {
+            var methodInfo = MethodInfoCache.Get(method);
+            if (!methodInfo.IsVoidOrUnit && !methodInfo.IsAsyncOperation)
+                throw new InvalidOperationException(HostOwnedReturnTypes.NotRunByNUnitMessage(method.ReturnType.Type, "setup or teardown method"));
+
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
-
-            var methodInfo = MethodInfoCache.Get(method);
 
             if (methodInfo.IsAsyncOperation)
                 AsyncToSyncAdapter.Await(context, () => InvokeMethod(method, context));

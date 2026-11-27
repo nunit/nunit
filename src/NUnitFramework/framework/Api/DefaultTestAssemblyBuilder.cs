@@ -161,7 +161,18 @@ namespace NUnit.Framework.Api
                         filter.Add(filterText);
                 }
 
-                var fixtures = GetFixtures(assembly, filter);
+                IEnumerable<string>? hostOwnedReturnTypes = null;
+                if (options.TryGetValue(FrameworkPackageSettings.HostOwnedReturnTypes, out object? hostOwnedReturnTypesValue) &&
+                    hostOwnedReturnTypesValue is not null)
+                {
+                    hostOwnedReturnTypes = hostOwnedReturnTypesValue as IEnumerable<string>
+                        ?? throw new ArgumentException(
+                            $"{FrameworkPackageSettings.HostOwnedReturnTypes} must be an IEnumerable<string> of full type names.");
+                }
+
+                IList<Test> fixtures;
+                using (HostOwnedReturnTypes.BeginBuild(hostOwnedReturnTypes))
+                    fixtures = GetFixtures(assembly, filter);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyNameOrPath, fixtures);
             }

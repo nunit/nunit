@@ -171,7 +171,11 @@ namespace NUnit.Framework.Internal.Builders
 
             var returnType = testMethod.Method.ReturnType.Type;
 
-            if (metadata.IsAsyncOperation)
+            if (HostOwnedReturnTypes.Contains(returnType))
+            {
+                // The host runs the method, so it decides what an expected result means.
+            }
+            else if (metadata.IsAsyncOperation)
             {
                 if (returnType == typeof(void))
                 {
