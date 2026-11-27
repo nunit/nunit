@@ -119,8 +119,17 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] { new[] { 1, 2, 3, 2 }, new[] { 2 } },
             new object[] { new[] { 2, 1, 2, 3, 2 }, new[] { 2 } },
             new object[] { new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 } },
-            new object[] { new[] { "x", null, "x" }, new[] { "x" } }
+            new object[] { new[] { "x", null, "x" }, new[] { "x" } },
+            new object[] { new[] { (1, "a"), (2, "b"), (1, "A") }, new[] { (1, "A") } },
+            new object[] { new[] { Tuple.Create(1, "a"), Tuple.Create(2, "b"), Tuple.Create(1, "A") }, new[] { Tuple.Create(1, "A") } },
+            new object[] { new[] { new KeyValuePair<int, string>(1, "a"), new KeyValuePair<int, string>(1, "A") }, new[] { new KeyValuePair<int, string>(1, "A") } },
+            new object[] { new[] { new DictionaryEntry(1, "a"), new DictionaryEntry(1, "A") }, new[] { new DictionaryEntry(1, "A") } },
+            new object[] { new SimpleObjectCollection((1, "a"), (1, "A")), new[] { (1, "A") } },
+            new object[] { new (int, string)?[] { (1, "a"), (1, "A") }, new (int, string)?[] { (1, "A") } },
+            new object[] { new[] { new StringTuple("a"), new StringTuple("A") }, new[] { new StringTuple("A") } },
+            new object[] { new SimpleObjectCollection((1, "a"), (1L, "a")), new[] { (1L, "a") } },
         };
+
         private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10000);
         private static readonly TestCaseData[] PerformanceDataFastPath =
         {
@@ -130,6 +139,8 @@ namespace NUnit.Framework.Tests.Constraints
             new(new List<double>(Range.Select(v => (double)v)), false),
             new(new List<string>(Range.Select(v => v.ToString())), false),
             new(new List<string>(Range.Select(v => v.ToString())), true),
+            new(new List<(int, string)>(Range.Select(v => (v, v.ToString()))), false),
+            new(new List<KeyValuePair<int, int>>(Range.Select(v => new KeyValuePair<int, int>(v, v))), true),
 
             // Non-generic container
             new(new SimpleObjectCollection(Range), false)
@@ -246,6 +257,22 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
+        }
+
+        [Test]
+        public void ComparesTupleItemsWithNUnitEquality()
+        {
+            var items = new[] { (new[] { 1, 2 }, 1), (new[] { 1, 2 }, 1) };
+
+            Assert.That(items, Is.Not.Unique);
+        }
+
+        [Test]
+        [DefaultFloatingPointTolerance(0.5)]
+        public void HonorsDefaultFloatingPointToleranceForTupleItems()
+        {
+            Assert.That(new[] { (1.0, 0), (0.9, 0) }, Is.Not.Unique);
+            Assert.That(new[] { new KeyValuePair<string, double>("a", 1.0), new KeyValuePair<string, double>("a", 0.9) }, Is.Not.Unique);
         }
 
         [Test]
@@ -390,6 +417,14 @@ namespace NUnit.Framework.Tests.Constraints
         private struct TestValueType
         {
             public int A { get; set; }
+        }
+
+        private sealed class StringTuple : Tuple<string>
+        {
+            public StringTuple(string item1)
+                : base(item1)
+            {
+            }
         }
     }
 }
