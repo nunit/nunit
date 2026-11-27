@@ -65,18 +65,27 @@ namespace NUnit.Framework.Internal.Commands
                 context.GlobalCancellationToken,
                 testCancellationTokenSource.Token);
             context.CancellationToken = combinedCancellationTokenSource.Token;
+            context.CancelAfterPhase = _failureSite switch
+            {
+                FailureSite.SetUp => "OneTimeSetUp",
+                FailureSite.TearDown => "OneTimeTearDown",
+                _ => "Test",
+            };
 
             try
             {
                 innerCommand.Execute(context);
             }
-            catch (OperationCanceledException ex)
+            catch (Exception ex) when (ex.Unwrap() is OperationCanceledException)
             {
+                // Record it before the token is reset, so it is reported as exceeding CancelAfter.
+                // Exceptions from reflection invoked code, like a fixture constructor, are still wrapped.
                 context.CurrentResult.RecordException(ex, _failureSite);
             }
             finally
             {
                 context.CancellationToken = context.GlobalCancellationToken;
+                context.CancelAfterPhase = "Test";
             }
 
             return context.CurrentResult;

@@ -424,16 +424,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void CancelAfterOnSetUpFixtureAppliesToOneTimeSetUp()
         {
-            Type setUpFixtureType = typeof(NUnit.TestData.CancelAfterSetUpFixture.SetUpFixtureWithTimeoutInOneTimeSetUp);
-            var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-            var options = new Dictionary<string, object>
-            {
-                ["LOAD"] = new[] { setUpFixtureType.Namespace! },
-                ["NumberOfTestWorkers"] = 0,
-            };
-            Assert.That(runner.Load(AssemblyHelper.GetAssemblyPath(setUpFixtureType.Assembly), options), Is.Not.Null);
-
-            ITestResult runResult = runner.Run(TestListener.NULL, TestFilter.Empty);
+            ITestResult runResult = RunNamespaceOf(typeof(NUnit.TestData.CancelAfterSetUpFixture.SetUpFixtureWithTimeoutInOneTimeSetUp));
 
             ITestResult? result = TestFinder.Find(nameof(NUnit.TestData.CancelAfterSetUpFixture.FixtureInSetUpFixtureNamespace.Test), runResult, true);
             Assert.That(result, Is.Not.Null);
@@ -443,6 +434,58 @@ namespace NUnit.Framework.Tests.Attributes
                 Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Parent));
                 Assert.That(result.Message, Does.Contain("OneTimeSetUp exceeded CancelAfter value of 50ms"));
             });
+        }
+
+        [TestCase(typeof(NUnit.TestData.CancelAfterNestedSetUpFixture.FixtureWithOwnCancelAfter), 50)]
+        [TestCase(typeof(NUnit.TestData.CancelAfterNestedSetUpFixture.FixtureWithEnclosingCancelAfter), 500)]
+        public void OneTimeSetUpUsesTheClosestCancelAfter(Type fixtureType, int expectedTimeout)
+        {
+            ITestResult runResult = RunNamespaceOf(fixtureType);
+
+            ITestResult? result = TestFinder.Find(fixtureType.Name, runResult, true);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(result.Message, Does.Contain($"OneTimeSetUp exceeded CancelAfter value of {expectedTimeout}ms"));
+            });
+        }
+
+        [Test]
+        public void FixtureConstructorTimesOut()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterFixtureWithTimeoutInConstructor));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeSetUp exceeded CancelAfter value of 50ms"));
+            });
+        }
+
+        [Test]
+        public void AfterSuiteActionTimesOut()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterFixtureWithTimeoutInAfterSuiteAction));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeTearDown exceeded CancelAfter value of 50ms"));
+            });
+        }
+
+        private static ITestResult RunNamespaceOf(Type type)
+        {
+            var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
+            var options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { type.Namespace! },
+                ["NumberOfTestWorkers"] = 0,
+            };
+            Assert.That(runner.Load(AssemblyHelper.GetAssemblyPath(type.Assembly), options), Is.Not.Null);
+
+            return runner.Run(TestListener.NULL, TestFilter.Empty);
         }
 
         [Test]

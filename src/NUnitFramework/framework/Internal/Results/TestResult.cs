@@ -752,7 +752,7 @@ namespace NUnit.Framework.Internal
         {
             RecordedException = ValidateAndUnwrap(ex);
 
-            var result = new ExceptionResult(RecordedException, site, this is TestSuiteResult);
+            var result = new ExceptionResult(RecordedException, site);
 
             if (RecordedException is AssertionException { FromReportFailure: true } or MultipleAssertException)
             {
@@ -804,7 +804,7 @@ namespace NUnit.Framework.Internal
             public string Message { get; }
             public string? StackTrace { get; }
 
-            public ExceptionResult(Exception ex, FailureSite site, bool isSuite)
+            public ExceptionResult(Exception ex, FailureSite site)
             {
                 if (ex is ResultStateException exception)
                 {
@@ -819,10 +819,8 @@ namespace NUnit.Framework.Internal
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
                     ResultState = ResultState.Failure.WithSite(site);
-                    string phase = isSuite
-                        ? site == FailureSite.TearDown ? "OneTimeTearDown" : "OneTimeSetUp"
-                        : "Test";
-                    Message = $"{phase} exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    TestExecutionContext context = TestExecutionContext.CurrentContext;
+                    Message = $"{context.CancelAfterPhase} exceeded CancelAfter value of {context.TestCaseTimeout}ms";
                 }
                 else
                 {

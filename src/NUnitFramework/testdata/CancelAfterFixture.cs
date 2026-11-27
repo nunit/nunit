@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.TestData
 {
@@ -195,6 +197,48 @@ namespace NUnit.TestData
         public async Task OneTimeSetUp()
         {
             await Task.Delay(1000, TestContext.CurrentContext.CancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    [TestFixture, CancelAfter(50)]
+    public sealed class CancelAfterFixtureWithTimeoutInConstructor
+    {
+        public CancelAfterFixtureWithTimeoutInConstructor()
+        {
+            CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+            cancellationToken.WaitHandle.WaitOne(1000);
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        [Test]
+        public void Test()
+        {
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class CancellableAfterSuiteActionAttribute : Attribute, ITestAction
+    {
+        public ActionTargets Targets => ActionTargets.Suite;
+
+        public void BeforeTest(ITest test)
+        {
+        }
+
+        public void AfterTest(ITest test)
+        {
+            CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+            cancellationToken.WaitHandle.WaitOne(1000);
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+    }
+
+    [TestFixture, CancelAfter(50), CancellableAfterSuiteAction]
+    public sealed class CancelAfterFixtureWithTimeoutInAfterSuiteAction
+    {
+        [Test]
+        public void Test()
+        {
         }
     }
 
