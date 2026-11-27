@@ -453,6 +453,28 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
+        public void NestedFixtureUsesItsOwnCancelAfterForOneTimeSetUp()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterOuterClassWithLongerCancelAfter.NestedFixtureWithOwnCancelAfter));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(suiteResult.Message, Does.Contain("OneTimeSetUp exceeded CancelAfter value of 50ms"));
+
+                // The outer class has CancelAfter(5000)
+                Assert.That(suiteResult.Duration, Is.LessThan(2.5), "OneTimeSetUp was not cancelled after 50ms");
+            });
+        }
+
+        [Test]
+        public void NestedFixtureIgnoresCancelAfterOfOuterClass()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterOuterClassWithCancelAfter.NestedFixtureWithoutOwnCancelAfter));
+            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.Success), suiteResult.Message);
+        }
+
+        [Test]
         public void FixtureConstructorTimesOut()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterFixtureWithTimeoutInConstructor));

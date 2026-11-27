@@ -242,6 +242,54 @@ namespace NUnit.TestData
         }
     }
 
+    [CancelAfter(5000)]
+    public sealed class CancelAfterOuterClassWithLongerCancelAfter
+    {
+        [TestFixture, CancelAfter(50)]
+        public sealed class NestedFixtureWithOwnCancelAfter
+        {
+            [OneTimeSetUp]
+            public void OneTimeSetUp()
+            {
+                CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+                cancellationToken.WaitHandle.WaitOne(10000);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            [Test]
+            public void Test()
+            {
+            }
+        }
+    }
+
+    [CancelAfter(50)]
+    public sealed class CancelAfterOuterClassWithCancelAfter
+    {
+        /// <summary>
+        /// Like its tests, the one-time methods of a nested fixture are not affected by a CancelAfter on the outer class.
+        /// </summary>
+        [TestFixture]
+        public sealed class NestedFixtureWithoutOwnCancelAfter
+        {
+            [OneTimeSetUp]
+            public void OneTimeSetUp()
+            {
+                CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+                cancellationToken.WaitHandle.WaitOne(200);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            [Test]
+            public void Test()
+            {
+                CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+                cancellationToken.WaitHandle.WaitOne(200);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+        }
+    }
+
     [TestFixture, CancelAfter(50)]
     public sealed class CancelAfterFixtureWithTimeoutInOneTimeTearDown
     {

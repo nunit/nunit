@@ -180,8 +180,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (!Test.TypeInfo!.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                     command = new ConstructFixtureCommand(command);
 
-                // Inside ApplyChangesToContextCommand, so the context has the CancelAfter value when reporting it
-                command = WrapWithCancelAfterCommand(command, FailureSite.SetUp);
+                // Inside ApplyChangesToContextCommand, so the context has the CancelAfter value of this fixture
+                command = new OneTimeCancelAfterCommand(command, _debugger, FailureSite.SetUp);
             }
 
             // Build the chain of ApplyChangesToContextCommands from IApplyToContext attributes
@@ -208,25 +208,11 @@ namespace NUnit.Framework.Internal.Execution
             if (Test is IDisposableFixture && Test.IsFixture && DisposeHelper.IsDisposable(Test.TypeInfo!.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
+            // The context still has the CancelAfter value of this fixture from the one-time setup
             if (Test.IsFixture)
-                command = WrapWithCancelAfterCommand(command, FailureSite.TearDown);
+                command = new OneTimeCancelAfterCommand(command, _debugger, FailureSite.TearDown);
 
             return command;
-        }
-
-        /// <summary>
-        /// Wraps a one-time setup or teardown phase in a <see cref="CancelAfterCommand"/>
-        /// if a <see cref="CancelAfterAttribute"/> applies to this suite.
-        /// </summary>
-        private TestCommand WrapWithCancelAfterCommand(TestCommand command, FailureSite failureSite)
-        {
-            // Get the CancelAfter value set on this suite or at a higher level
-            int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
-            bool useCancellation = Test.Properties.TryGet(PropertyNames.UseCancellation, Context.UseCancellation);
-
-            return timeout > 0 && useCancellation
-                ? new CancelAfterCommand(command, timeout, _debugger, failureSite)
-                : command;
         }
 
         private void PerformOneTimeSetUp()
