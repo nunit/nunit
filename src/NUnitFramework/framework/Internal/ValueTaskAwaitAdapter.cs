@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+#if !NETFRAMEWORK
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -13,11 +16,24 @@ namespace NUnit.Framework.Internal
             return new NonGenericAdapter(task);
         }
 
+#if !NETFRAMEWORK
+        [DynamicDependency(nameof(ValueTask<object>.GetAwaiter), typeof(ValueTask<>))]
+        [DynamicDependency(nameof(ValueTaskAwaiter<object>.IsCompleted), typeof(ValueTaskAwaiter<>))]
+        [DynamicDependency(nameof(ValueTaskAwaiter<object>.GetResult), typeof(ValueTaskAwaiter<>))]
+#endif
         public static AwaitAdapter? TryCreate(object task)
         {
             Type taskType = task.GetType();
             if (taskType.IsGenericType && taskType.GetGenericTypeDefinition() == typeof(ValueTask<>))
             {
+#if !NETFRAMEWORK
+                if (!RuntimeFeature.IsDynamicCodeSupported)
+                {
+                    return CSharpPatternBasedAwaitAdapter.TryCreate(task)
+                        ?? throw new NotSupportedException($"Cannot await value task of type {taskType}.");
+                }
+#endif
+
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                     .MakeGenericType(taskType.GetGenericArguments()[0])
                     .GetConstructor(new[] { taskType })!
