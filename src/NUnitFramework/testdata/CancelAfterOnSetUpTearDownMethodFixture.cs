@@ -206,6 +206,26 @@ namespace NUnit.TestData
         }
     }
 
+    [TestFixture]
+    public sealed class CancelAfterOnSetUpMethodThatIsSlowToStopFixture
+    {
+        [SetUp, CancelAfter(100)]
+        public void SetUp()
+        {
+            CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
+            cancellationToken.WaitHandle.WaitOne(1000);
+
+            // Keep running after the timeout of the test, until the timeout of this method has expired as well.
+            Thread.Sleep(200);
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+
+        [Test, CancelAfter(50)]
+        public void Test()
+        {
+        }
+    }
+
     [TestFixture, CancelAfter(50)]
     public sealed class CancelAfterOnOneTimeSetUpMethodLongerThanOnFixture
     {

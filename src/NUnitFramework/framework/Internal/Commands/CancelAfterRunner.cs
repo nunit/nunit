@@ -41,9 +41,11 @@ namespace NUnit.Framework.Internal.Commands
 
             // The registration is disposed before both token sources. Disposing it waits for a
             // callback that is already running, so the callback can't use a disposed source.
+            // If the enclosing token was cancelled first, the code may still be running when this timer expires.
+            // Not cancelling then ensures the timeout that expired first is reported.
             using var registration = timerTokenSource.Token.Register(() =>
             {
-                if (!debugger.IsAttached)
+                if (!debugger.IsAttached && !enclosingToken.IsCancellationRequested)
                     timedOutTokenSource.Cancel();
             });
 

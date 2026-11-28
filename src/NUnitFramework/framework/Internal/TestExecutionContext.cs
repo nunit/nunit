@@ -117,6 +117,8 @@ namespace NUnit.Framework.Internal
             ThrowOnEachFailureUnderDebugger = other.ThrowOnEachFailureUnderDebugger;
             UseCancellation = other.UseCancellation;
             CancellationToken = other.CancellationToken;
+            CancelAfterPhase = other.CancelAfterPhase;
+            CancelAfterTimeout = other.CancelAfterTimeout;
             GlobalCancellationToken = other.GlobalCancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 

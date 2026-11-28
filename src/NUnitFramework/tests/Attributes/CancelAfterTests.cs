@@ -596,6 +596,20 @@ namespace NUnit.Framework.Tests.Attributes
             });
         }
 
+        [Test]
+        public void SetUpMethodThatIsSlowToStopReportsTheCancelAfterThatExpiredFirst()
+        {
+            ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(CancelAfterOnSetUpMethodThatIsSlowToStopFixture));
+            ITestResult? result = TestFinder.Find(nameof(CancelAfterOnSetUpMethodThatIsSlowToStopFixture.Test), suiteResult, false);
+            Assert.That(result, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.SetUp));
+                Assert.That(result.Message, Does.Contain("Test exceeded CancelAfter value of 50ms"));
+            });
+        }
+
         [TestCase(typeof(CancelAfterOnOneTimeSetUpMethodShorterThanOnFixture), 50)]
         [TestCase(typeof(CancelAfterOnOneTimeSetUpMethodLongerThanOnFixture), 50)]
         public void OneTimeSetUpMethodIsCancelledByTheShortestCancelAfter(Type fixtureType, int expectedTimeout)
