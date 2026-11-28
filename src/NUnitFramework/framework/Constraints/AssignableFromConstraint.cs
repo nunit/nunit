@@ -19,10 +19,13 @@ namespace NUnit.Framework.Constraints
         {
         }
 
+        /// <inheritdoc/>
+        protected override bool UseUnionMember => false;
+
         /// <inheritdoc />
         protected override bool Matches<TActual>(TActual actual)
         {
-            Type? actualType = GetActualType(actual);
+            Type? actualType = ActualType;
             return actualType is not null && typeof(TExpected).CanImplicitlyConvertTo(actualType);
         }
     }
@@ -40,6 +43,9 @@ namespace NUnit.Framework.Constraints
         public AssignableFromConstraint(Type type) : base(type, "assignable from ")
         {
         }
+
+        /// <inheritdoc/>
+        protected override bool UseUnionMember => false;
 
         /// <inheritdoc />
         protected override bool Matches(object? actual)

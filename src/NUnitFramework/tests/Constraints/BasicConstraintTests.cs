@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 
 namespace NUnit.Framework.Tests.Constraints
 {
@@ -20,6 +21,18 @@ namespace NUnit.Framework.Tests.Constraints
         private static readonly object?[] SuccessData = new object?[] { null };
         private static readonly object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
 #pragma warning restore IDE0052 // Remove unread private members
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedValueTestCases))]
+        public void NonNullUnionCases<TUnion>(TUnion instance)
+        {
+            Assert.That(instance, Is.Not.Default);
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.DefaultValueTestCases))]
+        public void NullUnionCases<TUnion>(TUnion instance)
+        {
+            Assert.That(instance, Is.Default);
+        }
     }
 
     [TestFixture]

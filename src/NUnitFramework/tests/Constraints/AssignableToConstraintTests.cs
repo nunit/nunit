@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -101,6 +102,32 @@ namespace NUnit.Framework.Tests.Constraints
                     TypeArgs = typeArgs
                 }.SetArgDisplayNames("generic");
             }
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void UnionCases<TUnion>(TUnion _)
+        {
+            int member = 123;
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(member, Is.AssignableTo<TUnion>());
+                Assert.That(member, Is.AssignableTo(typeof(TUnion)));
+            }
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void FailureMessagesUseContainedUnionType<TUnion>(TUnion u)
+        {
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableTo<int>(),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
+
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableTo(typeof(int)),
+                Does.Contain(typeof(UnionMember).Name).And.Not.Contain(typeof(TUnion).Name));
         }
     }
 }

@@ -25,23 +25,35 @@ namespace NUnit.Framework.Constraints
         public override string Description { get; }
 
         /// <summary>
+        /// Gets a value indicating whether union member types are used for the actula value.
+        /// </summary>
+        protected virtual bool UseUnionMember => true;
+
+        private protected Type? ActualType { get; private set; }
+
+        /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Type? actualType = GetActualType(actual);
+            bool success;
+            if (UseUnionMember && UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            {
+                ActualType = unionValue?.GetType();
+                success = Matches(unionValue);
+            }
+            else
+            {
+                ActualType = actual?.GetType();
+                success = Matches(actual);
+            }
 
             if (actual is Exception)
-                return new ConstraintResult(this, actual, Matches(actual));
+                return new ConstraintResult(this, actual, success);
 
-            return new ConstraintResult(this, actualType, Matches(actual));
-        }
-
-        private protected static Type? GetActualType<TActual>(TActual? actual)
-        {
-            return UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
+            return new ConstraintResult(this, ActualType, success);
         }
 
         /// <summary>
@@ -97,18 +109,33 @@ namespace NUnit.Framework.Constraints
         public override string Description { get; }
 
         /// <summary>
+        /// Gets a value indicating whether union member types are used for the actula value.
+        /// </summary>
+        protected virtual bool UseUnionMember => true;
+
+        /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            actualType = UnionHelper.TryGetUnionValue(actual, out var unionValue) ? unionValue?.GetType() : actual?.GetType();
+            object? actualValue;
+            if (UseUnionMember && UnionHelper.TryGetUnionValue(actual, out var unionValue))
+            {
+                actualType = unionValue?.GetType();
+                actualValue = unionValue;
+            }
+            else
+            {
+                actualType = actual?.GetType();
+                actualValue = actual;
+            }
 
-            if (actual is Exception)
-                return new ConstraintResult(this, actual, Matches(actual));
+            if (actualValue is Exception)
+                return new ConstraintResult(this, actual, Matches(actualValue));
 
-            return new ConstraintResult(this, actualType, Matches(actual));
+            return new ConstraintResult(this, actualType, Matches(actualValue));
         }
 
         /// <summary>

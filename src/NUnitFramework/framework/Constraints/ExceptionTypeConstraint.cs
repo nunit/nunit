@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         {
             ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
 
-            return new ExceptionTypeConstraintResult(this, actual, GetActualType(actual), Matches(actual));
+            return new ExceptionTypeConstraintResult(this, actual, ActualType, Matches(actual));
         }
     }
 

@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Runtime.CompilerServices;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -17,7 +18,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            var isDefault = RuntimeHelpers.Equals(actual, default(TActual));
+            bool isDefault = UnionHelper.TryGetUnionValue(actual, out var unionValue)
+                ? unionValue is null
+                : RuntimeHelpers.Equals(actual, default(TActual));
+
             return new ConstraintResult(this, actual, isDefault);
         }
     }

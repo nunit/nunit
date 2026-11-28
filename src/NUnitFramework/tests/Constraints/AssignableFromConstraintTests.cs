@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
+using NUnit.TestData;
 using static NUnit.Framework.Tests.Constraints.AssignableTestScenarios;
 
 namespace NUnit.Framework.Tests.Constraints
@@ -90,6 +91,34 @@ namespace NUnit.Framework.Tests.Constraints
                     TypeArgs = typeArgs
                 }.SetArgDisplayNames("generic");
             }
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void UnionCases<TUnion>(TUnion instance)
+        {
+            Assert.That(instance?.GetType().Name, Does.EndWith("UnionType"));
+
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(instance, Is.AssignableFrom<UnionMember>());
+                Assert.That(instance, Is.AssignableFrom(typeof(UnionMember)));
+                Assert.That(instance, Is.AssignableFrom<int>());
+                Assert.That(instance, Is.AssignableFrom(typeof(int)));
+            }
+        }
+
+        [TestCaseSource(typeof(UnionTestData), nameof(UnionTestData.InitializedWithUnionMemberTestCases))]
+        public static void FailureMessagesUseUnionType<TUnion>(TUnion u)
+        {
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableFrom<double>(),
+                Does.Contain(typeof(TUnion).Name).And.Not.Contain(typeof(UnionMember).Name));
+
+            ConstraintAssert.MatchesFailureMessage(
+                u,
+                Is.AssignableFrom(typeof(double)),
+                Does.Contain(typeof(TUnion).Name).And.Not.Contain(typeof(UnionMember).Name));
         }
     }
 }
