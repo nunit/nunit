@@ -69,6 +69,36 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [Test]
+        public void DisplayStringDifferences_FormatCharactersBeforeDifference()
+        {
+            string expected = "\u200E-\u200E32\u066B768";
+            string actual = "\u200E-\u200E32\u066C768";
+
+            _writer.DisplayStringDifferences(expected, actual, 5, 5, false, false, true);
+            string message = _writer.ToString();
+
+            Assert.That(message, Is.EqualTo(
+                TextMessageWriter.Pfx_Expected + Q("\\x200E-\\x200E32\u066B768") + NL +
+                TextMessageWriter.Pfx_Actual + Q("\\x200E-\\x200E32\u066C768") + NL +
+                "  --------------------------^" + NL));
+        }
+
+        [Test]
+        public void DisplayStringDifferences_MultipleLeadingFormatCharacters()
+        {
+            string expected = "\u200E\u200E\u200E\u200E\u200E\u200E\u200E\u200E\u200E768";
+            string actual = "\u200E\u200E\u200E\u200E\u200E\u200E\u200E\u200E1768";
+
+            _writer.DisplayStringDifferences(expected, actual, 8, 8, false, false, true);
+            string message = _writer.ToString();
+
+            Assert.That(message, Is.EqualTo(
+                TextMessageWriter.Pfx_Expected + Q("\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E768") + NL +
+                TextMessageWriter.Pfx_Actual + Q("\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E\\x200E1768") + NL +
+                "  -----------------------------------------------------------^" + NL));
+        }
+
+        [Test]
         public void WriteMessageLine_EmbeddedZeroes()
         {
             string expected, message;

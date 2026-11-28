@@ -523,6 +523,10 @@ namespace NUnit.Framework.Constraints
                     return $"\\x{(int)c:X4}";
 
                 default:
+                    if (CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.Format)
+                    {
+                        return $"\\x{(int)c:X4}";
+                    }
                     return null;
             }
         }
