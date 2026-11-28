@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Extensions;
@@ -15,6 +16,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownItem
     {
+        private static readonly IDebugger Debugger = new DebuggerProxy();
+
         private readonly IMethodValidator? _methodValidator;
         private readonly IList<IMethodInfo> _setUpMethods;
         private readonly IList<IMethodInfo> _tearDownMethods;
@@ -57,7 +60,10 @@ namespace NUnit.Framework.Internal.Commands
             try
             {
                 foreach (IMethodInfo setUpMethod in _setUpMethods)
-                    runMethod(context, setUpMethod);
+                {
+                    if (!RunMethod(context, setUpMethod, runMethod, FailureSite.SetUp))
+                        return;
+                }
             }
             catch (Exception ex)
             {
@@ -89,7 +95,10 @@ namespace NUnit.Framework.Internal.Commands
                     var index = _tearDownMethods.Count;
 
                     while (--index >= 0)
-                        runMethod(context, _tearDownMethods[index]);
+                    {
+                        if (!RunMethod(context, _tearDownMethods[index], runMethod, FailureSite.TearDown))
+                            return;
+                    }
 
                     // If there are new assertion results here, they are warnings issued
                     // in teardown. Redo test completion so they are listed properly.
@@ -101,6 +110,28 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.RecordException(ex, FailureSite.TearDown);
                 }
             }
+        }
+
+        /// <summary>
+        /// Runs a setup or teardown method, with its own cancellation token if it has a <see cref="CancelAfterAttribute"/>.
+        /// </summary>
+        /// <returns>
+        /// <see langword="false"/> if the <see cref="CancelAfterAttribute"/> timeout of the method, or an enclosing one,
+        /// cancelled it and the cancellation was recorded, otherwise <see langword="true"/>.
+        /// Other exceptions are not caught.
+        /// </returns>
+        private static bool RunMethod(
+            TestExecutionContext context,
+            IMethodInfo method,
+            Action<TestExecutionContext, IMethodInfo> runMethod,
+            FailureSite failureSite)
+        {
+            int cancelAfterTimeout = MethodInfoCache.Get(method).CancelAfterTimeout;
+            if (cancelAfterTimeout > 0)
+                return CancelAfterRunner.Run(context, cancelAfterTimeout, Debugger, failureSite, () => runMethod(context, method));
+
+            runMethod(context, method);
+            return true;
         }
 
         private void RunSetUpMethodWithHooks(TestExecutionContext context, IMethodInfo setUpMethod)

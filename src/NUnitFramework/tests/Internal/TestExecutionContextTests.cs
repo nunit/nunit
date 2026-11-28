@@ -767,6 +767,31 @@ namespace NUnit.Framework.Tests.Internal
 
         #endregion
 
+        #region CancelAfter
+
+        [Test]
+        public void CopiedContextKeepsTheCancelAfterPhaseAndTimeoutOfItsCancellationToken()
+        {
+            using var cancellationTokenSource = new CancellationTokenSource();
+            var context = new TestExecutionContext
+            {
+                CancellationToken = cancellationTokenSource.Token,
+                CancelAfterPhase = "OneTimeSetUp",
+                CancelAfterTimeout = 50,
+            };
+
+            var copy = new TestExecutionContext(context);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(copy.CancellationToken, Is.EqualTo(context.CancellationToken));
+                Assert.That(copy.CancelAfterPhase, Is.EqualTo(context.CancelAfterPhase));
+                Assert.That(copy.CancelAfterTimeout, Is.EqualTo(context.CancelAfterTimeout));
+            });
+        }
+
+        #endregion
+
         #region DisableMultipleAssertsUnderDebugger
 
         [Test]

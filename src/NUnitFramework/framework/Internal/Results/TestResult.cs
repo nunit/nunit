@@ -820,7 +820,7 @@ namespace NUnit.Framework.Internal
                 {
                     ResultState = ResultState.Failure.WithSite(site);
                     TestExecutionContext context = TestExecutionContext.CurrentContext;
-                    Message = $"{context.CancelAfterPhase} exceeded CancelAfter value of {context.TestCaseTimeout}ms";
+                    Message = $"{context.CancelAfterPhase} exceeded CancelAfter value of {context.CancelAfterTimeout}ms";
                 }
                 else
                 {

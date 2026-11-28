@@ -117,6 +117,8 @@ namespace NUnit.Framework.Internal
             ThrowOnEachFailureUnderDebugger = other.ThrowOnEachFailureUnderDebugger;
             UseCancellation = other.UseCancellation;
             CancellationToken = other.CancellationToken;
+            CancelAfterPhase = other.CancelAfterPhase;
+            CancelAfterTimeout = other.CancelAfterTimeout;
             GlobalCancellationToken = other.GlobalCancellationToken;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
@@ -348,10 +350,16 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Gets or sets the name of the phase guarded by <see cref="CancellationToken"/>:
-        /// "Test", "OneTimeSetUp" or "OneTimeTearDown". Used in the message reported
+        /// "Test", "SetUp", "TearDown", "OneTimeSetUp" or "OneTimeTearDown". Used in the message reported
         /// when the <see cref="CancelAfterAttribute"/> timeout is exceeded.
         /// </summary>
         internal string CancelAfterPhase { get; set; } = "Test";
+
+        /// <summary>
+        /// Gets or sets the <see cref="CancelAfterAttribute"/> timeout in milliseconds of the phase guarded by
+        /// <see cref="CancellationToken"/>. Used in the message reported when the timeout is exceeded.
+        /// </summary>
+        internal int CancelAfterTimeout { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/> for the whole test run.

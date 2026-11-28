@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 
@@ -47,47 +46,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            // Because of the debugger possibly attaching after the test method is started
-            // we use a 2-prong approach where we only cancel the test's cancellation token
-            // if the debugger is not attached when the timer expires.
-            using var testCancellationTokenSource = new CancellationTokenSource();
-            using var timedCancellationTokenSource = new CancellationTokenSource(_timeout);
-
-            // The registration is disposed before both token sources. Disposing it waits for a
-            // callback that is already running, so the callback can't use a disposed source.
-            using var registration = timedCancellationTokenSource.Token.Register(() =>
-            {
-                if (!_debugger.IsAttached)
-                    testCancellationTokenSource.Cancel();
-            });
-
-            using var combinedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
-                context.GlobalCancellationToken,
-                testCancellationTokenSource.Token);
-            context.CancellationToken = combinedCancellationTokenSource.Token;
-            context.CancelAfterPhase = _failureSite switch
-            {
-                FailureSite.SetUp => "OneTimeSetUp",
-                FailureSite.TearDown => "OneTimeTearDown",
-                _ => "Test",
-            };
-
-            try
-            {
-                innerCommand.Execute(context);
-            }
-            catch (Exception ex) when (ex.Unwrap() is OperationCanceledException)
-            {
-                // Record it before the token is reset, so it is reported as exceeding CancelAfter.
-                // Exceptions from reflection invoked code, like a fixture constructor, are still wrapped.
-                context.CurrentResult.RecordException(ex, _failureSite);
-            }
-            finally
-            {
-                context.CancellationToken = context.GlobalCancellationToken;
-                context.CancelAfterPhase = "Test";
-            }
-
+            CancelAfterRunner.Run(context, _timeout, _debugger, _failureSite, () => innerCommand.Execute(context));
             return context.CurrentResult;
         }
     }

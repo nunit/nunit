@@ -19,6 +19,11 @@ namespace NUnit.Framework
     /// separately, to all <see cref="OneTimeSetUpAttribute"/> and all <see cref="OneTimeTearDownAttribute"/>
     /// methods of the fixture. Each of these phases gets its own cancellation token.
     /// </para>
+    /// <para>
+    /// When applied to a <see cref="SetUpAttribute"/>, <see cref="TearDownAttribute"/>, <see cref="OneTimeSetUpAttribute"/>
+    /// or <see cref="OneTimeTearDownAttribute"/> method, the timeout applies to that method only. The method gets its own
+    /// cancellation token, which is also cancelled when the timeout of an enclosing test or fixture is exceeded.
+    /// </para>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class CancelAfterAttribute : PropertyAttribute, IApplyToContext
@@ -35,6 +40,11 @@ namespace NUnit.Framework
             _timeout = timeout;
             Properties.Add(PropertyNames.UseCancellation, true);
         }
+
+        /// <summary>
+        /// Gets the timeout value in milliseconds.
+        /// </summary>
+        internal int Timeout => _timeout;
 
         #region IApplyToContext
 
