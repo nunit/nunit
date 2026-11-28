@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -139,15 +140,18 @@ namespace NUnit.Framework.Internal.Commands
 
             var methodInfo = MethodInfoCache.Get(method);
 
+            bool acceptsCancellationToken = methodInfo.Parameters.LastParameterAcceptsCancellationToken();
+
             if (methodInfo.IsAsyncOperation)
-                AsyncToSyncAdapter.Await(context, () => InvokeMethod(method, context));
+                AsyncToSyncAdapter.Await(context, () => InvokeMethod(method, context, acceptsCancellationToken));
             else
-                InvokeMethod(method, context);
+                InvokeMethod(method, context, acceptsCancellationToken);
         }
 
-        private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
+        private static object InvokeMethod(IMethodInfo method, TestExecutionContext context, bool acceptsCancellationToken)
         {
-            return method.Invoke(method.IsStatic ? null : context.TestObject, null)!;
+            object?[]? arguments = acceptsCancellationToken ? [context.CancellationToken] : null;
+            return method.Invoke(method.IsStatic ? null : context.TestObject, arguments)!;
         }
     }
 }

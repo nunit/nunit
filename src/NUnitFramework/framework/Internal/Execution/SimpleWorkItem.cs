@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (timeout > 0)
                 {
                     command = useCancellation
-                        ? new CancelAfterCommand(command, timeout, _debugger)
+                        ? new CancelAfterCommand(command, timeout, _debugger, FailureSite.Test)
                         : new TimeoutCommand(command, timeout, _debugger);
                 }
 

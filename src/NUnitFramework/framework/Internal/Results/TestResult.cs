@@ -819,7 +819,8 @@ namespace NUnit.Framework.Internal
                 else if (ex is OperationCanceledException && TestExecutionContext.CurrentContext.CancellationToken.IsCancellationRequested)
                 {
                     ResultState = ResultState.Failure.WithSite(site);
-                    Message = $"Test exceeded CancelAfter value of {TestExecutionContext.CurrentContext.TestCaseTimeout}ms";
+                    TestExecutionContext context = TestExecutionContext.CurrentContext;
+                    Message = $"{context.CancelAfterPhase} exceeded CancelAfter value of {context.TestCaseTimeout}ms";
                 }
                 else
                 {

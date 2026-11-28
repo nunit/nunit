@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Execution
                 return null;
             }
 
-            CompositeWorkItem? work = root ? new CompositeWorkItem(suite, filter) : null;
+            CompositeWorkItem? work = root ? new CompositeWorkItem(suite, filter, debugger) : null;
 
             if (recursive)
             {
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (childItem is null)
                         continue;
 
-                    work ??= new CompositeWorkItem(suite, filter);
+                    work ??= new CompositeWorkItem(suite, filter, debugger);
 
                     if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                         childItem.TargetApartment = work.TargetApartment;

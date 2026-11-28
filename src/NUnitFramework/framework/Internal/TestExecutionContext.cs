@@ -347,6 +347,13 @@ namespace NUnit.Framework.Internal
         public CancellationToken CancellationToken { get; internal set; }
 
         /// <summary>
+        /// Gets or sets the name of the phase guarded by <see cref="CancellationToken"/>:
+        /// "Test", "OneTimeSetUp" or "OneTimeTearDown". Used in the message reported
+        /// when the <see cref="CancelAfterAttribute"/> timeout is exceeded.
+        /// </summary>
+        internal string CancelAfterPhase { get; set; } = "Test";
+
+        /// <summary>
         /// Gets or sets the <see cref="CancellationToken"/> for the whole test run.
         /// </summary>
         internal CancellationToken GlobalCancellationToken { get; set; }

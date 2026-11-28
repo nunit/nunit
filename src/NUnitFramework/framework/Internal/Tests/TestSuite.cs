@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -330,9 +331,10 @@ namespace NUnit.Framework.Internal
                 {
                     MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
-                else if (methodInfo.Parameters.Length != 0)
+                else if (methodInfo.Parameters.Length > 1 ||
+                         (methodInfo.Parameters.Length == 1 && !methodInfo.Parameters.LastParameterAcceptsCancellationToken()))
                 {
-                    MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
+                    MakeInvalid("SetUp and TearDown methods can only have a single CancellationToken parameter: " + method.Name);
                 }
                 else if (methodInfo.IsAsyncOperation)
                 {

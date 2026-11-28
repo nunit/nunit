@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands
@@ -15,6 +16,7 @@ namespace NUnit.Framework.Internal.Commands
     {
         private readonly int _timeout;
         private readonly IDebugger _debugger;
+        private readonly FailureSite _failureSite;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelAfterCommand"/> class.
@@ -22,12 +24,18 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
-        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
+        /// <param name="failureSite">
+        /// The <see cref="FailureSite"/> used to record a cancellation:
+        /// <see cref="FailureSite.Test"/> when wrapping a test, or <see cref="FailureSite.SetUp"/>
+        /// or <see cref="FailureSite.TearDown"/> when wrapping the one-time setup or teardown of a fixture.
+        /// </param>
+        internal CancelAfterCommand(TestCommand innerCommand, int timeout, IDebugger debugger, FailureSite failureSite) : base(innerCommand)
         {
             _timeout = timeout;
             _debugger = debugger;
+            _failureSite = failureSite;
 
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "CancelAfterCommand may only apply to a TestMethod", nameof(innerCommand));
+            Guard.ArgumentValid(innerCommand.Test is TestMethod or TestSuite, "CancelAfterCommand may only apply to a TestMethod or TestSuite", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
             ArgumentNullException.ThrowIfNull(debugger);
         }
@@ -57,18 +65,27 @@ namespace NUnit.Framework.Internal.Commands
                 context.GlobalCancellationToken,
                 testCancellationTokenSource.Token);
             context.CancellationToken = combinedCancellationTokenSource.Token;
+            context.CancelAfterPhase = _failureSite switch
+            {
+                FailureSite.SetUp => "OneTimeSetUp",
+                FailureSite.TearDown => "OneTimeTearDown",
+                _ => "Test",
+            };
 
             try
             {
                 innerCommand.Execute(context);
             }
-            catch (OperationCanceledException ex)
+            catch (Exception ex) when (ex.Unwrap() is OperationCanceledException)
             {
-                context.CurrentResult.RecordException(ex);
+                // Record it before the token is reset, so it is reported as exceeding CancelAfter.
+                // Exceptions from reflection invoked code, like a fixture constructor, are still wrapped.
+                context.CurrentResult.RecordException(ex, _failureSite);
             }
             finally
             {
                 context.CancellationToken = context.GlobalCancellationToken;
+                context.CancelAfterPhase = "Test";
             }
 
             return context.CurrentResult;
