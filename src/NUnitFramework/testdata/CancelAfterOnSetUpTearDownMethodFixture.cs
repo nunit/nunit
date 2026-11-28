@@ -206,18 +206,29 @@ namespace NUnit.TestData
         }
     }
 
+    public abstract class CancelAfterBaseFixtureThatWaitsForCancellationInSetUp
+    {
+        /// <summary>
+        /// Runs before the setup of the derived class and returns once the timeout of the test has expired,
+        /// so the timeout of the test always expires before the timeout of the derived setup method.
+        /// </summary>
+        [SetUp]
+        public void WaitForCancellation()
+        {
+            TestContext.CurrentContext.CancellationToken.WaitHandle.WaitOne(10000);
+        }
+    }
+
     [TestFixture]
-    public sealed class CancelAfterOnSetUpMethodThatIsSlowToStopFixture
+    public sealed class CancelAfterOnSetUpMethodThatIsSlowToStopFixture : CancelAfterBaseFixtureThatWaitsForCancellationInSetUp
     {
         [SetUp, CancelAfter(100)]
         public void SetUp()
         {
-            CancellationToken cancellationToken = TestContext.CurrentContext.CancellationToken;
-            cancellationToken.WaitHandle.WaitOne(1000);
-
-            // Keep running after the timeout of the test, until the timeout of this method has expired as well.
-            Thread.Sleep(200);
-            cancellationToken.ThrowIfCancellationRequested();
+            // Keep running past the 100ms timeout of this method. Its timer signals nothing
+            // once the timeout of the test has expired, so there is nothing to wait for.
+            Thread.Sleep(300);
+            TestContext.CurrentContext.CancellationToken.ThrowIfCancellationRequested();
         }
 
         [Test, CancelAfter(50)]
