@@ -57,10 +57,17 @@ namespace NUnit.Framework.Internal.Commands
                 ? RunSetUpMethodWithHooks
                 : RunSetUpOrTearDownMethod;
 
-            foreach (IMethodInfo setUpMethod in _setUpMethods)
+            try
             {
-                if (!TryRunMethod(context, setUpMethod, runMethod, FailureSite.SetUp))
-                    return;
+                foreach (IMethodInfo setUpMethod in _setUpMethods)
+                {
+                    if (!RunMethod(context, setUpMethod, runMethod, FailureSite.SetUp))
+                        return;
+                }
+            }
+            catch (Exception ex)
+            {
+                context.CurrentResult.RecordException(ex, FailureSite.SetUp);
             }
         }
 
@@ -89,7 +96,7 @@ namespace NUnit.Framework.Internal.Commands
 
                     while (--index >= 0)
                     {
-                        if (!TryRunMethod(context, _tearDownMethods[index], runMethod, FailureSite.TearDown))
+                        if (!RunMethod(context, _tearDownMethods[index], runMethod, FailureSite.TearDown))
                             return;
                     }
 
@@ -106,30 +113,25 @@ namespace NUnit.Framework.Internal.Commands
         }
 
         /// <summary>
-        /// Runs a setup or teardown method, recording any exception it throws.
+        /// Runs a setup or teardown method, with its own cancellation token if it has a <see cref="CancelAfterAttribute"/>.
         /// </summary>
-        /// <returns><see langword="true"/> if the method succeeded, <see langword="false"/> if an exception was recorded.</returns>
-        private static bool TryRunMethod(
+        /// <returns>
+        /// <see langword="false"/> if the <see cref="CancelAfterAttribute"/> timeout of the method, or an enclosing one,
+        /// cancelled it and the cancellation was recorded, otherwise <see langword="true"/>.
+        /// Other exceptions are not caught.
+        /// </returns>
+        private static bool RunMethod(
             TestExecutionContext context,
             IMethodInfo method,
             Action<TestExecutionContext, IMethodInfo> runMethod,
             FailureSite failureSite)
         {
             int cancelAfterTimeout = MethodInfoCache.Get(method).CancelAfterTimeout;
+            if (cancelAfterTimeout > 0)
+                return CancelAfterRunner.Run(context, cancelAfterTimeout, Debugger, failureSite, () => runMethod(context, method));
 
-            try
-            {
-                if (cancelAfterTimeout > 0)
-                    return CancelAfterRunner.Run(context, cancelAfterTimeout, Debugger, failureSite, () => runMethod(context, method));
-
-                runMethod(context, method);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                context.CurrentResult.RecordException(ex, failureSite);
-                return false;
-            }
+            runMethod(context, method);
+            return true;
         }
 
         private void RunSetUpMethodWithHooks(TestExecutionContext context, IMethodInfo setUpMethod)
